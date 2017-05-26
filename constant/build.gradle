@@ -3,6 +3,7 @@ buildscript {
 		springBootVersion = '1.5.3.RELEASE'
 	}
 	repositories {
+		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
 		mavenCentral()
 	}
 	dependencies {
@@ -11,6 +12,7 @@ buildscript {
 }
 
 apply plugin: 'java'
+apply plugin: 'groovy'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
@@ -23,5 +25,12 @@ repositories {
 
 
 dependencies {
+	compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.11'
+}
 
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+}
+tasks.withType(GroovyCompile) {
+	options.encoding = "UTF-8"
 }

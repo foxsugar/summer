@@ -1,5 +1,6 @@
 package com.code.server.game.room;
 
+import com.code.server.constant.response.ErrorCode;
 import net.sf.json.JSONObject;
 
 /**
@@ -9,7 +10,7 @@ public class RoomMsgDispatch {
 
 
 
-    private int dispatchRoomService(String method, JSONObject params, ChannelHandlerContext ctx) {
+    private int dispatchRoomService(String method, JSONObject params, long userId) {
         Player player = GameManager.getPlayerByCtx(ctx);
         if (player == null) {
             return ErrorCode.YOU_HAVE_NOT_LOGIN;
