@@ -1,6 +1,6 @@
 package com.code.server.constant.response;
 
-import com.code.server.cardgame.core.doudizhu.PlayerCardInfoDouDiZhu;
+import com.code.server.game.landlord.core.doudizhu.PlayerCardInfoDouDiZhu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by sunxianping on 2017/3/20.
  */
-public class PlayerCardInfoVo {
+public class PlayerCardInfoVo implements IfacePlayerInfoVo {
     public long userId;
     public List<Integer> cards = new ArrayList<>();//手上的牌
     public int cardNum;

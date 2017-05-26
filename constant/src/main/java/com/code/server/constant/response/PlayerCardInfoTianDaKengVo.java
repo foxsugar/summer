@@ -1,6 +1,6 @@
 package com.code.server.constant.response;
 
-import com.code.server.cardgame.core.tiandakeng.PlayerCardInfoTianDaKeng;
+import com.code.server.game.landlord.core.tiandakeng.PlayerCardInfoTianDaKeng;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,5 @@
 package com.code.server.constant.response;
 
-import net.sf.json.JSONObject;
-
 public class AnswerUser {
 	
 	private String userId;
@@ -24,11 +22,6 @@ public class AnswerUser {
 		this.answer = answer;
 	}
 
-	public JSONObject toJSONObject() {
-		JSONObject jSONObject = new JSONObject();
-		jSONObject.put("userId", this.userId);
-		jSONObject.put("answer", this.answer);
-		return jSONObject;
-	}
+
 	
 }

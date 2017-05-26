@@ -1,7 +1,5 @@
 package com.code.server.constant.response;
 
-import net.sf.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class AskQuitRoom {
@@ -36,12 +34,6 @@ public class AskQuitRoom {
 		this.answerList = answerList;
 	}
 
-	public JSONObject toJSONObject() {
-		JSONObject jSONObject = new JSONObject();
-		jSONObject.put("userId", this.userId);
-		jSONObject.put("note", this.note);
-		jSONObject.put("answerList", this.answerList);
-		return jSONObject;
-	}
+
 	
 }

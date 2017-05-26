@@ -1,6 +1,5 @@
 package com.code.server.constant.response;
 
-import net.sf.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,10 +16,6 @@ public class NoticeReady {
 		this.userStatus = userStatus;
 	}
 
-	public JSONObject toJSONObject() {
-		JSONObject jSONObject = new JSONObject();
-		jSONObject.put("userStatus", this.userStatus);
-		return jSONObject;
-	}
+
 	
 }

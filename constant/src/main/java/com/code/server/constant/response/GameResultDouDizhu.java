@@ -7,22 +7,20 @@ import java.util.List;
  * Created by sunxianping on 2017/3/27.
  */
 public class GameResultDouDizhu {
-    private List<PlayerCardInfoVo> playerCardInfos = new ArrayList<>();
-    private boolean isDizhuWin;
-    private boolean isSpring;
-    private int multiple;
-    private boolean isReopen;
+    public List<IfacePlayerInfoVo> playerCardInfos = new ArrayList<>();
+    public boolean isDizhuWin;
+    public boolean isSpring;
+    public int multiple;
+    public boolean isReopen;
 
-    public List<PlayerCardInfoVo> getPlayerCardInfos() {
+    public List<IfacePlayerInfoVo> getPlayerCardInfos() {
         return playerCardInfos;
     }
 
-    public GameResultDouDizhu setPlayerCardInfos(List<PlayerCardInfoVo> playerCardInfos) {
+    public GameResultDouDizhu setPlayerCardInfos(List<IfacePlayerInfoVo> playerCardInfos) {
         this.playerCardInfos = playerCardInfos;
         return this;
     }
-
-
 
     public boolean isSpring() {
         return isSpring;
