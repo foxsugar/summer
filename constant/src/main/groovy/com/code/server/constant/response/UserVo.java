@@ -1,6 +1,7 @@
 package com.code.server.constant.response;
 
-import com.code.server.db.model.UserInfo;
+
+import com.code.server.constant.db.UserInfo;
 
 /**
  * Created by sunxianping on 2017/3/27.
@@ -21,6 +22,7 @@ public class UserVo {
     public String marquee; // required
     public int referee;
     public UserInfo UserInfo;
+
     public String download2;
 
     public long getId() {
@@ -157,11 +159,5 @@ public class UserVo {
         this.download2 = download2;
     }
 
-    public com.code.server.db.model.UserInfo getUserInfo() {
-        return UserInfo;
-    }
 
-    public void setUserInfo(com.code.server.db.model.UserInfo userInfo) {
-        UserInfo = userInfo;
-    }
 }

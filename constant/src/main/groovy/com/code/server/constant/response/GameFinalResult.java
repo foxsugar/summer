@@ -7,28 +7,28 @@ import java.util.List;
  * Created by sunxianping on 2017/3/30.
  */
 public class GameFinalResult {
-    private List<UserInfo> userInfos = new ArrayList<>();
+    private List<UserInfoVo> userInfos = new ArrayList<>();
 
     private String endTime;
 
-    public static class UserInfo{
+    public static class UserInfoVo {
         private long userId;
         private double score;
 
-        public UserInfo(long userId, double score) {
+        public UserInfoVo(long userId, double score) {
             this.userId = userId;
             this.score = score;
         }
 
-        public UserInfo() {
+        public UserInfoVo() {
         }
     }
 
-    public List<UserInfo> getUserInfos() {
+    public List<UserInfoVo> getUserInfos() {
         return userInfos;
     }
 
-    public GameFinalResult setUserInfos(List<UserInfo> userInfos) {
+    public GameFinalResult setUserInfos(List<UserInfoVo> userInfos) {
         this.userInfos = userInfos;
         return this;
     }
