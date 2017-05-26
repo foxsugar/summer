@@ -1,5 +1,8 @@
 package com.code.server.util.timer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
@@ -10,7 +13,7 @@ public class GameTimer {
 
     private GameTimer(){}
 
-//    private static final Logger logger = LoggerFactory.getLogger(GameTimer.class);
+    private static final Logger logger = LoggerFactory.getLogger(GameTimer.class);
     private static GameTimer instance;
 
 
@@ -40,7 +43,7 @@ public class GameTimer {
             try {
                 queue.poll().fire();
             } catch (Exception e) {
-//                logger.error("timer handle error ",e);
+                logger.error("timer handle error ",e);
             }
             if (node.isPeroid()) {
                 queue.add(node);
