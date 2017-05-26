@@ -9,7 +9,9 @@ import org.springframework.kafka.annotation.EnableKafka;
 @Configuration
 @EnableKafka()
 public class KafkaConfiguration {
+    public void testGit(){
 
+    }
 //    @Bean
 //    KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<Integer, String>>
 //    kafkaListenerContainerFactory() {
