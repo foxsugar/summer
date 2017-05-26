@@ -24,6 +24,10 @@ repositories {
 
 
 dependencies {
+	compile project(path: ':util')
+	compile project(path: ':constant')
+	compile project(path: ':redis')
+	compile project(path: ':db')
 	compile('org.springframework.boot:spring-boot-starter-data-redis')
 	compile('org.springframework.kafka:spring-kafka')
 	runtime('mysql:mysql-connector-java')
