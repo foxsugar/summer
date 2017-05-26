@@ -1,0 +1,53 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.3.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'scala'
+apply plugin: 'org.springframework.boot'
+
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	compile project(path: ':util')
+	compile('org.springframework.boot:spring-boot-starter-data-redis')
+	compile('org.springframework.kafka:spring-kafka')
+
+	compile "org.scala-lang:scala-library:2.12.2"
+	compile "org.scala-lang:scala-compiler:2.12.2"
+	compile "org.scala-lang:scala-reflect:2.12.2"
+
+	compile 'com.google.code.gson:gson:2.6.2'
+	compile "net.sf.json-lib:json-lib:2.4:jdk15"
+
+	compile group: 'io.netty', name: 'netty-all', version: '4.1.8.Final'
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+
+tasks.withType(ScalaCompile) {
+	options.encoding = "UTF-8"
+
+//	scalaCompileOptions.with {
+//		force = true
+//	}
+//	configure(scalaCompileOptions.forkOptions) {
+//		memoryMaximumSize = '1g'
+//		jvmArgs = ['-XX:MaxPermSize=512m']
+//	}
+}
