@@ -5,6 +5,7 @@ import com.code.server.redis.config.IConstant;
 import com.code.server.redis.dao.IUserRedis;
 import com.code.server.redis.dao.IUser_Gate;
 import com.code.server.redis.dao.IUser_Room;
+import com.code.server.redis.dao.IUser_Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
  * Created by sunxianping on 2017/5/25.
  */
 @Service
-public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConstant {
+public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConstant,IUser_Token {
 
 
     @Autowired
@@ -81,5 +82,22 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
         return user_bean.get(USER_BEAN, userId);
     }
 
+    @Override
+    public void updateUserBean(long userId, IUserBean userBean) {
+        HashOperations<String,Long,IUserBean> user_bean = redisTemplate.opsForHash();
+        user_bean.put(USER_BEAN, userId,userBean);
+    }
 
+
+    @Override
+    public void setToken(long userId, String token) {
+        HashOperations<String,Long,String> user_token = redisTemplate.opsForHash();
+        user_token.put(USER_TOKEN, userId,token);
+    }
+
+    @Override
+    public String getToken(long userId) {
+        HashOperations<String,Long,String> user_token = redisTemplate.opsForHash();
+        return user_token.get(USER_TOKEN, userId);
+    }
 }

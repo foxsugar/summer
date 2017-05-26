@@ -24,8 +24,8 @@ repositories {
 
 
 dependencies {
-	compile project(path: ':util')
 	compile project(path: ':constant')
+	compile project(path: ':util')
 	compile('org.springframework.boot:spring-boot-starter-data-redis')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

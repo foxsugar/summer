@@ -17,6 +17,7 @@ public interface IUserRedis {
     IUserBean getUserBean(long userId);
 
 
+    void updateUserBean(long userId, IUserBean userBean);
 
 
 
