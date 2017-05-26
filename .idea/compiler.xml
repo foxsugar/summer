@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="center_main" target="1.8" />
+      <module name="center_test" target="1.8" />
+      <module name="constant_main" target="1.8" />
+      <module name="constant_test" target="1.8" />
+      <module name="db_main" target="1.8" />
+      <module name="db_test" target="1.8" />
+      <module name="gate_main" target="1.8" />
+      <module name="gate_test" target="1.8" />
+      <module name="mahjong_main" target="1.8" />
+      <module name="mahjong_test" target="1.8" />
+      <module name="redis_main" target="1.8" />
+      <module name="redis_test" target="1.8" />
+      <module name="room_main" target="1.8" />
+      <module name="room_test" target="1.8" />
+      <module name="util_main" target="1.8" />
+      <module name="util_test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
