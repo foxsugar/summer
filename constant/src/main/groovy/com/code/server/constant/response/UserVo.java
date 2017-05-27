@@ -22,7 +22,6 @@ public class UserVo {
     public String marquee; // required
     public int referee;
     public UserInfo UserInfo;
-
     public String download2;
 
     public long getId() {
@@ -151,6 +150,15 @@ public class UserVo {
         return this;
     }
 
+    public com.code.server.constant.db.UserInfo getUserInfo() {
+        return UserInfo;
+    }
+
+    public UserVo setUserInfo(com.code.server.constant.db.UserInfo userInfo) {
+        UserInfo = userInfo;
+        return this;
+    }
+
     public String getDownload2() {
         return download2;
     }
@@ -158,6 +166,5 @@ public class UserVo {
     public void setDownload2(String download2) {
         this.download2 = download2;
     }
-
 
 }

@@ -1,6 +1,7 @@
 package com.code.server.constant.response;
 
-import com.code.server.game.landlord.core.doudizhu.CardStruct;
+
+import com.code.server.constant.game.CardStruct;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,6 +1,5 @@
 package com.code.server.constant.response;
 
-import com.code.server.game.landlord.core.doudizhu.PlayerCardInfoDouDiZhu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,20 +17,5 @@ public class PlayerCardInfoVo implements IfacePlayerInfoVo {
     public PlayerCardInfoVo() {
     }
 
-    public PlayerCardInfoVo(PlayerCardInfoDouDiZhu playerCardInfo, long uid) {
-        this.userId = playerCardInfo.userId;
-        if (playerCardInfo.userId == uid) {
-            this.cards.addAll(playerCardInfo.cards);
-        } else {
-            this.cardNum = playerCardInfo.cards.size();
-            this.isQiang = playerCardInfo.isQiang();
-        }
-    }
 
-    public PlayerCardInfoVo(PlayerCardInfoDouDiZhu playerCardInfo) {
-        this.userId = playerCardInfo.userId;
-        this.cards.addAll(playerCardInfo.cards);
-        this.isQiang = playerCardInfo.isQiang();
-        this.score = playerCardInfo.getScore();
-    }
 }

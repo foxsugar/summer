@@ -1,6 +1,5 @@
 package com.code.server.constant.response;
 
-import com.code.server.game.landlord.core.tiandakeng.PlayerCardInfoTianDaKeng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +16,5 @@ public class PlayerCardInfoTianDaKengVo {
     public PlayerCardInfoTianDaKengVo() {
     }
 
-    public PlayerCardInfoTianDaKengVo(PlayerCardInfoTianDaKeng playerCardInfo, long uid) {
-        this.userId = playerCardInfo.userId;
-        this.myselfCards = playerCardInfo.myselfCards;
-        this.everyknowCards = playerCardInfo.everyknowCards;
-    }
 
-    public PlayerCardInfoTianDaKengVo(PlayerCardInfoTianDaKeng playerCardInfo) {
-        this.userId = playerCardInfo.userId;
-        this.myselfCards = playerCardInfo.myselfCards;
-        this.everyknowCards = playerCardInfo.everyknowCards;
-    }
 }

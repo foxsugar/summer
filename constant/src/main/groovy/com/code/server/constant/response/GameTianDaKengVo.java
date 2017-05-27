@@ -1,8 +1,6 @@
 package com.code.server.constant.response;
 
-import com.code.server.game.landlord.core.Game;
-import com.code.server.game.landlord.core.tiandakeng.GameTianDaKeng;
-import com.code.server.game.landlord.core.tiandakeng.PlayerCardInfoTianDaKeng;
+
 
 import java.util.*;
 
@@ -35,35 +33,4 @@ public class GameTianDaKengVo extends GameVo{
     protected Map<Long,Integer> gameuserStatus = new HashMap<>();//玩家游戏中的状态
 
 
-    public static GameTianDaKengVo getGameTianDaKengVo(Game game, long uid){
-        GameTianDaKengVo vo = new GameTianDaKengVo();
-        if(game!=null){
-            GameTianDaKeng tianDaKeng = (GameTianDaKeng) game;
-
-            vo.cards = tianDaKeng.getCards();
-            vo.tableCards = tianDaKeng.getTableCards();
-            vo.users = tianDaKeng.getUsers();
-            vo.allChip = tianDaKeng.getAllChip();
-            vo.curChip = tianDaKeng.getCurChip();
-            vo.currentTurn = tianDaKeng.getCurrentTurn();
-            vo.chip = tianDaKeng.getChip();
-            vo.trunNumber = tianDaKeng.getTrunNumber();
-            vo.aliveUser = tianDaKeng.getAliveUser();
-            vo.curUser = tianDaKeng.getCurUser();
-            vo.canRaiseUser = tianDaKeng.getCanRaiseUser();
-            vo.gameuserStatus = tianDaKeng.getGameuserStatus();
-
-            //玩家牌信息
-            for (PlayerCardInfoTianDaKeng playerCardInfo : tianDaKeng.getPlayerCardInfos().values()) {
-                /*PlayerCardInfoTianDaKeng temp = playerCardInfo;
-                if(temp.getUserId()!=uid){
-                    temp.setMyselfCards(null);
-                    temp.setAllCards(null);
-                }*/
-                vo.playerCardInfos.put(playerCardInfo.userId, new PlayerCardInfoTianDaKengVo(playerCardInfo, uid));
-            }
-        }
-        return vo;
-
-    }
 }
