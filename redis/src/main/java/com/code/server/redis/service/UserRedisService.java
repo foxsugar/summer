@@ -41,20 +41,20 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     }
 
     @Override
-    public String getGateId(long userId) {
-        HashOperations<String,Long,String> user_gate = redisTemplate.opsForHash();
+    public int getGateId(long userId) {
+        HashOperations<String,Long,Integer> user_gate = redisTemplate.opsForHash();
         return user_gate.get(USERID_GATEID, userId);
     }
 
     @Override
-    public void setGateId(long userId, String roomId) {
-        HashOperations<String,Long,String> user_gate = redisTemplate.opsForHash();
-        user_gate.put(USERID_GATEID, userId,roomId);
+    public void setGateId(long userId, int gateId) {
+        HashOperations<String,Long,Integer> user_gate = redisTemplate.opsForHash();
+        user_gate.put(USERID_GATEID, userId,gateId);
     }
 
     @Override
     public void removeGate(long userId) {
-        HashOperations<String,Long,String> user_gate = redisTemplate.opsForHash();
+        HashOperations<String,Long,Integer> user_gate = redisTemplate.opsForHash();
         user_gate.delete(USERID_GATEID, userId);
     }
 
