@@ -1,5 +1,6 @@
 package com.code.server.gate.kafka;
 
+import com.code.server.util.JsonUtil;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,42 @@ public class MsgProducer {
         kafkaTemplate.send(topic, partition, data);
     }
 
+    public void send(String topic, String key, String data) {
+        kafkaTemplate.send(topic, key, data);
+    }
+
     public void send(String topic, int partition, String key, String data) {
         kafkaTemplate.send(topic, partition, key,data);
     }
 
+
     public void send(String topic, String data) {
         kafkaTemplate.send(topic, data);
     }
+
+
+    public void send(String topic, int partition, Object object) {
+        String json = JsonUtil.toJson(object);
+        send(topic,partition,json);
+    }
+
+    public void send(String topic, Object object) {
+        String json = JsonUtil.toJson(object);
+        send(topic,json);
+    }
+
+
+    public void send(String topic, int partition, String key, Object object){
+        String json = JsonUtil.toJson(object);
+        send(topic,partition,key,json);
+    }
+
+    public void send(String topic, String key, Object object){
+        String json = JsonUtil.toJson(object);
+        send(topic,key,json);
+    }
+
+
     public void send() {
         kafkaTemplate.send("test", 3, "111111111");
         kafkaTemplate.metrics();

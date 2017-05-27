@@ -23,9 +23,30 @@ repositories {
 	mavenCentral()
 }
 
+sourceSets {
+	main {
+		scala {
+			srcDirs = ['src/main/scala', 'src/main/java']
+		}
+		java {
+			srcDirs = []
+		}
+	}
+
+	test {
+		scala {
+			srcDirs = ['src/test/scala', 'src/test/java']
+		}
+		java {
+			srcDirs = []
+		}
+	}
+}
 
 dependencies {
+	compile project(path: ':constant')
 	compile project(path: ':util')
+	compile project(path: ':redis')
 	compile('org.springframework.boot:spring-boot-starter-data-redis')
 	compile('org.springframework.kafka:spring-kafka')
 
@@ -42,6 +63,18 @@ dependencies {
 
 
 tasks.withType(ScalaCompile) {
+	options.encoding = "UTF-8"
+
+//	scalaCompileOptions.with {
+//		force = true
+//	}
+//	configure(scalaCompileOptions.forkOptions) {
+//		memoryMaximumSize = '1g'
+//		jvmArgs = ['-XX:MaxPermSize=512m']
+//	}
+}
+
+tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
 
 //	scalaCompileOptions.with {

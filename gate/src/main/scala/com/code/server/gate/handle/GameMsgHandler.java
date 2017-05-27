@@ -1,6 +1,7 @@
 package com.code.server.gate.handle;
 
 import com.code.server.gate.kafka.MsgProducer;
+import com.code.server.gate.service.MsgDispatch;
 import com.code.server.gate.util.SpringUtil;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -17,19 +18,11 @@ public class GameMsgHandler extends ChannelDuplexHandler {
     public void channelRead(ChannelHandlerContext ctx, Object msg){
 
         System.out.println(msg);
-        dispatch(msg);
+        MsgDispatch.dispatch(msg);
     }
 
 
-    private void dispatch(Object msg){
-        JSONObject jsonObject = (JSONObject)msg;
-        String service = jsonObject.getString("service");
-        String method = jsonObject.getString("method");
-        JSONObject params = jsonObject.getJSONObject("params");
-        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
-        msgProducer.send("test",0,msg.toString());
 
-    }
     @Override
     public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
         super.channelWritabilityChanged(ctx);
