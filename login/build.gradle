@@ -1,0 +1,97 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.3.RELEASE'
+	}
+	repositories {
+//		mavenCentral()
+		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'scala'
+apply plugin: 'groovy'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'war'
+
+jar {
+	baseName = 'login'
+	version = '0.0.1-SNAPSHOT'
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+//这里是关键（把java与scala的源代码目录全映射到scala上,
+// 这样gradle compileScala时就能同时编译java与scala的源代码）
+sourceSets {
+	main {
+		scala {
+			srcDirs = ['src/main/scala', 'src/main/java']
+		}
+		java {
+			srcDirs = []
+		}
+	}
+
+	test {
+		scala {
+			srcDirs = ['src/test/scala', 'src/test/java']
+		}
+		java {
+			srcDirs = []
+		}
+	}
+}
+
+dependencies {
+	compile project(path: ':redis')
+	compile project(path: ':util')
+	compile project(path: ':constant')
+	compile project(path: ':db')
+	compile('org.springframework.boot:spring-boot-starter-aop')
+	compile('org.springframework.boot:spring-boot-starter-data-redis')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile('com.google.code.gson:gson:2.6.2')
+
+	compile "org.scala-lang:scala-library:2.12.2"
+	compile "org.scala-lang:scala-compiler:2.12.2"
+	compile "org.scala-lang:scala-reflect:2.12.2"
+
+	compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.11'
+
+	compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '1.2.0.RELEASE'
+
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+
+//	compile ('org.quartz-scheduler:quartz:2.2.1'){
+//		//排除c3p0的依赖
+//		exclude group:'c3p0',module:"c3p0"
+//		exclude group:'org.slf4j',module:"slf4j-api"
+//	}
+}
+
+tasks.withType(ScalaCompile) {
+	options.encoding = "UTF-8"
+
+//	scalaCompileOptions.with {
+//		force = true
+//	}
+//	configure(scalaCompileOptions.forkOptions) {
+//		memoryMaximumSize = '1g'
+//		jvmArgs = ['-XX:MaxPermSize=512m']
+//	}
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+}
