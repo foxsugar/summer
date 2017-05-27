@@ -1,6 +1,7 @@
 package com.code.server.redis.dao;
 
 import com.code.server.constant.game.IUserBean;
+import com.code.server.constant.game.UserBean;
 
 /**
  * Created by sunxianping on 2017/5/25.
@@ -14,10 +15,10 @@ public interface IUserRedis {
     void setUserMoney(long userId, double money);
 
 
-    IUserBean getUserBean(long userId);
+    UserBean getUserBean(long userId);
 
 
-    void updateUserBean(long userId, IUserBean userBean);
+    void updateUserBean(long userId, UserBean userBean);
 
 
 

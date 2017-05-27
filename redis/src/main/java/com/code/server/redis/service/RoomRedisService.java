@@ -18,15 +18,15 @@ public class RoomRedisService implements IRoom_Server ,IConstant{
     private RedisTemplate redisTemplate;
 
     @Override
-    public int getServerId(String roomId) {
+    public String getServerId(String roomId) {
 
-        HashOperations<String,String,Integer> user_room = redisTemplate.opsForHash();
+        HashOperations<String,String,String> user_room = redisTemplate.opsForHash();
         return user_room.get(ROOMID_SERVERID, roomId);
     }
 
     @Override
-    public void setServerId(String roomId, int serverid) {
-        HashOperations<String,String,Integer> user_room = redisTemplate.opsForHash();
+    public void setServerId(String roomId, String serverid) {
+        HashOperations<String,String,String> user_room = redisTemplate.opsForHash();
         user_room.put(ROOMID_SERVERID, roomId,serverid);
 
     }

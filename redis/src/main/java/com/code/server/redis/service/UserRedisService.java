@@ -1,6 +1,7 @@
 package com.code.server.redis.service;
 
 import com.code.server.constant.game.IUserBean;
+import com.code.server.constant.game.UserBean;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.dao.IUserRedis;
 import com.code.server.redis.dao.IUser_Gate;
@@ -41,14 +42,14 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     }
 
     @Override
-    public int getGateId(long userId) {
-        HashOperations<String,Long,Integer> user_gate = redisTemplate.opsForHash();
+    public String getGateId(long userId) {
+        HashOperations<String,Long,String> user_gate = redisTemplate.opsForHash();
         return user_gate.get(USERID_GATEID, userId);
     }
 
     @Override
-    public void setGateId(long userId, int gateId) {
-        HashOperations<String,Long,Integer> user_gate = redisTemplate.opsForHash();
+    public void setGateId(long userId, String gateId) {
+        HashOperations<String,Long,String> user_gate = redisTemplate.opsForHash();
         user_gate.put(USERID_GATEID, userId,gateId);
     }
 
@@ -77,14 +78,14 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     }
 
     @Override
-    public IUserBean getUserBean(long userId) {
-        HashOperations<String,Long,IUserBean> user_bean = redisTemplate.opsForHash();
+    public UserBean getUserBean(long userId) {
+        HashOperations<String,Long,UserBean> user_bean = redisTemplate.opsForHash();
         return user_bean.get(USER_BEAN, userId);
     }
 
     @Override
-    public void updateUserBean(long userId, IUserBean userBean) {
-        HashOperations<String,Long,IUserBean> user_bean = redisTemplate.opsForHash();
+    public void updateUserBean(long userId, UserBean userBean) {
+        HashOperations<String,Long,UserBean> user_bean = redisTemplate.opsForHash();
         user_bean.put(USER_BEAN, userId,userBean);
     }
 
