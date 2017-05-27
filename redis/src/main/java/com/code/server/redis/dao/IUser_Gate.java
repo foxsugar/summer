@@ -5,9 +5,9 @@ package com.code.server.redis.dao;
  */
 public interface IUser_Gate {
 
-    String getGateId(long userId);
+    int getGateId(long userId);
 
-    void setGateId(long userId, String roomId);
+    void setGateId(long userId, int gateId);
 
     void removeGate(long userId);
 }
