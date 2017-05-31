@@ -35,6 +35,8 @@ public class GateManager {
     }
 
 
+
+
     public static ChannelHandlerContext getUserNettyCtxByUserId(long userId){
         return getInstance().userNettyCtx.get(userId);
     }

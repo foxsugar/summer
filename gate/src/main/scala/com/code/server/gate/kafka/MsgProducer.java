@@ -18,7 +18,7 @@ public class MsgProducer {
     @Autowired
     private KafkaTemplate<String,String> kafkaTemplate;
 
-    public void send(String topic, int partition, String data) {
+    public void send2Partition(String topic, int partition, String data) {
         kafkaTemplate.send(topic, partition, data);
     }
 
@@ -26,7 +26,7 @@ public class MsgProducer {
         kafkaTemplate.send(topic, key, data);
     }
 
-    public void send(String topic, int partition, String key, String data) {
+    public void send2Partition(String topic, int partition, String key, String data) {
         kafkaTemplate.send(topic, partition, key,data);
     }
 
@@ -36,9 +36,9 @@ public class MsgProducer {
     }
 
 
-    public void send(String topic, int partition, Object object) {
+    public void send2Partition(String topic, int partition, Object object) {
         String json = JsonUtil.toJson(object);
-        send(topic,partition,json);
+        send2Partition(topic,partition,json);
     }
 
     public void send(String topic, Object object) {
@@ -47,9 +47,9 @@ public class MsgProducer {
     }
 
 
-    public void send(String topic, int partition, String key, Object object){
+    public void send2Partition(String topic, int partition, String key, Object object){
         String json = JsonUtil.toJson(object);
-        send(topic,partition,key,json);
+        send2Partition(topic,partition,key,json);
     }
 
     public void send(String topic, String key, Object object){

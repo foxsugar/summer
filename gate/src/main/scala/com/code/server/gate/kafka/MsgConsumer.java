@@ -13,10 +13,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class MsgConsumer {
 
-    @KafkaListener(id = "baz", topicPartitions = {
-            @TopicPartition(topic = "gate", partitions = "${serverConfig.serverId}")
+    @KafkaListener(id = "gate", topicPartitions = {
+            @TopicPartition(topic = "gate_topic", partitions = "${serverConfig.serverId}")
     })
-    public void listen(ConsumerRecord<?, ?> record) {
+    public void listen1(ConsumerRecord<Long, String> record) {
+
+        System.out.println(record.toString());
+        System.out.println("处理完毕");
+        KafkaMsgDispatch.send2Client(record.key(),record.value());
+
+
+    }
+
+
+    @KafkaListener(id = "inner", topicPartitions = {
+            @TopicPartition(topic = "inner_gate_topic", partitions = "${serverConfig.serverId}")
+    })
+    public void listen2(ConsumerRecord<?, ?> record) {
 
         System.out.println(record.toString());
         System.out.println("处理完毕");

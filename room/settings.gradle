@@ -1,2 +1,2 @@
 rootProject.name = 'room'
-includeFlat  'util','constant'
+includeFlat  'util','constant','kafka'

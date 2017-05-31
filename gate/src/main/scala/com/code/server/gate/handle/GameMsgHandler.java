@@ -1,12 +1,10 @@
 package com.code.server.gate.handle;
 
-import com.code.server.gate.kafka.MsgProducer;
-import com.code.server.gate.service.MsgDispatch;
-import com.code.server.gate.util.SpringUtil;
+import com.code.server.gate.service.GateManager;
+import com.code.server.gate.service.NettyMsgDispatch;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
-import net.sf.json.JSONObject;
 
 /**
  * Created by win7 on 2017/3/9.
@@ -18,7 +16,7 @@ public class GameMsgHandler extends ChannelDuplexHandler {
     public void channelRead(ChannelHandlerContext ctx, Object msg){
 
         System.out.println(msg);
-        MsgDispatch.dispatch(msg);
+        NettyMsgDispatch.dispatch(msg,ctx);
     }
 
 
@@ -42,11 +40,11 @@ public class GameMsgHandler extends ChannelDuplexHandler {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        //可从内存中剔除的玩家
-//        Player player = GameManager.getPlayerByCtx(ctx);
-//        if (player != null) {
-//            GameManager.getInstance().getKickUser().add(player);
-//        }
+        //移除ctx
+        if(ctx.channel().hasAttr(GateManager.attributeKey)){
+            long userId = ctx.channel().attr(GateManager.attributeKey).get();
+            GateManager.removeUserNettyCtx(userId);
+        }
         super.channelInactive(ctx);
     }
 

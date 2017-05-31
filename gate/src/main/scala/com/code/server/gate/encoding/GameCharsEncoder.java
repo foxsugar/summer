@@ -12,7 +12,8 @@ public class GameCharsEncoder extends MessageToByteEncoder<Object> {
     private Gson gson = new Gson();
 
     protected void encode(ChannelHandlerContext ctx, Object object, ByteBuf out) throws Exception {
-        String json = gson.toJson(object);
+//        String json = gson.toJson(object);
+        String json = (String)object;
         byte[] data = json.getBytes("utf-8");
 //        System.out.println("发送消息===  "+json);
         logger.info("发送消息===  "+json);

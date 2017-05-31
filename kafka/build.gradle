@@ -3,7 +3,6 @@ buildscript {
 		springBootVersion = '1.5.3.RELEASE'
 	}
 	repositories {
-		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
 		mavenCentral()
 	}
 	dependencies {
@@ -25,9 +24,7 @@ repositories {
 
 dependencies {
 	compile project(path: ':util')
-	compile project(path: ':constant')
-	compile project(path: ':kafka')
-	compile "net.sf.json-lib:json-lib:2.4:jdk15"
-	compile('org.springframework.boot:spring-boot-starter-data-redis')
+	compile('org.springframework.kafka:spring-kafka')
+	compile('org.springframework.boot:spring-boot-starter')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

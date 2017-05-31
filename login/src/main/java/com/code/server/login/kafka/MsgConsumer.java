@@ -1,9 +1,16 @@
 package com.code.server.login.kafka;
 
+import com.code.server.constant.kafka.KafkaMsgKey;
+import com.code.server.util.JsonUtil;
+import com.code.server.util.ThreadPool;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.PartitionOffset;
 import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * 消息消费者
@@ -11,21 +18,26 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MsgConsumer {
-//    int count = 0;
-//    @KafkaListener(topics = {"test","testkey"})
-    @KafkaListener(id = "bar", topicPartitions =
-            { @TopicPartition(topic = "test", partitions = { "0" })})
-    public void processMessage(String content) {
-//        count ++;
-        System.out.println("开始接受消息");
-        System.out.println(content);
-        System.out.println("处理完毕");
-        System.out.println("");
-//        System.out.println(count);
+
+    @Autowired
+    UserServiceMsgDispatch userServiceMsgDispatch;
+
+
+
+    @KafkaListener(id = "userservice", topicPartitions = {
+            @TopicPartition(topic = "userService", partitions = "${serverConfig.serverId}")
+    })
+    public void listen2(ConsumerRecord<String, String> record) {
+        ThreadPool.getInstance().executor.execute(()->{
+            String key = record.key();
+            String value = record.value();
+            KafkaMsgKey msgKey = JsonUtil.readValue(key, KafkaMsgKey.class);
+            JsonNode msgValue = JsonUtil.readTree(value);
+            userServiceMsgDispatch.dispatchMsg(msgKey,msgValue);
+        });
+
 
     }
-
-
 
 
 }

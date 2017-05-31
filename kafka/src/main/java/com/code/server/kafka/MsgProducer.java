@@ -1,4 +1,4 @@
-package com.code.server.login.kafka;
+package com.code.server.kafka;
 
 import com.code.server.util.JsonUtil;
 import org.apache.kafka.clients.producer.Producer;
