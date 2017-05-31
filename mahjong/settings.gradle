@@ -1,2 +1,2 @@
 rootProject.name = 'mahjong'
-includeFlat  'util','db'
+includeFlat  'util','db','constant'
