@@ -24,56 +24,45 @@ public class UserServiceMsgDispatch {
         String service = params.get("service").asText();
         String method = params.get("method").asText();
         JsonNode node = params.get("params");
-        int rtn = dispatchUserService(msgKey, node);
+        int rtn = dispatchUserService(msgKey,method, node);
         if (rtn != 0) {
             ResponseVo vo = new ResponseVo(service, method, rtn);
             kafkaMsgProducer.send2Partition(IKafaTopic.GATE_TOPIC, msgKey.getPartition(),""+msgKey.getUserId(),vo);
         }
     }
 
-    private int dispatchUserService(KafkaMsgKey msgKey, JsonNode params) {
+    private int dispatchUserService(KafkaMsgKey msgKey,String method, JsonNode params) {
 
-        String method = params.get("method").asText();
+//        String method = params.get("method").asText();
         switch (method) {
 
             case "getUserMessage": {
-
                 return gameUserService.getUserMessage(msgKey);
             }
-
             case "getUserRecodeByUserId": {
-
-                Player player = GameManager.getPlayerByCtx(ctx);
-                if (player == null) {
-                    return ErrorCode.YOU_HAVE_NOT_LOGIN;
-                }
-                int type = params.getInt("type");
-                return gameUserService.getUserRecodeByUserId(player, type);
-
+                return gameUserService.getUserRecodeByUserId(msgKey);
             }
             case "bindReferrer": {
+
                 Player player = GameManager.getPlayerByCtx(ctx);
                 if (player == null) {
                     return ErrorCode.YOU_HAVE_NOT_LOGIN;
                 }
                 int referrerId = params.getInt("referrerId");
                 return gameUserService.bindReferrer(player, referrerId);
+
             }
-
-
             case "giveOtherMoney":
-                Player player = GameManager.getPlayerByCtx(ctx);
-                Long accepterId = Long.parseLong(params.getString("accepterId"));
-                int money = Integer.parseInt(params.getString("money"));
-                return gameUserService.giveOtherMoney(player, accepterId, money);
+
+                double money = params.get("money").asDouble();
+                Long rechargeUserId = params.get("userid").asLong();
+                return gameUserService.giveOtherMoney(msgKey,rechargeUserId, money);
 
             case "getNickNamePlayer":
-                Player giver = GameManager.getPlayerByCtx(ctx);
-                Long accepterUserId = Long.parseLong(params.getString("accepterId"));
-                return gameUserService.getNickNamePlayer(giver, accepterUserId);
+
+               return gameUserService.getNickNamePlayer(msgKey);
 
             default:
-
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }
     }

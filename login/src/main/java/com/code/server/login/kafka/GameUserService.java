@@ -5,13 +5,12 @@ import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.*;
+import com.code.server.db.Service.UserRecordService;
 import com.code.server.db.Service.UserService;
-import com.code.server.db.model.Constant;
-import com.code.server.db.model.Record;
-import com.code.server.db.model.ServerInfo;
-import com.code.server.db.model.User;
+import com.code.server.db.model.*;
 
 import com.code.server.redis.service.UserRedisService;
+import com.code.server.util.SpringUtil;
 import com.code.server.util.ThreadPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +19,7 @@ import scala.tools.nsc.doc.html.page.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 /**
@@ -38,96 +35,92 @@ public class GameUserService {
     @Autowired
     MsgProducer kafkaMsgProducer;
 
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    UserRecordService userRecordService;
+
     /**
      * 给人充钱
-     * @param player
-     * @param accepterId
-     * @param money
+     * @param msgKey
+     * @param rechargeUserId   充值玩家ID
+     * @param money             充值数量
      * @return
      */
-    public int giveOtherMoney(Player player, Long accepterId,int money){
-        UserService userService = SpringUtil.getBean(UserService.class);
-        User user = player.getUser();
+    public int giveOtherMoney(KafkaMsgKey msgKey,Long rechargeUserId,double money){
+        //充值玩家id
+        Long userid = msgKey.getUserId();
+        //充值玩家钱数
+        double userMoney = userRedisService.getUserMoney(userid);
+        //被充值玩家余额
+        double rechargeUserMoney = userRedisService.getUserMoney(rechargeUserId);
+        //被充值玩家对象
+        UserBean userBean = userRedisService.getUserBean(rechargeUserId);
 
-        if(money<=0 || user.getMoney() < money){
+        if(userMoney-money>=0 && money>0){
+            if(userBean!=null){
+                userRedisService.setUserMoney(rechargeUserId,rechargeUserMoney+money);
+                //减掉充值玩家相应的钱数
+                userRedisService.setUserMoney(userid,userMoney-money);
+            }else {
+
+                    User accepter = userService.getUserByUserId(rechargeUserId);
+                    if(accepter==null){
+                        ResponseVo vo = new ResponseVo("userService", "giveOtherMoney", ErrorCode.NOT_HAVE_THIS_ACCEPTER);
+                        sendMsg(msgKey, vo);
+                    }else{
+                        accepter.setMoney(accepter.getMoney()+money);
+                        userService.save(accepter);
+
+                        //减掉充值玩家相应的钱数
+                        userRedisService.setUserMoney(userid,userMoney-money);
+                    }
+
+            }
+        }else{
             return ErrorCode.NOT_HAVE_MORE_MONEY;
         }
-
-        Player accepterPlayer = GameManager.getInstance().getPlayers().get(accepterId);
-
-        if (accepterPlayer != null) {
-            User userAccepter = accepterPlayer.getUser();
-            user.setMoney(user.getMoney()-money);
-            accepterPlayer.getUser().setMoney(userAccepter.getMoney() + money);
-            GameManager.getInstance().getSaveUser2DB().add(userAccepter);
-
-        } else {
-            ThreadPool.getInstance().executor.execute(()->{
-
-                User accepter = userService.getUserByUserId(accepterId);
-                if(accepter==null){
-                    player.sendMsg("userService","giveOtherMoney",ErrorCode.NOT_HAVE_THIS_ACCEPTER);
-                    return;
-                }
-                user.setMoney(user.getMoney()-money);
-                accepter.setMoney(accepter.getMoney()+money);
-                userService.save(accepter);
-
-            });
-        }
-        GameManager.getInstance().getSaveUser2DB().add(user);
-
-        player.sendMsg("userService","giveOtherMoney",0);
         return 0;
     }
 
 
     /**
      * 获取昵称
-     * @param player
-     * @param accepterId
+     * @param msgKey
      * @return
      */
-    public int getNickNamePlayer(Player player, Long accepterId){
+    public int getNickNamePlayer(KafkaMsgKey msgKey){
         ThreadPool.getInstance().executor.execute(()->{
-            UserService userService = SpringUtil.getBean(UserService.class);
-            User accepter = userService.getUserByUserId(accepterId);
-            if(accepter==null){
-                player.sendMsg("userService","getNickNamePlayer",ErrorCode.NOT_HAVE_THIS_ACCEPTER);
+            UserBean userBean = userRedisService.getUserBean(msgKey.getUserId());
+            if(userBean==null){
+                ResponseVo vo = new ResponseVo("userService", "getNickNamePlayer", ErrorCode.NOT_HAVE_THIS_ACCEPTER);
+                sendMsg(msgKey, vo);
                 return;
             }
-            JSONObject jSONObject = new JSONObject();
+            Map<String,Object> results = new HashMap<String,Object>();
             try {
-                jSONObject.put("nickname", (URLDecoder.decode(accepter.getUsername(),"utf-8")));
+                results.put("nickname", (URLDecoder.decode(userBean.getUsername(),"utf-8")));
             }catch (Exception e){
-                player.sendMsg("userService","getNickNamePlayer",ErrorCode.NOT_HAVE_THIS_ACCEPTER);
+                ResponseVo vo = new ResponseVo("userService", "getNickNamePlayer", ErrorCode.NOT_HAVE_THIS_ACCEPTER);
+                sendMsg(msgKey, vo);
                 return;
             }
-            player.sendMsg("userService","getNickNamePlayer",jSONObject);
+            ResponseVo vo = new ResponseVo("userService", "getNickNamePlayer", results);
+            sendMsg(msgKey, vo);
         });
         return 0;
     }
 
-
-    public int getUserRecodeByUserId(Player player, int type){
-        User user = player.getUser();
-        List<Record.RoomRecord> records = user.getRecord().getRoomRecords().get(type);
-        List<Record.RoomRecord> recordNew = new ArrayList<Record.RoomRecord>();
-        if(records!= null){
-            for (Record.RoomRecord roomRecord:records) {
-                boolean temp = false;
-                a:for (Record.UserRecord userRecord:roomRecord.getRecords()) {
-                    if(userRecord.getScore()!=0.0){
-                        temp=true;
-                        break a;
-                    }
-                }
-                if(temp){
-                    recordNew.add(roomRecord);
-                }
-            }
-        }
-        player.sendMsg("userService","getUserRecodeByUserId",recordNew);
+    /**
+     * 查询战绩
+     * @param msgKey
+     * @return
+     */
+    public int getUserRecodeByUserId(KafkaMsgKey msgKey){
+        UserRecord userRecord = userRecordService.getUserByUserRecord(msgKey.getUserId());
+        ResponseVo vo = new ResponseVo("userService", "getNickNamePlayer", userRecord);
+        sendMsg(msgKey, vo);
         return 0;
     }
 
