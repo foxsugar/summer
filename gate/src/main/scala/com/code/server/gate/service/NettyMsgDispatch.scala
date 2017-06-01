@@ -3,7 +3,7 @@ package com.code.server.gate.service
 import com.code.server.constant.kafka.{IKafaTopic, KafkaMsgKey, KickUser}
 import com.code.server.constant.response.{ErrorCode, ResponseVo}
 import com.code.server.gate.config.ServerConfig
-import com.code.server.gate.kafka.MsgProducer
+import com.code.server.kafka.MsgProducer
 import com.code.server.redis.service.{RoomRedisService, UserRedisService}
 import com.code.server.util.{JsonUtil, SpringUtil}
 import io.netty.channel.ChannelHandlerContext

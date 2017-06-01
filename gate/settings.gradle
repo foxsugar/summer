@@ -1,2 +1,2 @@
 rootProject.name = 'gate'
-includeFlat  'util','constant','redis'
+includeFlat  'util','constant','redis','kafka'
