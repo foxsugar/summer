@@ -1,4 +1,4 @@
-package com.code.server.gate.util;
+package com.code.server.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

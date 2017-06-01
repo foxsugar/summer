@@ -34,7 +34,7 @@ public class MsgConsumer {
         KafkaMsgKey msgKey = JsonUtil.readValue(key,KafkaMsgKey.class);
         JsonNode msgValue = JsonUtil.readTree(value);
 
-        roomMsgDispatch.
+        roomMsgDispatch.dispatchMsg(msgKey,msgValue);
 
 
     }

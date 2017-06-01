@@ -1,10 +1,11 @@
 package com.code.server.game.room;
 
 
+import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
+import com.code.server.game.room.service.RoomManager;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
-import net.sf.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -80,7 +81,8 @@ public class Room implements IfaceRoom{
         while (true) {
             int id = random.nextInt(999999);
 
-            boolean isHas = GameManager.getInstance().rooms.containsKey(""+id);
+            boolean isHas = RedisManager.getRoomRedisService().isExist(""+id);
+
             if (!isHas) {
                 return id;
             }
@@ -111,11 +113,9 @@ public class Room implements IfaceRoom{
 
 
 
-    public int joinRoom(Player player) {
-        long userId = player.getUserId();
-        if(GameManager.getInstance().getRoomByUser(player.getUserId())!=null){
-            return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;
-        }
+    public int joinRoom(long userId) {
+
+
         if (this.users.contains(userId)) {
             return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;
         }
@@ -123,67 +123,72 @@ public class Room implements IfaceRoom{
             return ErrorCode.CANNOT_JOIN_ROOM_IS_FULL;
 
         }
-        if (!isCanJoinCheckMoney(player)) {
+        if(RedisManager.getUserRedisService().getRoomId(userId) != null){
+            return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;
+        }
+        if (!isCanJoinCheckMoney(userId)) {
             return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
         }
 
 
 
-        roomAddUser(player);
+        roomAddUser(userId);
         //加进玩家-房间映射表
-        noticeJoinRoom(player);
+        noticeJoinRoom(userId);
 
         return 0;
     }
 
-    protected void roomAddUser(Player player) {
-        User user = player.getUser();
-        long userId = user.getUserId();
+    //TODO
+    protected void addUser2RoomRedis(long userId){
+        RedisManager.getUserRedisService().setRoomId(userId, roomId);
+    }
+
+    protected void removeUserRoomRedis(long userId){
+        RedisManager.getUserRedisService().removeRoom(userId);
+    }
+    protected void roomAddUser(long userId) {
+
         this.users.add(userId);
         this.userStatus.put(userId, 0);
         this.userScores.put(userId, 0D);
-        this.userMap.put(userId, player.getUser());
-        GameManager.getInstance().getUserRoom().put(player.getUserId(),roomId);
+        addUser2RoomRedis(userId);
     }
 
-    protected void roomRemoveUser(Player player) {
-        User user = player.getUser();
-        long userId = user.getUserId();
+    protected void roomRemoveUser(long userId) {
+
         this.users.remove(userId);
         this.userStatus.remove(userId);
         this.userScores.remove(userId);
-        this.userMap.remove(userId);
-        GameManager.getInstance().getUserRoom().remove(userId);
+        removeUserRoomRedis(userId);
     }
 
 
-    public void noticeJoinRoom(Player player){
+    public void noticeJoinRoom(long userId){
         List<UserVo> usersList = new ArrayList<>();
         UserOfRoom userOfRoom = new UserOfRoom();
         int readyNumber = 0;
-        for (long userId : users) {
-            User user = this.userMap.get(userId);
-            usersList.add(GameManager.getUserVo(user));
-        }
+//        for (long uid : users) {
+//            User user = this.userMap.get(uid);
+//            usersList.add(GameManager.getUserVo(user));
+//        }
 
 
-        userOfRoom.setUserList(usersList);
+        userOfRoom.setUserList(RedisManager.getUserRedisService().getUserBeans(users));
         userOfRoom.setInRoomNumber(users.size());
         userOfRoom.setReadyNumber(readyNumber);
 
 
-        player.sendMsg(new ResponseVo("roomService","joinRoom",new RoomVo(this,player)));
+        Player.sendMsg2Player(new ResponseVo("roomService","joinRoom",this.toVo()),userId);
 
         Player.sendMsg2Player(new ResponseVo("roomService","roomNotice",userOfRoom), this.getUsers());
 
 
     }
 
-    protected boolean isCanJoinCheckMoney(Player player) {
-        if (player.getUserId() == createUser) {
-
-            User user = player.getUser();
-            if (user.getMoney() < createNeedMoney) {
+    protected boolean isCanJoinCheckMoney(long userId) {
+        if (userId == createUser) {
+            if (RedisManager.getUserRedisService().getUserMoney(userId) < createNeedMoney) {
                 return false;
             }
         }
@@ -191,8 +196,7 @@ public class Room implements IfaceRoom{
     }
 
 
-    public int quitRoom(Player player) {
-        long userId = player.getUserId();
+    public int quitRoom(long userId) {
         if (!this.users.contains(userId)) {
             return ErrorCode.CANNOT_QUIT_ROOM_NOT_EXIST;
 
@@ -202,18 +206,12 @@ public class Room implements IfaceRoom{
             return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME;
         }
         //删除玩家房间映射关系
-        roomRemoveUser(player);
+        roomRemoveUser(userId);
 
 //        GameManager.getInstance().getUserRoom().remove(userId);
 
-        if (this.createUser == player.getUserId()) {//房主解散
+        if (this.createUser == userId) {//房主解散
 
-            //退钱
-            User user = userMap.get(createUser);
-            if (user != null) {
-                user.setMoney(user.getMoney() + getNeedMoney(this.gameNumber));
-                GameManager.getInstance().getSaveUser2DB().add(user);
-            }
             Notice n = new Notice();
             n.setMessage("roomNum "+this.getRoomId()+" :has destroy success!");
             Player.sendMsg2Player(new ResponseVo("roomService","destroyRoom",n), this.getUsers());
@@ -223,22 +221,22 @@ public class Room implements IfaceRoom{
 
         }
 
-        noticeQuitRoom(player);
+        noticeQuitRoom(userId);
 
         return 0;
     }
 
 
-    protected void noticeQuitRoom(Player player){
+    protected void noticeQuitRoom(long userId){
         List<UserVo> usersList = new ArrayList<>();
         UserOfRoom userOfRoom = new UserOfRoom();
 
         List<Long> noticeList = this.getUsers();
 
-        for (long userId : users) {
-            User user = this.userMap.get(userId);
-            usersList.add(GameManager.getUserVo(user));
-        }
+//        for (long uid : users) {
+//            User user = this.userMap.get(uid);
+//            usersList.add(GameManager.getUserVo(user));
+//        }
         int inRoomNumber = this.getUsers().size();
         int readyNumber = 0;
 
@@ -247,7 +245,7 @@ public class Room implements IfaceRoom{
                 readyNumber++;
             }
         }
-        userOfRoom.setUserList(usersList);
+        userOfRoom.setUserList(RedisManager.getUserRedisService().getUserBeans(users));
         userOfRoom.setInRoomNumber(inRoomNumber);
         userOfRoom.setReadyNumber(readyNumber);
 
@@ -258,12 +256,11 @@ public class Room implements IfaceRoom{
         n.setMessage("quit room success!");
 
         ResponseVo result = new ResponseVo("roomService","quitRoom",n);
-        player.sendMsg(result);
+        Player.sendMsg2Player(result,userId);
 
     }
 
-    public int getReady(Player player) {
-        long userId = player.getUserId();
+    public int getReady(long userId) {
         if (!this.users.contains(userId)) {
             return ErrorCode.CANNOT_FIND_THIS_USER;
 
@@ -294,7 +291,7 @@ public class Room implements IfaceRoom{
         if (readyNum >= personNumber) {
             startGame();
         }
-        player.sendMsg(new ResponseVo("roomService","getReady",0));
+        Player.sendMsg2Player(new ResponseVo("roomService","getReady",0),userId);
         return 0;
     }
 
@@ -321,26 +318,25 @@ public class Room implements IfaceRoom{
 
 
         //通知其他人游戏已经开始
-        CardEntity cardBegin = new CardEntity();
-        cardBegin.setCurrentUserId(this.getBankerId() + "");
+//        CardEntity cardBegin = new CardEntity();
+//        cardBegin.setCurrentUserId(this.getBankerId() + "");
         Player.sendMsg2Player(new ResponseVo("gameService","gameBegin","ok"), this.getUsers());
         pushScoreChange();
     }
 
     public void pushScoreChange() {
-        Gson gson = new Gson();
-        String json = gson.toJson(userScores);
-        JSONObject beginResult = new JSONObject();
-        beginResult.put("service", "gameService");
-        beginResult.put("method", "scoreChange");
-        beginResult.put("params", json);
-        beginResult.put("code", "0");
-        Player.sendMsg2Player(beginResult,this.getUsers());
+//        Gson gson = new Gson();
+//        String json = gson.toJson(userScores);
+//        JSONObject beginResult = new JSONObject();
+//        beginResult.put("service", "gameService");
+//        beginResult.put("method", "scoreChange");
+//        beginResult.put("params", json);
+//        beginResult.put("code", "0");
+        Player.sendMsg2Player(new ResponseVo("gameService","scoreChange",userScores),this.getUsers());
     }
 
 
-    public int dissolution(Player player,boolean agreeOrNot,String methodName) {
-        long userId = player.getUserId();
+    public int dissolution(long userId, boolean agreeOrNot, String methodName) {
         if (!this.users.contains(userId)) {
             return ErrorCode.CANNOT_FIND_THIS_USER;
 
@@ -419,7 +415,7 @@ public class Room implements IfaceRoom{
 
         AskQuitRoom send = new AskQuitRoom();
         send.setNote("ok");
-        player.sendMsg("roomService",methodName,send);
+        Player.sendMsg2Player("roomService",methodName,send,userId);
 
         return 0;
     }
@@ -429,7 +425,8 @@ public class Room implements IfaceRoom{
      */
     protected void dissolutionRoom(){
 
-        GameManager.getInstance().removeRoom(this);
+//        GameManager.getInstance().removeRoom(this);
+        RoomManager.removeRoom(this.roomId);
 
 
         // 结果类
@@ -437,7 +434,7 @@ public class Room implements IfaceRoom{
 
         long time = System.currentTimeMillis();
 
-        for(User user : this.userMap.values()){
+        for(UserBean user : RedisManager.getUserRedisService().getUserBeans(users)){
             UserOfResult resultObj = new UserOfResult();
             try {
                 resultObj.setUsername(URLDecoder.decode(user.getUsername(), "utf-8"));
@@ -445,13 +442,13 @@ public class Room implements IfaceRoom{
                 e.printStackTrace();
             }
             resultObj.setImage(user.getImage());
-            resultObj.setScores(""+this.userScores.get(user.getUserId()));
-            resultObj.setUserId(user.getUserId());
+            resultObj.setScores(""+this.userScores.get(user.getId()));
+            resultObj.setUserId(user.getId());
             resultObj.setTime(time);
 
             userOfResultList.add(resultObj);
             //删除映射关系
-            GameManager.getInstance().getUserRoom().remove(user.getUserId());
+            RedisManager.getUserRedisService().removeRoom(user.getId());
         }
 
 
@@ -470,12 +467,7 @@ public class Room implements IfaceRoom{
         gameOfResult.setUserList(userOfResultList);
         gameOfResult.setEndTime(new Date().toLocaleString());
 
-        JSONObject noticeEndResult = new JSONObject();
-        noticeEndResult.put("service", "gameService");
-        noticeEndResult.put("method", "askNoticeDissolutionResult");
-        noticeEndResult.put("params", gameOfResult);
-        noticeEndResult.put("code", "0");
-        Player.sendMsg2Player(noticeEndResult, this.users);
+        Player.sendMsg2Player(new ResponseVo("gameService","askNoticeDissolutionResult",gameOfResult), this.users);
 
     }
     public void clearReadyStatus(boolean isAddGameNum) {
@@ -504,19 +496,48 @@ public class Room implements IfaceRoom{
     }
 
     public void drawBack() {
-        User user = userMap.get(this.createUser);
-        if (user != null) {
-            user.setMoney(user.getMoney() + createNeedMoney);
-            GameManager.getInstance().getSaveUser2DB().add(user);
-        }
+        RedisManager.getUserRedisService().addUserMoney(this.createUser, createNeedMoney);
+//        User user = userMap.get(this.createUser);
+//        if (user != null) {
+//            user.setMoney(user.getMoney() + createNeedMoney);
+//            GameManager.getInstance().getSaveUser2DB().add(user);
+//        }
     }
 
     public void spendMoney() {
-        User user = userMap.get(this.createUser);
-        if (user != null) {
-            user.setMoney(user.getMoney() - createNeedMoney);
-            GameManager.getInstance().getSaveUser2DB().add(user);
-        }
+        RedisManager.getUserRedisService().addUserMoney(this.createUser, -createNeedMoney);
+//        User user = userMap.get(this.createUser);
+//        if (user != null) {
+//            user.setMoney(user.getMoney() - createNeedMoney);
+//            GameManager.getInstance().getSaveUser2DB().add(user);
+//        }
+    }
+
+
+    @Override
+    public IfaceRoomVo toVo() {
+        RoomVo roomVo = new RoomVo();
+        roomVo.createType = this.getCreateType();
+        roomVo.roomId = this.getRoomId();
+        roomVo.multiple = this.getMultiple();
+        roomVo.gameNumber = this.getGameNumber();
+        roomVo.createUser = this.getCreateUser();
+        roomVo.userStatus.putAll(this.getUserStatus());
+        roomVo.userScores.putAll(this.getUserScores());
+        roomVo.curGameNumber = this.getCurGameNumber();
+        roomVo.goldRoomType = this.getGoldRoomType();
+        roomVo.isLastDraw = this.isLastDraw();
+        roomVo.drawForLeaveChip = this.getDrawForLeaveChip();
+        roomVo.personNumber = this.getPersonNumber();
+        roomVo.hasNine = this.getHasNine();
+
+//        for(long uid : this.getUsers()){
+//            roomVo.userList.add(GameManager.getUserVo(uid));
+//        }
+        roomVo.userList.addAll(RedisManager.getUserRedisService().getUserBeans(users));
+
+        roomVo.game = this.game.toVo();
+        return roomVo;
     }
 
     public String getRoomId() {
@@ -572,14 +593,7 @@ public class Room implements IfaceRoom{
         return this;
     }
 
-    public Map<Long, User> getUserMap() {
-        return userMap;
-    }
 
-    public Room setUserMap(Map<Long, User> userMap) {
-        this.userMap = userMap;
-        return this;
-    }
 
     public int getMultiple() {
         return multiple;
@@ -726,4 +740,6 @@ public class Room implements IfaceRoom{
     public void setDealFirstOfRoom(Long dealFirstOfRoom) {
         this.dealFirstOfRoom = dealFirstOfRoom;
     }
+
+
 }

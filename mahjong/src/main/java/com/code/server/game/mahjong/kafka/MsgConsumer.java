@@ -14,10 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class MsgConsumer {
 
-    @KafkaListener(id = "baz", topicPartitions = {
-            @TopicPartition(topic = "test", partitions = "${serverConfig.serverId}")
+    @KafkaListener(id = "gameLogicService", topicPartitions = {
+            @TopicPartition(topic = "gameLogicService", partitions = "${serverConfig.serverId}")
     })
     public void listen(ConsumerRecord<?, ?> record) {
+
 
         System.out.println(record.toString());
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);

@@ -1,5 +1,7 @@
 package com.code.server.constant.response;
 
+import com.code.server.constant.game.UserBean;
+
 import java.util.List;
 
 public class UserOfRoom {
@@ -9,7 +11,7 @@ public class UserOfRoom {
     //准备好的人数
     private int readyNumber;
     
-    private List<UserVo> userList;
+    private List<UserBean> userList;
     
     
     
@@ -28,15 +30,13 @@ public class UserOfRoom {
 	public void setReadyNumber(int readyNumber) {
 		this.readyNumber = readyNumber;
 	}
-	
-	public List<UserVo> getUserList() {
+
+	public List<UserBean> getUserList() {
 		return userList;
 	}
 
-	public void setUserList(List<UserVo> userList) {
+	public UserOfRoom setUserList(List<UserBean> userList) {
 		this.userList = userList;
+		return this;
 	}
-
-
-
 }

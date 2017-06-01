@@ -4,7 +4,6 @@ import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.game.room.service.RoomManager;
 import com.fasterxml.jackson.databind.JsonNode;
-import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,19 +21,19 @@ public class RoomMsgDispatch {
 
         String roomId = msgKey.getRoomId();
         long userId = msgKey.getUserId();
+        int code = dispatchRoomService(method, params, userId,roomId);
+        if(code != 0){
+            Player.sendMsg2Player(service,method,code,userId);
+        }
+
 
     }
 
     private int dispatchRoomService(String method, JsonNode params, long userId,String roomId) {
-        Player player = GameManager.getPlayerByCtx(ctx);
-        if (player == null) {
-            return ErrorCode.YOU_HAVE_NOT_LOGIN;
-        }
+
 
         switch (method) {
-            case "reconnection" :{
 
-            }
 //            case "createRoom":{
 //
 //                int gameNumber = params.getInt("gameNumber");
@@ -56,7 +55,7 @@ public class RoomMsgDispatch {
                 if (room == null) {
                     return ErrorCode.CANNOT_JOIN_ROOM_NOT_EXIST;
                 }
-                return room.joinRoom(player);
+                return room.joinRoom(userId);
             }
 //            case "joinRoomQuick":{
 //                double type = params.getDouble("type");
@@ -65,33 +64,33 @@ public class RoomMsgDispatch {
 //
 //            }
             case "quitRoom": {
-                Room room = getRoomByPlayer(player);
+                Room room = RoomManager.getRoom(roomId);
                 if (room == null) {
                     return ErrorCode.CAN_NOT_NO_ROOM;
                 }
-                return room.quitRoom(player);
+                return room.quitRoom(userId);
             }
             case "getReady": {
-                Room room = getRoomByPlayer(player);
+                Room room = RoomManager.getRoom(roomId);
                 if (room == null) {
                     return ErrorCode.CAN_NOT_NO_ROOM;
                 }
-                return room.getReady(player);
+                return room.getReady(userId);
             }
             case "dissolveRoom": {
-                Room room = getRoomByPlayer(player);
+                Room room = RoomManager.getRoom(roomId);
                 if (room == null) {
                     return ErrorCode.CAN_NOT_NO_ROOM;
                 }
-                return room.dissolution(player, true, method);
+                return room.dissolution(userId, true, method);
             }
             case "answerIfDissolveRoom":
-                Room room = getRoomByPlayer(player);
+                Room room = RoomManager.getRoom(roomId);
                 if (room == null) {
                     return ErrorCode.CAN_NOT_NO_ROOM;
                 }
-                boolean isAgree = "2".equals(params.getString("answer"));
-                return room.dissolution(player, isAgree, method);
+                boolean isAgree = "2".equals(params.get("answer").asText());
+                return room.dissolution(userId, isAgree, method);
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

@@ -2,6 +2,11 @@ package com.code.server.game.room;
 
 
 
+import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.response.ResponseVo;
+import com.code.server.kafka.MsgProducer;
+import com.code.server.util.SpringUtil;
+
 import java.util.List;
 
 /**
@@ -9,25 +14,15 @@ import java.util.List;
  */
 public class Player {
     private long userId;
-    private User user;
-    private ChannelHandlerContext ctx;
     private long lastSendMsgTime;//上次发消息时间
 
-    public void sendMsg(Object msg){
-        this.ctx.writeAndFlush(msg);
-    }
 
-    public void sendMsg(String service, String method, Object msg) {
-        sendMsg(new ResponseVo(service,method,msg));
-    }
 
-    public void sendMsg(String service, String method, int code) {
-        sendMsg(new ResponseVo(service,method,code));
-    }
+
     public static void sendMsg2Player(Object msg, long userId) {
-        Player other = GameManager.getInstance().players.get(userId);
-        if (other != null && other.ctx != null) {
-            other.ctx.writeAndFlush(msg);
+        String gateId = RedisManager.getUserRedisService().getGateId(userId);
+        if (gateId != null) {
+            SpringUtil.getBean(MsgProducer.class).send2Partition(IKafaTopic.GATE_TOPIC,Integer.valueOf(gateId),""+userId,msg);
         }
     }
 
@@ -65,23 +60,6 @@ public class Player {
         return this;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public Player setUser(User user) {
-        this.user = user;
-        return this;
-    }
-
-    public ChannelHandlerContext getCtx() {
-        return ctx;
-    }
-
-    public Player setCtx(ChannelHandlerContext ctx) {
-        this.ctx = ctx;
-        return this;
-    }
 
 
 

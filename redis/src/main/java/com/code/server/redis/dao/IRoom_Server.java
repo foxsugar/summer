@@ -9,4 +9,6 @@ public interface IRoom_Server {
     void setServerId(String roomId, String serverid);
 
     void removeServer(String roomId);
+
+    boolean isExist(String roomId);
 }

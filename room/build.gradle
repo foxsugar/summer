@@ -25,9 +25,10 @@ repositories {
 
 dependencies {
 	compile project(path: ':util')
+	compile project(path: ':redis')
 	compile project(path: ':constant')
 	compile project(path: ':kafka')
-	compile "net.sf.json-lib:json-lib:2.4:jdk15"
-	compile('org.springframework.boot:spring-boot-starter-data-redis')
+//	compile "net.sf.json-lib:json-lib:2.4:jdk15"
+//	compile('org.springframework.boot:spring-boot-starter-data-redis')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

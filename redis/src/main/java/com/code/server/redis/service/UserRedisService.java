@@ -12,6 +12,8 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by sunxianping on 2017/5/25.
  */
@@ -36,9 +38,10 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     }
 
     @Override
-    public void removeRoom(long userId) {
+    public void removeRoom(long... userId) {
         HashOperations<String,Long,String> user_room = redisTemplate.opsForHash();
         user_room.delete(USERID_ROOMID, userId);
+
     }
 
     @Override
@@ -82,6 +85,14 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
         HashOperations<String,Long,UserBean> user_bean = redisTemplate.opsForHash();
         return user_bean.get(USER_BEAN, userId);
     }
+
+    @Override
+    public List<UserBean> getUserBeans(List<Long> users) {
+        HashOperations<String,Long,UserBean> user_bean = redisTemplate.opsForHash();
+        user_bean.multiGet(USER_BEAN, users);
+        return null;
+    }
+
 
     @Override
     public void updateUserBean(long userId, UserBean userBean) {

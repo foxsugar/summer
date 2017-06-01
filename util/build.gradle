@@ -24,11 +24,11 @@ repositories {
 
 
 dependencies {
-//	compile('org.springframework.boot:spring-boot-starter')
+	compile('org.springframework.boot:spring-boot-starter')
 	//jackson
 	compile 'com.fasterxml.jackson.core:jackson-core:2.8.7'
 	compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.7'
 	compile 'com.fasterxml.jackson.core:jackson-databind:2.8.7'
-	compile('org.springframework.boot:spring-boot-starter-logging')
+//	compile('org.springframework.boot:spring-boot-starter-logging')
 //	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

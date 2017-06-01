@@ -25,4 +25,12 @@ public class RoomManager {
     public static Room getRoom(String roomId){
         return getInstance().rooms.get(roomId);
     }
+
+    public static void removeRoom(String roomId) {
+        getInstance().rooms.remove(roomId);
+    }
+
+    public static void addRoom(String roomId, Room room) {
+        getInstance().rooms.put(roomId, room);
+    }
 }

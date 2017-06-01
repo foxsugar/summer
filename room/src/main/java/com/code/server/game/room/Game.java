@@ -1,5 +1,8 @@
 package com.code.server.game.room;
 
+
+import com.code.server.constant.response.IfaceGameVo;
+
 import java.util.List;
 
 /**
@@ -11,5 +14,15 @@ public class Game implements IfaceGame{
 
     public void startGame(List<Long> users,Room room){
 
+    }
+
+    @Override
+    public IfaceGameVo toVo() {
+        return null;
+    }
+
+    @Override
+    public IfaceGameVo toVo(long watchUser) {
+        return null;
     }
 }
