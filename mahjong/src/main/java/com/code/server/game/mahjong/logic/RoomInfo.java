@@ -58,7 +58,7 @@ public class RoomInfo extends Room {
      * @Creater: Clark
      * @Description: 创建房间
      */
-    public void init(String roomId, int userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, long createUser, long bankerId) {
+    public void init(String roomId, long userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, long createUser, long bankerId) {
         this.roomId = roomId;
         this.modeTotal = modeTotal;
         this.mode = mode;
@@ -309,14 +309,7 @@ public class RoomInfo extends Room {
         return "LQ".equals(gameType);
     }
 
-    private void addGold(long userId, double add) {
-        if (isAddGold()) {
 
-            UserBean userBean = RedisManager.getUserRedisService().getUserBean(this.createUser);
-            userBean.setGold(userBean.getGold() + add);
-            RedisManager.getUserRedisService().updateUserBean(userId, userBean);
-        }
-    }
 
     public void drawBack() {
 
@@ -325,7 +318,9 @@ public class RoomInfo extends Room {
         } else {
             int money = getCreateMoney();
             RedisManager.getUserRedisService().addUserMoney(this.createUser, money);
-            addGold(this.createUser, -money / 10);
+            if (isAddGold()) {
+                RedisManager.addGold(this.createUser, -money / 10);
+            }
 
 
         }
@@ -338,7 +333,9 @@ public class RoomInfo extends Room {
                 money = 20;
             }
             RedisManager.getUserRedisService().addUserMoney(userId, money);
-            addGold(this.createUser, -money / 10);
+            if (isAddGold()) {
+                RedisManager.addGold(this.createUser, -money / 10);
+            }
         }
     }
 
@@ -351,7 +348,10 @@ public class RoomInfo extends Room {
         } else {
             int money = -getCreateMoney();
             RedisManager.getUserRedisService().addUserMoney(this.createUser, money);
-            addGold(this.createUser, -money / 10);
+            if (isAddGold()) {
+
+                RedisManager.addGold(this.createUser, -money / 10);
+            }
         }
     }
 
@@ -362,7 +362,9 @@ public class RoomInfo extends Room {
                 money = 20;
             }
             RedisManager.getUserRedisService().addUserMoney(userId, -money);
-            addGold(this.createUser, money / 10);
+            if (isAddGold()) {
+                RedisManager.addGold(this.createUser, money / 10);
+            }
         }
     }
 

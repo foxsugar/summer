@@ -1,7 +1,9 @@
 package com.code.server.game.mahjong.response;
 
-import com.byz.mj.serviceNew.GameInfo;
-import com.byz.mj.serviceNew.PlayerCardsInfo;
+
+
+import com.code.server.game.mahjong.logic.GameInfo;
+import com.code.server.game.mahjong.logic.PlayerCardsInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ public class ReconnectResp {
 
     public ReconnectResp(){}
 
-    public ReconnectResp(GameInfo gameInfo,int userId) {
+    public ReconnectResp(GameInfo gameInfo, long userId) {
         disCard = gameInfo.getDisCard();
         isHasBao = gameInfo.getBaoCard() != null;
         baoCard = gameInfo.getBaoCard();
@@ -30,7 +32,7 @@ public class ReconnectResp {
         isAllPass = gameInfo.getWaitingforList().size() ==0;
 
         for (PlayerCardsInfo playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
-            int uid = playerCardsInfo.getUserId();
+            long uid = playerCardsInfo.getUserId();
             boolean isMine = userId == uid;
             playerCards.add(new PlayerCardsResp(playerCardsInfo,isMine));
         }
