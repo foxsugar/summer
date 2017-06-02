@@ -1,7 +1,6 @@
-package com.code.server.game.room;
+package com.code.server.constant.game;
 
 
-import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.response.IfacePlayerInfoVo;
 
 /**

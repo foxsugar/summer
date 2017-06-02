@@ -71,6 +71,7 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     @Override
     public double addUserMoney(long userId, double money) {
         HashOperations<String,Long,Double> user_money = redisTemplate.opsForHash();
+        //todo 把修改后的值放入userBean里
         return user_money.increment(USER_MONEY,userId,money);
     }
 

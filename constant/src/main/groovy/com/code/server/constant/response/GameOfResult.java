@@ -1,19 +1,21 @@
 package com.code.server.constant.response;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameOfResult {
 	
-	private ArrayList<UserOfResult> userList;
+	private List<UserOfResult> userList;
 
 	private String endTime;
 
-	public ArrayList<UserOfResult> getUserList() {
+	public List<UserOfResult> getUserList() {
 		return userList;
 	}
 
-	public void setUserList(ArrayList<UserOfResult> userList) {
+	public GameOfResult setUserList(List<UserOfResult> userList) {
 		this.userList = userList;
+		return this;
 	}
 
 	public String getEndTime() {

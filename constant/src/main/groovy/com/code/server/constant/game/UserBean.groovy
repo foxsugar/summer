@@ -14,6 +14,7 @@ class UserBean implements IUserBean {
     String account; // required
     String ipConfig; // required
     double money; // required
+    double gold;
     String roomId; // required
     int vip; // required
     String uuid; // required
