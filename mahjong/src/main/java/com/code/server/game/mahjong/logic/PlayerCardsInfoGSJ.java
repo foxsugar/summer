@@ -1,6 +1,7 @@
 package com.code.server.game.mahjong.logic;
 
-import com.byz.mj.util.*;
+
+import com.code.server.game.mahjong.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +98,7 @@ public class PlayerCardsInfoGSJ extends PlayerCardsInfo {
 	
 	// 杠牌分数计算
 	@Override
-    public void gangCompute(RoomInfo room,GameInfo gameInfo,boolean isMing,int diangangUser,String card){
+    public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card){
 		super.gangCompute(room,gameInfo,isMing,diangangUser,card);
     	if(!isMing){//暗杠
         	for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
@@ -120,7 +121,7 @@ public class PlayerCardsInfoGSJ extends PlayerCardsInfo {
 	
 	// 胡牌分数计算
 	@Override
-	public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo,int dianpaoUser, String card) {
+	public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
 		List<String> cs = getCardsNoChiPengGang(cards);
 		List<HuCardType> huList = HuUtil.isHu(cs, this,CardTypeUtil.cardType.get(card) , new HuLimit(0));
 		//设置胡牌类型
@@ -374,7 +375,7 @@ public class PlayerCardsInfoGSJ extends PlayerCardsInfo {
 	* @return int    返回类型
 	* @throws
 	 */
-	public static int bankerNumber(Map<Integer,Integer> bankerMap){
+	public static int bankerNumber(Map<Integer,Long> bankerMap){
 		int continueNum = 0;
 		int maxGameNum = 0;
 		Set<Integer> number = bankerMap.keySet();
@@ -384,7 +385,7 @@ public class PlayerCardsInfoGSJ extends PlayerCardsInfo {
 			}
 		}
 		for (int i = maxGameNum; i > 1; i--) {
-			if(bankerMap.get(i) == (int)bankerMap.get(i-1)){
+			if(bankerMap.get(i).longValue()== bankerMap.get(i-1)){
 				continueNum++;
 			}else{
 				return continueNum;

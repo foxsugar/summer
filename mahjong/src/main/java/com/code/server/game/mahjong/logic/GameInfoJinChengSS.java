@@ -1,9 +1,6 @@
 package com.code.server.game.mahjong.logic;
 
-import com.byz.mj.dao.GameDao;
-import com.byz.mj.dao.RoomDao;
-import com.byz.mj.dao.UserDao;
-import com.byz.mj.dao.UserRecodeDao;
+
 
 import java.util.List;
 
@@ -29,12 +26,8 @@ public class GameInfoJinChengSS extends GameInfo {
      * @param users
      */
     @Override
-    public void init(int gameId, int firstTurn, List<Integer> users, RoomInfo room, RoomDao roomDao, UserRecodeDao userRecodeDao, UserDao userDao, GameDao gameDao) {
+    public void init(int gameId, long firstTurn, List<Long> users, RoomInfo room) {
         this.gameId = gameId;
-        this.userDao = userDao;
-        this.gameDao = gameDao;
-        this.roomDao = roomDao;
-        this.userRecodeDao = userRecodeDao;
         this.firstTurn = firstTurn;
         this.turnId = firstTurn;
         remainCards.addAll(CardTypeUtil.ALL_CARD);

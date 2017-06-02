@@ -1,8 +1,10 @@
 package com.code.server.game.mahjong.logic;
 
-import com.byz.mj.util.HuCardType;
-import com.byz.mj.util.HuLimit;
-import com.byz.mj.util.HuUtil;
+
+
+import com.code.server.game.mahjong.util.HuCardType;
+import com.code.server.game.mahjong.util.HuLimit;
+import com.code.server.game.mahjong.util.HuUtil;
 
 import java.util.*;
 
@@ -77,7 +79,7 @@ public class PlayerCardsInfoLS extends PlayerCardsInfo{
 	
 	
     //胡牌分数计算
-    public void huCompute(RoomInfo room,GameInfo gameInfo,boolean isZimo,int dianpaoUser,String card){
+    public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card){
     	int scale = room.getMultiple();
         List<HuCardType> huList = HuUtil.isHu(getCardsNoChiPengGang(cards), this, CardTypeUtil.cardType.get(card), new HuLimit(0));
         
@@ -383,10 +385,10 @@ public class PlayerCardsInfoLS extends PlayerCardsInfo{
 	
     /**
      * 碰
-     * @param card
+	 * @param card
      * @param playUser 碰的谁的牌
-     */
-    public void peng(String card,int playUser) {
+	 */
+    public void peng(String card, long playUser) {
         super.peng(card, playUser);
         List<String> temp = new ArrayList<>();
 		for(String cardLs:first_four){
@@ -411,8 +413,8 @@ public class PlayerCardsInfoLS extends PlayerCardsInfo{
      * 手里杠
      */
 	@Override
-	public boolean gang_hand(RoomInfo room, GameInfo info, int diangangUser,
-			String card) {
+	public boolean gang_hand(RoomInfo room, GameInfo info, long diangangUser,
+							 String card) {
 		boolean r = super.gang_hand(room, info, diangangUser, card);
 		List<String> temp = new ArrayList<>();
 		for(String cardLs:first_four){
@@ -429,7 +431,7 @@ public class PlayerCardsInfoLS extends PlayerCardsInfo{
 	 */
 	@Override
 	public boolean gang_discard(RoomInfo room, GameInfo gameInfo,
-			int diangangUser, String disCard) {
+								long diangangUser, String disCard) {
 		boolean r = super.gang_discard(room, gameInfo, diangangUser, disCard);
 		List<String> temp = new ArrayList<>();
 		for(String cardLs:first_four){

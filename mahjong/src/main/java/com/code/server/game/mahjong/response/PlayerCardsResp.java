@@ -1,7 +1,8 @@
 package com.code.server.game.mahjong.response;
 
-import com.byz.mj.serviceNew.PlayerCardsInfo;
-import com.byz.mj.serviceNew.PlayerCardsInfoLS;
+
+import com.code.server.game.mahjong.logic.PlayerCardsInfo;
+import com.code.server.game.mahjong.logic.PlayerCardsInfoLS;
 
 import java.util.*;
 
@@ -11,7 +12,7 @@ import java.util.*;
  */
 public class PlayerCardsResp {
 
-    private int userId;
+    private long userId;
     List<String> cards = new ArrayList<>();//手上的牌
     List<String> handCards = new ArrayList<>();
     private List<String> disCards = new ArrayList<>();//丢弃的牌
@@ -22,7 +23,7 @@ public class PlayerCardsResp {
     private Map<Integer, List<String>> xuanfengdan = new HashMap<>();
     private List<String> firstfourLS = new ArrayList<>();//立四前四张
     private boolean isTing = false;
-    private int score;
+    private double score;
     private int lastOperate;
     private String catchCard;
 
@@ -38,8 +39,8 @@ public class PlayerCardsResp {
 
     private List<Integer> winType = new ArrayList<>();
     private int fan;
-    private int allScore;
-    private int gangScore;
+    private double allScore;
+    private double gangScore;
     private Set<Integer> baoMingDan = new HashSet<>();
     private Set<Integer> baoAnDan = new HashSet<>();
 
@@ -97,17 +98,17 @@ public class PlayerCardsResp {
 
     public static class Group{
         int type;
-        int userId;
+        long userId;
 
-        public Group(int type, int userId) {
+        public Group(int type, long userId) {
             this.type = type;
             this.userId = userId;
         }
     }
 
-    private List<Group> getGroup(Map<Integer,Integer> map) {
+    private List<Group> getGroup(Map<Integer,Long> map) {
         List<Group> list = new ArrayList<>();
-        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+        for (Map.Entry<Integer, Long> entry : map.entrySet()) {
             Group group = new Group(entry.getKey(), entry.getValue());
             list.add(group);
         }
@@ -115,12 +116,13 @@ public class PlayerCardsResp {
     }
 
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public PlayerCardsResp setUserId(long userId) {
         this.userId = userId;
+        return this;
     }
 
     public List<String> getCards() {
@@ -175,16 +177,16 @@ public class PlayerCardsResp {
         this.isTing = isTing;
     }
 
-    public int getScore() {
+    public double getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public PlayerCardsResp setScore(double score) {
         this.score = score;
+        return this;
     }
 
-
-	public List<String> getHandCards() {
+    public List<String> getHandCards() {
 		return handCards;
 	}
 
@@ -276,12 +278,21 @@ public class PlayerCardsResp {
         return this;
     }
 
-    public int getAllScore() {
+    public double getAllScore() {
         return allScore;
     }
 
-    public PlayerCardsResp setAllScore(int allScore) {
+    public PlayerCardsResp setAllScore(double allScore) {
         this.allScore = allScore;
+        return this;
+    }
+
+    public double getGangScore() {
+        return gangScore;
+    }
+
+    public PlayerCardsResp setGangScore(double gangScore) {
+        this.gangScore = gangScore;
         return this;
     }
 

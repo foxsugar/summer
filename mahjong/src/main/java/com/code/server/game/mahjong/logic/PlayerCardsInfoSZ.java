@@ -71,6 +71,12 @@ public class PlayerCardsInfoSZ extends PlayerCardsInfo {
         return need < 0 ? 0 : need;
     }
 
+    private boolean isCanHuYimenpai(HuCardType huCardType){
+        if(huCardType.specialHuList.contains(hu_缺两门) || huCardType.specialHuList.contains(hu_字一色)){
+            return true;
+        }
+        return false;
+    }
     @Override
     public boolean isCanTing(List<String> cards) {
         if (isTing) {
@@ -97,10 +103,11 @@ public class PlayerCardsInfoSZ extends PlayerCardsInfo {
         System.out.println("=================一张赢的所有类型 : "+yzyTingSet);
         //胡牌类型加上杠
         int needFan = getNeedFan(0);
-        List<HuCardType> list = getTingHuCardType(tempCards,new HuLimit(0));
+        List<HuCardType> list = getTingHuCardType(tempCards,null);
         for (HuCardType huCardType : list) {
             if (isHasYimenpai) {
-                if(huCardType.specialHuList.contains(hu_缺两门)){
+                FanUtil.compute(huCardType.cards, huCardType,huCardType.tingCardType , this);
+                if(isCanHuYimenpai(huCardType)){
                     return true;
                 }
             } else {
@@ -254,7 +261,7 @@ public class PlayerCardsInfoSZ extends PlayerCardsInfo {
 
 
         //胡牌类型加上杠
-        List<HuCardType> list = getTingHuCardType(cards,new HuLimit(0));
+        List<HuCardType> list = getTingHuCardType(cards,null);
         for (HuCardType huCardType : list) {
             HuCardType.setHuCardType(huCardType, this);
             if (isMing) {
@@ -263,7 +270,8 @@ public class PlayerCardsInfoSZ extends PlayerCardsInfo {
                 huCardType.anGang.add(cardType);
             }
             if (isHasYimenpai) {
-                if(huCardType.specialHuList.contains(hu_缺两门)){
+                FanUtil.compute(huCardType.cards, huCardType,huCardType.tingCardType , this);
+                if(isCanHuYimenpai(huCardType)){
                     return true;
                 }
             } else {
@@ -358,7 +366,7 @@ public class PlayerCardsInfoSZ extends PlayerCardsInfo {
     }
 
     @Override
-    public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, int dianpaoUser, String card) {
+    public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
         System.out.println("===========房间倍数============ "+room.getMultiple());
         int needFan = getNeedFan(0);
         System.out.println("胡的牌 : "+this.cards);
@@ -475,6 +483,7 @@ private static void change(){
 }
 
     public static void main(String[] args) {
+        System.out.println(isHasMode("0",MODE_YIMENPAI));
         change();
         PlayerCardsInfoSZ playerCardsInfo = new PlayerCardsInfoSZ();
         playerCardsInfo.isHasFengShun = true;

@@ -40,7 +40,7 @@ public class PlayerCardsInfoDPH extends PlayerCardsInfo {
 
 	//杠牌分数计算
 	@Override
-    public void gangCompute(RoomInfo room,GameInfo gameInfo,boolean isMing,int diangangUser,String card){
+    public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card){
 		super.gangCompute(room,gameInfo,isMing,diangangUser,card);
     	if(!isMing){//暗杠
         	for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
@@ -68,7 +68,7 @@ public class PlayerCardsInfoDPH extends PlayerCardsInfo {
     }
     //胡牌分数计算
 	@Override
-    public void huCompute(RoomInfo room,GameInfo gameInfo,boolean isZimo,int dianpaoUser,String card){
+    public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card){
 		List<String> cs = getCardsNoChiPengGang(cards);
 		List<HuCardType> huList = HuUtil.isHu(cs, this,CardTypeUtil.cardType.get(card) , new HuLimit(0));
 		//设置胡牌类型

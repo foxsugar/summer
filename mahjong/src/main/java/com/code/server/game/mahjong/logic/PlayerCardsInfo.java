@@ -21,12 +21,12 @@ public class PlayerCardsInfo implements HuType {
     public static final int type_chi = 7;
     public static final int type_xuanfengdan = 8;
 
-    protected int userId;
+    protected long userId;
     protected List<String> cards = new ArrayList<>();//手上的牌
     protected List<String> disCards = new ArrayList<>();//丢弃的牌
-    protected Map<Integer,Integer> pengType = new HashMap<>();//碰
+    protected Map<Integer,Long> pengType = new HashMap<>();//碰
     protected Set<Integer> anGangType = new HashSet<>();//暗杠
-    protected Map<Integer,Integer> mingGangType = new HashMap<>();//明杠
+    protected Map<Integer,Long> mingGangType = new HashMap<>();//明杠
     protected Set<Integer> chiType = new HashSet<>();
     protected List<List<String>> chiCards = new ArrayList<>();
     protected Map<Integer,List<String>> xuanfengDan = new HashMap<>();
@@ -139,7 +139,7 @@ public class PlayerCardsInfo implements HuType {
      * @param card
      * @param playUser 碰的谁的牌
      */
-    public void peng(String card,int playUser) {
+    public void peng(String card, long playUser) {
         this.cards.add(card);
         int cardType = CardTypeUtil.cardType.get(card);
         pengType.put(cardType, playUser);
@@ -332,7 +332,7 @@ public class PlayerCardsInfo implements HuType {
     protected void removeGang2Peng(String card) {
         int type = CardTypeUtil.getTypeByCard(card);
         mingGangType.remove(type);
-        pengType.put(type, -1);
+        pengType.put(type, -1L);
 
     }
 
@@ -558,15 +558,17 @@ public class PlayerCardsInfo implements HuType {
 
     /**
      * 杠手里的牌
+     *
+     * @param diangangUser
      * @param card
      * @return
      */
 
-    public boolean gang_hand(RoomInfo room,GameInfo info, int diangangUser,String card) {
+    public boolean gang_hand(RoomInfo room, GameInfo info, long diangangUser, String card) {
         boolean isMing = false;
         int cardType = CardTypeUtil.cardType.get(card);
         Map<Integer, Integer> cardNum = getCardNum(cards);
-        int diangang = -1;
+        long diangang = -1;
         if (cardNum.containsKey(cardType) && cardNum.get(cardType) == 4) {
             if (pengType.containsKey(cardType)) {//碰的类型包含这个 是明杠
                 //diangang = pengType.get(cardType);
@@ -584,10 +586,12 @@ public class PlayerCardsInfo implements HuType {
 
     /**
      * 杠弃牌
+     *
+     * @param diangangUser
      * @param disCard
      * @return
      */
-    public boolean gang_discard(RoomInfo room, GameInfo gameInfo,int diangangUser,String disCard) {
+    public boolean gang_discard(RoomInfo room, GameInfo gameInfo, long diangangUser, String disCard) {
 
         this.cards.add(disCard);
         int cardType = CardTypeUtil.cardType.get(disCard);
@@ -599,7 +603,7 @@ public class PlayerCardsInfo implements HuType {
     }
 
     //杠牌分数计算
-    public void gangCompute(RoomInfo room,GameInfo gameInfo,boolean isMing,int diangangUser,String card){
+    public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card){
         this.lastOperate = type_gang;
 
         operateList.add(type_gang);
@@ -607,7 +611,7 @@ public class PlayerCardsInfo implements HuType {
     }
 
     //胡牌分数计算
-    public void huCompute(RoomInfo room,GameInfo gameInfo,boolean isZimo,int dianpaoUser,String card){
+    public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card){
 
     }
 
@@ -723,7 +727,7 @@ public class PlayerCardsInfo implements HuType {
 	*
 	 */
 
-	public void hu_dianpao(RoomInfo room, GameInfo gameInfo, int dianpaoUser, String disCard) {
+	public void hu_dianpao(RoomInfo room, GameInfo gameInfo, long dianpaoUser, String disCard) {
         //胡牌次数
         room.addHuNum(this.userId);
         //连庄次数
@@ -807,15 +811,14 @@ public class PlayerCardsInfo implements HuType {
         return (c&(1<<type))>>type==1;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-
-    public void setUserId(int userId) {
+    public PlayerCardsInfo setUserId(long userId) {
         this.userId = userId;
+        return this;
     }
-
 
     public List<String> getCards() {
         return cards;
@@ -837,14 +840,6 @@ public class PlayerCardsInfo implements HuType {
     }
 
 
-    public Map<Integer, Integer> getPengType() {
-        return pengType;
-    }
-
-    public PlayerCardsInfo setPengType(Map<Integer, Integer> pengType) {
-        this.pengType = pengType;
-        return this;
-    }
 
     public Set<Integer> getAnGangType() {
         return anGangType;
@@ -856,11 +851,20 @@ public class PlayerCardsInfo implements HuType {
     }
 
 
-    public Map<Integer, Integer> getMingGangType() {
+    public Map<Integer, Long> getPengType() {
+        return pengType;
+    }
+
+    public PlayerCardsInfo setPengType(Map<Integer, Long> pengType) {
+        this.pengType = pengType;
+        return this;
+    }
+
+    public Map<Integer, Long> getMingGangType() {
         return mingGangType;
     }
 
-    public PlayerCardsInfo setMingGangType(Map<Integer, Integer> mingGangType) {
+    public PlayerCardsInfo setMingGangType(Map<Integer, Long> mingGangType) {
         this.mingGangType = mingGangType;
         return this;
     }
