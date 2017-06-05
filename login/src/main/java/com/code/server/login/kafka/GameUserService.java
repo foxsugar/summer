@@ -63,7 +63,7 @@ public class GameUserService {
                 userRedisService.setUserMoney(rechargeUserId,rechargeUserMoney+money);
                 //减掉充值玩家相应的钱数
                 userRedisService.setUserMoney(userid,userMoney-money);
-            }else {
+            }else{
 
                     User accepter = userService.getUserByUserId(rechargeUserId);
                     if(accepter==null){
