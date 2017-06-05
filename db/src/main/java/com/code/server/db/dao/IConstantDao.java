@@ -8,4 +8,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  */
 public interface IConstantDao extends PagingAndSortingRepository<Constant, Long> {
 
+
+    Constant getConstant();
 }
