@@ -93,7 +93,7 @@ public class PlayerCardsInfoSS extends PlayerCardsInfo {
 		List<String> list = Arrays.asList(s);
 		playerCardsInfoKD.cards.addAll(list);
 		// playerCardsInfoKD.anGangType.add(28);
-		playerCardsInfoKD.mingGangType.put(28, 0);
+		playerCardsInfoKD.mingGangType.put(28, 0L);
 		// playerCardsInfoKD.pengType.put(25,1);
 
 		playerCardsInfoKD.isTing = true;
@@ -193,7 +193,7 @@ public class PlayerCardsInfoSS extends PlayerCardsInfo {
 				|| this.roomInfo.getGameType().equals("SS")
 				|| this.roomInfo.getGameType().equals("JCSS")) {
 			if (!isMing) {// 暗杠
-				for (Integer i : gameInfo.getPlayerCardsInfos().keySet()) {
+				for (long i : gameInfo.getPlayerCardsInfos().keySet()) {
 					gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
 					room.setUserSocre(i, -2 * room.getMultiple());
 				}
@@ -201,7 +201,7 @@ public class PlayerCardsInfoSS extends PlayerCardsInfo {
 				room.setUserSocre(this.userId, 2 * room.getPersonNumber() * room.getMultiple());
 			} else {// 明杠
 				if (diangangUser == -1) {
-					for (Integer i : gameInfo.getPlayerCardsInfos().keySet()) {
+					for (long i : gameInfo.getPlayerCardsInfos().keySet()) {
 						gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple());
 						room.setUserSocre(i, -room.getMultiple());
 					}
@@ -210,7 +210,7 @@ public class PlayerCardsInfoSS extends PlayerCardsInfo {
 				} else {
 					if(this.roomInfo.getGameType().equals("JCSS")){
 						if(gameInfo.getPlayerCardsInfos().get(diangangUser).isTing){
-							for (Integer i : gameInfo.getPlayerCardsInfos().keySet()) {
+							for (long i : gameInfo.getPlayerCardsInfos().keySet()) {
 								gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple());
 								room.setUserSocre(i, -room.getMultiple());
 							}
@@ -250,7 +250,7 @@ public class PlayerCardsInfoSS extends PlayerCardsInfo {
 							|| room.getMode().equals(GameInfoShengShi.SS_Ping_HAVEFENG_NOTING)
 							|| room.getMode().equals(GameInfoShengShi.SS_Ping_NOFENG_CANTING) 
 							|| room.getMode().equals(GameInfoShengShi.SS_Ping_NOFENG_NOTING))) {// 平胡
-				for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+				for (long i : gameInfo.getPlayerCardsInfos().keySet()){
     				gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
     				room.setUserSocre(i, - 2 * room.getMultiple());
     			}
@@ -262,7 +262,7 @@ public class PlayerCardsInfoSS extends PlayerCardsInfo {
 							|| room.getMode().equals(GameInfoShengShi.SS_DA_HAVEFENG_NOTING)
 							|| room.getMode().equals(GameInfoShengShi.SS_DA_NOFENG_CANTING) 
 							|| room.getMode().equals(GameInfoShengShi.SS_DA_NOFENG_NOTING))) {// 大胡
-					for (Integer i : gameInfo.getPlayerCardsInfos().keySet()) {
+					for (long i : gameInfo.getPlayerCardsInfos().keySet()) {
 						gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple() * MahjongCode.HUTOSCOREFORSS.get(""+ CardUtil.huForScores(cards,huCardType)));
             			room.setUserSocre(i,  - room.getMultiple() * MahjongCode.HUTOSCOREFORSS.get(""+CardUtil.huForScores(cards,huCardType)));
 					}
@@ -279,7 +279,7 @@ public class PlayerCardsInfoSS extends PlayerCardsInfo {
 				if (room.getMode().equals(GameInfoShengShi.SS_Ping_HAVEFENG_CANTING)
 						|| room.getMode().equals(GameInfoShengShi.SS_Ping_NOFENG_CANTING)) {// 听的
 					if (gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing) {// 上听
-						for (Integer i : gameInfo.getPlayerCardsInfos().keySet()) {
+						for (long i : gameInfo.getPlayerCardsInfos().keySet()) {
 							gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple() * 1);
 	            			room.setUserSocre(i,  - room.getMultiple() * 1);
 						}
@@ -312,7 +312,7 @@ public class PlayerCardsInfoSS extends PlayerCardsInfo {
 						|| room.getMode().equals(GameInfoShengShi.SS_DA_NOFENG_CANTING)) {// 听的
 					if (gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing) {
 						if(2==MahjongCode.HUTOSCOREFORSS.get(""+CardUtil.huForScores(cards,huCardType)+"")){
-							for (Integer i : gameInfo.getPlayerCardsInfos().keySet()) {
+							for (long i : gameInfo.getPlayerCardsInfos().keySet()) {
 								gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple() * 1);
 		            			room.setUserSocre(i,  - room.getMultiple() * 1);
 							}
@@ -320,7 +320,7 @@ public class PlayerCardsInfoSS extends PlayerCardsInfo {
 			    			room.setUserSocre(this.userId, 1 * room.getPersonNumber() * room.getMultiple());
 			    			this.fan = 1;
 						}else{
-							for (Integer i : gameInfo.getPlayerCardsInfos().keySet()) {
+							for (long i : gameInfo.getPlayerCardsInfos().keySet()) {
 								gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple() * MahjongCode.HUTOSCOREFORSS.get(""+CardUtil.huForScores(cards,huCardType)+"")/3);
 		            			room.setUserSocre(i,  - room.getMultiple() * MahjongCode.HUTOSCOREFORSS.get(""+CardUtil.huForScores(cards,huCardType)+"")/3);
 							}

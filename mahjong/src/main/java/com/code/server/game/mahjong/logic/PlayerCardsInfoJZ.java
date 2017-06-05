@@ -791,7 +791,7 @@ public class PlayerCardsInfoJZ extends PlayerCardsInfoQAMT {
 //        xfd.put(1,xf2);
         playerCardsInfo.xuanfengDan = xfd;
 
-        playerCardsInfo.pengType.put(13, -1);
+        playerCardsInfo.pengType.put(13, -1L);
 
 
         System.out.println(playerCardsInfo.isCanTing(playerCardsInfo.cards));

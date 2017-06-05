@@ -87,7 +87,7 @@ public class PlayerCardsInfoKD extends PlayerCardsInfo {
 		List<String> list = Arrays.asList(s);
 		playerCardsInfoKD.cards.addAll(list);
 //		playerCardsInfoKD.anGangType.add(28);
-		playerCardsInfoKD.mingGangType.put(28,0);
+		playerCardsInfoKD.mingGangType.put(28,0L);
 //		playerCardsInfoKD.pengType.put(25,1);
 
 		playerCardsInfoKD.isTing = true;
@@ -178,7 +178,7 @@ public class PlayerCardsInfoKD extends PlayerCardsInfo {
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card){
 		super.gangCompute(room,gameInfo,isMing,diangangUser,card);
 		if(!isMing){//暗杠
-        	for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+        	for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
         		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * CardUtil.KDGangForScores(card) * room.getMultiple());
         		room.setUserSocre(i, - 2 * CardUtil.KDGangForScores(card) * room.getMultiple());
         	}
@@ -187,7 +187,7 @@ public class PlayerCardsInfoKD extends PlayerCardsInfo {
 			System.out.println("======暗杠：" + 2 * CardUtil.KDGangForScores(card) * 3 * room.getMultiple());
 		}else{//明杠
     		if (diangangUser==-1) {
-    			for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+    			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
             		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - CardUtil.KDGangForScores(card) * room.getMultiple());
             		room.setUserSocre(i, - CardUtil.KDGangForScores(card) * room.getMultiple());
     			}
@@ -196,7 +196,7 @@ public class PlayerCardsInfoKD extends PlayerCardsInfo {
 				System.out.println("======明杠：" + CardUtil.KDGangForScores(card) * 3 * room.getMultiple());
 			} else {
 				if(gameInfo.getPlayerCardsInfos().get(diangangUser).isTing){
-	    			for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+	    			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
 	            		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - CardUtil.KDGangForScores(card) * room.getMultiple());
 	            		room.setUserSocre(i, - CardUtil.KDGangForScores(card) * room.getMultiple());
 	    			}
@@ -238,7 +238,7 @@ public class PlayerCardsInfoKD extends PlayerCardsInfo {
 		}
 //		if (room.getMode().equals("6")){
 			if(isZimo){
-				for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+				for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
 					gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
 					room.setUserSocre(i, - 2 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
 				}
@@ -248,7 +248,7 @@ public class PlayerCardsInfoKD extends PlayerCardsInfo {
 				System.out.println("======自摸：" + 6 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length()-1),card,huCardType) * room.getMultiple());
 			}else{
 				if(gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing){
-					for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+					for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
 						gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
 						room.setUserSocre(i, - CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
 					}

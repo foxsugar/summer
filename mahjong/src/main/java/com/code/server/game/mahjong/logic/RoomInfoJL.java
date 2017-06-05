@@ -1,7 +1,7 @@
 package com.code.server.game.mahjong.logic;
 
 
-import com.code.server.game.room.RedisManager;
+import com.code.server.redis.service.RedisManager;
 
 public class RoomInfoJL extends RoomInfo {
     public void drawBack() {

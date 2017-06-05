@@ -344,10 +344,10 @@ public class GameInfoSongYuan extends GameInfo {
 
     /**
      * 出牌
-     *  @param userId
+     * @param userId
      * @param card
      */
-    public int chupai(int userId, String card) {
+    public int chupai(long userId, String card) {
         if (isAlreadyHu) {
             return ErrorCode.CAN_PLAYCARD_IS_HU;
         }
@@ -464,7 +464,7 @@ public class GameInfoSongYuan extends GameInfo {
      *
      * @param userId
      */
-    public int gang(int userId, String card) {
+    public int gang(long userId, String card) {
         if (isAlreadyHu) {
             return ErrorCode.CAN_NOT_GANG;
         }
@@ -587,7 +587,7 @@ public class GameInfoSongYuan extends GameInfo {
      * @param userId
      * @return
      */
-    public int peng(int userId) {
+    public int peng(long userId) {
         if (isAlreadyHu) {
             return ErrorCode.CAN_NOT_PENG;
         }
@@ -654,7 +654,7 @@ public class GameInfoSongYuan extends GameInfo {
      *
      * @param userId
      */
-    public int guo(int userId) {
+    public int guo(long userId) {
         if (isAlreadyHu) {
             return ErrorCode.CAN_NOT_GUO;
         }
@@ -712,7 +712,7 @@ public class GameInfoSongYuan extends GameInfo {
      * @param card
      * @return
      */
-    public int ting(int userId, String card) {
+    public int ting(long userId, String card) {
         if (isAlreadyHu) {
             return ErrorCode.CAN_NOT_TING;
         }
@@ -774,7 +774,7 @@ public class GameInfoSongYuan extends GameInfo {
      * @param userId
      * @return
      */
-    public int hu(int userId) {
+    public int hu(long userId) {
         if (isAlreadyHu) {
             return ErrorCode.CAN_NOT_HU_ALREADY;
         }
@@ -890,7 +890,7 @@ public class GameInfoSongYuan extends GameInfo {
         resetOtherOperate(userId);
     }
 
-    public int chiTing(int userId, String one, String two) {
+    public int chiTing(long userId, String one, String two) {
         if (isAlreadyHu) {
             return ErrorCode.CAN_NOT_CHI;
         }
@@ -943,7 +943,7 @@ public class GameInfoSongYuan extends GameInfo {
         resetOtherOperate(userId);
     }
 
-    public int pengTing(int userId) {
+    public int pengTing(long userId) {
         if (isAlreadyHu) {
             return ErrorCode.CAN_NOT_PENG_TING;
         }

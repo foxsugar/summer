@@ -152,7 +152,7 @@ public class PlayerCardsInfoLS extends PlayerCardsInfo{
     	
     	//明杠
     	if(gameInfo.getPlayerCardsInfos().get(userId).getMingGangType().size()>0){
-    		for(Integer minguser : mingGangType.values()){
+    		for(Long minguser : mingGangType.values()){
     			//判断是否是碰后杠
     			if(minguser!=-1){
     				//听牌三家输
@@ -535,7 +535,7 @@ public class PlayerCardsInfoLS extends PlayerCardsInfo{
         PlayerCardsInfo.setFirst_four(ls);
         List<String> list = Arrays.asList(s);
         PlayerCardsInfo.cards.addAll(list);
-        PlayerCardsInfo.pengType.put(22,1);
+        PlayerCardsInfo.pengType.put(22,1L);
         
         
         System.out.println(PlayerCardsInfo.isCanTing(PlayerCardsInfo.getCards()));

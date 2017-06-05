@@ -1,7 +1,7 @@
 package com.code.server.game.room.service;
 
 import com.code.server.game.room.IfaceRoom;
-import com.code.server.game.room.RedisManager;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.game.room.Room;
 
 import java.util.HashMap;

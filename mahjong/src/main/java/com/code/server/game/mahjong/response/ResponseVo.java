@@ -1,13 +1,12 @@
 package com.code.server.game.mahjong.response;
 
-import com.google.gson.Gson;
+import com.code.server.util.JsonUtil;
 import net.sf.json.JSONObject;
 
 /**
  * Created by win7 on 2016/12/1.
  */
 public class ResponseVo {
-    private static Gson gson = new Gson();
 
     private String service;
     private String method;
@@ -28,15 +27,12 @@ public class ResponseVo {
     }
 
 
-    public String toJson() {
-        return gson.toJson(this);
-    }
 
     public JSONObject toJsonObject() {
         JSONObject o = new JSONObject();
         o.put("service", service);
         o.put("method", method);
-        o.put("params", gson.toJson(params));
+        o.put("params", JsonUtil.toJson(params));
         o.put("code",""+code);
         return o;
     }

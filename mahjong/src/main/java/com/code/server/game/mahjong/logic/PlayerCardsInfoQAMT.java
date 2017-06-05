@@ -113,7 +113,7 @@ public class PlayerCardsInfoQAMT extends PlayerCardsInfoQAKT {
 //        playerCardsInfo.chiType.add(2);
 
 //        playerCardsInfo.chiCards = chis;
-        playerCardsInfo.pengType.put(11,1);
+        playerCardsInfo.pengType.put(11,1L);
 //        playerCardsInfo.pengType.put(31,1);
 
         System.out.println(playerCardsInfo.isCanTing(playerCardsInfo.cards));
