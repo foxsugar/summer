@@ -22,8 +22,8 @@ public class OperateReqResp {
 
     private int operateType = 0;
     private String card;
-    private int fromUserId;
-    private int userId;
+    private long fromUserId;
+    private long userId;
     private boolean isMing;
     private List<String> chiCards;
     private List<String> xuanfengCards;
@@ -44,16 +44,22 @@ public class OperateReqResp {
         this.card = card;
     }
 
-    public int getFromUserId() {
+    public long getFromUserId() {
         return fromUserId;
     }
 
-    public void setFromUserId(int fromUserId) {
+    public OperateReqResp setFromUserId(long fromUserId) {
         this.fromUserId = fromUserId;
+        return this;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
+    }
+
+    public OperateReqResp setUserId(long userId) {
+        this.userId = userId;
+        return this;
     }
 
     public void setUserId(int userId) {

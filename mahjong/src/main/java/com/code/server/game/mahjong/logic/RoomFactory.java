@@ -14,11 +14,11 @@ public class RoomFactory {
         switch (gameType) {
             case "JL"://晋龙
             case "DS"://都市
-                return new RoomInfoJL().setGameType(gameType);
+                return (RoomInfo)new RoomInfoJL().setGameType(gameType);
             case "HT":
-                return new RoomInfo().setGameType(gameType).setHasGangBlackList(false);
+                return ((RoomInfo)new RoomInfo().setGameType(gameType)).setHasGangBlackList(false);
             default:
-                return new RoomInfo().setGameType(gameType);
+                return (RoomInfo)new RoomInfo().setGameType(gameType);
         }
     }
 }

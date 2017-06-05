@@ -1,0 +1,152 @@
+package com.code.server.game.mahjong.response;
+
+
+import com.code.server.constant.game.UserBean;
+import com.code.server.game.mahjong.logic.RoomInfo;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 断线重连的方法
+ * @author Administrator
+ *
+ */
+public class AllMessage {
+
+	private boolean isExist;
+
+	private RoomInfo room;
+
+
+
+	private List<UserBean> users;
+
+//	private ArrayList<CardMessage> cardMessages;
+	
+	private Map<Long, Integer> userStatus = new HashMap<>();//用户状态
+
+	private Map<Long, Integer> offlineStatus = new HashMap<>();//在线状态
+
+	private Map<Long, Double> userScores = new HashMap<>();
+	
+	private ReconnectResp reconnectResp;
+
+	private int gameId;
+
+	private long banker;
+	private int curGameNumber;
+	private int cardNumber;
+	private int circleNum;
+
+
+	public RoomInfo getRoom() {
+		return room;
+	}
+
+	public AllMessage setRoom(RoomInfo room) {
+		this.room = room;
+		return this;
+	}
+
+	public List<UserBean> getUsers() {
+		return users;
+	}
+
+	public AllMessage setUsers(List<UserBean> users) {
+		this.users = users;
+		return this;
+	}
+
+	public Map<Long, Integer> getUserStatus() {
+		return userStatus;
+	}
+
+	public AllMessage setUserStatus(Map<Long, Integer> userStatus) {
+		this.userStatus = userStatus;
+		return this;
+	}
+
+	public Map<Long, Integer> getOfflineStatus() {
+		return offlineStatus;
+	}
+
+	public AllMessage setOfflineStatus(Map<Long, Integer> offlineStatus) {
+		this.offlineStatus = offlineStatus;
+		return this;
+	}
+
+	public AllMessage setBanker(long banker) {
+		this.banker = banker;
+		return this;
+	}
+
+	public int getCardNumber() {
+		return cardNumber;
+	}
+
+	public AllMessage setCardNumber(int cardNumber) {
+		this.cardNumber = cardNumber;
+		return this;
+	}
+
+	public int getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(int gameId) {
+		this.gameId = gameId;
+	}
+
+
+
+	public ReconnectResp getReconnectResp() {
+		return reconnectResp;
+	}
+
+	public void setReconnectResp(ReconnectResp reconnectResp) {
+		this.reconnectResp = reconnectResp;
+	}
+
+
+	public long getBanker() {
+		return banker;
+	}
+
+	public int getCircleNum() {
+		return circleNum;
+	}
+
+	public AllMessage setCircleNum(int circleNum) {
+		this.circleNum = circleNum;
+		return this;
+	}
+
+	public boolean isExist() {
+		return isExist;
+	}
+
+	public AllMessage setExist(boolean exist) {
+		isExist = exist;
+		return this;
+	}
+
+	public int getCurGameNumber() {
+		return curGameNumber;
+	}
+
+	public AllMessage setCurGameNumber(int curGameNumber) {
+		this.curGameNumber = curGameNumber;
+		return this;
+	}
+
+	public Map<Long, Double> getUserScores() {
+		return userScores;
+	}
+
+	public AllMessage setUserScores(Map<Long, Double> userScores) {
+		this.userScores = userScores;
+		return this;
+	}
+}

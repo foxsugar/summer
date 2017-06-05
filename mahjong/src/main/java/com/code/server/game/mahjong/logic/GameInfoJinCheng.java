@@ -21,17 +21,13 @@ public class GameInfoJinCheng extends GameInfo {
     
     /**
      * 初始化方法
-     *
-     * @param firstTurn
+     *  @param firstTurn
      * @param users
      */
     @Override
-    public void init(int gameId, int firstTurn, List<Integer> users, RoomInfo room, RoomDao roomDao, UserRecodeDao userRecodeDao, UserDao userDao, GameDao gameDao) {
+    public void init(int gameId, long firstTurn, List<Long> users, RoomInfo room) {
         this.gameId = gameId;
-        this.userDao = userDao;
-        this.gameDao = gameDao;
-        this.roomDao = roomDao;
-        this.userRecodeDao = userRecodeDao;
+
         this.firstTurn = firstTurn;
         this.turnId = firstTurn;
         remainCards.addAll(CardTypeUtil.ALL_CARD);
@@ -49,28 +45,27 @@ public class GameInfoJinCheng extends GameInfo {
     /**
      * 荒庄的处理
      *
-     * @param serverContext
      * @param userId
      */
-    protected void handleHuangzhuang(ServerContext serverContext, int userId) {
+    protected void handleHuangzhuang(long userId) {
 
         turnResultToZeroOnHuangZhuang();
         //平胡
 
         handleHuangzhuangScore();
 
-        sendResult(serverContext, false, userId);
+        sendResult(false, userId);
         /*room.addOneToCircleNumber();
         int nextId = nextTurnId(this.getFirstTurn());
         room.setBankerId(nextId);*/
-        noticeDissolutionResult(serverContext);
+        noticeDissolutionResult();
         //通知所有玩家结束
         room.clearReadyStatus();
 
     }
 
     private void handleHuangzhuangScore(){
-        for (Integer i : room.getUserScores().keySet()) {
+        for (long i : room.getUserScores().keySet()) {
 
             PlayerCardsInfo playerCardsInfo = this.getPlayerCardsInfos().get(i);
             if (playerCardsInfo == null) {
@@ -86,17 +81,17 @@ public class GameInfoJinCheng extends GameInfo {
         }
     }
 
-    protected void handleHu(ServerContext serverContext, PlayerCardsInfo playerCardsInfo) {
+    protected void handleHu(PlayerCardsInfo playerCardsInfo) {
         isAlreadyHu = true;
-        sendResult(serverContext, true, playerCardsInfo.userId);
+        sendResult(true, playerCardsInfo.userId);
         //圈
         if (this.getFirstTurn() != playerCardsInfo.getUserId()) {
             //换庄
             room.addOneToCircleNumber();
-            int nextId = nextTurnId(this.getFirstTurn());
+            long nextId = nextTurnId(this.getFirstTurn());
             room.setBankerId(nextId);
         }
-        noticeDissolutionResult(serverContext);
+        noticeDissolutionResult();
         room.clearReadyStatus();
     }
 

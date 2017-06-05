@@ -1,6 +1,7 @@
 package com.code.server.game.mahjong.logic;
 
 
+
 import java.util.List;
 
 /**
@@ -25,12 +26,9 @@ public class GameInfoJinCheng124 extends GameInfo {
      * @param users
      */
     @Override
-    public void init(int gameId, int firstTurn, List<Integer> users, RoomInfo room, RoomDao roomDao, UserRecodeDao userRecodeDao, UserDao userDao, GameDao gameDao) {
+    public void init(int gameId, long firstTurn, List<Long> users, RoomInfo room) {
         this.gameId = gameId;
-        this.userDao = userDao;
-        this.gameDao = gameDao;
-        this.roomDao = roomDao;
-        this.userRecodeDao = userRecodeDao;
+
         this.firstTurn = firstTurn;
         this.turnId = firstTurn;
         remainCards.addAll(CardTypeUtil.ALL_CARD);
@@ -45,17 +43,17 @@ public class GameInfoJinCheng124 extends GameInfo {
         }
     }
 
-    protected void handleHu(ServerContext serverContext, PlayerCardsInfo playerCardsInfo) {
+    protected void handleHu(PlayerCardsInfo playerCardsInfo) {
         isAlreadyHu = true;
-        sendResult(serverContext, true, playerCardsInfo.userId);
+        sendResult(true, playerCardsInfo.userId);
         //圈
         if (this.getFirstTurn() != playerCardsInfo.getUserId()) {
             //换庄
             room.addOneToCircleNumber();
-            int nextId = nextTurnId(this.getFirstTurn());
+            long nextId = nextTurnId(this.getFirstTurn());
             room.setBankerId(nextId);
         }
-        noticeDissolutionResult(serverContext);
+        noticeDissolutionResult();
         room.clearReadyStatus();
     }
 

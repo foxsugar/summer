@@ -1,24 +1,23 @@
 package com.code.server.game.mahjong.logic;
 
 
+import com.code.server.game.room.RedisManager;
+
 public class RoomInfoJL extends RoomInfo {
     public void drawBack() {
 
     }
 
     public void spendMoney() {
-        for (int userId : users) {
-            User eachUser = userDao.getUser(userId);
-            eachUser.setMoney(eachUser.getMoney() - 1);
-            userDao.saveUser(eachUser);
+        for (long userId : users) {
+            int money = -getCreateMoney();
+            RedisManager.getUserRedisService().addUserMoney(userId, -money);
         }
     }
 
 
     protected boolean isCanJoinCheckMoney(int userId) {
-
-        User user = userDao.getUser(userId);
-        if (user.getMoney() < 1) {
+        if (RedisManager.getUserRedisService().getUserMoney(userId) < 1) {
             return false;
         }
         return true;

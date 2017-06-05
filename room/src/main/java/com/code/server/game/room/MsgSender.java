@@ -12,9 +12,8 @@ import java.util.List;
 /**
  * Created by win7 on 2017/3/9.
  */
-public class Player {
-    private long userId;
-    private long lastSendMsgTime;//上次发消息时间
+public class MsgSender {
+
 
 
 
@@ -51,24 +50,4 @@ public class Player {
 
 
 
-    public long getUserId() {
-        return userId;
-    }
-
-    public Player setUserId(long userId) {
-        this.userId = userId;
-        return this;
-    }
-
-
-
-
-    public long getLastSendMsgTime() {
-        return lastSendMsgTime;
-    }
-
-    public Player setLastSendMsgTime(long lastSendMsgTime) {
-        this.lastSendMsgTime = lastSendMsgTime;
-        return this;
-    }
 }

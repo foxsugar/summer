@@ -6,7 +6,7 @@ import java.util.List;
  * Created by win7 on 2016/12/1.
  */
 public class GetCardResp {
-    private int userId;
+    private long userId;
     private String card;
     private List<String> allCards;
     private int remainNum;
@@ -19,12 +19,13 @@ public class GetCardResp {
         this.card = card;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public GetCardResp setUserId(long userId) {
         this.userId = userId;
+        return this;
     }
 
     public List<String> getAllCards() {

@@ -2,6 +2,7 @@ package com.code.server.game.mahjong.logic;
 
 
 
+
 import com.code.server.game.mahjong.util.HuCardType;
 import com.code.server.game.mahjong.util.HuLimit;
 import com.code.server.game.mahjong.util.HuUtil;
@@ -362,7 +363,7 @@ public class PlayerCardsInfoQAKT extends PlayerCardsInfo {
     }
 
     @Override
-    public void hu_dianpao(RoomInfo room, GameInfo gameInfo, int dianpaoUser, String disCard) {
+    public void hu_dianpao(RoomInfo room, GameInfo gameInfo, long dianpaoUser, String disCard) {
 
         super.hu_dianpao(room, gameInfo, dianpaoUser, disCard);
     }
@@ -407,7 +408,7 @@ public class PlayerCardsInfoQAKT extends PlayerCardsInfo {
 
 
     @Override
-    public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, int dianpaoUser, String card) {
+    public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
         List<String> cs = getCardsNoChiPengGang(cards);
         List<HuCardType> huList = HuUtil.isHu(cs, this, CardTypeUtil.cardType.get(card), new HuLimit(0));
         int cardType = CardTypeUtil.getTypeByCard(card);

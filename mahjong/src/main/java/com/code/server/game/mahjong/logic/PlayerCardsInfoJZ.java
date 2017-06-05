@@ -1,8 +1,10 @@
 package com.code.server.game.mahjong.logic;
 
-import com.byz.mj.util.HuCardType;
-import com.byz.mj.util.HuLimit;
-import com.byz.mj.util.HuUtil;
+
+
+import com.code.server.game.mahjong.util.HuCardType;
+import com.code.server.game.mahjong.util.HuLimit;
+import com.code.server.game.mahjong.util.HuUtil;
 
 import java.util.*;
 
@@ -94,18 +96,18 @@ public class PlayerCardsInfoJZ extends PlayerCardsInfoQAMT {
     }
 
     @Override
-    public void peng(String card, int playUser) {
+    public void peng(String card, long playUser) {
         super.peng(card, playUser);
         addCanDanCard(card);
     }
 
     @Override
-    public boolean gang_hand(RoomInfo room, GameInfo info, int diangangUser, String card) {
+    public boolean gang_hand(RoomInfo room, GameInfo info, long diangangUser, String card) {
         return super.gang_hand(room, info, diangangUser, card);
     }
 
     @Override
-    public boolean gang_discard(RoomInfo room, GameInfo gameInfo, int diangangUser, String disCard) {
+    public boolean gang_discard(RoomInfo room, GameInfo gameInfo, long diangangUser, String disCard) {
         addCanDanCard(disCard);
         return super.gang_discard(room, gameInfo, diangangUser, disCard);
     }
@@ -156,14 +158,14 @@ public class PlayerCardsInfoJZ extends PlayerCardsInfoQAMT {
 
     private boolean isCanXindan(){
         int size = this.gameInfo.userOperateList.size();
-        Map<Integer, Integer> map = this.gameInfo.userOperateList.get(size - 1);
+        Map<Long, Integer> map = this.gameInfo.userOperateList.get(size - 1);
         if (!map.containsKey(this.getUserId())) {
             return false;
         }
         //是否有其他玩家操作
         boolean isHasOther = false;
         for(int i=size -1;i>=0;i--){
-            Map<Integer, Integer> oper = this.gameInfo.userOperateList.get(i);
+            Map<Long, Integer> oper = this.gameInfo.userOperateList.get(i);
             if(!oper.containsKey(this.getUserId())){
                 isHasOther = true;
             }
@@ -552,7 +554,7 @@ public class PlayerCardsInfoJZ extends PlayerCardsInfoQAMT {
     }
 
     @Override
-    public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, int dianpaoUser, String card) {
+    public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
         List<String> cs = getCardsNoChiPengGang(cards);
         List<HuCardType> huList = HuUtil.isHu(cs, this, CardTypeUtil.cardType.get(card), new HuLimit(0));
         int cardType = CardTypeUtil.getTypeByCard(card);

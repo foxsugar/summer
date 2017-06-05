@@ -1,20 +1,20 @@
 package com.code.server.game.mahjong.logic;
 
 
+import com.code.server.constant.response.GameOfResult;
+import com.code.server.constant.response.UserOfResult;
 import com.code.server.game.mahjong.response.*;
-import com.code.server.game.mahjong.util.HuUtil;
-import net.sf.json.JSONObject;
+import com.code.server.game.room.Game;
+import com.code.server.game.room.MsgSender;
+import com.code.server.game.room.RedisManager;
 import org.apache.log4j.Logger;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.*;
 
 /**
  * Created by T420 on 2016/11/30.
  */
 
-public class GameInfo {
+public class GameInfo extends Game {
 
     protected static final Logger logger = Logger.getLogger("game");
     protected static final boolean isTest = true;
@@ -29,54 +29,45 @@ public class GameInfo {
     protected int gameModel;//游戏类型
     protected List<String> remainCards = new ArrayList<>();//剩下的牌
     protected String disCard;//出的牌
-    protected int turnId;//轮到谁出牌
-    protected int lastPlayUserId = -1;//上个出牌的人
-    protected int lastMoPaiUserId = -1;//上个摸牌的人
+    protected long turnId;//轮到谁出牌
+    protected long lastPlayUserId = -1;//上个出牌的人
+    protected long lastMoPaiUserId = -1;//上个摸牌的人
     protected String catchCard;//摸得牌
 
-    protected int lastOperateUserId;//上个操作的人
-    protected Map<Integer, PlayerCardsInfo> playerCardsInfos = new HashMap<>();//玩家手上牌的信息
-    protected int firstTurn = 0;//第一个出牌的人
+    protected long lastOperateUserId;//上个操作的人
+    protected Map<Long, PlayerCardsInfo> playerCardsInfos = new HashMap<>();//玩家手上牌的信息
+    protected long firstTurn = 0;//第一个出牌的人
     protected List<WaitDetail> waitingforList = new ArrayList<>();//需要等待玩家的列表
-    protected List<Integer> users = new ArrayList<>();
+    protected List<Long> users = new ArrayList<>();
     protected boolean isAlreadyHu;//是否已经胡过
     protected int baoType = -1;
     protected String baoCard = null;
 
-    protected boolean isHasJieGangHu = true ;
+    protected boolean isHasJieGangHu = true;
 
     protected String jieGangHuCard = null;
-    protected int beJieGangUser = -1;
+    protected long beJieGangUser = -1;
 
     protected List<String> jieXuanfengCard = null;
-    protected int beJieXuanfengUser = -1;
-    protected int jieXuanfengCardType = -1;
+    protected long beJieXuanfengUser = -1;
+    protected long jieXuanfengCardType = -1;
 
     protected transient RoomInfo room;
-    protected transient RoomDao roomDao;
-    protected transient UserRecodeDao userRecodeDao;
-    protected transient UserDao userDao;
-    protected transient GameDao gameDao;
+
     private boolean isHasWaitCache;
     protected int changeBaoSize = 0;
 
-    protected List<Map<Integer, Integer>> userOperateList = new ArrayList<>();
-
-
+    protected List<Map<Long, Integer>> userOperateList = new ArrayList<>();
 
 
     /**
      * 初始化方法
-     *
-     * @param firstTurn
+     *  @param firstTurn
      * @param users
      */
-    public void init(int gameId, int firstTurn, List<Integer> users, RoomInfo room, RoomDao roomDao, UserRecodeDao userRecodeDao, UserDao userDao, GameDao gameDao) {
+    public void init(int gameId, long firstTurn, List<Long> users, RoomInfo room) {
         this.gameId = gameId;
-        this.userDao = userDao;
-        this.gameDao = gameDao;
-        this.roomDao = roomDao;
-        this.userRecodeDao = userRecodeDao;
+
         this.firstTurn = firstTurn;
         this.turnId = firstTurn;
         remainCards.addAll(CardTypeUtil.ALL_CARD);
@@ -99,24 +90,20 @@ public class GameInfo {
         } else if (DPH_NOFENG.equals(room.getModeTotal())) {
             remainCards.removeAll(CardTypeUtil.FENG_CARD);
             remainCards.removeAll(CardTypeUtil.ZI_CARD);
-            /*int point = 16;
-            while (point > 0) {
-                remainCards.remove(0);
-                point--;
-            }*/
+
         }
     }
 
     /**
      * 发牌
      */
-    public void fapai(ServerContext serverContext) {
+    public void fapai() {
         //打乱顺序
         Collections.shuffle(remainCards);
         for (int i = 0; i < playerSize; i++) {
             PlayerCardsInfo playerCardsInfo = PlayerCardsInfoFactory.getInstance(room);
             playerCardsInfo.setGameInfo(this);
-            int userId = users.get(i);
+            long userId = users.get(i);
             //设置id
             playerCardsInfo.setUserId(userId);
             List<String> playerCards = new ArrayList<>();
@@ -134,13 +121,13 @@ public class GameInfo {
             resp.setCards(playerCards);
             ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_GET_HAND_CARDS, resp);
 
-            serverContext.sendToSinglePlayer(vo.toJsonObject(), "" + userId);
+            MsgSender.sendMsg2Player(vo.toJsonObject(), userId);
 
 
         }
         doAfterFapai();
         //第一个人抓牌
-        mopai(serverContext, firstTurn,"发牌");
+        mopai(firstTurn, "发牌");
 
     }
 
@@ -152,10 +139,9 @@ public class GameInfo {
     /**
      * 荒庄的处理
      *
-     * @param serverContext
      * @param userId
      */
-    protected void handleHuangzhuang(ServerContext serverContext, int userId) {
+    protected void handleHuangzhuang(long userId) {
 
         switch (this.room.modeTotal) {
             case "4":
@@ -165,21 +151,20 @@ public class GameInfo {
             default:
                 turnResultToZeroOnHuangZhuang();
         }
-        sendResult(serverContext, false, userId);
-        noticeDissolutionResult(serverContext);
+        sendResult(false, userId);
+        noticeDissolutionResult();
         //通知所有玩家结束
         room.clearReadyStatus();
-        if(HuUtil.getUserAndScore(this.room.getUserScores()).contains("否")){
-        	logger.info("<<<牌局得分>>>"+HuUtil.getUserAndScore(this.room.getUserScores()));
-        }
+//        if(HuUtil.getUserAndScore(this.room.getUserScores()).contains("否")){
+//        	logger.info("<<<牌局得分>>>"+HuUtil.getUserAndScore(this.room.getUserScores()));
+//        }
     }
 
-    protected void computeAllGang(){
+    protected void computeAllGang() {
         for (PlayerCardsInfo player : this.getPlayerCardsInfos().values()) {
             player.computeALLGang();
         }
     }
-
 
 
     /**
@@ -187,24 +172,24 @@ public class GameInfo {
      *
      * @param userId
      */
-    protected void mopai(ServerContext serverContext, int userId, String... wz) {
+    protected void mopai(long userId, String... wz) {
         System.err.println("摸牌===============================userId : " + userId);
 
 
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
 
         if (playerCardsInfo.isHuangzhuang(this)) {
-            handleHuangzhuang(serverContext, userId);
+            handleHuangzhuang(userId);
             return;
         }
 
 
         if (playerCardsInfo.isMoreOneCard()) {
             if (wz.length > 0) {
-                logger.info("======1操作后的摸牌 : "+wz[0]);
+                logger.info("======1操作后的摸牌 : " + wz[0]);
             }
-            logger.info("userId : "+userId +"　===1 more one card 抓牌时多一张牌");
-            logger.info("操作列表: "+playerCardsInfo.operateList.toString());
+            logger.info("userId : " + userId + "　===1 more one card 抓牌时多一张牌");
+            logger.info("操作列表: " + playerCardsInfo.operateList.toString());
             logger.info("所有操作: " + userOperateList.toString());
 
         }
@@ -234,7 +219,7 @@ public class GameInfo {
 
         // 把摸到的牌 推给摸牌的玩家
         int remainSize = remainCards.size();
-        for (int user : users) {
+        for (long user : users) {
             GetCardResp getCardResp = new GetCardResp();
             getCardResp.setRemainNum(remainSize);
             getCardResp.setUserId(userId);
@@ -242,7 +227,7 @@ public class GameInfo {
                 getCardResp.setCard(card);
             }
             ResponseVo responseVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_GET_CARD, getCardResp);
-            serverContext.sendToSinglePlayer(responseVo.toJsonObject(), "" + user);
+            MsgSender.sendMsg2Player(responseVo.toJsonObject(), user);
 
             //能做的操作全置成不能
             PlayerCardsInfo other = playerCardsInfos.get(user);
@@ -268,7 +253,7 @@ public class GameInfo {
 
         //可能的操作
         ResponseVo OperateResponseVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, resp);
-        serverContext.sendToSinglePlayer(OperateResponseVo.toJsonObject(), "" + userId);
+        MsgSender.sendMsg2Player(OperateResponseVo.toJsonObject(), userId);
 
     }
 
@@ -279,7 +264,7 @@ public class GameInfo {
      * @param userId
      * @param card
      */
-    public int chupai(ServerContext serverContext, int userId, String card) {
+    public int chupai(int userId, String card) {
         //出牌的玩家
         PlayerCardsInfo chupaiPlayerCardsInfo = playerCardsInfos.get(userId);
         if (this.turnId != userId) {
@@ -300,10 +285,10 @@ public class GameInfo {
         playCardResp.setUserId(userId);
         playCardResp.setCard(this.disCard);
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_PLAY_CARD, playCardResp);
-        serverContext.sendToOnlinePlayer(vo.toJsonObject(), users);
+        MsgSender.sendMsg2Player(vo.toJsonObject(), users);
 
         //其他人能做的操作
-        for (Map.Entry<Integer, PlayerCardsInfo> entry : playerCardsInfos.entrySet()) {
+        for (Map.Entry<Long, PlayerCardsInfo> entry : playerCardsInfos.entrySet()) {
             OperateResp operateResp = new OperateResp();
 
             //其他玩家的处理 碰杠等 如果有加入等待列表(要等待这些玩家"过")
@@ -330,7 +315,7 @@ public class GameInfo {
 
             //可能的操作
             ResponseVo OperateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-            serverContext.sendToSinglePlayer(OperateVo.toJsonObject(), "" + entry.getKey());
+            MsgSender.sendMsg2Player(OperateVo.toJsonObject(), entry.getKey());
         }
 
         resetCanBeOperate(chupaiPlayerCardsInfo);
@@ -338,8 +323,8 @@ public class GameInfo {
 
         //如果等待列表为空 就轮到下个人摸牌
         if (this.waitingforList.size() == 0) {
-            int nextId = nextTurnId(turnId);
-            mopai(serverContext, nextId,"userid : "+userId + " 出牌");
+            long nextId = nextTurnId(turnId);
+            mopai(nextId, "userid : " + userId + " 出牌");
         } else {
             //比较
             compare(waitingforList);
@@ -355,7 +340,7 @@ public class GameInfo {
      * @param userId
      * @param disCard
      */
-    protected void deleteDisCard(int userId, String disCard) {
+    protected void deleteDisCard(long userId, String disCard) {
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo != null) {
             playerCardsInfo.getDisCards().remove(disCard);
@@ -378,7 +363,7 @@ public class GameInfo {
                 } else if (o1.getPoint() < o2.getPoint()) {
                     return 1;
                 } else {
-                    List<Integer> turnList = next3TurnId();
+                    List<Long> turnList = next3TurnId();
                     int index1 = turnList.indexOf(o1.myUserId);
                     int index2 = turnList.indexOf(o2.myUserId);
                     if (index1 < index2) {
@@ -397,10 +382,10 @@ public class GameInfo {
      *
      * @return
      */
-    private List<Integer> next3TurnId() {
-        List<Integer> result = new ArrayList<>();
+    private List<Long> next3TurnId() {
+        List<Long> result = new ArrayList<>();
 
-        int curId = turnId;
+        long curId = turnId;
         for (int i = 0; i < users.size() - 1; i++) {
             curId = nextTurnId(curId);
             result.add(curId);
@@ -419,13 +404,14 @@ public class GameInfo {
         playerCardsInfo.setCanBeXuanfeng(false);
     }
 
-    protected void resetOtherOperate(int userId) {
+    protected void resetOtherOperate(long userId) {
         for (PlayerCardsInfo playerCardsInfo : playerCardsInfos.values()) {
             if (playerCardsInfo.getUserId() != userId) {
                 resetCanBeOperate(playerCardsInfo);
             }
         }
     }
+
     /**
      * 等待信息详情 排序用
      */
@@ -437,7 +423,7 @@ public class GameInfo {
         static final int pengPoint = 1 << 2;
         static final int chiPoint = 1 << 1;
 
-        int myUserId;
+        long myUserId;
         boolean isHu;
         boolean isGang;
         boolean isPeng;
@@ -447,14 +433,13 @@ public class GameInfo {
 
         int operate = -1;
         GameInfo gameInfo;
-        ServerContext serverContext;
         String[] params;
 
 
         public WaitDetail() {
         }
 
-        public WaitDetail(int myUserId, boolean isHu, boolean isGang, boolean isPeng, boolean isChi, boolean isChiTing, boolean isPengTing) {
+        public WaitDetail(long myUserId, boolean isHu, boolean isGang, boolean isPeng, boolean isChi, boolean isChiTing, boolean isPengTing) {
             this.myUserId = myUserId;
             this.isHu = isHu;
             this.isGang = isGang;
@@ -465,13 +450,12 @@ public class GameInfo {
         }
 
 
-        void operate(GameInfo gameInfo,int operate, ServerContext serverContext, String... params) {
+        void operate(GameInfo gameInfo, int operate, String... params) {
             //只有第一次操作有效
             if (this.operate == -1) {
                 this.operate = operate;
                 this.gameInfo = gameInfo;
                 this.params = params;
-                this.serverContext = serverContext;
             }
         }
 
@@ -479,22 +463,22 @@ public class GameInfo {
             PlayerCardsInfo playerCardsInfo = gameInfo.getPlayerCardsInfos().get(myUserId);
             switch (operate) {
                 case huPoint:
-                  gameInfo.doHu(serverContext,playerCardsInfo,myUserId);
-                  break;
+                    gameInfo.doHu(playerCardsInfo, myUserId);
+                    break;
                 case gangPoint:
-                    gameInfo.doGang(serverContext,playerCardsInfo,myUserId);
+                    gameInfo.doGang(playerCardsInfo, myUserId);
                     break;
                 case pengTingPoint:
-                    gameInfo.doPengTing(serverContext, playerCardsInfo, myUserId);
+                    gameInfo.doPengTing(playerCardsInfo, myUserId);
                     break;
                 case chiTingPoint:
-                    gameInfo.doChiTing(serverContext, playerCardsInfo, myUserId,params[0],params[1]);
+                    gameInfo.doChiTing(playerCardsInfo, myUserId, params[0], params[1]);
                     break;
                 case pengPoint:
-                    gameInfo.doPeng(serverContext, playerCardsInfo, myUserId);
+                    gameInfo.doPeng(playerCardsInfo, myUserId);
                     break;
                 case chiPoint:
-                    gameInfo.doChi(serverContext,playerCardsInfo,myUserId,params[0],params[1]);
+                    gameInfo.doChi(playerCardsInfo, myUserId, params[0], params[1]);
                     break;
             }
 
@@ -535,7 +519,7 @@ public class GameInfo {
      *
      * @param userId
      */
-    public int guo(ServerContext serverContext, int userId) {
+    public int guo(int userId) {
 //        if (waitingforList.size() == 0) {
 //            return ErrorCode.CAN_NOT_GUO;
 //        }
@@ -556,15 +540,15 @@ public class GameInfo {
                 if (jieGangHuCard != null) {
                     PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(beJieGangUser);
                     if (playerCardsInfo != null) {
-                        doGang_hand_after(serverContext, playerCardsInfo, true, -1, jieGangHuCard);
+                        doGang_hand_after(playerCardsInfo, true, -1, jieGangHuCard);
                     }
                     beJieGangUser = -1;
                     jieGangHuCard = null;
                 } else {
 
-                    int nextId = nextTurnId(turnId);
+                    long nextId = nextTurnId(turnId);
                     //下个人摸牌
-                    mopai(serverContext, nextId,"过后抓牌");
+                    mopai(nextId, "过后抓牌");
                 }
             }
 
@@ -577,7 +561,7 @@ public class GameInfo {
      *
      * @param userId
      */
-    public int gang(ServerContext serverContext, int userId, String card) {
+    public int gang(int userId, String card) {
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo == null) {
             return ErrorCode.USER_ERROR;
@@ -603,11 +587,11 @@ public class GameInfo {
             operateReqResp.setUserId(userId);
             operateReqResp.setCard(card);
             operateReqResp.setIsMing(isMing);
-            serverContext.sendToOnlinePlayer(vo.toJsonObject(), users);
+            MsgSender.sendMsg2Player(vo.toJsonObject(), users);
 
-            if (isHasJieGangHu &&isMing) {
+            if (isHasJieGangHu && isMing) {
 
-                for (Map.Entry<Integer, PlayerCardsInfo> entry : playerCardsInfos.entrySet()) {
+                for (Map.Entry<Long, PlayerCardsInfo> entry : playerCardsInfos.entrySet()) {
                     OperateResp operateResp = new OperateResp();
 
                     //其他玩家的处理 碰杠等 如果有加入等待列表(要等待这些玩家"过")
@@ -627,7 +611,7 @@ public class GameInfo {
 
                     //可能的操作
                     ResponseVo OperateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-                    serverContext.sendToSinglePlayer(OperateVo.toJsonObject(), "" + entry.getKey());
+                    MsgSender.sendMsg2Player(OperateVo.toJsonObject(), entry.getKey());
                 }
             }
 
@@ -641,7 +625,7 @@ public class GameInfo {
                 //排序
                 compare(waitingforList);
             } else {
-                doGang_hand_after(serverContext,playerCardsInfo, isMing, -1, card);
+                doGang_hand_after(playerCardsInfo, isMing, -1, card);
             }
 
 
@@ -649,18 +633,18 @@ public class GameInfo {
             if (disCard == null || !playerCardsInfo.canBeGang) {
                 return ErrorCode.CAN_NOT_GANG;
             }
-            if(!playerCardsInfo.isCanGangAddThisCard(disCard)){
+            if (!playerCardsInfo.isCanGangAddThisCard(disCard)) {
                 return ErrorCode.CAN_NOT_GANG;
             }
 
             //从等待列表删除
 //            if (waitingforList.size() > 0) {
-                WaitDetail waitDetail = waitingforList.get(0);
-                if (waitDetail!= null && waitDetail.myUserId == userId && waitDetail.isGang) {
-                    waitingforList.clear();
-                } else {
-                    return ErrorCode.NOT_TURN;
-                }
+            WaitDetail waitDetail = waitingforList.get(0);
+            if (waitDetail != null && waitDetail.myUserId == userId && waitDetail.isGang) {
+                waitingforList.clear();
+            } else {
+                return ErrorCode.NOT_TURN;
+            }
 //            }
 
             //删除弃牌
@@ -674,9 +658,9 @@ public class GameInfo {
             operateReqResp.setCard(disCard);
             operateReqResp.setIsMing(true);
             //通知所有人有杠
-            serverContext.sendToOnlinePlayer(vo.toJsonObject(), users);
+            MsgSender.sendMsg2Player(vo.toJsonObject(), users);
 
-            mopai(serverContext, userId,"userId : "+userId + " 点杠后抓牌");
+            mopai(userId, "userId : " + userId + " 点杠后抓牌");
             turnId = userId;
             this.disCard = null;
         }
@@ -687,20 +671,19 @@ public class GameInfo {
 
     }
 
-    protected void doGang_hand_after(ServerContext serverContext, PlayerCardsInfo playerCardsInfo,boolean isMing, int userId,String card){
-        playerCardsInfo.gangCompute(room, this, isMing, -1,card);
-        mopai(serverContext, playerCardsInfo.getUserId(),"userId : "+  playerCardsInfo.getUserId() + " 自摸杠抓牌");
+    protected void doGang_hand_after(PlayerCardsInfo playerCardsInfo, boolean isMing, int userId, String card) {
+        playerCardsInfo.gangCompute(room, this, isMing, -1, card);
+        mopai(playerCardsInfo.getUserId(), "userId : " + playerCardsInfo.getUserId() + " 自摸杠抓牌");
         turnId = playerCardsInfo.getUserId();
     }
 
     /**
      * 碰牌
      *
-     * @param serverContext
      * @param userId
      * @return
      */
-    public int peng(ServerContext serverContext, int userId) {
+    public int peng(int userId) {
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo == null) {
             return ErrorCode.USER_ERROR;
@@ -712,12 +695,12 @@ public class GameInfo {
         if (isCan) {
             //从等待列表删除
 //            if (waitingforList.size() > 0) {
-                WaitDetail waitDetail = waitingforList.get(0);
-                if (waitDetail!=null && waitDetail.myUserId == userId && waitDetail.isPeng) {
-                    waitingforList.clear();
-                } else {
-                    return ErrorCode.NOT_TURN;
-                }
+            WaitDetail waitDetail = waitingforList.get(0);
+            if (waitDetail != null && waitDetail.myUserId == userId && waitDetail.isPeng) {
+                waitingforList.clear();
+            } else {
+                return ErrorCode.NOT_TURN;
+            }
 //            }
             playerCardsInfo.peng(disCard, lastPlayUserId);
             lastOperateUserId = userId;
@@ -736,7 +719,7 @@ public class GameInfo {
 
             //通知其他人
             ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
-            serverContext.sendToOnlinePlayer(vo.toJsonObject(), users);
+            MsgSender.sendMsg2Player(vo.toJsonObject(), users);
 
 
             //碰完能听,杠,不能胡
@@ -748,7 +731,7 @@ public class GameInfo {
             operateResp.setIsCanTing(isCanTing);
             operateResp.setIsCanGang(isCanGang);
             ResponseVo operateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-            serverContext.sendToSinglePlayer(operateVo.toJsonObject(), "" + userId);
+            MsgSender.sendMsg2Player(operateVo.toJsonObject(), userId);
             this.disCard = null;
             //自己将能做的处理
             playerCardsInfo.canBePeng = false;
@@ -765,11 +748,10 @@ public class GameInfo {
     /**
      * 胡牌
      *
-     * @param serverContext
      * @param userId
      * @return
      */
-    public int hu(ServerContext serverContext, int userId) {
+    public int hu(int userId) {
 
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo == null) {
@@ -781,7 +763,7 @@ public class GameInfo {
             }
             room.setBankerId(userId);
             playerCardsInfo.hu_zm(room, this, catchCard);
-            handleHu(serverContext,playerCardsInfo);
+            handleHu(playerCardsInfo);
         } else {
             if (this.disCard == null && jieGangHuCard == null) {
                 return ErrorCode.CAN_NOT_HU;
@@ -793,24 +775,24 @@ public class GameInfo {
                 card = jieGangHuCard;
             }
 
-            if(!playerCardsInfo.isCanHu_dianpao(card)){
+            if (!playerCardsInfo.isCanHu_dianpao(card)) {
                 return ErrorCode.CAN_NOT_HU;
             }
             room.setBankerId(userId);
             //从等待列表删除
 //            if (waitingforList.size() > 0) {
-                WaitDetail waitDetail = waitingforList.get(0);
-                if (waitDetail!=null && waitDetail.myUserId == userId && waitDetail.isHu) {
-                    waitingforList.clear();
-                } else {
-                    return ErrorCode.NOT_TURN;
-                }
+            WaitDetail waitDetail = waitingforList.get(0);
+            if (waitDetail != null && waitDetail.myUserId == userId && waitDetail.isHu) {
+                waitingforList.clear();
+            } else {
+                return ErrorCode.NOT_TURN;
+            }
 //            }
 
             //截杠胡
             if (jieGangHuCard != null) {
                 playerCardsInfo.hu_dianpao(room, this, beJieGangUser, jieGangHuCard);
-                PlayerCardsInfo playerCardsInfoBeJie =  playerCardsInfos.get(beJieGangUser);
+                PlayerCardsInfo playerCardsInfoBeJie = playerCardsInfos.get(beJieGangUser);
                 //删除杠
                 if (playerCardsInfoBeJie != null) {
                     playerCardsInfoBeJie.cards.remove(jieGangHuCard);
@@ -826,82 +808,41 @@ public class GameInfo {
                 playerCardsInfo.hu_dianpao(room, this, lastPlayUserId, disCard);
                 this.disCard = null;
             }
-            handleHu(serverContext,playerCardsInfo);
+            handleHu(playerCardsInfo);
         }
 
 
-        if(HuUtil.getUserAndScore(this.room.getUserScores()).contains("否")){
-        	logger.info("<<<牌局得分>>>"+HuUtil.getUserAndScore(this.room.getUserScores()));
-        }
-        
         return 0;
-        
+
     }
 
-    protected void handleHu(ServerContext serverContext, PlayerCardsInfo playerCardsInfo) {
+    protected void handleHu(PlayerCardsInfo playerCardsInfo) {
         isAlreadyHu = true;
-        sendResult(serverContext, true, playerCardsInfo.getUserId());
-        noticeDissolutionResult(serverContext);
+        sendResult(true, playerCardsInfo.getUserId());
+        noticeDissolutionResult();
         room.clearReadyStatus();
     }
 
-    protected boolean isRoomOver(){
+    protected boolean isRoomOver() {
         return room.getCurGameNumber() >= room.getGameNumber();
     }
-    public void noticeDissolutionResult(ServerContext serverContext) {
 
-        try {
-            if (isRoomOver()) {
-                ArrayList<UserOfResult> userOfResultList = new ArrayList<UserOfResult>();
-                long time = System.currentTimeMillis();
-                for (Integer s : users) {
-                    UserOfResult east = new UserOfResult();
-                    User user = userDao.getUser(s);
-                    user.setRoomId("0");
-                    user.setSeatId("0");
-                    userDao.saveUser(user);
 
-                    east.setUserId(user.getId());
-                    east.setUsername(URLDecoder.decode(user.getUsername(), "utf-8"));
-                    east.setImage(user.getImage());
-                    east.setScores(room.getUserScores().get(s) + "");
-                    east.setTime(time);
-                    //设置胡牌次数
-                    if(room.getHuNum().containsKey(user.getId())){
-                        east.setHuNum(room.getHuNum().get(user.getId()));
-                    }
-                    if(room.getLianZhuangNum().containsKey(user.getId())){
-                        east.setLianZhuangNum(room.getLianZhuangNum().get(user.getId()));
-                    }
-                    if(room.getDianPaoNum().containsKey(user.getId())){
-                        east.setDianPaoNum((room.getDianPaoNum().get(user.getId())));
-                    }
-                    if(room.getMoBaoNum().containsKey(user.getId())){
-                        east.setMoBaoNum(room.getMoBaoNum().get(user.getId()));
-                    }
+    public void noticeDissolutionResult() {
+        if (isRoomOver()) {
+            List<UserOfResult> userOfResultList = this.room.getUserOfResult();
 
-                    userOfResultList.add(east);
-
-                    //删除玩家房间映射关系
-                    GameManager.getInstance().getUserRoom().remove(user.getId());
-                }
-
-                // 存储返回
-                GameOfResult gameOfResult = new GameOfResult();
-                gameOfResult.setUserList(userOfResultList);
-
-                JSONObject noticeEndResult = new JSONObject();
-                noticeEndResult.put("service", "gameService");
-                noticeEndResult.put("method", "noticeDissolutionResult");
-                noticeEndResult.put("params", gameOfResult.toJSONObject());
-                noticeEndResult.put("code", "0");
-
-                serverContext.sendToOnlinePlayer(noticeEndResult, users);
-//                logger.info("===send room over curGameNum: "+room.getCurGameNumber()+"  allGameNum: "+room.getGameNumber());
-                GameManager.getInstance().getRoomLock().remove(room.roomId);
+            for (long userId : users) {
+                //删除玩家房间映射关系
+                RedisManager.getUserRedisService().removeRoom(userId);
             }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+
+            // 存储返回
+            GameOfResult gameOfResult = new GameOfResult();
+            gameOfResult.setUserList(userOfResultList);
+
+            MsgSender.sendMsg2Player("gameService", "noticeDissolutionResult", gameOfResult, users);
+
         }
 
 
@@ -910,11 +851,10 @@ public class GameInfo {
     /**
      * 发送结果
      *
-     * @param serverContext
      * @param isHasWinner
      * @param winnerId
      */
-    protected void sendResult(ServerContext serverContext, boolean isHasWinner, int winnerId) {
+    protected void sendResult(boolean isHasWinner, long winnerId) {
         ResultResp result = new ResultResp();
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_RESULT, result);
 
@@ -929,19 +869,18 @@ public class GameInfo {
             list.add(resp);
         }
         result.setUserInfos(list);
-        serverContext.sendToOnlinePlayer(vo.toJsonObject(), users);
+        MsgSender.sendMsg2Player(vo.toJsonObject(), users);
 
     }
 
     /**
      * 听
      *
-     * @param serverContext
      * @param userId
      * @param card
      * @return
      */
-    public int ting(ServerContext serverContext, int userId, String card) {
+    public int ting(int userId, String card) {
 
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo == null) {
@@ -957,11 +896,14 @@ public class GameInfo {
         temp.addAll(playerCardsInfo.getCards());
         temp.remove(card);
 
+        if (!playerCardsInfo.cards.contains(card)) {
+            return ErrorCode.CAN_NOT_TING;
+        }
         boolean isCan = playerCardsInfo.isCanTing(temp);//不多一张
         if (isCan) {
             playerCardsInfo.ting(card);
             //通知其他玩家听
-            serverContext.sendToOnlinePlayer(vo.toJsonObject(), users);
+            MsgSender.sendMsg2Player(vo.toJsonObject(), users);
 
 
             //通知其他玩家出牌信息
@@ -970,10 +912,10 @@ public class GameInfo {
             playCardResp.setCard(null);
 
             ResponseVo chupaiVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_PLAY_CARD, playCardResp);
-            serverContext.sendToOnlinePlayer(chupaiVo.toJsonObject(), users);
+            MsgSender.sendMsg2Player(chupaiVo.toJsonObject(), users);
 
             //其他人的操作 全是false 听牌后什么都不能操作
-            for (Map.Entry<Integer, PlayerCardsInfo> entry : playerCardsInfos.entrySet()) {
+            for (Map.Entry<Long, PlayerCardsInfo> entry : playerCardsInfos.entrySet()) {
                 PlayerCardsInfo pci = entry.getValue();
                 pci.setCanBeGang(false);
                 pci.setCanBePeng(false);
@@ -982,43 +924,43 @@ public class GameInfo {
 
                 OperateResp operateResp = new OperateResp();
                 ResponseVo OperateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-                serverContext.sendToSinglePlayer(OperateVo.toJsonObject(), "" + entry.getKey());
+                MsgSender.sendMsg2Player(OperateVo.toJsonObject(), entry.getKey());
             }
 
             //摸牌
-            int nextId = nextTurnId(turnId);
-            mopai(serverContext, nextId,"userId : "+ userId + " 听完下家抓牌");
+            long nextId = nextTurnId(turnId);
+            mopai(nextId, "userId : " + userId + " 听完下家抓牌");
         } else {
             return ErrorCode.CAN_NOT_TING;
         }
         return 0;
     }
 
-    public int chi(ServerContext serverContext, int userId, String one, String two) {
+    public int chi(long userId, String one, String two) {
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
         boolean isCanChi = playerCardsInfo.isCanChiThisCard(disCard, one, two);
         if (!isCanChi) {
             return ErrorCode.CAN_NOT_CHI;
         }
 
-        if (disCard == null ||!playerCardsInfo.canBeChi) {
+        if (disCard == null || !playerCardsInfo.canBeChi) {
             return ErrorCode.CAN_NOT_CHI;
         }
         //从等待列表删除
 //        if (waitingforList.size() > 0) {
-            WaitDetail waitDetail = waitingforList.get(0);
-            if (waitDetail != null & waitDetail.myUserId == userId && waitDetail.isChi) {
-                waitingforList.clear();
-            } else {
-                return ErrorCode.NOT_TURN;
-            }
+        WaitDetail waitDetail = waitingforList.get(0);
+        if (waitDetail != null & waitDetail.myUserId == userId && waitDetail.isChi) {
+            waitingforList.clear();
+        } else {
+            return ErrorCode.NOT_TURN;
+        }
 //        }
         OperateReqResp operateReqResp = new OperateReqResp();
         operateReqResp.setOperateType(OperateReqResp.type_chi);
         operateReqResp.setUserId(userId);
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
         //通知其他玩家听
-        serverContext.sendToOnlinePlayer(vo.toJsonObject(), users);
+        MsgSender.sendMsg2Player(vo.toJsonObject(), users);
 
         //吃
         playerCardsInfo.chi(disCard, one, two);
@@ -1032,7 +974,7 @@ public class GameInfo {
         operateResp.setIsCanTing(isCanTing);
         operateResp.setIsCanGang(isCanGang);
         ResponseVo operateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-        serverContext.sendToSinglePlayer(operateVo.toJsonObject(), "" + userId);
+        MsgSender.sendMsg2Player(operateVo.toJsonObject(), userId);
         this.disCard = null;
         //自己将能做的处理
         playerCardsInfo.canBeChi = false;
@@ -1043,7 +985,7 @@ public class GameInfo {
         return 0;
     }
 
-    public int chiTing(ServerContext serverContext, int userId, String one, String two) {
+    public int chiTing(int userId, String one, String two) {
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
         boolean isCanChi = playerCardsInfo.isCanChiThisCard(disCard, one, two);
         if (!isCanChi) {
@@ -1067,7 +1009,7 @@ public class GameInfo {
         operateReqResp.setUserId(userId);
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
         //通知其他玩家听
-        serverContext.sendToOnlinePlayer(vo.toJsonObject(), users);
+        MsgSender.sendMsg2Player(vo.toJsonObject(), users);
 
         //吃
         playerCardsInfo.chi(disCard, one, two);
@@ -1079,7 +1021,7 @@ public class GameInfo {
         operateResp.setIsCanTing(true);
         operateResp.setIsCanGang(false);
         ResponseVo operateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-        serverContext.sendToSinglePlayer(operateVo.toJsonObject(), "" + userId);
+        MsgSender.sendMsg2Player(operateVo.toJsonObject(), userId);
         this.disCard = null;
         //自己将能做的处理
         playerCardsInfo.canBeChi = false;
@@ -1088,7 +1030,7 @@ public class GameInfo {
         return 0;
     }
 
-    public int pengTing(ServerContext serverContext, int userId) {
+    public int pengTing(int userId) {
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
 
         boolean isCan = playerCardsInfo.isCanPengTing(this.disCard);
@@ -1126,7 +1068,7 @@ public class GameInfo {
 
         //通知其他人
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
-        serverContext.sendToOnlinePlayer(vo.toJsonObject(), users);
+        MsgSender.sendMsg2Player(vo.toJsonObject(), users);
 
 
         //碰完能听,杠,不能胡
@@ -1136,7 +1078,7 @@ public class GameInfo {
         operateResp.setIsCanTing(true);
         operateResp.setIsCanGang(false);
         ResponseVo operateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-        serverContext.sendToSinglePlayer(operateVo.toJsonObject(), "" + userId);
+        MsgSender.sendMsg2Player(operateVo.toJsonObject(), userId);
         this.disCard = null;
         //自己将能做的处理
         playerCardsInfo.canBePeng = false;
@@ -1151,13 +1093,12 @@ public class GameInfo {
     /**
      * 交换牌 测试功能
      *
-     * @param serverContext
      * @param userId
      * @param srcType
      * @param desType
      * @return
      */
-    public int exchange(ServerContext serverContext, int userId, int srcType, int desType) {
+    public int exchange(int userId, int srcType, int desType) {
         if (!isTest) {
             return 0;
         }
@@ -1199,13 +1140,13 @@ public class GameInfo {
         }
 
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_EXCHANGE, new PlayerCardsResp(playerCardsInfo));
-        serverContext.sendToSinglePlayer(vo.toJsonObject(), "" + userId);
+        MsgSender.sendMsg2Player(vo.toJsonObject(), userId);
 
         return 0;
 
     }
 
-    public int needCard(ServerContext serverContext, int userId, int cardType) {
+    public int needCard(int userId, int cardType) {
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
         playerCardsInfo.nextNeedCard = cardType;
         return 0;
@@ -1226,7 +1167,7 @@ public class GameInfo {
      * @param curId
      * @return
      */
-    public int nextTurnId(int curId) {
+    public long nextTurnId(long curId) {
         int index = users.indexOf(curId);
 
         int nextId = index + 1;
@@ -1240,7 +1181,7 @@ public class GameInfo {
      * 荒庄积分清零
      */
     protected void turnResultToZeroOnHuangZhuang() {
-        for (Integer i : room.getUserScores().keySet()) {
+        for (long i : room.getUserScores().keySet()) {
             room.setUserSocre(i, -getPlayerCardsInfos().get(i).getScore());
             if (this.getPlayerCardsInfos().get(i) != null) {
                 this.getPlayerCardsInfos().get(i).setScore(0);
@@ -1249,110 +1190,162 @@ public class GameInfo {
     }
 
 
-    protected void addUserOperate(int userId, int type) {
-        Map<Integer, Integer> result = new HashMap<>();
+    protected void addUserOperate(long userId, int type) {
+        Map<Long, Integer> result = new HashMap<>();
         result.put(userId, type);
         this.userOperateList.add(result);
     }
 
-    protected void doChiTing(ServerContext serverContext, PlayerCardsInfo playerCardsInfo, int userId, String one, String two){}
-    protected void doPengTing(ServerContext serverContext, PlayerCardsInfo playerCardsInfo, int userId){}
-    protected void doChi(ServerContext serverContext, PlayerCardsInfo playerCardsInfo, int userId, String one, String two){}
-    protected void doPeng(ServerContext serverContext, PlayerCardsInfo playerCardsInfo, int userId){}
-    protected void doGang(ServerContext serverContext, PlayerCardsInfo playerCardsInfo, int userId){}
-    protected void doHu(ServerContext serverContext, PlayerCardsInfo playerCardsInfo, int userId){}
-
-    private static void testCompare() {
-        GameInfo info = new GameInfo();
-        List<Integer> users = new ArrayList<>();
-        users.add(1);
-        users.add(2);
-        users.add(3);
-        users.add(4);
-        info.users = users;
-        info.turnId = 1;
-        List<WaitDetail> list = new ArrayList<>();
-        WaitDetail waitDetail1 = new WaitDetail();
-        WaitDetail waitDetail2 = new WaitDetail();
-        WaitDetail waitDetail3 = new WaitDetail();
-        list.add(waitDetail1);
-        list.add(waitDetail2);
-        list.add(waitDetail3);
-        waitDetail1.isHu = true;
-        waitDetail1.myUserId = 2;
-
-        waitDetail2.isGang = true;
-        waitDetail2.myUserId = 3;
-
-        waitDetail3.isHu = true;
-        waitDetail3.myUserId = 4;
-        info.compare(list);
-        System.out.println(list);
+    protected void doChiTing(PlayerCardsInfo playerCardsInfo, long userId, String one, String two) {
     }
 
+    protected void doPengTing(PlayerCardsInfo playerCardsInfo, long userId) {
+    }
+
+    protected void doChi(PlayerCardsInfo playerCardsInfo, long userId, String one, String two) {
+    }
+
+    protected void doPeng(PlayerCardsInfo playerCardsInfo, long userId) {
+    }
+
+    protected void doGang(PlayerCardsInfo playerCardsInfo, long userId) {
+    }
+
+    protected void doHu(PlayerCardsInfo playerCardsInfo, long userId) {
+    }
+
+
+    public static Logger getLogger() {
+        return logger;
+    }
+
+    public static boolean isIsTest() {
+        return isTest;
+    }
+
+    public static String getGsjNofeng() {
+        return GSJ_NOFENG;
+    }
+
+    public static String getDphNofeng() {
+        return DPH_NOFENG;
+    }
+
+    public int getGameId() {
+        return gameId;
+    }
+
+    public GameInfo setGameId(int gameId) {
+        this.gameId = gameId;
+        return this;
+    }
+
+    public int getPlayerSize() {
+        return playerSize;
+    }
+
+    public GameInfo setPlayerSize(int playerSize) {
+        this.playerSize = playerSize;
+        return this;
+    }
+
+    public int getCardSize() {
+        return cardSize;
+    }
+
+    public GameInfo setCardSize(int cardSize) {
+        this.cardSize = cardSize;
+        return this;
+    }
 
     public int getGameModel() {
         return gameModel;
     }
 
-    public void setGameModel(int gameModel) {
+    public GameInfo setGameModel(int gameModel) {
         this.gameModel = gameModel;
+        return this;
     }
 
     public List<String> getRemainCards() {
         return remainCards;
     }
 
-    public void setRemainCards(List<String> remainCards) {
+    public GameInfo setRemainCards(List<String> remainCards) {
         this.remainCards = remainCards;
+        return this;
     }
 
     public String getDisCard() {
         return disCard;
     }
 
-    public void setDisCard(String disCard) {
+    public GameInfo setDisCard(String disCard) {
         this.disCard = disCard;
+        return this;
     }
 
-    public int getTurnId() {
+    public long getTurnId() {
         return turnId;
     }
 
-    public void setTurnId(int turnId) {
+    public GameInfo setTurnId(long turnId) {
         this.turnId = turnId;
+        return this;
     }
 
-    public int getLastPlayUserId() {
+    public long getLastPlayUserId() {
         return lastPlayUserId;
     }
 
-    public void setLastPlayUserId(int lastPlayUserId) {
+    public GameInfo setLastPlayUserId(long lastPlayUserId) {
         this.lastPlayUserId = lastPlayUserId;
+        return this;
     }
 
-    public int getLastMoPaiUserId() {
+    public long getLastMoPaiUserId() {
         return lastMoPaiUserId;
     }
 
-    public void setLastMoPaiUserId(int lastMoPaiUserId) {
+    public GameInfo setLastMoPaiUserId(long lastMoPaiUserId) {
         this.lastMoPaiUserId = lastMoPaiUserId;
+        return this;
     }
 
-    public Map<Integer, PlayerCardsInfo> getPlayerCardsInfos() {
+    public String getCatchCard() {
+        return catchCard;
+    }
+
+    public GameInfo setCatchCard(String catchCard) {
+        this.catchCard = catchCard;
+        return this;
+    }
+
+    public long getLastOperateUserId() {
+        return lastOperateUserId;
+    }
+
+    public GameInfo setLastOperateUserId(long lastOperateUserId) {
+        this.lastOperateUserId = lastOperateUserId;
+        return this;
+    }
+
+    public Map<Long, PlayerCardsInfo> getPlayerCardsInfos() {
         return playerCardsInfos;
     }
 
-    public void setPlayerCardsInfos(Map<Integer, PlayerCardsInfo> playerCardsInfos) {
+    public GameInfo setPlayerCardsInfos(Map<Long, PlayerCardsInfo> playerCardsInfos) {
         this.playerCardsInfos = playerCardsInfos;
+        return this;
     }
 
-    public int getFirstTurn() {
+    public long getFirstTurn() {
         return firstTurn;
     }
 
-    public void setFirstTurn(int firstTurn) {
+    public GameInfo setFirstTurn(long firstTurn) {
         this.firstTurn = firstTurn;
+        return this;
     }
 
     public List<WaitDetail> getWaitingforList() {
@@ -1364,77 +1357,21 @@ public class GameInfo {
         return this;
     }
 
-    public List<Integer> getUsers() {
+    public List<Long> getUsers() {
         return users;
     }
 
-    public void setUsers(List<Integer> users) {
+    public GameInfo setUsers(List<Long> users) {
         this.users = users;
+        return this;
     }
 
-    public int getGameId() {
-        return gameId;
+    public boolean isAlreadyHu() {
+        return isAlreadyHu;
     }
 
-    public void setGameId(int gameId) {
-        this.gameId = gameId;
-    }
-
-    public GameDao getGameDao() {
-        return gameDao;
-    }
-
-    public void setGameDao(GameDao gameDao) {
-        this.gameDao = gameDao;
-    }
-
-    public UserDao getUserDao() {
-        return userDao;
-    }
-
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    public RoomDao getRoomDao() {
-        return roomDao;
-    }
-
-    public void setRoomDao(RoomDao roomDao) {
-        this.roomDao = roomDao;
-    }
-
-
-    public UserRecodeDao getUserRecodeDao() {
-        return userRecodeDao;
-    }
-
-    public void setUserRecodeDao(UserRecodeDao userRecodeDao) {
-        this.userRecodeDao = userRecodeDao;
-    }
-
-    public int getPlayerSize() {
-        return playerSize;
-    }
-
-    public void setPlayerSize(int playerSize) {
-        this.playerSize = playerSize;
-    }
-
-    public int getCardSize() {
-        return cardSize;
-    }
-
-    public void setCardSize(int cardSize) {
-        this.cardSize = cardSize;
-    }
-
-    public RoomInfo getRoom() {
-        return room;
-    }
-
-    public GameInfo setRoom(RoomInfo room) {
-        this.room = room;
+    public GameInfo setAlreadyHu(boolean alreadyHu) {
+        isAlreadyHu = alreadyHu;
         return this;
     }
 
@@ -1456,22 +1393,6 @@ public class GameInfo {
         return this;
     }
 
-    public static String getUserAndScore(Map<Integer,Integer> map){
-    	StringBuffer sb = new StringBuffer();
-    	int temp = 0;
-    	for (Integer i : map.keySet()) {
-			sb.append("UserId:"+i+"得分为："+map.get(i));
-			sb.append(";");
-			temp+=map.get(i);
-		}
-    	sb.append("是不是0和："+ (temp==0?"是":"否"));
-    	return sb.toString();
-    }
-    
-    public static void main(String[] args) {
-    	
-	}
-
     public boolean isHasJieGangHu() {
         return isHasJieGangHu;
     }
@@ -1481,12 +1402,21 @@ public class GameInfo {
         return this;
     }
 
-    public int getChangeBaoSize() {
-        return changeBaoSize;
+    public String getJieGangHuCard() {
+        return jieGangHuCard;
     }
 
-    public GameInfo setChangeBaoSize(int changeBaoSize) {
-        this.changeBaoSize = changeBaoSize;
+    public GameInfo setJieGangHuCard(String jieGangHuCard) {
+        this.jieGangHuCard = jieGangHuCard;
+        return this;
+    }
+
+    public long getBeJieGangUser() {
+        return beJieGangUser;
+    }
+
+    public GameInfo setBeJieGangUser(long beJieGangUser) {
+        this.beJieGangUser = beJieGangUser;
         return this;
     }
 
@@ -1499,21 +1429,57 @@ public class GameInfo {
         return this;
     }
 
-    public int getJieXuanfengCardType() {
+    public long getBeJieXuanfengUser() {
+        return beJieXuanfengUser;
+    }
+
+    public GameInfo setBeJieXuanfengUser(long beJieXuanfengUser) {
+        this.beJieXuanfengUser = beJieXuanfengUser;
+        return this;
+    }
+
+    public long getJieXuanfengCardType() {
         return jieXuanfengCardType;
     }
 
-    public GameInfo setJieXuanfengCardType(int jieXuanfengCardType) {
+    public GameInfo setJieXuanfengCardType(long jieXuanfengCardType) {
         this.jieXuanfengCardType = jieXuanfengCardType;
         return this;
     }
 
-    public int getBeJieXuanfengUser() {
-        return beJieXuanfengUser;
+    public RoomInfo getRoom() {
+        return room;
     }
 
-    public GameInfo setBeJieXuanfengUser(int beJieXuanfengUser) {
-        this.beJieXuanfengUser = beJieXuanfengUser;
+    public GameInfo setRoom(RoomInfo room) {
+        this.room = room;
+        return this;
+    }
+
+    public boolean isHasWaitCache() {
+        return isHasWaitCache;
+    }
+
+    public GameInfo setHasWaitCache(boolean hasWaitCache) {
+        isHasWaitCache = hasWaitCache;
+        return this;
+    }
+
+    public int getChangeBaoSize() {
+        return changeBaoSize;
+    }
+
+    public GameInfo setChangeBaoSize(int changeBaoSize) {
+        this.changeBaoSize = changeBaoSize;
+        return this;
+    }
+
+    public List<Map<Long, Integer>> getUserOperateList() {
+        return userOperateList;
+    }
+
+    public GameInfo setUserOperateList(List<Map<Long, Integer>> userOperateList) {
+        this.userOperateList = userOperateList;
         return this;
     }
 }

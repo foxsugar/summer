@@ -1,5 +1,6 @@
 package com.code.server.game.room;
 
+import com.code.server.constant.game.UserBean;
 import com.code.server.redis.service.RoomRedisService;
 import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.SpringUtil;
@@ -24,4 +25,11 @@ public class RedisManager {
     public static RoomRedisService getRoomRedisService(){
         return SpringUtil.getBean(RoomRedisService.class);
     }
+
+    public static void addGold(long userId, double add){
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        userBean.setGold(userBean.getGold() + add);
+        RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+    }
+
 }

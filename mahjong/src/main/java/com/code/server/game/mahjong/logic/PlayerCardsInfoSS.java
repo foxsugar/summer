@@ -1,7 +1,6 @@
 package com.code.server.game.mahjong.logic;
 
 
-
 import com.code.server.game.mahjong.util.*;
 
 import java.util.ArrayList;
@@ -186,7 +185,7 @@ public class PlayerCardsInfoSS extends PlayerCardsInfo {
 	// 杠牌分数计算
 	@Override
 	public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing,
-			int diangangUser, String card) {
+                            long diangangUser, String card) {
 		super.gangCompute(room, gameInfo, isMing, diangangUser, card);
 		if (this.roomInfo.getGameType().equals("HT")
 				|| this.roomInfo.getGameType().equals("JL")
@@ -238,7 +237,7 @@ public class PlayerCardsInfoSS extends PlayerCardsInfo {
 	// 胡牌分数计算;
 	@Override
 	public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo,
-			int dianpaoUser, String card) {
+						  long dianpaoUser, String card) {
 		List<String> cs = getCardsNoChiPengGang(cards);
 		List<HuCardType> huList = HuUtil.isHu(cs, this,CardTypeUtil.cardType.get(card), new HuLimit(0));
 		// 设置胡牌类型

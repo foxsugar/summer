@@ -23,7 +23,7 @@ public class RoomMsgDispatch {
         long userId = msgKey.getUserId();
         int code = dispatchRoomService(method, params, userId,roomId);
         if(code != 0){
-            Player.sendMsg2Player(service,method,code,userId);
+            MsgSender.sendMsg2Player(service,method,code,userId);
         }
 
 
@@ -51,7 +51,7 @@ public class RoomMsgDispatch {
 //            }
             case "joinRoom": {
 
-                Room room = RoomManager.getRoom(roomId);
+                IfaceRoom room = RoomManager.getRoom(roomId);
                 if (room == null) {
                     return ErrorCode.CANNOT_JOIN_ROOM_NOT_EXIST;
                 }
@@ -64,28 +64,28 @@ public class RoomMsgDispatch {
 //
 //            }
             case "quitRoom": {
-                Room room = RoomManager.getRoom(roomId);
+                IfaceRoom room = RoomManager.getRoom(roomId);
                 if (room == null) {
                     return ErrorCode.CAN_NOT_NO_ROOM;
                 }
                 return room.quitRoom(userId);
             }
             case "getReady": {
-                Room room = RoomManager.getRoom(roomId);
+                IfaceRoom room = RoomManager.getRoom(roomId);
                 if (room == null) {
                     return ErrorCode.CAN_NOT_NO_ROOM;
                 }
                 return room.getReady(userId);
             }
             case "dissolveRoom": {
-                Room room = RoomManager.getRoom(roomId);
+                IfaceRoom room = RoomManager.getRoom(roomId);
                 if (room == null) {
                     return ErrorCode.CAN_NOT_NO_ROOM;
                 }
                 return room.dissolution(userId, true, method);
             }
             case "answerIfDissolveRoom":
-                Room room = RoomManager.getRoom(roomId);
+                IfaceRoom room = RoomManager.getRoom(roomId);
                 if (room == null) {
                     return ErrorCode.CAN_NOT_NO_ROOM;
                 }

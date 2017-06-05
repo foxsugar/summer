@@ -6,7 +6,7 @@ import java.util.List;
  * Created by T420 on 2016/12/1.
  */
 public class ResultResp {
-    private int winnerId = -1;
+    private long winnerId = -1;
     private String baoCard;
     private List<PlayerCardsResp> userInfos;
 
@@ -20,12 +20,13 @@ public class ResultResp {
         return this;
     }
 
-    public int getWinnerId() {
+    public long getWinnerId() {
         return winnerId;
     }
 
-    public void setWinnerId(int winnerId) {
+    public ResultResp setWinnerId(long winnerId) {
         this.winnerId = winnerId;
+        return this;
     }
 
     public List<PlayerCardsResp> getUserInfos() {

@@ -1,5 +1,7 @@
 package com.code.server.game.room.service;
 
+import com.code.server.game.room.IfaceRoom;
+import com.code.server.game.room.RedisManager;
 import com.code.server.game.room.Room;
 
 import java.util.HashMap;
@@ -11,7 +13,7 @@ import java.util.Map;
 public class RoomManager {
 
 
-    private Map<String, Room> rooms = new HashMap<>();
+    private Map<String, IfaceRoom> rooms = new HashMap<>();
 
     private static RoomManager ourInstance = new RoomManager();
 
@@ -22,15 +24,17 @@ public class RoomManager {
     private RoomManager() {
     }
 
-    public static Room getRoom(String roomId){
+    public static IfaceRoom getRoom(String roomId){
         return getInstance().rooms.get(roomId);
     }
 
     public static void removeRoom(String roomId) {
         getInstance().rooms.remove(roomId);
+        RedisManager.getRoomRedisService().removeServer(roomId);
     }
 
-    public static void addRoom(String roomId, Room room) {
+    public static void addRoom(String roomId,String serverId, Room room) {
         getInstance().rooms.put(roomId, room);
+        RedisManager.getRoomRedisService().setServerId(roomId,serverId);
     }
 }
