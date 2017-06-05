@@ -104,6 +104,7 @@ public class LoginAction {
                     String token = MD5Util.MD5Encode(time + account + password, "UTF-8");
                     userRedisService.setTokenAccount(user.getAccount(),token);// 添加用户名-token
                     userRedisService.setUserBeanAccount(userBean);// 添加用户名-userbean
+                    userRedisService.setToken(user.getUserId(),token);
 
                     params = token;
                 } else {//密码错误
@@ -179,8 +180,6 @@ public class LoginAction {
         results.put("code",code);
         return results;
     }
-
-
 
     public UserVo getUserVo(User user){
         UserVo vo = new UserVo();
