@@ -12,6 +12,7 @@ class UserBean implements IUserBean {
     String image; // required
     String seatId; // required
     String account; // required
+    String password;
     String ipConfig; // required
     double money; // required
     double gold;
