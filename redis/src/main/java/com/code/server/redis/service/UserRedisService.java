@@ -120,4 +120,29 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
         HashOperations<String,Long,String> user_token = redisTemplate.opsForHash();
         return user_token.get(USER_TOKEN, userId);
     }
+
+
+    @Override
+    public void setTokenAccount(String account, String token) {
+        HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
+        user_token.put(USER_TOKEN, account,token);
+    }
+
+    @Override
+    public String getTokenAccount(String account) {
+        HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
+        return user_token.get(USER_TOKEN, account);
+    }
+
+    @Override
+    public UserBean getUserBeanAccount(String account) {
+        HashOperations<String,String,UserBean> user_bean = redisTemplate.opsForHash();
+        return user_bean.get(USER_BEAN, account);
+    }
+
+    @Override
+    public void setUserBeanAccount(UserBean userBean) {
+        HashOperations<String,String,UserBean> user_bean = redisTemplate.opsForHash();
+        user_bean.put(USER_BEAN,userBean.getAccount(),userBean);
+    }
 }
