@@ -60,12 +60,12 @@ public class LoginAction {
 
            String redisTokey = userRedisService.getTokenAccount(account);
 
-           //判断tokey是否存在redis
+           //判断token是否存在redis
         if(token_user!=null && redisTokey!=null){
            if(token_user.equals(redisTokey)){
                params = token_user;
            }else{
-               code = 100000;
+               code = ErrorCode.REDIS_NO_TOKEN;
             }
         }else {
             UserBean userBeanRedis = userRedisService.getUserBeanAccount(account);
@@ -74,7 +74,7 @@ public class LoginAction {
                 if(password.equals(userBeanRedis.getPassword())){
                     params = userBeanRedis;
                 }else{
-                    code = 100000;
+                    code = ErrorCode.ROLE_ACCOUNT_OR_PASSWORD_ERROR;
                 }
             }else {
                 User user = userService.getUserByAccountAndPassword(account, password);
@@ -112,7 +112,7 @@ public class LoginAction {
                         userService.save(user);
                         params = getUserVo(user);
                     } else {
-                        code = ErrorCode.USERID_ERROR;
+                        code = ErrorCode.ROLE_ACCOUNT_OR_PASSWORD_ERROR;
                     }
                 }
             }
