@@ -21,6 +21,7 @@ import java.util.List;
 public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConstant,IUser_Token {
 
 
+
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -85,6 +86,12 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     public UserBean getUserBean(long userId) {
         HashOperations<String,Long,UserBean> user_bean = redisTemplate.opsForHash();
         return user_bean.get(USER_BEAN, userId);
+    }
+
+    @Override
+    public void setUserBean(UserBean userBean) {
+        HashOperations<String,Long,UserBean> user_bean = redisTemplate.opsForHash();
+        user_bean.put(USER_BEAN,userBean.getId(),userBean);
     }
 
     @Override

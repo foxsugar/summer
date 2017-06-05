@@ -19,6 +19,8 @@ public interface IUserRedis {
 
     UserBean getUserBean(long userId);
 
+    void setUserBean(UserBean userBean);
+
     List<UserBean> getUserBeans(List<Long> users);
 
 
