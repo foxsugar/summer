@@ -19,4 +19,23 @@ public class UserRecord {
     @Lob
     @Column(columnDefinition = "longtext")
     private Record record = new Record();
+
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public UserRecord setUserId(long userId) {
+        this.userId = userId;
+        return this;
+    }
+
+    public Record getRecord() {
+        return record;
+    }
+
+    public UserRecord setRecord(Record record) {
+        this.record = record;
+        return this;
+    }
 }

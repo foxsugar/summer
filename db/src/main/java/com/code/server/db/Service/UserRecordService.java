@@ -21,7 +21,7 @@ public class UserRecordService {
     private IUserRecordDao userRecordDao;
 
     public UserRecord getUserByUserRecord(long userid) {
-        UserRecord user = userRecordDao.getUserByUserRecord(userid);
+        UserRecord user = userRecordDao.getUserByUserId(userid);
         if (user == null) {
             return null;
         }

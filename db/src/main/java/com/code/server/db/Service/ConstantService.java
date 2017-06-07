@@ -17,7 +17,4 @@ public class ConstantService {
     @Autowired
     public IConstantDao constantDao;
 
-    public Constant getConstant(){
-        return constantDao.getConstant();
-    }
 }
