@@ -19,6 +19,16 @@ public interface IConstant {
     //玩家token
     String USER_TOKEN = "user_token";
 
+    //用户名-user
+    String ACCOUNT_USER = "account_user";
+    //user-用户名
+    String USER_ACCOUNT = "user_account";
+
+    //openid-user
+    String OPENID_USER = "openid_user";
+    //user-openid
+    String USER_OPENID = "user_openid";
+
     //游戏逻辑服务列表
     String GAME_SERVER_LIST = "game_server_list";
 
