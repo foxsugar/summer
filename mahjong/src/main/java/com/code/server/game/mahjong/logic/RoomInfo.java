@@ -423,7 +423,7 @@ public class RoomInfo extends Room {
      * @throws
      * @Title: 添加1
      * @Creater: Clark
-     * @Description: TODO(这里用一句话描述这个方法的作用)
+     * @Description:
      */
     public void addOneToCircleNumber() {
         int temp = getCurCircle();

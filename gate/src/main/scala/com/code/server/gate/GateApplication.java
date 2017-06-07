@@ -3,7 +3,7 @@ package com.code.server.gate;
 import com.code.server.gate.bootstarp.SocketServer;
 import com.code.server.gate.config.ServerConfig;
 import com.code.server.gate.config.ServerState;
-import com.code.server.gate.util.SpringUtil;
+import com.code.server.util.SpringUtil;
 import com.code.server.util.ThreadPool;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

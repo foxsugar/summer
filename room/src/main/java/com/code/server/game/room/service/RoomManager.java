@@ -29,8 +29,12 @@ public class RoomManager {
     }
 
     public static void removeRoom(String roomId) {
+        //本地内存删除room
         getInstance().rooms.remove(roomId);
+        //删除room-serverId 映射
         RedisManager.getRoomRedisService().removeServer(roomId);
+        //删除room-user映射
+        RedisManager.getRoomRedisService().removeRoomUsers(roomId);
     }
 
     public static void addRoom(String roomId,String serverId, Room room) {

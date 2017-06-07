@@ -25,24 +25,24 @@ public class CardStruct {
     public static final int type_飞机带翅膀 = 20;
 
 
-    int outCard = 0;//默认是出牌  0
-    long userid;//当前出牌的人
-    long nextUserId;//下一个要出牌的人
-    List<Integer> cards;
-    int type;
-    List<Integer> dan;// 单
-    List<Integer> dui; //对
-    List<Integer> san;  //三
-    List<Integer> zha;  //炸
-    List<Integer> feiji; //飞机
-    List<Integer> shun; //顺
-    List<Integer> liandui; //连对
-    List<Integer> sandaidan; //三带一
-    List<Integer> sandaidui; //三带二
-    List<Integer> sidaier; //四带二
-    List<Integer> feiji_chibang_dan;//飞机带翅膀_单
-    List<Integer> feiji_chibang_dui;//飞机带翅膀_对
-    List<Integer> huojian; //火箭
+    public int outCard = 0;//默认是出牌  0
+    public long userid;//当前出牌的人
+    public long nextUserId;//下一个要出牌的人
+    public List<Integer> cards;
+    public int type;
+    public List<Integer> dan;// 单
+    public List<Integer> dui; //对
+    public List<Integer> san;  //三
+    public List<Integer> zha;  //炸
+    public List<Integer> feiji; //飞机
+    public List<Integer> shun; //顺
+    public List<Integer> liandui; //连对
+    public List<Integer> sandaidan; //三带一
+    public List<Integer> sandaidui; //三带二
+    public List<Integer> sidaier; //四带二
+    public List<Integer> feiji_chibang_dan;//飞机带翅膀_单
+    public List<Integer> feiji_chibang_dui;//飞机带翅膀_对
+    public List<Integer> huojian; //火箭
 
     public  List<Integer> getByTypeList(int type){
         if(type == type_单){

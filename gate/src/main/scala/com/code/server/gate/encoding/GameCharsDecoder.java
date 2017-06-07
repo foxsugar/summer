@@ -1,5 +1,7 @@
 package com.code.server.gate.encoding;
 
+import com.code.server.util.JsonUtil;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -49,7 +51,8 @@ public class GameCharsDecoder extends ByteToMessageDecoder {
         buf.readBytes(data);
 
         String str = new String(data, "utf-8");
-        JSONObject json = JSONObject.fromObject(str);
+        JsonNode json = JsonUtil.readTree(str);
+//        JSONObject json = JSONObject.fromObject(str);
 
         list.add(json);
     }

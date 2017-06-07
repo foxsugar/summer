@@ -9,5 +9,6 @@ interface IKafaTopic {
     String ROOM_TOPIC = "room_topic"
     String RECONN_TOPIC = "reconnService"
     String INNER_GATE_TOPIC = "inner_gate_topic"
+    String CENTER_TOPIC = "center_topic"
 
 }

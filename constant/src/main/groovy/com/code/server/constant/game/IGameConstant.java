@@ -1,9 +1,11 @@
 package com.code.server.constant.game;
 
+import com.code.server.constant.kafka.IkafkaMsgId;
+
 /**
  * Created by sunxianping on 2017/5/11.
  */
-public interface IGameConstant {
+public interface IGameConstant extends IkafkaMsgId{
     int ROOM_CREATE_TYPE_CONMMON = 0;
     int ROOM_CREATE_TYPE_GOLD = 1;
 

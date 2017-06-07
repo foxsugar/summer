@@ -52,9 +52,20 @@ public class MsgProducer {
         send2Partition(topic,partition,key,json);
     }
 
+    public void send2Partition(String topic, int partition, Object key, Object object){
+        String json = JsonUtil.toJson(object);
+        String keyJson = JsonUtil.toJson(key);
+        send2Partition(topic,partition,keyJson,json);
+    }
+
     public void send(String topic, String key, Object object){
         String json = JsonUtil.toJson(object);
         send(topic,key,json);
+    }
+
+
+    public void send(String topic, Object key, Object object){
+        send(topic,JsonUtil.toJson(key),object);
     }
 
 

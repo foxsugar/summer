@@ -1,6 +1,8 @@
 package com.code.server.gate.service;
 
+import com.code.server.gate.config.ServerConfig;
 import com.code.server.util.JsonUtil;
+import com.code.server.util.SpringUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.AttributeKey;
 
@@ -48,13 +50,22 @@ public class GateManager {
     public static void removeUserNettyCtx(long userId){
         getInstance().userNettyCtx.remove(userId);
     }
-    public static void sendMsg(long userId,String msg){
+
+    public static void sendMsg(String msg, long userId){
         ChannelHandlerContext ctx = getUserNettyCtxByUserId(userId);
         ctx.writeAndFlush(msg);
     }
 
-    public static void sendMsg(long userId, Object object) {
+    public static void sendMsg(Object object, long userId) {
         String json = JsonUtil.toJson(object);
-        sendMsg(userId,json);
+        sendMsg(json, userId);
     }
+
+
+    public static int getGateId(){
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        return serverConfig.getGateId();
+    }
+
+
 }

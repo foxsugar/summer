@@ -139,10 +139,12 @@ public class Room implements IfaceRoom {
     //TODO
     protected void addUser2RoomRedis(long userId) {
         RedisManager.getUserRedisService().setRoomId(userId, roomId);
+        RedisManager.getRoomRedisService().addUser(roomId, userId);
     }
 
     protected void removeUserRoomRedis(long userId) {
         RedisManager.getUserRedisService().removeRoom(userId);
+        RedisManager.getRoomRedisService().removeUser(roomId, userId);
     }
 
     protected void roomAddUser(long userId) {
@@ -151,6 +153,8 @@ public class Room implements IfaceRoom {
         this.userStatus.put(userId, 0);
         this.userScores.put(userId, 0D);
         addUser2RoomRedis(userId);
+
+
     }
 
     protected void roomRemoveUser(long userId) {
