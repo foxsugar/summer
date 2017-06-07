@@ -44,12 +44,12 @@ public class UserServiceMsgDispatch {
             }
             case "bindReferrer": {
 
-                Player player = GameManager.getPlayerByCtx(ctx);
-                if (player == null) {
-                    return ErrorCode.YOU_HAVE_NOT_LOGIN;
-                }
-                int referrerId = params.getInt("referrerId");
-                return gameUserService.bindReferrer(player, referrerId);
+//                Player player = GameManager.getPlayerByCtx(ctx);
+//                if (player == null) {
+//                    return ErrorCode.YOU_HAVE_NOT_LOGIN;
+//                }
+//                int referrerId = params.getInt("referrerId");
+//                return gameUserService.bindReferrer(player, referrerId);
 
             }
             case "giveOtherMoney":

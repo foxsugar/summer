@@ -3,11 +3,11 @@ package com.code.server.login.action;
 
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.ErrorCode;
-import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserVo;
 import com.code.server.db.Service.ConstantService;
 import com.code.server.db.Service.ServerService;
 import com.code.server.db.Service.UserService;
+import com.code.server.db.model.Constant;
 import com.code.server.db.model.User;
 
 
@@ -49,9 +49,12 @@ public class LoginAction {
     @Autowired
     private ConstantService constantService;
 
-    @Value("serverConfig.serverId")
-    public int serverId;
+//    @Value("serverConfig.serverId")
+    public int serverId = 1;
 
+    private Constant getConstant(){
+        return constantService.constantDao.findOne(1L);
+    }
 
     @RequestMapping("/login")
     public Map<String,Object> login( String account,String password,String token_user){
@@ -75,8 +78,8 @@ public class LoginAction {
                 userBean.setUuid(user.getUuid());
                 userBean.setOpenId(user.getOpenId());
                 userBean.setSex(user.getSex());
-                userBean.setMarquee(constantService.getConstant().getMarquee());
-                userBean.setDownload2(constantService.getConstant().getDownload2());
+                userBean.setMarquee(getConstant().getMarquee());
+                userBean.setDownload2(getConstant().getDownload2());
 
                 userRedisService.setUserBean(userBean);//userid-userbean
                 userRedisService.setUserMoney(user.getUserId(), user.getMoney());//userid-money
@@ -113,8 +116,8 @@ public class LoginAction {
                     userBean.setUuid(user.getUuid());
                     userBean.setOpenId(user.getOpenId());
                     userBean.setSex(user.getSex());
-                    userBean.setMarquee(constantService.getConstant().getMarquee());
-                    userBean.setDownload2(constantService.getConstant().getDownload2());
+                    userBean.setMarquee(getConstant().getMarquee());
+                    userBean.setDownload2(getConstant().getDownload2());
 
                     userRedisService.setUserBean(userBean);//userid-userbean
                     userRedisService.setUserMoney(user.getUserId(), user.getMoney());//userid-money
@@ -197,7 +200,7 @@ public class LoginAction {
                 user.setSex(sex);
                 user.setVip(0);
                 user.setUuid("0");
-                user.setMoney(constantService.getConstant().getInitMoney());
+                user.setMoney(getConstant().getInitMoney());
                 userService.save(user);
 
                 params.add(getUserVo(user));
@@ -227,8 +230,8 @@ public class LoginAction {
             userBean.setUuid(user.getUuid());
             userBean.setOpenId(user.getOpenId());
             userBean.setSex(user.getSex());
-            userBean.setMarquee(constantService.getConstant().getMarquee());
-            userBean.setDownload2(constantService.getConstant().getDownload2());
+            userBean.setMarquee(getConstant().getMarquee());
+            userBean.setDownload2(getConstant().getDownload2());
 
             userRedisService.setUserBean(userBean);//userid-userbean
             userRedisService.setUserMoney(user.getUserId(), user.getMoney());//userid-money
@@ -266,7 +269,7 @@ public class LoginAction {
     public Map<String,Object> appleCheck(){
         Map<String,Object> params = new HashMap<>();
         params.put("isInAppleCheck",serverService.getAllServerInfo().get(0).getAppleCheck());
-        params.put("address",constantService.getConstant().getDownload());
+        params.put("address",getConstant().getDownload());
         params.put("appleVersion",serverService.getAllServerInfo().get(0).getVersionOfIos());
         params.put("androidVersion",serverService.getAllServerInfo().get(0).getVersionOfAndroid());
         return getParams("appleCheck",params,0);
@@ -288,8 +291,8 @@ public class LoginAction {
         vo.setIpConfig(user.getIpConfig());
         vo.setAccount(user.getAccount());
         vo.setImage(user.getImage());
-        vo.setMarquee(constantService.getConstant().getMarquee());
-        vo.setDownload2(constantService.getConstant().getDownload2());
+        vo.setMarquee(getConstant().getMarquee());
+        vo.setDownload2(getConstant().getDownload2());
         vo.setSex(user.getSex());
         vo.setOpenId(user.getOpenId());
         vo.setMoney(user.getMoney());
@@ -322,7 +325,7 @@ public class LoginAction {
         newUser.setSex(1);
         newUser.setVip(0);
         newUser.setUuid("0");
-        newUser.setMoney(constantService.getConstant().getInitMoney());
+        newUser.setMoney(getConstant().getInitMoney());
 
         return newUser;
     }

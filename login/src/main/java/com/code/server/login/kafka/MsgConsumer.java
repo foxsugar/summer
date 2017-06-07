@@ -2,6 +2,7 @@ package com.code.server.login.kafka;
 
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.util.JsonUtil;
+import com.code.server.util.SpringUtil;
 import com.code.server.util.ThreadPool;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -19,8 +20,7 @@ import org.springframework.stereotype.Service;
 @Component
 public class MsgConsumer {
 
-    @Autowired
-    UserServiceMsgDispatch userServiceMsgDispatch;
+
 
 
 
@@ -33,6 +33,7 @@ public class MsgConsumer {
             String value = record.value();
             KafkaMsgKey msgKey = JsonUtil.readValue(key, KafkaMsgKey.class);
             JsonNode msgValue = JsonUtil.readTree(value);
+            UserServiceMsgDispatch userServiceMsgDispatch = SpringUtil.getBean(UserServiceMsgDispatch.class);
             userServiceMsgDispatch.dispatchMsg(msgKey,msgValue);
         });
 

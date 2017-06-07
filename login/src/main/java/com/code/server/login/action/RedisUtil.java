@@ -1,6 +1,6 @@
 package com.code.server.login.action;
 
-import com.code.server.db.model.UserInfo;
+import com.code.server.constant.db.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
