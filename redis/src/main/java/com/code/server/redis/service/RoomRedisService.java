@@ -18,7 +18,7 @@ import java.util.Set;
 public class RoomRedisService implements IRoom_Server ,IConstant,IRoom_Users{
 
 
-    private static final String room_user = "room_user";
+    private static final String room_user = "room_user|";
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -74,6 +74,6 @@ public class RoomRedisService implements IRoom_Server ,IConstant,IRoom_Users{
     }
 
     private String getRoom_user_key(String roomId){
-        return room_user+"|"+roomId;
+        return room_user+roomId;
     }
 }
