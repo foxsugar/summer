@@ -43,7 +43,7 @@ public class PlayerCardsInfoDPH extends PlayerCardsInfo {
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card){
 		super.gangCompute(room,gameInfo,isMing,diangangUser,card);
     	if(!isMing){//暗杠
-        	for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+        	for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
         		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
         		room.setUserSocre(i, - 2 * room.getMultiple());
         	}
@@ -51,7 +51,7 @@ public class PlayerCardsInfoDPH extends PlayerCardsInfo {
         	room.setUserSocre(this.userId, 2 * room.getPersonNumber() * room.getMultiple());
     	}else{//明杠
     		if(diangangUser==-1){
-    			for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+    			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
             		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple());
             		room.setUserSocre(i, - room.getMultiple());
             	}
@@ -77,7 +77,7 @@ public class PlayerCardsInfoDPH extends PlayerCardsInfo {
 
     	if(isZimo){
     		if(huCardType.specialHuList.contains(hu_夹张)&& !huCardType.specialHuList.contains(hu_一条龙) && !huCardType.specialHuList.contains(hu_清一色)&&!huCardType.specialHuList.contains(hu_清龙)){
-    			for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+    			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
             		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple() * 4);
             		room.setUserSocre(i,  - room.getMultiple() * 4);
             	}
@@ -89,7 +89,7 @@ public class PlayerCardsInfoDPH extends PlayerCardsInfo {
             	this.winType.add(hu_砍胡);
             	this.winType.remove(hu_夹张);
     		}else{
-    			for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+    			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
             		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple() * MahjongCode.HUTOSCOREDPH.get(""+ CardUtil.huForScoresDPH(getCardsNoChiPengGang(cards),huCardType)));
             		room.setUserSocre(i,  - room.getMultiple() * MahjongCode.HUTOSCOREDPH.get(""+CardUtil.huForScoresDPH(getCardsNoChiPengGang(cards),huCardType)));
             	}

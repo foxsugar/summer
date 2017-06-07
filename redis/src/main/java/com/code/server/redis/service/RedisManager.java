@@ -1,8 +1,6 @@
-package com.code.server.game.room;
+package com.code.server.redis.service;
 
 import com.code.server.constant.game.UserBean;
-import com.code.server.redis.service.RoomRedisService;
-import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.SpringUtil;
 
 /**

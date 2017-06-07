@@ -101,14 +101,14 @@ public class PlayerCardsInfoGSJ extends PlayerCardsInfo {
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card){
 		super.gangCompute(room,gameInfo,isMing,diangangUser,card);
     	if(!isMing){//暗杠
-        	for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+        	for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
         		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - GANG_AN_SCORE);
         		room.setUserSocre(i, - GANG_AN_SCORE);
         	}
         	this.score = this.score + 3 * GANG_AN_SCORE;
         	room.setUserSocre(this.userId, 3 * GANG_AN_SCORE);
     	}else{//明杠
-    		for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+    		for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
         		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - GANG_MING_SCORE);
         		room.setUserSocre(i, - GANG_MING_SCORE);
         	}
@@ -133,7 +133,7 @@ public class PlayerCardsInfoGSJ extends PlayerCardsInfo {
 
 		if(this.userId==gameInfo.getFirstTurn()){//庄赢
 			if(isZimo){
-				for (Integer i : gameInfo.getPlayerCardsInfos().keySet()) {
+				for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
 					gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * huForScoresOfZhuangWin(cards,huCardType) - 2 * BANKER_BASE_SCORE * bankerNumber(room.getBankerMap()));
 					room.setUserSocre(i,- 2 * huForScoresOfZhuangWin(cards,huCardType) - 2 * BANKER_BASE_SCORE * bankerNumber(room.getBankerMap()));
 				}
@@ -142,7 +142,7 @@ public class PlayerCardsInfoGSJ extends PlayerCardsInfo {
 				this.fan = huForScoresOfZhuangWin(cards,huCardType);
 				//this.winType = CardUtil.huForWinTypeGSJ(cards);
 			}else{
-				for (Integer i : gameInfo.getPlayerCardsInfos().keySet()) {
+				for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
 					gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - huForScoresOfZhuangWin(cards,huCardType) - BANKER_BASE_SCORE * bankerNumber(room.getBankerMap()));
 					room.setUserSocre(i,- huForScoresOfZhuangWin(cards,huCardType) - BANKER_BASE_SCORE * bankerNumber(room.getBankerMap()));
 				}
@@ -154,7 +154,7 @@ public class PlayerCardsInfoGSJ extends PlayerCardsInfo {
 		}
 		else{//闲赢
 			if(isZimo){
-				for (Integer i : gameInfo.getPlayerCardsInfos().keySet()) {
+				for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
 					if(i==gameInfo.getFirstTurn()){
 						gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * huForScoresOfXianWinDownZhuang(cards,huCardType)- 2 * BANKER_BASE_SCORE * bankerNumber(room.getBankerMap()));
 						room.setUserSocre(i,- 2 * huForScoresOfXianWinDownZhuang(cards,huCardType) - 2 * BANKER_BASE_SCORE * bankerNumber(room.getBankerMap()));
@@ -168,7 +168,7 @@ public class PlayerCardsInfoGSJ extends PlayerCardsInfo {
 				this.fan = huForScoresOfXianWinDownXian(cards,huCardType);
 				//this.winType = CardUtil.huForWinTypeGSJ(cards);
 			}else{
-				for (Integer i : gameInfo.getPlayerCardsInfos().keySet()) {
+				for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
 					if(i==gameInfo.getFirstTurn()){
 						gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - huForScoresOfXianWinDownZhuang(cards,huCardType) - BANKER_BASE_SCORE * bankerNumber(room.getBankerMap()));
 						room.setUserSocre(i,- huForScoresOfXianWinDownZhuang(cards,huCardType) - BANKER_BASE_SCORE * bankerNumber(room.getBankerMap()));

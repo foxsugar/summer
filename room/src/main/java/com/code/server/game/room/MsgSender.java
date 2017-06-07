@@ -5,6 +5,7 @@ package com.code.server.game.room;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.kafka.MsgProducer;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 
 import java.util.List;

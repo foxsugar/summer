@@ -712,7 +712,7 @@ public class PlayerCardsInfoQAKT extends PlayerCardsInfo {
         //chis.add(chi1);
         //chis.add(chi2);
 //        chis.add(chi1);
-        playerCardsInfo.mingGangType.put(13,1);
+        playerCardsInfo.mingGangType.put(13,1L);
 //        playerCardsInfo.chiType.add(11);
 //        playerCardsInfo.chiType.add(2);
         //playerCardsInfo.chiType.add(5);

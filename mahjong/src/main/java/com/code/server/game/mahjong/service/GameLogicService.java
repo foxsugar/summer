@@ -2,13 +2,12 @@ package com.code.server.game.mahjong.service;
 
 
 import com.code.server.game.mahjong.logic.GameInfo;
-import com.code.server.game.mahjong.logic.GameInfoJiuZhou;
 import com.code.server.game.mahjong.logic.RoomInfo;
-
+import com.code.server.game.room.IfaceRoom;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.util.JsonUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
-import net.sf.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -21,33 +20,16 @@ public class GameLogicService {
     protected static final Logger logger = Logger.getLogger("game");
 
 
-    public int dispatch(String method, JSONObject paramsjSONObject) {
+    public static int dispatch(long userId, String method, String roomId, JsonNode paramsjSONObject) {
 
-        int gameId = paramsjSONObject.getInt("gameId");
-        int userId = paramsjSONObject.getInt("userId");
 
         String card = "";
         if (paramsjSONObject.has("card")) {
-            card = paramsjSONObject.getString("card");
+            card = paramsjSONObject.get("card").asText();
         }
         int code = 0;
 
-
-
-        String roomId = "";
-
-
-
         switch (method) {
-            case "connection":
-                break;
-            case "createRoomByUser":
-                break;
-            case "createRoomByEachUser":
-                break;
-            case "createRoomButNotInRoom":
-                break;
-
             case "playCard":
                 code = playCard(roomId, userId, card);
                 break;
@@ -67,46 +49,51 @@ public class GameLogicService {
                 code = hu(roomId, userId);
                 break;
             case "chi":
-                String one = paramsjSONObject.getString("one");
-                String two = paramsjSONObject.getString("two");
+                String one = paramsjSONObject.get("one").asText();
+                String two = paramsjSONObject.get("two").asText();
                 code = chi(roomId, userId, one, two);
                 break;
             case "chiTing":
-                String one1 = paramsjSONObject.getString("one");
-                String two1 = paramsjSONObject.getString("two");
+                String one1 = paramsjSONObject.get("one").asText();
+                String two1 = paramsjSONObject.get("two").asText();
                 code = chiTing(roomId, userId, one1, two1);
                 break;
             case "pengTing":
                 code = pengTing(roomId, userId);
                 break;
             case "exchange":
-                int srcType = paramsjSONObject.getInt("srcType");
-                int desType = paramsjSONObject.getInt("desType");
+                int srcType = paramsjSONObject.get("srcType").asInt();
+                int desType = paramsjSONObject.get("desType").asInt();
                 code = exchange(roomId, userId, srcType, desType);
                 break;
             case "needCard":
-                int cardType = paramsjSONObject.getInt("cardType");
+                int cardType = paramsjSONObject.get("cardType").asInt();
                 code = needCard(roomId, userId, cardType);
                 break;
             case "xuanfengdan":
-                int xuanfengType = paramsjSONObject.getInt("xuanfengType");
-                String xuanfengCard = paramsjSONObject.getString("xuanfengCards");
+                int xuanfengType = paramsjSONObject.get("xuanfengType").asInt();
+                String xuanfengCard = paramsjSONObject.get("xuanfengCards").asText();
                 List<String> xuanfengCardList = JsonUtil.readValue(xuanfengCard, new TypeReference<List<String>>() {
                 });
-                code = xuanfengdan(roomId, userId, xuanfengType, xuanfengCardList);
+//                code = xuanfengdan(roomId, userId, xuanfengType, xuanfengCardList);
                 break;
         }
         return code;
     }
 
 
-    private GameInfo getGameInfo(String roomId){
-        RoomInfo roomInfo = (RoomInfo)RoomManager.getRoom(roomId);
-        return roomInfo.getGameInfo();
-    }
-    public int playCard(String roomId, int userId, String card) {
+    private static GameInfo getGameInfo(String roomId) {
+        IfaceRoom room = RoomManager.getRoom(roomId);
+        if (room != null) {
+            return (GameInfo) room.getGame();
+        }
+        return null;
 
-        RoomInfo roomInfo = (RoomInfo)RoomManager.getRoom(roomId);
+    }
+
+    public static int playCard(String roomId, long userId, String card) {
+
+        RoomInfo roomInfo = (RoomInfo) RoomManager.getRoom(roomId);
         GameInfo gameInfo = getGameInfo(roomId);
         if (roomInfo != null) {
             roomInfo.setCanDissloution(false);
@@ -114,57 +101,58 @@ public class GameLogicService {
         return gameInfo.chupai(userId, card);
     }
 
-    public int next(String roomId, int userId) {
+    public static int next(String roomId, long userId) {
         return getGameInfo(roomId).guo(userId);
     }
 
-    public int peng(String roomId, int userId) {
+    public static int peng(String roomId, long userId) {
         return getGameInfo(roomId).peng(userId);
     }
 
-    public int gang(String roomId, int userId, String card) {
+    public static int gang(String roomId, long userId, String card) {
 
         return getGameInfo(roomId).gang(userId, card);
     }
 
-    public int ting(String roomId, int userId, String card) {
+    public static int ting(String roomId, long userId, String card) {
 
         return getGameInfo(roomId).ting(userId, card);
     }
 
-    public int hu(String roomId, int userId) {
+    public static int hu(String roomId, long userId) {
 
         return getGameInfo(roomId).hu(userId);
     }
 
-    public int chi(String roomId, int userId, String one, String two) {
+    public static int chi(String roomId, long userId, String one, String two) {
 
         return getGameInfo(roomId).chi(userId, one, two);
     }
 
-    public int chiTing(String roomId, int userId, String one, String two) {
+    public static int chiTing(String roomId, long userId, String one, String two) {
 
         return getGameInfo(roomId).chiTing(userId, one, two);
     }
 
-    public int pengTing(String roomId, int userId) {
+    public static int pengTing(String roomId, long userId) {
 
         return getGameInfo(roomId).pengTing(userId);
     }
 
-    public int exchange(String roomId, int userId, int srcType, int desType) {
+    public static int exchange(String roomId, long userId, int srcType, int desType) {
 
         return getGameInfo(roomId).exchange(userId, srcType, desType);
     }
 
-    public int needCard(String roomId, int userId, int cardType) {
+    public static int needCard(String roomId, long userId, int cardType) {
 
         return getGameInfo(roomId).needCard(userId, cardType);
     }
 
-    public int xuanfengdan(String roomId, int userId, int xuanfengType, List<String> xuanfengCard) {
+    public int xuanfengdan(String roomId, long userId, int xuanfengType, List<String> xuanfengCard) {
 
-        return ((GameInfoJiuZhou)getGameInfo(roomId)).xuanfengdan(serverContext, userId, xuanfengType, xuanfengCard);
+//        return (GameInfoJiuZhou)getGameInfo(roomId).xuanfengdan(serverContext, userId, xuanfengType, xuanfengCard);
+        return 0;
     }
 
 }

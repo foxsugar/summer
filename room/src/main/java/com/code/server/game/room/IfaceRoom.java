@@ -16,5 +16,7 @@ public interface IfaceRoom extends IGameConstant {
 
     int dissolution(long userId,boolean agreeOrNot, String method);
 
+    IfaceGame getGame();
+
     IfaceRoomVo toVo();
 }

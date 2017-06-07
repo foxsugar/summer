@@ -8,7 +8,8 @@
  */
 package com.code.server.game.mahjong.util;
 
-import com.byz.mj.serviceNew.CardTypeUtil;
+
+import com.code.server.game.mahjong.logic.CardTypeUtil;
 
 import java.util.ArrayList;
 import java.util.List;

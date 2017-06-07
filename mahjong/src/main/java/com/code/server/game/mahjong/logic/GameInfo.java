@@ -6,7 +6,7 @@ import com.code.server.constant.response.UserOfResult;
 import com.code.server.game.mahjong.response.*;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.MsgSender;
-import com.code.server.game.room.RedisManager;
+import com.code.server.redis.service.RedisManager;
 import org.apache.log4j.Logger;
 import java.util.*;
 
@@ -260,11 +260,10 @@ public class GameInfo extends Game {
 
     /**
      * 出牌
-     *
-     * @param userId
+     *  @param userId
      * @param card
      */
-    public int chupai(int userId, String card) {
+    public int chupai(long userId, String card) {
         //出牌的玩家
         PlayerCardsInfo chupaiPlayerCardsInfo = playerCardsInfos.get(userId);
         if (this.turnId != userId) {
@@ -519,7 +518,7 @@ public class GameInfo extends Game {
      *
      * @param userId
      */
-    public int guo(int userId) {
+    public int guo(long userId) {
 //        if (waitingforList.size() == 0) {
 //            return ErrorCode.CAN_NOT_GUO;
 //        }
@@ -561,7 +560,7 @@ public class GameInfo extends Game {
      *
      * @param userId
      */
-    public int gang(int userId, String card) {
+    public int gang(long userId, String card) {
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo == null) {
             return ErrorCode.USER_ERROR;
@@ -683,7 +682,7 @@ public class GameInfo extends Game {
      * @param userId
      * @return
      */
-    public int peng(int userId) {
+    public int peng(long userId) {
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo == null) {
             return ErrorCode.USER_ERROR;
@@ -751,7 +750,7 @@ public class GameInfo extends Game {
      * @param userId
      * @return
      */
-    public int hu(int userId) {
+    public int hu(long userId) {
 
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo == null) {
@@ -880,7 +879,7 @@ public class GameInfo extends Game {
      * @param card
      * @return
      */
-    public int ting(int userId, String card) {
+    public int ting(long userId, String card) {
 
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo == null) {
@@ -985,7 +984,7 @@ public class GameInfo extends Game {
         return 0;
     }
 
-    public int chiTing(int userId, String one, String two) {
+    public int chiTing(long userId, String one, String two) {
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
         boolean isCanChi = playerCardsInfo.isCanChiThisCard(disCard, one, two);
         if (!isCanChi) {
@@ -1030,7 +1029,7 @@ public class GameInfo extends Game {
         return 0;
     }
 
-    public int pengTing(int userId) {
+    public int pengTing(long userId) {
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
 
         boolean isCan = playerCardsInfo.isCanPengTing(this.disCard);
@@ -1098,7 +1097,7 @@ public class GameInfo extends Game {
      * @param desType
      * @return
      */
-    public int exchange(int userId, int srcType, int desType) {
+    public int exchange(long userId, int srcType, int desType) {
         if (!isTest) {
             return 0;
         }
@@ -1146,7 +1145,7 @@ public class GameInfo extends Game {
 
     }
 
-    public int needCard(int userId, int cardType) {
+    public int needCard(long userId, int cardType) {
         PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
         playerCardsInfo.nextNeedCard = cardType;
         return 0;

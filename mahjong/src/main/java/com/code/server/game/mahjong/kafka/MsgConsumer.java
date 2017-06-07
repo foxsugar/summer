@@ -1,6 +1,6 @@
 package com.code.server.game.mahjong.kafka;
 
-import com.code.server.game.mahjong.util.SpringUtil;
+import com.code.server.game.mahjong.service.MsgDispatch;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.TopicPartition;
@@ -17,16 +17,23 @@ public class MsgConsumer {
     @KafkaListener(id = "gameLogicService", topicPartitions = {
             @TopicPartition(topic = "gameLogicService", partitions = "${serverConfig.serverId}")
     })
-    public void listen(ConsumerRecord<?, ?> record) {
-
-
-        System.out.println(record.toString());
-        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
-
-        msgProducer.send("gate",0,record.toString());
-
-
+    public void listen(ConsumerRecord<String, String> record) {
+        MsgDispatch.dispatch(record);
     }
 
 
+    @KafkaListener(id = "reconn_topic", topicPartitions = {
+            @TopicPartition(topic = "reconn_topic", partitions = "${serverConfig.serverId}")
+    })
+    public void listen_reconn(ConsumerRecord<String, String> record) {
+        MsgDispatch.dispatch(record);
+    }
+
+
+    @KafkaListener(id = "mjRoomService", topicPartitions = {
+            @TopicPartition(topic = "mahjongRoomService", partitions = "${serverConfig.serverId}")
+    })
+    public void listen_room(ConsumerRecord<String, String> record) {
+        MsgDispatch.dispatch(record);
+    }
 }

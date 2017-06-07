@@ -1,10 +1,10 @@
 package com.code.server.gate.service
 
 import com.code.server.constant.kafka.{IKafaTopic, KafkaMsgKey, KickUser}
-import com.code.server.constant.response.{ErrorCode, ResponseVo}
+import com.code.server.constant.response.{ErrorCode, ReconnectResp, ResponseVo, RoomVo}
 import com.code.server.gate.config.ServerConfig
 import com.code.server.kafka.MsgProducer
-import com.code.server.redis.service.{RoomRedisService, UserRedisService}
+import com.code.server.redis.service.{RedisManager, RoomRedisService, UserRedisService}
 import com.code.server.util.{JsonUtil, SpringUtil}
 import io.netty.channel.ChannelHandlerContext
 import net.sf.json.JSONObject
@@ -17,6 +17,7 @@ object NettyMsgDispatch {
 
   /**
     * 分发消息
+    *
     * @param msg
     * @param ctx
     */
@@ -34,19 +35,31 @@ object NettyMsgDispatch {
         //直接发到kafka
         case "userService" =>
           //gateId 做key
-          val partition =  SpringUtil.getBean(classOf[ServerConfig]).getServerId
+          val partition = SpringUtil.getBean(classOf[ServerConfig]).getServerId
           val kafkaKey = new KafkaMsgKey
           kafkaKey.setUserId(userId)
           kafkaKey.setPartition(partition)
           val keyJson = JsonUtil.toJson(kafkaKey)
-          SpringUtil.getBean(classOf[MsgProducer]).send(service,keyJson, msg)
+          SpringUtil.getBean(classOf[MsgProducer]).send(service, keyJson, msg)
 
-        case "roomService" => roomService_dispatch(userId,method,params,msg)
+        case "roomService" => roomService_dispatch(userId, method, params, msg)
 
+        case "reconnService" => reconnService_dispatch(userId, msg)
+
+        case "mahjongRoomService" =>
+          val msgKey = new KafkaMsgKey
+          msgKey.setUserId(userId)
+          SpringUtil.getBean(classOf[MsgProducer]).send(service, JsonUtil.toJson(msgKey), msg)
+
+        case "pokerRoomSrvice" =>
+          val msgKey = new KafkaMsgKey
+          msgKey.setUserId(userId)
+          SpringUtil.getBean(classOf[MsgProducer]).send(service, JsonUtil.toJson(msgKey), msg)
+        //游戏逻辑
         case _ =>
           val roomAndPartition = getPartitionByUserId(userId)
-          if(roomAndPartition == null) {
-            GateManager.sendMsg(userId,new ResponseVo("roomService",method,ErrorCode.CAN_NOT_NO_ROOM))
+          if (roomAndPartition == null) {
+            GateManager.sendMsg(userId, new ResponseVo("roomService", method, ErrorCode.CAN_NOT_NO_ROOM))
             return
           }
           //玩家id做key
@@ -55,8 +68,9 @@ object NettyMsgDispatch {
           val msgKey = new KafkaMsgKey
           msgKey.setUserId(userId)
           msgKey.setRoomId(roomId)
-          msgKey.setPartition(partition.toInt);
-          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(service,partition.toInt,JsonUtil.toJson(msgKey), msg)
+          msgKey.setPartition(partition.toInt)
+          //按service的名字 分topic
+          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(service, partition.toInt, JsonUtil.toJson(msgKey), msg)
 
       }
 
@@ -65,6 +79,7 @@ object NettyMsgDispatch {
 
   /**
     * 网关消息分发
+    *
     * @param method
     * @param params
     * @param jsonObject
@@ -84,6 +99,7 @@ object NettyMsgDispatch {
 
   /**
     * 房间消息分发
+    *
     * @param userId
     * @param method
     * @param params
@@ -93,65 +109,86 @@ object NettyMsgDispatch {
     val msgKey = new KafkaMsgKey
     msgKey.setUserId(userId)
     method match {
-        //加入房间有roomId
+      //加入房间有roomId
       case "joinRoom" =>
         val roomId = params.getString("roomId")
         val partition = getPartitionByRoomId(roomId)
-        if(partition == null) {
-          GateManager.sendMsg(userId,new ResponseVo("roomService",method,ErrorCode.CAN_NOT_NO_ROOM))
-        }else{
+        if (partition == null) {
+          GateManager.sendMsg(userId, new ResponseVo("roomService", method, ErrorCode.CAN_NOT_NO_ROOM))
+        } else {
           msgKey.setRoomId(roomId)
           msgKey.setPartition(partition.toInt)
-          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(IKafaTopic.ROOM_TOPIC,partition.toInt,JsonUtil.toJson(msgKey),msg)
+          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(IKafaTopic.ROOM_TOPIC, partition.toInt, JsonUtil.toJson(msgKey), msg)
         }
 
 
+      //解散房间等其他消息
       case _ =>
         val roomAndPartition = getPartitionByUserId(userId)
-        if(roomAndPartition == null) {
-          GateManager.sendMsg(userId,new ResponseVo("roomService",method,ErrorCode.CAN_NOT_NO_ROOM))
-        }else{
+        if (roomAndPartition == null) {
+          GateManager.sendMsg(userId, new ResponseVo("roomService", method, ErrorCode.CAN_NOT_NO_ROOM))
+        } else {
           val roomId = roomAndPartition._1
           val partition = roomAndPartition._2
           msgKey.setRoomId(roomId)
           msgKey.setPartition(partition.toInt)
-          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(IKafaTopic.ROOM_TOPIC,partition.toInt,JsonUtil.toJson(msgKey),msg)
+          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(IKafaTopic.ROOM_TOPIC, partition.toInt, JsonUtil.toJson(msgKey), msg)
         }
+    }
+  }
+
+  def reconnService_dispatch(userid : Long,msg:Object):Unit = {
+    val roomId = RedisManager.getUserRedisService.getRoomId(userid)
+    if(roomId == null) {
+      val reconnectResp = new ReconnectResp
+      reconnectResp.setExist(false)
+      val vo = new ResponseVo("reconnService", "reconnection", reconnectResp)
+      GateManager.sendMsg(userid, vo)
+
+    }else {
+      val partition = getPartitionByRoomId(roomId)
+      val msgKey = new KafkaMsgKey
+      msgKey.setRoomId(roomId)
+      msgKey.setUserId(userid)
+      SpringUtil.getBean(classOf[MsgProducer]).send2Partition(IKafaTopic.RECONN_TOPIC, partition.toInt, JsonUtil.toJson(msgKey), msg)
     }
   }
 
   /**
     * 通过roomId找到分区
+    *
     * @param roomId
     * @return
     */
-  def getPartitionByRoomId(roomId : String):String = {
+  def getPartitionByRoomId(roomId: String): String = {
     val redisService = SpringUtil.getBean(classOf[RoomRedisService])
     redisService.getServerId(roomId)
   }
 
   /**
     * 通过userId找到分区
+    *
     * @param userId
     * @return
     */
-  def getPartitionByUserId(userId : Long):(String,String) = {
+  def getPartitionByUserId(userId: Long): (String, String) = {
     val userRedisService = SpringUtil.getBean(classOf[UserRedisService])
     val roomId = userRedisService.getRoomId(userId)
-    if(roomId == null) {
+    if (roomId == null) {
       return null
     }
     val partition = getPartitionByRoomId(roomId)
-    if(partition == null) {
+    if (partition == null) {
       return null
     }
-    (roomId,partition)
+    (roomId, partition)
 
   }
 
 
   /**
     * 登录gate
+    *
     * @param userId
     * @param token
     * @param ctx
@@ -163,7 +200,7 @@ object NettyMsgDispatch {
     if (token != token_redis) {
       return ErrorCode.ID_TOKEN_NOT_MATCH
     }
-    val loginGateId  = userRedisService.getGateId(userId)
+    val loginGateId = userRedisService.getGateId(userId)
     //登录过
     if (loginGateId != null) {
       val loginGateIdInt = loginGateId.toInt

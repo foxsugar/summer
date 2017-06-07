@@ -43,7 +43,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfo {
 		super.gangCompute(room,gameInfo,isMing,diangangUser,card);
     	if(this.roomInfo.getGameType().equals("HT") || this.roomInfo.getGameType().equals("JL") ||this.roomInfo.getGameType().equals("DS")){
     		if(!isMing){//暗杠
-            	for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+            	for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
             		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
             		room.setUserSocre(i, - 2 * room.getMultiple());
             	}
@@ -51,7 +51,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfo {
             	room.setUserSocre(this.userId, 2 * room.getPersonNumber() * room.getMultiple());
         	}else{//明杠
         		if(diangangUser==-1){
-        			for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+        			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
                 		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple());
                 		room.setUserSocre(i, - room.getMultiple());
                 	}
@@ -79,7 +79,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfo {
     	if(this.roomInfo.getGameType().equals("JL") ||this.roomInfo.getGameType().equals("DS")){
     		if(isZimo){
         		if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3"))){//平胡
-        			for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+        			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
         				gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
         				room.setUserSocre(i, - 2 * room.getMultiple());
         			}
@@ -88,7 +88,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfo {
         			this.fan = 2;
 //        			this.winType.add(HuType.hu_普通胡);
             	}else if(room.getModeTotal().equals("2") && (room.getMode().equals("2")||room.getMode().equals("4"))){//大胡
-            		for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+            		for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
             			gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple() * MahjongCode.HUTOSCOREFORJD.get(""+ CardUtil.huForScores(cards,huCardType)));
             			room.setUserSocre(i,  - room.getMultiple() * MahjongCode.HUTOSCOREFORJD.get(""+CardUtil.huForScores(cards,huCardType)));
             		}
@@ -128,7 +128,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfo {
     	else if(this.roomInfo.getGameType().equals("HT")){
     		if(isZimo){
         		if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3"))){//平胡
-        			for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+        			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
         				gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
         				room.setUserSocre(i, - 2 * room.getMultiple());
         			}
@@ -138,7 +138,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfo {
 //        			this.winType.add(HuType.hu_普通胡);
             	}else if(room.getModeTotal().equals("2") && (room.getMode().equals("2")||room.getMode().equals("4"))){//大胡
             		if(3==MahjongCode.HUTOSCOREFORHT.get(""+CardUtil.huForScores(cards,huCardType)+"")){
-            			for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+            			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
             				gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
             				room.setUserSocre(i, - 2 * room.getMultiple());
             			}
@@ -146,7 +146,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfo {
             			room.setUserSocre(this.userId, 2 * room.getPersonNumber() * room.getMultiple());
             			this.fan = 2;
             		}else{
-            			for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+            			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
                 			gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple() * MahjongCode.HUTOSCOREFORHT.get(""+CardUtil.huForScores(cards,huCardType)));
                 			room.setUserSocre(i,  - room.getMultiple() * MahjongCode.HUTOSCOREFORHT.get(""+CardUtil.huForScores(cards,huCardType)));
                 		}
@@ -177,7 +177,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfo {
     	}else{
     		if(isZimo){
         		if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3"))){//平胡
-        			for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+        			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
         				gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
         				room.setUserSocre(i, - 2 * room.getMultiple());
         			}
@@ -186,7 +186,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfo {
         			this.fan = 2;
 //        			this.winType.add(HuType.hu_普通胡);
             	}else if(room.getModeTotal().equals("2") && (room.getMode().equals("2")||room.getMode().equals("4"))){//大胡
-            		for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+            		for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
             			gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple() * MahjongCode.HUTOSCORE.get(""+CardUtil.huForScores(cards,huCardType))/3);
             			room.setUserSocre(i,  - 2 * room.getMultiple() * MahjongCode.HUTOSCORE.get(""+CardUtil.huForScores(cards,huCardType))/3);
             		}
@@ -217,7 +217,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfo {
     	
     	if(!this.roomInfo.getGameType().equals("HT") && !this.roomInfo.getGameType().equals("JL") && !this.roomInfo.getGameType().equals("DS")){
     		if(this.anGangType.size()>0){
-    			for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+    			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
             		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * this.anGangType.size() * room.getMultiple());
             		room.setUserSocre(i, - 2 * this.anGangType.size()* room.getMultiple());
             	}
@@ -227,7 +227,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfo {
     		if(this.mingGangType.size()>0){
     			for (Integer userId : this.mingGangType.keySet()) {
     				if(this.mingGangType.get(userId)==-1){
-    					for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
+    					for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
     	            		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple());
     	            		room.setUserSocre(i, - room.getMultiple());
     	            	}
