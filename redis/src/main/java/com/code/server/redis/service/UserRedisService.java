@@ -90,8 +90,8 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
 
     @Override
     public void setUserBean(UserBean userBean) {
-        HashOperations<String,Long,UserBean> user_bean = redisTemplate.opsForHash();
-        user_bean.put(USER_BEAN,userBean.getId(),userBean);
+        HashOperations<String,String,UserBean> user_bean = redisTemplate.opsForHash();
+        user_bean.put(USER_BEAN,""+userBean.getId(),userBean);
     }
 
     @Override
@@ -123,50 +123,50 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
 
 
     @Override
-    public String getAccountByUserId(long userId) {
-        HashOperations<String,Long,String> user_token = redisTemplate.opsForHash();
+    public String getAccountByUserId(String userId) {
+        HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
         return user_token.get(USER_ACCOUNT, userId);
     }
 
     @Override
-    public void setUserIdAccount(long userId, String account) {
-        HashOperations<String,Long,String> user_token = redisTemplate.opsForHash();
+    public void setUserIdAccount(String userId, String account) {
+        HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
         user_token.put(USER_ACCOUNT, userId,account);
     }
 
     @Override
-    public Long getUserIdByAccount(String account) {
-        HashOperations<String,String,Long> user_token = redisTemplate.opsForHash();
+    public String getUserIdByAccount(String account) {
+        HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
         return user_token.get(USER_ACCOUNT, account);
     }
 
     @Override
-    public void setAccountUserId(String account, long userId) {
-        HashOperations<String,String,Long> user_token = redisTemplate.opsForHash();
-        user_token.put(ACCOUNT_USER, account,userId);
+    public void setAccountUserId(String account, String userId) {
+        HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
+        user_token.put(ACCOUNT_USER, account,""+userId);
     }
 
     @Override
-    public String getOpenIdByUserId(long userId) {
-        HashOperations<String,Long,String> user_token = redisTemplate.opsForHash();
-        return user_token.get(USER_ACCOUNT, userId);
+    public String getOpenIdByUserId(String userId) {
+        HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
+        return user_token.get(USER_ACCOUNT, ""+userId);
     }
 
     @Override
-    public void setUserIdOpenId(long userId, String openId) {
-        HashOperations<String,Long,String> user_token = redisTemplate.opsForHash();
+    public void setUserIdOpenId(String userId, String openId) {
+        HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
         user_token.put(USER_OPENID, userId,openId);
     }
 
     @Override
-    public long getUserIdByOpenId(String openId) {
-        HashOperations<String,String,Long> user_token = redisTemplate.opsForHash();
+    public String getUserIdByOpenId(String openId) {
+        HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
         return user_token.get(OPENID_USER, openId);
     }
 
     @Override
-    public void setOpenIdUserId(String openId, long userId) {
-        HashOperations<String,String,Long> user_token = redisTemplate.opsForHash();
-        user_token.put(OPENID_USER, openId,userId);
+    public void setOpenIdUserId(String openId, String userId) {
+        HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
+        user_token.put(OPENID_USER, openId,""+userId);
     }
 }

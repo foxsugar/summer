@@ -21,21 +21,21 @@ public interface IUserRedis {
 
     void setUserBean(UserBean userBean);
 
-    String getAccountByUserId(long userId);
+    String getAccountByUserId(String userId);
 
-    void setUserIdAccount(long userId,String account);
+    void setUserIdAccount(String userId,String account);
 
-    Long getUserIdByAccount (String account);
+    String getUserIdByAccount (String account);
 
-    void setAccountUserId(String account,long userId);
+    void setAccountUserId(String account,String userId);
 
-    String getOpenIdByUserId(long userId);
+    String getOpenIdByUserId(String userId);
 
-    void setUserIdOpenId(long userId,String openId);
+    void setUserIdOpenId(String userId,String openId);
 
-    long getUserIdByOpenId (String openId);
+    String getUserIdByOpenId (String openId);
 
-    void setOpenIdUserId(String openId,long userId);
+    void setOpenIdUserId(String openId,String userId);
 
     List<UserBean> getUserBeans(List<Long> users);
 
