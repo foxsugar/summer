@@ -34,8 +34,7 @@ public class RedisApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RedisApplication.class, args);
 
-		RedisApplication r = new RedisApplication();
-		r.test();
+		System.out.println(RedisManager.getUserRedisService().getUserMoney(2L));
 
 
 	}

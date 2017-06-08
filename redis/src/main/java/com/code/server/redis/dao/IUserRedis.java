@@ -24,7 +24,7 @@ public interface IUserRedis {
 
     void setUserIdAccount(long userId, String account);
 
-    String getUserIdByAccount (long account);
+    String getUserIdByAccount (String account);
 
     void setAccountUserId(String account, long userId);
 

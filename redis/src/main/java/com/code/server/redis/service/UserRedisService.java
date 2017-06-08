@@ -31,7 +31,7 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     @Override
     public String getRoomId(long userId) {
         HashOperations<String,String,String> user_room = redisTemplate.opsForHash();
-        return user_room.get(USERID_ROOMID, userId);
+        return user_room.get(USERID_ROOMID, ""+userId);
     }
 
     @Override
@@ -43,14 +43,14 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     @Override
     public void removeRoom(long userId) {
         HashOperations<String,String,String> user_room = redisTemplate.opsForHash();
-        user_room.delete(USERID_ROOMID, userId);
+        user_room.delete(USERID_ROOMID, ""+userId);
 
     }
 
     @Override
     public String getGateId(long userId) {
         HashOperations<String,String,String> user_gate = redisTemplate.opsForHash();
-        return user_gate.get(USERID_GATEID, userId);
+        return user_gate.get(USERID_GATEID, ""+userId);
     }
 
     @Override
@@ -62,13 +62,13 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     @Override
     public void removeGate(long userId) {
         HashOperations<String,String,String> user_gate = redisTemplate.opsForHash();
-        user_gate.delete(USERID_GATEID, userId);
+        user_gate.delete(USERID_GATEID, ""+userId);
     }
 
     @Override
     public double getUserMoney(long userId) {
         HashOperations<String,String,String> user_money = redisTemplate.opsForHash();
-        return Double.parseDouble(user_money.get(USER_MONEY, userId));
+        return Double.parseDouble(user_money.get(USER_MONEY, ""+userId));
     }
 
     @Override
@@ -120,14 +120,14 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     @Override
     public String getToken(long userId) {
         HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
-        return user_token.get(USER_TOKEN, userId);
+        return user_token.get(USER_TOKEN, ""+userId);
     }
 
 
     @Override
     public String getAccountByUserId(long userId) {
         HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
-        return user_token.get(USER_ACCOUNT, userId);
+        return user_token.get(USER_ACCOUNT, ""+userId);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     }
 
     @Override
-    public String getUserIdByAccount(long account) {
+    public String getUserIdByAccount(String account) {
         HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
         return user_token.get(USER_ACCOUNT, account);
     }
@@ -175,5 +175,11 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
 
     private String getUserBeanKey(long userId){
         return USERBEAN+userId;
+    }
+
+    public void test(long userId){
+        HashOperations<String,String,String> user_money = redisTemplate.opsForHash();
+        user_money.get(USER_MONEY,user_money);
+
     }
 }
