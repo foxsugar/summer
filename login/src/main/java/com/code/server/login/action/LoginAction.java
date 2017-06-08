@@ -155,9 +155,9 @@ public class LoginAction {
                 }
             }
         }else{
-            //String redisTokey = userRedisService.getToken(Long.valueOf(userid));
+            String redisTokey = userRedisService.getToken(Long.valueOf(userid));
 
-            String redisTokey = null;
+//            String redisTokey = null;
             //判断token是否存在redis
             if(token_user!=null && redisTokey!=null){
                 if(token_user.equals(redisTokey)){
@@ -211,13 +211,13 @@ public class LoginAction {
                 newuser.setOpenId(openId);
                 newuser.setAccount(UUID.randomUUID().toString());
                 newuser.setPassword("111111");
-                /*try {
+                try {
                     newuser.setUsername(URLDecoder.decode(username, "utf-8"));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
-                }*/
+                }
 
-                newuser.setUsername("123456");
+                //newuser.setUsername("123456");
                 newuser.setImage(img);
                 newuser.setSex(sex);
                 newuser.setVip(0);
