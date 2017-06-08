@@ -189,11 +189,6 @@ public class LoginAction {
 
     @RequestMapping("/checkOpenId")
     public Map<String,Object> checkOpenId(String openId,String username,String image,int sex,String token_user){
-        System.out.println("openId:"+openId);
-        System.out.println("username:"+username);
-        System.out.println("image:"+image);
-        System.out.println("sex:"+sex);
-        System.out.println("token_user:"+token_user);
 
 
         int code = 0;
@@ -222,7 +217,7 @@ public class LoginAction {
                     e.printStackTrace();
                 }*/
 
-                //newuser.setUsername(username);
+                newuser.setUsername("123456");
                 newuser.setImage(img);
                 newuser.setSex(sex);
                 newuser.setVip(0);
@@ -233,30 +228,30 @@ public class LoginAction {
                 params.put("user",getUserVo(newuser));
             }else{
                 try {
-                    user.setUsername(URLDecoder.decode(username, "utf-8"));
+                    newuser.setUsername(URLDecoder.decode(username, "utf-8"));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                user.setImage(image);
-                user.setSex(sex);
-                userService.save(user);
+                newuser.setImage(image);
+                newuser.setSex(sex);
+                userService.save(newuser);
 
-                params.put("user",getUserVo(user));
+                params.put("user",getUserVo(newuser));
             }
 
 
             UserBean userBean = new UserBean();
-            userBean.setId(user.getUserId());
-            userBean.setUsername(user.getUsername());
-            userBean.setImage(user.getImage());
-            userBean.setAccount(user.getAccount());
-            userBean.setPassword(user.getPassword());
-            userBean.setIpConfig(user.getIpConfig());
-            userBean.setMoney(user.getMoney());
-            userBean.setVip(user.getVip());
-            userBean.setUuid(user.getUuid());
-            userBean.setOpenId(user.getOpenId());
-            userBean.setSex(user.getSex());
+            userBean.setId(newuser.getUserId());
+            userBean.setUsername(newuser.getUsername());
+            userBean.setImage(newuser.getImage());
+            userBean.setAccount(newuser.getAccount());
+            userBean.setPassword(newuser.getPassword());
+            userBean.setIpConfig(newuser.getIpConfig());
+            userBean.setMoney(newuser.getMoney());
+            userBean.setVip(newuser.getVip());
+            userBean.setUuid(newuser.getUuid());
+            userBean.setOpenId(newuser.getOpenId());
+            userBean.setSex(newuser.getSex());
             userBean.setMarquee(getConstant().getMarquee());
             userBean.setDownload2(getConstant().getDownload2());
 
@@ -266,7 +261,7 @@ public class LoginAction {
 
             long time = System.currentTimeMillis();
 
-            String token = MD5Util.MD5Encode(time + user.getAccount() + user.getPassword(), "UTF-8");
+            String token = MD5Util.MD5Encode(time + newuser.getAccount() + newuser.getPassword(), "UTF-8");
 
             //userRedisService.setToken(user.getUserId(),token);//userid-token
 
@@ -276,7 +271,7 @@ public class LoginAction {
             //userRedisService.setOpenIdUserId(user.getOpenId(),user.getUserId()+"");//openid-userid
             //userRedisService.setUserIdOpenId(user.getUserId()+"",user.getOpenId());//userid-openid
 
-            params.put("userid",user.getUserId());
+            params.put("userid",newuser.getUserId());
             params.put("token",token);
         }else{
             String redisTokey =userRedisService.getToken(Long.valueOf(userid));
@@ -369,12 +364,12 @@ public class LoginAction {
         vo.setReferee(user.getReferee());
         vo.setUserInfo(user.getUserInfo());
 
-        String room = userRedisService.getRoomId(user.getUserId());
+        /*String room = userRedisService.getRoomId(user.getUserId());
         if (room!=null) {
             vo.setRoomId(room);
         } else {
             vo.setRoomId("0");
-        }
+        }*/
         return vo;
     }
 
