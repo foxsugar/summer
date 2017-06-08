@@ -137,7 +137,7 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     }
 
     @Override
-    public String getUserIdByAccount(long account) {
+    public String getUserIdByAccount(String account) {
         HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
         return user_token.get(USER_ACCOUNT, account);
     }

@@ -67,7 +67,7 @@ public class LoginAction {
     public Map<String,Object> login( String account,String password,String token_user){
              List<Object> params = new ArrayList<>();
              int code = 0;
-           Long userid = userRedisService.getUserIdByAccount(account);//玩家id
+           String userid = userRedisService.getUserIdByAccount(account);//玩家id
 
         if(userid==null){
             User user = userService.getUserByAccountAndPassword(account, password);
