@@ -13,6 +13,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'scala'
 apply plugin: 'org.springframework.boot'
 
 version = '0.0.1-SNAPSHOT'
@@ -30,10 +31,26 @@ dependencies {
 	compile project(path: ':kafka')
 	compile project(path: ':redis')
 	compile project(path: ':room')
+
+	compile "org.scala-lang:scala-library:2.12.2"
+	compile "org.scala-lang:scala-compiler:2.12.2"
+	compile "org.scala-lang:scala-reflect:2.12.2"
+
+
 	compile('org.springframework.boot:spring-boot-starter-data-redis')
 	compile "net.sf.json-lib:json-lib:2.4:jdk15"
 	compile('org.springframework.kafka:spring-kafka')
 	compile 'org.apache.commons:commons-collections4:4.1'
 	compile('org.springframework.boot:spring-boot-starter-logging')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+tasks.withType(ScalaCompile) {
+	options.encoding = "UTF-8"
+
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+
 }

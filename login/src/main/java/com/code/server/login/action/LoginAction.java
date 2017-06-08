@@ -12,6 +12,7 @@ import com.code.server.db.model.User;
 
 
 import com.code.server.login.util.MD5Util;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
 
 import com.code.server.util.IdWorker;
@@ -19,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +42,9 @@ import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Text;
 @RestController
 @EnableAutoConfiguration
 public class LoginAction {
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Autowired
     private UserService userService;
@@ -302,6 +309,16 @@ public class LoginAction {
         return getParams("appleCheck",params,0);
     }
 
+    @RequestMapping("/")
+    public Map<String,Object> test(){
+//        RedisManager.getUserRedisService().addUserMoney("", 1);
+        UserBean userBean = new UserBean();
+        userBean.setGold(1);
+        ValueOperations<String,UserBean> user_money = redisTemplate.opsForValue();
+        user_money.set("testString",userBean);
+        Map<String,Object> params = new HashMap<>();
+        return params;
+    }
 
     @RequestMapping("/appleCheck123")
     public Map<String,Object> appleCheck123(){

@@ -1,26 +1,34 @@
 package com.code.server.redis;
 
+import com.code.server.constant.game.UserBean;
+import com.code.server.redis.service.RedisManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages={"com.code.server.*"})
 public class RedisApplication {
 
-	@Resource(name="redisTemplate")
-	private HashOperations<String,String, List<Integer>> mapOps;
 
+
+	@Autowired
+	private RedisTemplate redisTemplate;
 
 	public void test(){
-		List list = new ArrayList();
-		list.add(1);
-		list.add(2);
-		list.add(3);
-		mapOps.put("testMap2","hello",list);
+		UserBean userBean = new UserBean();
+		userBean.setGold(1);
+		HashOperations<String,String,UserBean> user_money = redisTemplate.opsForHash();
+		user_money.put("testString","1",userBean);
+		Map<String,Object> params = new HashMap<>();
+
 	}
 
 	public static void main(String[] args) {

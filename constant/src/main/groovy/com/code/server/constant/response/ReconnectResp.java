@@ -8,18 +8,18 @@ import java.util.Map;
  */
 public class ReconnectResp {
 
-    private RoomVo room;
+    private IfaceRoomVo room;
 
     private boolean isExist;
 
     private Map<Integer, Integer> offlineStatus = new HashMap<>();//在线状态
 
 
-    public RoomVo getRoom() {
+    public IfaceRoomVo getRoom() {
         return room;
     }
 
-    public ReconnectResp setRoom(RoomVo room) {
+    public ReconnectResp setRoom(IfaceRoomVo room) {
         this.room = room;
         return this;
     }

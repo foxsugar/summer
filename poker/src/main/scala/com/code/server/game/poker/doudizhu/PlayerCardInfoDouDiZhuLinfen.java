@@ -1,5 +1,7 @@
 package com.code.server.game.poker.doudizhu;
 
+import com.code.server.constant.game.CardStruct;
+
 import java.util.*;
 
 import static com.code.server.game.poker.doudizhu.CardUtil.getCardType;

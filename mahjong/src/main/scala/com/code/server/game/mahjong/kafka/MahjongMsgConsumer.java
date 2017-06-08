@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @author 2017/3/24 14:36
  */
 @Component
-public class MsgConsumer {
+public class MahjongMsgConsumer {
 
     @KafkaListener(id = "gameLogicService", topicPartitions = {
             @TopicPartition(topic = "gameLogicService", partitions = "${serverConfig.serverId}")
@@ -23,7 +23,7 @@ public class MsgConsumer {
 
 
     @KafkaListener(id = "reconn_topic", topicPartitions = {
-            @TopicPartition(topic = "reconn_topic", partitions = "${serverConfig.serverId}")
+            @TopicPartition(topic = "reconnService", partitions = "${serverConfig.serverId}")
     })
     public void listen_reconn(ConsumerRecord<String, String> record) {
         MsgDispatch.dispatch(record);

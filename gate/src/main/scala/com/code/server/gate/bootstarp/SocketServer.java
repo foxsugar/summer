@@ -1,7 +1,7 @@
 package com.code.server.gate.bootstarp;
 
 import com.code.server.gate.config.ServerConfig;
-import com.code.server.gate.util.SpringUtil;
+import com.code.server.util.SpringUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
