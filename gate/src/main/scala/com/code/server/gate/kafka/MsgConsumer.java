@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class MsgConsumer {
 
     @KafkaListener(id = "gate", topicPartitions = {
-            @TopicPartition(topic = "gate_topic", partitions = "${serverConfig.serverId}")
+            @TopicPartition(topic = "gate_topic", partitions = "${serverConfig.gateId}")
     })
     public void listen1(ConsumerRecord<Long, String> record) {
 
@@ -27,7 +27,7 @@ public class MsgConsumer {
 
 
     @KafkaListener(id = "inner", topicPartitions = {
-            @TopicPartition(topic = "inner_gate_topic", partitions = "${serverConfig.serverId}")
+            @TopicPartition(topic = "inner_gate_topic", partitions = "${serverConfig.gateId}")
     })
     public void listen2(ConsumerRecord<?, ?> record) {
 

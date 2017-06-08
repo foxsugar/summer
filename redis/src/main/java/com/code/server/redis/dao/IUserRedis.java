@@ -1,6 +1,5 @@
 package com.code.server.redis.dao;
 
-import com.code.server.constant.game.IUserBean;
 import com.code.server.constant.game.UserBean;
 
 import java.util.List;
@@ -21,21 +20,21 @@ public interface IUserRedis {
 
     void setUserBean(UserBean userBean);
 
-    String getAccountByUserId(String userId);
+    String getAccountByUserId(long userId);
 
-    void setUserIdAccount(String userId,String account);
+    void setUserIdAccount(long userId, String account);
 
-    String getUserIdByAccount (String account);
+    String getUserIdByAccount (long account);
 
-    void setAccountUserId(String account,String userId);
+    void setAccountUserId(String account, long userId);
 
-    String getOpenIdByUserId(String userId);
+    String getOpenIdByUserId(long userId);
 
-    void setUserIdOpenId(String userId,String openId);
+    void setUserIdOpenId(long userId, String openId);
 
     String getUserIdByOpenId (String openId);
 
-    void setOpenIdUserId(String openId,String userId);
+    void setOpenIdUserId(String openId, long userId);
 
     List<UserBean> getUserBeans(List<Long> users);
 

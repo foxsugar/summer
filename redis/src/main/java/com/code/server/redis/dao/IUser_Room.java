@@ -9,5 +9,5 @@ public interface IUser_Room {
 
     void setRoomId(long userId, String roomId);
 
-    void removeRoom(long... userId);
+    void removeRoom(long userId);
 }

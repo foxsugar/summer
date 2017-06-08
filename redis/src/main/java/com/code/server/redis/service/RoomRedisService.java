@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -39,20 +40,20 @@ public class RoomRedisService implements IRoom_Server ,IConstant,IRoom_Users{
 
     @Override
     public void removeServer(String roomId) {
-        HashOperations<String,String,Integer> room_server = redisTemplate.opsForHash();
+        HashOperations<String,String,String> room_server = redisTemplate.opsForHash();
         room_server.delete(ROOMID_SERVERID, roomId);
     }
 
     @Override
     public boolean isExist(String roomId) {
-        HashOperations<String,String,Integer> room_server = redisTemplate.opsForHash();
+        HashOperations<String,String,String> room_server = redisTemplate.opsForHash();
         return room_server.hasKey(ROOMID_SERVERID, roomId);
     }
 
     @Override
     public void addUser(String roomId, long userId) {
-        SetOperations<String,Long> room_user = redisTemplate.opsForSet();
-        room_user.add(getRoom_user_key(roomId), userId);
+        SetOperations<String,String> room_user = redisTemplate.opsForSet();
+        room_user.add(getRoom_user_key(roomId), ""+userId);
     }
 
     @Override
@@ -63,14 +64,22 @@ public class RoomRedisService implements IRoom_Server ,IConstant,IRoom_Users{
 
     @Override
     public void removeRoomUsers(String roomId) {
-        SetOperations<String,Long> room_user = redisTemplate.opsForSet();
+        SetOperations<String,String> room_user = redisTemplate.opsForSet();
         room_user.getOperations().delete(getRoom_user_key(roomId));
     }
 
     @Override
     public Set<Long> getUsers(String roomId) {
-        SetOperations<String,Long> room_user = redisTemplate.opsForSet();
-        return room_user.members(roomId);
+        SetOperations<String,String> room_user = redisTemplate.opsForSet();
+        Set<String> re = room_user.members(roomId);
+        if (re == null) {
+            return null;
+        }
+        Set<Long> result = new HashSet<>();
+        re.forEach(l->{
+            result.add(Long.valueOf(l));
+        });
+        return result;
     }
 
     private String getRoom_user_key(String roomId){

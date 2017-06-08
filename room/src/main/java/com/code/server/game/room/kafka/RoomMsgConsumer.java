@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * @author 2017/3/24 14:36
  */
 @Component
-public class MsgConsumer {
+public class RoomMsgConsumer {
 
     @Autowired
     RoomMsgDispatch roomMsgDispatch;

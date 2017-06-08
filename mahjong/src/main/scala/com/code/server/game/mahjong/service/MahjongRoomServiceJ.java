@@ -6,11 +6,11 @@ import com.code.server.game.mahjong.config.ServerConfig;
 import com.code.server.game.mahjong.logic.RoomFactory;
 import com.code.server.game.mahjong.logic.RoomInfo;
 import com.code.server.game.mahjong.util.ErrorCode;
-import com.code.server.game.mahjong.util.SpringUtil;
 import com.code.server.game.room.MsgSender;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.ITimeHandler;
 import com.code.server.util.timer.TimerNode;
@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 /**
  * Created by sunxianping on 2017/6/5.
  */
-public class MahjongRoomService {
+public class MahjongRoomServiceJ {
 
     public static int dispatch(long userId, String method, JsonNode paramsjSONObject) {
         int code = 0;
@@ -144,17 +144,17 @@ public class MahjongRoomService {
     }
 
     public static RoomInfo createRoom(long userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, String gameType, String each, boolean isJoin) {
-        if (!isCanCreate(modeTotal, mode, "" + multiple)) {
-            return null;
-        }
+
 
         RoomInfo roomInfo = RoomFactory.getRoomInstance(gameType);
         String roomId = Room.getRoomIdStr(Room.genRoomId());
         roomInfo.init(roomId, userId, modeTotal, mode, multiple, gameNumber, personNumber, userId, 0);
         roomInfo.setEach(each);
         if (isJoin) {
-
-            roomInfo.joinRoom(userId);
+            int code = roomInfo.joinRoom(userId);
+            if (code != 0) {
+                return null;
+            }
         }
 
         int serverId = SpringUtil.getBean(ServerConfig.class).getServerId();
@@ -165,6 +165,9 @@ public class MahjongRoomService {
 
 
     public static int createRoomByEachUser(long userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, String gameType) {
+        if (!isCanCreate(modeTotal, mode, "" + multiple)) {
+            return ErrorCode.CANNOT_CREATE_ROOM_PARAMETER_IS_ERROR;
+        }
         RoomInfo roomInfo = createRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType, "1", true);
         if (roomInfo == null) {
             return ErrorCode.CANNOT_CREATE_ROOM_PARAMETER_IS_ERROR;
@@ -174,6 +177,9 @@ public class MahjongRoomService {
     }
 
     public static int createRoomByUser(long userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, String gameType) {
+        if (!isCanCreate(modeTotal, mode, "" + multiple)) {
+            return ErrorCode.CANNOT_CREATE_ROOM_PARAMETER_IS_ERROR;
+        }
         RoomInfo roomInfo = createRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType, "0", true);
         if (roomInfo == null) {
             return ErrorCode.CANNOT_CREATE_ROOM_PARAMETER_IS_ERROR;
@@ -183,6 +189,9 @@ public class MahjongRoomService {
     }
 
     public static int createRoomButNotInRoom(long userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, String gameType) {
+        if (!isCanCreate(modeTotal, mode, "" + multiple)) {
+            return ErrorCode.CANNOT_CREATE_ROOM_PARAMETER_IS_ERROR;
+        }
 
         if ("LQ".equals(gameType)) {
             double money = RedisManager.getUserRedisService().getUserMoney(userId);
