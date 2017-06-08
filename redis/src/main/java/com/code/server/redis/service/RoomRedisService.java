@@ -59,7 +59,7 @@ public class RoomRedisService implements IRoom_Server ,IConstant,IRoom_Users{
     @Override
     public void removeUser(String roomId, long userId) {
         SetOperations<String,Long> room_user = redisTemplate.opsForSet();
-        room_user.remove(roomId, userId);
+        room_user.remove(getRoom_user_key(roomId), ""+userId);
     }
 
     @Override
