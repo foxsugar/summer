@@ -16,11 +16,11 @@ public class MsgConsumer {
     @KafkaListener(id = "gate", topicPartitions = {
             @TopicPartition(topic = "gate_topic", partitions = "${serverConfig.gateId}")
     })
-    public void listen1(ConsumerRecord<Long, String> record) {
+    public void listen1(ConsumerRecord<String, String> record) {
 
         System.out.println(record.toString());
         System.out.println("gate 发送给玩家");
-        KafkaMsgDispatch.send2Client(record.key(),record.value());
+        KafkaMsgDispatch.send2Client(Long.parseLong(record.key()),record.value());
 
 
     }

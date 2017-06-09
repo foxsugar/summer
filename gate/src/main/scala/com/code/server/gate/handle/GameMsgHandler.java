@@ -41,7 +41,7 @@ public class GameMsgHandler extends ChannelDuplexHandler {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         //移除ctx
-        if(ctx.channel().hasAttr(GateManager.attributeKey)){
+        if(ctx.channel().hasAttr(GateManager.attributeKey) && ctx.channel().attr(GateManager.attributeKey)!=null){
             long userId = ctx.channel().attr(GateManager.attributeKey).get();
             GateManager.removeUserNettyCtx(userId);
         }

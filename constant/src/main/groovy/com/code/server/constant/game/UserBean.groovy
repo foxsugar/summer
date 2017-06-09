@@ -23,12 +23,28 @@ class UserBean implements IUserBean {
     int sex; // required
     String marquee; // required
     int referee;
-    UserInfo UserInfo;
+    UserInfo userInfo;
     String download2;
 
     @Override
-    UserVo getVo() {
-
-        return null
+    UserVo toVo() {
+        UserVo userVo = new UserVo()
+        userVo.id = this.id
+        userVo.username = this.username // required
+        userVo.image = this.image// required
+        userVo.seatId  = this.seatId// required
+        userVo.account= this.account // required
+        userVo.ipConfig = this.ipConfig // required
+        userVo.money = this.money// required
+        userVo.roomId = this.roomId// required
+        userVo.vip  = this.vip//required
+        userVo.uuid = this.uuid// required
+        userVo.openId = this.openId// required
+        userVo.sex = this.sex//required
+        userVo.marquee= this.marquee // required
+        userVo.referee= this.referee
+        userVo.userInfo = this.userInfo
+        userVo.download2 = this.download2
+        return userVo
     }
 }

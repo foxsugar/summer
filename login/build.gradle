@@ -57,6 +57,7 @@ dependencies {
 	compile project(path: ':util')
 	compile project(path: ':constant')
 	compile project(path: ':db')
+	compile project(path: ':kafka')
 	compile('org.springframework.boot:spring-boot-starter-aop')
 	compile('org.springframework.boot:spring-boot-starter-data-redis')
 	compile('org.springframework.boot:spring-boot-starter-web')

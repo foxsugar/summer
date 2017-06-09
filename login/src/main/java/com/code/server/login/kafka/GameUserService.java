@@ -4,22 +4,22 @@ package com.code.server.login.kafka;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
-import com.code.server.constant.response.*;
+import com.code.server.constant.response.ErrorCode;
+import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.UserRecordService;
 import com.code.server.db.Service.UserService;
-import com.code.server.db.model.*;
-
+import com.code.server.db.model.User;
+import com.code.server.db.model.UserRecord;
+import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.UserRedisService;
-import com.code.server.util.SpringUtil;
 import com.code.server.util.ThreadPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import scala.tools.nsc.doc.html.page.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.net.InetSocketAddress;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**

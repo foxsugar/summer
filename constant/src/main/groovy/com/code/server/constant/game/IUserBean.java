@@ -7,5 +7,5 @@ import com.code.server.constant.response.UserVo;
  */
 public interface IUserBean {
 
-    UserVo getVo();
+    UserVo toVo();
 }

@@ -21,7 +21,7 @@ public class UserVo {
     public int sex; // required
     public String marquee; // required
     public int referee;
-    public UserInfo UserInfo;
+    public UserInfo userInfo;
     public String download2;
 
     public long getId() {
@@ -151,11 +151,11 @@ public class UserVo {
     }
 
     public com.code.server.constant.db.UserInfo getUserInfo() {
-        return UserInfo;
+        return userInfo;
     }
 
     public UserVo setUserInfo(com.code.server.constant.db.UserInfo userInfo) {
-        UserInfo = userInfo;
+        this.userInfo = userInfo;
         return this;
     }
 

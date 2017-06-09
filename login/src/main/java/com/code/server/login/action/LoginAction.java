@@ -2,6 +2,7 @@ package com.code.server.login.action;
 
 
 import com.code.server.constant.game.UserBean;
+import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.UserVo;
 import com.code.server.db.Service.ConstantService;
@@ -11,16 +12,16 @@ import com.code.server.db.model.Constant;
 import com.code.server.db.model.User;
 
 
+import com.code.server.kafka.MsgProducer;
 import com.code.server.login.util.MD5Util;
-import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
 
 import com.code.server.util.IdWorker;
+import com.code.server.util.JsonUtil;
+import com.code.server.util.SpringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,8 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
-
-import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Text;
 
 
 /**
@@ -65,8 +64,8 @@ public class LoginAction {
         return constantService.constantDao.findOne(1L);
     }
 
-    private String ip ="192.168.1.150";
-    private String port = "8080";
+    private String ip ="192.168.1.132";
+    private String port = "8002";
 
     @RequestMapping("/login")
     public Map<String,Object> login( String account,String password,String token_user){
@@ -92,6 +91,7 @@ public class LoginAction {
                 userBean.setSex(user.getSex());
                 userBean.setMarquee(getConstant().getMarquee());
                 userBean.setDownload2(getConstant().getDownload2());
+                userBean.setUserInfo(user.getUserInfo());
 
                 userRedisService.setUserBean(userBean);//userid-userbean
                 userRedisService.setUserMoney(user.getUserId(), user.getMoney());//userid-money
@@ -307,10 +307,13 @@ public class LoginAction {
     @RequestMapping("/")
     public Map<String,Object> test(){
 //        RedisManager.getUserRedisService().addUserMoney("", 1);
-        UserBean userBean = new UserBean();
-        userBean.setGold(1);
-        ValueOperations<String,UserBean> user_money = redisTemplate.opsForValue();
-        user_money.set("testString",userBean);
+        int partition = 0;
+        KafkaMsgKey kafkaKey = new KafkaMsgKey();
+        kafkaKey.setUserId(3);
+        kafkaKey.setPartition(partition);
+        String keyJson = JsonUtil.toJson(kafkaKey);
+        SpringUtil.getBean(MsgProducer.class).send("userService",kafkaKey,"hello");
+
         Map<String,Object> params = new HashMap<>();
         return params;
     }

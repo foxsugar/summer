@@ -531,7 +531,8 @@ public class Room implements IfaceRoom {
 //        for(long uid : this.getUsers()){
 //            roomVo.userList.add(GameManager.getUserVo(uid));
 //        }
-        roomVo.userList.addAll(RedisManager.getUserRedisService().getUserBeans(users));
+        RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
+//        roomVo.userList.addAll(RedisManager.getUserRedisService().getUserBeans(users));
 
         roomVo.game = this.game.toVo();
         return roomVo;

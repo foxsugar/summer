@@ -4,13 +4,16 @@ import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
+import com.code.server.kafka.MsgProducer;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import scala.tools.nsc.doc.html.page.JSONObject;
 
 /**
  * Created by sunxianping on 2017/5/31.
  */
+@Service
 public class UserServiceMsgDispatch {
 
     @Autowired

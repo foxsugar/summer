@@ -58,7 +58,7 @@ object NettyMsgDispatch {
           SpringUtil.getBean(classOf[MsgProducer]).send(service, JsonUtil.toJson(msgKey), msg)
 
         case "chatService" =>
-          chatService_dispatch(userId,method,params)
+          chatService_dispatch(userId, method, params)
 
         //游戏逻辑
         case _ =>
@@ -92,11 +92,14 @@ object NettyMsgDispatch {
     */
   def gateService_dispatch(method: String, params: JsonNode, jsonObject: JsonNode, ctx: ChannelHandlerContext): Unit = {
     method match {
-      case "loginGate" =>
+      case "login" =>
         val userId = params.get("userId").asLong()
         val token = params.get("token").asText()
-
         loginGate(userId, token, ctx)
+      case "heart" =>
+        val userId = params.get("userId").asLong()
+        val map = Map("time" -> System.currentTimeMillis())
+        GateManager.sendMsg(new ResponseVo("gateService", "heart", map), userId)
 
 
     }
@@ -142,15 +145,15 @@ object NettyMsgDispatch {
     }
   }
 
-  def reconnService_dispatch(userid : Long,msg:Object):Unit = {
+  def reconnService_dispatch(userid: Long, msg: Object): Unit = {
     val roomId = RedisManager.getUserRedisService.getRoomId(userid)
-    if(roomId == null) {
+    if (roomId == null) {
       val reconnectResp = new ReconnectResp
       reconnectResp.setExist(false)
       val vo = new ResponseVo("reconnService", "reconnection", reconnectResp)
       GateManager.sendMsg(vo, userid)
 
-    }else {
+    } else {
       val partition = getPartitionByRoomId(roomId)
       val msgKey = new KafkaMsgKey
       msgKey.setRoomId(roomId)
@@ -159,7 +162,7 @@ object NettyMsgDispatch {
     }
   }
 
-  private def chatService_dispatch(userId : Long, method: String, params: JsonNode) = {
+  private def chatService_dispatch(userId: Long, method: String, params: JsonNode) = {
 
     method match {
       case "sendMessageToOne" =>
@@ -250,7 +253,7 @@ object NettyMsgDispatch {
 
     //登录操作
     val userBean = UserSevice.doLogin(userId, ctx)
-    GateManager.sendMsg(userBean, userId)
+    GateManager.sendMsg(new ResponseVo("gateService", "login", userBean.toVo), userId)
 
     return 0
 

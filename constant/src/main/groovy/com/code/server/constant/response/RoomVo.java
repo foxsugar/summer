@@ -28,7 +28,7 @@ public class RoomVo implements IfaceRoomVo {
     public int hasNine;
 
     public Map<Long, Integer> userStatus = new HashMap<>();//用户状态
-    public List<UserBean> userList = new ArrayList<>();//用户列表
+    public List<UserVo> userList = new ArrayList<>();//用户列表
     public Map<Long, Double> userScores = new HashMap<>();
     public int personNumber;
 

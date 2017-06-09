@@ -6,7 +6,9 @@ import com.code.server.redis.dao.IUserRedis;
 import com.code.server.redis.dao.IUser_Gate;
 import com.code.server.redis.dao.IUser_Room;
 import com.code.server.redis.dao.IUser_Token;
+import com.code.server.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -74,8 +76,14 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     @Override
     public double addUserMoney(long userId, double money) {
         HashOperations<String,String,Double> user_money = redisTemplate.opsForHash();
-        //todo 把修改后的值放入userBean里
-        return user_money.increment(USER_MONEY,""+userId,money);
+        // 把修改后的值放入userBean里
+        double m = user_money.increment(USER_MONEY,""+userId,money);
+        UserBean userBean = getUserBean(userId);
+        if (userBean != null) {
+            userBean.setMoney(m);
+            updateUserBean(userId,userBean);
+        }
+        return m;
     }
 
     @Override
@@ -86,28 +94,32 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
 
     @Override
     public UserBean getUserBean(long userId) {
-        ValueOperations<String,UserBean> user_bean = redisTemplate.opsForValue();
-        return user_bean.get(getUserBeanKey(userId));
+//        ValueOperations<String,UserBean> user_bean = redisTemplate.opsForValue();
+        BoundHashOperations<String,String,String> user_bean = redisTemplate.boundHashOps(USER_BEAN);
+        String json = user_bean.get(String.valueOf(userId));
+        if (json != null) {
+            return JsonUtil.readValue(json, UserBean.class);
+        }
+        return null;
     }
 
     @Override
     public void setUserBean(UserBean userBean) {
-        ValueOperations<String,UserBean> user_bean = redisTemplate.opsForValue();
-        user_bean.set(getUserBeanKey(userBean.getId()),userBean);
+        updateUserBean(userBean.getId(), userBean);
     }
 
     @Override
     public List<UserBean> getUserBeans(List<Long> users) {
-        ValueOperations<String,UserBean> user_bean = redisTemplate.opsForValue();
+        BoundHashOperations<String,String,String> user_bean = redisTemplate.boundHashOps(USER_BEAN);
         List<String> userStrs = users.stream().map(this::getUserBeanKey).collect(Collectors.toList());
-        return user_bean.multiGet(userStrs);
+        return user_bean.multiGet(userStrs).stream().map(ub->JsonUtil.readValue(ub,UserBean.class)).collect(Collectors.toList());
     }
 
 
     @Override
     public void updateUserBean(long userId, UserBean userBean) {
-        ValueOperations<String,UserBean> user_bean = redisTemplate.opsForValue();
-        user_bean.set(getUserBeanKey(userId),userBean);
+        BoundHashOperations<String,String,String> user_bean = redisTemplate.boundHashOps(USER_BEAN);
+        user_bean.put(String.valueOf(userId),JsonUtil.toJson(userBean));
     }
 
 
