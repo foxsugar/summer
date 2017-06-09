@@ -1,21 +1,14 @@
 package com.code.server.login.kafka;
 
 import com.code.server.constant.kafka.KafkaMsgKey;
+import com.code.server.login.service.UserServiceMsgDispatch;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.ThreadPool;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.annotation.PartitionOffset;
-import org.springframework.kafka.annotation.TopicPartition;
-import org.springframework.kafka.support.Acknowledgment;
-import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 /**
  * 消息消费者
@@ -26,7 +19,7 @@ public class UserServiceMsgConsumer {
 
 
 
-    @KafkaListener(id = "ggg", topicPattern  = "userService")
+    @KafkaListener(id = "userService", topicPattern  = "userService")
     public void listen(ConsumerRecord<String, String> record) {
         System.out.println(record);
         ThreadPool.getInstance().executor.execute(()->{

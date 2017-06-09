@@ -1,4 +1,4 @@
-package com.code.server.login.kafka;
+package com.code.server.login.service;
 
 
 import com.code.server.constant.game.UserBean;
@@ -119,15 +119,12 @@ public class GameUserService {
      */
     public int getUserRecodeByUserId(KafkaMsgKey msgKey){
         UserRecord userRecord = userRecordService.getUserByUserRecord(msgKey.getUserId());
-        ResponseVo vo = new ResponseVo("userService", "getNickNamePlayer", userRecord);
+        ResponseVo vo = new ResponseVo("userService", "getUserRecodeByUserId", userRecord);
         sendMsg(msgKey, vo);
         return 0;
     }
 
 
-    private void sendMsg(long userId, int partition,Object msg){
-        kafkaMsgProducer.send2Partition(IKafaTopic.GATE_TOPIC, partition,""+userId,msg);
-    }
     private void sendMsg(KafkaMsgKey msgKey,Object msg){
         kafkaMsgProducer.send2Partition(IKafaTopic.GATE_TOPIC, msgKey.getPartition(),""+msgKey.getUserId(),msg);
     }

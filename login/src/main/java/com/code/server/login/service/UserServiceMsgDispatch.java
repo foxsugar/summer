@@ -1,4 +1,4 @@
-package com.code.server.login.kafka;
+package com.code.server.login.service;
 
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
@@ -8,7 +8,6 @@ import com.code.server.kafka.MsgProducer;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import scala.tools.nsc.doc.html.page.JSONObject;
 
 /**
  * Created by sunxianping on 2017/5/31.
