@@ -8,6 +8,7 @@ import com.code.server.db.Service.ConstantService;
 import com.code.server.db.Service.ServerService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.model.Constant;
+import com.code.server.db.model.ServerInfo;
 import com.code.server.db.model.User;
 
 
@@ -61,9 +62,10 @@ public class LoginAction {
 //    @Value("serverConfig.serverId")
     public int serverId = 1;
 
-    private Constant getConstant(){
-        return constantService.constantDao.findOne(1L);
-    }
+    Constant constant;
+    ServerInfo serverInfo;
+
+
 
     private String ip ="192.168.1.150";
     private String port = "8080";
@@ -112,7 +114,7 @@ public class LoginAction {
                 params.put("token",token);
                 params.put("userId",user.getUserId());
             } else {//密码错误
-                if (serverService.getAllServerInfo().get(0).getAppleCheck() == 1) {
+                if (getServerInfo().getAppleCheck() == 1) {
                     user = createUser(account, password);
                     userService.save(user);
 
@@ -295,14 +297,39 @@ public class LoginAction {
     @RequestMapping("/appleCheck")
     public Map<String,Object> appleCheck(){
         Map<String,Object> params = new HashMap<>();
-        params.put("isInAppleCheck",serverService.getAllServerInfo().get(0).getAppleCheck());
+        params.put("isInAppleCheck",getServerInfo().getAppleCheck());
         params.put("address",getConstant().getDownload());
-        params.put("appleVersion",serverService.getAllServerInfo().get(0).getVersionOfIos());
-        params.put("androidVersion",serverService.getAllServerInfo().get(0).getVersionOfAndroid());
+        params.put("appleVersion",getServerInfo().getVersionOfIos());
+        params.put("androidVersion",getServerInfo().getVersionOfAndroid());
         params.put("ip",ip);
         params.put("port",port);
         return getParams("appleCheck",params,0);
     }
+
+    @RequestMapping("/refreshMemory")
+    public Map<String,Object> refreshMemory(){
+        Map<String,Object> params = new HashMap<>();
+        constant = constantService.constantDao.findOne(1L);
+        serverInfo = serverService.getAllServerInfo().get(0);
+        params.put("constant",constant);
+        params.put("serverInfo",serverInfo);
+        return getParams("refreshMemory",params,0);
+    }
+
+    private Constant getConstant(){
+        if(constant==null){
+            constant = constantService.constantDao.findOne(1L);
+        }
+        return constant;
+    }
+
+    private ServerInfo getServerInfo(){
+        if(serverInfo==null){
+            serverInfo = serverService.getAllServerInfo().get(0);
+        }
+        return serverInfo;
+    }
+
 
     @RequestMapping("/")
     public Map<String,Object> test(){
