@@ -1,7 +1,6 @@
 package com.code.server.game.poker.doudizhu;
 
 
-
 import com.code.server.constant.response.*;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Game;
@@ -20,31 +19,38 @@ import java.util.ArrayList;
 public class RoomDouDiZhu extends Room {
 
 
-
     public static final int PERSONNUM = 3;
 
 
+    @Override
+    public void drawBack() {
+//        RedisManager.getUserRedisService().addUserMoney(this.createUser, createNeedMoney);
+//        User user = userMap.get(this.createUser);
+//        if (user != null) {
+//            user.setMoney(user.getMoney() + createNeedMoney);
+//            GameManager.getInstance().getSaveUser2DB().add(user);
+//        }
+    }
 
-
-        @Override
-        protected Game getGameInstance() {
-            switch (gameType) {
-                case GAMETYPE_LINFEN:
-                    return new GameDouDiZhuLinFen();
-                case GAMETYPE_QIANAN:
-                    return new GameDouDiZhuQianAn();
-                default:
-                    return new GameDouDiZhu();
-            }
-
+    @Override
+    protected Game getGameInstance() {
+        switch (gameType) {
+            case GAMETYPE_LINFEN:
+                return new GameDouDiZhuLinFen();
+            case GAMETYPE_QIANAN:
+                return new GameDouDiZhuQianAn();
+            default:
+                return new GameDouDiZhu();
         }
 
-    public RoomDouDiZhu getRoomInstance(String gameType){
+    }
+
+    public RoomDouDiZhu getRoomInstance(String gameType) {
         RoomDouDiZhu room = new RoomDouDiZhu();
         return room;
     }
 
-    public static int createRoom(long userId, int gameNumber, int multiple, String gameType) {
+    public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType) {
 
         RoomDouDiZhu room = new RoomDouDiZhu();
         room.personNumber = PERSONNUM;
@@ -52,6 +58,7 @@ public class RoomDouDiZhu extends Room {
         room.roomId = getRoomIdStr(genRoomId());
         room.createUser = userId;
         room.gameType = gameType;
+        room.roomType = roomType;
         room.init(gameNumber, multiple);
 
 
@@ -62,9 +69,9 @@ public class RoomDouDiZhu extends Room {
 
 
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
-        RoomManager.addRoom(room.roomId,""+serverConfig.getServerId(),room);
+        RoomManager.addRoom(room.roomId, "" + serverConfig.getServerId(), room);
 
-        MsgSender.sendMsg2Player(new ResponseVo("roomService", "createRoom", room.toVo()),userId);
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createRoom", room.toVo(userId)), userId);
 
         return 0;
     }

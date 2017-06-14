@@ -10,6 +10,9 @@ import com.code.server.util.timer.TimerNode;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 /**
@@ -18,6 +21,7 @@ import java.util.*;
 public class Room implements IfaceRoom {
 
 
+    protected String roomType;
     protected String roomId;
     protected int createType;//房卡或金币
     protected double goldRoomType;
@@ -31,7 +35,7 @@ public class Room implements IfaceRoom {
     protected Map<Long, Double> userScores = new HashMap<>();
 //    protected Map<Long,User> userMap = new HashMap<>();//用户列表
 
-    protected double roomType;//几倍房
+
     protected int multiple;//倍数
     protected int maxZhaCount;//最大炸的个数
     protected int gameNumber;
@@ -157,7 +161,7 @@ public class Room implements IfaceRoom {
 
     }
 
-    protected void roomRemoveUser(long userId) {
+    public void roomRemoveUser(long userId) {
 
         this.users.remove(userId);
         this.userStatus.remove(userId);
@@ -176,12 +180,16 @@ public class Room implements IfaceRoom {
 //        }
 
 
-        userOfRoom.setUserList(RedisManager.getUserRedisService().getUserBeans(users));
+        for (UserBean userBean : RedisManager.getUserRedisService().getUserBeans(users)) {
+            userOfRoom.getUserList().add(userBean.toVo());
+        }
+
+
         userOfRoom.setInRoomNumber(users.size());
         userOfRoom.setReadyNumber(readyNumber);
 
 
-        MsgSender.sendMsg2Player(new ResponseVo("roomService", "joinRoom", this.toVo()), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "joinRoom", this.toVo(userId)), userId);
 
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "roomNotice", userOfRoom), this.getUsers());
 
@@ -247,7 +255,9 @@ public class Room implements IfaceRoom {
                 readyNumber++;
             }
         }
-        userOfRoom.setUserList(RedisManager.getUserRedisService().getUserBeans(users));
+        for (UserBean userBean : RedisManager.getUserRedisService().getUserBeans(users)) {
+            userOfRoom.getUserList().add(userBean.toVo());
+        }
         userOfRoom.setInRoomNumber(inRoomNumber);
         userOfRoom.setReadyNumber(readyNumber);
 
@@ -356,7 +366,7 @@ public class Room implements IfaceRoom {
 
             });
             this.timerNode = node;
-            GameTimer.getInstance().addTimerNode(node);
+            GameTimer.addTimerNode(node);
         }
 
 
@@ -393,7 +403,7 @@ public class Room implements IfaceRoom {
 
         //同意解散
         if (agreeNum >= personNumber - 1) {
-            GameTimer.getInstance().removeNode(timerNode);
+            GameTimer.removeNode(timerNode);
             dissolutionRoom();
         }
         //不同意的人数大于2 解散取消
@@ -402,7 +412,7 @@ public class Room implements IfaceRoom {
                 //回到游戏状态
                 entry.setValue(STATUS_IN_GAME);
                 this.isHasDissolutionRequest = false;
-                GameTimer.getInstance().removeNode(timerNode);
+                GameTimer.removeNode(timerNode);
             }
         }
 
@@ -418,6 +428,20 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
+    protected List<UserOfResult> getUserOfResult(){
+        ArrayList<UserOfResult> userOfResultList = new ArrayList<>();
+        long time = System.currentTimeMillis();
+        for (UserBean eachUser : RedisManager.getUserRedisService().getUserBeans(this.users)) {
+            UserOfResult resultObj = new UserOfResult();
+            resultObj.setUsername(eachUser.getUsername());
+            resultObj.setImage(eachUser.getImage());
+            resultObj.setScores(this.userScores.get(eachUser.getId()) + "");
+            resultObj.setUserId(eachUser.getId());
+            resultObj.setTime(time);
+            userOfResultList.add(resultObj);
+        }
+        return userOfResultList;
+    }
     /**
      * 解散房间
      */
@@ -428,31 +452,13 @@ public class Room implements IfaceRoom {
 
 
         // 结果类
-        ArrayList<UserOfResult> userOfResultList = new ArrayList<>();
-
-        long time = System.currentTimeMillis();
-
-        for (UserBean user : RedisManager.getUserRedisService().getUserBeans(users)) {
-            UserOfResult resultObj = new UserOfResult();
-            try {
-                resultObj.setUsername(URLDecoder.decode(user.getUsername(), "utf-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            resultObj.setImage(user.getImage());
-            resultObj.setScores("" + this.userScores.get(user.getId()));
-            resultObj.setUserId(user.getId());
-            resultObj.setTime(time);
-
-            userOfResultList.add(resultObj);
-            //删除映射关系
-            RedisManager.getUserRedisService().removeRoom(user.getId());
-        }
+        // 结果类
+        List<UserOfResult> userOfResultList = getUserOfResult();
 
 
         boolean isChange = scoreIsChange();
         if (this.isInGame && this.curGameNumber == 1 && !isChange) {
-//            drawBack();
+            drawBack();
         }
 
 
@@ -461,11 +467,12 @@ public class Room implements IfaceRoom {
         GameOfResult gameOfResult = new GameOfResult();
 
         gameOfResult.setUserList(userOfResultList);
-        gameOfResult.setEndTime(new Date().toLocaleString());
+        gameOfResult.setEndTime(LocalDateTime.now().toString());
 
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), this.users);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), users);
 
     }
+
 
     public void clearReadyStatus(boolean isAddGameNum) {
         this.setGame(null);
@@ -512,8 +519,9 @@ public class Room implements IfaceRoom {
 
 
     @Override
-    public IfaceRoomVo toVo() {
+    public IfaceRoomVo toVo(long userId) {
         RoomVo roomVo = new RoomVo();
+        roomVo.roomType = this.getRoomType();
         roomVo.createType = this.getCreateType();
         roomVo.roomId = this.getRoomId();
         roomVo.multiple = this.getMultiple();
@@ -527,14 +535,10 @@ public class Room implements IfaceRoom {
         roomVo.drawForLeaveChip = this.getDrawForLeaveChip();
         roomVo.personNumber = this.getPersonNumber();
         roomVo.hasNine = this.getHasNine();
-
-//        for(long uid : this.getUsers()){
-//            roomVo.userList.add(GameManager.getUserVo(uid));
-//        }
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
-//        roomVo.userList.addAll(RedisManager.getUserRedisService().getUserBeans(users));
-
-        roomVo.game = this.game.toVo();
+        if (this.game != null) {
+            roomVo.game = this.game.toVo(userId);
+        }
         return roomVo;
     }
 
@@ -742,6 +746,15 @@ public class Room implements IfaceRoom {
 
     public Room setGameType(String gameType) {
         this.gameType = gameType;
+        return this;
+    }
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public Room setRoomType(String roomType) {
+        this.roomType = roomType;
         return this;
     }
 }

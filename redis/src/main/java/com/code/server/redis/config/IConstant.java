@@ -4,13 +4,18 @@ package com.code.server.redis.config;
  * Created by sunxianping on 2017/5/25.
  */
 public interface IConstant {
+    long SECOND_5 = 1000L * 5;
+
+    //房间-服务器(房间在哪个逻辑服务器)
+    String ROOM_GAMESERVER = "room_gameServer";
 
     //玩家-房间 关系
-    String USERID_ROOMID = "userId_roomId";
-    //房间-服务器(房间在哪个逻辑服务器)
-    String ROOMID_SERVERID = "roomId_serverId";
+    String USER_ROOM = "user_room";
+    //房间 玩家
+    String ROOM_USER = "room_user";
+
     //玩家-网关
-    String USERID_GATEID = "userId_gateId";
+    String USER_GATE = "user_gate";
     //玩家货币
     String USER_MONEY = "user_money";
     //玩家bean
@@ -25,7 +30,7 @@ public interface IConstant {
     String USER_ACCOUNT = "user_account";
 
     //openid-user
-    String OPENID_USER = "openid_user";
+    String OPENID_USER = "openId_user";
     //user-openid
     String USER_OPENID = "user_openid";
 
@@ -34,6 +39,9 @@ public interface IConstant {
 
     //网关服务列表
     String GATE_SERVER_LIST = "gate_server_list";
+
+    String HEART_GATE = "heart_gate";
+    String HEART_GAME = "heart_game";
 
 
 

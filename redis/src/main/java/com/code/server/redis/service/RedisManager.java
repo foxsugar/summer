@@ -24,10 +24,15 @@ public class RedisManager {
         return SpringUtil.getBean(RoomRedisService.class);
     }
 
+    public static GateRedisService getGateRedisService(){
+        return SpringUtil.getBean(GateRedisService.class);
+    }
+
     public static void addGold(long userId, double add){
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         userBean.setGold(userBean.getGold() + add);
         RedisManager.getUserRedisService().updateUserBean(userId, userBean);
     }
+
 
 }

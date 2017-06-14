@@ -2,6 +2,7 @@ package com.code.server.game.mahjong.response;
 
 
 import com.code.server.constant.game.UserBean;
+import com.code.server.constant.response.UserVo;
 import com.code.server.game.mahjong.logic.RoomInfo;
 
 import java.util.HashMap;
@@ -17,11 +18,11 @@ public class AllMessage {
 
 	private boolean isExist;
 
-	private RoomInfo room;
+	private Map<String,Object> room;
 
 
 
-	private List<UserBean> users;
+	private List<UserVo> users;
 
 //	private ArrayList<CardMessage> cardMessages;
 	
@@ -41,20 +42,20 @@ public class AllMessage {
 	private int circleNum;
 
 
-	public RoomInfo getRoom() {
+	public Map<String, Object> getRoom() {
 		return room;
 	}
 
-	public AllMessage setRoom(RoomInfo room) {
+	public AllMessage setRoom(Map<String, Object> room) {
 		this.room = room;
 		return this;
 	}
 
-	public List<UserBean> getUsers() {
+	public List<UserVo> getUsers() {
 		return users;
 	}
 
-	public AllMessage setUsers(List<UserBean> users) {
+	public AllMessage setUsers(List<UserVo> users) {
 		this.users = users;
 		return this;
 	}

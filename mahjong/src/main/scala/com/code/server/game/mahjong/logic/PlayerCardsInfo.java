@@ -58,8 +58,8 @@ public class PlayerCardsInfo implements HuType {
 
     protected boolean isHasGangBlackList = false;//是否有杠的黑名单
     protected Set<Integer> gangBlackList = new HashSet<>();//杠的黑名单
-    protected GameInfo gameInfo;
-    protected RoomInfo roomInfo;
+    protected transient GameInfo gameInfo;
+    protected transient RoomInfo roomInfo;
     protected List<Integer> operateList = new ArrayList<>();
     protected boolean isAlreadyHu = false;
     protected Set<Integer> baoMingDan = new HashSet<>();

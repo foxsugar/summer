@@ -18,5 +18,5 @@ public interface IfaceRoom extends IGameConstant {
 
     IfaceGame getGame();
 
-    IfaceRoomVo toVo();
+    IfaceRoomVo toVo(long userId);
 }

@@ -38,7 +38,7 @@ dependencies {
 
 
 	compile('org.springframework.boot:spring-boot-starter-data-redis')
-	compile "net.sf.json-lib:json-lib:2.4:jdk15"
+//	compile "net.sf.json-lib:json-lib:2.4:jdk15"
 	compile('org.springframework.kafka:spring-kafka')
 	compile 'org.apache.commons:commons-collections4:4.1'
 	compile('org.springframework.boot:spring-boot-starter-logging')

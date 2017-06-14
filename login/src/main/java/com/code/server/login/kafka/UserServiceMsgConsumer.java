@@ -1,5 +1,6 @@
 package com.code.server.login.kafka;
 
+
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.login.service.UserServiceMsgDispatch;
 import com.code.server.util.JsonUtil;
@@ -8,6 +9,7 @@ import com.code.server.util.ThreadPool;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,7 +22,7 @@ public class UserServiceMsgConsumer {
 
 
     @KafkaListener(id = "userService", topicPattern  = "userService")
-    public void listen(ConsumerRecord<String, String> record) {
+    public void listen(ConsumerRecord<String, String> record, Acknowledgment ack) {
         System.out.println(record);
         ThreadPool.getInstance().executor.execute(()->{
             String key = record.key();
@@ -31,6 +33,7 @@ public class UserServiceMsgConsumer {
             userServiceMsgDispatch.dispatchMsg(msgKey,msgValue);
         });
 
+        ack.acknowledge();
 
     }
 

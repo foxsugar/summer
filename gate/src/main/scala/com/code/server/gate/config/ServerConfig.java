@@ -7,23 +7,28 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "serverConfig")
 public class ServerConfig {
-
-    private int gateId;
+    private String serverType;
+    private int serverId;
+    private String host;
 
     private int port;
 
 
-
-
-
-
-
-    public int getGateId() {
-        return gateId;
+    public String getServerType() {
+        return serverType;
     }
 
-    public ServerConfig setGateId(int gateId) {
-        this.gateId = gateId;
+    public ServerConfig setServerType(String serverType) {
+        this.serverType = serverType;
+        return this;
+    }
+
+    public int getServerId() {
+        return serverId;
+    }
+
+    public ServerConfig setServerId(int serverId) {
+        this.serverId = serverId;
         return this;
     }
 
@@ -37,5 +42,12 @@ public class ServerConfig {
         return this;
     }
 
+    public String getHost() {
+        return host;
+    }
 
+    public ServerConfig setHost(String host) {
+        this.host = host;
+        return this;
+    }
 }

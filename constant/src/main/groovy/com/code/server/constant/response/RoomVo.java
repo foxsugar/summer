@@ -1,7 +1,5 @@
 package com.code.server.constant.response;
 
-import com.code.server.constant.game.UserBean;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +11,7 @@ import java.util.Map;
 public class RoomVo implements IfaceRoomVo {
 
 
+    public String roomType;
     public String roomId;
     public int multiple;//倍数
     public int gameNumber;
@@ -32,12 +31,8 @@ public class RoomVo implements IfaceRoomVo {
     public Map<Long, Double> userScores = new HashMap<>();
     public int personNumber;
 
-    public RoomVo(){}
-
-
-
-
-
+    public RoomVo() {
+    }
 
 
 }

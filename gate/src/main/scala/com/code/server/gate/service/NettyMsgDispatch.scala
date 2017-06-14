@@ -36,26 +36,28 @@ object NettyMsgDispatch {
         //直接发到kafka
         case "userService" =>
           //gateId 做key
-          val partition = SpringUtil.getBean(classOf[ServerConfig]).getGateId
+          val partition = SpringUtil.getBean(classOf[ServerConfig]).getServerId
           val kafkaKey = new KafkaMsgKey
           kafkaKey.setUserId(userId)
           kafkaKey.setPartition(partition)
           val keyJson = JsonUtil.toJson(kafkaKey)
           SpringUtil.getBean(classOf[MsgProducer]).send(service, keyJson, msg)
 
-        case "roomService" => roomService_dispatch(userId, method, params, msg)
+        case "roomService" => roomService_dispatch(userId,service, method, params, msg)
 
         case "reconnService" => reconnService_dispatch(userId, msg)
 
         case "mahjongRoomService" =>
           val msgKey = new KafkaMsgKey
           msgKey.setUserId(userId)
-          SpringUtil.getBean(classOf[MsgProducer]).send(service, JsonUtil.toJson(msgKey), msg)
+          val partition = 0
+          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(service, partition,JsonUtil.toJson(msgKey), msg)
 
-        case "pokerRoomSrvice" =>
+        case "pokerRoomService" =>
           val msgKey = new KafkaMsgKey
           msgKey.setUserId(userId)
-          SpringUtil.getBean(classOf[MsgProducer]).send(service, JsonUtil.toJson(msgKey), msg)
+          val partition = 1
+          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(service,partition, JsonUtil.toJson(msgKey), msg)
 
         case "chatService" =>
           chatService_dispatch(userId, method, params)
@@ -64,7 +66,7 @@ object NettyMsgDispatch {
         case _ =>
           val roomAndPartition = getPartitionByUserId(userId)
           if (roomAndPartition == null) {
-            GateManager.sendMsg(new ResponseVo("roomService", method, ErrorCode.CAN_NOT_NO_ROOM), userId)
+            GateManager.sendMsg(new ResponseVo(service, method, ErrorCode.CAN_NOT_NO_ROOM), userId)
             return
           }
           //玩家id做key
@@ -113,7 +115,7 @@ object NettyMsgDispatch {
     * @param params
     * @param msg
     */
-  def roomService_dispatch(userId: Long, method: String, params: JsonNode, msg: Object): Unit = {
+  def roomService_dispatch(userId: Long, service: String, method: String, params: JsonNode, msg: Object): Unit = {
     val msgKey = new KafkaMsgKey
     msgKey.setUserId(userId)
     method match {
@@ -126,7 +128,7 @@ object NettyMsgDispatch {
         } else {
           msgKey.setRoomId(roomId)
           msgKey.setPartition(partition.toInt)
-          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(IKafaTopic.ROOM_TOPIC, partition.toInt, msgKey, msg)
+          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(service, partition.toInt, msgKey, msg)
         }
 
 
@@ -140,24 +142,25 @@ object NettyMsgDispatch {
           val partition = roomAndPartition._2
           msgKey.setRoomId(roomId)
           msgKey.setPartition(partition.toInt)
-          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(IKafaTopic.ROOM_TOPIC, partition.toInt, msgKey, msg)
+          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(service, partition.toInt, msgKey, msg)
         }
     }
   }
 
-  def reconnService_dispatch(userid: Long, msg: Object): Unit = {
-    val roomId = RedisManager.getUserRedisService.getRoomId(userid)
+  def reconnService_dispatch(userId: Long, msg: Object): Unit = {
+    val roomId = RedisManager.getUserRedisService.getRoomId(userId)
     if (roomId == null) {
       val reconnectResp = new ReconnectResp
       reconnectResp.setExist(false)
       val vo = new ResponseVo("reconnService", "reconnection", reconnectResp)
-      GateManager.sendMsg(vo, userid)
+      GateManager.sendMsg(vo, userId)
 
     } else {
       val partition = getPartitionByRoomId(roomId)
       val msgKey = new KafkaMsgKey
       msgKey.setRoomId(roomId)
-      msgKey.setUserId(userid)
+      msgKey.setUserId(userId)
+      msgKey.setPartition(partition.toInt)
       SpringUtil.getBean(classOf[MsgProducer]).send2Partition(IKafaTopic.RECONN_TOPIC, partition.toInt, msgKey, msg)
     }
   }
@@ -235,7 +238,7 @@ object NettyMsgDispatch {
 
       val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
       //两个netty连接在同一个gate上
-      if (serverConfig.getGateId == loginGateIdInt) {
+      if (serverConfig.getServerId == loginGateIdInt) {
 
         //ctx 不是同一个
         if (ctx != GateManager.getUserNettyCtxByUserId(userId)) {

@@ -4,7 +4,8 @@ import java.net.InetSocketAddress
 
 import com.code.server.constant.game.UserBean
 import com.code.server.constant.response.Notice
-import com.code.server.redis.service.UserRedisService
+import com.code.server.gate.config.ServerConfig
+import com.code.server.redis.service.{RedisManager, UserRedisService}
 import com.code.server.util.SpringUtil
 import io.netty.channel.ChannelHandlerContext
 
@@ -24,7 +25,7 @@ object UserSevice {
     val insocket = ctx.channel.remoteAddress.asInstanceOf[InetSocketAddress]
     val clientIP = insocket.getAddress.getHostAddress
 
-    val userRedisService = SpringUtil.getBean(classOf[UserRedisService])
+    val userRedisService = RedisManager.getUserRedisService
     val userBean = userRedisService.getUserBean(userId)
     userBean.setIpConfig(clientIP)
 
@@ -34,6 +35,9 @@ object UserSevice {
     GateManager.putUserNettyCtx(userId, ctx)
 
     userRedisService.updateUserBean(userId,userBean)
+    //gate 映射
+    val gateId = SpringUtil.getBean(classOf[ServerConfig]).getServerId
+    userRedisService.setGateId(userId,gateId.toString)
 
     userBean
 

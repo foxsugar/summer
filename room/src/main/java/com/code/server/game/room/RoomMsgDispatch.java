@@ -3,7 +3,10 @@ package com.code.server.game.room;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.game.room.service.RoomManager;
+import com.code.server.util.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sun.org.apache.xml.internal.serializer.utils.MsgKey;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,23 +16,35 @@ import org.springframework.stereotype.Service;
 public class RoomMsgDispatch {
 
 
-    public void dispatchMsg(KafkaMsgKey msgKey, JsonNode msgValue){
+    public static void dispatch(ConsumerRecord<String,String> record){
+        try {
 
-        String service = msgValue.get("service").asText();
-        String method = msgValue.get("method").asText();
-        JsonNode params = msgValue.get("params");
+            String keyValue = record.key();
 
-        String roomId = msgKey.getRoomId();
-        long userId = msgKey.getUserId();
-        int code = dispatchRoomService(method, params, userId,roomId);
-        if(code != 0){
-            MsgSender.sendMsg2Player(service,method,code,userId);
+            String valueStr = record.value();
+            KafkaMsgKey msgKey = JsonUtil.readValue(keyValue, KafkaMsgKey.class);
+
+
+            JsonNode msgValue = JsonUtil.readTree(valueStr);
+
+            String service = msgValue.get("service").asText();
+            String method = msgValue.get("method").asText();
+            JsonNode params = msgValue.get("params");
+
+            String roomId = msgKey.getRoomId();
+            long userId = msgKey.getUserId();
+            int code = dispatchRoomService(method, params, userId,roomId);
+            if(code != 0){
+                MsgSender.sendMsg2Player(service,method,code,userId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
     }
 
-    private int dispatchRoomService(String method, JsonNode params, long userId,String roomId) {
+    private static int dispatchRoomService(String method, JsonNode params, long userId,String roomId) {
 
 
         switch (method) {

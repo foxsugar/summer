@@ -12,7 +12,9 @@ object KafkaMsgDispatch {
 
   def send2Client(userId:Long, msg:Object): Unit ={
     val ctx = GateManager.getUserNettyCtxByUserId(userId)
-    ctx.writeAndFlush(msg)
+    if(ctx != null ) {
+      ctx.writeAndFlush(msg)
+    }
   }
 
   def handleGate2GateMsg(record: ConsumerRecord[_, _]):Unit = {

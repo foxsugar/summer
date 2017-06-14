@@ -60,7 +60,7 @@ public class GameInfoSongYuan extends GameInfo {
         if (bao.length > 0) {
             map.put("baoCard", bao[0]);
         }
-        MsgSender.sendMsg2Player(new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_CHANGE_BAO, map).toJsonObject(), users);
+        MsgSender.sendMsg2Player(new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_CHANGE_BAO, map), users);
 
     }
 
@@ -207,7 +207,7 @@ public class GameInfoSongYuan extends GameInfo {
                 getCardResp.setCard(card);
             }
             ResponseVo responseVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_GET_CARD, getCardResp);
-            MsgSender.sendMsg2Player(responseVo.toJsonObject(), user);
+            MsgSender.sendMsg2Player(responseVo, user);
 
             //能做的操作全置成不能
             PlayerCardsInfo other = playerCardsInfos.get(user);
@@ -240,7 +240,7 @@ public class GameInfoSongYuan extends GameInfo {
 
         //可能的操作
         ResponseVo OperateResponseVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, resp);
-        MsgSender.sendMsg2Player(OperateResponseVo.toJsonObject(), userId);
+        MsgSender.sendMsg2Player(OperateResponseVo, userId);
 
     }
 
@@ -279,7 +279,7 @@ public class GameInfoSongYuan extends GameInfo {
         playCardResp.setUserId(userId);
         playCardResp.setCard(this.disCard);
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_PLAY_CARD, playCardResp);
-        MsgSender.sendMsg2Player(vo.toJsonObject(), users);
+        MsgSender.sendMsg2Player(vo, users);
 
         //是否换宝
         if (changeBaoSize > 0 && baoCard != null && getPlayCardNum(baoCard) >= 3) {
@@ -323,7 +323,7 @@ public class GameInfoSongYuan extends GameInfo {
 
             //可能的操作
             ResponseVo OperateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-            MsgSender.sendMsg2Player(OperateVo.toJsonObject(), entry.getKey());
+            MsgSender.sendMsg2Player(OperateVo, entry.getKey());
         }
 
         resetCanBeOperate(chupaiPlayerCardsInfo);
@@ -373,7 +373,7 @@ public class GameInfoSongYuan extends GameInfo {
         playCardResp.setUserId(userId);
         playCardResp.setCard(this.disCard);
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_PLAY_CARD, playCardResp);
-        MsgSender.sendMsg2Player(vo.toJsonObject(), users);
+        MsgSender.sendMsg2Player(vo, users);
 
         //是否换宝
         if (changeBaoSize > 0 && baoCard != null && getPlayCardNum(baoCard) >= 3) {
@@ -417,7 +417,7 @@ public class GameInfoSongYuan extends GameInfo {
 
             //可能的操作
             ResponseVo OperateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-            MsgSender.sendMsg2Player(OperateVo.toJsonObject(),  entry.getKey());
+            MsgSender.sendMsg2Player(OperateVo,  entry.getKey());
         }
 
         resetCanBeOperate(chupaiPlayerCardsInfo);
@@ -491,7 +491,7 @@ public class GameInfoSongYuan extends GameInfo {
             operateReqResp.setCard(card);
             operateReqResp.setIsMing(isMing);
             //通知所有人有杠
-            MsgSender.sendMsg2Player(vo.toJsonObject(), users);
+            MsgSender.sendMsg2Player(vo, users);
 
 
             if (isMing) {
@@ -516,7 +516,7 @@ public class GameInfoSongYuan extends GameInfo {
 
                     //可能的操作
                     ResponseVo OperateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-                    MsgSender.sendMsg2Player(OperateVo.toJsonObject(), entry.getKey());
+                    MsgSender.sendMsg2Player(OperateVo, entry.getKey());
                 }
             }
 
@@ -571,7 +571,7 @@ public class GameInfoSongYuan extends GameInfo {
         operateReqResp.setCard(disCard);
         operateReqResp.setIsMing(true);
         //通知所有人有杠
-        MsgSender.sendMsg2Player(vo.toJsonObject(), users);
+        MsgSender.sendMsg2Player(vo, users);
 
         mopai(userId,"杠后摸牌 点杠");
         turnId = userId;
@@ -625,7 +625,7 @@ public class GameInfoSongYuan extends GameInfo {
 
         //通知其他人
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
-        MsgSender.sendMsg2Player(vo.toJsonObject(), users);
+        MsgSender.sendMsg2Player(vo, users);
 
 
         //碰完能听,杠,不能胡
@@ -637,7 +637,7 @@ public class GameInfoSongYuan extends GameInfo {
         operateResp.setIsCanTing(isCanTing);
         operateResp.setIsCanGang(isCanGang);
         ResponseVo operateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-        MsgSender.sendMsg2Player(operateVo.toJsonObject(),userId);
+        MsgSender.sendMsg2Player(operateVo,userId);
         this.disCard = null;
         //自己将能做的处理
         playerCardsInfo.canBePeng = false;
@@ -702,7 +702,7 @@ public class GameInfoSongYuan extends GameInfo {
         map.put("isAllPass", true);
         map.put("lastPlayUser", lastPlayUserId);
         ResponseVo responseVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_ALL_PASS, map);
-        MsgSender.sendMsg2Player(responseVo.toJsonObject(),users);
+        MsgSender.sendMsg2Player(responseVo,users);
     }
 
     /**
@@ -735,7 +735,7 @@ public class GameInfoSongYuan extends GameInfo {
             //听
             playerCardsInfo.ting(card);
             //通知其他玩家听
-            MsgSender.sendMsg2Player(vo.toJsonObject(), users);
+            MsgSender.sendMsg2Player(vo, users);
 
 
             //通知其他玩家出牌信息
@@ -864,7 +864,7 @@ public class GameInfoSongYuan extends GameInfo {
 
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
         //通知其他玩家听
-        MsgSender.sendMsg2Player(vo.toJsonObject(), users);
+        MsgSender.sendMsg2Player(vo, users);
 
 
         //吃
@@ -879,7 +879,7 @@ public class GameInfoSongYuan extends GameInfo {
         operateResp.setIsCanTing(isCanTing);
         operateResp.setIsCanGang(isCanGang);
         ResponseVo operateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-        MsgSender.sendMsg2Player(operateVo.toJsonObject(), userId);
+        MsgSender.sendMsg2Player(operateVo, userId);
         this.disCard = null;
         //自己将能做的处理
         playerCardsInfo.canBeChi = false;
@@ -920,7 +920,7 @@ public class GameInfoSongYuan extends GameInfo {
         operateReqResp.setFromUserId(lastPlayUserId);
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
         //通知其他玩家听
-        MsgSender.sendMsg2Player(vo.toJsonObject(), users);
+        MsgSender.sendMsg2Player(vo, users);
 
         //吃
         playerCardsInfo.chi(disCard, one, two);
@@ -932,7 +932,7 @@ public class GameInfoSongYuan extends GameInfo {
         operateResp.setIsCanTing(false);//客户端特殊处理
         operateResp.setIsCanGang(false);
         ResponseVo operateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-        MsgSender.sendMsg2Player(operateVo.toJsonObject(), userId);
+        MsgSender.sendMsg2Player(operateVo, userId);
         this.disCard = null;
         //自己将能做的处理
         playerCardsInfo.canBeChi = false;
@@ -981,7 +981,7 @@ public class GameInfoSongYuan extends GameInfo {
 
         //通知其他人
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
-        MsgSender.sendMsg2Player(vo.toJsonObject(), users);
+        MsgSender.sendMsg2Player(vo, users);
 
 
         //碰完能听,杠,不能胡
@@ -991,7 +991,7 @@ public class GameInfoSongYuan extends GameInfo {
         operateResp.setIsCanTing(false);//客户端特殊处理
         operateResp.setIsCanGang(false);
         ResponseVo operateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-        MsgSender.sendMsg2Player(operateVo.toJsonObject(), userId);
+        MsgSender.sendMsg2Player(operateVo, userId);
         this.disCard = null;
         //自己将能做的处理
         playerCardsInfo.canBePeng = false;
@@ -1168,7 +1168,7 @@ public class GameInfoSongYuan extends GameInfo {
         operateReqResp.setUserId(userId);
         //通知其他人
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
-        MsgSender.sendMsg2Player(vo.toJsonObject(), users);
+        MsgSender.sendMsg2Player(vo, users);
     }
 
     private void pushDan(long userId, boolean isMing) {
@@ -1184,7 +1184,7 @@ public class GameInfoSongYuan extends GameInfo {
             operateReqResp.setCard(baoCard);
 //            }
             ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
-            MsgSender.sendMsg2Player(vo.toJsonObject(), id);
+            MsgSender.sendMsg2Player(vo, id);
         }
     }
 

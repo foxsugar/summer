@@ -6,6 +6,7 @@ import com.code.server.game.room.Room;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by sunxianping on 2017/5/31.
@@ -35,6 +36,11 @@ public class RoomManager {
         RedisManager.getRoomRedisService().removeServer(roomId);
         //删除room-user映射
         RedisManager.getRoomRedisService().removeRoomUsers(roomId);
+
+        //删除user-room
+        Set<Long> users =  RedisManager.getRoomRedisService().getUsers(roomId);
+        users.forEach(RedisManager.getUserRedisService()::removeRoom);
+
     }
 
     public static void addRoom(String roomId,String serverId, Room room) {

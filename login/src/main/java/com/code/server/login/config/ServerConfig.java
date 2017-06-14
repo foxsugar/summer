@@ -7,11 +7,19 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "serverConfig")
 public class ServerConfig {
-
+    private String serverType;
     private int serverId;
 
     private int port;
 
+    public String getServerType() {
+        return serverType;
+    }
+
+    public ServerConfig setServerType(String serverType) {
+        this.serverType = serverType;
+        return this;
+    }
 
     public int getServerId() {
         return serverId;

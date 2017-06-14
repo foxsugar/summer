@@ -22,9 +22,9 @@ object ReconnService {
     val room = RoomManager.getRoom(roomId)
     if (room != null) {
       reconnectResp.setExist(true)
-      reconnectResp.setRoom(room.toVo)
+      reconnectResp.setRoom(room.toVo(userId))
     }
-    val vo = new ResponseVo("userService", "reconnection", reconnectResp)
+    val vo = new ResponseVo("reconnService", "reconnection", reconnectResp)
     MsgSender.sendMsg2Player(vo, userId)
     0
   }

@@ -17,27 +17,27 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class RoomMsgConsumer {
-
-    @Autowired
-    RoomMsgDispatch roomMsgDispatch;
-
-    @KafkaListener(id = "room", topicPartitions = {
-            @TopicPartition(topic = "roomService", partitions = "${serverConfig.serverId}")
-    })
-    public void listen(ConsumerRecord<String, String> record) {
-
-        System.out.println(record.toString());
-        System.out.println("处理完毕");
-
-        String key = record.key();
-        String value = record.value();
-        KafkaMsgKey msgKey = JsonUtil.readValue(key,KafkaMsgKey.class);
-        JsonNode msgValue = JsonUtil.readTree(value);
-
-        roomMsgDispatch.dispatchMsg(msgKey,msgValue);
-
-
-    }
+//
+//    @Autowired
+//    RoomMsgDispatch roomMsgDispatch;
+//
+//    @KafkaListener(id = "room", topicPartitions = {
+//            @TopicPartition(topic = "roomService", partitions = "${serverConfig.serverId}")
+//    })
+//    public void listen(ConsumerRecord<String, String> record) {
+//
+//        System.out.println(record.toString());
+//        System.out.println("处理完毕");
+//
+//        String key = record.key();
+//        String value = record.value();
+//        KafkaMsgKey msgKey = JsonUtil.readValue(key,KafkaMsgKey.class);
+//        JsonNode msgValue = JsonUtil.readTree(value);
+//
+//        roomMsgDispatch.dispatchMsg(msgKey,msgValue);
+//
+//
+//    }
 
 
 

@@ -27,7 +27,7 @@ object ChatService {
 
     sendMsg2kafka(roomId,acceptNotice)
 
-    GateManager.sendMsg(new ResponseVo("chatService", "sendMessage", sendNotice),userId)
+    GateManager.sendMsg(new ResponseVo("chatService", "sendMessageToOne", sendNotice),userId)
     0
   }
 

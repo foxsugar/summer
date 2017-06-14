@@ -4,12 +4,14 @@ package com.code.server.game.mahjong.logic;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
 import com.code.server.game.room.MsgSender;
-import com.code.server.redis.service.RedisManager;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.service.RoomManager;
-import net.sf.json.JSONObject;
+import com.code.server.redis.service.RedisManager;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class RoomInfo extends Room {
@@ -179,27 +181,23 @@ public class RoomInfo extends Room {
 
         //通知其他人游戏已经开始
 
-        JSONObject beginResult = new JSONObject();
-        beginResult.put("service", "gameService");
-        beginResult.put("method", "gameBegin");
-        beginResult.put("params", toJSONObjectOfGameBegin());
-        beginResult.put("code", "0");
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameBegin", beginResult), this.getUsers());
+
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameBegin", toJSONObjectOfGameBegin()), this.getUsers());
         pushScoreChange();
     }
 
 
     //游戏开始
-    public JSONObject toJSONObjectOfGameBegin() {
-        JSONObject jSONObject = new JSONObject();
-        jSONObject.put("gameId", 0);
-        jSONObject.put("roomId", this.roomId);
+    public Map toJSONObjectOfGameBegin() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("gameId", 0);
+        result.put("roomId", this.roomId);
 
-        jSONObject.put("currentBanker", ((GameInfo) this.game).getFirstTurn());
-        jSONObject.put("gameNumber", this.getCurGameNumber());
-        jSONObject.put("circleNum", this.getCurCircle());
+        result.put("currentBanker", ((GameInfo) this.game).getFirstTurn());
+        result.put("gameNumber", this.getCurGameNumber());
+        result.put("circleNum", this.getCurCircle());
 
-        return jSONObject;
+        return result;
     }
 
     protected List<UserOfResult> getUserOfResult(){
@@ -233,7 +231,7 @@ public class RoomInfo extends Room {
             userOfResultList.add(resultObj);
 
             //删除映射关系
-            RedisManager.getUserRedisService().removeRoom(eachUser.getId());
+//            RedisManager.getUserRedisService().removeRoom(eachUser.getId());
         }
         return userOfResultList;
     }
@@ -251,10 +249,11 @@ public class RoomInfo extends Room {
         List<UserOfResult> userOfResultList = getUserOfResult();
 
 
-        for(long userId : users){
-            //删除映射关系
-            RedisManager.getUserRedisService().removeRoom(userId);
-        }
+//        for(long userId : users){
+//            //删除映射关系
+////            RedisManager.getUserRedisService().removeRoom(userId);
+//            roomRemoveUser(userId);
+//        }
 
 
         boolean isChange = scoreIsChange();
@@ -273,7 +272,7 @@ public class RoomInfo extends Room {
         gameOfResult.setUserList(userOfResultList);
 
 
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), this.users);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), users);
 //        serverContext.sendToOnlinePlayer(noticeEndResult, this.users);
 
     }
@@ -401,8 +400,9 @@ public class RoomInfo extends Room {
     }
 
 
-    public Object toJSONObject() {
-        JSONObject jSONObject = new JSONObject();
+    public Map<String, Object> toJSONObject() {
+        Map<String, Object> jSONObject = new HashMap<>();
+        jSONObject.put("roomType", this.roomType);
         jSONObject.put("roomId", this.roomId);
         jSONObject.put("modeTotal", this.modeTotal);
         jSONObject.put("mode", this.mode);
@@ -544,7 +544,29 @@ public class RoomInfo extends Room {
 
 
     @Override
-    public IfaceRoomVo toVo() {
-        return null;
+    public IfaceRoomVo toVo(long userId) {
+        RoomInfoVo roomVo = new RoomInfoVo();
+        roomVo.roomType = this.getRoomType();
+        roomVo.createType = this.getCreateType();
+        roomVo.roomId = this.getRoomId();
+        roomVo.multiple = this.getMultiple();
+        roomVo.gameNumber = this.getGameNumber();
+        roomVo.createUser = this.getCreateUser();
+        roomVo.userStatus.putAll(this.getUserStatus());
+        roomVo.userScores.putAll(this.getUserScores());
+        roomVo.curGameNumber = this.getCurGameNumber();
+        roomVo.goldRoomType = this.getGoldRoomType();
+        roomVo.isLastDraw = this.isLastDraw();
+        roomVo.drawForLeaveChip = this.getDrawForLeaveChip();
+        roomVo.personNumber = this.getPersonNumber();
+        roomVo.hasNine = this.getHasNine();
+        roomVo.setMode(this.getMode());
+        roomVo.setModeTotal(this.getModeTotal());
+        roomVo.setEach(this.getEach());
+        RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
+        if (this.getGame() != null) {
+            roomVo.game = this.game.toVo(userId);
+        }
+        return roomVo;
     }
 }

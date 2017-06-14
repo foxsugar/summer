@@ -245,7 +245,7 @@ object MahjongRoomService {
       }
     })
     roomInfo.setTimerNode(node)
-    GameTimer.getInstance.addTimerNode(node)
+    GameTimer.addTimerNode(node)
     MsgSender.sendMsg2Player(new ResponseVo("mahjongRoomService", "createRoomButNotInRoom", roomInfo.toJSONObject), userId)
     return 0
   }

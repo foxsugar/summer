@@ -11,10 +11,14 @@ object PokerRoomService {
 
     method match {
       case "createRoom" =>
+        val roomType = params.get("roomType").asText()
         val gameNumber = params.get("gameNumber").asInt()
         val multiple = params.get("maxMultiple").asInt()
-        val gameType = params.get("gameType").asText("0")
-        RoomDouDiZhu.createRoom(userId, gameNumber, multiple,gameType);
+        var gameType = "0"
+        if(params.has("gameType")) {
+          gameType = params.get("gameType").asText()
+        }
+        RoomDouDiZhu.createRoom(userId, gameNumber, multiple,gameType,roomType);
     }
 
 

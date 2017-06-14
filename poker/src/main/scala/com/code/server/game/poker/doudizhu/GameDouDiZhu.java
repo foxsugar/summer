@@ -4,7 +4,6 @@ package com.code.server.game.poker.doudizhu;
 import com.code.server.constant.game.CardStruct;
 import com.code.server.constant.game.Record;
 import com.code.server.constant.kafka.IKafaTopic;
-import com.code.server.constant.kafka.IkafkaMsgId;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.*;
 import com.code.server.game.room.Game;
@@ -14,12 +13,10 @@ import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by sunxianping on 2017/3/13.
@@ -150,7 +147,7 @@ public class GameDouDiZhu extends Game {
             sendFinalResult();
 
         }
-        MsgSender.sendMsg2Player("gameService", "play", 0,userId);
+        MsgSender.sendMsg2Player("gameService", "play", 0, userId);
 //        userId.sendMsg("gameService", "play", 0);
         updateLastOperateTime();
         return 0;
@@ -177,7 +174,7 @@ public class GameDouDiZhu extends Game {
         rs.put("nextUserId", playTurn);
 
         MsgSender.sendMsg2Player("gameService", "passResponse", rs, this.users);
-        MsgSender.sendMsg2Player("gameService", "pass", 0,userId);
+        MsgSender.sendMsg2Player("gameService", "pass", 0, userId);
 
         updateLastOperateTime();
         return 0;
@@ -297,7 +294,7 @@ public class GameDouDiZhu extends Game {
         rs.put("score", score);
         MsgSender.sendMsg2Player("gameService", "jiaoResponse", rs, users);
 
-        MsgSender.sendMsg2Player("gameService", "jiaoDizhu", 0,userId);
+        MsgSender.sendMsg2Player("gameService", "jiaoDizhu", 0, userId);
 
         updateLastOperateTime();
         return 0;
@@ -358,6 +355,7 @@ public class GameDouDiZhu extends Game {
     protected void sendFinalResult() {
         //所有牌局都结束
         if (room.getCurGameNumber() > room.getGameNumber()) {
+            List<Long> us = new ArrayList<>(users);
             GameFinalResult gameFinalResult = new GameFinalResult();
             room.getUserScores().forEach((userId, score) -> {
 
@@ -365,10 +363,10 @@ public class GameDouDiZhu extends Game {
 
                         //删除玩家房间映射关系
 //                        GameManager.getInstance().getUserRoom().remove(userId);
-                RedisManager.getUserRedisService().removeRoom(userId);
+//                        room.roomRemoveUser(userId);
                     }
             );
-            MsgSender.sendMsg2Player("gameService", "gameFinalResult", gameFinalResult, users);
+            MsgSender.sendMsg2Player("gameService", "gameFinalResult", gameFinalResult, us);
 
             //删除room
 //            GameManager.getInstance().removeRoom(room);
@@ -382,7 +380,7 @@ public class GameDouDiZhu extends Game {
         roomRecord.setTime(System.currentTimeMillis());
         roomRecord.setType(room.getCreateType());
 
-        playerCardInfos.values().forEach((playerInfo)->{
+        playerCardInfos.values().forEach((playerInfo) -> {
             Record.UserRecord userRecord = new Record.UserRecord();
             userRecord.setScore(playerInfo.getScore());
             userRecord.setUserId(playerInfo.getUserId());
@@ -392,16 +390,17 @@ public class GameDouDiZhu extends Game {
 
         KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_GEN_RECORD);
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
-        msgProducer.send(IKafaTopic.CENTER_TOPIC,kafkaMsgKey,roomRecord);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord);
     }
 
-    protected void playStepStart(long dizhu){
+    protected void playStepStart(long dizhu) {
         this.canQiangUser = -1;
         this.canJiaoUser = -1;
         this.dizhu = dizhu;
         this.step = STEP_PLAY;
         this.playTurn = dizhu;
     }
+
     /**
      * 开始打牌
      *
@@ -464,14 +463,14 @@ public class GameDouDiZhu extends Game {
         MsgSender.sendMsg2Player("gameService", "qiangResponse", rs, users);
 
 
-        MsgSender.sendMsg2Player("gameService", "qiangDizhu", 0,userId);
+        MsgSender.sendMsg2Player("gameService", "qiangDizhu", 0, userId);
 
 
         updateLastOperateTime();
         return 0;
     }
 
-    protected void updateLastOperateTime(){
+    protected void updateLastOperateTime() {
         this.lastOperateTime = System.currentTimeMillis();
     }
 
@@ -515,6 +514,7 @@ public class GameDouDiZhu extends Game {
         return users.get(nextId);
     }
 
+
     @Override
     public IfaceGameVo toVo(long userId) {
         GameDoudizhuVo vo = new GameDoudizhuVo();
@@ -530,7 +530,7 @@ public class GameDouDiZhu extends Game {
         vo.playTurn = this.getPlayTurn();
         vo.curMultiple = this.getMultiple();
         vo.tableScore = this.getTableScore();
-        if(userId == this.getDizhu() || !(this instanceof GameDouDiZhuLinFen)){//玩家是地主 并且是临汾斗地主
+        if (userId == this.getDizhu() || !(this instanceof GameDouDiZhuLinFen)) {//玩家是地主 并且是临汾斗地主
             vo.tableCards.addAll(this.getTableCards());
         }
 

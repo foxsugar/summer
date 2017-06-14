@@ -4,6 +4,7 @@ package com.code.server.game.mahjong.service;
 import com.code.server.game.mahjong.logic.GameInfo;
 import com.code.server.game.mahjong.logic.RoomInfo;
 import com.code.server.game.room.IfaceRoom;
+import com.code.server.game.room.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.util.JsonUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -77,6 +78,9 @@ public class GameLogicService {
                 });
 //                code = xuanfengdan(roomId, userId, xuanfengType, xuanfengCardList);
                 break;
+        }
+        if (code == 0) {
+            MsgSender.sendMsg2Player("gameLogicService",method,code, userId);
         }
         return code;
     }

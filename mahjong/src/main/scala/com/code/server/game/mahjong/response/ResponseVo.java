@@ -1,8 +1,5 @@
 package com.code.server.game.mahjong.response;
 
-import com.code.server.util.JsonUtil;
-import net.sf.json.JSONObject;
-
 /**
  * Created by win7 on 2016/12/1.
  */
@@ -28,14 +25,14 @@ public class ResponseVo {
 
 
 
-    public JSONObject toJsonObject() {
-        JSONObject o = new JSONObject();
-        o.put("service", service);
-        o.put("method", method);
-        o.put("params", JsonUtil.toJson(params));
-        o.put("code",""+code);
-        return o;
-    }
+//    public JSONObject toJsonObject() {
+//        JSONObject o = new JSONObject();
+//        o.put("service", service);
+//        o.put("method", method);
+//        o.put("params", JsonUtil.toJson(params));
+//        o.put("code",""+code);
+//        return o;
+//    }
 
     public String getService() {
         return service;

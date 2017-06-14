@@ -1,5 +1,6 @@
 package com.code.server.util;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,7 +18,7 @@ import java.util.TimeZone;
 public final class JsonUtil {
     public static final ObjectMapper mapper = new ObjectMapper(); // create once, reuse
 
-    static{
+    static {
 
         //去掉默认的时间戳格式
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
@@ -37,6 +38,13 @@ public final class JsonUtil {
         //单引号处理
         mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 
+        mapper.configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true);
+        mapper.setVisibility(
+                mapper.getSerializationConfig().
+                        getDefaultVisibilityChecker().
+                        withFieldVisibility(JsonAutoDetect.Visibility.ANY).
+                        withGetterVisibility(JsonAutoDetect.Visibility.NONE).
+                        withIsGetterVisibility(JsonAutoDetect.Visibility.NONE));
 
         //显示类型用的
 //        mapper.enableDefaultTyping();
@@ -45,7 +53,7 @@ public final class JsonUtil {
     }
 
 
-    public static String toJson(Object object){
+    public static String toJson(Object object) {
         String result = null;
         try {
             result = mapper.writeValueAsString(object);
@@ -55,7 +63,7 @@ public final class JsonUtil {
         return result;
     }
 
-    public static <T> T readValue(String json, TypeReference<T> typeReference){
+    public static <T> T readValue(String json, TypeReference<T> typeReference) {
         T result = null;
         try {
             result = mapper.readValue(json, typeReference);
@@ -65,7 +73,7 @@ public final class JsonUtil {
         return result;
     }
 
-    public static <T> T readValue(String json , Class<T> valueType){
+    public static <T> T readValue(String json, Class<T> valueType) {
         T result = null;
         try {
             result = mapper.readValue(json, valueType);
@@ -83,11 +91,6 @@ public final class JsonUtil {
         }
         return null;
     }
-
-
-
-
-
 
 
 }

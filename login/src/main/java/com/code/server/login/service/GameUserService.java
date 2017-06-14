@@ -6,6 +6,7 @@ import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
+import com.code.server.constant.response.UserVo;
 import com.code.server.db.Service.UserRecordService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.model.User;
@@ -136,7 +137,10 @@ public class GameUserService {
         if (userBean == null) {
             return  ErrorCode.YOU_HAVE_NOT_LOGIN;
         }
-        ResponseVo vo = new ResponseVo("userService", "getUserMessage", userBean);
+        String roomId = userRedisService.getRoomId(msgKey.getUserId());
+        UserVo userVo = userBean.toVo();
+        userVo.setRoomId(roomId);
+        ResponseVo vo = new ResponseVo("userService", "getUserMessage", userVo);
         sendMsg(msgKey, vo);
 
         return 0;

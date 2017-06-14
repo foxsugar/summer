@@ -1,7 +1,6 @@
 package com.code.server.constant.response;
 
-import com.code.server.constant.game.UserBean;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserOfRoom {
@@ -11,7 +10,7 @@ public class UserOfRoom {
     //准备好的人数
     private int readyNumber;
     
-    private List<UserBean> userList;
+    private List<UserVo> userList = new ArrayList<>();
     
     
     
@@ -31,11 +30,11 @@ public class UserOfRoom {
 		this.readyNumber = readyNumber;
 	}
 
-	public List<UserBean> getUserList() {
+	public List<UserVo> getUserList() {
 		return userList;
 	}
 
-	public UserOfRoom setUserList(List<UserBean> userList) {
+	public UserOfRoom setUserList(List<UserVo> userList) {
 		this.userList = userList;
 		return this;
 	}

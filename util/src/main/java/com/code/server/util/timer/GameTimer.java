@@ -73,12 +73,12 @@ public class GameTimer {
         }
     }
 
-    public void addTimerNode(TimerNode node) {
-        queue.add(node);
+    public static void addTimerNode(TimerNode node) {
+        getInstance().queue.add(node);
     }
 
-    public void removeNode(TimerNode node) {
-        queue.remove(node);
+    public static void removeNode(TimerNode node) {
+        getInstance().queue.remove(node);
     }
 
 

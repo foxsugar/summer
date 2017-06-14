@@ -5,17 +5,19 @@ import com.code.server.gate.service.NettyMsgDispatch;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by win7 on 2017/3/9.
  */
 public class GameMsgHandler extends ChannelDuplexHandler {
 
+    private final Logger logger = LoggerFactory.getLogger(GameMsgHandler.class);
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg){
-
-        System.out.println(msg);
+        logger.info("接收消息 : {}",msg );
         NettyMsgDispatch.dispatch(msg,ctx);
     }
 

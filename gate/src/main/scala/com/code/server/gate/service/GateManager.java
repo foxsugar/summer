@@ -53,7 +53,9 @@ public class GateManager {
 
     public static void sendMsg(String msg, long userId){
         ChannelHandlerContext ctx = getUserNettyCtxByUserId(userId);
-        ctx.writeAndFlush(msg);
+        if (ctx != null) {
+            ctx.writeAndFlush(msg);
+        }
     }
 
     public static void sendMsg(Object object, long userId) {
@@ -64,7 +66,7 @@ public class GateManager {
 
     public static int getGateId(){
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
-        return serverConfig.getGateId();
+        return serverConfig.getServerId();
     }
 
 
