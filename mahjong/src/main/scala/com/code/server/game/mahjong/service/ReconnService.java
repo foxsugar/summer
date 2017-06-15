@@ -7,7 +7,7 @@ import com.code.server.game.mahjong.logic.GameInfo;
 import com.code.server.game.mahjong.logic.RoomInfo;
 import com.code.server.game.mahjong.response.AllMessage;
 import com.code.server.game.mahjong.response.ReconnectResp;
-import com.code.server.game.room.MsgSender;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 

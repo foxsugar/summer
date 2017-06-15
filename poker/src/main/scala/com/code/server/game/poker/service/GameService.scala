@@ -3,7 +3,7 @@ package com.code.server.game.poker.service
 import com.code.server.constant.game.CardStruct
 import com.code.server.constant.response.ErrorCode
 import com.code.server.game.poker.doudizhu.GameDouDiZhu
-import com.code.server.game.room.{IfaceGame, IfaceRoom}
+import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
 import com.code.server.util.JsonUtil
 import com.fasterxml.jackson.databind.JsonNode
@@ -24,14 +24,16 @@ object GameService {
   private def dispatchGameDDZService(userId:Long,method: String, game: GameDouDiZhu, params: JsonNode) = method match {
     case "jiaoDizhu" =>
       val isJiao = params.get("isJiao").asBoolean()
-      val score = params.get("score").asInt(0)
+      val score = params.path("score").asInt(0)
+//      params.
       game.jiaoDizhu(userId, isJiao, score)
     case "qiangDizhu" =>
 
       val isQiang = params.get("isQiang").asBoolean()
       game.qiangDizhu(userId, isQiang)
     case "play" =>
-      val cardStruct = JsonUtil.readValue(params.get("cards").asText(), classOf[CardStruct])
+      val json = params.path("cards").toString
+      val cardStruct = JsonUtil.readValue(json, classOf[CardStruct])
       game.play(userId, cardStruct)
     case "pass" =>
       game.pass(userId)
@@ -42,4 +44,7 @@ object GameService {
   def getGame(roomId : String):IfaceGame = {
     RoomManager.getRoom(roomId).getGame
   }
+
+
+
 }

@@ -3,7 +3,7 @@ package com.code.server.game.mahjong.logic;
 
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
-import com.code.server.game.room.MsgSender;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;

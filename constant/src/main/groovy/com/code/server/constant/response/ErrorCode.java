@@ -24,6 +24,9 @@ public class ErrorCode {
 	public static final int CANNOT_QUIT_ROOM_IS_IN_GAME = 1000015;
 	public static final int CANNOT_CREATE_ROOM_MONEY = 1000016;
 	public static final int REDIS_NO_TOKEN = 1000017;
+	public static final int USERNAME_NOT_COMPLIE = 200001;
+	public static final int ACCOUNT_NOT_COMPLIE = 200002;
+	public static final int PASSWORD_NOT_COMPLIE = 200003;
 
 	//userId获取不到Role
 	public static final int USERID_ERROR = 110001;
@@ -40,8 +43,8 @@ public class ErrorCode {
 	//创建房间参数有误
 	public static final int SEND_MESSAGE_USERID_IS_ERROR = 140001;
 	
-	
-	
+
+
 	//麻将异常参数=====================================================================================
 	//传入用户参数错误
 	public static final int MJ_SEND_MESSAGE_USERID_IS_ERROR = 150001;
@@ -68,15 +71,15 @@ public class ErrorCode {
 	public static final int REFERRER_NOT_EXIST = 250000;
 	public static final int REFERRER_ALERADY_BIND = 250001;
 	public static final int CHARGE_NO_BIND = 250002;
-
-
+	
+	public static final int BALANCE_INSUFFICIENT = 300000; //余额不足
 	public static final int NOT_HAVE_THIS_GIVER = 300001;
 	public static final int NOT_HAVE_THIS_ACCEPTER = 300002;
 	public static final int NOT_HAVE_MORE_MONEY = 300003;
-
+	public static final int ORDER_WAS_PAID = 300011;//订单已支付
+	public static final int ORDER_WAS_CLOSED = 300012; //订单已关闭
 	public static final int ID_TOKEN_NOT_MATCH = 400001;
 
-	
 	static class ErrorCodeRepeatChecker {
     	public void check() {
     		Set<Integer> set = new HashSet<Integer>();

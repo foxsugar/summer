@@ -95,21 +95,21 @@ public class LoginAction {
                 userBean.setDownload2(getConstant().getDownload2());
                 userBean.setUserInfo(user.getUserInfo());
 
-                userRedisService.setUserBean(userBean);//userid-userbean
-                userRedisService.setUserMoney(user.getUserId(), user.getMoney());//userid-money
+                userRedisService.setUserBean(userBean);//userId-userbean
+                userRedisService.setUserMoney(user.getUserId(), user.getMoney());//userId-money
 
 
                 long time = System.currentTimeMillis();
 
                 String token = MD5Util.MD5Encode(time + account + password, "UTF-8");
 
-                userRedisService.setToken(user.getUserId(),token);//userid-token
+                userRedisService.setToken(user.getUserId(),token);//userId-token
 
-                userRedisService.setAccountUserId(account,user.getUserId());//account-userid
-                userRedisService.setUserIdAccount(user.getUserId(),account);//userid-account
+                userRedisService.setAccountUserId(account,user.getUserId());//account-userId
+                userRedisService.setUserIdAccount(user.getUserId(),account);//userId-account
 
-                userRedisService.setOpenIdUserId(user.getOpenId(),user.getUserId());//openid-userid
-                userRedisService.setUserIdOpenId(user.getUserId(),user.getOpenId());//userid-openid
+                userRedisService.setOpenIdUserId(user.getOpenId(),user.getUserId());//openid-userId
+                userRedisService.setUserIdOpenId(user.getUserId(),user.getOpenId());//userId-openid
 
                 params.put("token",token);
                 params.put("userId",user.getUserId());
@@ -133,20 +133,20 @@ public class LoginAction {
                     userBean.setMarquee(getConstant().getMarquee());
                     userBean.setDownload2(getConstant().getDownload2());
 
-                    userRedisService.setUserBean(userBean);//userid-userbean
-                    userRedisService.setUserMoney(user.getUserId(), user.getMoney());//userid-money
+                    userRedisService.setUserBean(userBean);//userId-userbean
+                    userRedisService.setUserMoney(user.getUserId(), user.getMoney());//userId-money
 
                     long time = System.currentTimeMillis();
 
                     String token = MD5Util.MD5Encode(time + account + password, "UTF-8");
 
-                    userRedisService.setToken(user.getUserId(),token);//userid-token
+                    userRedisService.setToken(user.getUserId(),token);//userId-token
 
-                    userRedisService.setAccountUserId(account,user.getUserId());//account-userid
-                    userRedisService.setUserIdAccount(user.getUserId(),account);//userid-account
+                    userRedisService.setAccountUserId(account,user.getUserId());//account-userId
+                    userRedisService.setUserIdAccount(user.getUserId(),account);//userId-account
 
-                    userRedisService.setOpenIdUserId(user.getOpenId(),user.getUserId());//openid-userid
-                    userRedisService.setUserIdOpenId(user.getUserId(),user.getOpenId());//userid-openid
+                    userRedisService.setOpenIdUserId(user.getOpenId(),user.getUserId());//openid-userId
+                    userRedisService.setUserIdOpenId(user.getUserId(),user.getOpenId());//userId-openid
 
 
                     params.put("user",getUserVo(user));
@@ -257,23 +257,23 @@ public class LoginAction {
             userBean.setMarquee(getConstant().getMarquee());
             userBean.setDownload2(getConstant().getDownload2());
 
-            userRedisService.setUserBean(userBean);//userid-userbean
-            userRedisService.setUserMoney(user.getUserId(), user.getMoney());//userid-money
+            userRedisService.setUserBean(userBean);//userId-userbean
+            userRedisService.setUserMoney(user.getUserId(), user.getMoney());//userId-money
 
 
             long time = System.currentTimeMillis();
 
             String token = MD5Util.MD5Encode(time + newuser.getAccount() + newuser.getPassword(), "UTF-8");
 
-            userRedisService.setToken(user.getUserId(),token);//userid-token
+            userRedisService.setToken(user.getUserId(),token);//userId-token
 
-            userRedisService.setAccountUserId(user.getAccount(),user.getUserId());//account-userid
-            userRedisService.setUserIdAccount(user.getUserId(),user.getAccount());//userid-account
+            userRedisService.setAccountUserId(user.getAccount(),user.getUserId());//account-userId
+            userRedisService.setUserIdAccount(user.getUserId(),user.getAccount());//userId-account
 
-            userRedisService.setOpenIdUserId(user.getOpenId(),user.getUserId());//openid-userid
-            userRedisService.setUserIdOpenId(user.getUserId(),user.getOpenId());//userid-openid
+            userRedisService.setOpenIdUserId(user.getOpenId(),user.getUserId());//openid-userId
+            userRedisService.setUserIdOpenId(user.getUserId(),user.getOpenId());//userId-openid
 
-            params.put("userid",newuser.getUserId());
+            params.put("userId",newuser.getUserId());
             params.put("token",token);
         }else{
             String redisTokey =userRedisService.getToken(Long.valueOf(userid));

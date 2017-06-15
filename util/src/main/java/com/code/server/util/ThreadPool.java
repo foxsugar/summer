@@ -18,4 +18,8 @@ public class ThreadPool {
     public static ThreadPool getInstance(){
         return instance;
     }
+
+    public static void execute(Runnable runnable){
+        getInstance().executor.execute(runnable);
+    }
 }

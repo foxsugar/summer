@@ -41,7 +41,7 @@ public class RoomRedisService implements IRoom_Server ,IConstant,IRoom_Users{
     }
 
     @Override
-    public void removeServer(String roomId) {
+    public void removeServer(Object... roomId) {
         HashOperations<String,String,String> room_server = redisTemplate.opsForHash();
         room_server.delete(ROOM_GAMESERVER, roomId);
     }
@@ -78,9 +78,9 @@ public class RoomRedisService implements IRoom_Server ,IConstant,IRoom_Users{
     }
 
     @Override
-    public void removeRoomUsers(String roomId) {
+    public void removeRoomUsers(Object... roomId) {
         BoundHashOperations<String,String,String> room_user = redisTemplate.boundHashOps(ROOM_USER);
-        room_user.delete(roomId);
+        room_user.delete( roomId);
     }
 
     @Override

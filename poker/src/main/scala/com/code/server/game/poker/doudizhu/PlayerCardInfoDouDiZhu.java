@@ -22,10 +22,10 @@ public class PlayerCardInfoDouDiZhu implements IfacePlayerInfo {
 
     //检测出牌是否合法
     public boolean checkPlayCard(CardStruct lastcardStruct , CardStruct currentCardStruct , int lasttype){
-        if (lastcardStruct == null || lastcardStruct.getUserid()==0) {
+        if (lastcardStruct == null || lastcardStruct.getUserId()==0) {
             return true;
         }
-        if (lastcardStruct.getUserid() == userId) {
+        if (lastcardStruct.getUserId() == userId) {
             return true;
         }
 

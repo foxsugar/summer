@@ -98,20 +98,20 @@ public class DouDiZhuLinfenRobot implements IDouDiZhuRobot,IGameConstant {
 //        GameProcessor.getInstance().messageQueue.add(messageHolder);
 //    }
 //
-//    //{"service":"gameService","method":"play","params":{"cards":{"userid":"25","cards":[16],"type":1,"dan":[16]}}}
+//    //{"service":"gameService","method":"play","params":{"cards":{"userId":"25","cards":[16],"type":1,"dan":[16]}}}
 //    @Override
 //    public void play(GameDouDiZhu game) {
 //        PlayerCardInfoDouDiZhu playerInfo = game.getPlayerCardInfos().get(game.playTurn);
 //        if(playerInfo.cards.size() ==0){
 //            return;
 //        }
-//        if (game.lastCardStruct == null || game.playTurn == game.lastCardStruct.getUserid()) {
+//        if (game.lastCardStruct == null || game.playTurn == game.lastCardStruct.getUserId()) {
 //
 //            CardStruct cardStruct = new CardStruct();
 //            cardStruct.type = 1;
 //            cardStruct.dan = game.getPlayerCardInfos().get(game.getPlayTurn()).MinimumCards();
 //            cardStruct.cards = game.getPlayerCardInfos().get(game.getPlayTurn()).MinimumCards();
-//            cardStruct.setUserid(game.getPlayTurn());
+//            cardStruct.setUserId(game.getPlayTurn());
 //
 //            Map<String, Object> cs = new HashMap<>();
 //            cs.put("cards", cardStruct);
@@ -130,11 +130,11 @@ public class DouDiZhuLinfenRobot implements IDouDiZhuRobot,IGameConstant {
 //        }
 //    }
 //
-//    // {"service":"gameService","method":"pass","params":{"userid":"23"}}
+//    // {"service":"gameService","method":"pass","params":{"userId":"23"}}
 //    @Override
 //    public void pass(GameDouDiZhu game) {
 //        Map<String, Long> pass = new HashMap<>();
-//        pass.put("userid", game.getPlayTurn());
+//        pass.put("userId", game.getPlayTurn());
 //        ResponseVo vo = new ResponseVo("gameService","pass",pass);
 //        MessageHolder messageHolder = new MessageHolder();
 //        messageHolder.msgType = MessageHolder.MSG_TYPE_INNER;

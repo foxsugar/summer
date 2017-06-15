@@ -32,7 +32,7 @@ public class GateRedisService implements IGateRedis,IConstant{
         ServerInfo gateServerInfo;
         //不存在此gate 加入
         if (json == null) {
-            gateServerInfo = new ServerInfo(gateId, host, port);
+            gateServerInfo = new ServerInfo("GATE",gateId, host, port);
         } else {
             gateServerInfo = JsonUtil.readValue(json, ServerInfo.class);
             long now = System.currentTimeMillis();

@@ -7,11 +7,10 @@ import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.*;
 import com.code.server.game.room.Game;
-import com.code.server.game.room.MsgSender;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
-import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,10 +107,10 @@ public class GameDouDiZhu extends Game {
         userPlayCount.add(userId);
         playerCardInfo.setPlayCount(playerCardInfo.getPlayCount() + 1);
 
-        long nextUserCard = nextTurnId(cardStruct.getUserid()); //下一个出牌的人
+        long nextUserCard = nextTurnId(cardStruct.getUserId()); //下一个出牌的人
 
         cardStruct.setNextUserId(nextUserCard);
-        cardStruct.setUserid(userId);
+        cardStruct.setUserId(userId);
 
         playTurn = nextUserCard;
 

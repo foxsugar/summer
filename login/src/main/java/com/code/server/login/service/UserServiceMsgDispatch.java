@@ -57,7 +57,7 @@ public class UserServiceMsgDispatch {
             case "giveOtherMoney":
 
                 double money = params.get("money").asDouble();
-                Long rechargeUserId = params.get("userid").asLong();
+                Long rechargeUserId = params.get("userId").asLong();
                 return gameUserService.giveOtherMoney(msgKey,rechargeUserId, money);
 
             case "getNickNamePlayer":

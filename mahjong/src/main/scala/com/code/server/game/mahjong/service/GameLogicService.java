@@ -4,7 +4,7 @@ package com.code.server.game.mahjong.service;
 import com.code.server.game.mahjong.logic.GameInfo;
 import com.code.server.game.mahjong.logic.RoomInfo;
 import com.code.server.game.room.IfaceRoom;
-import com.code.server.game.room.MsgSender;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.util.JsonUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -73,7 +73,7 @@ public class GameLogicService {
                 break;
             case "xuanfengdan":
                 int xuanfengType = paramsjSONObject.get("xuanfengType").asInt();
-                String xuanfengCard = paramsjSONObject.get("xuanfengCards").asText();
+                String xuanfengCard = paramsjSONObject.get("xuanfengCards").toString();
                 List<String> xuanfengCardList = JsonUtil.readValue(xuanfengCard, new TypeReference<List<String>>() {
                 });
 //                code = xuanfengdan(roomId, userId, xuanfengType, xuanfengCardList);

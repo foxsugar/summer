@@ -9,7 +9,7 @@ public class ResponseVo {
     private String method;
     private Object params;
     private int code = 0;
-
+    public ResponseVo(){}
     public ResponseVo(String service, String method, Object params) {
         this.service = service;
         this.method = method;
@@ -25,7 +25,14 @@ public class ResponseVo {
 
 
 
-
+//    public JSONObject toJsonObject() {
+//        JSONObject o = new JSONObject();
+//        o.put("service", service);
+//        o.put("method", method);
+//        o.put("params", JsonUtil.toJson(params));
+//        o.put("code",""+code);
+//        return o;
+//    }
 
     public String getService() {
         return service;

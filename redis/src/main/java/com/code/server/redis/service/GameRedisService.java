@@ -25,14 +25,15 @@ public class GameRedisService implements IGameRedis,IConstant{
     private RedisTemplate redisTemplate;
 
     @Override
-    public void register(int serverId) throws RegisterFailedException {
-        BoundHashOperations<String,String,String> gateServer = redisTemplate.boundHashOps(IConstant.GAME_SERVER_LIST);
+    public void register(String serverType, int serverId) throws RegisterFailedException {
+        BoundHashOperations<String,String,String> gateServer = redisTemplate.boundHashOps(IConstant.GAME_SERVER_LIST + serverType);
         String json = gateServer.get(""+serverId);
         ServerInfo serverInfo;
-        //不存在此gate 加入
+        //不存在此game 加入
         if (json == null) {
             serverInfo = new ServerInfo();
             serverInfo.setServerId(serverId);
+            serverInfo.setServerType(serverType);
             serverInfo.setStartTime(LocalDateTime.now().toString());
         } else {
             serverInfo = JsonUtil.readValue(json, ServerInfo.class);
@@ -55,18 +56,20 @@ public class GameRedisService implements IGameRedis,IConstant{
 
     @Override
     public void cleanGame(int serverId) {
+        System.out.println("==================清除game");
         //删掉 user-gate
-        BoundHashOperations<String,String,String> user_gate = redisTemplate.boundHashOps(HEART_GAME);
+        BoundHashOperations<String,String,String> room_server = redisTemplate.boundHashOps(ROOM_GAMESERVER);
         String serverStr = String.valueOf(serverId);
-        if (user_gate != null) {
+        //获得在该server下的room
+        if (room_server != null) {
             List<String> removeUserList = new ArrayList<>();
-            for(Map.Entry<String,String> entry : user_gate.entries().entrySet()){
+            for(Map.Entry<String,String> entry : room_server.entries().entrySet()){
                 if (entry.getValue().equals(serverStr)) {
                     removeUserList.add(entry.getKey());
                 }
             }
             if (removeUserList.size() > 0) {
-                user_gate.delete(removeUserList.toArray());
+                RedisManager.removeRoomAllInfo(removeUserList.toArray());
             }
 
         }

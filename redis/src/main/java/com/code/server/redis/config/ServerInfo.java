@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
  */
 public class ServerInfo {
     private int serverId;
+    private String serverType;
     private String startTime;
     private String host;
     private int port;
@@ -16,7 +17,8 @@ public class ServerInfo {
     }
 
 
-    public ServerInfo(int serverId, String host, int port) {
+    public ServerInfo(String serverType,int serverId, String host, int port) {
+        this.serverType = serverType;
         this.serverId = serverId;
         this.startTime = LocalDateTime.now().toString();
         this.host = host;
@@ -66,6 +68,15 @@ public class ServerInfo {
 
     public ServerInfo setPort(int port) {
         this.port = port;
+        return this;
+    }
+
+    public String getServerType() {
+        return serverType;
+    }
+
+    public ServerInfo setServerType(String serverType) {
+        this.serverType = serverType;
         return this;
     }
 }

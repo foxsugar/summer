@@ -4,7 +4,7 @@ package com.code.server.game.poker.doudizhu;
 import com.code.server.constant.game.CardStruct;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
-import com.code.server.game.room.MsgSender;
+import com.code.server.game.room.kafka.MsgSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

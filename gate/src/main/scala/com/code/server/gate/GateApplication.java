@@ -42,8 +42,8 @@ public class GateApplication {
 		long now = System.currentTimeMillis();
 		ThreadPool.getInstance().executor.execute(()->GameTimer.getInstance().fire());
 		GameTimer.addTimerNode(new TimerNode(now, IConstant.SECOND_5,true,()-> RedisManager.getGateRedisService().heart(serverConfig.getServerId())));
-		//kafka消费者
-		MsgConsumer.startAConsumer(IKafaTopic.GATE_TOPIC,serverConfig.getServerId(), new GateConsumer());
+//		//kafka消费者
+//		MsgConsumer.startAConsumer(IKafaTopic.GATE_TOPIC,serverConfig.getServerId(), new GateConsumer());
 
 
 

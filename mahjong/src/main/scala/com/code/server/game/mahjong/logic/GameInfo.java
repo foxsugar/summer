@@ -2,12 +2,12 @@ package com.code.server.game.mahjong.logic;
 
 
 import com.code.server.constant.response.GameOfResult;
+import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserOfResult;
 import com.code.server.game.mahjong.response.*;
 import com.code.server.game.room.Game;
-import com.code.server.game.room.MsgSender;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
-import com.code.server.redis.service.RedisManager;
 import org.apache.log4j.Logger;
 import java.util.*;
 
@@ -324,7 +324,7 @@ public class GameInfo extends Game {
         //如果等待列表为空 就轮到下个人摸牌
         if (this.waitingforList.size() == 0) {
             long nextId = nextTurnId(turnId);
-            mopai(nextId, "userid : " + userId + " 出牌");
+            mopai(nextId, "userId : " + userId + " 出牌");
         } else {
             //比较
             compare(waitingforList);

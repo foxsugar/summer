@@ -1,13 +1,12 @@
 package com.code.server.game.mahjong.service
 
 import com.code.server.constant.game.IGameConstant
-import com.code.server.constant.response.ResponseVo
+import com.code.server.constant.response.{ErrorCode, ResponseVo}
 import com.code.server.game.mahjong.config.ServerConfig
 import com.code.server.game.mahjong.logic.RoomFactory
 import com.code.server.game.mahjong.logic.RoomInfo
-import com.code.server.game.mahjong.util.ErrorCode
-import com.code.server.game.room.MsgSender
 import com.code.server.game.room.Room
+import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
 import com.code.server.redis.service.RedisManager
 import com.code.server.util.SpringUtil

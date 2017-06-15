@@ -1,6 +1,7 @@
 package com.code.server.util;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,9 +27,10 @@ public final class JsonUtil {
         mapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
         //空值不序列化
-//        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         //反序列化时，属性不存在的兼容处理
         mapper.getDeserializationConfig().withoutFeatures(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
 
         //序列化时，日期的统一格式
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
@@ -38,6 +40,7 @@ public final class JsonUtil {
         //单引号处理
         mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 
+        //TRANSIENT 不序列化
         mapper.configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true);
         mapper.setVisibility(
                 mapper.getSerializationConfig().
@@ -46,7 +49,7 @@ public final class JsonUtil {
                         withGetterVisibility(JsonAutoDetect.Visibility.NONE).
                         withIsGetterVisibility(JsonAutoDetect.Visibility.NONE));
 
-        //显示类型用的
+        //显示类的类型
 //        mapper.enableDefaultTyping();
 
 
@@ -86,6 +89,7 @@ public final class JsonUtil {
     public static JsonNode readTree(String content) {
         try {
             return mapper.readTree(content);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

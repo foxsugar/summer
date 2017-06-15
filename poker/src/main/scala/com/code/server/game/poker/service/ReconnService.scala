@@ -1,7 +1,7 @@
 package com.code.server.game.poker.service
 
 import com.code.server.constant.response.{ReconnectResp, ResponseVo}
-import com.code.server.game.room.MsgSender
+import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
 
 /**

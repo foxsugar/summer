@@ -4,14 +4,11 @@ package com.code.server.game.poker.doudizhu;
 import com.code.server.constant.response.*;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Game;
-import com.code.server.game.room.MsgSender;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
-import com.code.server.util.ThreadPool;
-
-import java.util.ArrayList;
 
 /**
  * Created by sunxianping on 2017/3/13.

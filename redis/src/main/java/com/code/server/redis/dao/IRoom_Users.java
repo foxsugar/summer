@@ -11,7 +11,7 @@ public interface IRoom_Users {
 
     void removeUser(String roomId, long userId);
 
-    void removeRoomUsers(String roomId);
+    void removeRoomUsers(Object... roomId);
 
     Set<Long> getUsers(String roomId);
 }
