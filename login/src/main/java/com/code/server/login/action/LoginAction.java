@@ -1,19 +1,18 @@
 package com.code.server.login.action;
 
 
-import com.code.server.constant.game.UserBean;
+import com.code.server.constant.game.*;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.UserVo;
 import com.code.server.db.Service.ConstantService;
 import com.code.server.db.Service.ServerService;
+import com.code.server.db.Service.UserRecordService;
 import com.code.server.db.Service.UserService;
-import com.code.server.db.model.Constant;
-import com.code.server.db.model.ServerInfo;
-import com.code.server.db.model.User;
+import com.code.server.db.model.*;
 
 
-import com.code.server.kafka.MsgProducer;
+import com.code.server.db.model.Record;
 import com.code.server.login.util.MD5Util;
 import com.code.server.redis.service.UserRedisService;
 
@@ -68,6 +67,72 @@ public class LoginAction {
 
     private String ip ="192.168.1.132";
     private String port = "8002";
+
+
+
+    @Autowired
+    public UserRecordService userRecordService;
+
+    @RequestMapping("/hello1")
+    public Map<String,Object> hello1(){
+        int code = 0;
+        Map<String,Object> params = new HashMap<>();
+
+        List<Record.RoomRecord> userRecord = userRecordService.getUserByUserIDAndType(11,3);
+
+        params.put("UserRecord",userRecord);
+        return getParams("hello",params,code);
+    }
+
+    @RequestMapping("/hello")
+    public Map<String,Object> hello(){
+        int code = 0;
+        Map<String,Object> params = new HashMap<>();
+
+        //List<Record.RoomRecord> userRecord = userRecordService.getUserByUserRecord(11,1);
+
+
+        Record.UserRecord UserRecord = new Record.UserRecord();
+        UserRecord.setUserId(11);
+        UserRecord.setName("测试11");
+        UserRecord.setRoomId("789456");
+        UserRecord.setScore(-10);
+
+        Record.UserRecord UserRecord1 = new Record.UserRecord();
+        UserRecord1.setUserId(12);
+        UserRecord1.setName("测试21");
+        UserRecord1.setRoomId("789456");
+        UserRecord1.setScore(0);
+
+        Record.UserRecord UserRecord2 = new Record.UserRecord();
+        UserRecord2.setUserId(12);
+        UserRecord2.setName("测试13");
+        UserRecord2.setRoomId("789456");
+        UserRecord2.setScore(10);
+
+        List<Record.UserRecord> list = new ArrayList<>();
+        list.add(UserRecord);
+        list.add(UserRecord1);
+        list.add(UserRecord2);
+
+        Record.RoomRecord roomRecord = new Record.RoomRecord();
+        roomRecord.setType(3);
+        roomRecord.setTime(System.currentTimeMillis());
+        roomRecord.setRecords(list);
+
+
+
+        UserRecord userRecord = userRecordService.addRecord(11,roomRecord);
+
+
+
+        params.put("UserRecord",userRecord);
+        return getParams("hello",params,code);
+    }
+
+
+
+
 
     @RequestMapping("/login")
     public Map<String,Object> login( String account,String password,String token_user){
@@ -331,19 +396,7 @@ public class LoginAction {
     }
 
 
-    @RequestMapping("/")
-    public Map<String,Object> test(){
-//        RedisManager.getUserRedisService().addUserMoney("", 1);
-        int partition = 0;
-        KafkaMsgKey kafkaKey = new KafkaMsgKey();
-        kafkaKey.setUserId(3);
-        kafkaKey.setPartition(partition);
-        String keyJson = JsonUtil.toJson(kafkaKey);
-        SpringUtil.getBean(MsgProducer.class).send("userService",kafkaKey,"hello");
 
-        Map<String,Object> params = new HashMap<>();
-        return params;
-    }
 
     @RequestMapping("/appleCheck123")
     public Map<String,Object> appleCheck123(){

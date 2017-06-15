@@ -13,12 +13,11 @@ import javax.persistence.*;
         indexes = {@Index(name = "userId", columnList = "userId")})
 public class UserRecord {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long userId;
 
     @Type(type = "json")
     @Lob
-    @Column(columnDefinition = "longtext")
+    @Column(columnDefinition = "json")
     private Record record = new Record();
 
 
