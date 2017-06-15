@@ -26,17 +26,10 @@ public class GameRedisService implements IGameRedis,IConstant{
 
     @Override
     public void register(String serverType, int serverId) throws RegisterFailedException {
-        BoundHashOperations<String,String,String> gateServer = redisTemplate.boundHashOps(IConstant.GAME_SERVER_LIST + serverType);
-        String json = gateServer.get(""+serverId);
-        ServerInfo serverInfo;
-        //不存在此game 加入
-        if (json == null) {
-            serverInfo = new ServerInfo();
-            serverInfo.setServerId(serverId);
-            serverInfo.setServerType(serverType);
-            serverInfo.setStartTime(LocalDateTime.now().toString());
-        } else {
-            serverInfo = JsonUtil.readValue(json, ServerInfo.class);
+        BoundHashOperations<String,String,String> gameServer = redisTemplate.boundHashOps(IConstant.GAME_SERVER_LIST + serverType);
+        long lastHeart = getLastHeart(serverId);
+        //存在game 加入
+        if (lastHeart != 0) {
             long now = System.currentTimeMillis();
             //认为有相同的gateid 停止启动
             if (now - getLastHeart(serverId) < 6000) {
@@ -44,8 +37,11 @@ public class GameRedisService implements IGameRedis,IConstant{
             }
             cleanGame(serverId);
         }
-
-        gateServer.put(String.valueOf(serverId), JsonUtil.toJson(serverInfo));
+        ServerInfo serverInfo = new ServerInfo();
+        serverInfo.setServerId(serverId);
+        serverInfo.setServerType(serverType);
+        serverInfo.setStartTime(LocalDateTime.now().toString());
+        gameServer.put(String.valueOf(serverId), JsonUtil.toJson(serverInfo));
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,15 +27,11 @@ public class GateRedisService implements IGateRedis,IConstant{
 
 
     @Override
-    public void register(int gateId,String host, int port ) throws RegisterFailedException {
-        BoundHashOperations<String,String,String> gateServer = redisTemplate.boundHashOps(IConstant.GATE_SERVER_LIST);
-        String json = gateServer.get(""+gateId);
-        ServerInfo gateServerInfo;
-        //不存在此gate 加入
-        if (json == null) {
-            gateServerInfo = new ServerInfo("GATE",gateId, host, port);
-        } else {
-            gateServerInfo = JsonUtil.readValue(json, ServerInfo.class);
+    public void register(String serverType,int gateId,String host, int port ) throws RegisterFailedException {
+        BoundHashOperations<String,String,String> gateServer = redisTemplate.boundHashOps(IConstant.GATE_SERVER_LIST+serverType);
+        long lastHeart = getLastHeart(gateId);
+        //存在game 加入
+        if (lastHeart != 0) {
             long now = System.currentTimeMillis();
             //认为有相同的gateid 停止启动
             if (now - getLastHeart(gateId) < 6000) {
@@ -42,8 +39,11 @@ public class GateRedisService implements IGateRedis,IConstant{
             }
             cleanGate(gateId);
         }
-
-        gateServer.put(String.valueOf(gateId), JsonUtil.toJson(gateServerInfo));
+        ServerInfo serverInfo = new ServerInfo();
+        serverInfo.setServerId(gateId);
+        serverInfo.setServerType(serverType);
+        serverInfo.setStartTime(LocalDateTime.now().toString());
+        gateServer.put(String.valueOf(gateId), JsonUtil.toJson(serverInfo));
 
     }
 

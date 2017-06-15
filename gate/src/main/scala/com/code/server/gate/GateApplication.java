@@ -37,7 +37,7 @@ public class GateApplication {
 		ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
 		//注册服务
-		RedisManager.getGateRedisService().register(serverConfig.getServerId(),serverConfig.getHost(),serverConfig.getPort());
+		RedisManager.getGateRedisService().register(serverConfig.getServerType(),serverConfig.getServerId(),serverConfig.getHost(),serverConfig.getPort());
 		//心跳
 		long now = System.currentTimeMillis();
 		ThreadPool.getInstance().executor.execute(()->GameTimer.getInstance().fire());
