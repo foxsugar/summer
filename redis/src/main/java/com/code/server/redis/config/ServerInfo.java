@@ -12,6 +12,7 @@ public class ServerInfo {
     private String host;
     private int port;
     private int sort;
+    private int status;
 
     public ServerInfo() {
     }
@@ -77,6 +78,15 @@ public class ServerInfo {
 
     public ServerInfo setServerType(String serverType) {
         this.serverType = serverType;
+        return this;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public ServerInfo setStatus(int status) {
+        this.status = status;
         return this;
     }
 }

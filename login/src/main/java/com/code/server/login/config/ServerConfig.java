@@ -11,6 +11,7 @@ public class ServerConfig {
     private int serverId;
 
     private int port;
+    private int isCenter;
 
     public String getServerType() {
         return serverType;
@@ -39,5 +40,12 @@ public class ServerConfig {
         return this;
     }
 
+    public int getIsCenter() {
+        return isCenter;
+    }
 
+    public ServerConfig setIsCenter(int isCenter) {
+        this.isCenter = isCenter;
+        return this;
+    }
 }

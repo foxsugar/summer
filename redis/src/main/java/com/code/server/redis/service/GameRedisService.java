@@ -26,7 +26,7 @@ public class GameRedisService implements IGameRedis,IConstant{
 
     @Override
     public void register(String serverType, int serverId) throws RegisterFailedException {
-        BoundHashOperations<String,String,String> gameServer = redisTemplate.boundHashOps(IConstant.GAME_SERVER_LIST + serverType);
+        BoundHashOperations<String,String,String> gameServer = redisTemplate.boundHashOps(GAME_SERVER_LIST );
         long lastHeart = getLastHeart(serverId);
         //存在game 加入
         if (lastHeart != 0) {
@@ -46,7 +46,7 @@ public class GameRedisService implements IGameRedis,IConstant{
 
     @Override
     public void heart(int serverId) {
-        BoundHashOperations<String,String,String> heart_gate = redisTemplate.boundHashOps(IConstant.HEART_GAME);
+        BoundHashOperations<String,String,String> heart_gate = redisTemplate.boundHashOps(HEART_GAME);
         heart_gate.put(""+serverId,""+System.currentTimeMillis());
     }
 
@@ -69,6 +69,13 @@ public class GameRedisService implements IGameRedis,IConstant{
             }
 
         }
+
+
+        //清除心跳
+        redisTemplate.boundHashOps(HEART_GAME).delete(String.valueOf(serverId));
+
+        //清除服务器列表
+        redisTemplate.boundHashOps(GAME_SERVER_LIST).delete(String.valueOf(serverId));
     }
 
     @Override
@@ -79,5 +86,11 @@ public class GameRedisService implements IGameRedis,IConstant{
             return 0;
         }
         return Long.parseLong(time);
+    }
+
+    @Override
+    public Map<String, String> getAllHeart() {
+        BoundHashOperations<String,String,String> heart_game = redisTemplate.boundHashOps(IConstant.HEART_GAME);
+        return heart_game.entries();
     }
 }

@@ -7,6 +7,7 @@ import com.code.server.redis.dao.IGateRedis;
 import com.code.server.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,7 @@ public class GateRedisService implements IGateRedis,IConstant{
 
     @Override
     public void register(String serverType,int gateId,String host, int port ) throws RegisterFailedException {
-        BoundHashOperations<String,String,String> gateServer = redisTemplate.boundHashOps(IConstant.GATE_SERVER_LIST+serverType);
+        BoundHashOperations<String,String,String> gateServer = redisTemplate.boundHashOps(GATE_SERVER_LIST);
         long lastHeart = getLastHeart(gateId);
         //存在game 加入
         if (lastHeart != 0) {
@@ -49,7 +50,7 @@ public class GateRedisService implements IGateRedis,IConstant{
 
     @Override
     public void heart(int gateId) {
-        BoundHashOperations<String,String,String> heart_gate = redisTemplate.boundHashOps(IConstant.HEART_GATE);
+        BoundHashOperations<String,String,String> heart_gate = redisTemplate.boundHashOps(HEART_GATE);
         heart_gate.put(""+gateId,""+System.currentTimeMillis());
     }
 
@@ -70,15 +71,26 @@ public class GateRedisService implements IGateRedis,IConstant{
             }
 
         }
+        //清除心跳
+        redisTemplate.boundHashOps(HEART_GATE).delete(String.valueOf(gateId));
+
+        //清除服务器列表
+        redisTemplate.boundHashOps(GATE_SERVER_LIST).delete(String.valueOf(gateId));
     }
 
     @Override
     public long getLastHeart(int gateId) {
-        BoundHashOperations<String,String,String> heart_gate = redisTemplate.boundHashOps(IConstant.HEART_GATE);
+        BoundHashOperations<String,String,String> heart_gate = redisTemplate.boundHashOps(HEART_GATE);
         String time = heart_gate.get("" + gateId);
         if (time == null) {
             return 0;
         }
         return Long.parseLong(time);
+    }
+
+    @Override
+    public Map<String,String>  getAllHeart(){
+        BoundHashOperations<String,String,String> heart_gate = redisTemplate.boundHashOps(IConstant.HEART_GATE);
+        return heart_gate.entries();
     }
 }

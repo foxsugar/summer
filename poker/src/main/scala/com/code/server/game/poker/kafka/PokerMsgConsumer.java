@@ -15,29 +15,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class PokerMsgConsumer {
 
-//    @KafkaListener(id = "gameService", topicPartitions = {
-//            @TopicPartition(topic = "gameService", partitions = "${serverConfig.serverId}")
-//    })
-//    public void listen(ConsumerRecord<String, String> record, Acknowledgment ack) {
-//        MsgDispatch.dispatch(record);
-//        ack.acknowledge();
-//    }
-//
-//
-//    @KafkaListener(id = "reconn_topic", topicPartitions = {
-//            @TopicPartition(topic = "reconnService", partitions = "${serverConfig.serverId}")
-//    })
-//    public void listen_reconn(ConsumerRecord<String, String> record, Acknowledgment ack) {
-//        MsgDispatch.dispatch(record);
-//        ack.acknowledge();
-//    }
-//
-//
-//    @KafkaListener(id = "pokerRoomService", topicPartitions = {
-//            @TopicPartition(topic = "pokerRoomService", partitions = "${serverConfig.serverId}")
-//    })
-//    public void listen_room(ConsumerRecord<String, String> record, Acknowledgment ack) {
-//        MsgDispatch.dispatch(record);
-//        ack.acknowledge();
-//    }
+    @KafkaListener(id = "gameService", topicPartitions = {
+            @TopicPartition(topic = "gameService", partitions = "${serverConfig.serverId}")
+    })
+    public void listen(ConsumerRecord<String, String> record ) {
+        MsgDispatch.dispatch(record);
+    }
+
+
+    @KafkaListener(id = "reconn_topic", topicPartitions = {
+            @TopicPartition(topic = "reconnService", partitions = "${serverConfig.serverId}")
+    })
+    public void listen_reconn(ConsumerRecord<String, String> record ) {
+        MsgDispatch.dispatch(record);
+    }
+
+
+    @KafkaListener(id = "pokerRoomService", topicPartitions = {
+            @TopicPartition(topic = "pokerRoomService", partitions = "${serverConfig.serverId}")
+    })
+    public void listen_room(ConsumerRecord<String, String> record ) {
+        MsgDispatch.dispatch(record);
+    }
 }

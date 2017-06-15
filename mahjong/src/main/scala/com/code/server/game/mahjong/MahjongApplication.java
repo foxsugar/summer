@@ -31,9 +31,9 @@ public class MahjongApplication {
         GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), IConstant.SECOND_5,true,()->RedisManager.getGameRedisService().heart(serverConfig.getServerId())));
 
 
-        MsgConsumer.startAConsumer("gameLogicService", serverConfig.getServerId(), MsgDispatch::dispatch);
-        MsgConsumer.startAConsumer("reconnService", serverConfig.getServerId(), MsgDispatch::dispatch);
-        MsgConsumer.startAConsumer("mahjongRoomService", serverConfig.getServerId(), MsgDispatch::dispatch);
-        MsgConsumer.startAConsumer("roomService", serverConfig.getServerId(), RoomMsgDispatch::dispatch);
+//        MsgConsumer.startAConsumer("gameLogicService", serverConfig.getServerId(), MsgDispatch::dispatch);
+//        MsgConsumer.startAConsumer("reconnService", serverConfig.getServerId(), MsgDispatch::dispatch);
+//        MsgConsumer.startAConsumer("mahjongRoomService", serverConfig.getServerId(), MsgDispatch::dispatch);
+//        MsgConsumer.startAConsumer("roomService", serverConfig.getServerId(), RoomMsgDispatch::dispatch);
     }
 }

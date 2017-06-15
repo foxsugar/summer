@@ -2,6 +2,8 @@ package com.code.server.redis.dao;
 
 import com.code.server.constant.exception.RegisterFailedException;
 
+import java.util.Map;
+
 /**
  * Created by sunxianping on 2017/6/14.
  */
@@ -13,4 +15,6 @@ public interface IGameRedis {
     void cleanGame(int serverId);
 
     long getLastHeart(int serverId);
+
+    Map<String,String> getAllHeart();
 }

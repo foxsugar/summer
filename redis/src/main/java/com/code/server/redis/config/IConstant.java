@@ -35,10 +35,10 @@ public interface IConstant {
     String USER_OPENID = "user_openid";
 
     //游戏逻辑服务列表
-    String GAME_SERVER_LIST = "server_list:";
+    String GAME_SERVER_LIST = "game_server_list";
 
     //网关服务列表
-    String GATE_SERVER_LIST = "server_list:";
+    String GATE_SERVER_LIST = "gate_server_list";
 
     String HEART_GATE = "heart_gate";
     String HEART_GAME = "heart_game";

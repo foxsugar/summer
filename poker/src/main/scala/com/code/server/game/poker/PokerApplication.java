@@ -29,9 +29,9 @@ public class PokerApplication {
 		//心跳
 		GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), IConstant.SECOND_5,true,()->RedisManager.getGameRedisService().heart(serverConfig.getServerId())));
 
-		MsgConsumer.startAConsumer("gameService", serverConfig.getServerId(), MsgDispatch::dispatch);
-		MsgConsumer.startAConsumer("reconnService", serverConfig.getServerId(), MsgDispatch::dispatch);
-		MsgConsumer.startAConsumer("pokerRoomService", serverConfig.getServerId(), MsgDispatch::dispatch);
-		MsgConsumer.startAConsumer("roomService", serverConfig.getServerId(), RoomMsgDispatch::dispatch);
+//		MsgConsumer.startAConsumer("gameService", serverConfig.getServerId(), MsgDispatch::dispatch);
+//		MsgConsumer.startAConsumer("reconnService", serverConfig.getServerId(), MsgDispatch::dispatch);
+//		MsgConsumer.startAConsumer("pokerRoomService", serverConfig.getServerId(), MsgDispatch::dispatch);
+//		MsgConsumer.startAConsumer("roomService", serverConfig.getServerId(), RoomMsgDispatch::dispatch);
 	}
 }
