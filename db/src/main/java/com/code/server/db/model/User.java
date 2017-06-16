@@ -1,6 +1,7 @@
 package com.code.server.db.model;
 
 import com.code.server.constant.db.UserInfo;
+import com.code.server.constant.game.Record;
 import com.code.server.db.utils.BaseEntity;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;

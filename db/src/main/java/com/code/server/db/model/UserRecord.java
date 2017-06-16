@@ -1,5 +1,6 @@
 package com.code.server.db.model;
 
+import com.code.server.constant.game.Record;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 

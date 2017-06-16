@@ -2,6 +2,7 @@ package com.code.server.login.kafka;
 
 
 import com.code.server.constant.kafka.KafkaMsgKey;
+import com.code.server.login.service.CenterMsgService;
 import com.code.server.login.service.UserServiceMsgDispatch;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
@@ -14,49 +15,41 @@ import org.springframework.stereotype.Component;
 
 /**
  * 消息消费者
- * @author  2017/3/24 14:36
+ *
+ * @author 2017/3/24 14:36
  */
 @Component
 public class UserServiceMsgConsumer {
 
 
-
-    @KafkaListener(id = "userService", topicPattern  = "userService")
-    public void listen(ConsumerRecord<String, String> record, Acknowledgment ack) {
+    @KafkaListener(id = "userService", topicPattern = "userService")
+    public void listen(ConsumerRecord<String, String> record) {
         System.out.println(record);
-        ThreadPool.getInstance().executor.execute(()->{
+        ThreadPool.getInstance().executor.execute(() -> {
             String key = record.key();
             String value = record.value();
             KafkaMsgKey msgKey = JsonUtil.readValue(key, KafkaMsgKey.class);
             JsonNode msgValue = JsonUtil.readTree(value);
             UserServiceMsgDispatch userServiceMsgDispatch = SpringUtil.getBean(UserServiceMsgDispatch.class);
-            userServiceMsgDispatch.dispatchMsg(msgKey,msgValue);
+            userServiceMsgDispatch.dispatchMsg(msgKey, msgValue);
         });
 
-        ack.acknowledge();
 
     }
 
 
+    @KafkaListener(id = "centerTopic", topicPattern = "center_topic")
+    public void listen2(ConsumerRecord<String, String> record) {
+        System.out.println(record);
+        ThreadPool.getInstance().executor.execute(() -> {
+            String key = record.key();
+            String value = record.value();
+            KafkaMsgKey msgKey = JsonUtil.readValue(key, KafkaMsgKey.class);
+            CenterMsgService.dispatch(msgKey, value);
+        });
 
 
-//
-//    @KafkaListener(id = "userService", topicPartitions = {
-//            @TopicPartition(topic = "userService", partitions = {"0","1","2","3"})
-//    })
-//    public void listen1(ConsumerRecord<String, String> record) {
-//        System.out.println(record);
-//        ThreadPool.getInstance().executor.execute(()->{
-//            String key = record.key();
-//            String value = record.value();
-//            KafkaMsgKey msgKey = JsonUtil.readValue(key, KafkaMsgKey.class);
-//            JsonNode msgValue = JsonUtil.readTree(value);
-//            UserServiceMsgDispatch userServiceMsgDispatch = SpringUtil.getBean(UserServiceMsgDispatch.class);
-//            userServiceMsgDispatch.dispatchMsg(msgKey,msgValue);
-//        });
-//
-//
-//        record.
-//    }
+    }
+
 
 }

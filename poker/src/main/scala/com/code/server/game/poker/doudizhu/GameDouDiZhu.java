@@ -377,7 +377,7 @@ public class GameDouDiZhu extends Game {
     protected void genRecord() {
         Record.RoomRecord roomRecord = new Record.RoomRecord();
         roomRecord.setTime(System.currentTimeMillis());
-        roomRecord.setType(room.getCreateType());
+        roomRecord.setType(room.getRoomType());
 
         playerCardInfos.values().forEach((playerInfo) -> {
             Record.UserRecord userRecord = new Record.UserRecord();

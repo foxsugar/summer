@@ -11,7 +11,7 @@ import java.util.Map;
 public class Record {
     private static final int MAX_SIZE = 20;
 
-    private Map<Integer, List<RoomRecord>> roomRecords = new HashMap<>();
+    private Map<String, List<RoomRecord>> roomRecords = new HashMap<>();
 
 
     public void addRoomRecord(RoomRecord roomRecord) {
@@ -27,7 +27,7 @@ public class Record {
     }
 
     public static class RoomRecord {
-        int type;
+        String type;
         long time;
         List<UserRecord> records = new ArrayList<>();
 
@@ -35,11 +35,11 @@ public class Record {
             records.add(userRecord);
         }
 
-        public int getType() {
+        public String getType() {
             return type;
         }
 
-        public RoomRecord setType(int type) {
+        public RoomRecord setType(String type) {
             this.type = type;
             return this;
         }
@@ -112,11 +112,11 @@ public class Record {
 
     }
 
-    public Map<Integer, List<RoomRecord>> getRoomRecords() {
+    public Map<String, List<RoomRecord>> getRoomRecords() {
         return roomRecords;
     }
 
-    public Record setRoomRecords(Map<Integer, List<RoomRecord>> roomRecords) {
+    public Record setRoomRecords(Map<String, List<RoomRecord>> roomRecords) {
         this.roomRecords = roomRecords;
         return this;
     }

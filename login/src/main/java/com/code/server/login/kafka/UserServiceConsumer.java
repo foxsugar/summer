@@ -15,13 +15,13 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 public class UserServiceConsumer implements IfaceMsgConsumer {
     @Override
     public void consumer(ConsumerRecord<String, String> record) {
-        ThreadPool.getInstance().executor.execute(() -> {
-            String key = record.key();
-            String value = record.value();
-            KafkaMsgKey msgKey = JsonUtil.readValue(key, KafkaMsgKey.class);
-            JsonNode msgValue = JsonUtil.readTree(value);
-            UserServiceMsgDispatch userServiceMsgDispatch = SpringUtil.getBean(UserServiceMsgDispatch.class);
-            userServiceMsgDispatch.dispatchMsg(msgKey, msgValue);
-        });
+//        ThreadPool.getInstance().executor.execute(() -> {
+//            String key = record.key();
+//            String value = record.value();
+//            KafkaMsgKey msgKey = JsonUtil.readValue(key, KafkaMsgKey.class);
+//            JsonNode msgValue = JsonUtil.readTree(value);
+//            UserServiceMsgDispatch userServiceMsgDispatch = SpringUtil.getBean(UserServiceMsgDispatch.class);
+//            userServiceMsgDispatch.dispatchMsg(msgKey, msgValue);
+//        });
     }
 }
