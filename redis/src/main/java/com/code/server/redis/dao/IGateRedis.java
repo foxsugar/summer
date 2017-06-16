@@ -1,7 +1,9 @@
 package com.code.server.redis.dao;
 
 import com.code.server.constant.exception.RegisterFailedException;
+import com.code.server.redis.config.ServerInfo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,4 +19,6 @@ public interface IGateRedis {
     long getLastHeart(int gateId);
 
     Map<String,String> getAllHeart();
+
+    List<ServerInfo> getAllServer();
 }

@@ -93,4 +93,11 @@ public class GateRedisService implements IGateRedis,IConstant{
         BoundHashOperations<String,String,String> heart_gate = redisTemplate.boundHashOps(IConstant.HEART_GATE);
         return heart_gate.entries();
     }
+
+    public List<ServerInfo> getAllServer(){
+        BoundHashOperations<String,String,String> gate_server = redisTemplate.boundHashOps(IConstant.GATE_SERVER_LIST);
+        List<ServerInfo> list = new ArrayList<>();
+        gate_server.entries().values().forEach(str->list.add(JsonUtil.readValue(str,ServerInfo.class)));
+        return list;
+    }
 }

@@ -79,6 +79,9 @@ public class ErrorCode {
 	public static final int ORDER_WAS_PAID = 300011;//订单已支付
 	public static final int ORDER_WAS_CLOSED = 300012; //订单已关闭
 	public static final int ID_TOKEN_NOT_MATCH = 400001;
+	public static final int GAMESERVER_NOT_OPEN = 500000;
+
+
 
 	static class ErrorCodeRepeatChecker {
     	public void check() {

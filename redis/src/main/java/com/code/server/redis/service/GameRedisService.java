@@ -93,4 +93,11 @@ public class GameRedisService implements IGameRedis,IConstant{
         BoundHashOperations<String,String,String> heart_game = redisTemplate.boundHashOps(IConstant.HEART_GAME);
         return heart_game.entries();
     }
+
+    public List<ServerInfo> getAllServer(){
+        BoundHashOperations<String,String,String> game_server = redisTemplate.boundHashOps(IConstant.GAME_SERVER_LIST);
+        List<ServerInfo> list = new ArrayList<>();
+        game_server.entries().values().forEach(str->list.add(JsonUtil.readValue(str,ServerInfo.class)));
+        return list;
+    }
 }

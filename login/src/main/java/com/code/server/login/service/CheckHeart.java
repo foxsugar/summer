@@ -36,7 +36,7 @@ public class CheckHeart {
 
     private static void checkGame(){
 
-        Map<String,String> map = RedisManager.getGateRedisService().getAllHeart();
+        Map<String,String> map = RedisManager.getGameRedisService().getAllHeart();
         long now = System.currentTimeMillis();
         map.entrySet().forEach((entry)->{
             int serverId = Integer.valueOf(entry.getKey());

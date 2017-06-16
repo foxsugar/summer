@@ -1,20 +1,28 @@
 package com.code.server.gate.service
 
+import java.util.Comparator
+import java.util.stream.Collectors
+
 import com.code.server.constant.kafka.{IKafaTopic, KafkaMsgKey, KickUser}
 import com.code.server.constant.response.{ErrorCode, ReconnectResp, ResponseVo, RoomVo}
 import com.code.server.gate.config.ServerConfig
 import com.code.server.kafka.MsgProducer
+import com.code.server.redis.config.ServerInfo
 import com.code.server.redis.service.{RedisManager, RoomRedisService, UserRedisService}
 import com.code.server.util.{JsonUtil, SpringUtil}
 import com.fasterxml.jackson.databind.JsonNode
 import io.netty.channel.ChannelHandlerContext
 import net.sf.json.JSONObject
 
+import scala.util.Random
+
 /**
   * Created by sunxianping on 2017/5/26.
   */
 object NettyMsgDispatch {
 
+  val MAHJONG:String = "MAHJONG"
+  val POKER:String = "POKER"
 
   /**
     * 分发消息
@@ -43,21 +51,30 @@ object NettyMsgDispatch {
           val keyJson = JsonUtil.toJson(kafkaKey)
           SpringUtil.getBean(classOf[MsgProducer]).send(service, keyJson, msg)
 
-        case "roomService" => roomService_dispatch(userId,service, method, params, msg)
+        case "roomService" => roomService_dispatch(userId, service, method, params, msg)
 
         case "reconnService" => reconnService_dispatch(userId, msg)
 
         case "mahjongRoomService" =>
           val msgKey = new KafkaMsgKey
           msgKey.setUserId(userId)
-          val partition = 0
-          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(service, partition,JsonUtil.toJson(msgKey), msg)
+
+          val server = getSortedServer(MAHJONG)
+          if(server == null) {
+            GateManager.sendMsg(new ResponseVo(service, method, ErrorCode.GAMESERVER_NOT_OPEN), userId)
+            return
+          }
+          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(service, server.getServerId, JsonUtil.toJson(msgKey), msg)
 
         case "pokerRoomService" =>
           val msgKey = new KafkaMsgKey
           msgKey.setUserId(userId)
-          val partition = 1
-          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(service,partition, JsonUtil.toJson(msgKey), msg)
+          val server = getSortedServer(POKER)
+          if(server == null) {
+            GateManager.sendMsg(new ResponseVo(service, method, ErrorCode.GAMESERVER_NOT_OPEN), userId)
+            return
+          }
+          SpringUtil.getBean(classOf[MsgProducer]).send2Partition(service, server.getServerId, JsonUtil.toJson(msgKey), msg)
 
         case "chatService" =>
           chatService_dispatch(userId, method, params)
@@ -83,6 +100,40 @@ object NettyMsgDispatch {
 
   }
 
+
+  private def sort(servers: java.util.List[ServerInfo]): Unit = {
+    val com = new Comparator[ServerInfo] {
+      override def compare(o1: ServerInfo, o2: ServerInfo): Int = {
+        if (o1.getSort > o2.getSort) {
+          -1
+        } else {
+          1
+        }
+      }
+    }
+    servers.sort(com)
+  }
+
+  /**
+    * 通过服务器类型获得一个服务器实例
+    * @param serverType
+    * @return
+    */
+  def getSortedServer(serverType: String): ServerInfo = {
+
+    val servers = RedisManager.getGameRedisService.getAllServer.stream().filter(
+      serverInfo => serverInfo.getStatus == 0 && serverInfo.getServerType == serverType
+    ).collect(Collectors.toList())
+    //排序
+    sort(servers)
+    val size = servers.size()
+    if (size == 0) {
+      return null
+    }
+    val rand = new Random()
+    val randId = rand.nextInt(size)
+    servers.get(randId)
+  }
 
   /**
     * 网关消息分发

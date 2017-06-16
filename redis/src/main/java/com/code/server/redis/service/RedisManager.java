@@ -42,8 +42,7 @@ public class RedisManager {
     public static void removeRoomAllInfo(Object... roomId) {
         //删除room-serverId 映射
         getRoomRedisService().removeServer(roomId);
-        //删除room-user映射
-        getRoomRedisService().removeRoomUsers(roomId);
+
 
         //删除user-room
         for(Object id : roomId){
@@ -51,6 +50,9 @@ public class RedisManager {
             Set<Long> users =  getRoomRedisService().getUsers(rid);
             users.forEach(getUserRedisService()::removeRoom);
         }
+
+        //删除room-user映射
+        getRoomRedisService().removeRoomUsers(roomId);
     }
 
 }
