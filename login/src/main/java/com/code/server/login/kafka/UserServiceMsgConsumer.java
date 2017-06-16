@@ -24,7 +24,6 @@ public class UserServiceMsgConsumer {
 
     @KafkaListener(id = "userService", topicPattern = "userService")
     public void listen(ConsumerRecord<String, String> record) {
-        System.out.println(record);
         ThreadPool.getInstance().executor.execute(() -> {
             String key = record.key();
             String value = record.value();
@@ -40,7 +39,6 @@ public class UserServiceMsgConsumer {
 
     @KafkaListener(id = "centerTopic", topicPattern = "center_topic")
     public void listen2(ConsumerRecord<String, String> record) {
-        System.out.println(record);
         ThreadPool.getInstance().executor.execute(() -> {
             String key = record.key();
             String value = record.value();

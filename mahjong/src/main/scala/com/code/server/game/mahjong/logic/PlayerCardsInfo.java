@@ -1,17 +1,19 @@
 package com.code.server.game.mahjong.logic;
 
 
+import com.code.server.constant.response.IfacePlayerInfoVo;
 import com.code.server.game.mahjong.util.HuCardType;
 import com.code.server.game.mahjong.util.HuLimit;
 import com.code.server.game.mahjong.util.HuType;
 import com.code.server.game.mahjong.util.HuUtil;
+import com.code.server.game.room.IfacePlayerInfo;
 
 import java.util.*;
 
 /**
  * Created by T420 on 2016/11/30.
  */
-public class PlayerCardsInfo implements HuType {
+public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
     public static final int type_gang = 1;
     public static final int type_peng = 2;
     public static final int type_ting = 3;
@@ -1140,6 +1142,16 @@ public class PlayerCardsInfo implements HuType {
     public PlayerCardsInfo setGangScore(int gangScore) {
         this.gangScore = gangScore;
         return this;
+    }
+
+    @Override
+    public IfacePlayerInfoVo toVo() {
+        return null;
+    }
+
+    @Override
+    public IfacePlayerInfoVo toVo(long watchUser) {
+        return null;
     }
 }
 

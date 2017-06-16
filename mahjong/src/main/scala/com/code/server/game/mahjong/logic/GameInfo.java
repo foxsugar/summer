@@ -1,6 +1,9 @@
 package com.code.server.game.mahjong.logic;
 
 
+import com.code.server.constant.game.Record;
+import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.GameOfResult;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserOfResult;
@@ -8,7 +11,10 @@ import com.code.server.game.mahjong.response.*;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
+import com.code.server.kafka.MsgProducer;
+import com.code.server.util.SpringUtil;
 import org.apache.log4j.Logger;
+
 import java.util.*;
 
 /**
@@ -63,7 +69,8 @@ public class GameInfo extends Game {
 
     /**
      * 初始化方法
-     *  @param firstTurn
+     *
+     * @param firstTurn
      * @param users
      */
     public void init(int gameId, long firstTurn, List<Long> users, RoomInfo room) {
@@ -261,7 +268,8 @@ public class GameInfo extends Game {
 
     /**
      * 出牌
-     *  @param userId
+     *
+     * @param userId
      * @param card
      */
     public int chupai(long userId, String card) {
@@ -816,9 +824,29 @@ public class GameInfo extends Game {
 
     }
 
+    protected void genRecord() {
+        Record.RoomRecord roomRecord = new Record.RoomRecord();
+        roomRecord.setTime(System.currentTimeMillis());
+        roomRecord.setType(room.getRoomType());
+
+        playerCardsInfos.values().forEach((playerInfo) -> {
+            Record.UserRecord userRecord = new Record.UserRecord();
+            userRecord.setScore(playerInfo.getScore());
+            userRecord.setUserId(playerInfo.getUserId());
+            userRecord.setRoomId(room.getRoomId());
+            roomRecord.addRecord(userRecord);
+        });
+
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_GEN_RECORD);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord);
+    }
+
     protected void handleHu(PlayerCardsInfo playerCardsInfo) {
         isAlreadyHu = true;
         sendResult(true, playerCardsInfo.getUserId());
+        //生成记录
+        genRecord();
         noticeDissolutionResult();
         room.clearReadyStatus();
     }
