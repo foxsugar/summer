@@ -9,6 +9,7 @@ import com.code.server.db.model.User;
 import com.code.server.login.kafka.MsgSender;
 import com.code.server.login.util.ErrorCode;
 import com.code.server.login.util.PayUtil;
+import com.code.server.login.config.ServerConfig;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,9 @@ public class PayCallback {
     private ChargeService chargeService ;
     @Autowired
     private UserService userService ;
+
+    @Autowired
+    private ServerConfig serverConfig;
 
     /**
      * 接受微信回调
@@ -65,7 +69,7 @@ public class PayCallback {
         secondParams.put("transaction_id", element.elementText("transaction_id"));
 
 
-        String paySign = PayUtil.createSign("UTF-8", secondParams);
+        String paySign = PayUtil.createSign("UTF-8",serverConfig.getKey(), secondParams);
 
         System.out.println(paySign);
 

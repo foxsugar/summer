@@ -3,11 +3,13 @@ package com.code.server.login.pay;
 
 import com.code.server.db.Service.ChargeService;
 import com.code.server.db.model.Charge;
+import com.code.server.login.config.ServerConfig;
 import com.code.server.login.util.PayUtil;
 import com.code.server.login.util.TestGetPost;
 import com.code.server.login.util.WxPayHelper;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +30,9 @@ public class UnifiedOrder {
 
     @Autowired
     private ChargeService chargeService ;
+
+    @Autowired
+    private ServerConfig serverConfig;
 
     /**
      * 微信统一下单
@@ -68,15 +73,15 @@ public class UnifiedOrder {
         }
 
         String orderId = PayUtil.getOrderIdByUUId();
-        packageParams.put("appid",PayUtil.appid);//appID       应用id
-        packageParams.put("mch_id",PayUtil.mch_id);//appID       商户号
+        packageParams.put("appid",serverConfig.getAppId());//appID       应用id
+        packageParams.put("mch_id",serverConfig.getMchId());//appID       商户号
         packageParams.put("nonce_str", PayUtil.getRandomStringByLength(32));//32位随机数
         packageParams.put("body",bodyUTF8);//商品描述
         packageParams.put("out_trade_no",orderId);
         packageParams.put("total_fee",""+money100);//充值金额
         packageParams.put("spbill_create_ip",spIp);//终端IP
         packageParams.put("trade_type","APP");//支付类型
-        packageParams.put("notify_url",PayUtil.notify_url);//通知地址
+        packageParams.put("notify_url",serverConfig.getNotifyUrl());//通知地址
 
         String rtn = postCharge(packageParams);
 
@@ -91,14 +96,14 @@ public class UnifiedOrder {
 
 
 
-                secondParams.put("appid", PayUtil.appid);
-                secondParams.put("partnerid", PayUtil.mch_id);
+                secondParams.put("appid",serverConfig.getAppId());
+                secondParams.put("partnerid", serverConfig.getMchId());
                 secondParams.put("prepayid", root.elementText("prepay_id"));
                 secondParams.put("noncestr", root.elementText("nonce_str"));
                 secondParams.put("timestamp", String.valueOf(System.currentTimeMillis()/1000));
                 secondParams.put("package", "Sign=WXPay");
 
-                String paySign = PayUtil.createSign("UTF-8", secondParams);
+                String paySign = PayUtil.createSign("UTF-8",serverConfig.getKey(), secondParams);
 
                 secondParams.put("sign", paySign);
 

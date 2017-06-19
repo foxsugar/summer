@@ -11,7 +11,6 @@ import java.util.SortedMap;
 
 public class WxPayHelper {
 
-
     /**
      * 取出一个指定长度大小的随机正整数.
      * @param length int 设定所取出随机数的长度。length小于11
