@@ -13,6 +13,15 @@ public class ServerConfig {
     private int port;
     private int isCenter;
 
+    private  String appId;//应用id
+
+    private   String mchId;//商户号
+
+    private  String key;//API秘钥
+
+    private  String notifyUrl;
+
+
     public String getServerType() {
         return serverType;
     }
@@ -47,5 +56,37 @@ public class ServerConfig {
     public ServerConfig setIsCenter(int isCenter) {
         this.isCenter = isCenter;
         return this;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getMchId() {
+        return mchId;
+    }
+
+    public void setMchId(String mchId) {
+        this.mchId = mchId;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getNotifyUrl() {
+        return notifyUrl;
+    }
+
+    public void setNotifyUrl(String notifyUrl) {
+        this.notifyUrl = notifyUrl;
     }
 }

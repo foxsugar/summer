@@ -11,6 +11,7 @@ import com.code.server.db.Service.UserRecordService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.model.*;
 
+import com.code.server.login.config.ServerConfig;
 import com.code.server.login.util.MD5Util;
 import com.code.server.redis.service.UserRedisService;
 
@@ -55,6 +56,9 @@ public class LoginAction {
     @Autowired
     private ConstantService constantService;
 
+    @Autowired
+    private ServerConfig serverConfig;
+
 //    @Value("serverConfig.serverId")
     public int serverId = 1;
 
@@ -71,17 +75,19 @@ public class LoginAction {
     @Autowired
     public UserRecordService userRecordService;
 
-   /* @RequestMapping("/hello1")
+   @RequestMapping("/hello1")
     public Map<String,Object> hello1(){
         int code = 0;
         Map<String,Object> params = new HashMap<>();
 
         List<Record.RoomRecord> userRecord = userRecordService.getUserByUserIDAndType(11,3);
 
-        params.put("UserRecord",userRecord);
+        params.put("UserRecord",serverConfig);
+
+
         return getParams("hello",params,code);
     }
-
+/*
     @RequestMapping("/hello")
     public Map<String,Object> hello(){
         int code = 0;

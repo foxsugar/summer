@@ -35,7 +35,7 @@ public class PayUtil {
 	//public static String Key = "e7b177fc771846a94b95f8fb71d3648e";//沙箱秘钥
 
 
-    public static String createSign(String characterEncoding,SortedMap<String,String> parameters){  
+    public static String createSign(String characterEncoding,String key,SortedMap<String,String> parameters){
         StringBuffer sb = new StringBuffer();  
         Set es = parameters.entrySet();//所有参与传参的参数按照accsii排序（升序）  
         Iterator it = es.iterator();  
@@ -48,7 +48,7 @@ public class PayUtil {
                 sb.append(k + "=" + v + "&");  
             }  
         }  
-        sb.append("key=" + Key);
+        sb.append("key=" + key);
         String s = "";
         		try {
 			s = new String(sb.toString().getBytes(characterEncoding),"ISO-8859-1");
@@ -317,7 +317,7 @@ public class PayUtil {
 		secondParams.put("transaction_id", "4003042001201704258268240754");
 		
 		
-		String paySign = PayUtil.createSign("UTF-8", secondParams);
+		//String paySign = PayUtil.createSign("UTF-8" , secondParams);
     	
     	//System.out.println(paySign);
     	
