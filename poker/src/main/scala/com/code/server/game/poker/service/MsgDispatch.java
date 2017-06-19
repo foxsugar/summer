@@ -17,6 +17,7 @@ public class MsgDispatch {
     private static final Logger logger = LoggerFactory.getLogger(MsgDispatch.class);
 
     public static void dispatch(ConsumerRecord<String, String> record) {
+        logger.info(record.toString());
         try {
             String key = record.key();
             String value = record.value();

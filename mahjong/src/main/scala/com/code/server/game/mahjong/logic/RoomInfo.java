@@ -261,9 +261,8 @@ public class RoomInfo extends Room {
             drawBack();
         }
 
-        if (isChange) {
-            //todo 保存
-//            saveRecode();
+        if (isChange && gameInfo!=null) {
+            gameInfo.genRecord();
         }
 
         this.isInGame = false;

@@ -11,8 +11,6 @@ import com.code.server.db.Service.UserRecordService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.model.*;
 
-
-import com.code.server.db.model.Record;
 import com.code.server.login.util.MD5Util;
 import com.code.server.redis.service.UserRedisService;
 
@@ -73,7 +71,7 @@ public class LoginAction {
     @Autowired
     public UserRecordService userRecordService;
 
-    @RequestMapping("/hello1")
+   /* @RequestMapping("/hello1")
     public Map<String,Object> hello1(){
         int code = 0;
         Map<String,Object> params = new HashMap<>();
@@ -128,7 +126,7 @@ public class LoginAction {
 
         params.put("UserRecord",userRecord);
         return getParams("hello",params,code);
-    }
+    }*/
 
 
 
