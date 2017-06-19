@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import net.sf.json.JSONObject;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +26,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 
-@Controller
+@RestController
 public class PayCallback {
 
 	private ChargeService chargeService = SpringUtil.getBean(ChargeService.class);
@@ -36,7 +37,6 @@ public class PayCallback {
      * @param
      */
     @RequestMapping(value = "/callback")
-    @ResponseBody
     public String callback(HttpServletRequest request,HttpServletResponse response){
     	System.out.println("接受回调参数");
     	//获取微信返回结果
