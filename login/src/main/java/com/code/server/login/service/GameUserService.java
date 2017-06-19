@@ -86,6 +86,42 @@ public class GameUserService {
     }
 
 
+    public static UserBean user2userBean(User user) {
+        UserBean userBean = new UserBean();
+
+        userBean.setId(user.getUserId());
+        userBean.setUsername(user.getUsername());
+        userBean.setImage(user.getImage());
+        userBean.setAccount(user.getAccount());
+        userBean.setPassword(user.getPassword());
+        userBean.setIpConfig(user.getIpConfig());
+        userBean.setMoney(user.getMoney());
+        userBean.setVip(user.getVip());
+        userBean.setUuid(user.getUuid());
+        userBean.setOpenId(user.getOpenId());
+        userBean.setSex(user.getSex());
+        userBean.setUserInfo(user.getUserInfo());
+
+        return userBean;
+    }
+
+    public static User userBean2User(UserBean userBean) {
+        User userResult = new User();
+
+        userResult.setUserId(userBean.getId());
+        userResult.setUsername(userBean.getUsername());
+        userResult.setImage(userBean.getImage());
+        userResult.setAccount(userBean.getAccount());
+        userResult.setPassword(userBean.getPassword());
+        userResult.setIpConfig(userBean.getIpConfig());
+        userResult.setMoney(userBean.getMoney());
+        userResult.setVip(userBean.getVip());
+        userResult.setUuid(userBean.getUuid());
+        userResult.setOpenId(userBean.getOpenId());
+        userResult.setSex(userBean.getSex());
+        userResult.setUserInfo(userBean.getUserInfo());
+        return userResult;
+    }
     /**
      * 获取昵称
      * @param msgKey

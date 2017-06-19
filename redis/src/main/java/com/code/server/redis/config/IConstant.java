@@ -43,6 +43,8 @@ public interface IConstant {
     String HEART_GATE = "heart_gate";
     String HEART_GAME = "heart_game";
 
+    String SAVE_USERS = "save_users";
+
 
 
 

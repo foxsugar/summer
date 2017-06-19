@@ -8,12 +8,11 @@ import com.code.server.redis.dao.IUser_Room;
 import com.code.server.redis.dao.IUser_Token;
 import com.code.server.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.BoundHashOperations;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -119,6 +118,8 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     public void updateUserBean(long userId, UserBean userBean) {
         BoundHashOperations<String,String,String> user_bean = redisTemplate.boundHashOps(USER_BEAN);
         user_bean.put(String.valueOf(userId),JsonUtil.toJson(userBean));
+        //加入保存列表
+        addSaveUser(userId);
     }
 
 
@@ -150,7 +151,7 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     @Override
     public String getUserIdByAccount(String account) {
         HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
-        return user_token.get(USER_ACCOUNT, account);
+        return user_token.get(ACCOUNT_USER, account);
     }
 
     @Override
@@ -162,7 +163,7 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     @Override
     public String getOpenIdByUserId(long userId) {
         HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
-        return user_token.get(USER_ACCOUNT, ""+userId);
+        return user_token.get(USER_OPENID, ""+userId);
     }
 
     @Override
@@ -186,6 +187,20 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
 
     private String getUserBeanKey(long userId){
         return String.valueOf(userId);
+    }
+
+    public void addSaveUser(long userId) {
+        BoundSetOperations<String,String> save_users = redisTemplate.boundSetOps(SAVE_USERS);
+        save_users.add("" + userId);
+    }
+
+    public void removeSaveUser(Object... userId) {
+        BoundSetOperations<String,String> save_users = redisTemplate.boundSetOps(SAVE_USERS);
+        save_users.remove(userId);
+    }
+
+    public Set<String> getSaveUsers() {
+        return redisTemplate.boundSetOps(SAVE_USERS).members();
     }
 
     public void test(long userId){
