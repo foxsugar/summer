@@ -8,6 +8,7 @@ import com.code.server.login.util.TestGetPost;
 import com.code.server.login.util.WxPayHelper;
 import com.code.server.util.SpringUtil;
 import org.dom4j.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +27,8 @@ import java.util.TreeMap;
 @RestController
 public class UnifiedOrder {
 
-    private ChargeService chargeService = SpringUtil.getBean(ChargeService.class);
+    @Autowired
+    private ChargeService chargeService ;
 
     /**
      * 微信统一下单

@@ -3,6 +3,7 @@ package com.code.server.db.model;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 import java.util.Date;
@@ -17,6 +18,7 @@ import java.util.Date;
         indexes = {@Index(name = "userId", columnList = "userId")})
 public class Charge {
 
+    @Id
     private String orderid;
     private long userid;
     private Date createtime;

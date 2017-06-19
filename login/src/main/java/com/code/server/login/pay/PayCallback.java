@@ -11,6 +11,7 @@ import com.code.server.login.util.ErrorCode;
 import com.code.server.login.util.PayUtil;
 import com.code.server.util.SpringUtil;
 import org.dom4j.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,8 +27,10 @@ import java.util.TreeMap;
 @RestController
 public class PayCallback {
 
-    private ChargeService chargeService = SpringUtil.getBean(ChargeService.class);
-    private UserService userService = SpringUtil.getBean(UserService.class);
+    @Autowired
+    private ChargeService chargeService ;
+    @Autowired
+    private UserService userService ;
 
     /**
      * 接受微信回调

@@ -6,22 +6,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import net.sf.json.JSONSerializer;
-import net.sf.json.xml.XMLSerializer;
-
-import org.apache.commons.dbutils.ResultSetHandler;
-import org.dom4j.Element;
-
-import com.byz.mj.service.UserService;
-import com.byz.mj.util.JdbcUtils;
 
 
 
@@ -127,9 +115,7 @@ public class TestGetPost {
         return result;  
     }  
   
-    public static String xml2JSON(String xml) {
-		return new XMLSerializer().read(xml).toString();
-	}
+
 
   /*  public static String json2XML(String json){
         JSONObject jobj = JSONObject.fromObject(json);
@@ -138,10 +124,7 @@ public class TestGetPost {
         return xml;
     }*/
     
-    public static String json2xml(String jsonString) {
-        XMLSerializer xmlSerializer = new XMLSerializer();
-        return xmlSerializer.write(JSONSerializer.toJSON(jsonString));
-    }
+
 
     
     // 提供主方法，测试发送GET请求和POST请求  
@@ -185,10 +168,10 @@ public class TestGetPost {
 		packageParams.put("sign", sign);
 */        //System.out.println(sign);
         
-        String str = UserService.postCharge(packageParams);
+//        String str = UserService.postCharge(packageParams);
         
         
-        System.out.println(str);
+//        System.out.println(str);
         
     	String xml = "<xml>";
     	xml+=  "<appid><![CDATA["+packageParams.get("appid")+"]]></appid>";
