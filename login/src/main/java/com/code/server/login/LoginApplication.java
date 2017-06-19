@@ -1,6 +1,12 @@
 package com.code.server.login;
 
 import com.code.server.login.config.ServerConfig;
+import com.code.server.login.service.CheckHeart;
+import com.code.server.redis.config.IConstant;
+import com.code.server.redis.service.RedisManager;
+import com.code.server.util.ThreadPool;
+import com.code.server.util.timer.GameTimer;
+import com.code.server.util.timer.TimerNode;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -12,9 +18,9 @@ public class LoginApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(LoginApplication.class, args);
 		//timer
-		//ThreadPool.execute(()-> GameTimer.getInstance().fire());
+		ThreadPool.execute(()-> GameTimer.getInstance().fire());
 
-		//CheckHeart.check();
+		CheckHeart.check();
 		//心跳
 		//GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), IConstant.SECOND_5,true,()-> RedisManager.getGameRedisService().heart(serverConfig.getServerId())));
 
