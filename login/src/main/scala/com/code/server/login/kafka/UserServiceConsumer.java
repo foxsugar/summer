@@ -3,6 +3,7 @@ package com.code.server.login.kafka;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.kafka.IfaceMsgConsumer;
 
+import com.code.server.login.service.UserServiceMsgDispatch;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.ThreadPool;
