@@ -154,13 +154,13 @@ public class GameUserService {
      * @param msgKey
      * @return
      */
-    public int getUserRecodeByUserId(KafkaMsgKey msgKey){
+    /*public int getUserRecodeByUserId(KafkaMsgKey msgKey){
         UserRecord userRecord = userRecordService.getUserByUserRecord(msgKey.getUserId());
         ResponseVo vo = new ResponseVo("userService", "getUserRecodeByUserId", userRecord);
         sendMsg(msgKey, vo);
         return 0;
     }
-
+*/
 
     private void sendMsg(KafkaMsgKey msgKey,Object msg){
         kafkaMsgProducer.send2Partition(IKafaTopic.GATE_TOPIC, msgKey.getPartition(),""+msgKey.getUserId(),msg);
