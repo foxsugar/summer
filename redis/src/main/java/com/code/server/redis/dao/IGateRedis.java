@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by sunxianping on 2017/6/13.
  */
 public interface IGateRedis {
-    void register(String serverType,int gateId,String host,int port) throws RegisterFailedException;
+    void register(String serverType,int gateId,String host,String domain, int port) throws RegisterFailedException;
 
     void heart(int gateId);
 

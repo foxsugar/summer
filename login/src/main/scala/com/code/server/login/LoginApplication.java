@@ -1,9 +1,13 @@
 package com.code.server.login;
 
 import com.code.server.login.config.ServerConfig;
+import com.code.server.login.rpc.RpcManager;
+import com.code.server.login.service.CenterService;
 import com.code.server.login.service.CheckHeart;
+import com.code.server.login.service.ServerManager;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.SpringUtil;
 import com.code.server.util.ThreadPool;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
@@ -17,12 +21,21 @@ public class LoginApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(LoginApplication.class, args);
-		//timer
-		ThreadPool.execute(()-> GameTimer.getInstance().fire());
 
-		CheckHeart.check();
-		//心跳
-		//GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), IConstant.SECOND_5,true,()-> RedisManager.getGameRedisService().heart(serverConfig.getServerId())));
+		ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
+		ServerManager.init();
+		System.out.println(ServerManager.constant.toString());
+		//中心服务器有的职能
+		if (serverConfig.getIsCenter() == 1) {
+
+			CenterService.work();
+			//rpc服务
+			RpcManager.getInstance().startGameRpcServer();
+
+			//检测rpc
+			RpcManager.getInstance().checkGameRpcServerWork();
+		}
 
 
 //		MsgConsumer.startAConsumer("userService",0,new UserServiceConsumer());
@@ -33,4 +46,6 @@ public class LoginApplication {
 
 
 	}
+
+
 }

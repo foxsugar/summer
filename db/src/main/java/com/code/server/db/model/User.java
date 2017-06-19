@@ -1,7 +1,6 @@
 package com.code.server.db.model;
 
 import com.code.server.constant.db.UserInfo;
-import com.code.server.constant.game.Record;
 import com.code.server.db.utils.BaseEntity;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
@@ -15,12 +14,12 @@ import java.util.Date;
 @DynamicUpdate
 @Entity
 @Table(name = "users",
-        indexes = {@Index(name = "userId", columnList = "userId"),
+        indexes = {@Index(name = "id", columnList = "id"),
                     @Index(name="openId",columnList = "openId")})
 public class User extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long userId;
+    private long id;
 
     @Column(nullable = false)
     private String account;
@@ -75,18 +74,15 @@ public class User extends BaseEntity{
     private UserInfo userInfo = new UserInfo();
 
 
-    @Type(type = "json")
-    @Lob
-    @Column(columnDefinition = "longtext")
-    private Record record = new Record();
 
 
-    public long getUserId() {
-        return userId;
+
+    public long getId() {
+        return id;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getAccount() {
@@ -224,14 +220,7 @@ public class User extends BaseEntity{
 
 
 
-    public Record getRecord() {
-        return record;
-    }
 
-    public User setRecord(Record record) {
-        this.record = record;
-        return this;
-    }
 
     public double getRebate() {
         return rebate;

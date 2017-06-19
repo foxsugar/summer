@@ -3,7 +3,6 @@ package com.code.server.login.service;
 import com.code.server.constant.game.Record;
 import com.code.server.constant.kafka.IkafkaMsgId;
 import com.code.server.constant.kafka.KafkaMsgKey;
-import com.code.server.db.Service.ChargeService;
 import com.code.server.db.Service.UserRecordService;
 import com.code.server.db.model.UserRecord;
 import com.code.server.util.JsonUtil;
@@ -43,7 +42,7 @@ public class CenterMsgService implements IkafkaMsgId{
                     record.addRoomRecord(roomRecord);
 
                     UserRecord newRecord = new UserRecord();
-                    newRecord.setUserId(userRecord.getUserId());
+                    newRecord.setId(userRecord.getUserId());
                     newRecord.setRecord(record);
                     userRecordService.save(newRecord);
                 }

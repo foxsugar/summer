@@ -6,7 +6,6 @@ import com.code.server.db.model.Charge;
 import com.code.server.login.util.PayUtil;
 import com.code.server.login.util.TestGetPost;
 import com.code.server.login.util.WxPayHelper;
-import com.code.server.util.SpringUtil;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -105,7 +104,7 @@ public class UnifiedOrder {
 
 
                 Charge charge = new Charge();
-                charge.setOrderid(orderId);
+                charge.setOrderId(orderId);
                 charge.setUserid(Long.valueOf(userId));
                 charge.setMoney(money);
                 charge.setMoney_point(money*10);

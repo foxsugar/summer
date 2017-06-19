@@ -19,10 +19,10 @@ public class UserVo {
     public String uuid; // required
     public String openId; // required
     public int sex; // required
-    public String marquee; // required
+//    public String marquee; // required
     public int referee;
     public UserInfo userInfo;
-    public String download2;
+//    public String download2;
 
     public long getId() {
         return id;
@@ -132,14 +132,7 @@ public class UserVo {
         return this;
     }
 
-    public String getMarquee() {
-        return marquee;
-    }
 
-    public UserVo setMarquee(String marquee) {
-        this.marquee = marquee;
-        return this;
-    }
 
     public int getReferee() {
         return referee;
@@ -159,12 +152,5 @@ public class UserVo {
         return this;
     }
 
-    public String getDownload2() {
-        return download2;
-    }
-
-    public void setDownload2(String download2) {
-        this.download2 = download2;
-    }
 
 }

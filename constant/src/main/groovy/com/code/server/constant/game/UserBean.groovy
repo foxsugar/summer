@@ -21,10 +21,10 @@ class UserBean implements IUserBean {
     String uuid; // required
     String openId; // required
     int sex; // required
-    String marquee; // required
+//    String marquee; // required
     int referee;
     UserInfo userInfo;
-    String download2;
+//    String download2;
 
     @Override
     UserVo toVo() {

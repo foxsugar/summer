@@ -12,6 +12,8 @@ import com.code.server.db.Service.UserService;
 import com.code.server.db.model.User;
 import com.code.server.db.model.UserRecord;
 import com.code.server.kafka.MsgProducer;
+import com.code.server.login.rpc.RpcManager;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.ThreadPool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,14 +46,20 @@ public class GameUserService {
 
     /**
      * 给人充钱
+     *
      * @param msgKey
-     * @param rechargeUserId   充值玩家ID
-     * @param money             充值数量
+     * @param rechargeUserId 充值玩家ID
+     * @param money          充值数量
      * @return
      */
-    public int giveOtherMoney(KafkaMsgKey msgKey,Long rechargeUserId,double money){
+    public int giveOtherMoney(KafkaMsgKey msgKey, Long rechargeUserId, double money) {
+
         //充值玩家id
         Long userid = msgKey.getUserId();
+        UserBean userBeanOwn = userRedisService.getUserBean(userid);
+        if (userBeanOwn == null) {
+            return ErrorCode.YOU_HAVE_NOT_LOGIN;
+        }
         //充值玩家钱数
         double userMoney = userRedisService.getUserMoney(userid);
         //被充值玩家余额
@@ -59,27 +67,27 @@ public class GameUserService {
         //被充值玩家对象
         UserBean userBean = userRedisService.getUserBean(rechargeUserId);
 
-        if(userMoney-money>=0 && money>0){
-            if(userBean!=null){
-                userRedisService.setUserMoney(rechargeUserId,rechargeUserMoney+money);
+        if (userMoney - money >= 0 && money > 0) {
+            if (userBean != null) {
+                userRedisService.addUserMoney(rechargeUserId, money);
                 //减掉充值玩家相应的钱数
-                userRedisService.setUserMoney(userid,userMoney-money);
-            }else{
+                userRedisService.addUserMoney(userid, -money);
+            } else {
 
-                    User accepter = userService.getUserByUserId(rechargeUserId);
-                    if(accepter==null){
-                        ResponseVo vo = new ResponseVo("userService", "giveOtherMoney", ErrorCode.NOT_HAVE_THIS_ACCEPTER);
-                        sendMsg(msgKey, vo);
-                    }else{
-                        accepter.setMoney(accepter.getMoney()+money);
-                        userService.save(accepter);
+                User accepter = userService.getUserByUserId(rechargeUserId);
+                if (accepter == null) {
+                    ResponseVo vo = new ResponseVo("userService", "giveOtherMoney", ErrorCode.NOT_HAVE_THIS_ACCEPTER);
+                    sendMsg(msgKey, vo);
+                } else {
+                    accepter.setMoney(accepter.getMoney() + money);
+                    userService.save(accepter);
 
-                        //减掉充值玩家相应的钱数
-                        userRedisService.setUserMoney(userid,userMoney-money);
-                    }
+                    //减掉充值玩家相应的钱数
+                    userRedisService.setUserMoney(userid, userMoney - money);
+                }
 
             }
-        }else{
+        } else {
             return ErrorCode.NOT_HAVE_MORE_MONEY;
         }
         return 0;
@@ -89,7 +97,7 @@ public class GameUserService {
     public static UserBean user2userBean(User user) {
         UserBean userBean = new UserBean();
 
-        userBean.setId(user.getUserId());
+        userBean.setId(user.getId());
         userBean.setUsername(user.getUsername());
         userBean.setImage(user.getImage());
         userBean.setAccount(user.getAccount());
@@ -108,7 +116,7 @@ public class GameUserService {
     public static User userBean2User(UserBean userBean) {
         User userResult = new User();
 
-        userResult.setUserId(userBean.getId());
+        userResult.setId(userBean.getId());
         userResult.setUsername(userBean.getUsername());
         userResult.setImage(userBean.getImage());
         userResult.setAccount(userBean.getAccount());
@@ -122,56 +130,59 @@ public class GameUserService {
         userResult.setUserInfo(userBean.getUserInfo());
         return userResult;
     }
+
     /**
      * 获取昵称
+     *
      * @param msgKey
      * @return
      */
-    public int getNickNamePlayer(KafkaMsgKey msgKey){
-        ThreadPool.getInstance().executor.execute(()->{
-            UserBean userBean = userRedisService.getUserBean(msgKey.getUserId());
-            if(userBean==null){
-                ResponseVo vo = new ResponseVo("userService", "getNickNamePlayer", ErrorCode.NOT_HAVE_THIS_ACCEPTER);
-                sendMsg(msgKey, vo);
-                return;
-            }
-            Map<String,Object> results = new HashMap<String,Object>();
-            try {
-                results.put("nickname", (URLDecoder.decode(userBean.getUsername(),"utf-8")));
-            }catch (Exception e){
-                ResponseVo vo = new ResponseVo("userService", "getNickNamePlayer", ErrorCode.NOT_HAVE_THIS_ACCEPTER);
-                sendMsg(msgKey, vo);
-                return;
-            }
-            ResponseVo vo = new ResponseVo("userService", "getNickNamePlayer", results);
+    public int getNickNamePlayer(KafkaMsgKey msgKey) {
+        UserBean userBean = userRedisService.getUserBean(msgKey.getUserId());
+        if (userBean == null) {
+            return ErrorCode.YOU_HAVE_NOT_LOGIN;
+
+        }
+        Map<String, Object> results = new HashMap<String, Object>();
+        try {
+            results.put("nickname", userBean.getUsername());
+        } catch (Exception e) {
+            ResponseVo vo = new ResponseVo("userService", "getNickNamePlayer", ErrorCode.NOT_HAVE_THIS_ACCEPTER);
             sendMsg(msgKey, vo);
-        });
+        }
+        ResponseVo vo = new ResponseVo("userService", "getNickNamePlayer", results);
+        sendMsg(msgKey, vo);
+        return 0;
+    }
+
+    public int getServerInfo(KafkaMsgKey msgKey) {
+        sendMsg(msgKey, new ResponseVo("userService","getServerInfo",ServerManager.constant));
         return 0;
     }
 
     /**
      * 查询战绩
+     *
      * @param msgKey
      * @return
      */
-    /*public int getUserRecodeByUserId(KafkaMsgKey msgKey){
-        UserRecord userRecord = userRecordService.getUserByUserRecord(msgKey.getUserId());
+    public int getUserRecodeByUserId(KafkaMsgKey msgKey) {
+        UserRecord userRecord = userRecordService.getUserRecordByUserId(msgKey.getUserId());
         ResponseVo vo = new ResponseVo("userService", "getUserRecodeByUserId", userRecord);
         sendMsg(msgKey, vo);
         return 0;
     }
-*/
 
-    private void sendMsg(KafkaMsgKey msgKey,Object msg){
-        kafkaMsgProducer.send2Partition(IKafaTopic.GATE_TOPIC, msgKey.getPartition(),""+msgKey.getUserId(),msg);
+
+    private void sendMsg(KafkaMsgKey msgKey, Object msg) {
+        kafkaMsgProducer.send2Partition(IKafaTopic.GATE_TOPIC, msgKey.getPartition(), "" + msgKey.getUserId(), msg);
     }
 
 
-
-    public int getUserMessage(KafkaMsgKey msgKey){
+    public int getUserMessage(KafkaMsgKey msgKey) {
         UserBean userBean = userRedisService.getUserBean(msgKey.getUserId());
         if (userBean == null) {
-            return  ErrorCode.YOU_HAVE_NOT_LOGIN;
+            return ErrorCode.YOU_HAVE_NOT_LOGIN;
         }
         String roomId = userRedisService.getRoomId(msgKey.getUserId());
         UserVo userVo = userBean.toVo();
@@ -183,7 +194,7 @@ public class GameUserService {
     }
 
 
-//
+    //
 //    public int getRecord(Player player,int type) {
 //        User user = player.getUser();
 //        user.getRecord().getRoomRecords().get(type);
@@ -193,105 +204,34 @@ public class GameUserService {
 //    }
 //
 //
-//    public int bindReferrer(Player player, int referrerId){
-//        User user = player.getUser();
-//        if(referrerId<=0 || user.getReferee()!=0){
-//            return ErrorCode.CAN_NOT_BING_REFERRER;
-//        }
-//        ThreadPool.getInstance().executor.execute(()->{
-//
-//            boolean isExist = RpcManager.getInstance().referrerIsExist(referrerId);
-//            if(!isExist){
-//                player.sendMsg("userService","bindReferrer",ErrorCode.REFERRER_NOT_EXIST);
-//                return;
-//            }
-//            user.setReferee(referrerId);
-//            user.setMoney(user.getMoney() + 10);
-//            GameManager.getInstance().getSaveUser2DB().add(user);
-//            player.sendMsg("userService","bindReferrer",0);
-//        });
-//
-//        return 0;
-//    }
-//
-//    public int checkOpenId(final String openId,String username, final String image,int sex,ChannelHandlerContext ctx){
-//
-//        ThreadPool.getInstance().executor.execute(()->{
-//            ResponseVo vo = null;
-//            UserService userService = SpringUtil.getBean(UserService.class);
-//
-//            Player player = null;
-//            if(GameManager.getInstance().openId_uid.containsKey(openId)){
-//                long userId = GameManager.getInstance().openId_uid.get(openId);
-//                if (GameManager.getInstance().players.containsKey(userId)) {
-//                    player = GameManager.getInstance().players.get(userId);
-//                }
-//            }
-//            User user = null;
-//            if (player != null) {
-//                user = player.getUser();
-//                //todo 踢人
-//                if (ctx != player.getCtx()) {
-//                    sendExit(player);
-//                }
-//            } else {
-//                user = userService.getUserByOpenId(openId);
-//            }
-//
-//            String img = image;
-//            if(img == null || img.equals("")){
-//                img = "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=253777390,947512827&fm=23&gp=0.jpg/96";
-//
-//            }
-//
-//            if(user == null) {
-//                user = new User();
-////                user.setId(0);
-////                user.setUserId(GameManager.getInstance().nextId());
-//                user.setOpenId(openId);
-//                user.setAccount(UUID.randomUUID().toString());
-//                user.setPassword("111111");
-//                try {
-//                    user.setUsername(URLDecoder.decode(username, "utf-8"));
-//                } catch (UnsupportedEncodingException e) {
-//                    e.printStackTrace();
-//                }
-//                user.setImage(img);
-//                user.setSex(sex);
-//                user.setVip(0);
-//                user.setUuid("0");
-//                user.setMoney(GameManager.getInstance().constant.getInitMoney());
-//                userService.save(user);
-//
-//                doLogin(user,ctx);
-//                vo = new ResponseVo("userService", "checkOpenId", getUserVo(user));
-//                MsgDispatch.sendMsg(ctx,vo);
-//
-//            }else{
-//                try {
-//                    user.setUsername(URLDecoder.decode(username, "utf-8"));
-//                } catch (UnsupportedEncodingException e) {
-//                    e.printStackTrace();
-//                }
-//                user.setImage(image);
-//                user.setSex(sex);
-//                userService.save(user);
-//
-//                doLogin(user,ctx);
-//                vo = new ResponseVo("userService", "checkOpenId", getUserVo(user));
-//                MsgDispatch.sendMsg(ctx,vo);
-//
-//            }
-//        });
-//
-//        return 0;
-//    }
+    public int bindReferrer(KafkaMsgKey msgKey, int referrerId) {
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(msgKey.getUserId());
+        if (userBean == null) {
+            return ErrorCode.YOU_HAVE_NOT_LOGIN;
+        }
+        if (referrerId <= 0 || userBean.getReferee() != 0) {
+            return ErrorCode.CAN_NOT_BING_REFERRER;
+        }
+        boolean isExist = RpcManager.getInstance().referrerIsExist(referrerId);
+        if (!isExist) {
+            return ErrorCode.REFERRER_NOT_EXIST;
+        }
+        userBean.setReferee(referrerId);
+        RedisManager.getUserRedisService().addUserMoney(msgKey.getUserId(), 10);
+
+        ResponseVo vo = new ResponseVo("userService", "bindReferrer", 0);
+        sendMsg(msgKey, vo);
+
+        return 0;
+    }
+
 
     public static void main(String[] args) {
         String s = "家用饮水机";
         String s2 = "";
         try {
-            String ss = URLDecoder.decode(s,"utf-8");
+            String ss = URLDecoder.decode(s, "utf-8");
             System.out.println(ss);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -301,7 +241,7 @@ public class GameUserService {
 //    private User createUser(String account, String password){
 //        User newUser = new User();
 ////        newUser.setId(-100);
-////        newUser.setUserId(GameManager.getInstance().nextId());
+////        newUser.setId(GameManager.getInstance().nextId());
 //        newUser.setAccount(account);
 //        newUser.setPassword(password);
 //        newUser.setOpenId(""+GameManager.getInstance().nextId());
@@ -377,7 +317,6 @@ public class GameUserService {
 //            }
 //        });
 //        return 0;
-
 
 
 //    }

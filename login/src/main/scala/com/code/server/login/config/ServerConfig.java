@@ -13,6 +13,11 @@ public class ServerConfig {
     private int port;
     private int isCenter;
 
+    private int gameRpcServerPort;
+    private String adminRpcHost;
+    private int adminRpcPort;
+
+
     public String getServerType() {
         return serverType;
     }
@@ -46,6 +51,33 @@ public class ServerConfig {
 
     public ServerConfig setIsCenter(int isCenter) {
         this.isCenter = isCenter;
+        return this;
+    }
+
+    public int getGameRpcServerPort() {
+        return gameRpcServerPort;
+    }
+
+    public ServerConfig setGameRpcServerPort(int gameRpcServerPort) {
+        this.gameRpcServerPort = gameRpcServerPort;
+        return this;
+    }
+
+    public String getAdminRpcHost() {
+        return adminRpcHost;
+    }
+
+    public ServerConfig setAdminRpcHost(String adminRpcHost) {
+        this.adminRpcHost = adminRpcHost;
+        return this;
+    }
+
+    public int getAdminRpcPort() {
+        return adminRpcPort;
+    }
+
+    public ServerConfig setAdminRpcPort(int adminRpcPort) {
+        this.adminRpcPort = adminRpcPort;
         return this;
     }
 }

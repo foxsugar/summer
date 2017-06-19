@@ -10,10 +10,10 @@ import javax.persistence.*;
 @DynamicUpdate
 @Entity
 @Table(name = "user_record",
-        indexes = {@Index(name = "userId", columnList = "userId")})
+        indexes = {@Index(name = "id", columnList = "id")})
 public class UserRecord {
     @Id
-    private long userId;
+    private long id;
 
     @Type(type = "json")
     @Lob
@@ -21,12 +21,12 @@ public class UserRecord {
     private Record record = new Record();
 
 
-    public long getUserId() {
-        return userId;
+    public long getId() {
+        return id;
     }
 
-    public UserRecord setUserId(long userId) {
-        this.userId = userId;
+    public UserRecord setId(long id) {
+        this.id = id;
         return this;
     }
 

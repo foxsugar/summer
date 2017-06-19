@@ -17,7 +17,7 @@ public class ChargeService {
 
 
     public Charge getChargeByOrderid(String orderid){
-        return chargeDao.getChargeByOrderid(orderid);
+        return chargeDao.getChargeByOrderId(orderid);
     }
 
     public Charge save(Charge charge){

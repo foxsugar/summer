@@ -28,7 +28,7 @@ public class GateRedisService implements IGateRedis,IConstant{
 
 
     @Override
-    public void register(String serverType,int gateId,String host, int port ) throws RegisterFailedException {
+    public void register(String serverType,int gateId,String host,String domain, int port ) throws RegisterFailedException {
         BoundHashOperations<String,String,String> gateServer = redisTemplate.boundHashOps(GATE_SERVER_LIST);
         long lastHeart = getLastHeart(gateId);
         //存在game 加入
@@ -44,6 +44,9 @@ public class GateRedisService implements IGateRedis,IConstant{
         serverInfo.setServerId(gateId);
         serverInfo.setServerType(serverType);
         serverInfo.setStartTime(LocalDateTime.now().toString());
+        serverInfo.setDomain(domain);
+        serverInfo.setHost(host);
+        serverInfo.setPort(port);
         gateServer.put(String.valueOf(gateId), JsonUtil.toJson(serverInfo));
 
     }

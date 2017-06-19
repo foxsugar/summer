@@ -1,12 +1,9 @@
 package com.code.server.gate;
 
 import com.code.server.constant.exception.RegisterFailedException;
-import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.gate.bootstarp.SocketServer;
 import com.code.server.gate.config.ServerConfig;
 import com.code.server.gate.config.ServerState;
-import com.code.server.gate.kafka.GateConsumer;
-import com.code.server.kafka.MsgConsumer;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
@@ -16,10 +13,6 @@ import com.code.server.util.timer.TimerNode;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-
-import java.util.Calendar;
-import java.util.Timer;
-import java.util.TimerTask;
 
 @SpringBootApplication(scanBasePackages = {"com.code.server.*"})
 @EnableConfigurationProperties({ServerConfig.class})
@@ -37,7 +30,8 @@ public class GateApplication {
 		ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
 		//注册服务
-		RedisManager.getGateRedisService().register(serverConfig.getServerType(),serverConfig.getServerId(),serverConfig.getHost(),serverConfig.getPort());
+		String host = serverConfig.getHost() + serverConfig.getDomain();
+		RedisManager.getGateRedisService().register(serverConfig.getServerType(),serverConfig.getServerId(),serverConfig.getHost(),serverConfig.getDomain(),serverConfig.getPort());
 		//心跳
 		long now = System.currentTimeMillis();
 		ThreadPool.getInstance().executor.execute(()->GameTimer.getInstance().fire());

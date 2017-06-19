@@ -32,25 +32,25 @@ repositories {
 
 //这里是关键（把java与scala的源代码目录全映射到scala上,
 // 这样gradle compileScala时就能同时编译java与scala的源代码）
-sourceSets {
-	main {
-		scala {
-			srcDirs = ['src/main/scala', 'src/main/java']
-		}
-		java {
-			srcDirs = []
-		}
-	}
-
-	test {
-		scala {
-			srcDirs = ['src/test/scala', 'src/test/java']
-		}
-		java {
-			srcDirs = []
-		}
-	}
-}
+//sourceSets {
+//	main {
+//		scala {
+//			srcDirs = ['src/main/scala', 'src/main/java']
+//		}
+//		java {
+//			srcDirs = []
+//		}
+//	}
+//
+//	test {
+//		scala {
+//			srcDirs = ['src/test/scala', 'src/test/java']
+//		}
+//		java {
+//			srcDirs = []
+//		}
+//	}
+//}
 
 dependencies {
 	compile project(path: ':redis')
@@ -58,6 +58,7 @@ dependencies {
 	compile project(path: ':constant')
 	compile project(path: ':db')
 	compile project(path: ':kafka')
+	compile project(path: ':rpc')
 	compile('org.springframework.boot:spring-boot-starter-aop')
 	compile('org.springframework.boot:spring-boot-starter-data-redis')
 	compile('org.springframework.boot:spring-boot-starter-web')
@@ -95,4 +96,9 @@ tasks.withType(ScalaCompile) {
 
 tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
+}
+
+//不执行thrift的编译
+gradle.taskGraph.whenReady { graph ->
+	graph.allTasks.findAll { it.name ==~ /compileThrift.*/ }*.enabled = false
 }

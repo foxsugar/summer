@@ -34,7 +34,7 @@ public class UserService {
     }
 
     public User getUserByUserId(long userId) {
-        User user = userDao.getUserByUserId(userId);
+        User user = userDao.getUserById(userId);
         if (user == null) {
             return null;
         }
@@ -51,7 +51,7 @@ public class UserService {
 
     public User save(User user) {
         User newUser = userDao.save(user);
-        user.setUserId(newUser.getUserId());
+        user.setId(newUser.getId());
         return user;
     }
 

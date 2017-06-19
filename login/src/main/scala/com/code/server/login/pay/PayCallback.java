@@ -9,7 +9,6 @@ import com.code.server.db.model.User;
 import com.code.server.login.kafka.MsgSender;
 import com.code.server.login.util.ErrorCode;
 import com.code.server.login.util.PayUtil;
-import com.code.server.util.SpringUtil;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -94,7 +93,7 @@ public class PayCallback {
 
                         Charge charge1 = new Charge();
                         charge1.setStatus(1);
-                        charge1.setOrderid(element.elementText("out_trade_no"));
+                        charge1.setOrderId(element.elementText("out_trade_no"));
                         chargeService.save(charge1);
 
                         //查询玩家
@@ -105,7 +104,7 @@ public class PayCallback {
                         //修改玩家豆豆
                         User userupdate = new User();
                         userupdate.setMoney(user.getMoney() + Integer.valueOf(element.elementText("total_fee")) / 10);
-                        userupdate.setUserId(user.getUserId());
+                        userupdate.setId(user.getId());
                         userService.save(userupdate);
                         System.out.println("通知客户端刷新充值");
                         Map<String, String> rs = new HashMap<>();

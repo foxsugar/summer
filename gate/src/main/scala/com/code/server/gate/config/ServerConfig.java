@@ -10,6 +10,7 @@ public class ServerConfig {
     private String serverType;
     private int serverId;
     private String host;
+    private String domain;
 
     private int port;
 
@@ -48,6 +49,15 @@ public class ServerConfig {
 
     public ServerConfig setHost(String host) {
         this.host = host;
+        return this;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public ServerConfig setDomain(String domain) {
+        this.domain = domain;
         return this;
     }
 }
