@@ -28,7 +28,8 @@ public class LoginApplication {
 		System.out.println(ServerManager.constant.toString());
 		//中心服务器有的职能
 		if (serverConfig.getIsCenter() == 1) {
-
+			//timer
+			ThreadPool.execute(GameTimer.getInstance()::fire);
 			CenterService.work();
 			//rpc服务
 			RpcManager.getInstance().startGameRpcServer();

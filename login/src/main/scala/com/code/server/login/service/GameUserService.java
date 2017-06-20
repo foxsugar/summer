@@ -1,6 +1,7 @@
 package com.code.server.login.service;
 
 
+import com.code.server.constant.game.Record;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
@@ -21,7 +22,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -166,9 +169,13 @@ public class GameUserService {
      * @param msgKey
      * @return
      */
-    public int getUserRecodeByUserId(KafkaMsgKey msgKey) {
+    public int getUserRecodeByUserId(KafkaMsgKey msgKey,String roomType) {
         UserRecord userRecord = userRecordService.getUserRecordByUserId(msgKey.getUserId());
-        ResponseVo vo = new ResponseVo("userService", "getUserRecodeByUserId", userRecord);
+        List<Record.RoomRecord> roomRecordList = new ArrayList<>();
+        if (userRecord != null) {
+            roomRecordList.addAll(userRecord.getRecord().getRoomRecords().get(roomType));
+        }
+        ResponseVo vo = new ResponseVo("userService", "getUserRecodeByUserId", roomRecordList);
         sendMsg(msgKey, vo);
         return 0;
     }

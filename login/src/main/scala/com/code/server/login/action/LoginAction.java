@@ -246,9 +246,7 @@ public class LoginAction {
      */
     private User createUser(String account, String password) {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
-
         User newUser = new User();
-
         newUser.setAccount(account);
         newUser.setPassword(password);
         newUser.setOpenId("" + new IdWorker(serverConfig.getServerId(), 1).nextId());
@@ -275,7 +273,6 @@ public class LoginAction {
      */
     private User createUser(String openId, String username, String image, int sex) {
         User newUser = new User();
-
         newUser.setAccount(openId);
         newUser.setPassword("111111");
         newUser.setOpenId(openId);
@@ -287,7 +284,6 @@ public class LoginAction {
         newUser.setMoney(getConstant().getInitMoney());
         newUser.setRegistDate(new Date());
         newUser.setLastLoginDate(new Date());
-
         return newUser;
     }
 

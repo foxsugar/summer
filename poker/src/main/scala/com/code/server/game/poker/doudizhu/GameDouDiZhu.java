@@ -3,6 +3,7 @@ package com.code.server.game.poker.doudizhu;
 
 import com.code.server.constant.game.CardStruct;
 import com.code.server.constant.game.Record;
+import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.*;
@@ -11,6 +12,7 @@ import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -384,6 +386,10 @@ public class GameDouDiZhu extends Game {
             userRecord.setScore(playerInfo.getScore());
             userRecord.setUserId(playerInfo.getUserId());
             userRecord.setRoomId(room.getRoomId());
+            UserBean userBean = RedisManager.getUserRedisService().getUserBean(playerInfo.getUserId());
+            if (userBean != null) {
+                userRecord.setName(userBean.getUsername());
+            }
             roomRecord.addRecord(userRecord);
         });
 

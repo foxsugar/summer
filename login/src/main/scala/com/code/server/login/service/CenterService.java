@@ -19,8 +19,7 @@ import java.util.Set;
  */
 public class CenterService {
     public static void work(){
-        //timer
-        ThreadPool.execute(()-> GameTimer.getInstance().fire());
+
 
         //检测服务器状态
         CheckHeart.check();

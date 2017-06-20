@@ -2,6 +2,7 @@ package com.code.server.game.mahjong.logic;
 
 
 import com.code.server.constant.game.Record;
+import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.GameOfResult;
@@ -12,6 +13,7 @@ import com.code.server.game.room.Game;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 import org.apache.log4j.Logger;
 
@@ -834,6 +836,10 @@ public class GameInfo extends Game {
             userRecord.setScore(playerInfo.getScore());
             userRecord.setUserId(playerInfo.getUserId());
             userRecord.setRoomId(room.getRoomId());
+            UserBean userBean = RedisManager.getUserRedisService().getUserBean(playerInfo.getUserId());
+            if (userBean != null) {
+                userRecord.setName(userBean.getUsername());
+            }
             roomRecord.addRecord(userRecord);
         });
 

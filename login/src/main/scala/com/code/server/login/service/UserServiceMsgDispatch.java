@@ -42,7 +42,8 @@ public class UserServiceMsgDispatch {
                 return gameUserService.getUserMessage(msgKey);
             }
             case "getUserRecodeByUserId": {
-                return gameUserService.getUserRecodeByUserId(msgKey);
+                String roomType = params.get("roomType").asText();
+                return gameUserService.getUserRecodeByUserId(msgKey,roomType);
             }
             case "bindReferrer": {
                 int referrerId = params.get("referrerId").asInt();
