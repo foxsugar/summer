@@ -2,7 +2,7 @@ package com.code.server.game.mahjong.util;
 
 
 
-import com.code.server.game.mahjong.logic.PlayerCardsInfo;
+import com.code.server.game.mahjong.logic.PlayerCardsInfoMj;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class HuCardType implements HuType {
     }
 
 
-    public int clearRepeat(PlayerCardsInfo playerCardsInfo, int fanTemp) {
+    public int clearRepeat(PlayerCardsInfoMj playerCardsInfo, int fanTemp) {
         if (this.specialHuList.contains(hu_清龙)) {
             fanTemp = removeHu(playerCardsInfo, hu_一条龙, fanTemp);
             fanTemp = removeHu(playerCardsInfo, hu_清一色, fanTemp);
@@ -61,7 +61,7 @@ public class HuCardType implements HuType {
         return fanTemp;
     }
 
-    private int removeHu(PlayerCardsInfo playerCardsInfo, int huType, int fanTemp) {
+    private int removeHu(PlayerCardsInfoMj playerCardsInfo, int huType, int fanTemp) {
         if (this.specialHuList.remove(huType)) {
             fanTemp -= playerCardsInfo.getSpecialHuScore(huType);
         }
@@ -73,7 +73,7 @@ public class HuCardType implements HuType {
      *
      * @return
      */
-    public static HuCardType setHuCardType(HuCardType cardType, PlayerCardsInfo playerCardsInfo) {
+    public static HuCardType setHuCardType(HuCardType cardType, PlayerCardsInfoMj playerCardsInfo) {
         cardType.chi.addAll(playerCardsInfo.getChiType());
         cardType.peng.addAll(playerCardsInfo.getPengType().keySet());
         cardType.mingGang.addAll(playerCardsInfo.getMingGangType().keySet());

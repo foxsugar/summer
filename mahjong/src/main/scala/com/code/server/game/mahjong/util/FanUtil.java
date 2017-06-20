@@ -3,7 +3,7 @@ package com.code.server.game.mahjong.util;
 
 
 import com.code.server.game.mahjong.logic.CardTypeUtil;
-import com.code.server.game.mahjong.logic.PlayerCardsInfo;
+import com.code.server.game.mahjong.logic.PlayerCardsInfoMj;
 
 import java.util.*;
 
@@ -53,7 +53,7 @@ public class FanUtil implements HuType{
 		ytl3.add(24);
 	}
 			
-	public static int compute(List<String> cards, HuCardType huCardType, int tingCardType, PlayerCardsInfo playerCardsInfo) {
+	public static int compute(List<String> cards, HuCardType huCardType, int tingCardType, PlayerCardsInfoMj playerCardsInfo) {
 		int fan = 0;
 		if (playerCardsInfo.isHasSpecialHu(hu_缺一门) && no_group_num(cards,huCardType) == 1) {//缺一门
 			huCardType.specialHuList.add(hu_缺一门);
@@ -397,7 +397,7 @@ public class FanUtil implements HuType{
 	public static boolean isYitiaolong(List<String> cards, HuCardType huCardType) {
 		List<String> temp = new ArrayList<>();
 		temp.addAll(cards);
-		Map<Integer, Integer> cardMap = PlayerCardsInfo.getCardNum(temp);
+		Map<Integer, Integer> cardMap = PlayerCardsInfoMj.getCardNum(temp);
 
 		boolean isHasLong1 = huCardType.shun.containsAll(ytl1);
 		boolean isHasLong2 = huCardType.shun.containsAll(ytl2);

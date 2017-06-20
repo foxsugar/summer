@@ -43,7 +43,7 @@ public class GameInfoJinCheng124 extends GameInfo {
         }
     }
 
-    protected void handleHu(PlayerCardsInfo playerCardsInfo) {
+    protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
         isAlreadyHu = true;
         sendResult(true, playerCardsInfo.userId);
         //圈

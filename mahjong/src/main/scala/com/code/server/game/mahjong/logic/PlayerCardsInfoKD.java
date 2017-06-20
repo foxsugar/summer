@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class PlayerCardsInfoKD extends PlayerCardsInfo {
+public class PlayerCardsInfoKD extends PlayerCardsInfoMj {
 	private static final int TING_MIN_SCORE = 6;
 	private static final int ZIMO_MIN_SCORE = 3;
 	private static final int DIANPAO_MIN_SCORE = 6;

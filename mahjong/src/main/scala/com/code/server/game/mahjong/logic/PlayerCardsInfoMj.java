@@ -6,14 +6,14 @@ import com.code.server.game.mahjong.util.HuCardType;
 import com.code.server.game.mahjong.util.HuLimit;
 import com.code.server.game.mahjong.util.HuType;
 import com.code.server.game.mahjong.util.HuUtil;
-import com.code.server.game.room.IfacePlayerInfo;
+import com.code.server.game.room.PlayerCardInfo;
 
 import java.util.*;
 
 /**
  * Created by T420 on 2016/11/30.
  */
-public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
+public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     public static final int type_gang = 1;
     public static final int type_peng = 2;
     public static final int type_ting = 3;
@@ -23,7 +23,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
     public static final int type_chi = 7;
     public static final int type_xuanfengdan = 8;
 
-    protected long userId;
+
     protected List<String> cards = new ArrayList<>();//手上的牌
     protected List<String> disCards = new ArrayList<>();//丢弃的牌
     protected Map<Integer,Long> pengType = new HashMap<>();//碰
@@ -33,7 +33,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
     protected List<List<String>> chiCards = new ArrayList<>();
     protected Map<Integer,List<String>> xuanfengDan = new HashMap<>();
     protected boolean isTing = false;
-    protected int score;//分数
+//    protected double score;//分数
     protected Set<Integer> tingSet = new HashSet<>();//听得牌
     protected int lastOperate;//上次的操作
     protected String catchCard;//上次摸得牌
@@ -767,7 +767,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         }
     }
 
-    public int addScore(int s){
+    public double addScore(int s){
         this.score = this.score +s;
         return this.score;
     }
@@ -817,7 +817,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return userId;
     }
 
-    public PlayerCardsInfo setUserId(long userId) {
+    public PlayerCardsInfoMj setUserId(long userId) {
         this.userId = userId;
         return this;
     }
@@ -857,7 +857,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return pengType;
     }
 
-    public PlayerCardsInfo setPengType(Map<Integer, Long> pengType) {
+    public PlayerCardsInfoMj setPengType(Map<Integer, Long> pengType) {
         this.pengType = pengType;
         return this;
     }
@@ -866,7 +866,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return mingGangType;
     }
 
-    public PlayerCardsInfo setMingGangType(Map<Integer, Long> mingGangType) {
+    public PlayerCardsInfoMj setMingGangType(Map<Integer, Long> mingGangType) {
         this.mingGangType = mingGangType;
         return this;
     }
@@ -884,19 +884,22 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         this.isTing = isTing;
     }
 
-    public int getScore() {
+    @Override
+    public double getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    @Override
+    public PlayerCardsInfoMj setScore(double score) {
         this.score = score;
+        return this;
     }
 
     public int getLastOperate() {
         return lastOperate;
     }
 
-    public PlayerCardsInfo setLastOperate(int lastOperate) {
+    public PlayerCardsInfoMj setLastOperate(int lastOperate) {
         this.lastOperate = lastOperate;
         return this;
     }
@@ -905,7 +908,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return winType;
     }
 
-    public PlayerCardsInfo setWinType(Set<Integer> winType) {
+    public PlayerCardsInfoMj setWinType(Set<Integer> winType) {
         this.winType = winType;
         return this;
     }
@@ -914,7 +917,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return catchCard;
     }
 
-    public PlayerCardsInfo setCatchCard(String catchCard) {
+    public PlayerCardsInfoMj setCatchCard(String catchCard) {
         this.catchCard = catchCard;
         return this;
     }
@@ -923,7 +926,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return canBePeng;
     }
 
-    public PlayerCardsInfo setCanBePeng(boolean canBePeng) {
+    public PlayerCardsInfoMj setCanBePeng(boolean canBePeng) {
         this.canBePeng = canBePeng;
         return this;
     }
@@ -932,7 +935,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return canBeGang;
     }
 
-    public PlayerCardsInfo setCanBeGang(boolean canBeGang) {
+    public PlayerCardsInfoMj setCanBeGang(boolean canBeGang) {
         this.canBeGang = canBeGang;
         return this;
     }
@@ -941,7 +944,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return canBeHu;
     }
 
-    public PlayerCardsInfo setCanBeHu(boolean canBeHu) {
+    public PlayerCardsInfoMj setCanBeHu(boolean canBeHu) {
         this.canBeHu = canBeHu;
         return this;
     }
@@ -950,7 +953,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return canBeTing;
     }
 
-    public PlayerCardsInfo setCanBeTing(boolean canBeTing) {
+    public PlayerCardsInfoMj setCanBeTing(boolean canBeTing) {
         this.canBeTing = canBeTing;
         return this;
     }
@@ -959,7 +962,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return tingSet;
     }
 
-    public PlayerCardsInfo setTingSet(Set<Integer> tingSet) {
+    public PlayerCardsInfoMj setTingSet(Set<Integer> tingSet) {
         this.tingSet = tingSet;
         return this;
     }
@@ -968,7 +971,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return huCard;
     }
 
-    public PlayerCardsInfo setHuCard(String huCard) {
+    public PlayerCardsInfoMj setHuCard(String huCard) {
         this.huCard = huCard;
         return this;
     }
@@ -977,7 +980,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return isHasFengShun;
     }
 
-    public PlayerCardsInfo setIsHasFengShun(boolean isHasFengShun) {
+    public PlayerCardsInfoMj setIsHasFengShun(boolean isHasFengShun) {
         this.isHasFengShun = isHasFengShun;
         return this;
     }
@@ -986,7 +989,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return isHasSpecialHu;
     }
 
-    public PlayerCardsInfo setIsHasSpecialHu(boolean isHasSpecialHu) {
+    public PlayerCardsInfoMj setIsHasSpecialHu(boolean isHasSpecialHu) {
         this.isHasSpecialHu = isHasSpecialHu;
         return this;
     }
@@ -995,7 +998,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return fan;
     }
 
-    public PlayerCardsInfo setFan(int fan) {
+    public PlayerCardsInfoMj setFan(int fan) {
         this.fan = fan;
         return this;
     }
@@ -1004,7 +1007,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return specialHuScore;
     }
 
-    public PlayerCardsInfo setSpecialHuScore(Map<Integer, Integer> specialHuScore) {
+    public PlayerCardsInfoMj setSpecialHuScore(Map<Integer, Integer> specialHuScore) {
         this.specialHuScore = specialHuScore;
         return this;
     }
@@ -1013,7 +1016,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return isHasGangBlackList;
     }
 
-    public PlayerCardsInfo setHasGangBlackList(boolean hasGangBlackList) {
+    public PlayerCardsInfoMj setHasGangBlackList(boolean hasGangBlackList) {
         isHasGangBlackList = hasGangBlackList;
         return this;
     }
@@ -1022,7 +1025,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return chiType;
     }
 
-    public PlayerCardsInfo setChiType(Set<Integer> chiType) {
+    public PlayerCardsInfoMj setChiType(Set<Integer> chiType) {
         this.chiType = chiType;
         return this;
     }
@@ -1031,7 +1034,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return chiCards;
     }
 
-    public PlayerCardsInfo setChiCards(List<List<String>> chiCards) {
+    public PlayerCardsInfoMj setChiCards(List<List<String>> chiCards) {
         this.chiCards = chiCards;
         return this;
     }
@@ -1040,7 +1043,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return canBeChi;
     }
 
-    public PlayerCardsInfo setCanBeChi(boolean canBeChi) {
+    public PlayerCardsInfoMj setCanBeChi(boolean canBeChi) {
         this.canBeChi = canBeChi;
         return this;
     }
@@ -1049,7 +1052,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return gameInfo;
     }
 
-    public PlayerCardsInfo setGameInfo(GameInfo gameInfo) {
+    public PlayerCardsInfoMj setGameInfo(GameInfo gameInfo) {
         this.gameInfo = gameInfo;
         return this;
     }
@@ -1058,7 +1061,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return canBeChiTing;
     }
 
-    public PlayerCardsInfo setCanBeChiTing(boolean canBeChiTing) {
+    public PlayerCardsInfoMj setCanBeChiTing(boolean canBeChiTing) {
         this.canBeChiTing = canBeChiTing;
         return this;
     }
@@ -1067,7 +1070,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return canBePengTing;
     }
 
-    public PlayerCardsInfo setCanBePengTing(boolean canBePengTing) {
+    public PlayerCardsInfoMj setCanBePengTing(boolean canBePengTing) {
         this.canBePengTing = canBePengTing;
         return this;
     }
@@ -1076,7 +1079,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return isAlreadyHu;
     }
 
-    public PlayerCardsInfo setAlreadyHu(boolean alreadyHu) {
+    public PlayerCardsInfoMj setAlreadyHu(boolean alreadyHu) {
         isAlreadyHu = alreadyHu;
         return this;
     }
@@ -1085,7 +1088,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return roomInfo;
     }
 
-    public PlayerCardsInfo setRoomInfo(RoomInfo roomInfo) {
+    public PlayerCardsInfoMj setRoomInfo(RoomInfo roomInfo) {
         this.roomInfo = roomInfo;
         return this;
     }
@@ -1094,7 +1097,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return yiZhangyingSet;
     }
 
-    public PlayerCardsInfo setYiZhangyingSet(Set<Integer> yiZhangyingSet) {
+    public PlayerCardsInfoMj setYiZhangyingSet(Set<Integer> yiZhangyingSet) {
         this.yiZhangyingSet = yiZhangyingSet;
         return this;
     }
@@ -1103,7 +1106,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return baoMingDan;
     }
 
-    public PlayerCardsInfo setBaoMingDan(Set<Integer> baoMingDan) {
+    public PlayerCardsInfoMj setBaoMingDan(Set<Integer> baoMingDan) {
         this.baoMingDan = baoMingDan;
         return this;
     }
@@ -1112,7 +1115,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return baoAnDan;
     }
 
-    public PlayerCardsInfo setBaoAnDan(Set<Integer> baoAnDan) {
+    public PlayerCardsInfoMj setBaoAnDan(Set<Integer> baoAnDan) {
         this.baoAnDan = baoAnDan;
         return this;
     }
@@ -1121,7 +1124,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return xuanfengDan;
     }
 
-    public PlayerCardsInfo setXuanfengDan(Map<Integer, List<String>> xuanfengDan) {
+    public PlayerCardsInfoMj setXuanfengDan(Map<Integer, List<String>> xuanfengDan) {
         this.xuanfengDan = xuanfengDan;
         return this;
     }
@@ -1130,7 +1133,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return canBeXuanfeng;
     }
 
-    public PlayerCardsInfo setCanBeXuanfeng(boolean canBeXuanfeng) {
+    public PlayerCardsInfoMj setCanBeXuanfeng(boolean canBeXuanfeng) {
         this.canBeXuanfeng = canBeXuanfeng;
         return this;
     }
@@ -1139,7 +1142,7 @@ public class PlayerCardsInfo implements HuType,IfacePlayerInfo {
         return gangScore;
     }
 
-    public PlayerCardsInfo setGangScore(int gangScore) {
+    public PlayerCardsInfoMj setGangScore(int gangScore) {
         this.gangScore = gangScore;
         return this;
     }

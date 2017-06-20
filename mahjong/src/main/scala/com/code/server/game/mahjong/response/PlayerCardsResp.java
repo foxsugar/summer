@@ -1,7 +1,7 @@
 package com.code.server.game.mahjong.response;
 
 
-import com.code.server.game.mahjong.logic.PlayerCardsInfo;
+import com.code.server.game.mahjong.logic.PlayerCardsInfoMj;
 import com.code.server.game.mahjong.logic.PlayerCardsInfoLS;
 
 import java.util.*;
@@ -48,17 +48,17 @@ public class PlayerCardsResp {
 
     public PlayerCardsResp(){}
 
-    public PlayerCardsResp(PlayerCardsInfo info) {
+    public PlayerCardsResp(PlayerCardsInfoMj info) {
         init(info, true);
     }
 
 
-    public PlayerCardsResp(PlayerCardsInfo info,boolean isMine) {
+    public PlayerCardsResp(PlayerCardsInfoMj info, boolean isMine) {
         init(info, isMine);
 
     }
 
-    public void init(PlayerCardsInfo info,boolean isMine) {
+    public void init(PlayerCardsInfoMj info, boolean isMine) {
         if (isMine) {
             this.cards.addAll(info.getCards());
             this.handCards = info.getCardsNoChiPengGang(info.getCards());

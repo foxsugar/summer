@@ -19,7 +19,7 @@ import java.util.Set;
 * @version 1.0    
 *
  */
-public class PlayerCardsInfoGSJ extends PlayerCardsInfo {
+public class PlayerCardsInfoGSJ extends PlayerCardsInfoMj {
 	
 	//庄家基础分
 	private static final int BANKER_BASE_SCORE = 3;

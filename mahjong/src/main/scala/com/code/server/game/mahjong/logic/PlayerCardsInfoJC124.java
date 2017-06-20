@@ -5,7 +5,7 @@ import com.code.server.game.mahjong.util.*;
 
 import java.util.*;
 
-public class PlayerCardsInfoJC124 extends PlayerCardsInfo {
+public class PlayerCardsInfoJC124 extends PlayerCardsInfoMj {
 	private static final int TING_MIN_SCORE = 0;
 	private static final int ZIMO_MIN_SCORE = 0;
 	private static final int DIANPAO_MIN_SCORE = 0;
@@ -569,7 +569,7 @@ public class PlayerCardsInfoJC124 extends PlayerCardsInfo {
 	public void baoGang(RoomInfo room, long dianpaoUser, long winner){
 		//点炮的人包杠
 		int temp = 0;
-		for(PlayerCardsInfo playerCardsInfo : gameInfo.getPlayerCardsInfos().values()){
+		for(PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()){
 			if(playerCardsInfo.getScore()<0){
 				temp += playerCardsInfo.getScore();
 				room.setUserSocre(playerCardsInfo.getUserId(), -playerCardsInfo.getScore());
@@ -589,7 +589,7 @@ public class PlayerCardsInfoJC124 extends PlayerCardsInfo {
 		}
 
         	if(gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing){//听牌直接计算
-            	for (PlayerCardsInfo playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
+            	for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
             		//暗杠计算
             		for (long i : scores.keySet()) {
     					scores.put(i, scores.get(i) - playerCardsInfo.getAnGangType().size()*2);
@@ -610,7 +610,7 @@ public class PlayerCardsInfoJC124 extends PlayerCardsInfo {
     				}
             	}
             }else{//未听牌
-            	for (PlayerCardsInfo playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
+            	for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
             		//暗杠计算
             		scores.put(dianpaoUser, scores.get(dianpaoUser) - playerCardsInfo.getAnGangType().size()*2*3);
             		scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId())+playerCardsInfo.getAnGangType().size()*2*3);
@@ -634,7 +634,7 @@ public class PlayerCardsInfoJC124 extends PlayerCardsInfo {
  			scores.put(i, 0);
  		}
     	
-    	for (PlayerCardsInfo playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
+    	for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
     		//暗杠计算
     		for (long i : scores.keySet()) {
 				scores.put(i, scores.get(i) - playerCardsInfo.getAnGangType().size()*2);

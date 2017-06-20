@@ -19,7 +19,7 @@ import java.util.*;
  * 修改时间：2016年12月12日 上午10:06:47
  * 修改备注：
  */
-public class PlayerCardsInfoLS extends PlayerCardsInfo{
+public class PlayerCardsInfoLS extends PlayerCardsInfoMj {
 	
 	List<String> first_four = new ArrayList<String>();//立四 前四张牌
 	
@@ -100,7 +100,7 @@ public class PlayerCardsInfoLS extends PlayerCardsInfo{
     	//是否是自摸
     	if(isZimo){
     		LSscore = LSscore*2;//自摸翻倍
-    		for(PlayerCardsInfo playerCardsInfo:gameInfo.getPlayerCardsInfos().values()){
+    		for(PlayerCardsInfoMj playerCardsInfo:gameInfo.getPlayerCardsInfos().values()){
     			if(playerCardsInfo.getUserId()!=userId){
     				playerCardsInfo.addScore(-LSscore * scale);
     			}else{
@@ -115,7 +115,7 @@ public class PlayerCardsInfoLS extends PlayerCardsInfo{
     	}else{
     		//听牌点炮不加分，三家输
     		if(gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing){
-    			for(PlayerCardsInfo playerCardsInfo:gameInfo.getPlayerCardsInfos().values()){
+    			for(PlayerCardsInfoMj playerCardsInfo:gameInfo.getPlayerCardsInfos().values()){
         			if(playerCardsInfo.getUserId()!=userId){
         				playerCardsInfo.addScore(-LSscore * scale);
         			}else{
@@ -141,7 +141,7 @@ public class PlayerCardsInfoLS extends PlayerCardsInfo{
     	
     	//暗杠三家减分
     	if(gameInfo.getPlayerCardsInfos().get(userId).getAnGangType().size()>0){
-    			for(PlayerCardsInfo playerCardsInfo:gameInfo.getPlayerCardsInfos().values()){
+    			for(PlayerCardsInfoMj playerCardsInfo:gameInfo.getPlayerCardsInfos().values()){
     				if(playerCardsInfo.getUserId()!=userId){
     					playerCardsInfo.addScore(-(gameInfo.getPlayerCardsInfos().get(userId).getAnGangType().size()*2)*scale);
     				}else{
@@ -157,7 +157,7 @@ public class PlayerCardsInfoLS extends PlayerCardsInfo{
     			if(minguser!=-1){
     				//听牌三家输
     				if(gameInfo.getPlayerCardsInfos().get(minguser).isTing){
-    					for(PlayerCardsInfo playerCardsInfo:gameInfo.getPlayerCardsInfos().values()){
+    					for(PlayerCardsInfoMj playerCardsInfo:gameInfo.getPlayerCardsInfos().values()){
     						if(playerCardsInfo.getUserId()!=userId){
     							playerCardsInfo.addScore(-(gameInfo.getPlayerCardsInfos().get(userId).getMingGangType().size()) * scale);
     						}else{
@@ -172,7 +172,7 @@ public class PlayerCardsInfoLS extends PlayerCardsInfo{
     			}else{
     				//碰后杠 三家包赔
     				if("-1".equals(minguser.toString())){
-    					for(PlayerCardsInfo playerCardsInfo:gameInfo.getPlayerCardsInfos().values()){
+    					for(PlayerCardsInfoMj playerCardsInfo:gameInfo.getPlayerCardsInfos().values()){
     						if(playerCardsInfo.getUserId()!=userId){
     							playerCardsInfo.addScore(-(gameInfo.getPlayerCardsInfos().get(userId).getMingGangType().size()) * scale);
     						}else{
@@ -185,10 +185,10 @@ public class PlayerCardsInfoLS extends PlayerCardsInfo{
     		}
     	}
     	
-    	fan  = gameInfo.getPlayerCardsInfos().get(userId).getScore();
+    	fan  = (int)gameInfo.getPlayerCardsInfos().get(userId).getScore();
     	
     	//将所有人的分数放入RoomInfo
-    	for(PlayerCardsInfo playerCardsInfo:gameInfo.getPlayerCardsInfos().values()){
+    	for(PlayerCardsInfoMj playerCardsInfo:gameInfo.getPlayerCardsInfos().values()){
     		room.setUserSocre(playerCardsInfo.getUserId(),playerCardsInfo.getScore()*room.getMultiple());
     	}
     }

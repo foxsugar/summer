@@ -2,22 +2,16 @@ package com.code.server.game.poker.doudizhu;
 
 
 import com.code.server.constant.game.CardStruct;
-import com.code.server.constant.game.Record;
-import com.code.server.constant.game.UserBean;
-import com.code.server.constant.kafka.IKafaTopic;
-import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.*;
 import com.code.server.game.room.Game;
-import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.Room;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
-import com.code.server.kafka.MsgProducer;
-import com.code.server.redis.service.RedisManager;
-import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by sunxianping on 2017/3/13.
@@ -377,25 +371,7 @@ public class GameDouDiZhu extends Game {
     }
 
     protected void genRecord() {
-        Record.RoomRecord roomRecord = new Record.RoomRecord();
-        roomRecord.setTime(System.currentTimeMillis());
-        roomRecord.setType(room.getRoomType());
-
-        playerCardInfos.values().forEach((playerInfo) -> {
-            Record.UserRecord userRecord = new Record.UserRecord();
-            userRecord.setScore(playerInfo.getScore());
-            userRecord.setUserId(playerInfo.getUserId());
-            userRecord.setRoomId(room.getRoomId());
-            UserBean userBean = RedisManager.getUserRedisService().getUserBean(playerInfo.getUserId());
-            if (userBean != null) {
-                userRecord.setName(userBean.getUsername());
-            }
-            roomRecord.addRecord(userRecord);
-        });
-
-        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_GEN_RECORD);
-        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
-        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord);
+        genRecord(playerCardInfos.values().stream().collect(Collectors.toMap(PlayerCardInfoDouDiZhu::getUserId,PlayerCardInfoDouDiZhu::getScore)),room);
     }
 
     protected void playStepStart(long dizhu) {

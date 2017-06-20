@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * 乾安快听
  */
-public class PlayerCardsInfoQAKT extends PlayerCardsInfo {
+public class PlayerCardsInfoQAKT extends PlayerCardsInfoMj {
 //    protected static final Logger logger = Logger.getLogger("game");
 
     protected static final Integer[] yao = new Integer[]{0, 8, 9, 17, 18, 26, 31};
@@ -395,7 +395,7 @@ public class PlayerCardsInfoQAKT extends PlayerCardsInfo {
         gangFan += getGangScore(anGangType,false,baoAnDan);
         int score = gangFan * roomInfo.getMultiple();
         int sub = 0;
-        for(PlayerCardsInfo playerCardsInfo : gameInfo.getPlayerCardsInfos().values()){
+        for(PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()){
             if (playerCardsInfo.getUserId() != this.userId) {
                 playerCardsInfo.addScore(-score);
                 roomInfo.setUserSocre(playerCardsInfo.getUserId(), -score);
@@ -496,7 +496,7 @@ public class PlayerCardsInfoQAKT extends PlayerCardsInfo {
         int subFan = 0;
         int subGangScore = 0;
         int subHuScore = 0;
-        for (PlayerCardsInfo playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
+        for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
             //不是自己
             if(playerCardsInfo.getUserId() != userId){
                 System.out.println("==================================begin====  "+playerCardsInfo.getUserId()+"  ==============");
@@ -570,7 +570,7 @@ public class PlayerCardsInfoQAKT extends PlayerCardsInfo {
     }
 
     private boolean isSanqing(GameInfo gameInfo){
-        for (PlayerCardsInfo playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
+        for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
             if (playerCardsInfo.getUserId() == userId) {
                 continue;
             }
@@ -590,7 +590,7 @@ public class PlayerCardsInfoQAKT extends PlayerCardsInfo {
             return true;
         }
         //五个对以上开门
-        Map<Integer, Integer> map = PlayerCardsInfo.getCardNum(this.getCards());
+        Map<Integer, Integer> map = PlayerCardsInfoMj.getCardNum(this.getCards());
         int duiSize = 0;
         for(Map.Entry<Integer,Integer> entry : map.entrySet()){
             if (entry.getValue() == 4) {

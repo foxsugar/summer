@@ -67,7 +67,7 @@ public class GameInfoJinCheng extends GameInfo {
     private void handleHuangzhuangScore(){
         for (long i : room.getUserScores().keySet()) {
 
-            PlayerCardsInfo playerCardsInfo = this.getPlayerCardsInfos().get(i);
+            PlayerCardsInfoMj playerCardsInfo = this.getPlayerCardsInfos().get(i);
             if (playerCardsInfo == null) {
                 return;
             }
@@ -81,7 +81,7 @@ public class GameInfoJinCheng extends GameInfo {
         }
     }
 
-    protected void handleHu(PlayerCardsInfo playerCardsInfo) {
+    protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
         isAlreadyHu = true;
         sendResult(true, playerCardsInfo.userId);
         //圈
