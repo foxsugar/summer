@@ -117,21 +117,23 @@ public class GameUserService {
     }
 
     public static User userBean2User(UserBean userBean) {
-        User userResult = new User();
+        User user = new User();
 
-        userResult.setId(userBean.getId());
-        userResult.setUsername(userBean.getUsername());
-        userResult.setImage(userBean.getImage());
-        userResult.setAccount(userBean.getAccount());
-        userResult.setPassword(userBean.getPassword());
-        userResult.setIpConfig(userBean.getIpConfig());
-        userResult.setMoney(userBean.getMoney());
-        userResult.setVip(userBean.getVip());
-        userResult.setUuid(userBean.getUuid());
-        userResult.setOpenId(userBean.getOpenId());
-        userResult.setSex(userBean.getSex());
-        userResult.setUserInfo(userBean.getUserInfo());
-        return userResult;
+        user.setId(userBean.getId());
+        user.setUsername(userBean.getUsername());
+        user.setImage(userBean.getImage());
+        user.setAccount(userBean.getAccount());
+        user.setPassword(userBean.getPassword());
+        user.setIpConfig(userBean.getIpConfig());
+        user.setMoney(userBean.getMoney());
+        user.setVip(userBean.getVip());
+        user.setUuid(userBean.getUuid());
+        user.setOpenId(userBean.getOpenId());
+        user.setSex(userBean.getSex());
+        user.setUserInfo(userBean.getUserInfo());
+        user.setGold(userBean.getGold());
+
+        return user;
     }
 
     /**
