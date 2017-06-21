@@ -4,7 +4,7 @@ import java.util.Comparator
 import java.util.stream.Collectors
 
 import com.code.server.constant.kafka.{IKafaTopic, KafkaMsgKey, KickUser}
-import com.code.server.constant.response.{ErrorCode, ReconnectResp, ResponseVo, RoomVo}
+import com.code.server.constant.response.{ErrorCode, ReconnectResp, ResponseVo}
 import com.code.server.gate.config.ServerConfig
 import com.code.server.kafka.MsgProducer
 import com.code.server.redis.config.ServerInfo
@@ -12,7 +12,6 @@ import com.code.server.redis.service.{RedisManager, RoomRedisService, UserRedisS
 import com.code.server.util.{JsonUtil, SpringUtil}
 import com.fasterxml.jackson.databind.JsonNode
 import io.netty.channel.ChannelHandlerContext
-import net.sf.json.JSONObject
 
 import scala.util.Random
 

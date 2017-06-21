@@ -60,7 +60,7 @@ dependencies {
 	compile project(path: ':kafka')
 	compile project(path: ':rpc')
 	compile('org.springframework.boot:spring-boot-starter-aop')
-	compile('org.springframework.boot:spring-boot-starter-data-redis')
+//	compile('org.springframework.boot:spring-boot-starter-data-redis')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('com.google.code.gson:gson:2.6.2')
@@ -71,7 +71,7 @@ dependencies {
 
 	compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.11'
 
-	compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '1.2.0.RELEASE'
+//	compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '1.2.0.RELEASE'
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 
