@@ -1,9 +1,5 @@
 package com.code.server.db;
 
-import com.code.server.db.Service.ServerService;
-import com.code.server.db.model.Model;
-import com.code.server.db.model.Test;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages={"com.code.server.*"})
