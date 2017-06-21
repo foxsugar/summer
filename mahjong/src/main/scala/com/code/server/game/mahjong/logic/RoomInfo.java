@@ -302,7 +302,7 @@ public class RoomInfo extends Room {
         return result;
     }
 
-    private boolean isAddGold() {
+    public boolean isAddGold() {
         return "LQ".equals(gameType);
     }
 

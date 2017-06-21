@@ -31,6 +31,8 @@ public class RoomVo implements IfaceRoomVo {
     public List<UserVo> userList = new ArrayList<>();//用户列表
     public Map<Long, Double> userScores = new HashMap<>();
     public int personNumber;
+    public boolean isAA;
+    public boolean isCreaterJoin;
 
     public RoomVo() {
     }

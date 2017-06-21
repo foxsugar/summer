@@ -31,6 +31,7 @@ public class DataManager implements IGameConstant {
         roomData_longqi.eachMoney.put(9, 10);
         roomData_longqi.eachMoney.put(18, 15);
         roomData_longqi.eachMoney.put(30, 20);
+        roomData_longqi.isAddGold = true;
 
         getInstance().roomDatas.put(GAMETYPE_LINFEN, roomData_qianan);
         getInstance().roomDatas.put(GAMETYPE_QIANAN, roomData_qianan);

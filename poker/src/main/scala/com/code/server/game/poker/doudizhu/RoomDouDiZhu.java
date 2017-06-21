@@ -67,8 +67,8 @@ public class RoomDouDiZhu extends Room {
         room.isAA = isAA;
         room.isCreaterJoin = isJoin;
 
-        room.createNeedMoney = room.getNeedMoney();
         room.init(gameNumber, multiple);
+
 
 
         int code = room.joinRoom(userId,isJoin);

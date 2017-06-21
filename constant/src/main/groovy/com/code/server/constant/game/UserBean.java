@@ -41,6 +41,7 @@ public class UserBean implements IUserBean {
         userVo.setSex(this.sex);//required
         userVo.setReferee(this.referee);
         userVo.setUserInfo(this.userInfo);
+        userVo.setGold(this.getGold());
         return userVo;
     }
 

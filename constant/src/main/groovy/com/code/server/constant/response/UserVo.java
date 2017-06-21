@@ -19,10 +19,9 @@ public class UserVo {
     public String uuid; // required
     public String openId; // required
     public int sex; // required
-//    public String marquee; // required
     public int referee;
     public UserInfo userInfo;
-//    public String download2;
+    public double gold;
 
     public long getId() {
         return id;
@@ -152,5 +151,12 @@ public class UserVo {
         return this;
     }
 
+    public double getGold() {
+        return gold;
+    }
 
+    public UserVo setGold(double gold) {
+        this.gold = gold;
+        return this;
+    }
 }
