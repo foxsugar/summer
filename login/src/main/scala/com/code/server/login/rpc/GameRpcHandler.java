@@ -33,7 +33,7 @@ public class GameRpcHandler implements GameRPC.AsyncIface {
                 if (order.getType() == ChargeType.money.getValue()) {
                     user.setMoney(user.getMoney() + order.getNum());
                 } else if (order.getType() == ChargeType.gold.getValue()) {
-                    user.setMoney(user.getGold() + order.getNum());
+                    user.setGold(user.getGold() + order.getNum());
                 }
                 userService.save(user);
             } else {
@@ -47,6 +47,7 @@ public class GameRpcHandler implements GameRPC.AsyncIface {
                 RedisManager.addGold(userId, order.getNum());
             }
         }
+        resultHandler.onComplete(0);
     }
 
     @Override

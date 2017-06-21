@@ -152,7 +152,7 @@ object MahjongRoomService {
     roomInfo.setEach(each)
     var code = 0
     if (isJoin) {
-      code = roomInfo.joinRoom(userId)
+      code = roomInfo.joinRoom(userId,true)
       if (code != 0) {
         return (code, null)
       }

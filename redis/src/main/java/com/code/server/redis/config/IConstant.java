@@ -5,6 +5,7 @@ package com.code.server.redis.config;
  */
 public interface IConstant {
     long SECOND_5 = 1000L * 5;
+    long HOUR_1 = 1000L * 60 * 60;
 
     //房间-服务器(房间在哪个逻辑服务器)
     String ROOM_GAMESERVER = "room_gameServer";
@@ -44,9 +45,6 @@ public interface IConstant {
     String HEART_GAME = "heart_game";
 
     String SAVE_USERS = "save_users";
-
-
-
 
 
 }

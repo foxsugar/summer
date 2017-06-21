@@ -70,7 +70,7 @@ public class RoomMsgDispatch {
                 if (room == null) {
                     return ErrorCode.CANNOT_JOIN_ROOM_NOT_EXIST;
                 }
-                return room.joinRoom(userId);
+                return room.joinRoom(userId,true);
             }
 //            case "joinRoomQuick":{
 //                double type = params.getDouble("type");

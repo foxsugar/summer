@@ -20,6 +20,7 @@ public class RoomVo implements IfaceRoomVo {
     public int curGameNumber;
     public int createType;
     public double goldRoomType;
+    public String gameType;
 
     //填大坑专用
     public boolean isLastDraw;//是否平局
