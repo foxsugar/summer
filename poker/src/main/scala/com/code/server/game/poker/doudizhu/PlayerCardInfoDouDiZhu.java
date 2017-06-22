@@ -5,6 +5,7 @@ import com.code.server.constant.game.CardStruct;
 import com.code.server.constant.response.IfacePlayerInfoVo;
 import com.code.server.constant.response.PlayerCardInfoVo;
 import com.code.server.game.room.IfacePlayerInfo;
+import com.sun.xml.internal.ws.developer.UsesJAXBContext;
 
 import java.util.*;
 
@@ -36,6 +37,9 @@ public class PlayerCardInfoDouDiZhu implements IfacePlayerInfo {
         if(getListByIsType(currentCardStruct.cards) == 0){
             return false;
         }
+        if(getListByIsType(currentCardStruct.cards) != currentCardStruct.getType()){
+            return false;
+        }
         if(0!=lasttype){
              Integer currenttype =  currentCardStruct.type;//获取当前出牌类型
              if(currenttype==lasttype){
@@ -64,6 +68,11 @@ public class PlayerCardInfoDouDiZhu implements IfacePlayerInfo {
         }
         return types.size() == 1;
     }
+
+    public void text(){
+
+    }
+
     public Integer getListByIsType(List<Integer> cards) {
         int len = cards.size();
         if (len <= 4) {
