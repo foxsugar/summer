@@ -46,8 +46,8 @@ public class GameRedisService implements IGameRedis,IConstant{
 
     @Override
     public void heart(int serverId) {
-        BoundHashOperations<String,String,String> heart_gate = redisTemplate.boundHashOps(HEART_GAME);
-        heart_gate.put(""+serverId,""+System.currentTimeMillis());
+        BoundHashOperations<String,String,String> heart_game = redisTemplate.boundHashOps(HEART_GAME);
+        heart_game.put(""+serverId,""+System.currentTimeMillis());
     }
 
     @Override

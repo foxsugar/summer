@@ -11,7 +11,7 @@ import com.code.server.game.mahjong.util.HuUtil;
 import java.util.*;
 
 
-public class PlayerCardsInfoSZ extends PlayerCardsInfo {
+public class PlayerCardsInfoSZ extends PlayerCardsInfoMj {
 
     protected boolean isHasYimenpai = false;//一门牌
     protected boolean isHasShuye = false;//数页
@@ -424,7 +424,7 @@ public class PlayerCardsInfoSZ extends PlayerCardsInfo {
             maxFan += getYmpFan(shuye);
             maxFan = maxFan>=50?50:maxFan;
 
-            for(PlayerCardsInfo playerCardsInfo : gameInfo.getPlayerCardsInfos().values()){
+            for(PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()){
                 if (playerCardsInfo.getUserId() != userId) {//三家减分
                     System.out.println("userId : "+playerCardsInfo.getUserId() +" 偏家输变化分数"+maxFan*room.getMultiple());
                     playerCardsInfo.addScore(-maxFan*room.getMultiple());
@@ -435,7 +435,7 @@ public class PlayerCardsInfoSZ extends PlayerCardsInfo {
 
         } else {//偏家赢
             maxFan = maxFan>=50?50:maxFan;
-            for(PlayerCardsInfo playerCardsInfo : gameInfo.getPlayerCardsInfos().values()){
+            for(PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()){
                 if(playerCardsInfo.getUserId()!=userId){//输的人
                     if(playerCardsInfo.getUserId() == gameInfo.getFirstTurn()){//庄家输
                         int temp = maxFan + 1;

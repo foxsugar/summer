@@ -1,0 +1,93 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.2.RELEASE'
+	}
+	repositories {
+		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+//		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.0'
+		classpath "gradle.plugin.org.jruyi.gradle:thrift-gradle-plugin:0.4.0"
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: "idea"
+apply plugin: "org.jruyi.thrift"
+apply plugin: 'com.google.protobuf'
+
+version = '0.0.1-SNAPSHOT'
+//sourceCompatibility = 1.8
+//targetCompatibility = 1.8
+
+repositories {
+	maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+	mavenCentral()
+}
+
+
+dependencies {
+	compile 'org.apache.thrift:libthrift:0.10.0'
+
+
+	//grpc
+
+	compile group: 'io.grpc', name: 'grpc-stub', version: '1.2.0'
+	compile group: 'io.grpc', name: 'grpc-protobuf', version: '1.2.0'
+	compile group: 'io.grpc', name: 'grpc-netty', version: '1.2.0'
+	compile group: 'io.grpc', name: 'grpc-core', version: '1.2.0'
+	//netty
+//	compile group: 'io.netty', name: 'netty-all', version: '4.1.8.Final'
+}
+
+sourceSets {
+	main {
+		java{
+			srcDir 'gen/main/java'
+			srcDir 'gen/main/grpc'
+			srcDir 'genThrift/gen-java/grpc'
+		}
+		proto {
+			srcDir 'src/main/proto'
+		}
+	}
+}
+
+protobuf {
+	protoc {
+		artifact = "com.google.protobuf:protoc:3.0.2"
+	}
+	plugins {
+		grpc {
+			artifact = 'io.grpc:protoc-gen-grpc-java:1.2.0'
+		}
+	}
+
+	generatedFilesBaseDir = "$projectDir/gen/"
+//	generatedFilesBaseDir = "buildDir/gen/"
+
+	generateProtoTasks {
+		all()*.plugins {
+			grpc {}
+		}
+	}
+}
+
+//
+compileThrift {
+	recurse true
+	thriftExecutable 'thrift-0.10.0.exe'
+//	generator 'html'
+	generator 'java', 'private-members'
+	outputDir "$projectDir/genThrift/"
+}
+
+
+tasks.withType(JavaCompile) {
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
+	options.encoding = "UTF-8"
+}

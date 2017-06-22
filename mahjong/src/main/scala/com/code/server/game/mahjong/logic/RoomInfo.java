@@ -3,8 +3,8 @@ package com.code.server.game.mahjong.logic;
 
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
-import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.Room;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 
@@ -32,7 +32,6 @@ public class RoomInfo extends Room {
     protected Map<Long, Integer> lianZhuangNum = new HashMap<>();
     protected Map<Long, Integer> moBaoNum = new HashMap<>();
 
-    protected boolean isCanDissloution = false;
 
     protected String each = "";//4人平分房卡
 
@@ -303,7 +302,7 @@ public class RoomInfo extends Room {
         return result;
     }
 
-    private boolean isAddGold() {
+    public boolean isAddGold() {
         return "LQ".equals(gameType);
     }
 

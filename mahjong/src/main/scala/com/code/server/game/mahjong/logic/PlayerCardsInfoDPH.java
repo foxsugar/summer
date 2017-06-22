@@ -18,7 +18,7 @@ import java.util.List;
 * @version 1.0    
 *
  */
-public class PlayerCardsInfoDPH extends PlayerCardsInfo {
+public class PlayerCardsInfoDPH extends PlayerCardsInfoMj {
 
 	@Override
 	public void init(List<String> cards) {

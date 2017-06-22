@@ -77,6 +77,11 @@ public class GameTimer {
         getInstance().queue.add(node);
     }
 
+    public static void addTimerNode(long interval, boolean isPeroid, ITimeHandler timeHandler){
+        TimerNode node = new TimerNode(System.currentTimeMillis(), interval, isPeroid, timeHandler);
+        addTimerNode(node);
+    }
+
     public static void removeNode(TimerNode node) {
         getInstance().queue.remove(node);
     }

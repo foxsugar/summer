@@ -8,7 +8,7 @@ import com.code.server.constant.response.IfaceRoomVo;
  * Created by sunxianping on 2017/5/24.
  */
 public interface IfaceRoom extends IGameConstant {
-    int joinRoom(long userId);
+    int joinRoom(long userId,boolean isJoin);
 
     int quitRoom(long userId);
 

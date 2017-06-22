@@ -23,7 +23,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //
 //
 //    protected void doAfterFapai() {
-//        for(PlayerCardsInfo playerCardsInfo : playerCardsInfos.values()){
+//        for(PlayerCardsInfoMj playerCardsInfo : playerCardsInfos.values()){
 //            PlayerCardsInfoJZ playerCardsInfoJiuzhou = (PlayerCardsInfoJZ)playerCardsInfo;
 //            playerCardsInfoJiuzhou.canDanCards.addAll(playerCardsInfoJiuzhou.cards);
 //        }
@@ -140,7 +140,7 @@ public class GameInfoJiuZhou extends GameInfo {
 ////            return;
 ////        }
 //        //荒庄
-//        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+//        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
 //        if (playerCardsInfo.isHuangzhuang(this)) {
 //            handleHuangzhuang(userId);
 //            return;
@@ -198,7 +198,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //            MsgSender.sendMsg2Player(responseVo.toJsonObject(),  user);
 //
 //            //能做的操作全置成不能
-//            PlayerCardsInfo other = playerCardsInfos.get(user);
+//            PlayerCardsInfoMj other = playerCardsInfos.get(user);
 //
 //            resetCanBeOperate(other);
 //        }
@@ -237,7 +237,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //
 //    }
 //
-//    protected void handleHu(PlayerCardsInfo playerCardsInfo) {
+//    protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
 //        isAlreadyHu = true;
 //        sendResult(true, playerCardsInfo.userId);
 //        //圈
@@ -254,7 +254,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //
 //    private int chuPai_ting(int userId, String card) {
 //        //出牌的玩家
-//        PlayerCardsInfo chupaiPlayerCardsInfo = playerCardsInfos.get(userId);
+//        PlayerCardsInfoMj chupaiPlayerCardsInfo = playerCardsInfos.get(userId);
 //        if (this.turnId != userId||isAlreadyHu) {
 //            return ErrorCode.CAN_NOT_PLAYCARD;
 //        }
@@ -287,13 +287,13 @@ public class GameInfoJiuZhou extends GameInfo {
 //        }
 //
 //        //其他人能做的操作
-//        for (Map.Entry<Integer, PlayerCardsInfo> entry : playerCardsInfos.entrySet()) {
+//        for (Map.Entry<Integer, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
 //            OperateResp operateResp = new OperateResp();
 //
 //            //其他玩家的处理 碰杠等 如果有加入等待列表(要等待这些玩家"过")
 //            if (userId != entry.getKey()) {
 //                //通知其他玩家出了什么牌 自己能有什么操作
-//                PlayerCardsInfo playerCardsInfo = entry.getValue();
+//                PlayerCardsInfoMj playerCardsInfo = entry.getValue();
 //                boolean isCanGang = playerCardsInfo.isCanGangAddThisCard(card);
 //                boolean isCanPeng = playerCardsInfo.isCanPengAddThisCard(card);
 //                boolean isCanHu = playerCardsInfo.isCanHu_dianpao(card);
@@ -345,7 +345,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //        }
 //        System.out.println("出牌的人 = " + userId);
 //        //出牌的玩家
-//        PlayerCardsInfo chupaiPlayerCardsInfo = playerCardsInfos.get(userId);
+//        PlayerCardsInfoMj chupaiPlayerCardsInfo = playerCardsInfos.get(userId);
 //        if (this.turnId != userId) {
 //            return ErrorCode.CAN_NOT_PLAYCARD;
 //        }
@@ -380,13 +380,13 @@ public class GameInfoJiuZhou extends GameInfo {
 //        }
 //
 //        //其他人能做的操作
-//        for (Map.Entry<Integer, PlayerCardsInfo> entry : playerCardsInfos.entrySet()) {
+//        for (Map.Entry<Integer, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
 //            OperateResp operateResp = new OperateResp();
 //
 //            //其他玩家的处理 碰杠等 如果有加入等待列表(要等待这些玩家"过")
 //            if (userId != entry.getKey()) {
 //                //通知其他玩家出了什么牌 自己能有什么操作
-//                PlayerCardsInfo playerCardsInfo = entry.getValue();
+//                PlayerCardsInfoMj playerCardsInfo = entry.getValue();
 //                boolean isCanGang = playerCardsInfo.isCanGangAddThisCard(card);
 //                boolean isCanPeng = playerCardsInfo.isCanPengAddThisCard(card);
 //                boolean isCanHu = playerCardsInfo.isCanHu_dianpao(card);
@@ -460,7 +460,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //        if (isAlreadyHu) {
 //            return ErrorCode.CAN_NOT_GANG;
 //        }
-//        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+//        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
 //        if (playerCardsInfo == null) {
 //            return ErrorCode.USER_ERROR;
 //        }
@@ -488,13 +488,13 @@ public class GameInfoJiuZhou extends GameInfo {
 //
 //            if (isMing) {
 //
-//                for (Map.Entry<Integer, PlayerCardsInfo> entry : playerCardsInfos.entrySet()) {
+//                for (Map.Entry<Integer, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
 //                    OperateResp operateResp = new OperateResp();
 //
 //                    //其他玩家的处理 碰杠等 如果有加入等待列表(要等待这些玩家"过")
 //                    if (userId != entry.getKey()) {
 //                        //通知其他玩家出了什么牌 自己能有什么操作
-//                        PlayerCardsInfo playerOther = entry.getValue();
+//                        PlayerCardsInfoMj playerOther = entry.getValue();
 //                        boolean isCanHu = playerOther.isCanHu_dianpao(card);
 //                        //设置返回结果
 //                        operateResp.setCanBeOperate(false, false, false, false, isCanHu, false, false);
@@ -542,14 +542,14 @@ public class GameInfoJiuZhou extends GameInfo {
 //
 //    }
 //
-//    protected void doGang_hand(ServerContext serverContext, PlayerCardsInfo playerCardsInfo, int userId,String card){
+//    protected void doGang_hand(ServerContext serverContext, PlayerCardsInfoMj playerCardsInfo, int userId,String card){
 //        playerCardsInfo.gang_hand(room, this, userId, card);
 //        mopai(playerCardsInfo.getUserId(),"杠后摸牌");
 //        turnId = playerCardsInfo.getUserId();
 //        lastOperateUserId = playerCardsInfo.getUserId();
 //    }
 //
-//    protected void doGang(PlayerCardsInfo playerCardsInfo, long userId) {
+//    protected void doGang(PlayerCardsInfoMj playerCardsInfo, long userId) {
 //        OperateReqResp operateReqResp = new OperateReqResp();
 //        operateReqResp.setOperateType(OperateReqResp.type_gang);
 //        ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
@@ -588,7 +588,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //        if (isAlreadyHu) {
 //            return ErrorCode.CAN_NOT_PENG;
 //        }
-//        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+//        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
 //        if (playerCardsInfo == null) {
 //            return ErrorCode.USER_ERROR;
 //        }
@@ -604,7 +604,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //        return 0;
 //    }
 //
-//    protected void doPeng(PlayerCardsInfo playerCardsInfo, long userId){
+//    protected void doPeng(PlayerCardsInfoMj playerCardsInfo, long userId){
 //        playerCardsInfo.peng(disCard, lastPlayUserId);
 //        lastOperateUserId = userId;
 //
@@ -719,13 +719,13 @@ public class GameInfoJiuZhou extends GameInfo {
 //            this.disCard = card;
 //
 //            //其他人能做的操作
-//            for (Map.Entry<Integer, PlayerCardsInfo> entry : playerCardsInfos.entrySet()) {
+//            for (Map.Entry<Integer, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
 //                OperateResp operateResp = new OperateResp();
 //
 //                //其他玩家的处理 碰杠等 如果有加入等待列表(要等待这些玩家"过")
 //                if (userId != entry.getKey()) {
 //                    //通知其他玩家出了什么牌 自己能有什么操作
-//                    PlayerCardsInfo playerCardsInfoOther = entry.getValue();
+//                    PlayerCardsInfoMj playerCardsInfoOther = entry.getValue();
 //                    boolean isCanGang = playerCardsInfoOther.isCanGangAddThisCard(card);
 //                    boolean isCanPeng = playerCardsInfoOther.isCanPengAddThisCard(card);
 //                    boolean isCanHu = playerCardsInfoOther.isCanHu_dianpao(card);
@@ -868,7 +868,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //        if (isAlreadyHu) {
 //            return ErrorCode.CAN_NOT_TING;
 //        }
-//        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+//        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
 //        if (playerCardsInfo == null) {
 //            return ErrorCode.USER_ERROR;
 //        }
@@ -922,7 +922,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //        if (isAlreadyHu) {
 //            return ErrorCode.CAN_NOT_HU_ALREADY;
 //        }
-//        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+//        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
 //        if (playerCardsInfo == null) {
 //            return ErrorCode.USER_ERROR;
 //        }
@@ -958,7 +958,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //
 //    }
 //
-//    protected void doHu(PlayerCardsInfo playerCardsInfo, long userId){
+//    protected void doHu(PlayerCardsInfoMj playerCardsInfo, long userId){
 //        if (jieGangHuCard != null) {
 //            playerCardsInfo.hu_dianpao(room, this, beJieGangUser, jieGangHuCard);
 //            playerCardsInfos.get(beJieGangUser).cards.remove(jieGangHuCard);
@@ -985,7 +985,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //        if (isAlreadyHu) {
 //            return ErrorCode.CAN_NOT_CHI;
 //        }
-//        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+//        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
 //        if (disCard == null) {
 //            return ErrorCode.CAN_NOT_CHI;
 //        }
@@ -998,7 +998,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //        return 0;
 //    }
 //
-//    protected void doChi(PlayerCardsInfo playerCardsInfo, long userId, String one, String two) {
+//    protected void doChi(PlayerCardsInfoMj playerCardsInfo, long userId, String one, String two) {
 //        deleteDisCard(lastPlayUserId, disCard);
 //        List<String> chiCards = new ArrayList<>();
 //        chiCards.add(one);
@@ -1045,7 +1045,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //        if (isAlreadyHu) {
 //            return ErrorCode.CAN_NOT_CHI;
 //        }
-//        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+//        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
 //        if (disCard == null) {
 //            return ErrorCode.CAN_NOT_CHI_TING;
 //        }
@@ -1058,7 +1058,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //        return 0;
 //    }
 //
-//    protected void doChiTing(PlayerCardsInfo playerCardsInfo, long userId, String one, String two) {
+//    protected void doChiTing(PlayerCardsInfoMj playerCardsInfo, long userId, String one, String two) {
 //        deleteDisCard(lastPlayUserId, disCard);
 //        List<String> chiCards = new ArrayList<>();
 //        chiCards.add(one);
@@ -1098,7 +1098,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //        if (isAlreadyHu) {
 //            return ErrorCode.CAN_NOT_PENG_TING;
 //        }
-//        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+//        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
 //
 //        if (disCard == null) {
 //            return ErrorCode.CAN_NOT_PENG_TING;
@@ -1114,7 +1114,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //        return 0;
 //    }
 //
-//    protected void doPengTing(PlayerCardsInfo playerCardsInfo, long userId) {
+//    protected void doPengTing(PlayerCardsInfoMj playerCardsInfo, long userId) {
 //        playerCardsInfo.peng(disCard, lastPlayUserId);
 //        lastOperateUserId = userId;
 //
@@ -1192,7 +1192,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //        int ct = CardTypeUtil.getTypeByCard(card);
 //        int count = 0;
 //        Set<String> cs = new HashSet<>();
-//        for (PlayerCardsInfo playerCardsInfo : playerCardsInfos.values()) {
+//        for (PlayerCardsInfoMj playerCardsInfo : playerCardsInfos.values()) {
 //            cs.addAll(playerCardsInfo.disCards);
 //
 //            for (List<String> chiCards : playerCardsInfo.chiCards) {
@@ -1226,7 +1226,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //        return count;
 //    }
 //
-//    protected void checkZhiDui(PlayerCardsInfo playerCardsInfo, CheckInfo checkInfo) {
+//    protected void checkZhiDui(PlayerCardsInfoMj playerCardsInfo, CheckInfo checkInfo) {
 //
 //        if (isAlreadyHu||changeBaoSize == 0 && this.baoType == -1 || checkInfo.isOver || checkInfo.userList.size() >= this.users.size() || checkInfo.huUser!=-1) {
 //            return;
@@ -1270,7 +1270,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //                }
 //                //宝暗蛋
 //                List<String> noCPG = playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards);
-//                Map<Integer, Integer> cardNum = PlayerCardsInfo.getCardNum(noCPG);
+//                Map<Integer, Integer> cardNum = PlayerCardsInfoMj.getCardNum(noCPG);
 //                for (Map.Entry<Integer, Integer> entry : cardNum.entrySet()) {
 //                    if (entry.getKey() == this.baoType && entry.getValue() == 3) {
 //                        //加一个暗杠
@@ -1300,7 +1300,7 @@ public class GameInfoJiuZhou extends GameInfo {
 //        } else {
 //            checkInfo.isChangeBao = false;
 //        }
-//        PlayerCardsInfo nextPlayerCardsInfo = playerCardsInfos.get(nextId);
+//        PlayerCardsInfoMj nextPlayerCardsInfo = playerCardsInfos.get(nextId);
 //        checkZhiDui(nextPlayerCardsInfo, checkInfo);
 //
 //

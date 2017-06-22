@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;

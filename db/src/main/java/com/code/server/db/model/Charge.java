@@ -19,7 +19,7 @@ import java.util.Date;
 public class Charge {
 
     @Id
-    private String orderid;
+    private String orderId;
     private long userid;
     private Date createtime;
     private Date callbacktime;
@@ -36,12 +36,12 @@ public class Charge {
     private String recharge_source;//1 微信  2 支付宝  3 分享赠送  4 充值卡  5绑定赠送
 
 
-    public String getOrderid() {
-        return orderid;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setOrderid(String orderid) {
-        this.orderid = orderid;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public long getUserid() {

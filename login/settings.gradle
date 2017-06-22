@@ -1,2 +1,2 @@
 rootProject.name = 'login'
-includeFlat  'db','constant','util','redis','kafka'
+includeFlat  'db','constant','util','redis','kafka','rpc'

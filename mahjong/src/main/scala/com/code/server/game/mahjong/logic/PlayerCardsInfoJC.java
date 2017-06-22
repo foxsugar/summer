@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class PlayerCardsInfoJC extends PlayerCardsInfo {
+public class PlayerCardsInfoJC extends PlayerCardsInfoMj {
 	private static final int TING_MIN_SCORE = 0;
 	private static final int ZIMO_MIN_SCORE = 0;
 	private static final int DIANPAO_MIN_SCORE = 0;

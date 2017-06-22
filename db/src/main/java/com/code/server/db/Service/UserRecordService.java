@@ -38,12 +38,12 @@ public class UserRecordService {
         return userRecordDao.save(user);
     }
 
-    public UserRecord getUserRecordByUserId(long userid){
-        UserRecord user = userRecordDao.findOne(userid);
-        if (user == null) {
+    public UserRecord getUserRecordByUserId(long userId){
+        UserRecord record = userRecordDao.findOne(userId);
+        if (record == null) {
             return null;
         }
-        return user;
+        return record;
     }
 
     public UserRecord save(UserRecord userRecord) {

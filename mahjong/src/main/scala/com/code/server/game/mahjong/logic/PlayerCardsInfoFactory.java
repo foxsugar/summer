@@ -9,10 +9,10 @@ public class PlayerCardsInfoFactory {
 
     private static Logger logger = Logger.getLogger(PlayerCardsInfoFactory.class.getName());
 
-    public static PlayerCardsInfo getInstance(RoomInfo room) {
+    public static PlayerCardsInfoMj getInstance(RoomInfo room) {
         String model = room.getModeTotal();
         boolean isHasSpecialHu = !"1".equals(room.getMode());
-        PlayerCardsInfo playerCardsInfo;
+        PlayerCardsInfoMj playerCardsInfo;
         switch (model) {
             case "1":
                 playerCardsInfo =  new PlayerCardsInfoKD();

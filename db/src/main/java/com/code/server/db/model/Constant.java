@@ -15,8 +15,12 @@ public class Constant {
     private String marquee;
     private String download;
     private String download2;
-
     private int initMoney;
+    private String versionOfAndroid;//安卓版本
+    private String versionOfIos;//IOS版本
+
+
+    private int appleCheck;
 
 
     public long getId() {
@@ -62,5 +66,46 @@ public class Constant {
     public Constant setDownload2(String download2) {
         this.download2 = download2;
         return this;
+    }
+
+    public String getVersionOfAndroid() {
+        return versionOfAndroid;
+    }
+
+    public Constant setVersionOfAndroid(String versionOfAndroid) {
+        this.versionOfAndroid = versionOfAndroid;
+        return this;
+    }
+
+    public String getVersionOfIos() {
+        return versionOfIos;
+    }
+
+    public Constant setVersionOfIos(String versionOfIos) {
+        this.versionOfIos = versionOfIos;
+        return this;
+    }
+
+    public int getAppleCheck() {
+        return appleCheck;
+    }
+
+    public Constant setAppleCheck(int appleCheck) {
+        this.appleCheck = appleCheck;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Constant{" +
+                "id=" + id +
+                ", marquee='" + marquee + '\'' +
+                ", download='" + download + '\'' +
+                ", download2='" + download2 + '\'' +
+                ", initMoney=" + initMoney +
+                ", versionOfAndroid='" + versionOfAndroid + '\'' +
+                ", versionOfIos='" + versionOfIos + '\'' +
+                ", appleCheck=" + appleCheck +
+                '}';
     }
 }

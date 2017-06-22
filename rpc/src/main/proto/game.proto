@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+option java_package = "com.code.server.grpc.idl";
+option java_outer_classname = "Game";
+option java_generic_services = true;
+option java_multiple_files = true;
+
+
+
+message User{
+    int64 id = 1;
+    string username = 2;
+    double money = 3;
+    double gold = 4;
+}
+
+message Order{
+    int64 userId = 1;
+    double num = 2;
+    int32 type = 3;
+    string token = 4;
+    int32 agentId = 5;
+    int64 id = 6;
+}
+
+enum ChargeType{
+    none = 0;
+    money =1;
+    gold =2;
+}
+
+enum ErrorCode{
+    SUCCESS = 0;
+}
+
+
+message Request{
+    int64 id = 1;
+}
+message Response{
+    int64 id = 1;
+    ErrorCode code = 2;
+
+}
+
+service GameService{
+    //充值
+    rpc charge(Order) returns (Response){}
+    //获得用户信息
+    rpc getUserInfo(Request) returns (User){}
+    //交易库存斗
+    rpc exchange(Order) returns (Response){}
+}

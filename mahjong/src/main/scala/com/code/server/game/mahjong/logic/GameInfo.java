@@ -2,6 +2,7 @@ package com.code.server.game.mahjong.logic;
 
 
 import com.code.server.constant.game.Record;
+import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.GameOfResult;
@@ -12,10 +13,12 @@ import com.code.server.game.room.Game;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 import org.apache.log4j.Logger;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by T420 on 2016/11/30.
@@ -42,7 +45,7 @@ public class GameInfo extends Game {
     protected String catchCard;//摸得牌
 
     protected long lastOperateUserId;//上个操作的人
-    protected Map<Long, PlayerCardsInfo> playerCardsInfos = new HashMap<>();//玩家手上牌的信息
+    protected Map<Long, PlayerCardsInfoMj> playerCardsInfos = new HashMap<>();//玩家手上牌的信息
     protected long firstTurn = 0;//第一个出牌的人
     protected List<WaitDetail> waitingforList = new ArrayList<>();//需要等待玩家的列表
     protected List<Long> users = new ArrayList<>();
@@ -109,7 +112,7 @@ public class GameInfo extends Game {
         //打乱顺序
         Collections.shuffle(remainCards);
         for (int i = 0; i < playerSize; i++) {
-            PlayerCardsInfo playerCardsInfo = PlayerCardsInfoFactory.getInstance(room);
+            PlayerCardsInfoMj playerCardsInfo = PlayerCardsInfoFactory.getInstance(room);
             playerCardsInfo.setGameInfo(this);
             long userId = users.get(i);
             //设置id
@@ -169,7 +172,7 @@ public class GameInfo extends Game {
     }
 
     protected void computeAllGang() {
-        for (PlayerCardsInfo player : this.getPlayerCardsInfos().values()) {
+        for (PlayerCardsInfoMj player : this.getPlayerCardsInfos().values()) {
             player.computeALLGang();
         }
     }
@@ -184,7 +187,7 @@ public class GameInfo extends Game {
         System.err.println("摸牌===============================userId : " + userId);
 
 
-        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
 
         if (playerCardsInfo.isHuangzhuang(this)) {
             handleHuangzhuang(userId);
@@ -238,7 +241,7 @@ public class GameInfo extends Game {
             MsgSender.sendMsg2Player(responseVo, user);
 
             //能做的操作全置成不能
-            PlayerCardsInfo other = playerCardsInfos.get(user);
+            PlayerCardsInfoMj other = playerCardsInfos.get(user);
 
             resetCanBeOperate(other);
         }
@@ -274,7 +277,7 @@ public class GameInfo extends Game {
      */
     public int chupai(long userId, String card) {
         //出牌的玩家
-        PlayerCardsInfo chupaiPlayerCardsInfo = playerCardsInfos.get(userId);
+        PlayerCardsInfoMj chupaiPlayerCardsInfo = playerCardsInfos.get(userId);
         if (this.turnId != userId) {
             return ErrorCode.CAN_NOT_PLAYCARD;
         }
@@ -296,13 +299,13 @@ public class GameInfo extends Game {
         MsgSender.sendMsg2Player(vo, users);
 
         //其他人能做的操作
-        for (Map.Entry<Long, PlayerCardsInfo> entry : playerCardsInfos.entrySet()) {
+        for (Map.Entry<Long, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
             OperateResp operateResp = new OperateResp();
 
             //其他玩家的处理 碰杠等 如果有加入等待列表(要等待这些玩家"过")
             if (userId != entry.getKey()) {
                 //通知其他玩家出了什么牌 自己能有什么操作
-                PlayerCardsInfo playerCardsInfo = entry.getValue();
+                PlayerCardsInfoMj playerCardsInfo = entry.getValue();
                 boolean isCanGang = playerCardsInfo.isCanGangAddThisCard(card);
                 boolean isCanPeng = playerCardsInfo.isCanPengAddThisCard(card);
                 boolean isCanHu = playerCardsInfo.isCanHu_dianpao(card);
@@ -349,7 +352,7 @@ public class GameInfo extends Game {
      * @param disCard
      */
     protected void deleteDisCard(long userId, String disCard) {
-        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo != null) {
             playerCardsInfo.getDisCards().remove(disCard);
         }
@@ -401,7 +404,7 @@ public class GameInfo extends Game {
         return result;
     }
 
-    protected void resetCanBeOperate(PlayerCardsInfo playerCardsInfo) {
+    protected void resetCanBeOperate(PlayerCardsInfoMj playerCardsInfo) {
         playerCardsInfo.setCanBeChi(false);
         playerCardsInfo.setCanBeGang(false);
         playerCardsInfo.setCanBePeng(false);
@@ -413,7 +416,7 @@ public class GameInfo extends Game {
     }
 
     protected void resetOtherOperate(long userId) {
-        for (PlayerCardsInfo playerCardsInfo : playerCardsInfos.values()) {
+        for (PlayerCardsInfoMj playerCardsInfo : playerCardsInfos.values()) {
             if (playerCardsInfo.getUserId() != userId) {
                 resetCanBeOperate(playerCardsInfo);
             }
@@ -468,7 +471,7 @@ public class GameInfo extends Game {
         }
 
         void fire() {
-            PlayerCardsInfo playerCardsInfo = gameInfo.getPlayerCardsInfos().get(myUserId);
+            PlayerCardsInfoMj playerCardsInfo = gameInfo.getPlayerCardsInfos().get(myUserId);
             switch (operate) {
                 case huPoint:
                     gameInfo.doHu(playerCardsInfo, myUserId);
@@ -546,7 +549,7 @@ public class GameInfo extends Game {
             if (this.waitingforList.size() == 0) {
                 //有截杠胡 都点了过 要杠出来
                 if (jieGangHuCard != null) {
-                    PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(beJieGangUser);
+                    PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(beJieGangUser);
                     if (playerCardsInfo != null) {
                         doGang_hand_after(playerCardsInfo, true, -1, jieGangHuCard);
                     }
@@ -570,7 +573,7 @@ public class GameInfo extends Game {
      * @param userId
      */
     public int gang(long userId, String card) {
-        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo == null) {
             return ErrorCode.USER_ERROR;
         }
@@ -599,13 +602,13 @@ public class GameInfo extends Game {
 
             if (isHasJieGangHu && isMing) {
 
-                for (Map.Entry<Long, PlayerCardsInfo> entry : playerCardsInfos.entrySet()) {
+                for (Map.Entry<Long, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
                     OperateResp operateResp = new OperateResp();
 
                     //其他玩家的处理 碰杠等 如果有加入等待列表(要等待这些玩家"过")
                     if (userId != entry.getKey()) {
                         //通知其他玩家出了什么牌 自己能有什么操作
-                        PlayerCardsInfo playerOther = entry.getValue();
+                        PlayerCardsInfoMj playerOther = entry.getValue();
                         boolean isCanHu = playerOther.isCanHu_dianpao(card);
                         //设置返回结果
                         operateResp.setCanBeOperate(false, false, false, false, isCanHu, false, false);
@@ -679,7 +682,7 @@ public class GameInfo extends Game {
 
     }
 
-    protected void doGang_hand_after(PlayerCardsInfo playerCardsInfo, boolean isMing, int userId, String card) {
+    protected void doGang_hand_after(PlayerCardsInfoMj playerCardsInfo, boolean isMing, int userId, String card) {
         playerCardsInfo.gangCompute(room, this, isMing, -1, card);
         mopai(playerCardsInfo.getUserId(), "userId : " + playerCardsInfo.getUserId() + " 自摸杠抓牌");
         turnId = playerCardsInfo.getUserId();
@@ -692,7 +695,7 @@ public class GameInfo extends Game {
      * @return
      */
     public int peng(long userId) {
-        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo == null) {
             return ErrorCode.USER_ERROR;
         }
@@ -761,7 +764,7 @@ public class GameInfo extends Game {
      */
     public int hu(long userId) {
 
-        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo == null) {
             return ErrorCode.USER_ERROR;
         }
@@ -800,7 +803,7 @@ public class GameInfo extends Game {
             //截杠胡
             if (jieGangHuCard != null) {
                 playerCardsInfo.hu_dianpao(room, this, beJieGangUser, jieGangHuCard);
-                PlayerCardsInfo playerCardsInfoBeJie = playerCardsInfos.get(beJieGangUser);
+                PlayerCardsInfoMj playerCardsInfoBeJie = playerCardsInfos.get(beJieGangUser);
                 //删除杠
                 if (playerCardsInfoBeJie != null) {
                     playerCardsInfoBeJie.cards.remove(jieGangHuCard);
@@ -824,29 +827,11 @@ public class GameInfo extends Game {
 
     }
 
-    protected void genRecord() {
-        Record.RoomRecord roomRecord = new Record.RoomRecord();
-        roomRecord.setTime(System.currentTimeMillis());
-        roomRecord.setType(room.getRoomType());
 
-        playerCardsInfos.values().forEach((playerInfo) -> {
-            Record.UserRecord userRecord = new Record.UserRecord();
-            userRecord.setScore(playerInfo.getScore());
-            userRecord.setUserId(playerInfo.getUserId());
-            userRecord.setRoomId(room.getRoomId());
-            roomRecord.addRecord(userRecord);
-        });
 
-        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_GEN_RECORD);
-        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
-        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord);
-    }
-
-    protected void handleHu(PlayerCardsInfo playerCardsInfo) {
+    protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
         isAlreadyHu = true;
         sendResult(true, playerCardsInfo.getUserId());
-        //生成记录
-        genRecord();
         noticeDissolutionResult();
         room.clearReadyStatus();
     }
@@ -893,7 +878,7 @@ public class GameInfo extends Game {
             result.setBaoCard(baoCard);
         }
         List<PlayerCardsResp> list = new ArrayList<>();
-        for (PlayerCardsInfo info : playerCardsInfos.values()) {
+        for (PlayerCardsInfoMj info : playerCardsInfos.values()) {
             PlayerCardsResp resp = new PlayerCardsResp(info);
             resp.setAllScore(room.getUserScores().get(info.getUserId()));
             list.add(resp);
@@ -901,6 +886,13 @@ public class GameInfo extends Game {
         result.setUserInfos(list);
         MsgSender.sendMsg2Player(vo, users);
 
+        //生成记录
+        genRecord();
+    }
+
+    @Override
+    protected void genRecord() {
+        genRecord(playerCardsInfos.values().stream().collect(Collectors.toMap(PlayerCardsInfoMj::getUserId,PlayerCardsInfoMj::getScore)),room);
     }
 
     /**
@@ -912,7 +904,7 @@ public class GameInfo extends Game {
      */
     public int ting(long userId, String card) {
 
-        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo == null) {
             return ErrorCode.USER_ERROR;
         }
@@ -945,8 +937,8 @@ public class GameInfo extends Game {
             MsgSender.sendMsg2Player(chupaiVo, users);
 
             //其他人的操作 全是false 听牌后什么都不能操作
-            for (Map.Entry<Long, PlayerCardsInfo> entry : playerCardsInfos.entrySet()) {
-                PlayerCardsInfo pci = entry.getValue();
+            for (Map.Entry<Long, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
+                PlayerCardsInfoMj pci = entry.getValue();
                 pci.setCanBeGang(false);
                 pci.setCanBePeng(false);
                 pci.setCanBeHu(false);
@@ -967,7 +959,7 @@ public class GameInfo extends Game {
     }
 
     public int chi(long userId, String one, String two) {
-        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
         boolean isCanChi = playerCardsInfo.isCanChiThisCard(disCard, one, two);
         if (!isCanChi) {
             return ErrorCode.CAN_NOT_CHI;
@@ -1016,7 +1008,7 @@ public class GameInfo extends Game {
     }
 
     public int chiTing(long userId, String one, String two) {
-        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
         boolean isCanChi = playerCardsInfo.isCanChiThisCard(disCard, one, two);
         if (!isCanChi) {
             return ErrorCode.CAN_NOT_CHI_TING;
@@ -1061,7 +1053,7 @@ public class GameInfo extends Game {
     }
 
     public int pengTing(long userId) {
-        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
 
         boolean isCan = playerCardsInfo.isCanPengTing(this.disCard);
         if (!isCan) {
@@ -1132,7 +1124,7 @@ public class GameInfo extends Game {
         if (!isTest) {
             return 0;
         }
-        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo == null) {
             return ErrorCode.USER_ERROR;
         }
@@ -1177,7 +1169,7 @@ public class GameInfo extends Game {
     }
 
     public int needCard(long userId, int cardType) {
-        PlayerCardsInfo playerCardsInfo = playerCardsInfos.get(userId);
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
         playerCardsInfo.nextNeedCard = cardType;
         return 0;
     }
@@ -1226,22 +1218,22 @@ public class GameInfo extends Game {
         this.userOperateList.add(result);
     }
 
-    protected void doChiTing(PlayerCardsInfo playerCardsInfo, long userId, String one, String two) {
+    protected void doChiTing(PlayerCardsInfoMj playerCardsInfo, long userId, String one, String two) {
     }
 
-    protected void doPengTing(PlayerCardsInfo playerCardsInfo, long userId) {
+    protected void doPengTing(PlayerCardsInfoMj playerCardsInfo, long userId) {
     }
 
-    protected void doChi(PlayerCardsInfo playerCardsInfo, long userId, String one, String two) {
+    protected void doChi(PlayerCardsInfoMj playerCardsInfo, long userId, String one, String two) {
     }
 
-    protected void doPeng(PlayerCardsInfo playerCardsInfo, long userId) {
+    protected void doPeng(PlayerCardsInfoMj playerCardsInfo, long userId) {
     }
 
-    protected void doGang(PlayerCardsInfo playerCardsInfo, long userId) {
+    protected void doGang(PlayerCardsInfoMj playerCardsInfo, long userId) {
     }
 
-    protected void doHu(PlayerCardsInfo playerCardsInfo, long userId) {
+    protected void doHu(PlayerCardsInfoMj playerCardsInfo, long userId) {
     }
 
 
@@ -1360,11 +1352,11 @@ public class GameInfo extends Game {
         return this;
     }
 
-    public Map<Long, PlayerCardsInfo> getPlayerCardsInfos() {
+    public Map<Long, PlayerCardsInfoMj> getPlayerCardsInfos() {
         return playerCardsInfos;
     }
 
-    public GameInfo setPlayerCardsInfos(Map<Long, PlayerCardsInfo> playerCardsInfos) {
+    public GameInfo setPlayerCardsInfos(Map<Long, PlayerCardsInfoMj> playerCardsInfos) {
         this.playerCardsInfos = playerCardsInfos;
         return this;
     }

@@ -3,7 +3,7 @@ package com.code.server.game.mahjong.util;
 
 
 import com.code.server.game.mahjong.logic.CardTypeUtil;
-import com.code.server.game.mahjong.logic.PlayerCardsInfo;
+import com.code.server.game.mahjong.logic.PlayerCardsInfoMj;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.*;
@@ -120,7 +120,7 @@ public class HuUtil implements HuType {
      * @param tingCardType
      * @return
      */
-    public static List<HuCardType> isHu(List<String> cards, PlayerCardsInfo playerCardsInfo, int tingCardType, HuLimit limit) {
+    public static List<HuCardType> isHu(List<String> cards, PlayerCardsInfoMj playerCardsInfo, int tingCardType, HuLimit limit) {
         List<HuCardType> huList = new ArrayList<>();
         List<HuCardType> result = new ArrayList<>();
         //带特殊胡法
@@ -177,7 +177,7 @@ public class HuUtil implements HuType {
     }
 
 
-    public static List<Integer> isTing(List<String> cards, PlayerCardsInfo playerCardsInfo, HuLimit limit) {
+    public static List<Integer> isTing(List<String> cards, PlayerCardsInfoMj playerCardsInfo, HuLimit limit) {
         List<Integer> exclude = new ArrayList<>();
         //TODO 杠过的牌也可以听 去掉下面两行
 //        exclude.addAll(playerCardsInfo.getAnGangType());
@@ -213,7 +213,7 @@ public class HuUtil implements HuType {
      * @param removeCard 听删掉的牌
      * @return
      */
-    public static List<HuCardType> getTingHuList(List<String> cards, PlayerCardsInfo playerCardsInfo, HuLimit limit,String removeCard) {
+    public static List<HuCardType> getTingHuList(List<String> cards, PlayerCardsInfoMj playerCardsInfo, HuLimit limit, String removeCard) {
         List<HuCardType> result = new ArrayList<>();
         Set<Integer> tingSet = new HashSet<>();
         for (int i = 0; i < n_zero.length; i++) {
@@ -510,7 +510,7 @@ public class HuUtil implements HuType {
      * @param playerCardsInfo
      * @return
      */
-    public static boolean isQingqidui(List<String> cards, PlayerCardsInfo playerCardsInfo) {
+    public static boolean isQingqidui(List<String> cards, PlayerCardsInfoMj playerCardsInfo) {
         return isYiSe_wtt(cards) && (isQixiaodui(cards, playerCardsInfo)||isHaoHuaQixiaodui(cards,playerCardsInfo,1)||isShuangHaoQixiaodui(cards,playerCardsInfo));
     }
 
@@ -528,14 +528,14 @@ public class HuUtil implements HuType {
         }
         return set.size() == 1;
     }
-    public static boolean isQixiaodui_common(List<String> cards, PlayerCardsInfo playerCardsInfo) {
+    public static boolean isQixiaodui_common(List<String> cards, PlayerCardsInfoMj playerCardsInfo) {
         List<String> temp = new ArrayList<>();
         temp.addAll(cards);
         int size = playerCardsInfo.getMingGangType().size() + playerCardsInfo.getAnGangType().size() + playerCardsInfo.getPengType().size()+playerCardsInfo.getChiType().size();;
         if (size > 0) {
             return false;
         }
-        Map<Integer, Integer> cardMap = PlayerCardsInfo.getCardNum(temp);
+        Map<Integer, Integer> cardMap = PlayerCardsInfoMj.getCardNum(temp);
         if (cardMap.size() > 7) {
             return false;
         }
@@ -548,14 +548,14 @@ public class HuUtil implements HuType {
 
     }
 
-    public static boolean isQixiaodui(List<String> cards, PlayerCardsInfo playerCardsInfo) {
+    public static boolean isQixiaodui(List<String> cards, PlayerCardsInfoMj playerCardsInfo) {
         List<String> temp = new ArrayList<>();
         temp.addAll(cards);
         int size = playerCardsInfo.getMingGangType().size() + playerCardsInfo.getAnGangType().size() + playerCardsInfo.getPengType().size() +playerCardsInfo.getChiType().size();
         if (size > 0) {
             return false;
         }
-        Map<Integer, Integer> cardMap = PlayerCardsInfo.getCardNum(temp);
+        Map<Integer, Integer> cardMap = PlayerCardsInfoMj.getCardNum(temp);
         if (cardMap.size() > 7) {
             return false;
         }
@@ -568,14 +568,14 @@ public class HuUtil implements HuType {
 
     }
 
-    public static boolean isHaoHuaQixiaodui(List<String> cards, PlayerCardsInfo playerCardsInfo,int haohuaNum) {
+    public static boolean isHaoHuaQixiaodui(List<String> cards, PlayerCardsInfoMj playerCardsInfo, int haohuaNum) {
         List<String> temp = new ArrayList<>();
         temp.addAll(cards);
         int size = playerCardsInfo.getMingGangType().size() + playerCardsInfo.getAnGangType().size() + playerCardsInfo.getPengType().size() +playerCardsInfo.getChiType().size();
         if (size > 0) {
             return false;
         }
-        Map<Integer, Integer> cardMap = PlayerCardsInfo.getCardNum(playerCardsInfo.getCardsNoGang(temp));
+        Map<Integer, Integer> cardMap = PlayerCardsInfoMj.getCardNum(playerCardsInfo.getCardsNoGang(temp));
         int isHas4Num = 0;
         for (Integer num : cardMap.values()) {
             if (num != 2 && num != 4) {
@@ -589,7 +589,7 @@ public class HuUtil implements HuType {
 
     }
 
-    public static boolean isShuangHaoQixiaodui(List<String> cards, PlayerCardsInfo playerCardsInfo) {
+    public static boolean isShuangHaoQixiaodui(List<String> cards, PlayerCardsInfoMj playerCardsInfo) {
         List<String> temp = new ArrayList<>();
         temp.addAll(cards);
 
@@ -597,7 +597,7 @@ public class HuUtil implements HuType {
         if (size > 0) {
             return false;
         }
-        Map<Integer, Integer> cardMap = PlayerCardsInfo.getCardNum(temp);
+        Map<Integer, Integer> cardMap = PlayerCardsInfoMj.getCardNum(temp);
         int isHas4Num = 0;
         for (Integer num : cardMap.values()) {
             if (num != 2 && num != 4) {
@@ -612,10 +612,10 @@ public class HuUtil implements HuType {
 
     }
 
-    public static boolean isYitiaolong(List<String> cards, PlayerCardsInfo playerCardsInfo) {
+    public static boolean isYitiaolong(List<String> cards, PlayerCardsInfoMj playerCardsInfo) {
         List<String> temp = new ArrayList<>();
         temp.addAll(cards);
-        Map<Integer, Integer> cardMap = PlayerCardsInfo.getCardNum(temp);
+        Map<Integer, Integer> cardMap = PlayerCardsInfoMj.getCardNum(temp);
 
         boolean isHas = false;
         int ytlType = 0;
@@ -646,10 +646,10 @@ public class HuUtil implements HuType {
     }
 
 
-    public static boolean is13Yao(List<String> cards, PlayerCardsInfo playerCardsInfo) {
+    public static boolean is13Yao(List<String> cards, PlayerCardsInfoMj playerCardsInfo) {
         List<String> temp = new ArrayList<>();
         temp.addAll(cards);
-        Map<Integer, Integer> cardMap = PlayerCardsInfo.getCardNum(temp);
+        Map<Integer, Integer> cardMap = PlayerCardsInfoMj.getCardNum(temp);
         boolean isHas2Num = false;
         for (int y : yao) {
             if (!cardMap.containsKey(y)) {

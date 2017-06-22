@@ -15,6 +15,6 @@ public interface IUserDao extends PagingAndSortingRepository<User, Long> {
 
     User getUserByOpenId(String openId);
 
-    User getUserByUserId(long userId);
+    User getUserById(long userId);
 
 }

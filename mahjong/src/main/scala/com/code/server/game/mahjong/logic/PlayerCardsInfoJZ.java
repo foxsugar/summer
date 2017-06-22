@@ -484,7 +484,7 @@ public class PlayerCardsInfoJZ extends PlayerCardsInfoQAMT {
         System.out.println("userId : "+this.userId +"  旋风蛋的分数 : "+ gangFan);
         int score = gangFan * roomInfo.getMultiple();
         int sub = 0;
-        for (PlayerCardsInfo playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
+        for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
             if (playerCardsInfo.getUserId() != this.userId) {
                 playerCardsInfo.addScore(-score);
                 playerCardsInfo.addGangScore(-score);
@@ -640,7 +640,7 @@ public class PlayerCardsInfoJZ extends PlayerCardsInfoQAMT {
         int subFan = 0;
         int subGangScore = 0;
         int subHuScore = 0;
-        for (PlayerCardsInfo playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
+        for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
             //不是自己
             if (playerCardsInfo.getUserId() != userId) {
                 System.out.println("==================================begin====  " + playerCardsInfo.getUserId() + "  ==============");

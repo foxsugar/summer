@@ -10,6 +10,7 @@ public class ServerInfo {
     private String serverType;
     private String startTime;
     private String host;
+    private String domain;
     private int port;
     private int sort;
     private int status;
@@ -87,6 +88,15 @@ public class ServerInfo {
 
     public ServerInfo setStatus(int status) {
         this.status = status;
+        return this;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public ServerInfo setDomain(String domain) {
+        this.domain = domain;
         return this;
     }
 }

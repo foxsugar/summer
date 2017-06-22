@@ -4,7 +4,7 @@ buildscript {
 	}
 	repositories {
 		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-		mavenCentral()
+//		mavenCentral()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -23,26 +23,6 @@ repositories {
 	mavenCentral()
 }
 
-sourceSets {
-	main {
-		scala {
-			srcDirs = ['src/main/scala', 'src/main/java']
-		}
-		java {
-			srcDirs = []
-		}
-	}
-
-	test {
-		scala {
-			srcDirs = ['src/test/scala', 'src/test/java']
-		}
-		java {
-			srcDirs = []
-		}
-	}
-}
-
 dependencies {
 	compile project(path: ':constant')
 	compile project(path: ':util')
@@ -55,8 +35,8 @@ dependencies {
 	compile "org.scala-lang:scala-compiler:2.12.2"
 	compile "org.scala-lang:scala-reflect:2.12.2"
 
-	compile 'com.google.code.gson:gson:2.6.2'
-	compile "net.sf.json-lib:json-lib:2.4:jdk15"
+//	compile 'com.google.code.gson:gson:2.6.2'
+//	compile "net.sf.json-lib:json-lib:2.4:jdk15"
 
 	compile group: 'io.netty', name: 'netty-all', version: '4.1.8.Final'
 	testCompile('org.springframework.boot:spring-boot-starter-test')

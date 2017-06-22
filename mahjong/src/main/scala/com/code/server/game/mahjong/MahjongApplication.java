@@ -26,8 +26,9 @@ public class MahjongApplication {
         //注册
         RedisManager.getGameRedisService().register(serverConfig.getServerType(),serverConfig.getServerId());
         //timer
-        ThreadPool.execute(()-> GameTimer.getInstance().fire());
+        ThreadPool.execute(GameTimer.getInstance()::fire);
         //心跳
+        System.out.println("启动心跳");
         GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), IConstant.SECOND_5,true,()->RedisManager.getGameRedisService().heart(serverConfig.getServerId())));
 
 

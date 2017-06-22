@@ -9,6 +9,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  */
 public interface IChargeDao extends PagingAndSortingRepository<Charge, Long> {
 
-    Charge getChargeByOrderid(String orderid);
+    Charge getChargeByOrderId(String orderId);
 
 }

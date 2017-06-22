@@ -4,7 +4,7 @@ buildscript {
 	}
 	repositories {
 		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-		mavenCentral()
+//		mavenCentral()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -37,11 +37,11 @@ dependencies {
 	compile "org.scala-lang:scala-reflect:2.12.2"
 
 
-	compile('org.springframework.boot:spring-boot-starter-data-redis')
+//	compile('org.springframework.boot:spring-boot-starter-data-redis')
 //	compile "net.sf.json-lib:json-lib:2.4:jdk15"
-	compile('org.springframework.kafka:spring-kafka')
+//	compile('org.springframework.kafka:spring-kafka')
 	compile 'org.apache.commons:commons-collections4:4.1'
-	compile('org.springframework.boot:spring-boot-starter-logging')
+//	compile('org.springframework.boot:spring-boot-starter-logging')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 

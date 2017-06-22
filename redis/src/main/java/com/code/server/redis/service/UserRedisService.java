@@ -125,14 +125,19 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
 
     @Override
     public void setToken(long userId, String token) {
-        HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
-        user_token.put(USER_TOKEN, ""+userId,token);
+//        HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
+//        user_token.put(USER_TOKEN, ""+userId,token);
+
+        BoundValueOperations<String,String> user_token = redisTemplate.boundValueOps(getUserTokenKey(userId));
+
+        user_token.set(token);
     }
 
     @Override
     public String getToken(long userId) {
-        HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
-        return user_token.get(USER_TOKEN, ""+userId);
+        BoundValueOperations<String,String> user_token = redisTemplate.boundValueOps(getUserTokenKey(userId));
+
+        return user_token.get();
     }
 
 
@@ -207,5 +212,9 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
         HashOperations<String,String,String> user_money = redisTemplate.opsForHash();
         user_money.get(USER_MONEY,user_money);
 
+    }
+
+    private String getUserTokenKey(long userId) {
+        return USER_TOKEN + userId;
     }
 }
