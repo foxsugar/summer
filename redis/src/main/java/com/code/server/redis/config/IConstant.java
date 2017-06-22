@@ -23,7 +23,7 @@ public interface IConstant {
     String USER_BEAN = "user_bean";
 
     //玩家token
-    String USER_TOKEN = "user_token";
+    String USER_TOKEN = "user_token:";
 
     //用户名-user
     String ACCOUNT_USER = "account_user";

@@ -79,8 +79,10 @@ public class GameDouDiZhu extends Game {
     public PlayerCardInfoDouDiZhu getGameTypePlayerCardInfo() {
         switch (room.getGameType()) {
             case Room.GAMETYPE_LINFEN:
+            case Room.GAMETYPE_LONGQI_LINFEN:
                 return new PlayerCardInfoDouDiZhuLinfen();
             case Room.GAMETYPE_QIANAN:
+            case Room.GAMETYPE_LONGQI:
                 return new PlayerCardInfoDouDiZhu();
             default:
                 return new PlayerCardInfoDouDiZhu();
