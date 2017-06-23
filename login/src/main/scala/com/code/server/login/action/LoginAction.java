@@ -14,6 +14,7 @@ import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.LoginService;
 import com.code.server.login.service.ServerManager;
 import com.code.server.login.util.MD5Util;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
@@ -138,12 +139,19 @@ public class LoginAction {
         }
 
 
-        setHostAndPort(params, code == 0);
+        setHostAndPort(userId,params, code == 0);
         return getParams("login", params, code);
     }
 
-    private void setHostAndPort(Map<String, Object> params, boolean isSet) {
-        com.code.server.redis.config.ServerInfo serverInfo = LoginService.getSortedServer("GATE");
+    private void setHostAndPort(String userId, Map<String, Object> params, boolean isSet) {
+        String gateId = RedisManager.getUserRedisService().getGateId(Long.valueOf(userId));
+        com.code.server.redis.config.ServerInfo serverInfo = null;
+        if (gateId != null) {
+            serverInfo = RedisManager.getGateRedisService().getServerInfo(gateId);
+        }
+        if (serverInfo == null) {
+            serverInfo = LoginService.getSortedServer("GATE");
+        }
         if (serverInfo != null && isSet) {
             params.put("port", serverInfo.getPort());
             params.put("ip", serverInfo.getHost());
@@ -180,7 +188,7 @@ public class LoginAction {
             params.put("userId", userId);
         }
 
-        setHostAndPort(params, code == 0);
+        setHostAndPort(userId,params, code == 0);
 
         return getParams("checkOpenId", params, code);
     }

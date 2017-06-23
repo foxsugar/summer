@@ -23,15 +23,6 @@ public class RoomDouDiZhu extends Room {
     public static final int PERSONNUM = 3;
 
 
-    @Override
-    public void drawBack() {
-//        RedisManager.getUserRedisService().addUserMoney(this.createUser, createNeedMoney);
-//        User user = userMap.get(this.createUser);
-//        if (user != null) {
-//            user.setMoney(user.getMoney() + createNeedMoney);
-//            GameManager.getInstance().getSaveUser2DB().add(user);
-//        }
-    }
 
     @Override
     protected Game getGameInstance() {
@@ -48,11 +39,6 @@ public class RoomDouDiZhu extends Room {
                 return new GameDouDiZhu();
         }
 
-    }
-
-    public RoomDouDiZhu getRoomInstance(String gameType) {
-        RoomDouDiZhu room = new RoomDouDiZhu();
-        return room;
     }
 
     public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType, boolean isAA, boolean isJoin) throws DataNotFoundException {

@@ -160,7 +160,8 @@ public class RoomInfo extends Room {
         if (this.bankerId == 0) {
             this.bankerId = users.get(0);
         }
-
+        //初始化统计
+        users.forEach(this::initRoomStatisticsMap);
         this.isInGame = true;
 
         if (this.gameType.equals("JC") && this.modeTotal.equals("124")) {
@@ -199,7 +200,7 @@ public class RoomInfo extends Room {
         return result;
     }
 
-    protected List<UserOfResult> getUserOfResult(){
+    public List<UserOfResult> getUserOfResult(){
         // 结果类
         ArrayList<UserOfResult> userOfResultList = new ArrayList<>();
 
@@ -246,13 +247,6 @@ public class RoomInfo extends Room {
 
         // 结果类
         List<UserOfResult> userOfResultList = getUserOfResult();
-
-
-//        for(long userId : users){
-//            //删除映射关系
-////            RedisManager.getUserRedisService().removeRoom(userId);
-//            roomRemoveUser(userId);
-//        }
 
 
         boolean isChange = scoreIsChange();

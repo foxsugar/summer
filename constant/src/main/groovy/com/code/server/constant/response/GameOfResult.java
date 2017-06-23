@@ -1,6 +1,5 @@
 package com.code.server.constant.response;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GameOfResult {

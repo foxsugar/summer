@@ -165,6 +165,17 @@ public class GameUserService {
         return 0;
     }
 
+    public int reportingCoord(KafkaMsgKey msgKey,String coord) {
+        long userId = msgKey.getUserId();
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+            userBean.setCoord(coord);
+            RedisManager.getUserRedisService().setUserBean(userBean);
+        }
+        sendMsg(msgKey, new ResponseVo("userService","reportingCoord",0));
+        return 0;
+    }
+
     /**
      * 查询战绩
      *

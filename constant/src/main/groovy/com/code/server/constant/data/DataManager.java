@@ -24,10 +24,12 @@ public class DataManager implements IGameConstant {
         roomData_qianan.money.put(10, 1);
         roomData_qianan.money.put(20, 2);
 
+        roomData_longqi.money.put(2, 30);
         roomData_longqi.money.put(9, 30);
         roomData_longqi.money.put(18, 45);
         roomData_longqi.money.put(30, 60);
 
+        roomData_longqi.eachMoney.put(2, 10);
         roomData_longqi.eachMoney.put(9, 10);
         roomData_longqi.eachMoney.put(18, 15);
         roomData_longqi.eachMoney.put(30, 20);

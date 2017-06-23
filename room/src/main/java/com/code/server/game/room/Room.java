@@ -4,6 +4,7 @@ package com.code.server.game.room;
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.data.RoomData;
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
 import com.code.server.game.room.kafka.MsgSender;
@@ -13,6 +14,7 @@ import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -54,6 +56,7 @@ public class Room implements IfaceRoom {
     protected boolean isAA;
     protected boolean isCreaterJoin = true;
     protected boolean isAddGold;
+    protected Map<Long, RoomStatistics> roomStatisticsMap = new HashMap<>();
 
 
     public static int joinRoomQuick(MsgSender player, int type) {
@@ -109,7 +112,7 @@ public class Room implements IfaceRoom {
     }
 
 
-    public int joinRoom(long userId,boolean isJoin) {
+    public int joinRoom(long userId, boolean isJoin) {
 
 
         if (this.users.contains(userId)) {
@@ -306,6 +309,9 @@ public class Room implements IfaceRoom {
         return new Game();
     }
 
+    protected void initRoomStatisticsMap(long userId) {
+        this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
+    }
 
     public void startGame() {
         this.isOpen = true;
@@ -313,9 +319,12 @@ public class Room implements IfaceRoom {
         Game game = getGameInstance();
         this.game = game;
         //扣钱
-        if (curGameNumber == 1) {
+        if (curGameNumber == 1 && isCreaterJoin) {
             spendMoney();
         }
+        //初始化统计
+        users.forEach(this::initRoomStatisticsMap);
+
         game.startGame(users, this);
 
         //通知其他人游戏已经开始
@@ -412,7 +421,7 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
-    protected List<UserOfResult> getUserOfResult() {
+    public List<UserOfResult> getUserOfResult() {
         ArrayList<UserOfResult> userOfResultList = new ArrayList<>();
         long time = System.currentTimeMillis();
         for (UserBean eachUser : RedisManager.getUserRedisService().getUserBeans(this.users)) {
@@ -422,6 +431,7 @@ public class Room implements IfaceRoom {
             resultObj.setScores(this.userScores.get(eachUser.getId()) + "");
             resultObj.setUserId(eachUser.getId());
             resultObj.setTime(time);
+            resultObj.setRoomStatistics(roomStatisticsMap.get(eachUser.getId()));
             userOfResultList.add(resultObj);
         }
         return userOfResultList;
@@ -435,10 +445,11 @@ public class Room implements IfaceRoom {
         // 结果类
         List<UserOfResult> userOfResultList = getUserOfResult();
 
-        boolean isChange = scoreIsChange();
-        if (this.isInGame && this.curGameNumber == 1 && !isChange) {
+        //代开房 并且游戏未开始
+        if (!isCreaterJoin && !this.isInGame && this.curGameNumber == 1) {
             drawBack();
         }
+
 
         this.isInGame = false;
         // 存储返回
@@ -464,6 +475,15 @@ public class Room implements IfaceRoom {
     public void addUserSocre(long userId, double score) {
         double s = userScores.get(userId);
         userScores.put(userId, s + score);
+        RoomStatistics roomStatistics = roomStatisticsMap.get(userId);
+        if (roomStatistics != null) {
+            roomStatistics.maxScore = roomStatistics.maxScore > score ? roomStatistics.maxScore : score;
+            if (score >= 0) {
+                roomStatistics.winTime ++;
+            }else {
+                roomStatistics.failedTime ++;
+            }
+        }
     }
 
     public boolean scoreIsChange() {
@@ -479,11 +499,11 @@ public class Room implements IfaceRoom {
         if (isAA) {
             this.users.forEach(userId -> {
                 RedisManager.getUserRedisService().addUserMoney(userId, createNeedMoney);
-                if (isAddGold()) RedisManager.addGold(userId,-createNeedMoney/10);
+                if (isAddGold()) RedisManager.addGold(userId, -createNeedMoney / 10);
             });
         } else {
             RedisManager.getUserRedisService().addUserMoney(this.createUser, createNeedMoney);
-            if (isAddGold()) RedisManager.addGold(this.createUser,-createNeedMoney/10);
+            if (isAddGold()) RedisManager.addGold(this.createUser, -createNeedMoney / 10);
         }
     }
 
@@ -491,35 +511,28 @@ public class Room implements IfaceRoom {
         if (isAA) {
             this.users.forEach(userId -> {
                 RedisManager.getUserRedisService().addUserMoney(userId, -createNeedMoney);
-                if (isAddGold()) RedisManager.addGold(userId,createNeedMoney/10);
+                if (isAddGold()) RedisManager.addGold(userId, createNeedMoney / 10);
             });
         } else {
             RedisManager.getUserRedisService().addUserMoney(this.createUser, -createNeedMoney);
-            if (isAddGold()) RedisManager.addGold(this.createUser,createNeedMoney/10);
+            if (isAddGold()) RedisManager.addGold(this.createUser, createNeedMoney / 10);
         }
     }
 
+    public static void main(String[] args) {
+        Room room = new Room();
+        room.setGame(new Game());
+        room.setRoomId("11111");
+        RoomVo roomVo = new RoomVo();
+        BeanUtils.copyProperties(room,roomVo);
+
+        System.out.println(roomVo.roomId);
+    }
 
     @Override
     public IfaceRoomVo toVo(long userId) {
         RoomVo roomVo = new RoomVo();
-        roomVo.roomType = this.getRoomType();
-        roomVo.gameType = this.getGameType();
-        roomVo.createType = this.getCreateType();
-        roomVo.roomId = this.getRoomId();
-        roomVo.multiple = this.getMultiple();
-        roomVo.gameNumber = this.getGameNumber();
-        roomVo.createUser = this.getCreateUser();
-        roomVo.userStatus.putAll(this.getUserStatus());
-        roomVo.userScores.putAll(this.getUserScores());
-        roomVo.curGameNumber = this.getCurGameNumber();
-        roomVo.goldRoomType = this.getGoldRoomType();
-        roomVo.isLastDraw = this.isLastDraw();
-        roomVo.drawForLeaveChip = this.getDrawForLeaveChip();
-        roomVo.personNumber = this.getPersonNumber();
-        roomVo.hasNine = this.getHasNine();
-        roomVo.isAA = this.isAA;
-        roomVo.isCreaterJoin = this.isCreaterJoin;
+        BeanUtils.copyProperties(this, roomVo);
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.game != null) {
             roomVo.game = this.game.toVo(userId);
@@ -767,6 +780,15 @@ public class Room implements IfaceRoom {
 
     public Room setAddGold(boolean addGold) {
         isAddGold = addGold;
+        return this;
+    }
+
+    public Map<Long, RoomStatistics> getRoomStatisticsMap() {
+        return roomStatisticsMap;
+    }
+
+    public Room setRoomStatisticsMap(Map<Long, RoomStatistics> roomStatisticsMap) {
+        this.roomStatisticsMap = roomStatisticsMap;
         return this;
     }
 }
