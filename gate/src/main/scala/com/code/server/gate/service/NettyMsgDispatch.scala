@@ -279,6 +279,7 @@ object NettyMsgDispatch {
     val userRedisService = SpringUtil.getBean(classOf[UserRedisService])
     val token_redis = userRedisService.getToken(userId)
     if (token != token_redis) {
+      ctx.writeAndFlush(JsonUtil.toJson(new ResponseVo("gateService", "login", ErrorCode.ID_TOKEN_NOT_MATCH)))
       return ErrorCode.ID_TOKEN_NOT_MATCH
     }
     val loginGateId = userRedisService.getGateId(userId)

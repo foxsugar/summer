@@ -88,8 +88,6 @@ public class LoginAction {
             //新建玩家
             user = createUser(openId, userName, img, sex);
             userService.save(user);
-        } else {
-            return ErrorCode.ROLE_ACCOUNT_OR_PASSWORD_ERROR;
         }
         String token = getToken(user.getId());
         saveUser2Redis(user, token);
@@ -176,7 +174,9 @@ public class LoginAction {
                 userBean.setSex(sex);
                 userRedisService.updateUserBean(Long.valueOf(userId), userBean);
             }
-            params.put("token", getToken(Long.valueOf(userId)));
+            String redisToken =  getToken(Long.valueOf(userId));
+            userRedisService.setToken(Long.valueOf(userId), redisToken);
+            params.put("token", redisToken);
             params.put("userId", userId);
         }
 

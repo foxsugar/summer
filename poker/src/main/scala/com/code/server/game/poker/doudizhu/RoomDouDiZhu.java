@@ -79,6 +79,8 @@ public class RoomDouDiZhu extends Room {
 
         //代建房 定时解散
         if(!isJoin){
+            //给代建房 开房者 扣钱
+            room.spendMoney();
             GameTimer.addTimerNode(IConstant.HOUR_1,false,room::dissolutionRoom);
         }
 
