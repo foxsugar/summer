@@ -160,8 +160,6 @@ public class RoomInfo extends Room {
         if (this.bankerId == 0) {
             this.bankerId = users.get(0);
         }
-        //初始化统计
-        users.forEach(this::initRoomStatisticsMap);
         this.isInGame = true;
 
         if (this.gameType.equals("JC") && this.modeTotal.equals("124")) {

@@ -155,6 +155,7 @@ public class Room implements IfaceRoom {
         this.users.add(userId);
         this.userStatus.put(userId, 0);
         this.userScores.put(userId, 0D);
+        this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         addUser2RoomRedis(userId);
 
 
@@ -165,6 +166,7 @@ public class Room implements IfaceRoom {
         this.users.remove(userId);
         this.userStatus.remove(userId);
         this.userScores.remove(userId);
+        this.roomStatisticsMap.remove(userId);
         removeUserRoomRedis(userId);
     }
 
@@ -322,9 +324,6 @@ public class Room implements IfaceRoom {
         if (curGameNumber == 1 && isCreaterJoin) {
             spendMoney();
         }
-        //初始化统计
-        users.forEach(this::initRoomStatisticsMap);
-
         game.startGame(users, this);
 
         //通知其他人游戏已经开始
@@ -479,9 +478,9 @@ public class Room implements IfaceRoom {
         if (roomStatistics != null) {
             roomStatistics.maxScore = roomStatistics.maxScore > score ? roomStatistics.maxScore : score;
             if (score >= 0) {
-                roomStatistics.winTime ++;
-            }else {
-                roomStatistics.failedTime ++;
+                roomStatistics.winTime += 1;
+            } else {
+                roomStatistics.failedTime += 1;
             }
         }
     }
@@ -524,7 +523,7 @@ public class Room implements IfaceRoom {
         room.setGame(new Game());
         room.setRoomId("11111");
         RoomVo roomVo = new RoomVo();
-        BeanUtils.copyProperties(room,roomVo);
+        BeanUtils.copyProperties(room, roomVo);
 
         System.out.println(roomVo.roomId);
     }
