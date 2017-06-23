@@ -72,10 +72,6 @@ public class PlayerCardInfoDouDiZhuLinfen extends  PlayerCardInfoDouDiZhu{
         if(getListByIsType(currentCardStruct.cards) == 0){
             return false;
         }
-
-        if(getListByIsType(currentCardStruct.cards) != currentCardStruct.getType()){
-            return false;
-        }
         if(0!=lasttype){
              Integer currenttype =  currentCardStruct.type;//获取当前出牌类型
              if(currenttype==lasttype){
