@@ -29,15 +29,10 @@ public class PlayerCardInfoDouDiZhu implements IfacePlayerInfo {
         if (lastcardStruct.getUserId() == userId) {
             return true;
         }
-
-
         boolean results = false;
 
         //判断牌型是否合法
         if(getListByIsType(currentCardStruct.cards) == 0){
-            return false;
-        }
-        if(getListByIsType(currentCardStruct.cards) != currentCardStruct.getType()){
             return false;
         }
         if(0!=lasttype){
