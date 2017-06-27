@@ -2,17 +2,15 @@ package com.code.server.game.poker.doudizhu;
 
 
 import com.code.server.constant.exception.DataNotFoundException;
-import com.code.server.constant.response.*;
+import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Game;
-import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.Room;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.config.IConstant;
-import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
-import com.code.server.util.timer.TimerNode;
 
 /**
  * Created by sunxianping on 2017/3/13.
@@ -23,15 +21,6 @@ public class RoomDouDiZhu extends Room {
     public static final int PERSONNUM = 3;
 
 
-    @Override
-    public void drawBack() {
-//        RedisManager.getUserRedisService().addUserMoney(this.createUser, createNeedMoney);
-//        User user = userMap.get(this.createUser);
-//        if (user != null) {
-//            user.setMoney(user.getMoney() + createNeedMoney);
-//            GameManager.getInstance().getSaveUser2DB().add(user);
-//        }
-    }
 
     @Override
     protected Game getGameInstance() {
@@ -44,15 +33,13 @@ public class RoomDouDiZhu extends Room {
                 return new GameDouDiZhu();
             case GAMETYPE_LONGQI_LINFEN:
                 return new GameDouDiZhuLinFen();
+            case GAMETYPE_LONGQI_LINFEN_NO_QIANG:
+                return new GameDouDiZhuLinFenNoQiang();
+
             default:
                 return new GameDouDiZhu();
         }
 
-    }
-
-    public RoomDouDiZhu getRoomInstance(String gameType) {
-        RoomDouDiZhu room = new RoomDouDiZhu();
-        return room;
     }
 
     public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType, boolean isAA, boolean isJoin) throws DataNotFoundException {

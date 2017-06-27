@@ -23,6 +23,7 @@ public class UserBean implements IUserBean {
     private int sex;
     private int referee;
     private UserInfo userInfo;
+    private String coord = "";
 
     @Override
     public UserVo toVo() {
@@ -42,6 +43,7 @@ public class UserBean implements IUserBean {
         userVo.setReferee(this.referee);
         userVo.setUserInfo(this.userInfo);
         userVo.setGold(this.getGold());
+        userVo.setCoord(coord);
         return userVo;
     }
 
@@ -173,5 +175,12 @@ public class UserBean implements IUserBean {
         this.userInfo = userInfo;
     }
 
+    public String getCoord() {
+        return coord;
+    }
 
+    public UserBean setCoord(String coord) {
+        this.coord = coord;
+        return this;
+    }
 }

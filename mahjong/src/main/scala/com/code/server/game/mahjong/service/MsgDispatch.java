@@ -18,6 +18,7 @@ public class MsgDispatch {
     public static void dispatch(ConsumerRecord<String, String> record) {
 
         try {
+            logger.info(record.toString());
             String key = record.key();
             String value = record.value();
 

@@ -40,6 +40,7 @@ public class ReconnService {
         result.put("gameNumber", roomInfo.getGameNumber());
         result.put("createUser", roomInfo.getCreateUser());
         result.put("each", roomInfo.getEach());
+        result.put("roomType", roomInfo.getRoomType());
 
         return result;
     }

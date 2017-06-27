@@ -1,13 +1,12 @@
 package com.code.server.redis.service;
 
 import com.code.server.constant.exception.RegisterFailedException;
-import com.code.server.redis.config.ServerInfo;
 import com.code.server.redis.config.IConstant;
+import com.code.server.redis.config.ServerInfo;
 import com.code.server.redis.dao.IGateRedis;
 import com.code.server.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +73,7 @@ public class GateRedisService implements IGateRedis,IConstant{
             }
 
         }
+        //todo gate 没有清除掉
         //清除心跳
         redisTemplate.boundHashOps(HEART_GATE).delete(String.valueOf(gateId));
 
@@ -89,6 +89,17 @@ public class GateRedisService implements IGateRedis,IConstant{
             return 0;
         }
         return Long.parseLong(time);
+    }
+
+    @Override
+    public ServerInfo getServerInfo(String gateId) {
+        BoundHashOperations<String,String,String> serverList =  redisTemplate.boundHashOps(GATE_SERVER_LIST);
+        String json = serverList.get(gateId);
+        if (json != null) {
+            return JsonUtil.readValue(json, ServerInfo.class);
+        }
+
+        return null;
     }
 
     @Override

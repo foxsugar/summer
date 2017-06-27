@@ -73,8 +73,6 @@ public class PayCallback {
         //解析返回结果
         String returnXML = null;
 
-        //通知客户端
-        MsgSender msgSender = new MsgSender();
 
         //回调成功
         if ("SUCCESS".equals(element.elementText("return_code"))) {
@@ -88,7 +86,7 @@ public class PayCallback {
 
                 if (paySign.equals(element.elementText("sign")) && String.valueOf(charge.getMoney()).equals(String.valueOf(Integer.valueOf(element.elementText("cash_fee")) / 100))) {
 
-                    if ("0".equals(charge.getStatus())) {
+                    if (0==charge.getStatus()) {
                         System.out.println("修改订单状态");
                         //修改支付订单状态 已支付
 
@@ -109,7 +107,7 @@ public class PayCallback {
                         userService.save(userupdate);
                         System.out.println("通知客户端刷新充值");
                         Map<String, String> rs = new HashMap<>();
-                        msgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
+                        MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
                     }
 
 		    			
@@ -129,7 +127,7 @@ public class PayCallback {
                     rs.put("err_code_des", element.elementText("err_code_des"));
                     ResponseVo vo = new ResponseVo("userService", "refresh", rs);
                     vo.setCode(ErrorCode.BALANCE_INSUFFICIENT);
-                    msgSender.sendMsg2Player(vo, charge.getUserid());
+                    MsgSender.sendMsg2Player(vo, charge.getUserid());
                     //订单已支付
                 } else if ("ORDERPAID".equals(element.elementText("err_code"))) {
                     Map<String, String> rs = new HashMap<>();
@@ -137,7 +135,7 @@ public class PayCallback {
                     rs.put("err_code_des", element.elementText("err_code_des"));
                     ResponseVo vo = new ResponseVo("userService", "refresh", rs);
                     vo.setCode(ErrorCode.ORDER_WAS_PAID);
-                    msgSender.sendMsg2Player(vo, charge.getUserid());
+                    MsgSender.sendMsg2Player(vo, charge.getUserid());
                     //订单已关闭
                 } else if ("ORDERCLOSED".equals(element.elementText("err_code"))) {
                     Map<String, String> rs = new HashMap<>();
@@ -145,7 +143,7 @@ public class PayCallback {
                     rs.put("err_code_des", element.elementText("err_code_des"));
                     ResponseVo vo = new ResponseVo("userService", "refresh", rs);
                     vo.setCode(ErrorCode.ORDER_WAS_CLOSED);
-                    msgSender.sendMsg2Player(vo, charge.getUserid());
+                    MsgSender.sendMsg2Player(vo, charge.getUserid());
                 }
 
 

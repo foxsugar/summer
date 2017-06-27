@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -103,11 +104,12 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
 
     @Override
     public void setUserBean(UserBean userBean) {
-        updateUserBean(userBean.getId(), userBean);
+        BoundHashOperations<String,String,String> user_bean = redisTemplate.boundHashOps(USER_BEAN);
+        user_bean.put(String.valueOf(userBean.getId()),JsonUtil.toJson(userBean));
     }
 
     @Override
-    public List<UserBean> getUserBeans(List<Long> users) {
+    public List<UserBean> getUserBeans(Collection<Long> users) {
         BoundHashOperations<String,String,String> user_bean = redisTemplate.boundHashOps(USER_BEAN);
         List<String> userStrs = users.stream().map(this::getUserBeanKey).collect(Collectors.toList());
         return user_bean.multiGet(userStrs).stream().map(ub->JsonUtil.readValue(ub,UserBean.class)).collect(Collectors.toList());

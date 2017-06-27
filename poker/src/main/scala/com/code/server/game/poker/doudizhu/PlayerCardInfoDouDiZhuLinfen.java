@@ -249,66 +249,6 @@ public class PlayerCardInfoDouDiZhuLinfen extends  PlayerCardInfoDouDiZhu{
         }
     }
 
-
-
-
-
-
-
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public PlayerCardInfoDouDiZhuLinfen setUserId(long userId) {
-        this.userId = userId;
-        return this;
-    }
-
-    public List<Integer> getCards() {
-        return cards;
-    }
-
-    public PlayerCardInfoDouDiZhuLinfen setCards(List<Integer> cards) {
-        this.cards = cards;
-        return this;
-    }
-
-    public List<Integer> getDisCards() {
-        return disCards;
-    }
-
-    public PlayerCardInfoDouDiZhuLinfen setDisCards(List<Integer> disCards) {
-        this.disCards = disCards;
-        return this;
-    }
-
-    public boolean isQiang() {
-        return isQiang;
-    }
-
-    public PlayerCardInfoDouDiZhuLinfen setQiang(boolean qiang) {
-        isQiang = qiang;
-        return this;
-    }
-
-    public double getScore() {
-        return score;
-    }
-
-    public PlayerCardInfoDouDiZhuLinfen setScore(double score) {
-        this.score = score;
-        return this;
-    }
-
-    public int getPlayCount() {
-        return playCount;
-    }
-
-    public PlayerCardInfoDouDiZhuLinfen setPlayCount(int playCount) {
-        this.playCount = playCount;
-        return this;
-    }
 }
 
 

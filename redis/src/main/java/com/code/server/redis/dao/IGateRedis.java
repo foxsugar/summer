@@ -18,6 +18,8 @@ public interface IGateRedis {
 
     long getLastHeart(int gateId);
 
+    ServerInfo getServerInfo(String gateId);
+
     Map<String,String> getAllHeart();
 
     List<ServerInfo> getAllServer();

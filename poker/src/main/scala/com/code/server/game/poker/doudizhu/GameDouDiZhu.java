@@ -136,6 +136,7 @@ public class GameDouDiZhu extends Game {
 
             sendResult(false, playerCardInfo.getUserId() == dizhu);
 
+
             //生成记录
             genRecord();
 
@@ -352,28 +353,19 @@ public class GameDouDiZhu extends Game {
     protected void sendFinalResult() {
         //所有牌局都结束
         if (room.getCurGameNumber() > room.getGameNumber()) {
-            List<Long> us = new ArrayList<>(users);
-            GameFinalResult gameFinalResult = new GameFinalResult();
-            room.getUserScores().forEach((userId, score) -> {
+            List<UserOfResult> userOfResultList = this.room.getUserOfResult();
+            // 存储返回
+            GameOfResult gameOfResult = new GameOfResult();
+            gameOfResult.setUserList(userOfResultList);
+            MsgSender.sendMsg2Player("gameService", "gameFinalResult", gameOfResult, users);
 
-                        gameFinalResult.getUserInfos().add(new GameFinalResult.UserInfoVo(userId, score));
-
-                        //删除玩家房间映射关系
-//                        GameManager.getInstance().getUserRoom().remove(userId);
-//                        room.roomRemoveUser(userId);
-                    }
-            );
-            MsgSender.sendMsg2Player("gameService", "gameFinalResult", gameFinalResult, us);
-
-            //删除room
-//            GameManager.getInstance().removeRoom(room);
             RoomManager.removeRoom(room.getRoomId());
 
         }
     }
 
     protected void genRecord() {
-        genRecord(playerCardInfos.values().stream().collect(Collectors.toMap(PlayerCardInfoDouDiZhu::getUserId,PlayerCardInfoDouDiZhu::getScore)),room);
+        genRecord(playerCardInfos.values().stream().collect(Collectors.toMap(PlayerCardInfoDouDiZhu::getUserId, PlayerCardInfoDouDiZhu::getScore)), room);
     }
 
     protected void playStepStart(long dizhu) {

@@ -1,7 +1,7 @@
 package com.code.server.gate.kafka
 
-import com.code.server.constant.kafka.{IKafkaMsg, KickUser}
-import com.code.server.gate.service.GateManager
+import com.code.server.constant.kafka.{IKafkaMsg, IkafkaMsgId, KafkaMsgKey, KickUser}
+import com.code.server.gate.service.{GateManager, UserSevice}
 import com.code.server.util.JsonUtil
 import org.apache.kafka.clients.consumer.ConsumerRecord
 
@@ -21,6 +21,21 @@ object KafkaMsgDispatch {
     val json = record.value().toString
     val msg = JsonUtil.readValue(json, classOf[IKafkaMsg])
 
+  }
+
+  def dispatchInnerGate(record: ConsumerRecord[String,String]):Unit = {
+    val keyStr =record.key()
+    val valueStr = record.value()
+    val msgKey = JsonUtil.readValue(keyStr,classOf[KafkaMsgKey])
+    val msgId = msgKey.msgId
+    msgId match {
+      case IkafkaMsgId.KAFKA_MSG_ID_GATE_KICK_USER =>{
+        val kickUser = JsonUtil.readValue(valueStr,classOf[KickUser])
+        val userId = kickUser.getId
+        UserSevice.sendExit(userId)
+      }
+
+    }
   }
 
   def main(args: Array[String]): Unit = {

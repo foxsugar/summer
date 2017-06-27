@@ -22,6 +22,7 @@ public class UserVo {
     public int referee;
     public UserInfo userInfo;
     public double gold;
+    public String coord = "";
 
     public long getId() {
         return id;
@@ -157,6 +158,15 @@ public class UserVo {
 
     public UserVo setGold(double gold) {
         this.gold = gold;
+        return this;
+    }
+
+    public String getCoord() {
+        return coord;
+    }
+
+    public UserVo setCoord(String coord) {
+        this.coord = coord;
         return this;
     }
 }

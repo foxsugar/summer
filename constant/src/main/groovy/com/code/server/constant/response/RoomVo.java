@@ -1,5 +1,7 @@
 package com.code.server.constant.response;
 
+import com.code.server.constant.game.RoomStatistics;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +37,177 @@ public class RoomVo implements IfaceRoomVo {
     public boolean isCreaterJoin;
 
     public RoomVo() {
+    }
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public RoomVo setRoomType(String roomType) {
+        this.roomType = roomType;
+        return this;
+    }
+
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public RoomVo setRoomId(String roomId) {
+        this.roomId = roomId;
+        return this;
+    }
+
+    public int getMultiple() {
+        return multiple;
+    }
+
+    public RoomVo setMultiple(int multiple) {
+        this.multiple = multiple;
+        return this;
+    }
+
+    public int getGameNumber() {
+        return gameNumber;
+    }
+
+    public RoomVo setGameNumber(int gameNumber) {
+        this.gameNumber = gameNumber;
+        return this;
+    }
+
+    public long getCreateUser() {
+        return createUser;
+    }
+
+    public RoomVo setCreateUser(long createUser) {
+        this.createUser = createUser;
+        return this;
+    }
+
+    public IfaceGameVo getGame() {
+        return game;
+    }
+
+    public RoomVo setGame(IfaceGameVo game) {
+        this.game = game;
+        return this;
+    }
+
+    public int getCurGameNumber() {
+        return curGameNumber;
+    }
+
+    public RoomVo setCurGameNumber(int curGameNumber) {
+        this.curGameNumber = curGameNumber;
+        return this;
+    }
+
+    public int getCreateType() {
+        return createType;
+    }
+
+    public RoomVo setCreateType(int createType) {
+        this.createType = createType;
+        return this;
+    }
+
+    public double getGoldRoomType() {
+        return goldRoomType;
+    }
+
+    public RoomVo setGoldRoomType(double goldRoomType) {
+        this.goldRoomType = goldRoomType;
+        return this;
+    }
+
+    public String getGameType() {
+        return gameType;
+    }
+
+    public RoomVo setGameType(String gameType) {
+        this.gameType = gameType;
+        return this;
+    }
+
+    public boolean isLastDraw() {
+        return isLastDraw;
+    }
+
+    public RoomVo setLastDraw(boolean lastDraw) {
+        isLastDraw = lastDraw;
+        return this;
+    }
+
+    public int getDrawForLeaveChip() {
+        return drawForLeaveChip;
+    }
+
+    public RoomVo setDrawForLeaveChip(int drawForLeaveChip) {
+        this.drawForLeaveChip = drawForLeaveChip;
+        return this;
+    }
+
+    public int getHasNine() {
+        return hasNine;
+    }
+
+    public RoomVo setHasNine(int hasNine) {
+        this.hasNine = hasNine;
+        return this;
+    }
+
+    public Map<Long, Integer> getUserStatus() {
+        return userStatus;
+    }
+
+    public RoomVo setUserStatus(Map<Long, Integer> userStatus) {
+        this.userStatus = userStatus;
+        return this;
+    }
+
+    public List<UserVo> getUserList() {
+        return userList;
+    }
+
+    public RoomVo setUserList(List<UserVo> userList) {
+        this.userList = userList;
+        return this;
+    }
+
+    public Map<Long, Double> getUserScores() {
+        return userScores;
+    }
+
+    public RoomVo setUserScores(Map<Long, Double> userScores) {
+        this.userScores = userScores;
+        return this;
+    }
+
+    public int getPersonNumber() {
+        return personNumber;
+    }
+
+    public RoomVo setPersonNumber(int personNumber) {
+        this.personNumber = personNumber;
+        return this;
+    }
+
+    public boolean isAA() {
+        return isAA;
+    }
+
+    public RoomVo setAA(boolean AA) {
+        isAA = AA;
+        return this;
+    }
+
+    public boolean isCreaterJoin() {
+        return isCreaterJoin;
+    }
+
+    public RoomVo setCreaterJoin(boolean createrJoin) {
+        isCreaterJoin = createrJoin;
+        return this;
     }
 
 

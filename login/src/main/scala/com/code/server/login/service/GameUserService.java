@@ -16,16 +16,13 @@ import com.code.server.kafka.MsgProducer;
 import com.code.server.login.rpc.RpcManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
-import com.code.server.util.ThreadPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -162,6 +159,34 @@ public class GameUserService {
 
     public int getServerInfo(KafkaMsgKey msgKey) {
         sendMsg(msgKey, new ResponseVo("userService","getServerInfo",ServerManager.constant));
+        return 0;
+    }
+
+    public int reportingCoord(KafkaMsgKey msgKey,String coord) {
+        long userId = msgKey.getUserId();
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+            userBean.setCoord(coord);
+            RedisManager.getUserRedisService().setUserBean(userBean);
+        }
+        sendMsg(msgKey, new ResponseVo("userService","reportingCoord",0));
+        return 0;
+    }
+
+    /**
+     * 获得同一房间的所有人坐标
+     * @param msgKey
+     * @return
+     */
+    public int getCoords(KafkaMsgKey msgKey){
+        long userId = msgKey.getUserId();
+        String roomId = RedisManager.getUserRedisService().getRoomId(userId);
+        if (roomId == null) {
+            return ErrorCode.CAN_NOT_NO_ROOM;
+        }
+        Set<Long> users = RedisManager.getRoomRedisService().getUsers(roomId);
+        Map<Long,Object> result = RedisManager.getUserRedisService().getUserBeans(users).stream().collect(Collectors.toMap(UserBean::getId,UserBean::getCoord));
+        sendMsg(msgKey, new ResponseVo("userService","getCoords",result));
         return 0;
     }
 

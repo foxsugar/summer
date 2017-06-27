@@ -1,5 +1,7 @@
 package com.code.server.constant.response;
 
+import com.code.server.constant.game.RoomStatistics;
+
 public class UserOfResult {
 
     private long userId;//id
@@ -20,6 +22,7 @@ public class UserOfResult {
     private int lianZhuangNum;
     private long time;
 
+    private RoomStatistics roomStatistics;
 
     public long getUserId() {
         return userId;
@@ -129,4 +132,12 @@ public class UserOfResult {
         return this;
     }
 
+    public RoomStatistics getRoomStatistics() {
+        return roomStatistics;
+    }
+
+    public UserOfResult setRoomStatistics(RoomStatistics roomStatistics) {
+        this.roomStatistics = roomStatistics;
+        return this;
+    }
 }

@@ -32,14 +32,15 @@ public class MsgConsumer {
     @KafkaListener(id = "inner", topicPartitions = {
             @TopicPartition(topic = "inner_gate_topic", partitions = "${serverConfig.serverId}")
     })
-    public void listen2(ConsumerRecord<?, ?> record) {
+    public void listen2(ConsumerRecord<String, String> record) {
         try {
-            System.out.println(record.toString());
-            System.out.println("处理完毕");
+            System.out.println("处理gate内部消息");
+            KafkaMsgDispatch.dispatchInnerGate(record);
         } catch (Exception e) {
             logger.error("inner_gate_topic 消费异常 ", e);
         }
     }
+
 
 
 }
