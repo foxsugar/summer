@@ -2,6 +2,7 @@ package com.code.server.redis.dao;
 
 import com.code.server.constant.game.UserBean;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ public interface IUserRedis {
 
     void setOpenIdUserId(String openId, long userId);
 
-    List<UserBean> getUserBeans(List<Long> users);
+    List<UserBean> getUserBeans(Collection<Long> users);
 
 
     void updateUserBean(long userId, UserBean userBean);

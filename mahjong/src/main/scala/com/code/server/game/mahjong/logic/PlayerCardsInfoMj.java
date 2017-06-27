@@ -813,6 +813,23 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         return (c&(1<<type))>>type==1;
     }
 
+    public static void main(String[] args) {
+
+        PlayerCardsInfoMj playerCardsInfo = new PlayerCardsInfoMj();
+
+
+//        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","042","124","135"};
+//        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","134","042","124","135"};
+        String[] s = new String[]{"012","013","014",     "016",  "017","018",    "020",     "024","025","026",   "028","029",    "032","033"};
+
+
+        List<String> cs = Arrays.asList(s);
+        playerCardsInfo.cards = cs;
+        playerCardsInfo.init(playerCardsInfo.cards);
+//        System.out.println(playerCardsInfo.getTingCardType(playerCardsInfo.cards,null));
+        System.out.println(playerCardsInfo.isCanHu_zimo("033"));
+    }
+
     public long getUserId() {
         return userId;
     }

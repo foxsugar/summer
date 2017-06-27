@@ -64,6 +64,8 @@ public class UserServiceMsgDispatch {
             case "reportingCoord":
                 String coord = params.get("coord").asText();
                 return gameUserService.reportingCoord(msgKey,coord);
+            case "getCoords":
+                return gameUserService.getCoords(msgKey);
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

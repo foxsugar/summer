@@ -5,4 +5,6 @@ package com.code.server.constant.kafka;
  */
 public interface IkafkaMsgId {
     int KAFKA_MSG_ID_GEN_RECORD = 1000;
+
+    int KAFKA_MSG_ID_GATE_KICK_USER = 2000;
 }

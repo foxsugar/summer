@@ -3,7 +3,7 @@ package com.code.server.gate.service
 import java.util.Comparator
 import java.util.stream.Collectors
 
-import com.code.server.constant.kafka.{IKafaTopic, KafkaMsgKey, KickUser}
+import com.code.server.constant.kafka.{IKafaTopic, IkafkaMsgId, KafkaMsgKey, KickUser}
 import com.code.server.constant.response.{ErrorCode, ReconnectResp, ResponseVo}
 import com.code.server.gate.config.ServerConfig
 import com.code.server.kafka.MsgProducer
@@ -301,7 +301,9 @@ object NettyMsgDispatch {
         val kafkaSend = SpringUtil.getBean(classOf[MsgProducer])
         val kickUser = new KickUser
         kickUser.setId(userId)
-        kafkaSend.send2Partition(IKafaTopic.INNER_GATE_TOPIC, loginGateIdInt, kickUser)
+        val msgKey = new KafkaMsgKey
+        msgKey.msgId = IkafkaMsgId.KAFKA_MSG_ID_GATE_KICK_USER
+        kafkaSend.send2Partition(IKafaTopic.INNER_GATE_TOPIC, loginGateIdInt, msgKey,kickUser)
       }
     }
 

@@ -124,6 +124,7 @@ public class LoginAction {
 
         if (userId == null) {
             code = login4sqlByAccount(account, password, params);
+            userId = (String)params.get("userId");
         } else {
             String redisToken = userRedisService.getToken(Long.valueOf(userId));
             UserBean userBean = userRedisService.getUserBean(Long.valueOf(userId));
@@ -173,6 +174,7 @@ public class LoginAction {
 
         if (userId == null) {
             code = login4sqlByOpenId(openId, username, image, sex, params);
+            userId = (String)params.get("userId");
         } else {
             //刷新redis数据
             UserBean userBean = userRedisService.getUserBean(Long.valueOf(userId));

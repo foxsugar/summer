@@ -23,7 +23,7 @@ public class UserBean implements IUserBean {
     private int sex;
     private int referee;
     private UserInfo userInfo;
-    private String coord;
+    private String coord = "";
 
     @Override
     public UserVo toVo() {

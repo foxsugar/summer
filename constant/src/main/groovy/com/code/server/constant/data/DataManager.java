@@ -39,6 +39,7 @@ public class DataManager implements IGameConstant {
         getInstance().roomDatas.put(GAMETYPE_QIANAN, roomData_qianan);
         getInstance().roomDatas.put(GAMETYPE_LONGQI, roomData_longqi);
         getInstance().roomDatas.put(GAMETYPE_LONGQI_LINFEN, roomData_longqi);
+        getInstance().roomDatas.put(GAMETYPE_LONGQI_LINFEN_NO_QIANG, roomData_longqi);
     }
 
     public static DataManager getInstance() {

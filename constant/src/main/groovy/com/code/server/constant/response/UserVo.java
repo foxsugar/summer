@@ -22,7 +22,7 @@ public class UserVo {
     public int referee;
     public UserInfo userInfo;
     public double gold;
-    public String coord;
+    public String coord = "";
 
     public long getId() {
         return id;
