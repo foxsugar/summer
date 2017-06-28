@@ -17,10 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017/5/23.
@@ -78,7 +75,7 @@ public class UnifiedOrder {
         packageParams.put("nonce_str", PayUtil.getRandomStringByLength(32));//32位随机数
         packageParams.put("body",bodyUTF8);//商品描述
         packageParams.put("out_trade_no",orderId);
-        packageParams.put("total_fee",""+money100);//充值金额
+        packageParams.put("total_fee",""+money);//充值金额
         packageParams.put("spbill_create_ip",spIp);//终端IP
         packageParams.put("trade_type","APP");//支付类型
         packageParams.put("notify_url",serverConfig.getNotifyUrl());//通知地址
@@ -118,6 +115,7 @@ public class UnifiedOrder {
                 charge.setSign(paySign);
                 charge.setSp_ip(spIp);
                 charge.setRecharge_source("1");
+                charge.setCallbacktime(new Date());
                 chargeService.save(charge);
 
 
