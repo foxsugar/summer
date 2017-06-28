@@ -2,6 +2,8 @@ package com.code.server.db.dao;
 
 
 import com.code.server.db.model.User;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
@@ -16,5 +18,9 @@ public interface IUserDao extends PagingAndSortingRepository<User, Long> {
     User getUserByOpenId(String openId);
 
     User getUserById(long userId);
+
+    @Modifying
+    @Query("update users  set money = ? where id = ?")
+    int update(double status , long order_id);
 
 }

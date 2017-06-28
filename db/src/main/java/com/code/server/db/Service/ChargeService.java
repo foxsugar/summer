@@ -15,13 +15,16 @@ public class ChargeService {
     @Autowired
     public IChargeDao chargeDao;
 
-
     public Charge getChargeByOrderid(String orderid){
         return chargeDao.getChargeByOrderId(orderid);
     }
 
     public Charge save(Charge charge){
         return chargeDao.save(charge);
+    }
+
+    public int update(Charge charge){
+        return chargeDao.update(charge.getStatus(),charge.getOrderId());
     }
 
 }
