@@ -97,9 +97,8 @@ public class PayCallback {
                             System.out.println("修改订单状态");
                             //修改支付订单状态 已支付
 
-                            Charge charge1 = new Charge();
+                        Charge charge1 = chargeService.getChargeByOrderid(element.elementText("out_trade_no"));
                             charge1.setStatus(1);
-                            charge1.setOrderId(element.elementText("out_trade_no"));
                             chargeService.save(charge1);
 
                             //查询玩家
@@ -108,13 +107,14 @@ public class PayCallback {
 
                             System.out.println("修改玩家豆豆");
                             //修改玩家豆豆
-                            User userupdate = new User();
-                            userupdate.setMoney(user.getMoney() + Integer.valueOf(element.elementText("total_fee")) / 10);
-                            userupdate.setId(user.getId());
-                            userService.save(userupdate);
+
+                            user.setMoney(user.getMoney() + Integer.valueOf(element.elementText("total_fee")) / 10);
+
+                            userService.save(user);
+
                             System.out.println("通知客户端刷新充值");
                             Map<String, String> rs = new HashMap<>();
-                        MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
+                           MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
                     }
 
 		    			
