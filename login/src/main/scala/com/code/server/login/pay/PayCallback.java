@@ -91,7 +91,7 @@ public class PayCallback {
                 System.out.println(paySign);
                 System.out.println(element.elementText("sign"));
 
-                if (paySign.equals(element.elementText("sign")) && String.valueOf(charge.getMoney()).equals(String.valueOf(Integer.valueOf(element.elementText("cash_fee")) / 100))) {
+                if (paySign.equals(element.elementText("sign")) && String.valueOf(charge.getMoney()).equals(String.valueOf(Double.valueOf(element.elementText("cash_fee")) / 100))) {
 
                     if (0==charge.getStatus()) {
                             System.out.println("修改订单状态");
