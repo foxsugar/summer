@@ -58,9 +58,10 @@ public class ErrorCode {
 	public static final int CHARGE_NO_BIND = 250002;
 	
 	public static final int BALANCE_INSUFFICIENT = 300000; //余额不足
-	
+
 	public static final int ORDER_WAS_PAID = 300001;//订单已支付
 	public static final int ORDER_WAS_CLOSED = 300002; //订单已关闭
+	public static final int PARAMETER_SIGN_MONEY_ERROR = 300003; //参数错误
 
 	static class ErrorCodeRepeatChecker {
     	public void check() {

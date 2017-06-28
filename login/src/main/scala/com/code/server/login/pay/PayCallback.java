@@ -97,9 +97,9 @@ public class PayCallback {
                             System.out.println("修改订单状态");
                             //修改支付订单状态 已支付
 
-                        Charge charge1 = chargeService.getChargeByOrderid(element.elementText("out_trade_no"));
-                            charge1.setStatus(1);
-                            chargeService.save(charge1);
+                            charge = chargeService.getChargeByOrderid(element.elementText("out_trade_no"));
+                            charge.setStatus(1);
+                            chargeService.save(charge);
 
                             //查询玩家
                             User user = userService.getUserByUserId(charge.getUserid());
@@ -115,13 +115,28 @@ public class PayCallback {
                             System.out.println("通知客户端刷新充值");
                             Map<String, String> rs = new HashMap<>();
                            MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
+                    }else{
+                        Map<String, String> rs = new HashMap<>();
+                        rs.put("err_code", element.elementText("err_code"));
+                        rs.put("err_code_des", element.elementText("err_code_des"));
+                        ResponseVo vo = new ResponseVo("userService", "refresh", rs);
+                        vo.setCode(ErrorCode.ORDER_WAS_PAID);
+                        MsgSender.sendMsg2Player(vo, charge.getUserid());
                     }
 
-		    			
 		    			/*returnXML = "<xml>";
                         returnXML += "<return_code>![CDATA[SUCCESS]]</return_code>";
 		    		    returnXML += "<return_msg>![CDATA[OK]]</return_msg>";
 		    		    returnXML += "</xml>";*/
+
+                    returnXML = "SUCCESS";
+                }else{
+                    Map<String, String> rs = new HashMap<>();
+                    rs.put("err_code", element.elementText("err_code"));
+                    rs.put("err_code_des", element.elementText("err_code_des"));
+                    ResponseVo vo = new ResponseVo("userService", "refresh", rs);
+                    vo.setCode(ErrorCode.PARAMETER_SIGN_MONEY_ERROR);
+                    MsgSender.sendMsg2Player(vo, charge.getUserid());
 
                     returnXML = "SUCCESS";
                 }
