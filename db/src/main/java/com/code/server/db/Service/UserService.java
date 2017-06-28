@@ -55,9 +55,7 @@ public class UserService {
         return user;
     }
 
-    public int update(User user) {
-        return userDao.update(user.getMoney(),user.getId());
-    }
+
 
 
     public void flush(){

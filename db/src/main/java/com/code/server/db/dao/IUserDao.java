@@ -19,8 +19,6 @@ public interface IUserDao extends PagingAndSortingRepository<User, Long> {
 
     User getUserById(long userId);
 
-    @Modifying
-    @Query("update users  set money = ? where id = ?")
-    int update(double status , long order_id);
+
 
 }

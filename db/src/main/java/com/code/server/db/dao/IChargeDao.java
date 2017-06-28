@@ -13,8 +13,5 @@ public interface IChargeDao extends PagingAndSortingRepository<Charge, Long> {
 
     Charge getChargeByOrderId(String orderId);
 
-    @Modifying
-    @Query("update charge  set status = ? where order_id = ?")
-    int update(int status , String order_id);
 
 }

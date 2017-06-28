@@ -23,8 +23,6 @@ public class ChargeService {
         return chargeDao.save(charge);
     }
 
-    public int update(Charge charge){
-        return chargeDao.update(charge.getStatus(),charge.getOrderId());
-    }
+
 
 }
