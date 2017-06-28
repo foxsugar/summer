@@ -75,7 +75,7 @@ public class UnifiedOrder {
         packageParams.put("nonce_str", PayUtil.getRandomStringByLength(32));//32位随机数
         packageParams.put("body",bodyUTF8);//商品描述
         packageParams.put("out_trade_no",orderId);
-        packageParams.put("total_fee",""+money);//充值金额
+        packageParams.put("total_fee",""+money100);//充值金额
         packageParams.put("spbill_create_ip",spIp);//终端IP
         packageParams.put("trade_type","APP");//支付类型
         packageParams.put("notify_url",serverConfig.getNotifyUrl());//通知地址
