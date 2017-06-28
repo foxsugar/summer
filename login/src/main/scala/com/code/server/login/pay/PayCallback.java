@@ -99,8 +99,6 @@ public class PayCallback {
                     if (0==charge.getStatus()) {
                             System.out.println("修改订单状态");
                             //修改支付订单状态 已支付
-
-                            charge = chargeService.getChargeByOrderid(element.elementText("out_trade_no"));
                             charge.setStatus(1);
                             chargeService.save(charge);
 
