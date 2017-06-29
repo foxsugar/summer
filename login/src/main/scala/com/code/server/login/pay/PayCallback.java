@@ -1,6 +1,7 @@
 package com.code.server.login.pay;
 
 
+import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.ChargeService;
 import com.code.server.db.Service.UserService;
@@ -10,6 +11,7 @@ import com.code.server.login.config.ServerConfig;
 import com.code.server.login.kafka.MsgSender;
 import com.code.server.login.util.ErrorCode;
 import com.code.server.login.util.PayUtil;
+import com.code.server.redis.service.UserRedisService;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +36,8 @@ public class PayCallback {
 
     @Autowired
     private ServerConfig serverConfig;
+    @Autowired
+    private UserRedisService userRedisService;
 
     /**
      * 接受微信回调
@@ -86,38 +90,62 @@ public class PayCallback {
             if ("SUCCESS".equals(element.elementText("result_code"))) {
                 System.out.println("业务成功");
 
+                System.out.println(charge.getMoney());
+                System.out.println(element.elementText("cash_fee"));
+                System.out.println(paySign);
+                System.out.println(element.elementText("sign"));
 
-                if (paySign.equals(element.elementText("sign")) && String.valueOf(charge.getMoney()).equals(String.valueOf(Integer.valueOf(element.elementText("cash_fee")) / 100))) {
+                if (paySign.equals(element.elementText("sign"))
+                        && String.valueOf(charge.getMoney()).equals(String.valueOf(Double.valueOf(element.elementText("cash_fee")) / 100))) {
 
                     if (0==charge.getStatus()) {
-                        System.out.println("修改订单状态");
-                        //修改支付订单状态 已支付
-
-                        Charge charge1 = new Charge();
-                        charge1.setStatus(1);
-                        charge1.setOrderId(element.elementText("out_trade_no"));
-                        chargeService.save(charge1);
-
-                        //查询玩家
-                        User user = userService.getUserByUserId(charge.getUserid());
+                            System.out.println("修改订单状态");
+                            //修改支付订单状态 已支付
+                            charge.setStatus(1);
+                            chargeService.save(charge);
 
 
-                        System.out.println("修改玩家豆豆");
-                        //修改玩家豆豆
-                        User userupdate = new User();
-                        userupdate.setMoney(user.getMoney() + Integer.valueOf(element.elementText("total_fee")) / 10);
-                        userupdate.setId(user.getId());
-                        userService.save(userupdate);
-                        System.out.println("通知客户端刷新充值");
+
+                        UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
+
+                            if(UserBeanRedis!=null){
+                                userRedisService.setUserMoney(charge.getUserid(),UserBeanRedis.getMoney() + Double.valueOf(element.elementText("total_fee")) / 10);
+                            }else{
+                                //查询玩家
+                                User user = userService.getUserByUserId(charge.getUserid());
+                                System.out.println("修改玩家豆豆");
+                                //修改玩家豆豆
+                                user.setMoney(user.getMoney() + Integer.valueOf(element.elementText("total_fee")) / 10);
+                                userService.save(user);
+                            }
+
+
+
+                            System.out.println("通知客户端刷新充值");
+                            Map<String, String> rs = new HashMap<>();
+                           MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
+                    }else{
                         Map<String, String> rs = new HashMap<>();
-                        MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
+                        rs.put("err_code", element.elementText("err_code"));
+                        rs.put("err_code_des", element.elementText("err_code_des"));
+                        ResponseVo vo = new ResponseVo("userService", "refresh", rs);
+                        vo.setCode(ErrorCode.ORDER_WAS_PAID);
+                        MsgSender.sendMsg2Player(vo, charge.getUserid());
                     }
 
-		    			
 		    			/*returnXML = "<xml>";
                         returnXML += "<return_code>![CDATA[SUCCESS]]</return_code>";
 		    		    returnXML += "<return_msg>![CDATA[OK]]</return_msg>";
 		    		    returnXML += "</xml>";*/
+
+                    returnXML = "SUCCESS";
+                }else{
+                    Map<String, String> rs = new HashMap<>();
+                    rs.put("err_code", element.elementText("err_code"));
+                    rs.put("err_code_des", element.elementText("err_code_des"));
+                    ResponseVo vo = new ResponseVo("userService", "refresh", rs);
+                    vo.setCode(ErrorCode.PARAMETER_SIGN_MONEY_ERROR);
+                    MsgSender.sendMsg2Player(vo, charge.getUserid());
 
                     returnXML = "SUCCESS";
                 }
@@ -149,7 +177,7 @@ public class PayCallback {
                     MsgSender.sendMsg2Player(vo, charge.getUserid());
                 }
 
-
+                returnXML = "SUCCESS";
             }
         }
         System.out.println("回调结束，返回微信成功信息");

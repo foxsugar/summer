@@ -17,10 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017/5/23.
@@ -118,6 +115,7 @@ public class UnifiedOrder {
                 charge.setSign(paySign);
                 charge.setSp_ip(spIp);
                 charge.setRecharge_source("1");
+                charge.setCallbacktime(new Date());
                 chargeService.save(charge);
 
 
