@@ -1,12 +1,12 @@
-
 package com.code.server.game.mahjong.util;
+
 
 import java.util.*;
 
 /**
  * Created by SunXianping on 2016/11/28 0028.
  */
-public class Hu {
+public class Hu1 {
 
     private static final Integer[] ALL_CARD = new Integer[]{
             //万
@@ -141,217 +141,132 @@ public class Hu {
         if (o1.type < o2.type) {
             return -1;
         } else if (o1.type == o2.type) {
-            if (o1.firstCard < o2.firstCard) {
+            if (o1.firstCard <= o2.firstCard) {
                 return -1;
-            } else if (o1.firstCard > o2.firstCard) {
+            } else {
                 return 1;
-            } else return 0;
+            }
         } else {
             return 1;
         }
     };
     private static int count = 0;
 
-    private static void reset(){
 
-    }
-
-    static void test1(int[] cards, int[] cardsInner, List all, List<CardGroup> list, boolean isHasFengShun, boolean isOut, int cardSize, int count) {
-        Hu.count++;
-        System.out.println("====: " + Hu.count + " isout : " + isOut);
+    static void test1(int[] cards, List all, List<CardGroup> list, boolean isHasFengShun) {
+        count++;
+        //   System.out.println("====: " + count);
 
         for (int i = 0; i < 34; i++) {
             if (cards[i] == 0) {
                 continue;
             }
-            count++;
-//            System.out.println(list==null?"null":list.hashCode());
-            if (isOut) {
-                System.out.println("===============is out index: " + i);
-                cardSize = 14;
-                count = 0;
-                cardsInner = Arrays.copyOf(cards, cards.length);
-            }
-            System.out.println("count : " + count+" list : " + list);
 
             //将
-            if (cardSize > 0 && cardsInner[i] >= 2 && !isHasJiang(list)) {
-                if (list == null) {
-                    System.out.println("======jiang");
-                }
+            if (cards[i] >= 2 && !isHasJiang(list)) {
                 int[] newCards = Arrays.copyOf(cards, cards.length);
-                cardsInner[i] -= 2;
-                cardSize -= 2;
-
-                List<CardGroup> newList = list == null ? new ArrayList<>() : list;
+                newCards[i] -= 2;
+                List<CardGroup> newList = new ArrayList(list);
                 newList.add(new CardGroup(CARD_GROUP_TYPE_JIANG, i));
-                add2List(all, newList);
-                if (cardSize==0) {
+                if (isEmpty(newCards)) {
+                    add2List(all, newList);
                 } else {
-                    test1(newCards,cardsInner , all, newList, isHasFengShun, false, cardSize, count);
+                    test1(newCards, all, newList, isHasFengShun);
 
                 }
             }
-            if (isOut) {
-                System.out.println("===============is out index: " + i);
-                cardSize = 14;
-                count = 0;
-                cardsInner = Arrays.copyOf(cards, cards.length);
-            }
+
             //碰
-            if (cardSize > 0 && cardsInner[i] >= 3) {
-                if (list == null) {
-                    System.out.println("======peng");
-                }
+            if (cards[i] >= 3) {
                 int[] newCards = Arrays.copyOf(cards, cards.length);
-                cardsInner[i] -= 3;
-                cardSize -= 3;
-                List<CardGroup> newList = list == null ? new ArrayList<>() : list;
+                newCards[i] -= 3;
+                List<CardGroup> newList = new ArrayList(list);
                 newList.add(new CardGroup(CARD_GROUP_TYPE_KE, i));
-                add2List(all, newList);
-                if (cardSize==0) {
-                    System.out.println("--全部提出");
+                if (isEmpty(newCards)) {
+                    add2List(all, newList);
                 } else {
-                    test1(newCards,cardsInner , all, newList, isHasFengShun, false, cardSize, count);
+                    test1(newCards, all, newList, isHasFengShun);
                 }
-            }
-            if (isOut) {
-                System.out.println("===============is out index: " + i);
-                cardSize = 14;
-                count = 0;
-                cardsInner = Arrays.copyOf(cards, cards.length);
             }
             //顺
-            if (cardSize > 0 && isShun(cardsInner, i)) {
-                if (list == null) {
-                    System.out.println("======shun");
-                }
+            if (isShun(cards, i)) {
                 int[] newCards = Arrays.copyOf(cards, cards.length);
-                cardsInner[i] -= 1;
-                cardsInner[i + 1] -= 1;
-                cardsInner[i + 2] -= 1;
-                cardSize -= 3;
-                List<CardGroup> newList = list == null ? new ArrayList<>() : list;
+                newCards[i] -= 1;
+                newCards[i + 1] -= 1;
+                newCards[i + 2] -= 1;
+                List<CardGroup> newList = new ArrayList(list);
                 newList.add(new CardGroup(CARD_GROUP_TYPE_SHUN, i));
-                add2List(all, newList);
-                if (cardSize==0) {
+                if (isEmpty(newCards)) {
+                    add2List(all, newList);
                 } else {
-                    test1(newCards,cardsInner , all, newList, isHasFengShun, false, cardSize, count);
+                    test1(newCards, all, newList, isHasFengShun);
                 }
             }
 
-            if (isOut) {
-                System.out.println("===============is out index: " + i);
-                cardSize = 14;
-                count = 0;
-                cardsInner = Arrays.copyOf(cards, cards.length);
-            }
-            if (cardSize > 0 && isHasFengShun) {
+            if (isHasFengShun) {
                 //风组成的顺
-                if (isHasFengShun(cardsInner, i, feng_shun_array[0])) {
-                    if (list == null) {
-                        System.out.println("======feng0");
-                    }
+                if (isHasFengShun(cards, i, feng_shun_array[0])) {
                     int[] newCards = Arrays.copyOf(cards, cards.length);
-                    removeFengShun(cardsInner, feng_shun_array[0]);
-                    cardSize -= 3;
-                    List<CardGroup> newList = list == null ? new ArrayList<>() : list;
+                    removeFengShun(newCards, feng_shun_array[0]);
+                    List<CardGroup> newList = new ArrayList(list);
                     newList.add(new CardGroup(CARD_GROUP_TYPE_FENG_SHUN, 0));
-                    add2List(all, newList);
-                    if (cardSize==0) {
+                    if (isEmpty(newCards)) {
+                        add2List(all, newList);
                     } else {
-                        test1(newCards,cardsInner , all, newList, isHasFengShun, false, cardSize, count);
+                        test1(newCards, all, newList, isHasFengShun);
                     }
                 }
-
-                if (isOut) {
-                    System.out.println("===============is out index: " + i);
-                    cardSize = 14;
-                    count = 0;
-                    cardsInner = Arrays.copyOf(cards, cards.length);
-                }
-                if (cardSize > 0 && isHasFengShun(cardsInner, i, feng_shun_array[1])) {
-                    if (list == null) {
-                        System.out.println("======feng1");
-                    }
+                if (isHasFengShun(cards, i, feng_shun_array[1])) {
                     int[] newCards = Arrays.copyOf(cards, cards.length);
-                    removeFengShun(cardsInner, feng_shun_array[1]);
-                    cardSize -= 3;
-                    List<CardGroup> newList = list == null ? new ArrayList<>() : list;
+                    removeFengShun(newCards, feng_shun_array[1]);
+                    List<CardGroup> newList = new ArrayList(list);
                     newList.add(new CardGroup(CARD_GROUP_TYPE_FENG_SHUN, 1));
-                    add2List(all, newList);
-                    if (cardSize==0) {
+                    if (isEmpty(newCards)) {
+                        add2List(all, newList);
                     } else {
-                        test1(newCards, cardsInner, all, newList, isHasFengShun, false, cardSize, count);
+                        test1(newCards, all, newList, isHasFengShun);
                     }
                 }
-                if (isOut) {
-                    System.out.println("===============is out index: " + i);
-                    cardSize = 14;
-                    count = 0;
-                    cardsInner = Arrays.copyOf(cards, cards.length);
-                }
-                if (cardSize > 0 && isHasFengShun(cardsInner, i, feng_shun_array[2])) {
-                    if (list == null) {
-                        System.out.println("======feng2");
-                    }
+                if (isHasFengShun(cards, i, feng_shun_array[2])) {
                     int[] newCards = Arrays.copyOf(cards, cards.length);
-                    removeFengShun(cardsInner, feng_shun_array[2]);
-                    cardSize -= 3;
-                    List<CardGroup> newList = list == null ? new ArrayList<>() : list;
+                    removeFengShun(newCards, feng_shun_array[2]);
+                    List<CardGroup> newList = new ArrayList(list);
                     newList.add(new CardGroup(CARD_GROUP_TYPE_FENG_SHUN, 2));
-                    add2List(all, newList);
-                    if (cardSize==0) {
+                    if (isEmpty(newCards)) {
+                        add2List(all, newList);
                     } else {
-                        test1(newCards, cardsInner, all, newList, isHasFengShun, false, cardSize, count);
+                        test1(newCards, all, newList, isHasFengShun);
                     }
                 }
-                if (isOut) {
-                    System.out.println("===============is out index: " + i);
-                    cardSize = 14;
-                    count = 0;
-                    cardsInner = Arrays.copyOf(cards, cards.length);
-                }
-                if (cardSize > 0 && isHasFengShun(cardsInner, i, feng_shun_array[3])) {
-                    if (list == null) {
-                        System.out.println("======feng3");
-                    }
+                if (isHasFengShun(cards, i, feng_shun_array[3])) {
                     int[] newCards = Arrays.copyOf(cards, cards.length);
-                    cardSize -= 3;
-                    removeFengShun(cardsInner, feng_shun_array[3]);
-                    List<CardGroup> newList = list == null ? new ArrayList<>() : list;
+                    removeFengShun(newCards, feng_shun_array[3]);
+                    List<CardGroup> newList = new ArrayList(list);
                     newList.add(new CardGroup(CARD_GROUP_TYPE_FENG_SHUN, 3));
-                    add2List(all, newList);
-                    if (cardSize==0) {
+                    if (isEmpty(newCards)) {
+                        add2List(all, newList);
                     } else {
-                        test1(newCards, cardsInner, all, newList, isHasFengShun, false, cardSize, count);
+                        test1(newCards, all, newList, isHasFengShun);
                     }
-                }
-                if (isOut) {
-                    System.out.println("===============is out index: " + i);
-                    cardSize = 14;
-                    count = 0;
-                    cardsInner = Arrays.copyOf(cards, cards.length);
                 }
                 //是中发白
-                if (cardSize > 0 && isHasZFB(cardsInner, i)) {
-                    if (list == null) {
-                        System.out.println("======zfb1");
-                    }
+                if (isHasZFB(cards, i)) {
                     int[] newCards = Arrays.copyOf(cards, cards.length);
-                    removeZFB(cardsInner);
-                    List<CardGroup> newList = list == null ? new ArrayList<>() : list;
+                    removeZFB(newCards);
+                    List<CardGroup> newList = new ArrayList(list);
                     newList.add(new CardGroup(CARD_GROUP_TYPE_ZFB, 31));
-                    cardSize -= 3;
-                    add2List(all, newList);
-                    if (cardSize==0) {
+                    if (isEmpty(newCards)) {
+                        add2List(all, newList);
                     } else {
-                        test1(newCards,cardsInner , all, newList, isHasFengShun, false, cardSize, count);
+                        test1(newCards, all, newList, isHasFengShun);
                     }
                 }
             }
 
+            if (list.size() == 0) {
 
+                System.out.println("index : " + i);
+            }
         }
     }
 
@@ -363,9 +278,6 @@ public class Hu {
     }
 
     private static boolean isHasJiang(List<CardGroup> list) {
-        if (list == null) {
-            return false;
-        }
         for (CardGroup cardGroup : list) {
             if (cardGroup.type == CARD_GROUP_TYPE_JIANG) {
                 return true;
@@ -377,18 +289,14 @@ public class Hu {
     private static void add2List(List<List<CardGroup>> list, List<CardGroup> cardGroups) {
         cardGroups.sort(comparator);
         boolean equal = false;
-        if (!list.contains(cardGroups)) {
-            System.out.println("jiaru");
+        for (List<CardGroup> l : list) {
+            if (isEqual(l, cardGroups)) {
+                equal = true;
+            }
+        }
+        if (!equal) {
             list.add(cardGroups);
         }
-//        for (List<CardGroup> l : list) {
-//            if (isEqual(l, cardGroups)) {
-//                equal = true;
-//            }
-//        }
-//        if (!equal) {
-//            list.add(cardGroups);
-//        }
     }
 
     private static boolean isEqual(List<CardGroup> list1, List<CardGroup> list2) {
@@ -412,15 +320,10 @@ public class Hu {
                 3, 3, 3, 3,
                 0, 0, 0
         };
-        List<List<CardGroup>> list = new ArrayList();
+        List list = new ArrayList();
         List<CardGroup> groups = new ArrayList<>();
-        test1(a,a , list, null, true, true, 14, 0);
+        test1(a, list, groups,true);
         System.out.println(list);
-        for(List<CardGroup> l : list){
-            if(l.size() == 5){
-                System.out.println(l);
-            }
-        }
     }
 
     private static boolean isShun(int[] cards, int index) {

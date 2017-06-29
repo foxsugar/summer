@@ -252,6 +252,7 @@ public class GameUserService {
             return ErrorCode.REFERRER_NOT_EXIST;
         }
         userBean.setReferee(referrerId);
+        RedisManager.getUserRedisService().updateUserBean(userBean.getId(),userBean);
         RedisManager.getUserRedisService().addUserMoney(msgKey.getUserId(), 10);
 
         ResponseVo vo = new ResponseVo("userService", "bindReferrer", 0);

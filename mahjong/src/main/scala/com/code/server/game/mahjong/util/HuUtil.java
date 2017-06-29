@@ -266,6 +266,11 @@ public class HuUtil implements HuType {
     }
 
 
+
+    private static boolean isShun(int[] n) {
+        return false;
+    }
+
     //胡牌
     static List<HuCardType> agari(int[] n, boolean... isHasFengShun) {
 //        List<Integer[][]> ret = new ArrayList<Integer[][]>();
