@@ -17,6 +17,15 @@ public class IdWorker {
     private long lastMillis;
     private int count;
 
+    public static IdWorker instance;
+
+    public static IdWorker getDefaultInstance(){
+        if (instance == null) {
+            instance = new IdWorker(100, 2);
+        }
+        return instance;
+    }
+
     public IdWorker(int serverId,int workId){
         this.serverId = serverId;
         this.workId = serverId;

@@ -29,6 +29,7 @@ public class Record {
     public static class RoomRecord {
         String type;
         long time;
+        long id;
         List<UserRecord> records = new ArrayList<>();
 
         public void addRecord(UserRecord userRecord) {
@@ -59,6 +60,15 @@ public class Record {
 
         public RoomRecord setRecords(List<UserRecord> records) {
             this.records = records;
+            return this;
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public RoomRecord setId(long id) {
+            this.id = id;
             return this;
         }
     }
