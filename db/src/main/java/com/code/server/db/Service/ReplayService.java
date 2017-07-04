@@ -4,7 +4,6 @@ import com.code.server.db.dao.IReplayDao;
 import com.code.server.db.model.Replay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 /**
  * Created by Administrator on 2017/7/3.
  */
@@ -30,11 +29,11 @@ public class ReplayService {
         if (replay == null) {
             return false;
         }
-        replay.setCount(replay.getCount() - 1);
-        if (replay.getCount() <= 0){
+        replay.setLeftCount(replay.getLeftCount() - 1);
+        if (replay.getLeftCount() <= 0){
             replayDao.delete(replay);
         }else {
-            save(replay);
+            replayDao.decReplayCountById(replay.getId());
         }
         return true;
     }
