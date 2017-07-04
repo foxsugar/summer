@@ -35,7 +35,7 @@ public class PlayerCardsInfoSZ extends PlayerCardsInfoMj {
         specialHuScore.put(hu_三风三副,10);
         specialHuScore.put(hu_三元一副,1);
         specialHuScore.put(hu_三元两副,7);
-
+        specialHuScore.put(hu_三元三副,50);
 
         specialHuScore.put(hu_门清,1);
         specialHuScore.put(hu_清一色,10);
@@ -46,7 +46,7 @@ public class PlayerCardsInfoSZ extends PlayerCardsInfoMj {
         specialHuScore.put(hu_字一色,50);
         specialHuScore.put(hu_清七对,50);
         specialHuScore.put(hu_清龙,50);
-        specialHuScore.put(hu_三元三副,50);
+
 
         isHasYimenpai = isHasMode(roomInfo.getMode(),MODE_YIMENPAI);
         isHasShuye = isHasMode(roomInfo.getMode(), MODE_SHUYE);

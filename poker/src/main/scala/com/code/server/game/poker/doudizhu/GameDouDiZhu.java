@@ -7,6 +7,7 @@ import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
+import com.code.server.util.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -365,7 +366,8 @@ public class GameDouDiZhu extends Game {
     }
 
     protected void genRecord() {
-        genRecord(playerCardInfos.values().stream().collect(Collectors.toMap(PlayerCardInfoDouDiZhu::getUserId, PlayerCardInfoDouDiZhu::getScore)), room);
+        genRecord(playerCardInfos.values().stream().collect
+                (Collectors.toMap(PlayerCardInfoDouDiZhu::getUserId, PlayerCardInfoDouDiZhu::getScore)), room, IdWorker.getDefaultInstance().nextId());
     }
 
     protected void playStepStart(long dizhu) {
@@ -374,6 +376,10 @@ public class GameDouDiZhu extends Game {
         this.dizhu = dizhu;
         this.step = STEP_PLAY;
         this.playTurn = dizhu;
+        for(PlayerCardInfoDouDiZhu playerCardInfoDouDiZhu : playerCardInfos.values()){
+            playerCardInfoDouDiZhu.allCards.addAll(playerCardInfoDouDiZhu.cards);
+        }
+
     }
 
     /**

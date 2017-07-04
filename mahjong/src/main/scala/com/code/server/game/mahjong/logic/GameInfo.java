@@ -1,6 +1,8 @@
 package com.code.server.game.mahjong.logic;
 
 
+import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.GameOfResult;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserOfResult;
@@ -8,6 +10,9 @@ import com.code.server.game.mahjong.response.*;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
+import com.code.server.kafka.MsgProducer;
+import com.code.server.util.IdWorker;
+import com.code.server.util.SpringUtil;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -61,6 +66,8 @@ public class GameInfo extends Game {
     protected int changeBaoSize = 0;
 
     protected List<Map<Long, Integer>> userOperateList = new ArrayList<>();
+
+    protected Replay replay = new Replay();
 
 
     /**
@@ -130,6 +137,10 @@ public class GameInfo extends Game {
 
         }
         doAfterFapai();
+        //回放的牌信息
+        for (PlayerCardsInfoMj playerCardsInfoMj : playerCardsInfos.values()) {
+            replay.getCards().put(playerCardsInfoMj.getUserId(), playerCardsInfoMj.getCards());
+        }
         //第一个人抓牌
         mopai(firstTurn, "发牌");
 
@@ -255,6 +266,13 @@ public class GameInfo extends Game {
         resp.setIsCanHu(isCanHu);
         resp.setIsCanTing(isCanTing);
 
+        //回放 抓牌
+        OperateReqResp operateReqResp = new OperateReqResp();
+        operateReqResp.setCard(card);
+        operateReqResp.setUserId(userId);
+        operateReqResp.setOperateType(OperateReqResp.type_mopai);
+        replay.getOperate().add(operateReqResp);
+
         //可能的操作
         ResponseVo OperateResponseVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, resp);
         MsgSender.sendMsg2Player(OperateResponseVo, userId);
@@ -290,6 +308,13 @@ public class GameInfo extends Game {
         playCardResp.setCard(this.disCard);
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_PLAY_CARD, playCardResp);
         MsgSender.sendMsg2Player(vo, users);
+
+        //回放 出牌
+        OperateReqResp operateReqResp = new OperateReqResp();
+        operateReqResp.setCard(card);
+        operateReqResp.setUserId(userId);
+        operateReqResp.setOperateType(OperateReqResp.type_play);
+        replay.getOperate().add(operateReqResp);
 
         //其他人能做的操作
         for (Map.Entry<Long, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
@@ -593,6 +618,9 @@ public class GameInfo extends Game {
             operateReqResp.setIsMing(isMing);
             MsgSender.sendMsg2Player(vo, users);
 
+            //回放
+            replay.getOperate().add(operateReqResp);
+
             if (isHasJieGangHu && isMing) {
 
                 for (Map.Entry<Long, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
@@ -721,6 +749,9 @@ public class GameInfo extends Game {
             operateReqResp.setFromUserId(lastPlayUserId);
             operateReqResp.setUserId(userId);
 
+            //回放
+            replay.getOperate().add(operateReqResp);
+
             //通知其他人
             ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
             MsgSender.sendMsg2Player(vo, users);
@@ -761,6 +792,11 @@ public class GameInfo extends Game {
         if (playerCardsInfo == null) {
             return ErrorCode.USER_ERROR;
         }
+
+        OperateReqResp operateReqResp = new OperateReqResp();
+        operateReqResp.setUserId(userId);
+
+
         if (lastOperateUserId == userId) {//自摸
             if (!playerCardsInfo.isCanHu_zimo(catchCard)) {
                 return ErrorCode.CAN_NOT_HU;
@@ -768,6 +804,8 @@ public class GameInfo extends Game {
             room.setBankerId(userId);
             playerCardsInfo.hu_zm(room, this, catchCard);
             handleHu(playerCardsInfo);
+            //回放
+            replay.getOperate().add(operateReqResp);
         } else {
             if (this.disCard == null && jieGangHuCard == null) {
                 return ErrorCode.CAN_NOT_HU;
@@ -796,6 +834,10 @@ public class GameInfo extends Game {
             //截杠胡
             if (jieGangHuCard != null) {
                 playerCardsInfo.hu_dianpao(room, this, beJieGangUser, jieGangHuCard);
+                //回放
+                operateReqResp.setFromUserId(beJieGangUser);
+                operateReqResp.setCard(jieGangHuCard);
+
                 PlayerCardsInfoMj playerCardsInfoBeJie = playerCardsInfos.get(beJieGangUser);
                 //删除杠
                 if (playerCardsInfoBeJie != null) {
@@ -806,12 +848,20 @@ public class GameInfo extends Game {
                 beJieGangUser = -1;
                 jieGangHuCard = null;
 
+
             } else {
                 //删除弃牌
                 deleteDisCard(lastPlayUserId, disCard);
                 playerCardsInfo.hu_dianpao(room, this, lastPlayUserId, disCard);
+                //回放
+                operateReqResp.setFromUserId(lastOperateUserId);
+                operateReqResp.setCard(disCard);
+
                 this.disCard = null;
             }
+
+            //回放
+            replay.getOperate().add(operateReqResp);
             handleHu(playerCardsInfo);
         }
 
@@ -819,7 +869,6 @@ public class GameInfo extends Game {
         return 0;
 
     }
-
 
 
     protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
@@ -879,13 +928,24 @@ public class GameInfo extends Game {
         result.setUserInfos(list);
         MsgSender.sendMsg2Player(vo, users);
 
+
+        //回放
+        replay.setResult(result);
         //生成记录
         genRecord();
     }
 
     @Override
     protected void genRecord() {
-        genRecord(playerCardsInfos.values().stream().collect(Collectors.toMap(PlayerCardsInfoMj::getUserId,PlayerCardsInfoMj::getScore)),room);
+        long id = IdWorker.getDefaultInstance().nextId();
+        genRecord(playerCardsInfos.values().stream().collect
+                (Collectors.toMap(PlayerCardsInfoMj::getUserId, PlayerCardsInfoMj::getScore)), room, id);
+
+
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_REPLAY);
+        kafkaMsgKey.setUserId(id);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, replay);
     }
 
     /**
@@ -920,6 +980,8 @@ public class GameInfo extends Game {
             //通知其他玩家听
             MsgSender.sendMsg2Player(vo, users);
 
+            //回放
+            replay.getOperate().add(operateReqResp);
 
             //通知其他玩家出牌信息
             PlayCardResp playCardResp = new PlayCardResp();
@@ -977,6 +1039,9 @@ public class GameInfo extends Game {
         //通知其他玩家听
         MsgSender.sendMsg2Player(vo, users);
 
+        //回放
+        replay.getOperate().add(operateReqResp);
+
         //吃
         playerCardsInfo.chi(disCard, one, two);
 
@@ -1025,6 +1090,9 @@ public class GameInfo extends Game {
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
         //通知其他玩家听
         MsgSender.sendMsg2Player(vo, users);
+
+        //回放
+        replay.getOperate().add(operateReqResp);
 
         //吃
         playerCardsInfo.chi(disCard, one, two);
@@ -1080,6 +1148,9 @@ public class GameInfo extends Game {
         operateReqResp.setCard(disCard);
         operateReqResp.setFromUserId(lastPlayUserId);
         operateReqResp.setUserId(userId);
+
+        //回放
+        replay.getOperate().add(operateReqResp);
 
         //通知其他人
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);

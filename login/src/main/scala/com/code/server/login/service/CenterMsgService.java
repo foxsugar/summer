@@ -25,6 +25,8 @@ public class CenterMsgService implements IkafkaMsgId{
             case KAFKA_MSG_ID_GEN_RECORD:
                 genRecord(msg);
                 break;
+            case KAFKA_MSG_ID_REPLAY:
+
 
         }
     }
@@ -47,5 +49,9 @@ public class CenterMsgService implements IkafkaMsgId{
                     userRecordService.save(newRecord);
                 }
         }
+    }
+
+    private static void replay(long id,String msg){
+
     }
 }

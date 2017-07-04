@@ -10,7 +10,6 @@ import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -29,11 +28,12 @@ public class Game implements IfaceGame{
 
     }
 
-    protected void genRecord(Map<Long,Double> scores, Room room) {
+    protected void genRecord(Map<Long,Double> scores, Room room,long id) {
+
         Record.RoomRecord roomRecord = new Record.RoomRecord();
         roomRecord.setTime(System.currentTimeMillis());
         roomRecord.setType(room.getRoomType());
-
+        roomRecord.setId(id);
         scores.entrySet().forEach((playerInfo) -> {
             Record.UserRecord userRecord = new Record.UserRecord();
             userRecord.setScore(playerInfo.getValue());

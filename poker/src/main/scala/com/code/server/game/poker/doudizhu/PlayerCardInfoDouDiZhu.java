@@ -14,6 +14,7 @@ import java.util.*;
 public class PlayerCardInfoDouDiZhu implements IfacePlayerInfo {
 
     public long userId;
+    public List<Integer> allCards = new ArrayList<>();
     public List<Integer> cards = new ArrayList<>();//手上的牌
     protected List<Integer> disCards = new ArrayList<>();//丢弃的牌
     protected boolean isQiang;
@@ -269,6 +270,7 @@ public class PlayerCardInfoDouDiZhu implements IfacePlayerInfo {
         vo.userId = this.userId;
         if (watchUser == this.userId) {
             vo.cards.addAll(this.cards);
+            vo.allCards.addAll(this.allCards);
         } else {
             vo.cardNum = this.cards.size();
             vo.isQiang = this.isQiang();
@@ -281,6 +283,7 @@ public class PlayerCardInfoDouDiZhu implements IfacePlayerInfo {
         PlayerCardInfoVo vo = new PlayerCardInfoVo();
         vo.userId = this.userId;
         vo.cards.addAll(this.cards);
+        vo.allCards.addAll(this.allCards);
         vo.isQiang = this.isQiang();
         vo.score = this.getScore();
         return vo;
@@ -372,6 +375,15 @@ public class PlayerCardInfoDouDiZhu implements IfacePlayerInfo {
             }
         }
         return index;
+    }
+
+    public List<Integer> getAllCards() {
+        return allCards;
+    }
+
+    public PlayerCardInfoDouDiZhu setAllCards(List<Integer> allCards) {
+        this.allCards = allCards;
+        return this;
     }
 }
 
