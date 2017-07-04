@@ -78,6 +78,7 @@ public class ErrorCode {
 	public static final int ID_TOKEN_NOT_MATCH = 400001;
 	public static final int GAMESERVER_NOT_OPEN = 500000;
 
+	public static final int REPLAY_NOT_EXIST = 200011;
 
 
 	static class ErrorCodeRepeatChecker {

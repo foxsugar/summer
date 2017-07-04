@@ -8,14 +8,17 @@ import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserVo;
+import com.code.server.db.Service.ReplayService;
 import com.code.server.db.Service.UserRecordService;
 import com.code.server.db.Service.UserService;
+import com.code.server.db.model.Replay;
 import com.code.server.db.model.User;
 import com.code.server.db.model.UserRecord;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.rpc.RpcManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
+import com.code.server.util.SpringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -260,7 +263,25 @@ public class GameUserService {
 
         return 0;
     }
-
+    public int getReplay(KafkaMsgKey msgKey, long id){
+        Replay r = SpringUtil.getBean(ReplayService.class).getReplay(id);
+        if (r == null) {
+            return ErrorCode.REPLAY_NOT_EXIST;
+        }
+        ResponseVo vo = new ResponseVo("replayService", "getReplay", 0);
+        sendMsg(msgKey, vo);
+        return 0;
+    }
+    public int setReplay(KafkaMsgKey msgKey, long id){
+        ReplayService rs = SpringUtil.getBean(ReplayService.class);
+        boolean isSuccess = rs.decReplayCount(id);
+        if (!isSuccess) {
+            return ErrorCode.REPLAY_NOT_EXIST;
+        }
+        ResponseVo vo = new ResponseVo("replayService", "setReplay", 0);
+        sendMsg(msgKey, vo);
+        return 0;
+    }
 
     public static void main(String[] args) {
         String s = "家用饮水机";

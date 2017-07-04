@@ -4,6 +4,7 @@ import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
+import com.code.server.db.Service.ReplayService;
 import com.code.server.kafka.MsgProducer;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class UserServiceMsgDispatch {
     @Autowired
     MsgProducer kafkaMsgProducer;
 
+    @Autowired
+    ReplayService replayService;
 
     public void dispatchMsg(KafkaMsgKey msgKey, JsonNode params) {
         String service = params.get("service").asText();
@@ -66,6 +69,10 @@ public class UserServiceMsgDispatch {
                 return gameUserService.reportingCoord(msgKey,coord);
             case "getCoords":
                 return gameUserService.getCoords(msgKey);
+            case "getReplay":
+                return gameUserService.getReplay(msgKey, params.get("id").asLong());
+            case "setReplay":
+                return gameUserService.setReplay(msgKey, params.get("id").asLong());
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }
