@@ -268,7 +268,7 @@ public class GameUserService {
         if (r == null) {
             return ErrorCode.REPLAY_NOT_EXIST;
         }
-        ResponseVo vo = new ResponseVo("replayService", "getReplay", 0);
+        ResponseVo vo = new ResponseVo("userService", "getReplay", r.getData());
         sendMsg(msgKey, vo);
         return 0;
     }
@@ -278,7 +278,7 @@ public class GameUserService {
         if (!isSuccess) {
             return ErrorCode.REPLAY_NOT_EXIST;
         }
-        ResponseVo vo = new ResponseVo("replayService", "setReplay", 0);
+        ResponseVo vo = new ResponseVo("userService", "setReplay", 0);
         sendMsg(msgKey, vo);
         return 0;
     }

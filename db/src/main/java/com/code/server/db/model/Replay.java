@@ -14,20 +14,11 @@ import javax.persistence.*;
         indexes = {@Index(name = "id", columnList = "id")})
 public class Replay extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @Lob
     @Column(columnDefinition = "longtext")
     private String data;
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
 
     private int count;
 
@@ -45,5 +36,12 @@ public class Replay extends BaseEntity {
 
     public void setData(String data) {
         this.data = data;
+    }
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }

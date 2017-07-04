@@ -124,7 +124,7 @@ public class LoginAction {
 
         if (userId == null) {
             code = login4sqlByAccount(account, password, params);
-            userId = (String)params.get("userId");
+            userId = String.valueOf(params.get("userId"));
         } else {
             String redisToken = userRedisService.getToken(Long.valueOf(userId));
             UserBean userBean = userRedisService.getUserBean(Long.valueOf(userId));

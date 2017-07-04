@@ -40,6 +40,8 @@ public class JacksonUtil {
             //单引号处理
             OBJECT_MAPPER.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 
+            OBJECT_MAPPER.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, false) ;
+
 
 //            OBJECT_MAPPER.enableDefaultTyping();
         }

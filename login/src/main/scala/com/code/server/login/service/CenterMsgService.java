@@ -3,7 +3,9 @@ package com.code.server.login.service;
 import com.code.server.constant.game.Record;
 import com.code.server.constant.kafka.IkafkaMsgId;
 import com.code.server.constant.kafka.KafkaMsgKey;
+import com.code.server.db.Service.ReplayService;
 import com.code.server.db.Service.UserRecordService;
+import com.code.server.db.model.Replay;
 import com.code.server.db.model.UserRecord;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
@@ -18,6 +20,7 @@ public class CenterMsgService implements IkafkaMsgId{
 
     private static UserRecordService userRecordService = SpringUtil.getBean(UserRecordService.class);
 
+    private static ReplayService replayService = SpringUtil.getBean(ReplayService.class);
 
     public static void dispatch(KafkaMsgKey msgKey, String msg){
         int msgId = msgKey.getMsgId();
@@ -26,6 +29,7 @@ public class CenterMsgService implements IkafkaMsgId{
                 genRecord(msg);
                 break;
             case KAFKA_MSG_ID_REPLAY:
+                replay(msg);
 
 
         }
@@ -51,7 +55,16 @@ public class CenterMsgService implements IkafkaMsgId{
         }
     }
 
-    private static void replay(long id,String msg){
+    private static void replay(String msg){
+        if (msg != null) {
+            long id = JsonUtil.readTree(msg).path("id").asLong();
+            int count = JsonUtil.readTree(msg).path("count").asInt();
+            Replay replay = new Replay();
+            replay.setId(id);
+            replay.setCount(count);
+            replay.setData(msg);
+            replayService.save(replay);
+        }
 
     }
 }

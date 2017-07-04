@@ -67,7 +67,7 @@ public class GameInfo extends Game {
 
     protected List<Map<Long, Integer>> userOperateList = new ArrayList<>();
 
-    protected Replay replay = new Replay();
+    protected ReplayMj replay = new ReplayMj();
 
 
     /**
@@ -941,9 +941,11 @@ public class GameInfo extends Game {
         genRecord(playerCardsInfos.values().stream().collect
                 (Collectors.toMap(PlayerCardsInfoMj::getUserId, PlayerCardsInfoMj::getScore)), room, id);
 
+        replay.setId(id);
+        replay.setCount(playerCardsInfos.size());
+        replay.setRoomInfo(this.getRoom().toJSONObject());
 
         KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_REPLAY);
-        kafkaMsgKey.setUserId(id);
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
         msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, replay);
     }

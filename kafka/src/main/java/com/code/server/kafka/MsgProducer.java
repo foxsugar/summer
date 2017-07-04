@@ -3,14 +3,11 @@ package com.code.server.kafka;
 import com.code.server.util.JsonUtil;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.RecordMetadata;
-import org.apache.kafka.common.PartitionInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaOperations;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.ProducerListener;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * 消息生产者
@@ -55,7 +52,12 @@ public class MsgProducer {
 
 
     public void send2Partition(String topic, int partition, String key, Object object){
-        String json = JsonUtil.toJson(object);
+        String json = null;
+        if (object instanceof String) {
+            json = (String)object;
+        } else {
+            json = JsonUtil.toJson(object);
+        }
         send2Partition(topic,partition,key,json);
     }
 
