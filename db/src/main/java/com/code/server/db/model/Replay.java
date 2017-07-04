@@ -14,7 +14,6 @@ import javax.persistence.*;
         indexes = {@Index(name = "id", columnList = "id")})
 public class Replay extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @Lob
