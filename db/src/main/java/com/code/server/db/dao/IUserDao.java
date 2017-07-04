@@ -2,11 +2,7 @@ package com.code.server.db.dao;
 
 
 import com.code.server.db.model.User;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
-
-import java.util.List;
 
 /**
  * Created by win7 on 2017/3/8.

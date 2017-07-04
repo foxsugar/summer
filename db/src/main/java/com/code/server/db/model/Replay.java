@@ -21,15 +21,15 @@ public class Replay extends BaseEntity {
     @Column(columnDefinition = "longtext")
     private String data;
 
-    public int getCount() {
-        return count;
+    public int getLeftCount() {
+        return leftCount;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setLeftCount(int leftCount) {
+        this.leftCount = leftCount;
     }
 
-    private int count;
+    private int leftCount;
 
     public long getId() {
         return id;
