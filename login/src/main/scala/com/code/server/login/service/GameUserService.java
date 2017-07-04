@@ -199,7 +199,7 @@ public class GameUserService {
     public int getUserRecodeByUserId(KafkaMsgKey msgKey,String roomType) {
         UserRecord userRecord = userRecordService.getUserRecordByUserId(msgKey.getUserId());
         List<Record.RoomRecord> roomRecordList = new ArrayList<>();
-        if (userRecord != null) {
+        if (userRecord != null && userRecord.getRecord()!=null && userRecord.getRecord().getRoomRecords().containsKey(roomType)) {
             roomRecordList.addAll(userRecord.getRecord().getRoomRecords().get(roomType));
         }
         ResponseVo vo = new ResponseVo("userService", "getUserRecodeByUserId", roomRecordList);

@@ -8,7 +8,6 @@ import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.IfaceGameVo;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
-import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 
 import java.util.List;
@@ -29,12 +28,12 @@ public class Game implements IfaceGame{
 
     }
 
-    protected void genRecord(Map<Long,Double> scores, Room room) {
+    protected void genRecord(Map<Long,Double> scores, Room room,long id) {
 
         Record.RoomRecord roomRecord = new Record.RoomRecord();
         roomRecord.setTime(System.currentTimeMillis());
         roomRecord.setType(room.getRoomType());
-        roomRecord.setId(IdWorker.getDefaultInstance().nextId());
+        roomRecord.setId(id);
         scores.entrySet().forEach((playerInfo) -> {
             Record.UserRecord userRecord = new Record.UserRecord();
             userRecord.setScore(playerInfo.getValue());

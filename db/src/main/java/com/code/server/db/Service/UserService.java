@@ -4,6 +4,7 @@ package com.code.server.db.Service;
 import com.code.server.db.dao.IUserDao;
 import com.code.server.db.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;

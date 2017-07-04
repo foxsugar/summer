@@ -15,6 +15,8 @@ public class OperateReqResp {
     public static final int type_peng_ting = 7;
     public static final int type_dan = 8;
     public static final int type_xuanfengdan = 9;
+    public static final int type_mopai = 10;
+    public static final int type_play = 11;
 
 
 

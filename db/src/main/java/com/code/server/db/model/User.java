@@ -70,7 +70,7 @@ public class User extends BaseEntity{
 
     @Type(type = "json")
     @Lob
-    @Column(columnDefinition = "longtext")
+    @Column(columnDefinition = "json")
     private UserInfo userInfo = new UserInfo();
 
 
