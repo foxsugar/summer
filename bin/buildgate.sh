@@ -1,6 +1,6 @@
 #!/bin/sh  
-srcDir = "gate"
-desDir = "/root/gate"
+srcDir="gate"
+desDir="/root/gate"
 cd ../
 git pull
 cd $srcDir
