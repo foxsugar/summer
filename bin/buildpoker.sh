@@ -1,7 +1,7 @@
 #!/bin/sh
 baseDir="/root/summer/"
-srcDir="login"
-desDir="/root/login"
+srcDir="poker"
+desDir="/root/poker"
 cd ../
 git pull
 cd $srcDir
@@ -17,4 +17,4 @@ if [ ! -d "$desDir" ];
 fi
 
 cd "$baseDir""$srcDir""/build/libs"
-cp -a $srcDir*.war $desDir
+cp -a $srcDir*.jar $desDir
