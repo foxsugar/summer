@@ -1,6 +1,7 @@
 package com.code.server.db.dao;
 
 import com.code.server.db.model.Replay;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
