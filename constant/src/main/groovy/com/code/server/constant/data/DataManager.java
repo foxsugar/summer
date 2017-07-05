@@ -13,6 +13,8 @@ public class DataManager implements IGameConstant {
     private static DataManager ourInstance = new DataManager();
 
     public Map<String, RoomData> roomDatas = new HashMap<>();
+    public Map<String, RoomData> room1Datas = new HashMap<>();
+
 
     static{
         init();

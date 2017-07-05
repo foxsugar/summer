@@ -14,7 +14,7 @@ public class GameCharsEncoder extends MessageToByteEncoder<Object> {
         String json = (String)object;
         byte[] data = json.getBytes("utf-8");
 //        System.out.println("发送消息===  "+json);
-        logger.info("发送消息===  "+json);
+        logger.info("send msg : "+json);
         out.writeInt(data.length);
         out.writeBytes(data);
     }

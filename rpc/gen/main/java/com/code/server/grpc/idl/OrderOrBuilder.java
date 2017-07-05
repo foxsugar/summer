@@ -41,4 +41,38 @@ public interface OrderOrBuilder extends
    * <code>optional int64 id = 6;</code>
    */
   long getId();
+
+  /**
+   * <code>map&lt;int32, string&gt; m = 7;</code>
+   */
+  int getMCount();
+  /**
+   * <code>map&lt;int32, string&gt; m = 7;</code>
+   */
+  boolean containsM(
+      int key);
+  /**
+   * Use {@link #getMMap()} instead.
+   */
+  @java.lang.Deprecated
+  java.util.Map<java.lang.Integer, java.lang.String>
+  getM();
+  /**
+   * <code>map&lt;int32, string&gt; m = 7;</code>
+   */
+  java.util.Map<java.lang.Integer, java.lang.String>
+  getMMap();
+  /**
+   * <code>map&lt;int32, string&gt; m = 7;</code>
+   */
+
+  java.lang.String getMOrDefault(
+      int key,
+      java.lang.String defaultValue);
+  /**
+   * <code>map&lt;int32, string&gt; m = 7;</code>
+   */
+
+  java.lang.String getMOrThrow(
+      int key);
 }

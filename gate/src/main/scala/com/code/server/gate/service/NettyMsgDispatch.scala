@@ -1,5 +1,6 @@
 package com.code.server.gate.service
 
+import java.util
 import java.util.Comparator
 import java.util.stream.Collectors
 
@@ -20,8 +21,8 @@ import scala.util.Random
   */
 object NettyMsgDispatch {
 
-  val MAHJONG:String = "MAHJONG"
-  val POKER:String = "POKER"
+  val MAHJONG: String = "MAHJONG"
+  val POKER: String = "POKER"
 
   /**
     * 分发消息
@@ -59,7 +60,7 @@ object NettyMsgDispatch {
           msgKey.setUserId(userId)
 
           val server = getSortedServer(MAHJONG)
-          if(server == null) {
+          if (server == null) {
             GateManager.sendMsg(new ResponseVo(service, method, ErrorCode.GAMESERVER_NOT_OPEN), userId)
             return
           }
@@ -69,7 +70,7 @@ object NettyMsgDispatch {
           val msgKey = new KafkaMsgKey
           msgKey.setUserId(userId)
           val server = getSortedServer(POKER)
-          if(server == null) {
+          if (server == null) {
             GateManager.sendMsg(new ResponseVo(service, method, ErrorCode.GAMESERVER_NOT_OPEN), userId)
             return
           }
@@ -115,6 +116,7 @@ object NettyMsgDispatch {
 
   /**
     * 通过服务器类型获得一个服务器实例
+    *
     * @param serverType
     * @return
     */
@@ -156,6 +158,7 @@ object NettyMsgDispatch {
 
     }
   }
+
 
   /**
     * 房间消息分发
@@ -303,24 +306,55 @@ object NettyMsgDispatch {
         kickUser.setId(userId)
         val msgKey = new KafkaMsgKey
         msgKey.msgId = IkafkaMsgId.KAFKA_MSG_ID_GATE_KICK_USER
-        kafkaSend.send2Partition(IKafaTopic.INNER_GATE_TOPIC, loginGateIdInt, msgKey,kickUser)
+        kafkaSend.send2Partition(IKafaTopic.INNER_GATE_TOPIC, loginGateIdInt, msgKey, kickUser)
       }
     }
 
     //登录操作
     val userBean = UserSevice.doLogin(userId, ctx)
+
     GateManager.sendMsg(new ResponseVo("gateService", "login", userBean.toVo), userId)
 
+      //上线通知
+    noticeOnline2Other(userId)
     return 0
 
   }
 
 
+  def noticeOnline2Other(userId: Long): Unit = {
+    val roomId = RedisManager.getUserRedisService.getRoomId(userId)
+    if (roomId != null) {
+      val users = RedisManager.getRoomRedisService.getUsers(roomId)
+      val map = new util.HashMap[String,String]()
+      map.put("userId",userId.toString)
+      val online = new ResponseVo("gateService", "online", map)
+      users.forEach(id => GateManager.sendMsg(online, id))
+    }
+  }
+
+  def noticeOffline2Other(userId: Long): Unit = {
+    val roomId = RedisManager.getUserRedisService.getRoomId(userId)
+    if (roomId != null) {
+      val users = RedisManager.getRoomRedisService.getUsers(roomId)
+      val map = new util.HashMap[String,String]()
+      map.put("userId",userId.toString)
+      val online = new ResponseVo("gateService", "offline", map)
+      users.forEach(id => GateManager.sendMsg(online, id))
+    }
+  }
+
   def main(args: Array[String]): Unit = {
     val kickUser = new KickUser
 
-    println(JsonUtil.toJson(kickUser))
+    var map = new java.util.HashMap[String,String]
 
-    print("9999")
+  map.put("1","3")
+
+
+
+    println(JsonUtil.toJson(map))
+
+
   }
 }

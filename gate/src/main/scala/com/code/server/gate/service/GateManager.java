@@ -1,6 +1,9 @@
 package com.code.server.gate.service;
 
+import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.gate.config.ServerConfig;
+import com.code.server.kafka.MsgProducer;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import io.netty.channel.ChannelHandlerContext;
@@ -37,24 +40,30 @@ public class GateManager {
     }
 
 
-
-
-    public static ChannelHandlerContext getUserNettyCtxByUserId(long userId){
+    public static ChannelHandlerContext getUserNettyCtxByUserId(long userId) {
         return getInstance().userNettyCtx.get(userId);
     }
 
-    public static void putUserNettyCtx(long userId, ChannelHandlerContext ctx){
+    public static void putUserNettyCtx(long userId, ChannelHandlerContext ctx) {
         getInstance().userNettyCtx.put(userId, ctx);
     }
 
-    public static void removeUserNettyCtx(long userId){
+    public static void removeUserNettyCtx(long userId) {
         getInstance().userNettyCtx.remove(userId);
     }
 
-    public static void sendMsg(String msg, long userId){
+    public static void sendMsg(String msg, long userId) {
         ChannelHandlerContext ctx = getUserNettyCtxByUserId(userId);
         if (ctx != null) {
-            ctx.writeAndFlush(msg);
+            String gateId = RedisManager.getUserRedisService().getGateId(userId);
+            if (gateId != null) {
+                int thisGateId = getGateId();
+                if (gateId.equals("" + thisGateId)) {
+                    ctx.writeAndFlush(msg);
+                } else {
+                    SpringUtil.getBean(MsgProducer.class).send2Partition(IKafaTopic.GATE_TOPIC, Integer.valueOf(gateId), "" + userId, msg);
+                }
+            }
         }
     }
 
@@ -64,7 +73,7 @@ public class GateManager {
     }
 
 
-    public static int getGateId(){
+    public static int getGateId() {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         return serverConfig.getServerId();
     }

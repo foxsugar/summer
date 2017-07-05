@@ -25,6 +25,11 @@ public final class Game {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_Order_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_Order_MEntry_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_Order_MEntry_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_Request_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -45,16 +50,18 @@ public final class Game {
     java.lang.String[] descriptorData = {
       "\n\ngame.proto\"A\n\004User\022\n\n\002id\030\001 \001(\003\022\020\n\010user" +
       "name\030\002 \001(\t\022\r\n\005money\030\003 \001(\001\022\014\n\004gold\030\004 \001(\001\"" +
-      "^\n\005Order\022\016\n\006userId\030\001 \001(\003\022\013\n\003num\030\002 \001(\001\022\014\n" +
-      "\004type\030\003 \001(\005\022\r\n\005token\030\004 \001(\t\022\017\n\007agentId\030\005 " +
-      "\001(\005\022\n\n\002id\030\006 \001(\003\"\025\n\007Request\022\n\n\002id\030\001 \001(\003\"0" +
-      "\n\010Response\022\n\n\002id\030\001 \001(\003\022\030\n\004code\030\002 \001(\0162\n.E" +
-      "rrorCode*+\n\nChargeType\022\010\n\004none\020\000\022\t\n\005mone" +
-      "y\020\001\022\010\n\004gold\020\002*\030\n\tErrorCode\022\013\n\007SUCCESS\020\0002" +
-      "o\n\013GameService\022\035\n\006charge\022\006.Order\032\t.Respo" +
-      "nse\"\000\022 \n\013getUserInfo\022\010.Request\032\005.User\"\000\022",
-      "\037\n\010exchange\022\006.Order\032\t.Response\"\000B%\n\030com." +
-      "code.server.grpc.idlB\004GameP\001\210\001\001b\006proto3"
+      "\242\001\n\005Order\022\016\n\006userId\030\001 \001(\003\022\013\n\003num\030\002 \001(\001\022\014" +
+      "\n\004type\030\003 \001(\005\022\r\n\005token\030\004 \001(\t\022\017\n\007agentId\030\005" +
+      " \001(\005\022\n\n\002id\030\006 \001(\003\022\030\n\001m\030\007 \003(\0132\r.Order.MEnt" +
+      "ry\032(\n\006MEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\t" +
+      ":\0028\001\"\025\n\007Request\022\n\n\002id\030\001 \001(\003\"0\n\010Response\022" +
+      "\n\n\002id\030\001 \001(\003\022\030\n\004code\030\002 \001(\0162\n.ErrorCode*+\n" +
+      "\nChargeType\022\010\n\004none\020\000\022\t\n\005money\020\001\022\010\n\004gold" +
+      "\020\002*\030\n\tErrorCode\022\013\n\007SUCCESS\020\0002o\n\013GameServ",
+      "ice\022\035\n\006charge\022\006.Order\032\t.Response\"\000\022 \n\013ge" +
+      "tUserInfo\022\010.Request\032\005.User\"\000\022\037\n\010exchange" +
+      "\022\006.Order\032\t.Response\"\000B%\n\030com.code.server" +
+      ".grpc.idlB\004GameP\001\210\001\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -79,7 +86,13 @@ public final class Game {
     internal_static_Order_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Order_descriptor,
-        new java.lang.String[] { "UserId", "Num", "Type", "Token", "AgentId", "Id", });
+        new java.lang.String[] { "UserId", "Num", "Type", "Token", "AgentId", "Id", "M", });
+    internal_static_Order_MEntry_descriptor =
+      internal_static_Order_descriptor.getNestedTypes().get(0);
+    internal_static_Order_MEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_Order_MEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
     internal_static_Request_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_Request_fieldAccessorTable = new

@@ -23,6 +23,7 @@ message Order{
     int32 agentId = 5;
     int64 id = 6;
     map<int32,string> m = 7;
+    repeated int32 c = 8;
 }
 
 enum ChargeType{

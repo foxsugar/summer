@@ -16,7 +16,6 @@
 package com.code.server.gate.bootstarp;
 
 
-
 import com.code.server.gate.encoding.GameCharsDecoder;
 import com.code.server.gate.encoding.GameCharsEncoder;
 import com.code.server.gate.handle.GameMsgHandler;
@@ -25,6 +24,8 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.timeout.IdleStateHandler;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  */
@@ -42,10 +43,10 @@ public class SocketServerInitializer extends ChannelInitializer<SocketChannel> {
         if (sslCtx != null) {
             p.addLast(sslCtx.newHandler(ch.alloc()));
         }
-        p.addLast(new IdleStateHandler(60,60,60));
 //        p.addLast(new LoggingHandler(LogLevel.INFO));
         p.addLast("encoder", new GameCharsEncoder());
         p.addLast("decoder", new GameCharsDecoder());
+        p.addLast("timeout", new IdleStateHandler(15, 0, 0, TimeUnit.SECONDS));
 //        p.addLast(new SocketHandler());
         p.addLast("gameHandler", new GameMsgHandler());
     }

@@ -79,6 +79,18 @@ public  final class Order extends
             id_ = input.readInt64();
             break;
           }
+          case 58: {
+            if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+              m_ = com.google.protobuf.MapField.newMapField(
+                  MDefaultEntryHolder.defaultEntry);
+              mutable_bitField0_ |= 0x00000040;
+            }
+            com.google.protobuf.MapEntry<java.lang.Integer, java.lang.String>
+            m = input.readMessage(
+                MDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+            m_.getMutableMap().put(m.getKey(), m.getValue());
+            break;
+          }
         }
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -95,6 +107,17 @@ public  final class Order extends
     return com.code.server.grpc.idl.Game.internal_static_Order_descriptor;
   }
 
+  @SuppressWarnings({"rawtypes"})
+  protected com.google.protobuf.MapField internalGetMapField(
+      int number) {
+    switch (number) {
+      case 7:
+        return internalGetM();
+      default:
+        throw new RuntimeException(
+            "Invalid map field number: " + number);
+    }
+  }
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
     return com.code.server.grpc.idl.Game.internal_static_Order_fieldAccessorTable
@@ -102,6 +125,7 @@ public  final class Order extends
             com.code.server.grpc.idl.Order.class, com.code.server.grpc.idl.Order.Builder.class);
   }
 
+  private int bitField0_;
   public static final int USERID_FIELD_NUMBER = 1;
   private long userId_;
   /**
@@ -181,6 +205,82 @@ public  final class Order extends
     return id_;
   }
 
+  public static final int M_FIELD_NUMBER = 7;
+  private static final class MDefaultEntryHolder {
+    static final com.google.protobuf.MapEntry<
+        java.lang.Integer, java.lang.String> defaultEntry =
+            com.google.protobuf.MapEntry
+            .<java.lang.Integer, java.lang.String>newDefaultInstance(
+                com.code.server.grpc.idl.Game.internal_static_Order_MEntry_descriptor, 
+                com.google.protobuf.WireFormat.FieldType.INT32,
+                0,
+                com.google.protobuf.WireFormat.FieldType.STRING,
+                "");
+  }
+  private com.google.protobuf.MapField<
+      java.lang.Integer, java.lang.String> m_;
+  private com.google.protobuf.MapField<java.lang.Integer, java.lang.String>
+  internalGetM() {
+    if (m_ == null) {
+      return com.google.protobuf.MapField.emptyMapField(
+          MDefaultEntryHolder.defaultEntry);
+    }
+    return m_;
+  }
+
+  public int getMCount() {
+    return internalGetM().getMap().size();
+  }
+  /**
+   * <code>map&lt;int32, string&gt; m = 7;</code>
+   */
+
+  public boolean containsM(
+      int key) {
+    
+    return internalGetM().getMap().containsKey(key);
+  }
+  /**
+   * Use {@link #getMMap()} instead.
+   */
+  @java.lang.Deprecated
+  public java.util.Map<java.lang.Integer, java.lang.String> getM() {
+    return getMMap();
+  }
+  /**
+   * <code>map&lt;int32, string&gt; m = 7;</code>
+   */
+
+  public java.util.Map<java.lang.Integer, java.lang.String> getMMap() {
+    return internalGetM().getMap();
+  }
+  /**
+   * <code>map&lt;int32, string&gt; m = 7;</code>
+   */
+
+  public java.lang.String getMOrDefault(
+      int key,
+      java.lang.String defaultValue) {
+    
+    java.util.Map<java.lang.Integer, java.lang.String> map =
+        internalGetM().getMap();
+    return map.containsKey(key) ? map.get(key) : defaultValue;
+  }
+  /**
+   * <code>map&lt;int32, string&gt; m = 7;</code>
+   */
+
+  public java.lang.String getMOrThrow(
+      int key) {
+    
+    java.util.Map<java.lang.Integer, java.lang.String> map =
+        internalGetM().getMap();
+    if (!map.containsKey(key)) {
+      throw new java.lang.IllegalArgumentException();
+    }
+    return map.get(key);
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -210,6 +310,15 @@ public  final class Order extends
     }
     if (id_ != 0L) {
       output.writeInt64(6, id_);
+    }
+    for (java.util.Map.Entry<java.lang.Integer, java.lang.String> entry
+         : internalGetM().getMap().entrySet()) {
+      com.google.protobuf.MapEntry<java.lang.Integer, java.lang.String>
+      m = MDefaultEntryHolder.defaultEntry.newBuilderForType()
+          .setKey(entry.getKey())
+          .setValue(entry.getValue())
+          .build();
+      output.writeMessage(7, m);
     }
   }
 
@@ -241,6 +350,16 @@ public  final class Order extends
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(6, id_);
     }
+    for (java.util.Map.Entry<java.lang.Integer, java.lang.String> entry
+         : internalGetM().getMap().entrySet()) {
+      com.google.protobuf.MapEntry<java.lang.Integer, java.lang.String>
+      m = MDefaultEntryHolder.defaultEntry.newBuilderForType()
+          .setKey(entry.getKey())
+          .setValue(entry.getValue())
+          .build();
+      size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(7, m);
+    }
     memoizedSize = size;
     return size;
   }
@@ -271,6 +390,8 @@ public  final class Order extends
         == other.getAgentId());
     result = result && (getId()
         == other.getId());
+    result = result && internalGetM().equals(
+        other.internalGetM());
     return result;
   }
 
@@ -296,6 +417,10 @@ public  final class Order extends
     hash = (37 * hash) + ID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getId());
+    if (!internalGetM().getMap().isEmpty()) {
+      hash = (37 * hash) + M_FIELD_NUMBER;
+      hash = (53 * hash) + internalGetM().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -390,6 +515,28 @@ public  final class Order extends
       return com.code.server.grpc.idl.Game.internal_static_Order_descriptor;
     }
 
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 7:
+          return internalGetM();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMutableMapField(
+        int number) {
+      switch (number) {
+        case 7:
+          return internalGetMutableM();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.code.server.grpc.idl.Game.internal_static_Order_fieldAccessorTable
@@ -426,6 +573,7 @@ public  final class Order extends
 
       id_ = 0L;
 
+      internalGetMutableM().clear();
       return this;
     }
 
@@ -448,12 +596,17 @@ public  final class Order extends
 
     public com.code.server.grpc.idl.Order buildPartial() {
       com.code.server.grpc.idl.Order result = new com.code.server.grpc.idl.Order(this);
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
       result.userId_ = userId_;
       result.num_ = num_;
       result.type_ = type_;
       result.token_ = token_;
       result.agentId_ = agentId_;
       result.id_ = id_;
+      result.m_ = internalGetM();
+      result.m_.makeImmutable();
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -514,6 +667,8 @@ public  final class Order extends
       if (other.getId() != 0L) {
         setId(other.getId());
       }
+      internalGetMutableM().mergeFrom(
+          other.internalGetM());
       onChanged();
       return this;
     }
@@ -539,6 +694,7 @@ public  final class Order extends
       }
       return this;
     }
+    private int bitField0_;
 
     private long userId_ ;
     /**
@@ -736,6 +892,125 @@ public  final class Order extends
       
       id_ = 0L;
       onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.MapField<
+        java.lang.Integer, java.lang.String> m_;
+    private com.google.protobuf.MapField<java.lang.Integer, java.lang.String>
+    internalGetM() {
+      if (m_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            MDefaultEntryHolder.defaultEntry);
+      }
+      return m_;
+    }
+    private com.google.protobuf.MapField<java.lang.Integer, java.lang.String>
+    internalGetMutableM() {
+      onChanged();;
+      if (m_ == null) {
+        m_ = com.google.protobuf.MapField.newMapField(
+            MDefaultEntryHolder.defaultEntry);
+      }
+      if (!m_.isMutable()) {
+        m_ = m_.copy();
+      }
+      return m_;
+    }
+
+    public int getMCount() {
+      return internalGetM().getMap().size();
+    }
+    /**
+     * <code>map&lt;int32, string&gt; m = 7;</code>
+     */
+
+    public boolean containsM(
+        int key) {
+      
+      return internalGetM().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getMMap()} instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.Integer, java.lang.String> getM() {
+      return getMMap();
+    }
+    /**
+     * <code>map&lt;int32, string&gt; m = 7;</code>
+     */
+
+    public java.util.Map<java.lang.Integer, java.lang.String> getMMap() {
+      return internalGetM().getMap();
+    }
+    /**
+     * <code>map&lt;int32, string&gt; m = 7;</code>
+     */
+
+    public java.lang.String getMOrDefault(
+        int key,
+        java.lang.String defaultValue) {
+      
+      java.util.Map<java.lang.Integer, java.lang.String> map =
+          internalGetM().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;int32, string&gt; m = 7;</code>
+     */
+
+    public java.lang.String getMOrThrow(
+        int key) {
+      
+      java.util.Map<java.lang.Integer, java.lang.String> map =
+          internalGetM().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public Builder clearM() {
+      getMutableM().clear();
+      return this;
+    }
+    /**
+     * <code>map&lt;int32, string&gt; m = 7;</code>
+     */
+
+    public Builder removeM(
+        int key) {
+      
+      getMutableM().remove(key);
+      return this;
+    }
+    /**
+     * Use alternate mutation accessors instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.Integer, java.lang.String>
+    getMutableM() {
+      return internalGetMutableM().getMutableMap();
+    }
+    /**
+     * <code>map&lt;int32, string&gt; m = 7;</code>
+     */
+    public Builder putM(
+        int key,
+        java.lang.String value) {
+      
+      if (value == null) { throw new java.lang.NullPointerException(); }
+      getMutableM().put(key, value);
+      return this;
+    }
+    /**
+     * <code>map&lt;int32, string&gt; m = 7;</code>
+     */
+
+    public Builder putAllM(
+        java.util.Map<java.lang.Integer, java.lang.String> values) {
+      getMutableM().putAll(values);
       return this;
     }
     public final Builder setUnknownFields(
