@@ -61,7 +61,7 @@ public class CenterMsgService implements IkafkaMsgId{
             int count = JsonUtil.readTree(msg).path("count").asInt();
             Replay replay = new Replay();
             replay.setId(id);
-            replay.setCount(count);
+            replay.setLeftCount(count);
             replay.setData(msg);
             replayService.save(replay);
         }
