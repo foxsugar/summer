@@ -11,7 +11,11 @@ buildscript {
 	}
 }
 
-
+allprojects {
+	repositories {
+		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+	}
+}
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'scala'
