@@ -25,7 +25,7 @@ public class ReplayService {
 
 
     public boolean decReplayCount(long id){
-        Replay replay = replayDao.getReplayById(id);
+        Replay replay = replayDao.getReplayCountById(id);
         if (replay == null) {
             return false;
         }

@@ -1,6 +1,7 @@
 package com.code.server.db.Service;
 
 import com.code.server.constant.game.Record;
+import com.code.server.db.dao.IReplayDao;
 import com.code.server.db.dao.IUserRecordDao;
 import com.code.server.db.model.UserRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.List;
 
 
 @Service("userRecordService")
@@ -21,21 +21,30 @@ public class UserRecordService {
     private IUserRecordDao userRecordDao;
 
 
+    @Autowired
+    private ReplayService replayService;
 
-    public List<Record.RoomRecord> getUserByUserIDAndType(long userid, int type) {
-        UserRecord user = userRecordDao.findOne(userid);
-        if (user == null) {
-            return null;
-        }
-        return user.getRecord().getRoomRecords().get(type);
-    }
 
+    /**
+     * 添加一条战绩 超过指定条数后删除第一条
+     * @param userid
+     * @param roomRecord
+     * @return
+     */
     public UserRecord addRecord(long userid, Record.RoomRecord roomRecord) {
-        UserRecord user = userRecordDao.findOne(userid);
+        UserRecord userRecords = userRecordDao.findOne(userid);
 
-        user.getRecord().addRoomRecord(roomRecord);
+        Record.RoomRecord rc = userRecords.getRecord().addRoomRecord(roomRecord);
+        //有删除的战绩
+        if (rc != null) {
+            long replayId = rc.getId();
+            replayService.decReplayCount(replayId);
 
-        return userRecordDao.save(user);
+
+        }
+        return userRecordDao.save(userRecords);
+
+
     }
 
     public UserRecord getUserRecordByUserId(long userId){

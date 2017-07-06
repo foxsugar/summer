@@ -536,6 +536,10 @@ public class Room implements IfaceRoom {
         if (this.game != null) {
             roomVo.game = this.game.toVo(userId);
         }
+        if (this.getTimerNode() != null) {
+            long time = this.getTimerNode().getStart() + this.getTimerNode().getInterval() - System.currentTimeMillis();
+            roomVo.setRemainTime(time);
+        }
         return roomVo;
     }
 

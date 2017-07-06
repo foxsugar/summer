@@ -1,7 +1,5 @@
 package com.code.server.constant.response;
 
-import com.code.server.constant.game.RoomStatistics;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +33,7 @@ public class RoomVo implements IfaceRoomVo {
     public int personNumber;
     public boolean isAA;
     public boolean isCreaterJoin;
+    public long remainTime = -1;
 
     public RoomVo() {
     }
@@ -210,5 +209,12 @@ public class RoomVo implements IfaceRoomVo {
         return this;
     }
 
+    public long getRemainTime() {
+        return remainTime;
+    }
 
+    public RoomVo setRemainTime(long remainTime) {
+        this.remainTime = remainTime;
+        return this;
+    }
 }

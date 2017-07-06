@@ -14,16 +14,24 @@ public class Record {
     private Map<String, List<RoomRecord>> roomRecords = new HashMap<>();
 
 
-    public void addRoomRecord(RoomRecord roomRecord) {
+    /**
+     * 追加一条战绩,超过指定条数删除第一条
+     * @param roomRecord
+     * @return
+     */
+    public RoomRecord addRoomRecord(RoomRecord roomRecord) {
+        RoomRecord result = null;
         List<RoomRecord> list = roomRecords.get(roomRecord.type);
         if (list == null) {
             list = new ArrayList<>();
         }
         list.add(roomRecord);
         if (list.size() > MAX_SIZE) {
+            result = list.get(0);
             list.remove(0);
         }
         roomRecords.put(roomRecord.type, list);
+        return result;
     }
 
     public static class RoomRecord {

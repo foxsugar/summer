@@ -75,6 +75,10 @@ public class ReconnService {
 
             }
             allMessage.setUsers(userList);
+            if (roomInfo.getTimerNode() != null) {
+                long time = roomInfo.getTimerNode().getStart() + roomInfo.getTimerNode().getInterval() - System.currentTimeMillis();
+                allMessage.setRemainTime(time);
+            }
         }
         ResponseVo vo = new ResponseVo("reconnService", "reconnection", allMessage);
         MsgSender.sendMsg2Player(vo, userId);

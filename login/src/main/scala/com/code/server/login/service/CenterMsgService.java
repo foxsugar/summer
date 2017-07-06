@@ -15,14 +15,14 @@ import java.util.List;
 /**
  * Created by sunxianping on 2017/6/16.
  */
-public class CenterMsgService implements IkafkaMsgId{
+public class CenterMsgService implements IkafkaMsgId {
 
 
     private static UserRecordService userRecordService = SpringUtil.getBean(UserRecordService.class);
 
     private static ReplayService replayService = SpringUtil.getBean(ReplayService.class);
 
-    public static void dispatch(KafkaMsgKey msgKey, String msg){
+    public static void dispatch(KafkaMsgKey msgKey, String msg) {
         int msgId = msgKey.getMsgId();
         switch (msgId) {
             case KAFKA_MSG_ID_GEN_RECORD:
@@ -35,27 +35,27 @@ public class CenterMsgService implements IkafkaMsgId{
         }
     }
 
-    private static void genRecord(String msg){
+    private static void genRecord(String msg) {
         Record.RoomRecord roomRecord = JsonUtil.readValue(msg, Record.RoomRecord.class);
 
         List<Record.UserRecord> lists = roomRecord.getRecords();
-        for(Record.UserRecord userRecord: lists){
+        for (Record.UserRecord userRecord : lists) {
             UserRecord addRecord = userRecordService.getUserRecordByUserId(userRecord.getUserId());
-                if (addRecord!=null){
-                    userRecordService.addRecord(userRecord.getUserId(),roomRecord);
-                }else{
-                    Record record = new Record();
-                    record.addRoomRecord(roomRecord);
+            if (addRecord != null) {
+                userRecordService.addRecord(userRecord.getUserId(), roomRecord);
+            } else {
+                Record record = new Record();
+                record.addRoomRecord(roomRecord);
 
-                    UserRecord newRecord = new UserRecord();
-                    newRecord.setId(userRecord.getUserId());
-                    newRecord.setRecord(record);
-                    userRecordService.save(newRecord);
-                }
+                UserRecord newRecord = new UserRecord();
+                newRecord.setId(userRecord.getUserId());
+                newRecord.setRecord(record);
+                userRecordService.save(newRecord);
+            }
         }
     }
 
-    private static void replay(String msg){
+    private static void replay(String msg) {
         if (msg != null) {
             long id = JsonUtil.readTree(msg).path("id").asLong();
             int count = JsonUtil.readTree(msg).path("count").asInt();

@@ -793,8 +793,10 @@ public class GameInfo extends Game {
             return ErrorCode.USER_ERROR;
         }
 
+        //回放
         OperateReqResp operateReqResp = new OperateReqResp();
         operateReqResp.setUserId(userId);
+        operateReqResp.setOperateType(OperateReqResp.type_hu);
 
 
         if (lastOperateUserId == userId) {//自摸
@@ -861,6 +863,7 @@ public class GameInfo extends Game {
             }
 
             //回放
+            operateReqResp.setIsMing(true);
             replay.getOperate().add(operateReqResp);
             handleHu(playerCardsInfo);
         }

@@ -1,9 +1,7 @@
 package com.code.server.game.mahjong.response;
 
 
-import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.UserVo;
-import com.code.server.game.mahjong.logic.RoomInfo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +38,7 @@ public class AllMessage {
 	private int curGameNumber;
 	private int cardNumber;
 	private int circleNum;
+	private long remainTime = -1;
 
 
 	public Map<String, Object> getRoom() {
@@ -148,6 +147,15 @@ public class AllMessage {
 
 	public AllMessage setUserScores(Map<Long, Double> userScores) {
 		this.userScores = userScores;
+		return this;
+	}
+
+	public long getRemainTime() {
+		return remainTime;
+	}
+
+	public AllMessage setRemainTime(long remainTime) {
+		this.remainTime = remainTime;
 		return this;
 	}
 }
