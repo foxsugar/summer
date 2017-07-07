@@ -41,6 +41,7 @@ public class ReconnService {
         result.put("createUser", roomInfo.getCreateUser());
         result.put("each", roomInfo.getEach());
         result.put("roomType", roomInfo.getRoomType());
+        result.put("dissloutionUser", roomInfo.getDissloutionUser());//申请解散房间的人
 
         return result;
     }

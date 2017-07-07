@@ -2,6 +2,7 @@
 dir="/root/login"
 jar_prefix="login"
 cd $dir
+rm -rf log
 nohup java -server -Xmx3g -Xms3g \
 -XX:+PrintGCDetails \
 -XX:+PrintGCDateStamps \

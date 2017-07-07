@@ -391,18 +391,20 @@ public class RoomInfo extends Room {
 
 
     public Map<String, Object> toJSONObject() {
-        Map<String, Object> jSONObject = new HashMap<>();
-        jSONObject.put("roomType", this.roomType);
-        jSONObject.put("roomId", this.roomId);
-        jSONObject.put("modeTotal", this.modeTotal);
-        jSONObject.put("mode", this.mode);
-        jSONObject.put("multiple", this.multiple);
-        jSONObject.put("gameNumber", this.gameNumber);
-        jSONObject.put("personNumber", this.personNumber);
-        jSONObject.put("createUser", this.createUser);
-        jSONObject.put("userList", RedisManager.getUserRedisService().getUserBeans(this.users));
-        jSONObject.put("each", this.each);//1是4个分开付，0是user付
-        return jSONObject;
+        Map<String, Object> result = new HashMap<>();
+        result.put("roomType", this.roomType);
+        result.put("roomId", this.roomId);
+        result.put("modeTotal", this.modeTotal);
+        result.put("mode", this.mode);
+        result.put("multiple", this.multiple);
+        result.put("gameNumber", this.gameNumber);
+        result.put("personNumber", this.personNumber);
+        result.put("createUser", this.createUser);
+        result.put("userList", RedisManager.getUserRedisService().getUserBeans(this.users));
+        result.put("each", this.each);//1是4个分开付，0是user付
+
+
+        return result;
     }
 
 

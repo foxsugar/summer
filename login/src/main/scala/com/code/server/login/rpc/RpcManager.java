@@ -63,12 +63,15 @@ public class RpcManager {
     public static void main(String[] args) {
 //        testGame(1);
         try {
-//            charge("123.56.8.137",10001,100);
+            for(int i=0;i<19;i++){
+
+                charge("103.73.206.28",i,1000);
+            }
 //            charge("123.56.8.137",10002,100);
 //            charge("123.56.8.137",10003,100);
 //            charge("123.56.8.137",10004,100);
 
-            appCheck("192.168.1.132");
+//            appCheck("192.168.1.132");
         } catch (TException e) {
             e.printStackTrace();
         }

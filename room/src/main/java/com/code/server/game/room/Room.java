@@ -52,11 +52,12 @@ public class Room implements IfaceRoom {
     private int drawForLeaveChip = 0;//平局留下筹码
     protected int hasNine;
     protected boolean isCanDissloution = false;
+    protected long dissloutionUser = -1;//申请解散房间的人
     protected Long dealFirstOfRoom;//第一个发牌的人
-    protected boolean isAA;
-    protected boolean isCreaterJoin = true;
+    protected boolean isAA;//是否共同付费
+    protected boolean isCreaterJoin = true;//是否是代开房
     protected boolean isAddGold;
-    protected Map<Long, RoomStatistics> roomStatisticsMap = new HashMap<>();
+    protected Map<Long, RoomStatistics> roomStatisticsMap = new HashMap<>();//统计
 
 
     public static int joinRoomQuick(MsgSender player, int type) {
@@ -346,6 +347,7 @@ public class Room implements IfaceRoom {
 
         //第一个点解散
         if (agreeOrNot && !isHasDissolutionRequest) {
+            dissloutionUser = userId;
             isCanDissloution = true;
             this.isHasDissolutionRequest = true;
             //第一次申请 五分钟后解散
@@ -792,6 +794,15 @@ public class Room implements IfaceRoom {
 
     public Room setRoomStatisticsMap(Map<Long, RoomStatistics> roomStatisticsMap) {
         this.roomStatisticsMap = roomStatisticsMap;
+        return this;
+    }
+
+    public long getDissloutionUser() {
+        return dissloutionUser;
+    }
+
+    public Room setDissloutionUser(long dissloutionUser) {
+        this.dissloutionUser = dissloutionUser;
         return this;
     }
 }

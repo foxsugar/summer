@@ -145,19 +145,22 @@ public class LoginAction {
     }
 
     private void setHostAndPort(String userId, Map<String, Object> params, boolean isSet) {
-        String gateId = RedisManager.getUserRedisService().getGateId(Long.valueOf(userId));
-        com.code.server.redis.config.ServerInfo serverInfo = null;
-        if (gateId != null) {
-            serverInfo = RedisManager.getGateRedisService().getServerInfo(gateId);
-        }
-        if (serverInfo == null) {
-            serverInfo = LoginService.getSortedServer("GATE");
-        }
-        if (serverInfo != null && isSet) {
-            params.put("port", serverInfo.getPort());
-            params.put("ip", serverInfo.getHost());
-            params.put("domain", serverInfo.getDomain());
+        if(isSet){
 
+            String gateId = RedisManager.getUserRedisService().getGateId(Long.valueOf(userId));
+            com.code.server.redis.config.ServerInfo serverInfo = null;
+            if (gateId != null) {
+                serverInfo = RedisManager.getGateRedisService().getServerInfo(gateId);
+            }
+            if (serverInfo == null) {
+                serverInfo = LoginService.getSortedServer("GATE");
+            }
+            if (serverInfo != null && isSet) {
+                params.put("port", serverInfo.getPort());
+                params.put("ip", serverInfo.getHost());
+                params.put("domain", serverInfo.getDomain());
+
+            }
         }
     }
 
