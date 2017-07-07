@@ -136,6 +136,7 @@ object NettyMsgDispatch {
     servers.get(randId)
   }
 
+
   /**
     * 网关消息分发
     *
@@ -345,15 +346,19 @@ object NettyMsgDispatch {
   }
 
   def main(args: Array[String]): Unit = {
-    val kickUser = new KickUser
+//    val kickUser = new KickUser
+//
+//    var map = new java.util.HashMap[String,String]
+//
+//  map.put("1","3")
+//
+//
+//
+//    println(JsonUtil.toJson(map))
 
-    var map = new java.util.HashMap[String,String]
-
-  map.put("1","3")
-
-
-
-    println(JsonUtil.toJson(map))
+    val s = "1"
+    val i = s.asInstanceOf[Int]
+    print(i)
 
 
   }

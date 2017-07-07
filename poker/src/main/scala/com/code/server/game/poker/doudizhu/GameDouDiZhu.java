@@ -376,9 +376,7 @@ public class GameDouDiZhu extends Game {
         this.dizhu = dizhu;
         this.step = STEP_PLAY;
         this.playTurn = dizhu;
-        for(PlayerCardInfoDouDiZhu playerCardInfoDouDiZhu : playerCardInfos.values()){
-            playerCardInfoDouDiZhu.allCards.addAll(playerCardInfoDouDiZhu.cards);
-        }
+
 
     }
 
@@ -395,6 +393,9 @@ public class GameDouDiZhu extends Game {
             playerCardInfo.cards.addAll(tableCards);
             //给所有人看
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "showTableCard", tableCards), users);
+        }
+        for(PlayerCardInfoDouDiZhu playerCardInfoDouDiZhu : playerCardInfos.values()){
+            playerCardInfoDouDiZhu.allCards.addAll(playerCardInfoDouDiZhu.cards);
         }
 
     }

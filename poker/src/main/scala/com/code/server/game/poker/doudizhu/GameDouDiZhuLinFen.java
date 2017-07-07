@@ -250,6 +250,9 @@ public class GameDouDiZhuLinFen extends GameDouDiZhu{
             //只给地主看
             MsgSender.sendMsg2Player(new ResponseVo("gameService","showTableCard",tableCards),dizhu);
         }
+        for(PlayerCardInfoDouDiZhu playerCardInfoDouDiZhu : playerCardInfos.values()){
+            playerCardInfoDouDiZhu.allCards.addAll(playerCardInfoDouDiZhu.cards);
+        }
 
     }
 
