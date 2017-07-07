@@ -71,7 +71,7 @@ public class GameMsgHandler extends ChannelDuplexHandler {
             //下线通知
             NettyMsgDispatch.noticeOffline2Other(userId);
         }
-        super.channelInactive(ctx);
+//        super.channelInactive(ctx);
     }
 
 
