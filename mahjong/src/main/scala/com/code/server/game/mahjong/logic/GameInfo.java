@@ -805,9 +805,9 @@ public class GameInfo extends Game {
             }
             room.setBankerId(userId);
             playerCardsInfo.hu_zm(room, this, catchCard);
-            handleHu(playerCardsInfo);
             //回放
             replay.getOperate().add(operateReqResp);
+            handleHu(playerCardsInfo);
         } else {
             if (this.disCard == null && jieGangHuCard == null) {
                 return ErrorCode.CAN_NOT_HU;

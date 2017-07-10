@@ -2,12 +2,16 @@ package com.code.server.game.poker.doudizhu;
 
 
 import com.code.server.constant.game.CardStruct;
+import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.*;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
+import com.code.server.kafka.MsgProducer;
 import com.code.server.util.IdWorker;
+import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +58,7 @@ public class GameDouDiZhu extends Game {
     protected int tableScore;//底分
     protected boolean isNMQiang = false;//农民是否抢过
     protected long lastOperateTime;
+    protected ReplayDouDiZhu replay = new ReplayDouDiZhu();
 
 
     public void startGame(List<Long> users, Room room) {
@@ -124,6 +129,9 @@ public class GameDouDiZhu extends Game {
         //处理炸
         handleBomb(cardStruct);
 
+        //回放
+        replay.getOperate().add(Operate.getOperate_PLAY(userId,cardStruct,false));
+
         //牌打完
         if (playerCardInfo.cards.size() == 0) {
             PlayerCardInfoDouDiZhu playerCardInfoDizhu = playerCardInfos.get(dizhu);
@@ -175,6 +183,8 @@ public class GameDouDiZhu extends Game {
         MsgSender.sendMsg2Player("gameService", "passResponse", rs, this.users);
         MsgSender.sendMsg2Player("gameService", "pass", 0, userId);
 
+        //回放
+        replay.getOperate().add(Operate.getOperate_PLAY(userId,null,true));
         updateLastOperateTime();
         return 0;
     }
@@ -296,6 +306,11 @@ public class GameDouDiZhu extends Game {
         MsgSender.sendMsg2Player("gameService", "jiaoDizhu", 0, userId);
 
         updateLastOperateTime();
+
+
+        //回放
+        replay.getOperate().add(Operate.getOperate_JDZ(userId,score,!isJiao));
+
         return 0;
     }
 
@@ -349,6 +364,7 @@ public class GameDouDiZhu extends Game {
         MsgSender.sendMsg2Player("gameService", "gameResult", gameResultDouDizhu, users);
 
 
+        replay.setResult(gameResultDouDizhu);
     }
 
     protected void sendFinalResult() {
@@ -366,8 +382,20 @@ public class GameDouDiZhu extends Game {
     }
 
     protected void genRecord() {
+        long id = IdWorker.getDefaultInstance().nextId();
         genRecord(playerCardInfos.values().stream().collect
-                (Collectors.toMap(PlayerCardInfoDouDiZhu::getUserId, PlayerCardInfoDouDiZhu::getScore)), room, IdWorker.getDefaultInstance().nextId());
+                (Collectors.toMap(PlayerCardInfoDouDiZhu::getUserId, PlayerCardInfoDouDiZhu::getScore)), room, id);
+
+
+        //回放
+        replay.setId(id);
+        replay.setCount(playerCardInfos.size());
+        replay.setRoomInfo(this.room.toVo(0));
+
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_REPLAY);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, replay);
+
     }
 
     protected void playStepStart(long dizhu) {
@@ -394,10 +422,20 @@ public class GameDouDiZhu extends Game {
             //给所有人看
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "showTableCard", tableCards), users);
         }
+        doAfterStart();
+    }
+
+    /**
+     * 开始游戏后的处理
+     */
+    protected void doAfterStart(){
+        //玩家所有的牌
         for(PlayerCardInfoDouDiZhu playerCardInfoDouDiZhu : playerCardInfos.values()){
             playerCardInfoDouDiZhu.allCards.addAll(playerCardInfoDouDiZhu.cards);
-        }
 
+            //回放 玩家的牌
+            replay.getCards().put(playerCardInfoDouDiZhu.getUserId(), playerCardInfoDouDiZhu.allCards);
+        }
     }
 
     protected void pushChooseDizhu() {
@@ -449,6 +487,8 @@ public class GameDouDiZhu extends Game {
 
 
         updateLastOperateTime();
+        //回放
+        replay.getOperate().add(Operate.getOperate_QDZ(userId,!isQiang));
         return 0;
     }
 

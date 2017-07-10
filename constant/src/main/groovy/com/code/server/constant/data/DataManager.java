@@ -2,6 +2,10 @@ package com.code.server.constant.data;
 
 import com.code.server.constant.game.IGameConstant;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,11 +18,34 @@ public class DataManager implements IGameConstant {
 
     public Map<String, RoomData> roomDatas = new HashMap<>();
 
+    public  static StaticDataProto.DataManager data;
 
     static{
         init();
     }
 
+    private static void initData(String file) throws IOException {
+        InputStream in = new FileInputStream(file);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+
+        int off = 0;
+        while ((off = in.read(buffer, 0, 1024)) > 0) {
+            out.write(buffer, 0, off);
+        }
+        String byteString = new String(out.toByteArray()).replace("\r\n", "\n");
+        byte[] bytes = byteString.getBytes();
+
+        data = StaticDataProto.DataManager.parseFrom(bytes);
+
+
+    }
+
+    public static void main(String[] args) throws IOException {
+        initData("E:\\StaticDataGenerator\\out\\static_data.data");
+
+
+    }
     private static void init(){
         RoomData roomData_longqi = new RoomData();
         RoomData roomData_qianan = new RoomData();

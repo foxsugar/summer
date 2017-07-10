@@ -59,7 +59,7 @@ public class FanUtil implements HuType{
 			huCardType.specialHuList.add(hu_缺一门);
 			fan += playerCardsInfo.getSpecialHuScore(hu_缺一门);
 		}
-		if (playerCardsInfo.isHasSpecialHu(hu_缺两门) &&no_group_num(cards,huCardType) == 2) {//缺两门
+		if (playerCardsInfo.isHasSpecialHu(hu_缺两门) &&no_group_num(cards,huCardType) >= 2) {//缺两门
 			huCardType.specialHuList.add(hu_缺两门);
 			fan += playerCardsInfo.getSpecialHuScore(hu_缺两门);
 		}

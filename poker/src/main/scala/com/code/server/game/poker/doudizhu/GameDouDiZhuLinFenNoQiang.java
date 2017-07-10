@@ -55,6 +55,8 @@ public class GameDouDiZhuLinFenNoQiang extends GameDouDiZhuLinFen {
         MsgSender.sendMsg2Player("gameService","jiaoDizhu",0,userId);
 
         updateLastOperateTime();
+        //回放
+        replay.getOperate().add(Operate.getOperate_JDZ(userId,score,!isJiao));
         return 0;
     }
 }

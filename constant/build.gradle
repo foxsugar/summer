@@ -30,6 +30,7 @@ repositories {
 
 dependencies {
 	compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.11'
+	compile group: 'io.grpc', name: 'grpc-protobuf', version: '1.2.0'
 }
 
 tasks.withType(JavaCompile) {

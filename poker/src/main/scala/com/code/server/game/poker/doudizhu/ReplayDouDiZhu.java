@@ -1,5 +1,8 @@
 package com.code.server.game.poker.doudizhu;
 
+import com.code.server.constant.response.GameResultDouDizhu;
+import com.code.server.constant.response.IfaceRoomVo;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,5 +18,62 @@ public class ReplayDouDiZhu {
     private Map<Long, List<Integer>> cards = new HashMap<>();
     private List<Operate> operate = new ArrayList<>();
 
-    private Map<String, Object> roomInfo = new HashMap<>();
+    private IfaceRoomVo roomInfo ;
+    private GameResultDouDizhu result;
+
+
+    public long getId() {
+        return id;
+    }
+
+    public ReplayDouDiZhu setId(long id) {
+        this.id = id;
+        return this;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public ReplayDouDiZhu setCount(int count) {
+        this.count = count;
+        return this;
+    }
+
+    public Map<Long, List<Integer>> getCards() {
+        return cards;
+    }
+
+    public ReplayDouDiZhu setCards(Map<Long, List<Integer>> cards) {
+        this.cards = cards;
+        return this;
+    }
+
+    public List<Operate> getOperate() {
+        return operate;
+    }
+
+
+    public ReplayDouDiZhu setOperate(List<Operate> operate) {
+        this.operate = operate;
+        return this;
+    }
+
+    public IfaceRoomVo getRoomInfo() {
+        return roomInfo;
+    }
+
+    public ReplayDouDiZhu setRoomInfo(IfaceRoomVo roomInfo) {
+        this.roomInfo = roomInfo;
+        return this;
+    }
+
+    public GameResultDouDizhu getResult() {
+        return result;
+    }
+
+    public ReplayDouDiZhu setResult(GameResultDouDizhu result) {
+        this.result = result;
+        return this;
+    }
 }

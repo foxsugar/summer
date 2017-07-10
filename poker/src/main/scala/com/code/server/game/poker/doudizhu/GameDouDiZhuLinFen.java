@@ -111,6 +111,8 @@ public class GameDouDiZhuLinFen extends GameDouDiZhu{
         MsgSender.sendMsg2Player("gameService","jiaoDizhu",0,userId);
 
         updateLastOperateTime();
+        //回放
+        replay.getOperate().add(Operate.getOperate_JDZ(userId,score,!isJiao));
         return 0;
     }
 
@@ -195,6 +197,8 @@ public class GameDouDiZhuLinFen extends GameDouDiZhu{
         MsgSender.sendMsg2Player("gameService","qiangDizhu",0,userId);
 
         updateLastOperateTime();
+        //回放
+        replay.getOperate().add(Operate.getOperate_QDZ(userId,!isQiang));
         return 0;
     }
 
@@ -250,9 +254,7 @@ public class GameDouDiZhuLinFen extends GameDouDiZhu{
             //只给地主看
             MsgSender.sendMsg2Player(new ResponseVo("gameService","showTableCard",tableCards),dizhu);
         }
-        for(PlayerCardInfoDouDiZhu playerCardInfoDouDiZhu : playerCardInfos.values()){
-            playerCardInfoDouDiZhu.allCards.addAll(playerCardInfoDouDiZhu.cards);
-        }
+        doAfterStart();
 
     }
 

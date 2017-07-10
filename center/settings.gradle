@@ -1,2 +1,2 @@
 rootProject.name = 'center'
-includeFlat  'util','constant','redis','db','gate'
+includeFlat  'util','constant','redis','db'
