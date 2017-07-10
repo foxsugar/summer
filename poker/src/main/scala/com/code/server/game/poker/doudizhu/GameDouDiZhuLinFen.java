@@ -78,11 +78,11 @@ public class GameDouDiZhuLinFen extends GameDouDiZhu{
         //不叫 下个人能叫
         if (!isJiao) {
             bujiaoSet.add(userId);
-            if (bujiaoSet.size() >= users.size()) {
+            if (bujiaoSet.size() >= users.size()) {//三个人都不叫
                 sendResult(true,false);
                 room.clearReadyStatus(true);
                 sendFinalResult();
-            } else {
+            } else {//下个人叫
                 long nextJiao = nextTurnId(userId);
                 canJiaoUser = nextJiao;
                 noticeCanJiao(nextJiao);
@@ -94,7 +94,6 @@ public class GameDouDiZhuLinFen extends GameDouDiZhu{
             if (chooseJiaoSet.size() >= users.size()) {
                 startPlay(jiaoUser);
             } else {
-
                 step = STEP_QIANG_DIZHU;
                 long nextId = nextTurnId(userId);
                 this.canQiangUser = nextId;

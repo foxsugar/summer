@@ -13,5 +13,12 @@ public class ServerManager {
     public static void init(){
         ConstantService constantService = SpringUtil.getBean(ConstantService.class);
         constant = constantService.constantDao.findOne(1L);
+        if (constant == null) {
+            Constant constant1 = new Constant();
+            constant1.setAppleCheck(1).setDownload("0").setInitMoney(100).setMarquee("welcome").setVersionOfAndroid("0").setVersionOfIos("0").setDownload2("0");
+            constantService.constantDao.save(constant1);
+            constant = constant1;
+
+        }
     }
 }

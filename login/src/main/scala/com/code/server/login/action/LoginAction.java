@@ -94,7 +94,7 @@ public class LoginAction {
         saveUser2Redis(user, token);
 
         params.put("token", token);
-        params.put("userId", user.getId());
+        params.put("userId", ""+user.getId());
         return 0;
     }
 
