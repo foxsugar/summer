@@ -32,7 +32,7 @@ public class RoomDouDiZhu extends Room {
             case GAMETYPE_LONGQI:
                 return new GameDouDiZhu();
             case GAMETYPE_LONGQI_LINFEN:
-                return new GameDouDiZhuLinFen();
+                return new GameDouDiZhuLinFenLongQi();
             case GAMETYPE_LONGQI_LINFEN_NO_QIANG:
                 return new GameDouDiZhuLinFenNoQiang();
 

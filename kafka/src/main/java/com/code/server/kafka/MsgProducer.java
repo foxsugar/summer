@@ -3,6 +3,8 @@ package com.code.server.kafka;
 import com.code.server.util.JsonUtil;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaOperations;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MsgProducer {
+    private static final Logger logger = LoggerFactory.getLogger(MsgProducer.class);
     @Autowired
     private KafkaTemplate<String,String> kafkaTemplate;
 
@@ -29,6 +32,7 @@ public class MsgProducer {
     }
 
     public void send2Partition(String topic, int partition, String key, String data) {
+        logger.info(data);
         kafkaTemplate.send(topic, partition, key,data);
         kafkaTemplate.flush();
     }
