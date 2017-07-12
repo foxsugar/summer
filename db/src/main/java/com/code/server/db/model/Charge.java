@@ -20,6 +20,7 @@ public class Charge {
 
     @Id
     private String orderId;
+    private String transaction_id;
     private long userid;
     private Date createtime;
     private Date callbacktime;
@@ -154,5 +155,14 @@ public class Charge {
 
     public void setRecharge_source(String recharge_source) {
         this.recharge_source = recharge_source;
+    }
+
+    public String getTransaction_id() {
+        return transaction_id;
+    }
+
+    public Charge setTransaction_id(String transaction_id) {
+        this.transaction_id = transaction_id;
+        return this;
     }
 }

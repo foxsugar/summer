@@ -79,6 +79,8 @@ public class GameDouDiZhu extends Game {
 
         shuffle();
         deal();
+        //第一局 第一个玩家做地主
+        dizhuUser = dizhuUser != 0 ? dizhuUser : users.get(0);
         chooseDizhu(dizhuUser);
     }
 

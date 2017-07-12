@@ -30,9 +30,9 @@ import java.util.TreeMap;
 public class PayCallback {
 
     @Autowired
-    private ChargeService chargeService ;
+    private ChargeService chargeService;
     @Autowired
-    private UserService userService ;
+    private UserService userService;
 
     @Autowired
     private ServerConfig serverConfig;
@@ -73,7 +73,7 @@ public class PayCallback {
         secondParams.put("transaction_id", element.elementText("transaction_id"));
 
 
-        String paySign = PayUtil.createSign("UTF-8",serverConfig.getKey(), secondParams);
+        String paySign = PayUtil.createSign("UTF-8", serverConfig.getKey(), secondParams);
 
         System.out.println(paySign);
 
@@ -81,105 +81,104 @@ public class PayCallback {
         String returnXML = null;
 
 
-        //回调成功
-        if ("SUCCESS".equals(element.elementText("return_code"))) {
-            System.out.println("回调成功");
-            //业务返回成功
+        System.out.println("回调成功");
+        //业务返回成功
 
-            Charge charge = chargeService.getChargeByOrderid(element.elementText("out_trade_no"));
-            if ("SUCCESS".equals(element.elementText("result_code"))) {
-                System.out.println("业务成功");
+        Charge charge = chargeService.getChargeByOrderid(element.elementText("out_trade_no"));
+        if ("SUCCESS".equals(element.elementText("result_code"))) {
+            String transaction_id = element.elementText("transaction_id");
+            charge.setTransaction_id(transaction_id);
+            System.out.println("业务成功");
 
-                System.out.println(charge.getMoney());
-                System.out.println(element.elementText("cash_fee"));
-                System.out.println(paySign);
-                System.out.println(element.elementText("sign"));
+            System.out.println(charge.getMoney());
+            System.out.println(element.elementText("cash_fee"));
+            System.out.println(paySign);
+            System.out.println(element.elementText("sign"));
 
-                if (paySign.equals(element.elementText("sign"))
-                        && String.valueOf(charge.getMoney()).equals(String.valueOf(Double.valueOf(element.elementText("cash_fee")) / 100))) {
+            if (paySign.equals(element.elementText("sign"))
+                    && String.valueOf(charge.getMoney()).equals(String.valueOf(Double.valueOf(element.elementText("total_fee")) / 100))) {
 
-                    if (0==charge.getStatus()) {
-                            System.out.println("修改订单状态");
-                            //修改支付订单状态 已支付
-                            charge.setStatus(1);
-                            chargeService.save(charge);
-
-
-
-                        UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
-
-                            if(UserBeanRedis!=null){
-                                userRedisService.setUserMoney(charge.getUserid(),UserBeanRedis.getMoney() + Double.valueOf(element.elementText("total_fee")) / 10);
-                            }else{
-                                //查询玩家
-                                User user = userService.getUserByUserId(charge.getUserid());
-                                System.out.println("修改玩家豆豆");
-                                //修改玩家豆豆
-                                user.setMoney(user.getMoney() + Integer.valueOf(element.elementText("total_fee")) / 10);
-                                userService.save(user);
-                            }
+                if (0 == charge.getStatus()) {
+                    System.out.println("修改订单状态");
+                    //修改支付订单状态 已支付
+                    charge.setStatus(1);
+                    chargeService.save(charge);
 
 
+                    UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
 
-                            System.out.println("通知客户端刷新充值");
-                            Map<String, String> rs = new HashMap<>();
-                           MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
-                    }else{
-                        Map<String, String> rs = new HashMap<>();
-                        rs.put("err_code", element.elementText("err_code"));
-                        rs.put("err_code_des", element.elementText("err_code_des"));
-                        ResponseVo vo = new ResponseVo("userService", "refresh", rs);
-                        vo.setCode(ErrorCode.ORDER_WAS_PAID);
-                        MsgSender.sendMsg2Player(vo, charge.getUserid());
+                    if (UserBeanRedis != null) {
+                        //  userRedisService.setUserMoney(charge.getUserid(),UserBeanRedis.getMoney() + Double.valueOf(element.elementText("total_fee")) / 10);
+                        userRedisService.addUserMoney(charge.getUserid(), Double.valueOf(element.elementText("total_fee")));
+                    } else {
+                        //查询玩家
+                        User user = userService.getUserByUserId(charge.getUserid());
+                        System.out.println("修改玩家豆豆");
+                        //修改玩家豆豆
+                        user.setMoney(user.getMoney() + Integer.valueOf(element.elementText("total_fee")) / 10);
+                        userService.save(user);
                     }
 
-		    			/*returnXML = "<xml>";
-                        returnXML += "<return_code>![CDATA[SUCCESS]]</return_code>";
-		    		    returnXML += "<return_msg>![CDATA[OK]]</return_msg>";
-		    		    returnXML += "</xml>";*/
 
-                    returnXML = "SUCCESS";
-                }else{
+                    System.out.println("通知客户端刷新充值");
                     Map<String, String> rs = new HashMap<>();
-                    rs.put("err_code", element.elementText("err_code"));
-                    rs.put("err_code_des", element.elementText("err_code_des"));
-                    ResponseVo vo = new ResponseVo("userService", "refresh", rs);
-                    vo.setCode(ErrorCode.PARAMETER_SIGN_MONEY_ERROR);
-                    MsgSender.sendMsg2Player(vo, charge.getUserid());
-
-                    returnXML = "SUCCESS";
-                }
-            } else {
-
-                //余额不足
-                if ("NOTENOUGH".equals(element.elementText("err_code"))) {
-                    Map<String, String> rs = new HashMap<>();
-                    rs.put("err_code", element.elementText("err_code"));
-                    rs.put("err_code_des", element.elementText("err_code_des"));
-                    ResponseVo vo = new ResponseVo("userService", "refresh", rs);
-                    vo.setCode(ErrorCode.BALANCE_INSUFFICIENT);
-                    MsgSender.sendMsg2Player(vo, charge.getUserid());
-                    //订单已支付
-                } else if ("ORDERPAID".equals(element.elementText("err_code"))) {
+                    MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
+                } else {
                     Map<String, String> rs = new HashMap<>();
                     rs.put("err_code", element.elementText("err_code"));
                     rs.put("err_code_des", element.elementText("err_code_des"));
                     ResponseVo vo = new ResponseVo("userService", "refresh", rs);
                     vo.setCode(ErrorCode.ORDER_WAS_PAID);
                     MsgSender.sendMsg2Player(vo, charge.getUserid());
-                    //订单已关闭
-                } else if ("ORDERCLOSED".equals(element.elementText("err_code"))) {
-                    Map<String, String> rs = new HashMap<>();
-                    rs.put("err_code", element.elementText("err_code"));
-                    rs.put("err_code_des", element.elementText("err_code_des"));
-                    ResponseVo vo = new ResponseVo("userService", "refresh", rs);
-                    vo.setCode(ErrorCode.ORDER_WAS_CLOSED);
-                    MsgSender.sendMsg2Player(vo, charge.getUserid());
                 }
+
+		    			/*returnXML = "<xml>";
+                        returnXML += "<return_code>![CDATA[SUCCESS]]</return_code>";
+		    		    returnXML += "<return_msg>![CDATA[OK]]</return_msg>";
+		    		    returnXML += "</xml>";*/
+
+                returnXML = "SUCCESS";
+            } else {
+                Map<String, String> rs = new HashMap<>();
+                rs.put("err_code", element.elementText("err_code"));
+                rs.put("err_code_des", element.elementText("err_code_des"));
+                ResponseVo vo = new ResponseVo("userService", "refresh", rs);
+                vo.setCode(ErrorCode.PARAMETER_SIGN_MONEY_ERROR);
+                MsgSender.sendMsg2Player(vo, charge.getUserid());
 
                 returnXML = "SUCCESS";
             }
+        } else {
+
+            //余额不足
+            if ("NOTENOUGH".equals(element.elementText("err_code"))) {
+                Map<String, String> rs = new HashMap<>();
+                rs.put("err_code", element.elementText("err_code"));
+                rs.put("err_code_des", element.elementText("err_code_des"));
+                ResponseVo vo = new ResponseVo("userService", "refresh", rs);
+                vo.setCode(ErrorCode.BALANCE_INSUFFICIENT);
+                MsgSender.sendMsg2Player(vo, charge.getUserid());
+                //订单已支付
+            } else if ("ORDERPAID".equals(element.elementText("err_code"))) {
+                Map<String, String> rs = new HashMap<>();
+                rs.put("err_code", element.elementText("err_code"));
+                rs.put("err_code_des", element.elementText("err_code_des"));
+                ResponseVo vo = new ResponseVo("userService", "refresh", rs);
+                vo.setCode(ErrorCode.ORDER_WAS_PAID);
+                MsgSender.sendMsg2Player(vo, charge.getUserid());
+                //订单已关闭
+            } else if ("ORDERCLOSED".equals(element.elementText("err_code"))) {
+                Map<String, String> rs = new HashMap<>();
+                rs.put("err_code", element.elementText("err_code"));
+                rs.put("err_code_des", element.elementText("err_code_des"));
+                ResponseVo vo = new ResponseVo("userService", "refresh", rs);
+                vo.setCode(ErrorCode.ORDER_WAS_CLOSED);
+                MsgSender.sendMsg2Player(vo, charge.getUserid());
+            }
+
+            returnXML = "SUCCESS";
         }
+
         System.out.println("回调结束，返回微信成功信息");
 
         System.out.println(returnXML);
