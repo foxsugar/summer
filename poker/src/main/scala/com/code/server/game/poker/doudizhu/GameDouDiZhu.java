@@ -359,6 +359,7 @@ public class GameDouDiZhu extends Game {
         gameResultDouDizhu.setSpring(isSpring);
         gameResultDouDizhu.setDizhuWin(isDizhuWin);
         gameResultDouDizhu.setReopen(isReopen);
+        gameResultDouDizhu.setTableCards(tableCards);
         for (PlayerCardInfoDouDiZhu playerCardInfo : playerCardInfos.values()) {
             gameResultDouDizhu.getPlayerCardInfos().add(playerCardInfo.toVo());
 

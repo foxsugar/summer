@@ -817,11 +817,12 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
         PlayerCardsInfoMj playerCardsInfo = new PlayerCardsInfoMj();
 
+        playerCardsInfo.isHasFengShun = true;
 
 //        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","042","124","135"};
 //        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","134","042","124","135"};
+//        String[] s = new String[]{"124","128","132",     "016",  "017","018",    "020",     "024","025","026",   "028","029",    "032","033"};
         String[] s = new String[]{"012","013","014",     "016",  "017","018",    "020",     "024","025","026",   "028","029",    "032","033"};
-
 
         List<String> cs = Arrays.asList(s);
         playerCardsInfo.cards = cs;

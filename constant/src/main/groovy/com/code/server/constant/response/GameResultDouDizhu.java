@@ -12,6 +12,7 @@ public class GameResultDouDizhu {
     public boolean isSpring;
     public int multiple;
     public boolean isReopen;
+    public List<Integer> tableCards = new ArrayList<>();
 
     public List<IfacePlayerInfoVo> getPlayerCardInfos() {
         return playerCardInfos;
@@ -55,6 +56,15 @@ public class GameResultDouDizhu {
 
     public GameResultDouDizhu setReopen(boolean reopen) {
         isReopen = reopen;
+        return this;
+    }
+
+    public List<Integer> getTableCards() {
+        return tableCards;
+    }
+
+    public GameResultDouDizhu setTableCards(List<Integer> tableCards) {
+        this.tableCards = tableCards;
         return this;
     }
 }

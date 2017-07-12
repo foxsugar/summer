@@ -4,7 +4,6 @@ package com.code.server.game.mahjong.util;
 
 import com.code.server.game.mahjong.logic.CardTypeUtil;
 import com.code.server.game.mahjong.logic.PlayerCardsInfoMj;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.*;
 
@@ -57,6 +56,10 @@ public class HuUtil implements HuType {
             {27, 29, 30}
     };
 
+    static Integer[] zi_shun_array = new Integer[]{
+            31,32,33
+    };
+
     static List<List<Integer>> feng = new ArrayList<>();
     static List<Integer> feng1 = new ArrayList<>();
     static List<Integer> feng2 = new ArrayList<>();
@@ -102,16 +105,6 @@ public class HuUtil implements HuType {
         return temp;
     }
 
-    /**
-     * 能胡的牌
-     *
-     * @param list
-     * @param isHasFengShun
-     * @return
-     */
-    private static List<HuCardType> isHuCommon(List<String> list, boolean... isHasFengShun) {
-        return agari(analyse(convert(list)), isHasFengShun);
-    }
 
     /**
      * 能胡的牌
@@ -240,135 +233,113 @@ public class HuUtil implements HuType {
         return result;
     }
 
-    /**
-     * 能听的牌
-     *
-     * @param list
-     * @param exclude
-     * @param isHasFengShun
-     * @return
-     */
-    private static List<Integer> isTing(List<String> list, List<Integer> exclude, boolean... isHasFengShun) {
-        List<Integer> ting = new ArrayList<>();
-        for (int i = 0; i < n_zero.length; i++) {
-            //不包含
-            if (!exclude.contains(i)) {
-                //加入数组
-                int[] a = convert(list);
-                int[] b = Arrays.copyOf(a, a.length + 1);
-                b[a.length] = i;
-                if (agari(analyse(b), isHasFengShun).size() > 0) {
-                    ting.add(i);
-                }
-            }
-        }
-        return ting;
-    }
 
 
 
-    private static boolean isShun(int[] n) {
-        return false;
-    }
+
 
     //胡牌
     static List<HuCardType> agari(int[] n, boolean... isHasFengShun) {
-//        List<Integer[][]> ret = new ArrayList<Integer[][]>();
         List<HuCardType> ret = new ArrayList<>();
 
-        for (int i = 0; i < 34; i++) {
-
-            for (int ke_first = 0; ke_first < 2; ke_first++) {
-                Integer[] jiang = new Integer[1];
-                ArrayList<Integer> ke = new ArrayList<Integer>();
-                ArrayList<Integer> shun = new ArrayList<Integer>();
-                ArrayList<List<Integer>> feng = new ArrayList<>();
-                int zi_num = 0;
-
-                int[] t = n.clone();
-                if (t[i] >= 2) {
-                    // 循环可以做将的牌
-                    t[i] -= 2;
-                    jiang[0] = i;
-
-                    if (ke_first == 0) {//先找刻
-                        // 寻找刻
-                        for (int j = 0; j < 34; j++) {
-                            if (t[j] >= 3) {
-                                t[j] -= 3;
-                                ke.add(j);
-                            }
-                        }
-                        // 顺
-                        for (int a = 0; a < 3; a++) {
-                            for (int b = 0; b < 7; ) {//8万以后不能成顺
-                                if (t[9 * a + b] >= 1 && t[9 * a + b + 1] >= 1 && t[9 * a + b + 2] >= 1) {
-                                    int one = 9 * a + b;
-                                    int two = 9 * a + b + 1;
-                                    int three = 9 * a + b + 2;
-                                    t[one]--;
-                                    t[two]--;
-                                    t[three]--;
-                                    shun.add(9 * a + b);
-                                } else {
-                                    b++;
-                                }
-                            }
-                        }
-                        if (isHasFengShun.length > 0 && isHasFengShun[0]) {
-
-                            //处理风
-                            disposeFENG(t, feng);
-                            //处理字
-                            zi_num = disposeZFB(t);
-                        }
-                    } else {//先找顺
-                        if (isHasFengShun.length > 0 && isHasFengShun[0]) {
-                            //处理风
-                            disposeFENG(t, feng);
-                            //处理字
-                            zi_num = disposeZFB(t);
-                        }
-
-                        // 找顺
-                        for (int a = 0; a < 3; a++) {
-                            for (int b = 0; b < 7; ) {
-                                if (t[9 * a + b] >= 1 &&
-                                        t[9 * a + b + 1] >= 1 &&
-                                        t[9 * a + b + 2] >= 1) {
-                                    t[9 * a + b]--;
-                                    t[9 * a + b + 1]--;
-                                    t[9 * a + b + 2]--;
-                                    shun.add(9 * a + b);
-                                } else {
-                                    b++;
-                                }
-                            }
-                        }
-                        // 找刻
-                        for (int j = 0; j < 34; j++) {
-                            if (t[j] >= 3) {
-                                t[j] -= 3;
-                                ke.add(j);
-                            }
-                        }
-                    }
-
-                    //
-                    if (Arrays.equals(t, n_zero)) {
-                        HuCardType huCardType = new HuCardType();
-                        huCardType.jiang = jiang[0];
-                        huCardType.shun = shun;
-                        huCardType.ke = ke;
-                        huCardType.feng_shun = feng;
-                        huCardType.zi_shun = zi_num;
-
-                        add(ret, huCardType);
-                    }
-                }
-            }
-        }
-        return ret;
+        List<List<Hu1.CardGroup>> list = new ArrayList();
+        List<Hu1.CardGroup> groups = new ArrayList<>();
+        boolean isHasF = isHasFengShun.length != 0 && isHasFengShun[0];
+        Hu1.test1(n,list,groups,isHasF);
+        return Hu1.convert(list);
+//        for (int i = 0; i < 34; i++) {
+//
+//            for (int ke_first = 0; ke_first < 2; ke_first++) {
+//                Integer[] jiang = new Integer[1];
+//                ArrayList<Integer> ke = new ArrayList<Integer>();
+//                ArrayList<Integer> shun = new ArrayList<Integer>();
+//                ArrayList<List<Integer>> feng = new ArrayList<>();
+//                int zi_num = 0;
+//
+//                int[] t = n.clone();
+//                if (t[i] >= 2) {
+//                    // 循环可以做将的牌
+//                    t[i] -= 2;
+//                    jiang[0] = i;
+//
+//                    if (ke_first == 0) {//先找刻
+//                        // 寻找刻
+//                        for (int j = 0; j < 34; j++) {
+//                            if (t[j] >= 3) {
+//                                t[j] -= 3;
+//                                ke.add(j);
+//                            }
+//                        }
+//                        // 顺
+//                        for (int a = 0; a < 3; a++) {
+//                            for (int b = 0; b < 7; ) {//8万以后不能成顺
+//                                if (t[9 * a + b] >= 1 && t[9 * a + b + 1] >= 1 && t[9 * a + b + 2] >= 1) {
+//                                    int one = 9 * a + b;
+//                                    int two = 9 * a + b + 1;
+//                                    int three = 9 * a + b + 2;
+//                                    t[one]--;
+//                                    t[two]--;
+//                                    t[three]--;
+//                                    shun.add(9 * a + b);
+//                                } else {
+//                                    b++;
+//                                }
+//                            }
+//                        }
+//                        if (isHasFengShun.length > 0 && isHasFengShun[0]) {
+//
+//                            //处理风
+//                            disposeFENG(t, feng);
+//                            //处理字
+//                            zi_num = disposeZFB(t);
+//                        }
+//                    } else {//先找顺
+//                        if (isHasFengShun.length > 0 && isHasFengShun[0]) {
+//                            //处理风
+//                            disposeFENG(t, feng);
+//                            //处理字
+//                            zi_num = disposeZFB(t);
+//                        }
+//
+//                        // 找顺
+//                        for (int a = 0; a < 3; a++) {
+//                            for (int b = 0; b < 7; ) {
+//                                if (t[9 * a + b] >= 1 &&
+//                                        t[9 * a + b + 1] >= 1 &&
+//                                        t[9 * a + b + 2] >= 1) {
+//                                    t[9 * a + b]--;
+//                                    t[9 * a + b + 1]--;
+//                                    t[9 * a + b + 2]--;
+//                                    shun.add(9 * a + b);
+//                                } else {
+//                                    b++;
+//                                }
+//                            }
+//                        }
+//                        // 找刻
+//                        for (int j = 0; j < 34; j++) {
+//                            if (t[j] >= 3) {
+//                                t[j] -= 3;
+//                                ke.add(j);
+//                            }
+//                        }
+//                    }
+//
+//                    //
+//                    if (Arrays.equals(t, n_zero)) {
+//                        HuCardType huCardType = new HuCardType();
+//                        huCardType.jiang = jiang[0];
+//                        huCardType.shun = shun;
+//                        huCardType.ke = ke;
+//                        huCardType.feng_shun = feng;
+//                        huCardType.zi_shun = zi_num;
+//
+//                        add(ret, huCardType);
+//                    }
+//                }
+//            }
+//        }
+//        return ret;
     }
 
     private static void add(List<HuCardType> ret, HuCardType huCardType) {
@@ -617,38 +588,7 @@ public class HuUtil implements HuType {
 
     }
 
-    public static boolean isYitiaolong(List<String> cards, PlayerCardsInfoMj playerCardsInfo) {
-        List<String> temp = new ArrayList<>();
-        temp.addAll(cards);
-        Map<Integer, Integer> cardMap = PlayerCardsInfoMj.getCardNum(temp);
 
-        boolean isHas = false;
-        int ytlType = 0;
-        for (int i = 0; i < 3; i++) {
-            boolean isLx = true;
-
-            for (int j = 0; j < 9; j++) {
-                if (!cardMap.containsKey(i * 9 + j)) {
-                    isLx = false;
-                    break;
-                }
-            }
-            if (isLx) {
-                isHas = true;
-                ytlType = i;
-            }
-        }
-
-        if (isHas) {
-            for (int i = 0; i < 9; i++) {
-                int type = ytlType * 9 + i;
-                playerCardsInfo.removeCardByType(temp, type, 1);
-            }
-            return isHuCommon(temp).size() > 0;
-        } else {
-            return false;
-        }
-    }
 
 
     public static boolean is13Yao(List<String> cards, PlayerCardsInfoMj playerCardsInfo) {
@@ -700,20 +640,7 @@ public class HuUtil implements HuType {
 
     }
 
-    private static void test_equil() {
-        List list = new ArrayList();
-        List list1 = new ArrayList();
-        System.out.println(CollectionUtils.isEqualCollection(list, list1));
-    }
 
-    private static void test_yitiaolong() {
-
-        String[] t = new String[]{"112", "123", "110", "062", "050", "126", "044", "121", "108", "067", "056", "125", "119", "024"};
-        List<String> list = Arrays.asList(t);
-        list.addAll(Arrays.asList(t));
-        isHuCommon(list, true);
-
-    }
     
     /**
      * 测试是否0和的数据

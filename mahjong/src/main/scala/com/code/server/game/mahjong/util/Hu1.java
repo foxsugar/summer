@@ -2,6 +2,7 @@ package com.code.server.game.mahjong.util;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by SunXianping on 2016/11/28 0028.
@@ -141,7 +142,7 @@ public class Hu1 {
         if (o1.type < o2.type) {
             return -1;
         } else if (o1.type == o2.type) {
-            if (o1.firstCard <= o2.firstCard) {
+            if (o1.card <= o2.card) {
                 return -1;
             } else {
                 return 1;
@@ -154,8 +155,8 @@ public class Hu1 {
 
 
     static void test1(int[] cards, List all, List<CardGroup> list, boolean isHasFengShun) {
-        count++;
-        //   System.out.println("====: " + count);
+//        count++;
+//           System.out.println("====: " + count);
 
         for (int i = 0; i < 34; i++) {
             if (cards[i] == 0) {
@@ -263,12 +264,41 @@ public class Hu1 {
                 }
             }
 
-            if (list.size() == 0) {
 
-                System.out.println("index : " + i);
-            }
         }
     }
+
+    public static List<HuCardType> convert(List<List<CardGroup>> all) {
+        List<HuCardType> result = new ArrayList<>();
+        for (List<CardGroup> cardGroups : all) {
+            result.add(convert2HuCardType(cardGroups));
+        }
+        return result;
+    }
+
+    public static HuCardType convert2HuCardType(List<CardGroup> list) {
+        HuCardType huCardType = new HuCardType();
+        for (CardGroup cardGroup : list) {
+            switch (cardGroup.type) {
+                case CARD_GROUP_TYPE_JIANG:
+                    huCardType.jiang = cardGroup.card;
+                    break;
+                case CARD_GROUP_TYPE_SHUN:
+                    huCardType.shun.add(cardGroup.card);
+                    break;
+                case CARD_GROUP_TYPE_KE:
+                    huCardType.ke.add(cardGroup.card);
+                    break;
+                case CARD_GROUP_TYPE_FENG_SHUN:
+                    huCardType.feng_shun.add(Arrays.stream(feng_shun_array[cardGroup.card]).boxed().collect(Collectors.toList()));
+                    break;
+                case CARD_GROUP_TYPE_ZFB:
+                    huCardType.zi_shun++;
+            }
+        }
+        return huCardType;
+    }
+
 
     private static boolean isHasZFB(int[] cards, int index) {
         if (index != 31) {
@@ -304,7 +334,7 @@ public class Hu1 {
             return false;
         }
         for (int i = 0; i < list1.size(); i++) {
-            if (list1.get(i).type != list2.get(i).type || list1.get(i).firstCard.intValue() != list2.get(i).firstCard) {
+            if (list1.get(i).type != list2.get(i).type || list1.get(i).card != list2.get(i).card) {
                 return false;
             }
         }
@@ -322,7 +352,7 @@ public class Hu1 {
         };
         List list = new ArrayList();
         List<CardGroup> groups = new ArrayList<>();
-        test1(a, list, groups,true);
+        test1(a, list, groups, true);
         System.out.println(list);
     }
 
@@ -437,25 +467,25 @@ public class Hu1 {
     private void cardRemoveGroup(List<Integer> list, CardGroup group) {
         switch (group.type) {
             case CARD_GROUP_TYPE_JIANG:
-                removeCard(list, group.firstCard);
-                removeCard(list, group.firstCard);
+                removeCard(list, group.card);
+                removeCard(list, group.card);
                 break;
             case CARD_GROUP_TYPE_SHUN:
-                removeCard(list, group.firstCard);
-                removeCard(list, group.firstCard + 1);
-                removeCard(list, group.firstCard + 2);
+                removeCard(list, group.card);
+                removeCard(list, group.card + 1);
+                removeCard(list, group.card + 2);
 
                 break;
             case CARD_GROUP_TYPE_KE:
-                removeCard(list, group.firstCard);
-                removeCard(list, group.firstCard);
-                removeCard(list, group.firstCard);
+                removeCard(list, group.card);
+                removeCard(list, group.card);
+                removeCard(list, group.card);
                 break;
             case CARD_GROUP_TYPE_GANG:
-                removeCard(list, group.firstCard);
-                removeCard(list, group.firstCard);
-                removeCard(list, group.firstCard);
-                removeCard(list, group.firstCard);
+                removeCard(list, group.card);
+                removeCard(list, group.card);
+                removeCard(list, group.card);
+                removeCard(list, group.card);
                 break;
             default:
                 //todo 错误处理
@@ -531,19 +561,19 @@ public class Hu1 {
      * 胡牌分组
      */
     public static class CardGroup {
-        public CardGroup(int type, int firstCard) {
-            this.firstCard = firstCard;
+        public CardGroup(int type, int card) {
+            this.card = card;
             this.type = type;
         }
 
         int type;
-        Integer firstCard;
+        int card;
 
         @Override
         public String toString() {
             return
 //                    "type=" + type +
-                    type + "," + firstCard
+                    type + "," + card
                     ;
         }
     }
