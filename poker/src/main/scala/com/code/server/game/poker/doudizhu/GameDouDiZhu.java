@@ -233,7 +233,7 @@ public class GameDouDiZhu extends Game {
             int index = rand.nextInt(3);
             canJiao = users.get(index);
         } else {
-            canJiao = nextTurnId(lastJiaoUser);
+            canJiao = lastJiaoUser;
         }
         canJiaoUser = canJiao;
 
