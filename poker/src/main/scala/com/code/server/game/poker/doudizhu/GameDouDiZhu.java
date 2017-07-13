@@ -247,6 +247,24 @@ public class GameDouDiZhu extends Game {
     }
 
     /**
+     * 叫地主的人重置为这把叫地主的人(再叫一次)
+     */
+    protected void resetJiaodizhuUser(){
+        long user = nextTurnId(nextTurnId(room.getBankerId()));
+        room.setBankerId(user);
+    }
+
+    /**
+     * 流局处理
+     */
+    protected void handleLiuju(){
+        sendResult(true, false);
+        room.clearReadyStatus(false);
+        sendFinalResult();
+        //重置叫地主的人
+        resetJiaodizhuUser();
+    }
+    /**
      * 叫地主
      *
      * @param userId
@@ -274,9 +292,7 @@ public class GameDouDiZhu extends Game {
                     //推送选定地主
                     qiangStepStart();
                 } else {
-                    sendResult(true, false);
-                    room.clearReadyStatus(false);
-                    sendFinalResult();
+                    handleLiuju();
                 }
             } else {
                 long nextJiao = nextTurnId(userId);
@@ -318,7 +334,8 @@ public class GameDouDiZhu extends Game {
 
 
     protected void qiangStepStart() {
-        pushChooseDizhu();
+        //选定地主
+        chooseDizhu();
         step = STEP_QIANG_DIZHU;
         long nextId = nextTurnId(dizhu);
         this.canQiangUser = nextId;
@@ -407,17 +424,14 @@ public class GameDouDiZhu extends Game {
         this.dizhu = dizhu;
         this.step = STEP_PLAY;
         this.playTurn = dizhu;
-
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameBegin", 0), users);
 
     }
 
     /**
-     * 开始打牌
-     *
-     * @param dizhu
+     * 底牌加到地主身上
      */
-    protected void startPlay(long dizhu) {
-        playStepStart(dizhu);
+    protected void dizhuAddTableCards(){
         //把底牌加到地主身上
         PlayerCardInfoDouDiZhu playerCardInfo = playerCardInfos.get(dizhu);
         if (playerCardInfo != null) {
@@ -425,6 +439,16 @@ public class GameDouDiZhu extends Game {
             //给所有人看
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "showTableCard", tableCards), users);
         }
+    }
+    /**
+     * 开始打牌
+     *
+     * @param dizhu
+     */
+    protected void startPlay(long dizhu) {
+        playStepStart(dizhu);
+
+
         doAfterStart();
     }
 
@@ -441,11 +465,14 @@ public class GameDouDiZhu extends Game {
         }
     }
 
-    protected void pushChooseDizhu() {
+    protected void chooseDizhu() {
         //选定地主
         Map<String, Long> rs = new HashMap<>();
         rs.put("userId", dizhu);
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "chooseDizhu", rs), users);
+
+        //牌加到地主身上
+        dizhuAddTableCards();
     }
 
     /**

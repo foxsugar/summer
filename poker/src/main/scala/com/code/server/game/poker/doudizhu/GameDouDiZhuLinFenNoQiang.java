@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by sunxianping on 2017/6/26.
  */
-public class GameDouDiZhuLinFenNoQiang extends GameDouDiZhuLinFen {
+public class GameDouDiZhuLinFenNoQiang extends GameDouDiZhuLinFenLongQi {
     private static final Logger logger = LoggerFactory.getLogger(GameDouDiZhuLinFen.class);
     /**
      * 叫地主
@@ -33,9 +33,7 @@ public class GameDouDiZhuLinFenNoQiang extends GameDouDiZhuLinFen {
         if (!isJiao) {
             bujiaoSet.add(userId);
             if (bujiaoSet.size() >= users.size()) {
-                sendResult(true,false);
-                room.clearReadyStatus(true);
-                sendFinalResult();
+                handleLiuju();
             } else {
                 long nextJiao = nextTurnId(userId);
                 canJiaoUser = nextJiao;
@@ -44,6 +42,8 @@ public class GameDouDiZhuLinFenNoQiang extends GameDouDiZhuLinFen {
         } else {//叫了 开始游戏
             jiaoUser = userId;
             dizhu = userId;
+            //选定地主
+            chooseDizhu();
             startPlay(jiaoUser);
         }
 

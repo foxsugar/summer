@@ -268,12 +268,12 @@ public class PlayerCardInfoDouDiZhu implements IfacePlayerInfo {
     public IfacePlayerInfoVo toVo(long watchUser) {
         PlayerCardInfoVo vo = new PlayerCardInfoVo();
         vo.userId = this.userId;
+        vo.isQiang = this.isQiang();
+        vo.cardNum = this.cards.size();
         if (watchUser == this.userId) {
             vo.cards.addAll(this.cards);
             vo.allCards.addAll(this.allCards);
-        } else {
-            vo.cardNum = this.cards.size();
-            vo.isQiang = this.isQiang();
+
         }
         return vo;
     }

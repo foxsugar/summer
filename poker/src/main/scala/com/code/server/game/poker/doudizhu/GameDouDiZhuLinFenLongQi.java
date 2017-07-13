@@ -1,5 +1,6 @@
 package com.code.server.game.poker.doudizhu;
 
+import com.code.server.constant.game.CardStruct;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.game.room.kafka.MsgSender;
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ public class GameDouDiZhuLinFenLongQi extends GameDouDiZhuLinFen {
     @Override
     public void init(List<Long> users, long dizhuUser) {
         this.initCardNum = 16;
-        super.init(users,dizhuUser);
+        super.init(users, dizhuUser);
 
         //生成操作列表
         operateNode = OperateNode.initOperate(canJiaoUser, users);
@@ -39,16 +40,59 @@ public class GameDouDiZhuLinFenLongQi extends GameDouDiZhuLinFen {
         return null;
     }
 
+    @Override
+    protected void handleBomb(CardStruct cardStruct) {
+        computeBomb(cardStruct);
+    }
+
+    @Override
+    protected void compute(boolean isDizhuWin){
+
+        double subScore = 0;
+        int s = isDizhuWin?-1:1;
+        //地主
+        PlayerCardInfoDouDiZhu playerCardInfoDizhu = playerCardInfos.get(dizhu);
+
+        for(PlayerCardInfoDouDiZhu playerCardInfo : playerCardInfos.values()){
+            //不是地主 扣分
+            if(dizhu != playerCardInfo.getUserId()){
+                double score = multiple * s;
+                if (playerCardInfo.isQiang()) {
+                    score *=2;
+                    //地主抢了 再乘2
+                    if(playerCardInfoDizhu.isQiang()){
+                        score *= 2;
+                    }
+                }
+                //最大倍数
+                if(room.getMultiple()!=-1){
+                    int max = 1 << zhaCount;
+                    if (max >= score) {
+                        score = max;
+                    }
+                }
+                subScore += score;
+                playerCardInfo.setScore(score);
+                room.addUserSocre(playerCardInfo.getUserId(),score);
+            }
+        }
+
+        playerCardInfoDizhu.setScore(-subScore);
+        room.addUserSocre(dizhu,-subScore);
+
+    }
+
     /**
      * 叫地主
+     *
      * @param userId
      * @param isJiao
      * @return
      */
     @Override
-    public int jiaoDizhu(long userId, boolean isJiao, int score){
+    public int jiaoDizhu(long userId, boolean isJiao, int score) {
 
-        logger.info(userId +"  叫地主 "+ isJiao);
+        logger.info(userId + "  叫地主 " + isJiao);
         if (canJiaoUser != userId) {
             return ErrorCode.CAN_NOT_JIAO_TURN;
         }
@@ -59,11 +103,9 @@ public class GameDouDiZhuLinFenLongQi extends GameDouDiZhuLinFen {
         if (!isJiao) {
             bujiaoSet.add(userId);
             if (bujiaoSet.size() >= users.size()) {//三个人都不叫
-                sendResult(true,false);
-                room.clearReadyStatus(false);
-                sendFinalResult();
+                handleLiuju();
             } else {//下个选叫
-                OperateNode node = getOperateByType(operateNode,OperateNode.BU_JIAO);
+                OperateNode node = getOperateByType(operateNode, OperateNode.BU_JIAO);
                 long nid = node.children.get(0).userId;
                 this.operateNode = node;
                 long nextJiao = nextTurnId(userId);
@@ -74,6 +116,8 @@ public class GameDouDiZhuLinFenLongQi extends GameDouDiZhuLinFen {
             OperateNode node = getOperateByType(operateNode, OperateNode.JIAO);
             jiaoUser = userId;
             dizhu = userId;
+            //选定地主
+            chooseDizhu();
             //第三个人叫的 直接开始游戏
             if (chooseJiaoSet.size() >= users.size()) {
                 startPlay(jiaoUser);
@@ -90,28 +134,29 @@ public class GameDouDiZhuLinFenLongQi extends GameDouDiZhuLinFen {
         Map<String, Object> rs = new HashMap<>();
         rs.put("userId", userId);
         rs.put("isJiao", isJiao);
-        MsgSender.sendMsg2Player("gameService","jiaoResponse",rs,users);
+        MsgSender.sendMsg2Player("gameService", "jiaoResponse", rs, users);
 
-        MsgSender.sendMsg2Player("gameService","jiaoDizhu",0,userId);
+        MsgSender.sendMsg2Player("gameService", "jiaoDizhu", 0, userId);
 
         updateLastOperateTime();
         //回放
-        replay.getOperate().add(Operate.getOperate_JDZ(userId,score,!isJiao));
+        replay.getOperate().add(Operate.getOperate_JDZ(userId, score, !isJiao));
         return 0;
     }
 
 
     /**
      * 抢地主
+     *
      * @param userId
      * @param isQiang
      * @return
      */
     @Override
     public int qiangDizhu(long userId, boolean isQiang) {
-        logger.info(userId +"  抢地主 "+isQiang);
+        logger.info(userId + "  抢地主 " + isQiang);
 
-        if(userId != canQiangUser){
+        if (userId != canQiangUser) {
             return ErrorCode.CAN_NOT_QIANG_TURN;
         }
         this.chooseQiangSet.add(userId);
@@ -141,13 +186,13 @@ public class GameDouDiZhuLinFenLongQi extends GameDouDiZhuLinFen {
         Map<String, Object> rs = new HashMap<>();
         rs.put("userId", userId);
         rs.put("isQiang", isQiang);
-        MsgSender.sendMsg2Player("gameService","qiangResponse",rs,users);
+        MsgSender.sendMsg2Player("gameService", "qiangResponse", rs, users);
 
-        MsgSender.sendMsg2Player("gameService","qiangDizhu",0,userId);
+        MsgSender.sendMsg2Player("gameService", "qiangDizhu", 0, userId);
 
         updateLastOperateTime();
         //回放
-        replay.getOperate().add(Operate.getOperate_QDZ(userId,!isQiang));
+        replay.getOperate().add(Operate.getOperate_QDZ(userId, !isQiang));
         return 0;
     }
 }

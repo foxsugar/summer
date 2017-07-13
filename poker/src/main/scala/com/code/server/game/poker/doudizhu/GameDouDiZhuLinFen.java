@@ -60,6 +60,18 @@ public class GameDouDiZhuLinFen extends GameDouDiZhu{
     }
 
     /**
+     * 底牌加到地主身上
+     */
+    protected void dizhuAddTableCards(){
+        //把底牌加到地主身上
+        PlayerCardInfoDouDiZhu playerCardInfo = playerCardInfos.get(dizhu);
+        if (playerCardInfo != null) {
+            playerCardInfo.cards.addAll(tableCards);
+            //给所有人看
+            MsgSender.sendMsg2Player(new ResponseVo("gameService", "showTableCard", tableCards), dizhu);
+        }
+    }
+    /**
      * 叫地主
      * @param userId
      * @param isJiao
@@ -79,9 +91,7 @@ public class GameDouDiZhuLinFen extends GameDouDiZhu{
         if (!isJiao) {
             bujiaoSet.add(userId);
             if (bujiaoSet.size() >= users.size()) {//三个人都不叫
-                sendResult(true,false);
-                room.clearReadyStatus(true);
-                sendFinalResult();
+                handleLiuju();
             } else {//下个人叫
                 long nextJiao = nextTurnId(userId);
                 canJiaoUser = nextJiao;
@@ -90,6 +100,8 @@ public class GameDouDiZhuLinFen extends GameDouDiZhu{
         } else {//叫了 开始抢
             jiaoUser = userId;
             dizhu = userId;
+            //选定地主
+            chooseDizhu();
             //第三个人叫的 直接开始游戏
             if (chooseJiaoSet.size() >= users.size()) {
                 startPlay(jiaoUser);
@@ -115,22 +127,26 @@ public class GameDouDiZhuLinFen extends GameDouDiZhu{
         return 0;
     }
 
-    @Override
-    protected void handleBomb(CardStruct cardStruct){
-        if(zhaCount < room.getMultiple() || room.getMultiple() == -1){
-            if(cardStruct.getType()==CardStruct.type_炸){
-                List<Integer> cards = cardStruct.getCards();
-                if(cards.size()==4 && CardUtil.getTypeByCard(cards.get(0)) == 0 && CardUtil.getTypeByCard(cards.get(cards.size()-1))==0){ //3333
-                    zhaCount += 1;//记录炸的数量
-                    multiple *= 8;//记录倍数
-                }else{ //除4个三的炸
-                    zhaCount += 1;//记录炸的数量
-                    multiple *= 2;//记录倍数
-                }
-            }else if(cardStruct.getType()==CardStruct.type_火箭){
+
+    protected void computeBomb(CardStruct cardStruct){
+        if(cardStruct.getType()==CardStruct.type_炸){
+            List<Integer> cards = cardStruct.getCards();
+            if(cards.size()==4 && CardUtil.getTypeByCard(cards.get(0)) == 0 && CardUtil.getTypeByCard(cards.get(cards.size()-1))==0){ //3333
+                zhaCount += 1;//记录炸的数量
+                multiple *= 8;//记录倍数
+            }else{ //除4个三的炸
                 zhaCount += 1;//记录炸的数量
                 multiple *= 2;//记录倍数
             }
+        }else if(cardStruct.getType()==CardStruct.type_火箭){
+            zhaCount += 1;//记录炸的数量
+            multiple *= 2;//记录倍数
+        }
+    }
+    @Override
+    protected void handleBomb(CardStruct cardStruct){
+        if(zhaCount < room.getMultiple() || room.getMultiple() == -1){
+            computeBomb(cardStruct);
         }
     }
 
@@ -240,21 +256,6 @@ public class GameDouDiZhuLinFen extends GameDouDiZhu{
         }
     }
 
-    @Override
-    protected void startPlay(long dizhu){
-        playStepStart(dizhu);
-        //选定地主
-        pushChooseDizhu();
 
-        //把底牌加到地主身上
-        PlayerCardInfoDouDiZhu playerCardInfo = playerCardInfos.get(dizhu);
-        if (playerCardInfo != null) {
-            playerCardInfo.cards.addAll(tableCards);
-            //只给地主看
-            MsgSender.sendMsg2Player(new ResponseVo("gameService","showTableCard",tableCards),dizhu);
-        }
-        doAfterStart();
-
-    }
 
 }
