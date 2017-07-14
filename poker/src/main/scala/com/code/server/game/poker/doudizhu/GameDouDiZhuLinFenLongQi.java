@@ -56,21 +56,25 @@ public class GameDouDiZhuLinFenLongQi extends GameDouDiZhuLinFen {
         for(PlayerCardInfoDouDiZhu playerCardInfo : playerCardInfos.values()){
             //不是地主 扣分
             if(dizhu != playerCardInfo.getUserId()){
-                double score = multiple * s;
+                double score = multiple;
+                int localMultiple = multiple;
                 if (playerCardInfo.isQiang()) {
                     score *=2;
+                    localMultiple *= 2;
                     //地主抢了 再乘2
                     if(playerCardInfoDizhu.isQiang()){
                         score *= 2;
+                        localMultiple *= 2;
                     }
                 }
                 //最大倍数
                 if(room.getMultiple()!=-1){
-                    int max = 1 << zhaCount;
-                    if (max >= score) {
+                    int max = 1 << room.getMultiple();
+                    if (score >= max) {
                         score = max;
                     }
                 }
+                score = score * s;
                 subScore += score;
                 playerCardInfo.setScore(score);
                 room.addUserSocre(playerCardInfo.getUserId(),score);
