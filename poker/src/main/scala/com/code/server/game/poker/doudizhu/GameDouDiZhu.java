@@ -461,7 +461,9 @@ public class GameDouDiZhu extends Game {
             playerCardInfoDouDiZhu.allCards.addAll(playerCardInfoDouDiZhu.cards);
 
             //回放 玩家的牌
-            replay.getCards().put(playerCardInfoDouDiZhu.getUserId(), playerCardInfoDouDiZhu.allCards);
+            List<Integer> cs = new ArrayList<>();
+            cs.addAll(playerCardInfoDouDiZhu.allCards);
+            replay.getCards().put(playerCardInfoDouDiZhu.getUserId(), cs);
         }
     }
 

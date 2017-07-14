@@ -139,7 +139,9 @@ public class GameInfo extends Game {
         doAfterFapai();
         //回放的牌信息
         for (PlayerCardsInfoMj playerCardsInfoMj : playerCardsInfos.values()) {
-            replay.getCards().put(playerCardsInfoMj.getUserId(), playerCardsInfoMj.getCards());
+            List<String> cs = new ArrayList<>();
+            cs.addAll(playerCardsInfoMj.getCards());
+            replay.getCards().put(playerCardsInfoMj.getUserId(), cs);
         }
         //第一个人抓牌
         mopai(firstTurn, "发牌");
