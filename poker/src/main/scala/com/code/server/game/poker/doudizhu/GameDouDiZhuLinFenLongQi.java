@@ -57,14 +57,11 @@ public class GameDouDiZhuLinFenLongQi extends GameDouDiZhuLinFen {
             //不是地主 扣分
             if(dizhu != playerCardInfo.getUserId()){
                 double score = multiple;
-                int localMultiple = multiple;
                 if (playerCardInfo.isQiang()) {
                     score *=2;
-                    localMultiple *= 2;
                     //地主抢了 再乘2
                     if(playerCardInfoDizhu.isQiang()){
                         score *= 2;
-                        localMultiple *= 2;
                     }
                 }
                 //最大倍数

@@ -13,6 +13,7 @@ public class ServerConfig {
     //机器人执行周期
     private int robotExeCycle = 1000;
     private int isStartRobot = 1;
+    private String dataFile;
 
 
     public String getServerType() {
@@ -59,6 +60,15 @@ public class ServerConfig {
 
     public ServerConfig setRobotExeCycle(int robotExeCycle) {
         this.robotExeCycle = robotExeCycle;
+        return this;
+    }
+
+    public String getDataFile() {
+        return dataFile;
+    }
+
+    public ServerConfig setDataFile(String dataFile) {
+        this.dataFile = dataFile;
         return this;
     }
 }
