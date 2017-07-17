@@ -48,8 +48,8 @@ public class PlayerCardsInfoSZ extends PlayerCardsInfoMj {
         specialHuScore.put(hu_清龙,50);
 
 
-        isHasYimenpai = isHasMode(roomInfo.getMode(),MODE_YIMENPAI);
-        isHasShuye = isHasMode(roomInfo.getMode(), MODE_SHUYE);
+//        isHasYimenpai = isHasMode(roomInfo.getMode(),MODE_YIMENPAI);
+//        isHasShuye = isHasMode(roomInfo.getMode(), MODE_SHUYE);
 
     }
     public boolean isHasChi(String card){
@@ -485,12 +485,16 @@ private static void change(){
     public static void main(String[] args) {
         System.out.println(isHasMode("0",MODE_YIMENPAI));
         change();
-        PlayerCardsInfoSZ playerCardsInfo = new PlayerCardsInfoSZ();
+        PlayerCardsInfoSZ_LQ playerCardsInfo = new PlayerCardsInfoSZ_LQ();
         playerCardsInfo.isHasFengShun = true;
 
+        playerCardsInfo.isHasYimenpai = true;
+        playerCardsInfo.isHasShuye = true;
 //        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","042","124","135"};
 //        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","134","042","124","135"};
-        String[] s = new String[]{"076","077","078",     "080",  "084","085",    "088", "089","090",    "092","093","096",    "100","101"};
+        String[] s = new String[]{"044","045","048",     "049",  "108","109",    "116", "117","120",    "121","128","129",    "036","072"};
+
+//        String[] s = new String[]{"076","077","078",     "080",  "084","085",    "088", "089","090",    "092","093","096",    "100","101"};
 
 
         playerCardsInfo.cards = new ArrayList<>();
@@ -512,13 +516,13 @@ private static void change(){
 //        playerCardsInfo.isTing = true;
         List<String> temp = new ArrayList<>();
         temp.addAll(playerCardsInfo.cards);
-        playerCardsInfo.isTing = true;
+//        playerCardsInfo.isTing = true;
         playerCardsInfo.tingSet = new HashSet<>();
 //        playerCardsInfo.tingSet.add(15);
 //        System.out.println(playerCardsInfo.isCanTing());
 //        System.out.println("==="+playerCardsInfo.getYiZhangYingSet(playerCardsInfo.getCardsNoChiPengGang(temp),null));
-        System.out.println(playerCardsInfo.isCanHu_zimo("088"));
-//        System.out.println(playerCardsInfo.isCanTing(playerCardsInfo.cards));
+//        System.out.println(playerCardsInfo.isCanHu_zimo("088"));
+        System.out.println(playerCardsInfo.isCanTing(playerCardsInfo.cards));
 //        List<String> cs = playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.getCards());
 //        int type = CardTypeUtil.getTypeByCard("060");
 //        HuUtil.isHu(cs, playerCardsInfo, CardTypeUtil.cardType.get("060"), new HuLimit(3));
@@ -527,20 +531,7 @@ private static void change(){
 //        playerCardsInfo.huCompute();
     }
 
-//    听的牌 : [060, 038, 052, 054, 066, 065, 061, 046, 055, 040, 062, 064, 092]
-//    听的牌 没有碰杠: [038, 046, 040, 092]
-//            =================一张赢的所有类型 : [21, 23]
-//
-//            ============= 听的类型: 23
-//    是一张赢加一番
-//    算番的结果== : 2
-//    是否可听: false
-//
-//            ============= 听的类型: 21
-//    是一张赢加一番
-//    算番的结果== : 2
-//    是否可听: false
-//            ---------------三嘴是否可听--------------end userId : 7
+
 
 
 }

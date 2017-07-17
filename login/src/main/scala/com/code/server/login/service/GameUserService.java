@@ -19,7 +19,6 @@ import com.code.server.login.rpc.RpcManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.SpringUtil;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -272,8 +271,7 @@ public class GameUserService {
         Map<String, Object> result = new HashMap<>();
         result.put("data", r.getData());
         ResponseVo vo = new ResponseVo("userService", "getReplay", r.getData());
-        Gson gson = new Gson();
-        sendMsg(msgKey, gson.toJson(vo));
+        sendMsg(msgKey, vo);
         return 0;
     }
     public int setReplay(KafkaMsgKey msgKey, long id){

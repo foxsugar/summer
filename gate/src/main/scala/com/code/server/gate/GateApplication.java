@@ -9,7 +9,6 @@ import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.ThreadPool;
 import com.code.server.util.timer.GameTimer;
-import com.code.server.util.timer.TimerNode;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,28 +17,28 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @EnableConfigurationProperties({ServerConfig.class})
 public class GateApplication {
 
-	public static void main(String[] args) throws RegisterFailedException {
-		SpringApplication.run(GateApplication.class, args);
-		SpringUtil.getBean(ServerConfig.class);
+    public static void main(String[] args) throws RegisterFailedException {
+        SpringApplication.run(GateApplication.class, args);
+        SpringUtil.getBean(ServerConfig.class);
 
-		ThreadPool.getInstance().executor.execute(new SocketServer());
+        ThreadPool.getInstance().executor.execute(new SocketServer());
 
-		ServerState.isWork = true;
+        ServerState.isWork = true;
 
-		//配置文件
-		ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        //配置文件
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
-		//注册服务
-		String host = serverConfig.getHost() + serverConfig.getDomain();
-		RedisManager.getGateRedisService().register(serverConfig.getServerType(),serverConfig.getServerId(),serverConfig.getHost(),serverConfig.getDomain(),serverConfig.getPort());
-		//心跳
-		long now = System.currentTimeMillis();
-		ThreadPool.getInstance().executor.execute(()->GameTimer.getInstance().fire());
-		GameTimer.addTimerNode(new TimerNode(now, IConstant.SECOND_5,true,()-> RedisManager.getGateRedisService().heart(serverConfig.getServerId())));
+        //注册服务
+        RedisManager.getGateRedisService().register(serverConfig.getServerType(), serverConfig.getServerId(), serverConfig.getHost(), serverConfig.getDomain(), serverConfig.getPort());
+        //心跳
+
+        //定时器
+        ThreadPool.execute(() -> GameTimer.getInstance().fire());
+
+        GameTimer.addTimerNode( IConstant.SECOND_5, true, () -> RedisManager.getGateRedisService().heart(serverConfig.getServerId()));
 //		//kafka消费者
 //		MsgConsumer.startAConsumer(IKafaTopic.GATE_TOPIC,serverConfig.getServerId(), new GateConsumer());
 
 
-
-	}
+    }
 }

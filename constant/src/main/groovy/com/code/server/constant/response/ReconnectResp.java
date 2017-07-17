@@ -12,7 +12,7 @@ public class ReconnectResp {
 
     private boolean isExist;
 
-    private Map<Integer, Integer> offlineStatus = new HashMap<>();//在线状态
+    private Map<Long, Boolean> offlineStatus = new HashMap<>();//在线状态
 
 
     public IfaceRoomVo getRoom() {
@@ -34,11 +34,11 @@ public class ReconnectResp {
     }
 
 
-    public Map<Integer, Integer> getOfflineStatus() {
+    public Map<Long, Boolean> getOfflineStatus() {
         return offlineStatus;
     }
 
-    public ReconnectResp setOfflineStatus(Map<Integer, Integer> offlineStatus) {
+    public ReconnectResp setOfflineStatus(Map<Long, Boolean> offlineStatus) {
         this.offlineStatus = offlineStatus;
         return this;
     }

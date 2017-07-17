@@ -805,4 +805,5 @@ public class Room implements IfaceRoom {
         this.dissloutionUser = dissloutionUser;
         return this;
     }
+
 }

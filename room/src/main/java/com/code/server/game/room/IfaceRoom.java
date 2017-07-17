@@ -4,6 +4,8 @@ package com.code.server.game.room;
 import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.response.IfaceRoomVo;
 
+import java.util.List;
+
 /**
  * Created by sunxianping on 2017/5/24.
  */
@@ -19,4 +21,6 @@ public interface IfaceRoom extends IGameConstant {
     IfaceGame getGame();
 
     IfaceRoomVo toVo(long userId);
+
+    List<Long> getUsers();
 }

@@ -63,10 +63,10 @@ public class RpcManager {
     public static void main(String[] args) {
 //        testGame(1);
         try {
-            for(int i=0;i<19;i++){
+//            for(int i=0;i<19;i++){
 
-                charge("192.168.1.132",i,1000);
-            }
+            charge("123.56.8.137", 10239, 1000);
+//            }
 //            charge("123.56.8.137",10002,100);
 //            charge("123.56.8.137",10003,100);
 //            charge("123.56.8.137",10004,100);

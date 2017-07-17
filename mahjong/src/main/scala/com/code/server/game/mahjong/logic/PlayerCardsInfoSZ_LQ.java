@@ -19,12 +19,14 @@ public class PlayerCardsInfoSZ_LQ extends PlayerCardsInfoSZ {
         specialHuScore.remove(hu_门清);
         specialHuScore.remove(hu_清一色);
         specialHuScore.remove(hu_一条龙);
-        specialHuScore.remove(hu_七小对);
-        specialHuScore.remove(hu_豪华七小对);
-        specialHuScore.remove(hu_双豪七小对_山西);
+
         specialHuScore.remove(hu_字一色);
-        specialHuScore.remove(hu_清七对);
         specialHuScore.remove(hu_清龙);
+
+        specialHuScore.put(hu_清七对,0);
+        specialHuScore.put(hu_七小对,0);
+        specialHuScore.put(hu_豪华七小对,0);
+        specialHuScore.put(hu_双豪七小对_山西,0);
         this.isHasGangBlackList = false;
 
     }

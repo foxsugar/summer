@@ -2,6 +2,7 @@ package com.code.server.gate.handle;
 
 import com.code.server.gate.service.GateManager;
 import com.code.server.gate.service.NettyMsgDispatch;
+import com.code.server.redis.service.RedisManager;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
@@ -68,6 +69,8 @@ public class GameMsgHandler extends ChannelDuplexHandler {
         if(ctx.channel().hasAttr(GateManager.attributeKey) && ctx.channel().attr(GateManager.attributeKey)!=null){
             long userId = ctx.channel().attr(GateManager.attributeKey).get();
             GateManager.removeUserNettyCtx(userId);
+            //删掉user-gate
+            RedisManager.getUserRedisService().removeGate(userId);
             //下线通知
             NettyMsgDispatch.noticeOffline2Other(userId);
         }

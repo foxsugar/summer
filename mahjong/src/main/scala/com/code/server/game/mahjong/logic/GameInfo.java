@@ -614,14 +614,15 @@ public class GameInfo extends Game {
             boolean isMing = playerCardsInfo.getPengType().containsKey(gangType);
 
             //通知别人有杠
-            operateReqResp.setFromUserId(userId);
+            //回放
             operateReqResp.setUserId(userId);
             operateReqResp.setCard(card);
             operateReqResp.setIsMing(isMing);
+            replay.getOperate().add(operateReqResp);
+
             MsgSender.sendMsg2Player(vo, users);
 
-            //回放
-            replay.getOperate().add(operateReqResp);
+
 
             if (isHasJieGangHu && isMing) {
 
@@ -671,6 +672,7 @@ public class GameInfo extends Game {
                 return ErrorCode.CAN_NOT_GANG;
             }
 
+
             //从等待列表删除
 //            if (waitingforList.size() > 0) {
             WaitDetail waitDetail = waitingforList.get(0);
@@ -679,7 +681,14 @@ public class GameInfo extends Game {
             } else {
                 return ErrorCode.NOT_TURN;
             }
-//            }
+
+
+            //回放
+            operateReqResp.setUserId(userId);
+            operateReqResp.setFromUserId(lastPlayUserId);
+            operateReqResp.setCard(disCard);
+            operateReqResp.setIsMing(true);
+            replay.getOperate().add(operateReqResp);
 
             //删除弃牌
             deleteDisCard(lastPlayUserId, disCard);
@@ -971,6 +980,7 @@ public class GameInfo extends Game {
         OperateReqResp operateReqResp = new OperateReqResp();
         operateReqResp.setOperateType(OperateReqResp.type_ting);
         operateReqResp.setUserId(userId);
+        operateReqResp.setCard(card);
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
 
 

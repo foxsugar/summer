@@ -3,6 +3,7 @@ package com.code.server.game.poker.service
 import com.code.server.constant.response.{ReconnectResp, ResponseVo}
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
+import com.code.server.redis.service.RedisManager
 
 /**
   * Created by sunxianping on 2017/6/7.
@@ -23,6 +24,8 @@ object ReconnService {
     if (room != null) {
       reconnectResp.setExist(true)
       reconnectResp.setRoom(room.toVo(userId))
+      //在线状态
+      room.getUsers.forEach(user=>reconnectResp.getOfflineStatus.put(user,RedisManager.getUserRedisService.getGateId(user)== null))
     }
     val vo = new ResponseVo("reconnService", "reconnection", reconnectResp)
     MsgSender.sendMsg2Player(vo, userId)

@@ -29,7 +29,7 @@ public class ReconnService {
         }
     }
 
-    private static Map<String,Object> getRoomInfo(RoomInfo roomInfo){
+    private static Map<String, Object> getRoomInfo(RoomInfo roomInfo) {
         Map<String, Object> result = new HashMap<>();
         result.put("isInGame", roomInfo.isInGame());
         result.put("personNumber", roomInfo.getPersonNumber());
@@ -62,18 +62,17 @@ public class ReconnService {
             for (UserBean userBean : RedisManager.getUserRedisService().getUserBeans(roomInfo.getUsers())) {
                 userList.add(userBean.toVo());
             }
+            //在线状态
+            for (long uid : roomInfo.getUsers()) {
+                allMessage.getOfflineStatus().put(uid, RedisManager.getUserRedisService().getGateId(uid) != null);
+            }
             GameInfo gameInfo = (GameInfo) roomInfo.getGame();
+            roomInfo.getReady(userId);
             if (gameInfo != null) {
-                roomInfo.getReady(userId);
-
                 ReconnectResp reconnect = new ReconnectResp(gameInfo, userId);
                 allMessage.setGameId(gameInfo.getGameId());
                 allMessage.setCardNumber(gameInfo.getRemainCards().size());
                 allMessage.setReconnectResp(reconnect);
-            } else {
-                //
-                roomInfo.getReady(userId);
-
             }
             allMessage.setUsers(userList);
             if (roomInfo.getTimerNode() != null) {

@@ -26,7 +26,7 @@ public class AllMessage {
 	
 	private Map<Long, Integer> userStatus = new HashMap<>();//用户状态
 
-	private Map<Long, Integer> offlineStatus = new HashMap<>();//在线状态
+	private Map<Long, Boolean> offlineStatus = new HashMap<>();//在线状态
 
 	private Map<Long, Double> userScores = new HashMap<>();
 	
@@ -68,11 +68,11 @@ public class AllMessage {
 		return this;
 	}
 
-	public Map<Long, Integer> getOfflineStatus() {
+	public Map<Long, Boolean> getOfflineStatus() {
 		return offlineStatus;
 	}
 
-	public AllMessage setOfflineStatus(Map<Long, Integer> offlineStatus) {
+	public AllMessage setOfflineStatus(Map<Long, Boolean> offlineStatus) {
 		this.offlineStatus = offlineStatus;
 		return this;
 	}
