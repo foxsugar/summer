@@ -48,8 +48,8 @@ public class PlayerCardsInfoSZ extends PlayerCardsInfoMj {
         specialHuScore.put(hu_清龙,50);
 
 
-//        isHasYimenpai = isHasMode(roomInfo.getMode(),MODE_YIMENPAI);
-//        isHasShuye = isHasMode(roomInfo.getMode(), MODE_SHUYE);
+        isHasYimenpai = isHasMode(roomInfo.getMode(),MODE_YIMENPAI);
+        isHasShuye = isHasMode(roomInfo.getMode(), MODE_SHUYE);
 
     }
     public boolean isHasChi(String card){
