@@ -8,13 +8,12 @@ import com.code.server.db.model.User;
 import com.code.server.login.service.ServerManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
-import com.code.server.rpc.idl.ChargeType;
-import com.code.server.rpc.idl.GameRPC;
-import com.code.server.rpc.idl.Order;
-import com.code.server.rpc.idl.RPCError;
+import com.code.server.rpc.idl.*;
 import com.code.server.util.SpringUtil;
 import org.apache.thrift.TException;
 import org.apache.thrift.async.AsyncMethodCallback;
+
+import java.util.Set;
 
 /**
  * Created by sunxianping on 2017/3/29.
@@ -153,6 +152,26 @@ public class GameRpcHandler implements GameRPC.AsyncIface {
         ServerManager.constant.setDownload2(str);
         constantService.constantDao.save(ServerManager.constant);
         resultHandler.onComplete(0);
+    }
+
+    @Override
+    public void addBlackList(long userId, AsyncMethodCallback<Integer> resultHandler) throws TException {
+
+    }
+
+    @Override
+    public void removeBlackList(long userId, AsyncMethodCallback<Integer> resultHandler) throws TException {
+
+    }
+
+    @Override
+    public void getBlackList(AsyncMethodCallback<Set<Long>> resultHandler) throws TException {
+
+    }
+
+    @Override
+    public void getOnlineUser(AsyncMethodCallback<OnlineNum> resultHandler) throws TException {
+
     }
 
 

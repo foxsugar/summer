@@ -21,6 +21,7 @@ public  final class Order extends
     token_ = "";
     agentId_ = 0;
     id_ = 0L;
+    c_ = java.util.Collections.emptyList();
   }
 
   @java.lang.Override
@@ -91,6 +92,27 @@ public  final class Order extends
             m_.getMutableMap().put(m.getKey(), m.getValue());
             break;
           }
+          case 64: {
+            if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
+              c_ = new java.util.ArrayList<java.lang.Integer>();
+              mutable_bitField0_ |= 0x00000080;
+            }
+            c_.add(input.readInt32());
+            break;
+          }
+          case 66: {
+            int length = input.readRawVarint32();
+            int limit = input.pushLimit(length);
+            if (!((mutable_bitField0_ & 0x00000080) == 0x00000080) && input.getBytesUntilLimit() > 0) {
+              c_ = new java.util.ArrayList<java.lang.Integer>();
+              mutable_bitField0_ |= 0x00000080;
+            }
+            while (input.getBytesUntilLimit() > 0) {
+              c_.add(input.readInt32());
+            }
+            input.popLimit(limit);
+            break;
+          }
         }
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -99,6 +121,9 @@ public  final class Order extends
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
+        c_ = java.util.Collections.unmodifiableList(c_);
+      }
       makeExtensionsImmutable();
     }
   }
@@ -281,6 +306,29 @@ public  final class Order extends
     return map.get(key);
   }
 
+  public static final int C_FIELD_NUMBER = 8;
+  private java.util.List<java.lang.Integer> c_;
+  /**
+   * <code>repeated int32 c = 8;</code>
+   */
+  public java.util.List<java.lang.Integer>
+      getCList() {
+    return c_;
+  }
+  /**
+   * <code>repeated int32 c = 8;</code>
+   */
+  public int getCCount() {
+    return c_.size();
+  }
+  /**
+   * <code>repeated int32 c = 8;</code>
+   */
+  public int getC(int index) {
+    return c_.get(index);
+  }
+  private int cMemoizedSerializedSize = -1;
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -293,6 +341,7 @@ public  final class Order extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    getSerializedSize();
     if (userId_ != 0L) {
       output.writeInt64(1, userId_);
     }
@@ -319,6 +368,13 @@ public  final class Order extends
           .setValue(entry.getValue())
           .build();
       output.writeMessage(7, m);
+    }
+    if (getCList().size() > 0) {
+      output.writeUInt32NoTag(66);
+      output.writeUInt32NoTag(cMemoizedSerializedSize);
+    }
+    for (int i = 0; i < c_.size(); i++) {
+      output.writeInt32NoTag(c_.get(i));
     }
   }
 
@@ -360,6 +416,20 @@ public  final class Order extends
       size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(7, m);
     }
+    {
+      int dataSize = 0;
+      for (int i = 0; i < c_.size(); i++) {
+        dataSize += com.google.protobuf.CodedOutputStream
+          .computeInt32SizeNoTag(c_.get(i));
+      }
+      size += dataSize;
+      if (!getCList().isEmpty()) {
+        size += 1;
+        size += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(dataSize);
+      }
+      cMemoizedSerializedSize = dataSize;
+    }
     memoizedSize = size;
     return size;
   }
@@ -392,6 +462,8 @@ public  final class Order extends
         == other.getId());
     result = result && internalGetM().equals(
         other.internalGetM());
+    result = result && getCList()
+        .equals(other.getCList());
     return result;
   }
 
@@ -420,6 +492,10 @@ public  final class Order extends
     if (!internalGetM().getMap().isEmpty()) {
       hash = (37 * hash) + M_FIELD_NUMBER;
       hash = (53 * hash) + internalGetM().hashCode();
+    }
+    if (getCCount() > 0) {
+      hash = (37 * hash) + C_FIELD_NUMBER;
+      hash = (53 * hash) + getCList().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -574,6 +650,8 @@ public  final class Order extends
       id_ = 0L;
 
       internalGetMutableM().clear();
+      c_ = java.util.Collections.emptyList();
+      bitField0_ = (bitField0_ & ~0x00000080);
       return this;
     }
 
@@ -606,6 +684,11 @@ public  final class Order extends
       result.id_ = id_;
       result.m_ = internalGetM();
       result.m_.makeImmutable();
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        c_ = java.util.Collections.unmodifiableList(c_);
+        bitField0_ = (bitField0_ & ~0x00000080);
+      }
+      result.c_ = c_;
       result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
@@ -669,6 +752,16 @@ public  final class Order extends
       }
       internalGetMutableM().mergeFrom(
           other.internalGetM());
+      if (!other.c_.isEmpty()) {
+        if (c_.isEmpty()) {
+          c_ = other.c_;
+          bitField0_ = (bitField0_ & ~0x00000080);
+        } else {
+          ensureCIsMutable();
+          c_.addAll(other.c_);
+        }
+        onChanged();
+      }
       onChanged();
       return this;
     }
@@ -1011,6 +1104,72 @@ public  final class Order extends
     public Builder putAllM(
         java.util.Map<java.lang.Integer, java.lang.String> values) {
       getMutableM().putAll(values);
+      return this;
+    }
+
+    private java.util.List<java.lang.Integer> c_ = java.util.Collections.emptyList();
+    private void ensureCIsMutable() {
+      if (!((bitField0_ & 0x00000080) == 0x00000080)) {
+        c_ = new java.util.ArrayList<java.lang.Integer>(c_);
+        bitField0_ |= 0x00000080;
+       }
+    }
+    /**
+     * <code>repeated int32 c = 8;</code>
+     */
+    public java.util.List<java.lang.Integer>
+        getCList() {
+      return java.util.Collections.unmodifiableList(c_);
+    }
+    /**
+     * <code>repeated int32 c = 8;</code>
+     */
+    public int getCCount() {
+      return c_.size();
+    }
+    /**
+     * <code>repeated int32 c = 8;</code>
+     */
+    public int getC(int index) {
+      return c_.get(index);
+    }
+    /**
+     * <code>repeated int32 c = 8;</code>
+     */
+    public Builder setC(
+        int index, int value) {
+      ensureCIsMutable();
+      c_.set(index, value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated int32 c = 8;</code>
+     */
+    public Builder addC(int value) {
+      ensureCIsMutable();
+      c_.add(value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated int32 c = 8;</code>
+     */
+    public Builder addAllC(
+        java.lang.Iterable<? extends java.lang.Integer> values) {
+      ensureCIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, c_);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated int32 c = 8;</code>
+     */
+    public Builder clearC() {
+      c_ = java.util.Collections.emptyList();
+      bitField0_ = (bitField0_ & ~0x00000080);
+      onChanged();
       return this;
     }
     public final Builder setUnknownFields(

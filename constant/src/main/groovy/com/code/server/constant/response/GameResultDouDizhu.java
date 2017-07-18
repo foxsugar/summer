@@ -1,7 +1,9 @@
 package com.code.server.constant.response;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2017/3/27.
@@ -13,6 +15,7 @@ public class GameResultDouDizhu {
     public int multiple;
     public boolean isReopen;
     public List<Integer> tableCards = new ArrayList<>();
+    public Map<Long, Double> userScores = new HashMap<>();
 
     public List<IfacePlayerInfoVo> getPlayerCardInfos() {
         return playerCardInfos;
@@ -65,6 +68,15 @@ public class GameResultDouDizhu {
 
     public GameResultDouDizhu setTableCards(List<Integer> tableCards) {
         this.tableCards = tableCards;
+        return this;
+    }
+
+    public Map<Long, Double> getUserScores() {
+        return userScores;
+    }
+
+    public GameResultDouDizhu setUserScores(Map<Long, Double> userScores) {
+        this.userScores = userScores;
         return this;
     }
 }

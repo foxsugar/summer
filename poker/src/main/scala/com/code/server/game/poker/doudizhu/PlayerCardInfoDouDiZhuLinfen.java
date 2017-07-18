@@ -72,26 +72,32 @@ public class PlayerCardInfoDouDiZhuLinfen extends PlayerCardInfoDouDiZhu {
         if (getListByIsType(currentCardStruct.cards) == 0) {
             return false;
         }
-        if (0 != lasttype) {
-            Integer currenttype = currentCardStruct.type;//获取当前出牌类型
-            if (currenttype == lasttype) {
-                List<Integer> lastList = lastcardStruct.getCards();//获取上次出牌的牌型
-                List<Integer> list = currentCardStruct.getCards();//获取当前出牌类型
 
-                if (list.size() > lastList.size() && currentCardStruct.type==CardStruct.type_炸) {     //3333 > 22
-                    return true;
-                }
-                if (CardUtil.getTypeByCard(list.get(0)) > CardUtil.getTypeByCard(lastList.get(0))) {
-                    return true;
-                }
-            } else if (currenttype == CardStruct.type_火箭) { // 出牌是火箭
-                results = true;
-            } else if (lasttype < CardStruct.type_炸 && currenttype == CardStruct.type_炸) { //出牌是炸弹，并且上一次出牌的类型不是火箭也不是炸弹
-                results = true;
-            }
-        } else {
-            results = true;
+        int currenttype = currentCardStruct.type;//获取当前出牌类型
+        if(currenttype == CardStruct.type_火箭){
+            return true;
         }
+        if(currenttype == CardStruct.type_炸 && lasttype < CardStruct.type_炸 ){
+            return true;
+        }
+
+        if (currenttype == lasttype) {
+            List<Integer> lastList = lastcardStruct.getCards();//获取上次出牌的牌型
+            List<Integer> list = currentCardStruct.getCards();//获取当前出牌类型
+
+            if (list.size() != lastList.size()) {
+                if(list.size() > lastList.size() && currentCardStruct.type == CardStruct.type_炸){// 3333>22
+                    return true;
+                }
+
+            } else {
+                if(CardUtil.getTypeByCard(list.get(0)) > CardUtil.getTypeByCard(lastList.get(0))){
+                    return true;
+                }
+            }
+
+        }
+
         return results;
     }
 

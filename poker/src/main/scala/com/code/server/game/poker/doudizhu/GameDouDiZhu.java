@@ -381,6 +381,7 @@ public class GameDouDiZhu extends Game {
             gameResultDouDizhu.getPlayerCardInfos().add(playerCardInfo.toVo());
 
         }
+        gameResultDouDizhu.getUserScores().putAll(this.room.getUserScores());
         MsgSender.sendMsg2Player("gameService", "gameResult", gameResultDouDizhu, users);
 
 

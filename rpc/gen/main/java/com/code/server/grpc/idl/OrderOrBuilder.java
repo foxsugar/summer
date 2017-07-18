@@ -75,4 +75,17 @@ public interface OrderOrBuilder extends
 
   java.lang.String getMOrThrow(
       int key);
+
+  /**
+   * <code>repeated int32 c = 8;</code>
+   */
+  java.util.List<java.lang.Integer> getCList();
+  /**
+   * <code>repeated int32 c = 8;</code>
+   */
+  int getCCount();
+  /**
+   * <code>repeated int32 c = 8;</code>
+   */
+  int getC(int index);
 }
