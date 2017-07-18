@@ -196,6 +196,12 @@ public class GameDouDiZhuLinFen extends GameDouDiZhu{
         this.chooseQiangSet.add(userId);
         int jiaoIndex = chooseJiaoSet.size();
 
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("userId", userId);
+        rs.put("isQiang", isQiang);
+        MsgSender.sendMsg2Player("gameService","qiangResponse",rs,users);
+        MsgSender.sendMsg2Player("gameService","qiangDizhu",0,userId);
+
         PlayerCardInfoDouDiZhu playerCardInfo = playerCardInfos.get(userId);
         playerCardInfo.setQiang(isQiang);
         if (jiaoIndex == 1) {
@@ -203,13 +209,6 @@ public class GameDouDiZhuLinFen extends GameDouDiZhu{
         } else if (jiaoIndex == 2) {
             handleQiang2(userId, isQiang);
         }
-
-        Map<String, Object> rs = new HashMap<>();
-        rs.put("userId", userId);
-        rs.put("isQiang", isQiang);
-        MsgSender.sendMsg2Player("gameService","qiangResponse",rs,users);
-
-        MsgSender.sendMsg2Player("gameService","qiangDizhu",0,userId);
 
         updateLastOperateTime();
         //回放

@@ -498,6 +498,13 @@ public class GameDouDiZhu extends Game {
         PlayerCardInfoDouDiZhu playerCardInfo = playerCardInfos.get(userId);
         playerCardInfo.setQiang(isQiang);
 
+        //回执
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("userId", userId);
+        rs.put("isQiang", isQiang);
+        MsgSender.sendMsg2Player("gameService", "qiangResponse", rs, users);
+        MsgSender.sendMsg2Player("gameService", "qiangDizhu", 0, userId);
+
         //两个农民都没抢
         boolean allNoQiang = buqiangSet.size() == 2 && !isQiang;
         //开始游戏
@@ -509,13 +516,7 @@ public class GameDouDiZhu extends Game {
         }
 
 
-        Map<String, Object> rs = new HashMap<>();
-        rs.put("userId", userId);
-        rs.put("isQiang", isQiang);
-        MsgSender.sendMsg2Player("gameService", "qiangResponse", rs, users);
 
-
-        MsgSender.sendMsg2Player("gameService", "qiangDizhu", 0, userId);
 
 
         updateLastOperateTime();

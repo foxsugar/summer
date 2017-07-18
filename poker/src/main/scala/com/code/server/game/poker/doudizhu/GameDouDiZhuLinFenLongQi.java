@@ -166,6 +166,12 @@ public class GameDouDiZhuLinFenLongQi extends GameDouDiZhuLinFen {
         PlayerCardInfoDouDiZhu playerCardInfo = playerCardInfos.get(userId);
         playerCardInfo.setQiang(isQiang);
 
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("userId", userId);
+        rs.put("isQiang", isQiang);
+        MsgSender.sendMsg2Player("gameService", "qiangResponse", rs, users);
+        MsgSender.sendMsg2Player("gameService", "qiangDizhu", 0, userId);
+
         OperateNode node;
         if (isQiang) {
             node = getOperateByType(operateNode, OperateNode.QIANG);
@@ -181,16 +187,7 @@ public class GameDouDiZhuLinFenLongQi extends GameDouDiZhuLinFen {
             noticeCanQiang(canQiangUser);
         }
 
-
         this.operateNode = node;
-
-        Map<String, Object> rs = new HashMap<>();
-        rs.put("userId", userId);
-        rs.put("isQiang", isQiang);
-        MsgSender.sendMsg2Player("gameService", "qiangResponse", rs, users);
-
-        MsgSender.sendMsg2Player("gameService", "qiangDizhu", 0, userId);
-
         updateLastOperateTime();
         //回放
         replay.getOperate().add(Operate.getOperate_QDZ(userId, !isQiang));
