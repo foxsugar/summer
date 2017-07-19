@@ -11,8 +11,8 @@ public interface IReplayDao extends PagingAndSortingRepository<Replay, Long>{
     Replay getReplayById(long id);
 
     @Query(value = "select left_count from replay where id=?1", nativeQuery = true)
-    Replay getReplayCountById(long id);
+    int getReplayCountById(long id);
 
-    @Query(value = "update replay set left_count=left_count-1", nativeQuery = true)
-    Replay decReplayCountById(long id);
+    @Query(value = "update replay set left_count=left_count-1 where id=?1", nativeQuery = true)
+    void decReplayCountById(long id);
 }
