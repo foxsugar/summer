@@ -235,7 +235,13 @@ public class Room implements IfaceRoom {
             MsgSender.sendMsg2Player(new ResponseVo("roomService", "destroyRoom", n), this.getUsers());
             //删除房间
 //            GameManager.getInstance().rooms.remove(roomId);
-            dissolutionRoom();
+
+            RoomManager.removeRoom(this.roomId);
+            //代开房 并且游戏未开始
+            if (!isCreaterJoin && !this.isInGame && this.curGameNumber == 1) {
+                drawBack();
+            }
+//            dissolutionRoom();
 
         }
 
@@ -450,9 +456,8 @@ public class Room implements IfaceRoom {
         if (!isCreaterJoin && !this.isInGame && this.curGameNumber == 1) {
             drawBack();
         }
-
-
         this.isInGame = false;
+
         // 存储返回
         GameOfResult gameOfResult = new GameOfResult();
 

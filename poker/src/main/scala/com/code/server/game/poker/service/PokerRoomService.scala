@@ -1,6 +1,6 @@
 package com.code.server.game.poker.service
 
-import com.code.server.game.poker.doudizhu.{GameDouDiZhu, RoomDouDiZhu}
+import com.code.server.game.poker.doudizhu.RoomDouDiZhu
 import com.fasterxml.jackson.databind.JsonNode
 
 /**
