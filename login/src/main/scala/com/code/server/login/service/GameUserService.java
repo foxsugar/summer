@@ -276,10 +276,11 @@ public class GameUserService {
     }
     public int setReplay(KafkaMsgKey msgKey, long id){
         ReplayService rs = SpringUtil.getBean(ReplayService.class);
-        boolean isSuccess = rs.decReplayCount(id);
-        if (!isSuccess) {
-            return ErrorCode.REPLAY_NOT_EXIST;
-        }
+//        boolean isSuccess = rs.decReplayCount(id);
+//        if (!isSuccess) {
+//            return ErrorCode.REPLAY_NOT_EXIST;
+//        }
+        rs.decReplayCount(id);
         ResponseVo vo = new ResponseVo("userService", "setReplay", 0);
         sendMsg(msgKey, vo);
         return 0;

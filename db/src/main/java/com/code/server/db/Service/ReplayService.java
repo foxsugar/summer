@@ -23,18 +23,10 @@ public class ReplayService {
         return r;
     }
 
-
-    public boolean decReplayCount(long id){
-        Replay replay = replayDao.getReplayCountById(id);
-        if (replay == null) {
-            return false;
-        }
-        replay.setLeftCount(replay.getLeftCount() - 1);
-        if (replay.getLeftCount() <= 0){
-            replayDao.delete(replay);
-        }else {
-            replayDao.decReplayCountById(replay.getId());
-        }
-        return true;
+    public Integer getReplayLeftCount(long id) {
+        return replayDao.getReplayCountById(id);
+    }
+    public void decReplayCount(long id){
+        replayDao.decReplayCountById(id);
     }
 }
