@@ -25,7 +25,7 @@ object ReconnService {
       reconnectResp.setExist(true)
       reconnectResp.setRoom(room.toVo(userId))
       //在线状态
-      room.getUsers.forEach(user=>reconnectResp.getOfflineStatus.put(user,RedisManager.getUserRedisService.getGateId(user)== null))
+      room.getUsers.forEach(user=>reconnectResp.getOfflineStatus.put(user,RedisManager.getUserRedisService.getGateId(user)!= null))
     }
     val vo = new ResponseVo("reconnService", "reconnection", reconnectResp)
     MsgSender.sendMsg2Player(vo, userId)

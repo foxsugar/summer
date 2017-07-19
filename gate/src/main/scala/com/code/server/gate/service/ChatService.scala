@@ -1,10 +1,10 @@
 package com.code.server.gate.service
 
-import com.code.server.constant.kafka.{IKafaTopic, KafkaMsgKey, KickUser}
+import com.code.server.constant.kafka.{IKafaTopic, KafkaMsgKey}
 import com.code.server.constant.response.{ErrorCode, Notice, ResponseVo}
 import com.code.server.kafka.MsgProducer
 import com.code.server.redis.service.RedisManager
-import com.code.server.util.{JsonUtil, SpringUtil}
+import com.code.server.util.SpringUtil
 
 /**
   * Created by sunxianping on 2017/6/7.
@@ -58,6 +58,9 @@ object ChatService {
       val serverid = RedisManager.getUserRedisService.getGateId(uid)
       val responsevo = new ResponseVo("chatService", "acceptMessage", acceptNotice)
 
+      if(serverid == null){
+        return
+      }
       if(serverid.toInt == gateId){
         GateManager.sendMsg(responsevo,uid)
       }else{
