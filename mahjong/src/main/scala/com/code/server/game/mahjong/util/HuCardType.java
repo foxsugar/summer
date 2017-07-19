@@ -20,7 +20,7 @@ public class HuCardType implements HuType {
     public Set<Integer> anGang = new HashSet<>();
     public List<Integer> shun = new ArrayList<>();//顺中的第一个
     public List<Integer> ke = new ArrayList<>();
-    public int jiang;
+    public int jiang = -1;
 
     public List<List<Integer>> feng_shun = new ArrayList<>();
     public int zi_shun;//有几个中发白组合
