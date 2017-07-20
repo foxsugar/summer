@@ -107,7 +107,7 @@ public class PayCallback {
 
                     UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
 
-                    double addMoney = Double.valueOf(element.elementText("total_fee"))/100;
+                    double addMoney = Double.valueOf(element.elementText("total_fee"))/10;
                     if (UserBeanRedis != null) {
                         //  userRedisService.setUserMoney(charge.getUserid(),UserBeanRedis.getMoney() + Double.valueOf(element.elementText("total_fee")) / 10);
                         userRedisService.addUserMoney(charge.getUserid(), addMoney);
