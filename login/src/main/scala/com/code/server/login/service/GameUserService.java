@@ -112,6 +112,7 @@ public class GameUserService {
         userBean.setOpenId(user.getOpenId());
         userBean.setSex(user.getSex());
         userBean.setUserInfo(user.getUserInfo());
+        userBean.setReferee(user.getReferee());
 
         return userBean;
     }
@@ -132,6 +133,7 @@ public class GameUserService {
         user.setSex(userBean.getSex());
         user.setUserInfo(userBean.getUserInfo());
         user.setGold(userBean.getGold());
+        user.setReferee(userBean.getReferee());
 
         return user;
     }
@@ -256,7 +258,7 @@ public class GameUserService {
         }
         userBean.setReferee(referrerId);
         RedisManager.getUserRedisService().updateUserBean(userBean.getId(),userBean);
-        RedisManager.getUserRedisService().addUserMoney(msgKey.getUserId(), 10);
+        RedisManager.getUserRedisService().addUserMoney(msgKey.getUserId(), 100);
 
         ResponseVo vo = new ResponseVo("userService", "bindReferrer", 0);
         sendMsg(msgKey, vo);

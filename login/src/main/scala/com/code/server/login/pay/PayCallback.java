@@ -115,7 +115,7 @@ public class PayCallback {
                         User user = userService.getUserByUserId(charge.getUserid());
                         System.out.println("修改玩家豆豆");
                         //修改玩家豆豆
-                        user.setMoney(user.getMoney() + Integer.valueOf(element.elementText("total_fee")) / 10);
+                        user.setMoney(user.getMoney() + Integer.valueOf(element.elementText("total_fee")) / 100);
                         userService.save(user);
                     }
 

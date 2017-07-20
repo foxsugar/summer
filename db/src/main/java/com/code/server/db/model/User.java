@@ -257,4 +257,31 @@ public class User extends BaseEntity{
         this.gold = gold;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", account='" + account + '\'' +
+                ", password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", ipConfig='" + ipConfig + '\'' +
+                ", money=" + money +
+                ", cash=" + cash +
+                ", image='" + image + '\'' +
+                ", rebate=" + rebate +
+                ", referee=" + referee +
+                ", gold=" + gold +
+                ", vip=" + vip +
+                ", fatherId='" + fatherId + '\'' +
+                ", uuid='" + uuid + '\'' +
+                ", openId='" + openId + '\'' +
+                ", sex=" + sex +
+                ", aliId='" + aliId + '\'' +
+                ", email='" + email + '\'' +
+                ", registDate=" + registDate +
+                ", lastLoginDate=" + lastLoginDate +
+                ", userInfo=" + userInfo +
+                '}';
+    }
 } // class User

@@ -5,13 +5,10 @@ import com.code.server.db.Service.UserService;
 import com.code.server.db.model.User;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
-import com.code.server.util.ThreadPool;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -26,7 +23,7 @@ public class CenterService {
 
 
         //保存玩家
-        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(),1000L*5,true, CenterService::saveUser));
+        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(),1000L*60*5,true, CenterService::saveUser));
 
     }
 
