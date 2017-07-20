@@ -14,7 +14,7 @@ object ChatService {
     // messageType,1表示普通打字，2表示表情，3表示语音
     val sendUserId = userId
     val roomId = RedisManager.getUserRedisService.getRoomId(userId)
-    if(roomId == null) return ErrorCode.CAN_NOT_NO_ROOM
+    if (roomId == null) return ErrorCode.CAN_NOT_NO_ROOM
     val sendNotice = new Notice
     val acceptNotice = new Notice
     sendNotice.setMessage("send message success!")
@@ -25,16 +25,16 @@ object ChatService {
     acceptNotice.setSendUserId("" + sendUserId)
 
 
-    sendMsg2kafka(roomId,acceptNotice)
+    sendMsg2kafka(roomId, acceptNotice)
 
-    GateManager.sendMsg(new ResponseVo("chatService", "sendMessageToOne", sendNotice),userId)
+    GateManager.sendMsg(new ResponseVo("chatService", "sendMessageToOne", sendNotice), userId)
     0
   }
 
   def sendMessage(userId: Long, messageType: String, message: String): Int = {
     // messageType,1表示普通打字，2表示表情，3表示语音
     val roomId = RedisManager.getUserRedisService.getRoomId(userId)
-    if(roomId == null) return ErrorCode.CAN_NOT_NO_ROOM
+    if (roomId == null) return ErrorCode.CAN_NOT_NO_ROOM
     val sendNotice = new Notice
     val acceptNotice = new Notice
     sendNotice.setMessage("send message success!")
@@ -46,29 +46,28 @@ object ChatService {
 
     sendMsg2kafka(roomId, acceptNotice)
 
-    GateManager.sendMsg(new ResponseVo("chatService", "sendMessage", sendNotice),userId)
+    GateManager.sendMsg(new ResponseVo("chatService", "sendMessage", sendNotice), userId)
     0
   }
 
-  def sendMsg2kafka(roomId:String, acceptNotice:Any): Unit ={
+  def sendMsg2kafka(roomId: String, acceptNotice: Any): Unit = {
     val users = RedisManager.getRoomRedisService.getUsers(roomId)
 
     val gateId = GateManager.getGateId
-    val sendMsg = (uid:Long)=>{
+    val sendMsg = (uid: Long) => {
       val serverid = RedisManager.getUserRedisService.getGateId(uid)
       val responsevo = new ResponseVo("chatService", "acceptMessage", acceptNotice)
 
-      if(serverid == null){
-        return
-      }
-      if(serverid.toInt == gateId){
-        GateManager.sendMsg(responsevo,uid)
-      }else{
-        //发送kick通知 发送到kafka
-        val kafkaSend = SpringUtil.getBean(classOf[MsgProducer])
-        val msgkey = new KafkaMsgKey
-        msgkey.setUserId(uid)
-        kafkaSend.send2Partition(IKafaTopic.GATE_TOPIC, serverid.toInt,msgkey, responsevo)
+      if (serverid != null) {
+        if (serverid.toInt == gateId) {
+          GateManager.sendMsg(responsevo, uid)
+        } else {
+          //发送kick通知 发送到kafka
+          val kafkaSend = SpringUtil.getBean(classOf[MsgProducer])
+          val msgkey = new KafkaMsgKey
+          msgkey.setUserId(uid)
+          kafkaSend.send2Partition(IKafaTopic.GATE_TOPIC, serverid.toInt, msgkey, responsevo)
+        }
       }
     }
 
