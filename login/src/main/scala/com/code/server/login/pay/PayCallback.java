@@ -107,15 +107,16 @@ public class PayCallback {
 
                     UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
 
+                    double addMoney = Double.valueOf(element.elementText("total_fee"))/100;
                     if (UserBeanRedis != null) {
                         //  userRedisService.setUserMoney(charge.getUserid(),UserBeanRedis.getMoney() + Double.valueOf(element.elementText("total_fee")) / 10);
-                        userRedisService.addUserMoney(charge.getUserid(), Double.valueOf(element.elementText("total_fee")));
+                        userRedisService.addUserMoney(charge.getUserid(), addMoney);
                     } else {
                         //查询玩家
                         User user = userService.getUserByUserId(charge.getUserid());
                         System.out.println("修改玩家豆豆");
                         //修改玩家豆豆
-                        user.setMoney(user.getMoney() + Integer.valueOf(element.elementText("total_fee")) / 100);
+                        user.setMoney(user.getMoney() + addMoney);
                         userService.save(user);
                     }
 
