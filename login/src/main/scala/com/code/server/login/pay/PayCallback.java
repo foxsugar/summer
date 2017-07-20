@@ -20,10 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 
 @RestController
@@ -102,6 +99,7 @@ public class PayCallback {
                     System.out.println("修改订单状态");
                     //修改支付订单状态 已支付
                     charge.setStatus(1);
+                    charge.setCallbacktime(new Date());
                     chargeService.save(charge);
 
 
