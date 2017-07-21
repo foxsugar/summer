@@ -19,6 +19,7 @@ import com.code.server.login.rpc.RpcManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.SpringUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,20 +100,20 @@ public class GameUserService {
 
     public static UserBean user2userBean(User user) {
         UserBean userBean = new UserBean();
-
-        userBean.setId(user.getId());
-        userBean.setUsername(user.getUsername());
-        userBean.setImage(user.getImage());
-        userBean.setAccount(user.getAccount());
-        userBean.setPassword(user.getPassword());
-        userBean.setIpConfig(user.getIpConfig());
-        userBean.setMoney(user.getMoney());
-        userBean.setVip(user.getVip());
-        userBean.setUuid(user.getUuid());
-        userBean.setOpenId(user.getOpenId());
-        userBean.setSex(user.getSex());
-        userBean.setUserInfo(user.getUserInfo());
-        userBean.setReferee(user.getReferee());
+        BeanUtils.copyProperties(user,userBean);
+//        userBean.setId(user.getId());
+//        userBean.setUsername(user.getUsername());
+//        userBean.setImage(user.getImage());
+//        userBean.setAccount(user.getAccount());
+//        userBean.setPassword(user.getPassword());
+//        userBean.setIpConfig(user.getIpConfig());
+//        userBean.setMoney(user.getMoney());
+//        userBean.setVip(user.getVip());
+//        userBean.setUuid(user.getUuid());
+//        userBean.setOpenId(user.getOpenId());
+//        userBean.setSex(user.getSex());
+//        userBean.setUserInfo(user.getUserInfo());
+//        userBean.setReferee(user.getReferee());
 
         return userBean;
     }
@@ -120,20 +121,21 @@ public class GameUserService {
     public static User userBean2User(UserBean userBean) {
         User user = new User();
 
-        user.setId(userBean.getId());
-        user.setUsername(userBean.getUsername());
-        user.setImage(userBean.getImage());
-        user.setAccount(userBean.getAccount());
-        user.setPassword(userBean.getPassword());
-        user.setIpConfig(userBean.getIpConfig());
-        user.setMoney(userBean.getMoney());
-        user.setVip(userBean.getVip());
-        user.setUuid(userBean.getUuid());
-        user.setOpenId(userBean.getOpenId());
-        user.setSex(userBean.getSex());
-        user.setUserInfo(userBean.getUserInfo());
-        user.setGold(userBean.getGold());
-        user.setReferee(userBean.getReferee());
+        BeanUtils.copyProperties(userBean,user);
+//        user.setId(userBean.getId());
+//        user.setUsername(userBean.getUsername());
+//        user.setImage(userBean.getImage());
+//        user.setAccount(userBean.getAccount());
+//        user.setPassword(userBean.getPassword());
+//        user.setIpConfig(userBean.getIpConfig());
+//        user.setMoney(userBean.getMoney());
+//        user.setVip(userBean.getVip());
+//        user.setUuid(userBean.getUuid());
+//        user.setOpenId(userBean.getOpenId());
+//        user.setSex(userBean.getSex());
+//        user.setUserInfo(userBean.getUserInfo());
+//        user.setGold(userBean.getGold());
+//        user.setReferee(userBean.getReferee());
 
         return user;
     }

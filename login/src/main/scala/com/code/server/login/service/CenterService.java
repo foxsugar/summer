@@ -23,7 +23,7 @@ public class CenterService {
 
 
         //保存玩家
-        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(),1000L*60*5,true, CenterService::saveUser));
+        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(),1000L*10,true, CenterService::saveUser));
 
     }
 
