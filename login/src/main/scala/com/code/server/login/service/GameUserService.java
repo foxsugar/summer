@@ -8,9 +8,11 @@ import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserVo;
+import com.code.server.db.Service.ChargeService;
 import com.code.server.db.Service.ReplayService;
 import com.code.server.db.Service.UserRecordService;
 import com.code.server.db.Service.UserService;
+import com.code.server.db.model.Charge;
 import com.code.server.db.model.Replay;
 import com.code.server.db.model.User;
 import com.code.server.db.model.UserRecord;
@@ -18,6 +20,7 @@ import com.code.server.kafka.MsgProducer;
 import com.code.server.login.rpc.RpcManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
+import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -258,12 +261,21 @@ public class GameUserService {
         if (!isExist) {
             return ErrorCode.REFERRER_NOT_EXIST;
         }
+        double money = 100;
         userBean.setReferee(referrerId);
         RedisManager.getUserRedisService().updateUserBean(userBean.getId(),userBean);
-        RedisManager.getUserRedisService().addUserMoney(msgKey.getUserId(), 100);
+        RedisManager.getUserRedisService().addUserMoney(msgKey.getUserId(), money);
+
 
         ResponseVo vo = new ResponseVo("userService", "bindReferrer", 0);
         sendMsg(msgKey, vo);
+
+        //充值记录
+        Charge charge = new Charge();
+        charge.setRecharge_source("5").setUserid(userBean.getId()).setUsername(userBean.getUsername()).setStatus(1).
+                setCreatetime(new Date()).setMoney_point(money).setMoney(money).setOrderId(""+IdWorker.getDefaultInstance().nextId());
+        SpringUtil.getBean(ChargeService.class).save(charge);
+
 
         return 0;
     }
