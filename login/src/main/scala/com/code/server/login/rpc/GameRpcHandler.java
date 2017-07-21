@@ -12,6 +12,8 @@ import com.code.server.rpc.idl.*;
 import com.code.server.util.SpringUtil;
 import org.apache.thrift.TException;
 import org.apache.thrift.async.AsyncMethodCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
@@ -20,6 +22,7 @@ import java.util.Set;
  */
 public class GameRpcHandler implements GameRPC.AsyncIface {
 
+    private static final Logger logger = LoggerFactory.getLogger(GameRpcHandler.class);
 
     @Override
     public void charge(Order order, AsyncMethodCallback<Integer> resultHandler) throws TException {
@@ -176,6 +179,7 @@ public class GameRpcHandler implements GameRPC.AsyncIface {
 
     @Override
     public void bindReferee(long userId, int referee, AsyncMethodCallback<Integer> resultHandler) throws TException {
+        logger.info("绑定邀请码 userId : " + userId);
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         if (userBean != null) {
             userBean.setReferee(referee);
@@ -184,6 +188,7 @@ public class GameRpcHandler implements GameRPC.AsyncIface {
             UserService userService = SpringUtil.getBean(UserService.class);
             User user = userService.getUserByUserId(userId);
             user.setReferee(referee);
+            userService.save(user);
         }
         resultHandler.onComplete(0);
     }
