@@ -174,5 +174,19 @@ public class GameRpcHandler implements GameRPC.AsyncIface {
 
     }
 
+    @Override
+    public void bindReferee(long userId, int referee, AsyncMethodCallback<Integer> resultHandler) throws TException {
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+            userBean.setReferee(referee);
+            RedisManager.getUserRedisService().updateUserBean(userBean.getId(),userBean);
+        } else {
+            UserService userService = SpringUtil.getBean(UserService.class);
+            User user = userService.getUserByUserId(userId);
+            user.setReferee(referee);
+        }
+        resultHandler.onComplete(0);
+    }
+
 
 }

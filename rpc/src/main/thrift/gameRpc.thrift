@@ -60,6 +60,8 @@ service GameRPC{
 
    set<i64> getBlackList();
 
-   OnlineNum getOnlineUser()
+   OnlineNum getOnlineUser();
+
+   i32 bindReferee(i64 userId,i32 referee);
 }
 
