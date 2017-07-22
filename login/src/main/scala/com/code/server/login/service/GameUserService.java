@@ -272,8 +272,14 @@ public class GameUserService {
 
         //充值记录
         Charge charge = new Charge();
-        charge.setRecharge_source("5").setUserid(userBean.getId()).setUsername(userBean.getUsername()).setStatus(1).
-                setCreatetime(new Date()).setMoney_point(money).setMoney(money).setOrderId(""+IdWorker.getDefaultInstance().nextId());
+        charge.setRecharge_source("5");
+        charge.setUserid(userBean.getId());
+        charge.setUsername(userBean.getUsername());
+        charge.setStatus(1);
+        charge.setCreatetime(new Date());
+        charge.setMoney_point(money);
+        charge.setMoney(money);
+        charge.setOrderId("" + IdWorker.getDefaultInstance().nextId());
         SpringUtil.getBean(ChargeService.class).save(charge);
 
 

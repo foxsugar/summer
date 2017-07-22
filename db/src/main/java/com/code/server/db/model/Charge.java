@@ -40,143 +40,127 @@ public class Charge {
         return orderId;
     }
 
-    public Charge setOrderId(String orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
-        return this;
     }
 
     public String getTransaction_id() {
         return transaction_id;
     }
 
-    public Charge setTransaction_id(String transaction_id) {
+    public void setTransaction_id(String transaction_id) {
         this.transaction_id = transaction_id;
-        return this;
     }
 
     public long getUserid() {
         return userid;
     }
 
-    public Charge setUserid(long userid) {
+    public void setUserid(long userid) {
         this.userid = userid;
-        return this;
     }
 
     public Date getCreatetime() {
         return createtime;
     }
 
-    public Charge setCreatetime(Date createtime) {
+    public void setCreatetime(Date createtime) {
         this.createtime = createtime;
-        return this;
     }
 
     public Date getCallbacktime() {
         return callbacktime;
     }
 
-    public Charge setCallbacktime(Date callbacktime) {
+    public void setCallbacktime(Date callbacktime) {
         this.callbacktime = callbacktime;
-        return this;
     }
 
     public double getMoney() {
         return money;
     }
 
-    public Charge setMoney(double money) {
+    public void setMoney(double money) {
         this.money = money;
-        return this;
     }
 
     public int getOrigin() {
         return origin;
     }
 
-    public Charge setOrigin(int origin) {
+    public void setOrigin(int origin) {
         this.origin = origin;
-        return this;
     }
 
     public int getStatus() {
         return status;
     }
 
-    public Charge setStatus(int status) {
+    public void setStatus(int status) {
         this.status = status;
-        return this;
     }
 
     public String getSign() {
         return sign;
     }
 
-    public Charge setSign(String sign) {
+    public void setSign(String sign) {
         this.sign = sign;
-        return this;
     }
 
     public String getSp_ip() {
         return sp_ip;
     }
 
-    public Charge setSp_ip(String sp_ip) {
+    public void setSp_ip(String sp_ip) {
         this.sp_ip = sp_ip;
-        return this;
     }
 
     public int getShareid() {
         return shareid;
     }
 
-    public Charge setShareid(int shareid) {
+    public void setShareid(int shareid) {
         this.shareid = shareid;
-        return this;
     }
 
     public String getShare_content() {
         return share_content;
     }
 
-    public Charge setShare_content(String share_content) {
+    public void setShare_content(String share_content) {
         this.share_content = share_content;
-        return this;
     }
 
     public String getShare_area() {
         return share_area;
     }
 
-    public Charge setShare_area(String share_area) {
+    public void setShare_area(String share_area) {
         this.share_area = share_area;
-        return this;
     }
 
     public double getMoney_point() {
         return money_point;
     }
 
-    public Charge setMoney_point(double money_point) {
+    public void setMoney_point(double money_point) {
         this.money_point = money_point;
-        return this;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public Charge setUsername(String username) {
+    public void setUsername(String username) {
         this.username = username;
-        return this;
     }
 
     public String getRecharge_source() {
         return recharge_source;
     }
 
-    public Charge setRecharge_source(String recharge_source) {
+    public void setRecharge_source(String recharge_source) {
         this.recharge_source = recharge_source;
-        return this;
     }
 }
