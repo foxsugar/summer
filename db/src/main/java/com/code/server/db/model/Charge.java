@@ -48,8 +48,9 @@ public class Charge {
         return transaction_id;
     }
 
-    public void setTransaction_id(String transaction_id) {
+    public Charge setTransaction_id(String transaction_id) {
         this.transaction_id = transaction_id;
+        return this;
     }
 
     public long getUserid() {
