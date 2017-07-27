@@ -428,6 +428,11 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
+    @Override
+    public int startGameByClient(long userId) {
+        return 0;
+    }
+
     public List<UserOfResult> getUserOfResult() {
         ArrayList<UserOfResult> userOfResultList = new ArrayList<>();
         long time = System.currentTimeMillis();

@@ -99,13 +99,22 @@ public class RoomMsgDispatch {
                 }
                 return room.dissolution(userId, true, method);
             }
-            case "answerIfDissolveRoom":
+            case "answerIfDissolveRoom":{
+
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 if (room == null) {
                     return ErrorCode.CAN_NOT_NO_ROOM;
                 }
                 boolean isAgree = "2".equals(params.get("answer").asText());
                 return room.dissolution(userId, isAgree, method);
+            }
+            case "startGameByClient":{
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                if (room == null) {
+                    return ErrorCode.CAN_NOT_NO_ROOM;
+                }
+
+            }
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

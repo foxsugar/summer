@@ -29,7 +29,6 @@ public class GameDouDiZhu extends Game {
     protected List<Integer> disCards = new ArrayList<>();//丢弃的牌
     protected List<Integer> tableCards = new ArrayList<>();//底牌
     protected Map<Long, PlayerCardInfoDouDiZhu> playerCardInfos = new HashMap<>();
-    protected List<Long> users = new ArrayList<>();
     private Random rand = new Random();
     protected long dizhu = -1;//地主
     protected Set<Long> chooseJiaoSet = new HashSet<>();//叫过地主的人
@@ -554,21 +553,7 @@ public class GameDouDiZhu extends Game {
         MsgSender.sendMsg2Player(vo, users);
     }
 
-    /**
-     * 下个人
-     *
-     * @param curId
-     * @return
-     */
-    public long nextTurnId(long curId) {
-        int index = users.indexOf(curId);
 
-        int nextId = index + 1;
-        if (nextId >= users.size()) {
-            nextId = 0;
-        }
-        return users.get(nextId);
-    }
 
 
     @Override

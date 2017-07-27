@@ -36,6 +36,15 @@ public class PayCallback {
     @Autowired
     private UserRedisService userRedisService;
 
+    private static final Map<Integer, Integer> chargeMoney = new HashMap<>();
+
+    static{
+        chargeMoney.put(5,50);
+        chargeMoney.put(10,110);
+        chargeMoney.put(20,230);
+        chargeMoney.put(50,600);
+        chargeMoney.put(100,1300);
+    }
     /**
      * 接受微信回调
      *
@@ -92,8 +101,9 @@ public class PayCallback {
             System.out.println(paySign);
             System.out.println(element.elementText("sign"));
 
+            int money_total = Integer.valueOf(element.elementText("total_fee")) / 100;
             if (paySign.equals(element.elementText("sign"))
-                    && String.valueOf(charge.getMoney()).equals(String.valueOf(Double.valueOf(element.elementText("total_fee")) / 100))) {
+                    && charge.getMoney() == money_total) {
 
                 if (0 == charge.getStatus()) {
                     System.out.println("修改订单状态");
@@ -105,7 +115,12 @@ public class PayCallback {
 
                     UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
 
-                    double addMoney = Double.valueOf(element.elementText("total_fee"))/10;
+                    int addMoney = Integer.valueOf(element.elementText("total_fee"))/10;
+                    //龙七分档
+                    if (chargeMoney.containsKey(money_total)) {
+                        addMoney = chargeMoney.get(money_total);
+                    }
+
                     if (UserBeanRedis != null) {
                         //  userRedisService.setUserMoney(charge.getUserid(),UserBeanRedis.getMoney() + Double.valueOf(element.elementText("total_fee")) / 10);
                         userRedisService.addUserMoney(charge.getUserid(), addMoney);

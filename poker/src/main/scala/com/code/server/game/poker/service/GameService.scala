@@ -3,6 +3,7 @@ package com.code.server.game.poker.service
 import com.code.server.constant.game.CardStruct
 import com.code.server.constant.response.ErrorCode
 import com.code.server.game.poker.doudizhu.GameDouDiZhu
+import com.code.server.game.poker.paijiu.GamePaijiu
 import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
 import com.code.server.util.JsonUtil
@@ -17,6 +18,7 @@ object GameService {
     val game = getGame(roomId)
     game match {
       case x:GameDouDiZhu =>dispatchGameDDZService(userId,method,game.asInstanceOf[GameDouDiZhu],params)
+      case x:GamePaijiu =>dispatchGamePJService(userId,method,game.asInstanceOf[GamePaijiu],params)
     }
 
   }
@@ -37,6 +39,17 @@ object GameService {
       game.play(userId, cardStruct)
     case "pass" =>
       game.pass(userId)
+    case _ =>
+      ErrorCode.REQUEST_PARAM_ERROR
+  }
+
+  private def dispatchGamePJService(userId:Long,method: String, game: GamePaijiu, params: JsonNode) = method match {
+    case "bet" =>
+      val one = params.path("one").asInt(0)
+      val two = params.path("two").asInt(0)
+
+      game.bet(userId,one,two)
+
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

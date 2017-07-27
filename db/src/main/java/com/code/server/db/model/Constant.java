@@ -13,13 +13,13 @@ public class Constant {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String marquee;
+    private String marquee1;
+    private String marquee2;
     private String download;
     private String download2;
     private int initMoney;
     private String versionOfAndroid;//安卓版本
     private String versionOfIos;//IOS版本
-
-
     private int appleCheck;
 
 
@@ -92,6 +92,25 @@ public class Constant {
 
     public Constant setAppleCheck(int appleCheck) {
         this.appleCheck = appleCheck;
+        return this;
+    }
+
+
+    public String getMarquee1() {
+        return marquee1;
+    }
+
+    public Constant setMarquee1(String marquee1) {
+        this.marquee1 = marquee1;
+        return this;
+    }
+
+    public String getMarquee2() {
+        return marquee2;
+    }
+
+    public Constant setMarquee2(String marquee2) {
+        this.marquee2 = marquee2;
         return this;
     }
 

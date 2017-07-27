@@ -46,7 +46,7 @@ public class GameInfo extends Game {
     protected Map<Long, PlayerCardsInfoMj> playerCardsInfos = new HashMap<>();//玩家手上牌的信息
     protected long firstTurn = 0;//第一个出牌的人
     protected List<WaitDetail> waitingforList = new ArrayList<>();//需要等待玩家的列表
-    protected List<Long> users = new ArrayList<>();
+
     protected boolean isAlreadyHu;//是否已经胡过
     protected int baoType = -1;
     protected String baoCard = null;

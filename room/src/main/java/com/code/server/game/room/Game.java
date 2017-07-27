@@ -10,6 +10,7 @@ import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import java.util.Map;
  */
 public class Game implements IfaceGame{
 
+    public List<Long> users = new ArrayList<>();
     public int number;
 
     public void startGame(List<Long> users,Room room){
@@ -26,6 +28,21 @@ public class Game implements IfaceGame{
 
     protected void genRecord() {
 
+    }
+    /**
+     * 下个人
+     *
+     * @param curId
+     * @return
+     */
+    protected long nextTurnId(long curId) {
+        int index = users.indexOf(curId);
+
+        int nextId = index + 1;
+        if (nextId >= users.size()) {
+            nextId = 0;
+        }
+        return users.get(nextId);
     }
 
     protected void genRecord(Map<Long,Double> scores, Room room,long id) {
@@ -59,5 +76,14 @@ public class Game implements IfaceGame{
     @Override
     public IfaceGameVo toVo(long watchUser) {
         return null;
+    }
+
+    public List<Long> getUsers() {
+        return users;
+    }
+
+    public Game setUsers(List<Long> users) {
+        this.users = users;
+        return this;
     }
 }

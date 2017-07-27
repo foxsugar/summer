@@ -61,7 +61,7 @@ public class ErrorCode {
 
 	public static final int CAN_NOT_BING_REFERRER = 200010;
 
-
+	public static final int REPLAY_NOT_EXIST = 200011;
 	public static final int CAN_NOT_JOIN_PARAM_ERROR = 200020;
 
 
@@ -78,7 +78,19 @@ public class ErrorCode {
 	public static final int ID_TOKEN_NOT_MATCH = 400001;
 	public static final int GAMESERVER_NOT_OPEN = 500000;
 
-	public static final int REPLAY_NOT_EXIST = 200011;
+	public static final int ROOM_START_NOT_CREATEUSER = 500010;
+	public static final int ROOM_START_CAN_NOT = 500011;
+
+	public static final int NO_USER = 500020;
+	public static final int ALREADY_BET = 500021;
+	public static final int BET_PARAM_ERROR = 500022;
+	public static final int OPEN_PARAM_ERROR = 500023;
+
+
+
+
+
+
 
 
 	static class ErrorCodeRepeatChecker {
