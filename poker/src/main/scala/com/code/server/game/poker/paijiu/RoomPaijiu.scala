@@ -1,15 +1,19 @@
 package com.code.server.game.poker.paijiu
 
 import com.code.server.constant.game.IGameConstant
-import com.code.server.constant.response.ErrorCode
+import com.code.server.constant.response.{ErrorCode}
 import com.code.server.game.room.{Game, Room}
+
+import scala.beans.BeanProperty
 
 /**
   * Created by sunxianping on 2017/7/24.
   */
 class RoomPaijiu extends Room {
 
+  @BeanProperty
   var cards: List[Int] = List()
+  @BeanProperty
   var lastGameCards: List[Int] = List()
 
 
@@ -39,6 +43,20 @@ class RoomPaijiu extends Room {
     })
     //开始游戏
     super.startGame()
+    0
+  }
+
+
+
+}
+
+object RoomPaijiu {
+  def createRoom(userId:Long,roomType:String, gameType:String, gameNumber:Int):Int = {
+    val roomPaijiu = new RoomPaijiu
+    roomPaijiu.createUser = userId
+    roomPaijiu.roomType = roomType
+    roomPaijiu.gameType = gameType
+    roomPaijiu.gameNumber = gameNumber
     0
   }
 }

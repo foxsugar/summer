@@ -47,8 +47,12 @@ object GameService {
     case "bet" =>
       val one = params.path("one").asInt(0)
       val two = params.path("two").asInt(0)
-
       game.bet(userId,one,two)
+    case "open"=>
+      val group1 = params.path("group1").asText()
+      val group2 = params.path("group1").asText()
+      game.open(userId,group1,group2)
+
 
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR

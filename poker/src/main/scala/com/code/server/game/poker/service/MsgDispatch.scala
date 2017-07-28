@@ -41,6 +41,8 @@ object MsgDispatch {
   private def dispatchAllMsg(userId: Long, roomId: String, service: String, method: String, params: JsonNode) = service match {
     case "gameService" =>
       GameService.dispatch(userId, method, roomId, params)
+    case "gamePaijiuService" =>
+      GameService.dispatch(userId, method, roomId, params)
     case "pokerRoomService" =>
       PokerRoomService.dispatch(userId, method, params)
     case "reconnService" =>

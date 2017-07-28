@@ -53,7 +53,7 @@ public class FanUtil implements HuType {
     }
 
     public static int compute(List<String> cards, HuCardType huCardType, int tingCardType, PlayerCardsInfoMj playerCardsInfo) {
-        int fan = 0;
+        int fan = huCardType.fan;
         if (playerCardsInfo.isHasSpecialHu(hu_缺一门) && no_group_num(cards, huCardType) == 1) {//缺一门
             huCardType.specialHuList.add(hu_缺一门);
             fan += playerCardsInfo.getSpecialHuScore(hu_缺一门);

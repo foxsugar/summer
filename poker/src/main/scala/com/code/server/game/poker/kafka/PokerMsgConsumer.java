@@ -4,7 +4,6 @@ import com.code.server.game.poker.service.MsgDispatch;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.TopicPartition;
-import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,10 +17,16 @@ public class PokerMsgConsumer {
     @KafkaListener(id = "gameService", topicPartitions = {
             @TopicPartition(topic = "gameService", partitions = "${serverConfig.serverId}")
     })
-    public void listen(ConsumerRecord<String, String> record ) {
+    public void listenGameDoudizhu(ConsumerRecord<String, String> record ) {
         MsgDispatch.dispatch(record);
     }
 
+    @KafkaListener(id = "gamePaijiuService", topicPartitions = {
+            @TopicPartition(topic = "gamePaijiuService", partitions = "${serverConfig.serverId}")
+    })
+    public void listenGamePaijiu(ConsumerRecord<String, String> record ) {
+        MsgDispatch.dispatch(record);
+    }
 
     @KafkaListener(id = "reconn_topic", topicPartitions = {
             @TopicPartition(topic = "reconnService", partitions = "${serverConfig.serverId}")

@@ -5,7 +5,7 @@ import java.lang.Long
 import java.util
 
 import com.code.server.constant.data.DataManager
-import com.code.server.constant.response.ErrorCode
+import com.code.server.constant.response.{ErrorCode, GamePaijiuVo, IfaceGameVo}
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.{Game, Room}
 
@@ -21,7 +21,7 @@ class GamePaijiu extends Game with PaijiuConstant {
 
   var cards: List[Int] = List()
 
-  val playerCardInfos: Map[Long, PlayerCardInfoPaijiu] = Map()
+  var playerCardInfos: Map[Long, PlayerCardInfoPaijiu] = Map()
 
   var roomPaijiu: RoomPaijiu = _
 
@@ -47,10 +47,13 @@ class GamePaijiu extends Game with PaijiuConstant {
     val isFirst = roomPaijiu.cards.size == ALL_CARD_NUM
     //摇色子决定发牌
     if (isFirst) {
-      //发牌扔色子
-      randFapai()
-      cards ++= roomPaijiu.cards
-    } else {
+
+      //初始牌并洗牌
+
+      val cardList = DataManager.data.getPaijiuCardDataMap.values().asScala.map(card => card.getCard).toList
+      val rand = new Random
+      roomPaijiu.cards ++= rand.shuffle(cardList)
+
       //拿出一半的牌
       val thisGameCards = roomPaijiu.cards.slice(0, 15)
       //本局的牌
@@ -60,11 +63,16 @@ class GamePaijiu extends Game with PaijiuConstant {
       roomPaijiu.lastGameCards ++= thisGameCards
 
 
+    } else {
+      cards ++= roomPaijiu.cards
       //轮庄
       val nextBanker = nextTurnId(roomPaijiu.getBankerId)
       roomPaijiu.setBankerId(nextBanker)
     }
     bankerId = roomPaijiu.getBankerId
+
+    //下注阶段开始
+    betStart
   }
 
 
@@ -73,10 +81,10 @@ class GamePaijiu extends Game with PaijiuConstant {
     */
   protected def init(): Unit = {
     this.users.addAll(roomPaijiu.getUsers)
-    roomPaijiu.getUsers.forEach(uid =>{
+    roomPaijiu.getUsers.forEach(uid => {
       val playerInfo = new PlayerCardInfoPaijiu
       playerInfo.userId = uid
-      this.playerCardInfos + (uid -> playerInfo)
+      this.playerCardInfos += (uid -> playerInfo)
     })
 
   }
@@ -85,12 +93,12 @@ class GamePaijiu extends Game with PaijiuConstant {
     * 发牌
     */
   protected def fapai(): Unit = {
-    this.playerCardInfos.values.foreach(playerCardInfos => {
-      for (i <- 0 to 4) {
-        playerCardInfos.cards.+:(cards.asJava.remove(0))
-      }
-    })
-
+    val slidList = cards.sliding(4,4).toList
+    var count = 0
+    for(playerInfo <- playerCardInfos.values){
+      playerInfo.cards ++= slidList(count)
+      count += 1
+    }
   }
 
   /**
@@ -118,7 +126,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     //除去庄家全都下完注
     val isAllBet = playerCardInfos.count { case (uid, playerInfo) => uid == bankerId || playerInfo.bet == null } == 1
     if (isAllBet) {
-      open_start
+      openStart
     }
     0
   }
@@ -170,6 +178,7 @@ class GamePaijiu extends Game with PaijiuConstant {
 
     //开的牌和拥有的牌相同
     val isSame = playerCardInfo.cards.diff(allCard).isEmpty
+    if(!isSame) return false
 
     //第一组不小于第二组牌
     val score1 = getGroupScore(group1)
@@ -185,20 +194,22 @@ class GamePaijiu extends Game with PaijiuConstant {
 
   }
 
+
   /**
     * 结算
     */
   protected def compute(): Unit = {
     val banker = playerCardInfos(bankerId)
     playerCardInfos.foreach { case (uid, playerInfo) =>
-      if(uid != bankerId){
-        compareAndSetScore(banker,playerInfo)
+      if (uid != bankerId) {
+        compareAndSetScore(banker, playerInfo)
       }
     }
   }
 
   /**
     * 比较输赢并设置分数
+    *
     * @param banker
     * @param other
     */
@@ -214,19 +225,20 @@ class GamePaijiu extends Game with PaijiuConstant {
     if (bankerScore2 > otherScore2) result += 1
     if (bankerScore2 < otherScore2) result -= 1
     //庄家赢
-    if(result>0) {
-      val changeScore = other.getBetScore(bankerScore1>=mix8Score)
+    if (result > 0) {
+      val changeScore = other.getBetScore(bankerScore1 >= mix8Score)
       banker.score += changeScore
       other.score -= changeScore
-      roomPaijiu.addUserSocre(banker.userId,changeScore)
-      roomPaijiu.addUserSocre(other.userId,-changeScore)
+      roomPaijiu.addUserSocre(banker.userId, changeScore)
+      roomPaijiu.addUserSocre(other.userId, -changeScore)
       other.winState = lose
-    }else if(result<0){//闲家赢
-      val changeScore = other.getBetScore(otherScore1>=mix8Score)
+    } else if (result < 0) {
+      //闲家赢
+      val changeScore = other.getBetScore(otherScore1 >= mix8Score)
       banker.score -= changeScore
       other.score += changeScore
-      roomPaijiu.addUserSocre(banker.userId,-changeScore)
-      roomPaijiu.addUserSocre(other.userId,changeScore)
+      roomPaijiu.addUserSocre(banker.userId, -changeScore)
+      roomPaijiu.addUserSocre(other.userId, changeScore)
       other.winState = win
     }
   }
@@ -245,30 +257,49 @@ class GamePaijiu extends Game with PaijiuConstant {
   /**
     * 转换为下注状态
     */
-  protected def bet_start: Unit = {
+  protected def betStart: Unit = {
     state = STATE_BET
 
+    //推送开始下注
+    MsgSender.sendMsg2Player("gamePaijiuService", "betStart", 0, users)
   }
 
   /**
     * 转换为开牌状态
     */
-  protected def open_start: Unit = {
-    state = STATE_OPEN
+  protected def openStart: Unit = {
+    //发牌扔色子
+    crap()
 
+    state = STATE_OPEN
+    //推送开始下注
+    MsgSender.sendMsg2Player("gamePaijiuService", "openStart", 0, users)
   }
 
   /**
-    * 随机发牌
+    * 掷骰子
     */
-  private def randFapai(): Unit = {
+  private def crap(): Unit = {
     val rand = new Random()
     val num = rand.nextInt(11) + 2
     val result = Map("num" -> num)
-    MsgSender.sendMsg2Player("gameService", "randSZ", result.asJava, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "randSZ", result.asJava, users)
 
   }
 
+
+
+
+  override def toVo(watchUser: scala.Long): IfaceGameVo = {
+    val gamePaijiuVo = new GamePaijiuVo
+    gamePaijiuVo.bankerId = this.bankerId
+    gamePaijiuVo.state = this.state
+    this.playerCardInfos.foreach{case (userId,playerInfo)=>
+      gamePaijiuVo.playerCardInfos.put(userId,playerInfo.toVo(watchUser))
+    }
+    gamePaijiuVo
+
+  }
 
 }
 

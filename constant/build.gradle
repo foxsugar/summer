@@ -17,6 +17,7 @@ allprojects {
 }
 apply plugin: 'java'
 apply plugin: 'groovy'
+apply plugin: 'scala'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
@@ -31,11 +32,17 @@ repositories {
 dependencies {
 	compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.11'
 	compile group: 'io.grpc', name: 'grpc-protobuf', version: '1.2.0'
+	compile "org.scala-lang:scala-library:2.12.2"
+	compile "org.scala-lang:scala-compiler:2.12.2"
+	compile "org.scala-lang:scala-reflect:2.12.2"
 }
 
 tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
 }
 tasks.withType(GroovyCompile) {
+	options.encoding = "UTF-8"
+}
+tasks.withType(ScalaCompile) {
 	options.encoding = "UTF-8"
 }

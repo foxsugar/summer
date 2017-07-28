@@ -2,6 +2,7 @@ package com.code.server.game.poker.paijiu
 
 import com.code.server.constant.response.{IfacePlayerInfoVo, PlayerCardInfoPaijiuVo}
 import com.code.server.game.room.IfacePlayerInfo
+import scala.collection.JavaConverters._
 
 /**
   * Created by sunxianping on 2017/7/24.
@@ -10,7 +11,7 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
 
   var userId: Long = _
   //牌
-  val cards: List[Int] = List()
+  var cards: List[Int] = List()
   //下注
   var bet: Bet = _
   //开牌
@@ -29,18 +30,36 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
     * @return
     */
   def getBetScore(isWinTwo: Boolean): Int = {
-    if (bet == null) 0
+    if (bet == null) return 0
     var result = bet.one
     if (isWinTwo) result += bet.two
     result
   }
 
   override def toVo: IfacePlayerInfoVo = {
+    val playerCardInfoPaijiuVo = new PlayerCardInfoPaijiuVo
+    playerCardInfoPaijiuVo.bet1 = this.bet.two
+    playerCardInfoPaijiuVo.bet2 = this.bet.two
+    playerCardInfoPaijiuVo.group1 = this.group1
+    playerCardInfoPaijiuVo.group2 = this.group2
+    playerCardInfoPaijiuVo.cards = this.cards.asJava
+    playerCardInfoPaijiuVo.userId = this.userId
+    playerCardInfoPaijiuVo.winState = this.winState
+    playerCardInfoPaijiuVo.score = this.score
+
     new PlayerCardInfoPaijiuVo
   }
 
   override def toVo(watchUser: Long): IfacePlayerInfoVo = {
-    new PlayerCardInfoPaijiuVo
+    if(watchUser == this.userId) return this.toVo
+
+    val playerCardInfoPaijiuVo = new PlayerCardInfoPaijiuVo
+    playerCardInfoPaijiuVo.bet1 = this.bet.two
+    playerCardInfoPaijiuVo.bet2 = this.bet.two
+    playerCardInfoPaijiuVo.userId = this.userId
+    playerCardInfoPaijiuVo.winState = this.winState
+    playerCardInfoPaijiuVo.score = this.score
+    playerCardInfoPaijiuVo
   }
 }
 
@@ -48,5 +67,6 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
 class Bet(o: Int, t: Int) {
   val one = o
   val two = t
+
 
 }
