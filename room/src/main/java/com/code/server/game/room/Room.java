@@ -323,18 +323,15 @@ public class Room implements IfaceRoom {
     }
 
     public void startGame() {
-        this.isOpen = true;
         this.isInGame = true;
         Game game = getGameInstance();
         this.game = game;
         //扣钱
-        if (curGameNumber == 1 && isCreaterJoin) {
+        if (!isOpen && isCreaterJoin) {
             spendMoney();
         }
         game.startGame(users, this);
-
-        //通知其他人游戏已经开始
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameBegin", "ok"), this.getUsers());
+        this.isOpen = true;
         pushScoreChange();
     }
 
@@ -815,5 +812,9 @@ public class Room implements IfaceRoom {
         this.dissloutionUser = dissloutionUser;
         return this;
     }
+
+
+
+
 
 }

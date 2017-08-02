@@ -1,12 +1,12 @@
 package com.code.server.game.poker.paijiu
 
+import com.code.server.constant.response.PlayerCardInfoPaijiuVo
 import com.code.server.util.JsonUtil
 
-import scala.collection.immutable.HashMap
-import scala.util.Random
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
+import scala.util.Random
 
 /**
   * Created by sunxianping on 2017/7/21.
@@ -79,6 +79,16 @@ object Test {
     map.put(3, 6)
     print(map)
   }
+
+  def testPlayerVo():Unit = {
+    var pl = new PlayerCardInfoPaijiuVo()
+    var playerCardInfoPaijiu = new PlayerCardInfoPaijiu
+
+
+
+    print(pl)
+
+  }
   def main(args: Array[String]): Unit = {
 //    test1()
 //    testSame()
@@ -88,6 +98,7 @@ object Test {
 //    testList
 //    testShuffle
 //    testSild
-    testMap1
+//    testMap1
+    testPlayerVo
   }
 }

@@ -113,6 +113,7 @@ public class RoomMsgDispatch {
                 if (room == null) {
                     return ErrorCode.CAN_NOT_NO_ROOM;
                 }
+                return room.startGameByClient(userId);
 
             }
             default:

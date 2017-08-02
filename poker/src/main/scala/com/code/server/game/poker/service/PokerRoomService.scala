@@ -20,13 +20,15 @@ object PokerRoomService {
         val isAA = params.path("isAA").asBoolean(false)
         val isJoin = params.path("isJoin").asBoolean(true)
 
-        RoomDouDiZhu.createRoom(userId, gameNumber, multiple, gameType, roomType,isAA,isJoin)
+        return RoomDouDiZhu.createRoom(userId, gameNumber, multiple, gameType, roomType,isAA,isJoin)
 
       case "createPaijiuRoom"=>
         val roomType = params.path("roomType").asText()
         val gameType = params.path("gameType").asText()
         val gameNumber = params.path("gameNumber").asInt()
-        RoomPaijiu.createRoom(userId,roomType, gameType,gameNumber)
+        return RoomPaijiu.createRoom(userId,roomType, gameType,gameNumber)
+      case _ =>
+        return -1
     }
 
 

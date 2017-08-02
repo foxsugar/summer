@@ -141,6 +141,7 @@ public class LoginAction {
 
 
         setHostAndPort(userId,params, code == 0);
+        System.err.println(params);
         return getParams("login", params, code);
     }
 
@@ -232,11 +233,12 @@ public class LoginAction {
         int partition = 0;
         KafkaMsgKey kafkaKey = new KafkaMsgKey();
         kafkaKey.setUserId(3);
-        kafkaKey.setPartition(partition);
+        kafkaKey.setPartition(1);
         String keyJson = JsonUtil.toJson(kafkaKey);
-        SpringUtil.getBean(MsgProducer.class).send("userService", kafkaKey, "hello");
+        SpringUtil.getBean(MsgProducer.class).send("gamePaijiuService", kafkaKey, "hello");
 
         Map<String, Object> params = new HashMap<>();
+        System.out.println("====");
         return params;
     }
 

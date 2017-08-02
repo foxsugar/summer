@@ -31,7 +31,9 @@ object LoginService {
     }
     val rand = new Random()
     val randId = rand.nextInt(size)
-    servers.get(randId)
+//    servers.get(randId)
+    servers.get(0)
+    //todo 服务器 负载均衡
   }
 
   private def sort(servers: java.util.List[ServerInfo]): Unit = {

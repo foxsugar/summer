@@ -64,6 +64,8 @@ public class GameDouDiZhu extends Game {
         this.room = room;
         init(users, room.getBankerId());
         updateLastOperateTime();
+        //通知其他人游戏已经开始
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameBegin", "ok"), this.getUsers());
     }
 
     public void init(List<Long> users, long dizhuUser) {

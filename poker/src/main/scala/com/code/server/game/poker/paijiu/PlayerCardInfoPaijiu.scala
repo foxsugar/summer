@@ -37,9 +37,12 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
   }
 
   override def toVo: IfacePlayerInfoVo = {
-    val playerCardInfoPaijiuVo = new PlayerCardInfoPaijiuVo
-    playerCardInfoPaijiuVo.bet1 = this.bet.two
-    playerCardInfoPaijiuVo.bet2 = this.bet.two
+    var playerCardInfoPaijiuVo = new PlayerCardInfoPaijiuVo()
+
+    if (this.bet != null) {
+      playerCardInfoPaijiuVo.bet1 = this.bet.one
+      playerCardInfoPaijiuVo.bet2 = this.bet.two
+    }
     playerCardInfoPaijiuVo.group1 = this.group1
     playerCardInfoPaijiuVo.group2 = this.group2
     playerCardInfoPaijiuVo.cards = this.cards.asJava
@@ -51,11 +54,13 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
   }
 
   override def toVo(watchUser: Long): IfacePlayerInfoVo = {
-    if(watchUser == this.userId) return this.toVo
+    if (watchUser == this.userId) return this.toVo
 
-    val playerCardInfoPaijiuVo = new PlayerCardInfoPaijiuVo
-    playerCardInfoPaijiuVo.bet1 = this.bet.two
-    playerCardInfoPaijiuVo.bet2 = this.bet.two
+    var playerCardInfoPaijiuVo = new PlayerCardInfoPaijiuVo()
+    if (this.bet != null) {
+      playerCardInfoPaijiuVo.bet1 = this.bet.one
+      playerCardInfoPaijiuVo.bet2 = this.bet.two
+    }
     playerCardInfoPaijiuVo.userId = this.userId
     playerCardInfoPaijiuVo.winState = this.winState
     playerCardInfoPaijiuVo.score = this.score
