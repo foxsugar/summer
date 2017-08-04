@@ -308,7 +308,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     * @param group
     * @return
     */
-  protected def getGroupScore(group: String): Int = {
+  def getGroupScore(group: String): Int = {
     val name: String = DataManager.data.getPaijiuCardGroupDataMap.get(group).getName
     logger.info("cardgroupName : " + name)
     DataManager.data.getPaijiuCardGroupScoreDataMap.get(name).getScore
