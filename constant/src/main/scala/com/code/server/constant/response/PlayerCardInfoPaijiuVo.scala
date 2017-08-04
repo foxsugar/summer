@@ -1,5 +1,4 @@
 package com.code.server.constant.response
-import scala.collection.JavaConverters._
 
 
 /**
@@ -20,5 +19,7 @@ class PlayerCardInfoPaijiuVo extends IfacePlayerInfoVo{
   var winState: Int = 0
   //分数
   var score: Double = 0
+
+  var isOpenCard :Boolean = false
 
 }

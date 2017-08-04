@@ -49,12 +49,16 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
       playerCardInfoPaijiuVo.bet1 = this.bet.one
       playerCardInfoPaijiuVo.bet2 = this.bet.two
     }
+    if(this.group1!=null) playerCardInfoPaijiuVo.isOpenCard = true
+
+
     playerCardInfoPaijiuVo.group1 = this.group1
     playerCardInfoPaijiuVo.group2 = this.group2
     playerCardInfoPaijiuVo.cards = this.cards.asJava
     playerCardInfoPaijiuVo.userId = this.userId
     playerCardInfoPaijiuVo.winState = this.winState
     playerCardInfoPaijiuVo.score = this.score
+
 
     playerCardInfoPaijiuVo
   }
@@ -67,9 +71,12 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
       playerCardInfoPaijiuVo.bet1 = this.bet.one
       playerCardInfoPaijiuVo.bet2 = this.bet.two
     }
+    if(this.group1!=null) playerCardInfoPaijiuVo.isOpenCard = true
+
     playerCardInfoPaijiuVo.userId = this.userId
     playerCardInfoPaijiuVo.winState = this.winState
     playerCardInfoPaijiuVo.score = this.score
+
     playerCardInfoPaijiuVo
   }
 }
