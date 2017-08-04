@@ -6,7 +6,7 @@ import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
 import com.code.server.game.room.{Game, Room}
-import com.code.server.util.{JsonUtil, SpringUtil}
+import com.code.server.util.SpringUtil
 
 import scala.beans.BeanProperty
 
@@ -20,10 +20,14 @@ class RoomPaijiu extends Room {
   @BeanProperty
   var lastGameCards: List[Int] = List()
 
+  //庄家设置的分
+  var bankerScore: Int = 0
+  var bankerInitScore: Int = 0
+
 
   override protected def getGameInstance: Game = gameType match {
-    case _ =>
-      new GamePaijiu
+    case "11" => new GamePaijiuEndless
+    case _ => new GamePaijiu
   }
 
   override def startGame(): Unit = {
@@ -40,18 +44,26 @@ class RoomPaijiu extends Room {
     //房主已经准备
     if (userStatus.get(userId) != IGameConstant.STATUS_READY) return ErrorCode.ROOM_START_CAN_NOT
 
+    //准备的人数大于2
+    val readyCount = userStatus.values().stream().filter(status => status == IGameConstant.STATUS_READY).count()
+    if (readyCount < 2) return ErrorCode.READY_NUM_ERROR
+
+
     //没准备的人
+    var removeList = List[java.lang.Long]()
     userStatus.forEach((uid, status) => {
       if (status != IGameConstant.STATUS_READY) {
-        roomRemoveUser(uid)
+        removeList = removeList.+:(uid)
       }
     })
+    for (removeId <- removeList) {
+      roomRemoveUser(removeId)
+    }
 
-//    super.startGame()
+    //    super.startGame()
     //通知其他人游戏已经开始
     MsgSender.sendMsg2Player(new ResponseVo("gameService", "gamePaijiuBegin", "ok"), this.getUsers)
     MsgSender.sendMsg2Player(new ResponseVo("roomService", "startGameByClient", 0), userId)
-
 
 
     //开始游戏
@@ -62,18 +74,16 @@ class RoomPaijiu extends Room {
     //扣钱
     if (!isOpen && isCreaterJoin) spendMoney()
     this.isInGame = true
-    //开始游戏
     this.isOpen = true
     pushScoreChange()
     0
   }
 
 
-
 }
 
-object RoomPaijiu extends Room{
-  def createRoom(userId:Long,roomType:String, gameType:String, gameNumber:Int):Int = {
+object RoomPaijiu extends Room {
+  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int): Int = {
     val roomPaijiu = new RoomPaijiu
     roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId()))
     roomPaijiu.setRoomType(roomType)
@@ -82,7 +92,7 @@ object RoomPaijiu extends Room{
     roomPaijiu.setBankerId(userId)
     roomPaijiu.setCreateUser(userId)
     roomPaijiu.setPersonNumber(4)
-
+    roomPaijiu.init(gameNumber, 1)
     val code = roomPaijiu.joinRoom(userId, true)
     if (code != 0) return code
 
@@ -93,15 +103,4 @@ object RoomPaijiu extends Room{
     0
   }
 
-  def main(args: Array[String]): Unit = {
-    val s = "{\"userId\":\"1\",\"roomType\":\"3\",\"gameType\":\"10\",\"gameNumber\":\"12\"}"
-    val jsonNode = JsonUtil.readTree(s)
-    val userId = jsonNode.path("userId").asLong()
-    val roomType = jsonNode.path("roomType").asText()
-    val gameType = jsonNode.path("gameType").asText()
-    val gameNumber = jsonNode.path("gameNumber").asInt()
-    createRoom(userId,roomType, gameType,gameNumber)
-
-
-  }
 }

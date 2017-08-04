@@ -23,13 +23,14 @@ import java.util.*;
 public class UnifiedOrder {
 
     @Autowired
-    private ChargeService chargeService ;
+    private ChargeService chargeService;
 
     @Autowired
     private ServerConfig serverConfig;
 
     /**
      * 微信统一下单
+     *
      * @param userId
      * @param spIp
      * @param origin
@@ -37,9 +38,9 @@ public class UnifiedOrder {
      * @return
      */
     @RequestMapping(value = "/charge", method = RequestMethod.POST)
-    public Map<String,Object> charge(String userId, String spIp, int origin, int money) {
+    public Map<String, Object> charge(String userId, String spIp, int origin, int money) {
 
-        Map<String,Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         int code = 0;
 //		if(user.getVip() == null || "0".equals(user.getVip())){
 //			code = ErrorCode.CHARGE_NO_BIND;
@@ -50,11 +51,11 @@ public class UnifiedOrder {
         }
 
 
-        SortedMap<String,String> packageParams = new TreeMap<>();
+        SortedMap<String, String> packageParams = new TreeMap<>();
 
         //微信
 
-        int money100 = money*100;
+        int money100 = money * 100;
 
         String body = "龙七棋牌-充值";
 
@@ -67,81 +68,76 @@ public class UnifiedOrder {
         }
 
         String orderId = PayUtil.getOrderIdByUUId();
-        packageParams.put("appid",serverConfig.getAppId());//appID       应用id
-        packageParams.put("mch_id",serverConfig.getMchId());//appID       商户号
+        packageParams.put("appid", serverConfig.getAppId());//appID       应用id
+        packageParams.put("mch_id", serverConfig.getMchId());//appID       商户号
         packageParams.put("nonce_str", PayUtil.getRandomStringByLength(32));//32位随机数
-        packageParams.put("body",bodyUTF8);//商品描述
-        packageParams.put("out_trade_no",orderId);
-        packageParams.put("total_fee",""+money100);//充值金额
-        packageParams.put("spbill_create_ip",spIp);//终端IP
-        packageParams.put("trade_type","APP");//支付类型
-        packageParams.put("notify_url",serverConfig.getNotifyUrl());//通知地址
+        packageParams.put("body", bodyUTF8);//商品描述
+        packageParams.put("out_trade_no", orderId);
+        packageParams.put("total_fee", "" + money100);//充值金额
+        packageParams.put("spbill_create_ip", spIp);//终端IP
+        packageParams.put("trade_type", "APP");//支付类型
+        packageParams.put("notify_url", serverConfig.getNotifyUrl());//通知地址
 
         String rtn = postCharge(packageParams);
 
         Element root = PayUtil.ParsingXML(rtn);//解析xmlString
 
-        SortedMap<String,String> secondParams = new TreeMap<>();
+        SortedMap<String, String> secondParams = new TreeMap<>();
 
         //成功
-        if("SUCCESS".equals(root.elementText("return_code"))){
-            //业务成功
-            if("SUCCESS".equals(root.elementText("result_code"))){
+//        if("SUCCESS".equals(root.elementText("return_code"))){
+        //业务成功
+        if ("SUCCESS".equals(root.elementText("result_code"))) {
 
 
+            secondParams.put("appid", serverConfig.getAppId());
+            secondParams.put("partnerid", serverConfig.getMchId());
+            secondParams.put("prepayid", root.elementText("prepay_id"));
+            secondParams.put("noncestr", root.elementText("nonce_str"));
+            secondParams.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
+            secondParams.put("package", "Sign=WXPay");
 
-                secondParams.put("appid",serverConfig.getAppId());
-                secondParams.put("partnerid", serverConfig.getMchId());
-                secondParams.put("prepayid", root.elementText("prepay_id"));
-                secondParams.put("noncestr", root.elementText("nonce_str"));
-                secondParams.put("timestamp", String.valueOf(System.currentTimeMillis()/1000));
-                secondParams.put("package", "Sign=WXPay");
+            String paySign = PayUtil.createSign("UTF-8", serverConfig.getKey(), secondParams);
 
-                String paySign = PayUtil.createSign("UTF-8",serverConfig.getKey(), secondParams);
-
-                secondParams.put("sign", paySign);
-
+            secondParams.put("sign", paySign);
 
 
-
-                Charge charge = new Charge();
-                charge.setOrderId(orderId);
-                charge.setUserid(Long.valueOf(userId));
-                charge.setMoney(money);
-                charge.setMoney_point(money*10);
-                charge.setOrigin(origin);
-                charge.setStatus(0);
-                charge.setSign(paySign);
-                charge.setSp_ip(spIp);
-                charge.setRecharge_source("1");
-                charge.setCreatetime(new Date());
-//                charge.setCallbacktime(new Date());
-                chargeService.save(charge);
+            Charge charge = new Charge();
+            charge.setOrderId(orderId);
+            charge.setUserid(Long.valueOf(userId));
+            charge.setMoney(money);
+            charge.setMoney_point(money * 10);
+            charge.setOrigin(origin);
+            charge.setStatus(0);
+            charge.setSign(paySign);
+            charge.setSp_ip(spIp);
+            charge.setRecharge_source("1");
+            charge.setCreatetime(new Date());
+            chargeService.save(charge);
 
 
-
-            }else{
-                //余额不足
-                if("NOTENOUGH".equals(root.elementText("err_code"))){
-                    secondParams.put("err_code", root.elementText("err_code"));
-                    secondParams.put("err_code_des", root.elementText("err_code_des"));
-                    result.put("code", 10000);
-                    return result;
-                    //订单已支付
-                }else if("ORDERPAID".equals(root.elementText("err_code"))){
-                    secondParams.put("err_code", root.elementText("err_code"));
-                    secondParams.put("err_code_des", root.elementText("err_code_des"));
-                    result.put("code", 11111);
-                    return result;
-                    //订单已关闭
-                }else if("ORDERCLOSED".equals(root.elementText("err_code"))){
-                    secondParams.put("err_code", root.elementText("err_code"));
-                    secondParams.put("err_code_des", root.elementText("err_code_des"));
-                    result.put("code", 10001);
-                    return result;
-                }
+        } else {
+            //余额不足
+            if ("NOTENOUGH".equals(root.elementText("err_code"))) {
+                secondParams.put("err_code", root.elementText("err_code"));
+                secondParams.put("err_code_des", root.elementText("err_code_des"));
+                result.put("code", 10000);
+                return result;
+                //订单已支付
+            } else if ("ORDERPAID".equals(root.elementText("err_code"))) {
+                secondParams.put("err_code", root.elementText("err_code"));
+                secondParams.put("err_code_des", root.elementText("err_code_des"));
+                result.put("code", 11111);
+                return result;
+                //订单已关闭
+            } else if ("ORDERCLOSED".equals(root.elementText("err_code"))) {
+                secondParams.put("err_code", root.elementText("err_code"));
+                secondParams.put("err_code_des", root.elementText("err_code_des"));
+                result.put("code", 10001);
+                return result;
             }
         }
+//        }
 
         result.put("params", secondParams);
         result.put("code", 0);
@@ -149,9 +145,9 @@ public class UnifiedOrder {
         return result;
     }
 
-    public static String postCharge(SortedMap<String, String> params){
+    public static String postCharge(SortedMap<String, String> params) {
         StringBuilder sb = new StringBuilder();
-        String sign= WxPayHelper.createSign(params);
+        String sign = WxPayHelper.createSign(params);
 
         sb.append("<xml>");
         for (Map.Entry<String, String> entry : params.entrySet()) {

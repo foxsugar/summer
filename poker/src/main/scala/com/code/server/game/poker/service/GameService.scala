@@ -48,9 +48,11 @@ object GameService {
       val one = params.path("one").asInt(0)
       val two = params.path("two").asInt(0)
       game.bet(userId,one,two)
+    case "crap"=>
+      game.crap(userId)
     case "open"=>
       val group1 = params.path("group1").asText()
-      val group2 = params.path("group1").asText()
+      val group2 = params.path("group2").asText()
       game.open(userId,group1,group2)
 
 

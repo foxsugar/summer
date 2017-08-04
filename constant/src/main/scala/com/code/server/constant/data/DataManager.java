@@ -98,6 +98,9 @@ public class DataManager implements IGameConstant {
 
 //        System.out.println(data.getPaijiuCardGroupDataMap());
 //        System.out.println(data.getPaijiuCardGroupScoreDataMap());
+        data.getPaijiuCardGroupScoreDataMap().forEach((name,score)->{
+            System.out.println("name"+name+"score"+score.getScore());
+        });
 
 
     }

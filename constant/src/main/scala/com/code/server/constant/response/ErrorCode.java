@@ -85,6 +85,11 @@ public class ErrorCode {
 	public static final int ALREADY_BET = 500021;
 	public static final int BET_PARAM_ERROR = 500022;
 	public static final int OPEN_PARAM_ERROR = 500023;
+	public static final int NOT_BANKER = 500024;
+	public static final int ALREADY_FIGHT_FOR_BANKER = 500025;
+	public static final int BANKER_SET_SCORE_GAMENUM_ERROR = 500026;
+	public static final int BANKER_BREAK_GAMENUM_ERROR = 500027;
+	public static final int READY_NUM_ERROR = 500028;
 
 
 

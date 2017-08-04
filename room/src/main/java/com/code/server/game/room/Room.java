@@ -2,7 +2,7 @@ package com.code.server.game.room;
 
 
 import com.code.server.constant.data.DataManager;
-import com.code.server.constant.data.RoomData;
+import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.game.UserBean;
@@ -88,14 +88,14 @@ public class Room implements IfaceRoom {
 
     public int getNeedMoney() throws DataNotFoundException {
 
-        RoomData roomData = DataManager.getInstance().roomDatas.get(gameType);
+        StaticDataProto.RoomData roomData = DataManager.data.getRoomDataMap().get(gameType);
         if (roomData == null) {
             throw new DataNotFoundException("roomdata not found : " + gameType);
         }
         if (isAA) {
-            return roomData.eachMoney.get(gameNumber);
+            return roomData.getEachMoneyMap().get(gameNumber);
         } else {
-            return roomData.money.get(gameNumber);
+            return roomData.getMoneyMap().get(gameNumber);
         }
 
     }
@@ -107,7 +107,8 @@ public class Room implements IfaceRoom {
         this.isInGame = false;
         this.maxZhaCount = multiple;
         this.createNeedMoney = this.getNeedMoney();
-        this.isAddGold = DataManager.getInstance().roomDatas.get(this.gameType).isAddGold;
+        this.isAddGold = DataManager.data.getRoomDataMap().get(this.gameType).getIsAddGold() == 1;
+
 
 
     }

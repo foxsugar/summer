@@ -6,15 +6,20 @@ package com.code.server.game.poker.paijiu
 trait PaijiuConstant {
   val ALL_CARD_NUM = 32
 
-  val STATE_START = 0
-  val STATE_BET = 1
-  val STATE_OPEN = 2
+  val STATE_START = 0//开始
+  val STATE_FIGHT_FOR_BANKER = 1//抢庄
+  val STATE_BANKER_SET_SCORE = 2//庄家选分
+  val STATE_BET = 3//下注
+  val START_CRAP = 4//摇色子
+  val STATE_OPEN = 5//开牌
+  val STATE_BANKER_BREAK = 6//切庄
+
 
   //杂8的名字  大于等于杂8输两道
   val MIX_8 = "mixeight"
 
-  val win = 1
-  val lose = -1
-  val draw = 0
+  val win:Int = 1
+  val lose: Int = -1
+  val draw:Int = 0
 
 }

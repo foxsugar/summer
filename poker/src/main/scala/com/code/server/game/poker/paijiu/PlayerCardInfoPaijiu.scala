@@ -22,6 +22,12 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
   //分数
   var score: Double = 0
 
+  //是否选择坐庄
+  var isFightForBanker:Boolean = false
+
+  //是否选择过抢庄
+  var isHasFightForBanker:Boolean = false
+
 
   /**
     * 得到押注的分
@@ -37,7 +43,7 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
   }
 
   override def toVo: IfacePlayerInfoVo = {
-    var playerCardInfoPaijiuVo = new PlayerCardInfoPaijiuVo()
+    val playerCardInfoPaijiuVo = new PlayerCardInfoPaijiuVo()
 
     if (this.bet != null) {
       playerCardInfoPaijiuVo.bet1 = this.bet.one
@@ -50,13 +56,13 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
     playerCardInfoPaijiuVo.winState = this.winState
     playerCardInfoPaijiuVo.score = this.score
 
-    new PlayerCardInfoPaijiuVo
+    playerCardInfoPaijiuVo
   }
 
   override def toVo(watchUser: Long): IfacePlayerInfoVo = {
     if (watchUser == this.userId) return this.toVo
 
-    var playerCardInfoPaijiuVo = new PlayerCardInfoPaijiuVo()
+    val playerCardInfoPaijiuVo = new PlayerCardInfoPaijiuVo()
     if (this.bet != null) {
       playerCardInfoPaijiuVo.bet1 = this.bet.one
       playerCardInfoPaijiuVo.bet2 = this.bet.two
@@ -70,8 +76,8 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
 
 
 class Bet(o: Int, t: Int) {
-  val one = o
-  val two = t
+  val one: Int = o
+  val two: Int = t
 
 
 }

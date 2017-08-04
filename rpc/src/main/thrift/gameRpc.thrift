@@ -16,7 +16,7 @@ enum ChargeType{
 struct Order{
     1:i64 userId,
     2:double num,
-    3:i32 type,
+    3:i32 type,//chargeType
     4:string token,
     5:i32 agentId,
     6:i64 id,
