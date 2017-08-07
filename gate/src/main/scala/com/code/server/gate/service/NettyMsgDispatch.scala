@@ -37,6 +37,10 @@ object NettyMsgDispatch {
     val params = jsonObject.get("params")
 
     val userId = ctx.channel().attr(GateManager.attributeKey).get()
+    if(userId == null) {
+//      GateManager.sendMsg(service, method, map, userId)
+      return
+    }
 
     val result =
       service match {

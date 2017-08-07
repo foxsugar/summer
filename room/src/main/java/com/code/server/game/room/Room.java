@@ -307,7 +307,7 @@ public class Room implements IfaceRoom {
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "noticeReady", noticeReady), this.users);
 
         //开始游戏
-        if (readyNum >= personNumber) {
+        if (readyNum >= this.userStatus.size()) {
             startGame();
         }
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "getReady", 0), userId);

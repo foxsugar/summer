@@ -62,17 +62,19 @@ class GamePaijiuEndless extends GamePaijiu {
     val banker = playerCardInfos(bankerId)
     var winUsers: List[PlayerCardInfoPaijiu] = List()
     val mix8Score = getGroupScoreByName(MIX_8)
+    var resultSet: Set[Int] = Set()
     playerCardInfos.foreach { case (uid, other) =>
       if (uid != bankerId) {
         val bankerScore1 = getGroupScore(banker.group1)
         val bankerScore2 = getGroupScore(banker.group2)
         val otherScore1 = getGroupScore(other.group1)
         val otherScore2 = getGroupScore(other.group2)
-        var result = 0
+        var result: Int = 0
         if (bankerScore1 > otherScore1) result += 1
         if (bankerScore1 < otherScore1) result -= 1
         if (bankerScore2 > otherScore2) result += 1
         if (bankerScore2 < otherScore2) result -= 1
+        resultSet = resultSet.+(result)
         //庄家赢
         if (result > 0) {
           val changeScore = other.getBetScore(bankerScore1 >= mix8Score)
@@ -80,12 +82,21 @@ class GamePaijiuEndless extends GamePaijiu {
           other.score -= changeScore
           roomPaijiu.addUserSocre(banker.userId, changeScore)
           roomPaijiu.addUserSocre(other.userId, -changeScore)
-          other.winState = lose
+          other.winState = LOSE
+
         } else if (result < 0) {
-          other.winState = win
+          other.winState = WIN
           winUsers = winUsers.+:(other)
         }
+
       }
+    }
+
+    //全赢或全输
+    if (resultSet.size == 1) {
+      val bankerStatiseics = this.roomPaijiu.getRoomStatisticsMap.get(banker)
+      if (resultSet.contains(WIN)) bankerStatiseics.winAllTime += 1
+      if (resultSet.contains(LOSE)) bankerStatiseics.loseAllTime += 1
     }
 
     //排序后的

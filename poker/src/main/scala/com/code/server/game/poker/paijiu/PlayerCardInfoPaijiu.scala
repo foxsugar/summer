@@ -18,7 +18,7 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
   var group1: String = _
   var group2: String = _
   //赢
-  var winState: Int = draw
+  var winState: Int = DRAW
   //分数
   var score: Double = 0
 
@@ -42,6 +42,21 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
     result
   }
 
+  /**
+    * 加分数
+    * @param room
+    * @param add
+    */
+  def addScore(room:RoomPaijiu,add:Int): Unit ={
+    this.score += add
+    //设置最大分数
+    val max = room.getRoomStatisticsMap.get(userId).maxScore
+    if(add > max){
+      room.getRoomStatisticsMap.get(userId).maxScore = add
+    }
+
+  }
+
   override def toVo: IfacePlayerInfoVo = {
     val playerCardInfoPaijiuVo = new PlayerCardInfoPaijiuVo()
 
@@ -62,6 +77,9 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
 
     playerCardInfoPaijiuVo
   }
+
+
+
 
   override def toVo(watchUser: Long): IfacePlayerInfoVo = {
     if (watchUser == this.userId) return this.toVo

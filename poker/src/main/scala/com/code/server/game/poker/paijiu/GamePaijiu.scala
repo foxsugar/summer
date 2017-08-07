@@ -86,15 +86,15 @@ class GamePaijiu extends Game with PaijiuConstant {
       //初始牌并洗牌
       val cardList = DataManager.data.getPaijiuCardDataMap.values().asScala.map(card => card.getCard).toList
       val rand = new Random
-      roomPaijiu.cards ++= rand.shuffle(cardList)
+      roomPaijiu.cards = rand.shuffle(cardList)
 
       //拿出一半的牌
-      val thisGameCards = roomPaijiu.cards.slice(0, 15)
+      val thisGameCards = roomPaijiu.cards.slice(0, 16)
       //本局的牌
       cards ++= thisGameCards
       //room中的牌删除本局的牌
       roomPaijiu.cards = roomPaijiu.cards.diff(thisGameCards)
-      roomPaijiu.lastGameCards ++= thisGameCards
+      roomPaijiu.lastGameCards = thisGameCards
     } else {
       //双数局
       cards ++= roomPaijiu.cards
@@ -187,6 +187,14 @@ class GamePaijiu extends Game with PaijiuConstant {
     playerInfoOption.get.group1 = group1
     playerInfoOption.get.group2 = group2
 
+    //记录最大牌型
+    val lastMax = roomPaijiu.getRoomStatisticsMap.get(userId).maxCardGroup
+    val lastMaxScore = if (lastMax == null) 0 else getGroupScore(lastMax)
+    val thisScore = getGroupScore(group1)
+    if (thisScore > lastMaxScore) {
+      roomPaijiu.getRoomStatisticsMap.get(userId).maxCardGroup = group1
+    }
+
     //是否已经全开牌
     val isAllOpen = playerCardInfos.count { case (uid, playerInfo) => playerInfo.group1 == null && playerInfo.group2 == null } == 0
     if (isAllOpen) {
@@ -236,10 +244,18 @@ class GamePaijiu extends Game with PaijiuConstant {
     */
   protected def compute(): Unit = {
     val banker = playerCardInfos(bankerId)
+    var resultSet: Set[Int] = Set()
     playerCardInfos.foreach { case (uid, playerInfo) =>
       if (uid != bankerId) {
-        compareAndSetScore(banker, playerInfo)
+        val winResult: Int = compareAndSetScore(banker, playerInfo)
+        resultSet = resultSet.+(winResult)
       }
+    }
+    //全赢或全输
+    if (resultSet.size == 1) {
+      val bankerStatiseics = this.roomPaijiu.getRoomStatisticsMap.get(banker)
+      if (resultSet.contains(WIN)) bankerStatiseics.winAllTime += 1
+      if (resultSet.contains(LOSE)) bankerStatiseics.loseAllTime += 1
     }
   }
 
@@ -272,13 +288,13 @@ class GamePaijiu extends Game with PaijiuConstant {
     * @param banker
     * @param other
     */
-  protected def compareAndSetScore(banker: PlayerCardInfoPaijiu, other: PlayerCardInfoPaijiu): Unit = {
+  protected def compareAndSetScore(banker: PlayerCardInfoPaijiu, other: PlayerCardInfoPaijiu): Int = {
     val mix8Score = getGroupScoreByName(MIX_8)
     val bankerScore1 = getGroupScore(banker.group1)
     val bankerScore2 = getGroupScore(banker.group2)
     val otherScore1 = getGroupScore(other.group1)
     val otherScore2 = getGroupScore(other.group2)
-    var result = 0
+    var result: Int = 0
     if (bankerScore1 > otherScore1) result += 1
     if (bankerScore1 < otherScore1) result -= 1
     if (bankerScore2 > otherScore2) result += 1
@@ -286,20 +302,21 @@ class GamePaijiu extends Game with PaijiuConstant {
     //庄家赢
     if (result > 0) {
       val changeScore = other.getBetScore(bankerScore1 >= mix8Score)
-      banker.score += changeScore
-      other.score -= changeScore
+      banker.addScore(this.roomPaijiu, changeScore)
+      other.addScore(this.roomPaijiu, -changeScore)
       roomPaijiu.addUserSocre(banker.userId, changeScore)
       roomPaijiu.addUserSocre(other.userId, -changeScore)
-      other.winState = lose
+      other.winState = LOSE
     } else if (result < 0) {
       //闲家赢
       val changeScore = other.getBetScore(otherScore1 >= mix8Score)
-      banker.score -= changeScore
-      other.score += changeScore
+      banker.addScore(this.roomPaijiu, -changeScore)
+      other.addScore(this.roomPaijiu, changeScore)
       roomPaijiu.addUserSocre(banker.userId, -changeScore)
       roomPaijiu.addUserSocre(other.userId, changeScore)
-      other.winState = win
+      other.winState = WIN
     }
+    result
   }
 
   /**
@@ -327,6 +344,11 @@ class GamePaijiu extends Game with PaijiuConstant {
     val param = Map("bankerId" -> this.bankerId)
     //推送开始下注
     MsgSender.sendMsg2Player("gamePaijiuService", "betStart", param.asJava, users)
+    //双数局 通知上把牌
+    if (roomPaijiu.getCurGameNumber % 2 == 0) {
+      MsgSender.sendMsg2Player("gamePaijiuService", "lastCards", roomPaijiu.lastGameCards.asJava, users)
+    }
+
   }
 
   /**
@@ -335,7 +357,7 @@ class GamePaijiu extends Game with PaijiuConstant {
   protected def fightForBankerStart(): Unit = {
     state = STATE_FIGHT_FOR_BANKER
     //推送开始下注
-    MsgSender.sendMsg2Player("gamePaijiuService", "toBeBankerStart", 0, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "fightForBankerStart", 0, users)
   }
 
   /**
@@ -479,6 +501,10 @@ class GamePaijiu extends Game with PaijiuConstant {
     gamePaijiuVo.state = this.state
     this.playerCardInfos.foreach { case (userId, playerInfo) =>
       gamePaijiuVo.playerCardInfos.put(userId, playerInfo.toVo(watchUser))
+    }
+    //双数局
+    if (this.roomPaijiu.getCurGameNumber % 2 == 0) {
+      gamePaijiuVo.lastCards = this.roomPaijiu.lastGameCards.asJava
     }
     gamePaijiuVo
 
