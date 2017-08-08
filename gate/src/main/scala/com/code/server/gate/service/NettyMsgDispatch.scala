@@ -7,6 +7,7 @@ import java.util.stream.Collectors
 import com.code.server.constant.kafka.{IKafaTopic, IkafkaMsgId, KafkaMsgKey, KickUser}
 import com.code.server.constant.response.{ErrorCode, ReconnectResp, ResponseVo}
 import com.code.server.gate.config.ServerConfig
+import com.code.server.gate.service.GateManager.{attributeKey, getUserNettyCtxByUserId, sendMsg}
 import com.code.server.kafka.MsgProducer
 import com.code.server.redis.config.ServerInfo
 import com.code.server.redis.service.{RedisManager, RoomRedisService, UserRedisService}
@@ -35,11 +36,11 @@ object NettyMsgDispatch {
     val service = jsonObject.get("service").asText()
     val method = jsonObject.get("method").asText()
     val params = jsonObject.get("params")
-
-    val userId = ctx.channel().attr(GateManager.attributeKey).get()
-    if(userId == null) {
-//      GateManager.sendMsg(service, method, map, userId)
-      return
+    var userId:java.lang.Long = null
+    if(service != "gateService"){
+      if (!ctx.channel().hasAttr(attributeKey)) return
+      userId = (ctx.channel() attr attributeKey).get()
+      if(userId == null || userId == 0) return
     }
 
     val result =
@@ -65,7 +66,7 @@ object NettyMsgDispatch {
 
           val server = getSortedServer(MAHJONG)
           if (server == null) {
-            GateManager.sendMsg(new ResponseVo(service, method, ErrorCode.GAMESERVER_NOT_OPEN), userId)
+            sendMsg(new ResponseVo(service, method, ErrorCode.GAMESERVER_NOT_OPEN), userId)
             return
           }
           SpringUtil.getBean(classOf[MsgProducer]).send2Partition(service, server.getServerId, JsonUtil.toJson(msgKey), msg)
@@ -75,7 +76,7 @@ object NettyMsgDispatch {
           msgKey.setUserId(userId)
           val server = getSortedServer(POKER)
           if (server == null) {
-            GateManager.sendMsg(new ResponseVo(service, method, ErrorCode.GAMESERVER_NOT_OPEN), userId)
+            sendMsg(new ResponseVo(service, method, ErrorCode.GAMESERVER_NOT_OPEN), userId)
             return
           }
           SpringUtil.getBean(classOf[MsgProducer]).send2Partition(service, server.getServerId, JsonUtil.toJson(msgKey), msg)
@@ -87,7 +88,7 @@ object NettyMsgDispatch {
         case _ =>
           val roomAndPartition = getPartitionByUserId(userId)
           if (roomAndPartition == null) {
-            GateManager.sendMsg(new ResponseVo(service, method, ErrorCode.CAN_NOT_NO_ROOM), userId)
+            sendMsg(new ResponseVo(service, method, ErrorCode.CAN_NOT_NO_ROOM), userId)
             return
           }
           //玩家id做key
@@ -158,7 +159,7 @@ object NettyMsgDispatch {
       case "heart" =>
         val userId = params.get("userId").asLong()
         val map = Map("time" -> System.currentTimeMillis())
-        GateManager.sendMsg(new ResponseVo("gateService", "heart", map), userId)
+        sendMsg(new ResponseVo("gateService", "heart", map), userId)
 
 
     }
@@ -182,7 +183,7 @@ object NettyMsgDispatch {
         val roomId = params.get("roomId").asText()
         val partition = getPartitionByRoomId(roomId)
         if (partition == null) {
-          GateManager.sendMsg(new ResponseVo("roomService", method, ErrorCode.CAN_NOT_NO_ROOM), userId)
+          sendMsg(new ResponseVo("roomService", method, ErrorCode.CAN_NOT_NO_ROOM), userId)
         } else {
           msgKey.setRoomId(roomId)
           msgKey.setPartition(partition.toInt)
@@ -194,7 +195,7 @@ object NettyMsgDispatch {
       case _ =>
         val roomAndPartition = getPartitionByUserId(userId)
         if (roomAndPartition == null) {
-          GateManager.sendMsg(new ResponseVo("roomService", method, ErrorCode.CAN_NOT_NO_ROOM), userId)
+          sendMsg(new ResponseVo("roomService", method, ErrorCode.CAN_NOT_NO_ROOM), userId)
         } else {
           val roomId = roomAndPartition._1
           val partition = roomAndPartition._2
@@ -211,7 +212,7 @@ object NettyMsgDispatch {
       val reconnectResp = new ReconnectResp
       reconnectResp.setExist(false)
       val vo = new ResponseVo("reconnService", "reconnection", reconnectResp)
-      GateManager.sendMsg(vo, userId)
+      sendMsg(vo, userId)
 
     } else {
       val partition = getPartitionByRoomId(roomId)
@@ -300,7 +301,7 @@ object NettyMsgDispatch {
       if (serverConfig.getServerId == loginGateIdInt) {
 
         //ctx 不是同一个
-        if (ctx != GateManager.getUserNettyCtxByUserId(userId)) {
+        if (ctx != getUserNettyCtxByUserId(userId)) {
           UserSevice.sendExit(userId)
         }
 
@@ -318,9 +319,9 @@ object NettyMsgDispatch {
     //登录操作
     val userBean = UserSevice.doLogin(userId, ctx)
 
-    GateManager.sendMsg(new ResponseVo("gateService", "login", userBean.toVo), userId)
+    sendMsg(new ResponseVo("gateService", "login", userBean.toVo), userId)
 
-      //上线通知
+    //上线通知
     noticeOnline2Other(userId)
     return 0
 
@@ -331,10 +332,10 @@ object NettyMsgDispatch {
     val roomId = RedisManager.getUserRedisService.getRoomId(userId)
     if (roomId != null) {
       val users = RedisManager.getRoomRedisService.getUsers(roomId)
-      val map = new util.HashMap[String,String]()
-      map.put("userId",userId.toString)
+      val map = new util.HashMap[String, String]()
+      map.put("userId", userId.toString)
       val online = new ResponseVo("gateService", "online", map)
-      users.forEach(id => GateManager.sendMsg(online, id))
+      users.forEach(id => sendMsg(online, id))
     }
   }
 
@@ -342,23 +343,23 @@ object NettyMsgDispatch {
     val roomId = RedisManager.getUserRedisService.getRoomId(userId)
     if (roomId != null) {
       val users = RedisManager.getRoomRedisService.getUsers(roomId)
-      val map = new util.HashMap[String,String]()
-      map.put("userId",userId.toString)
+      val map = new util.HashMap[String, String]()
+      map.put("userId", userId.toString)
       val online = new ResponseVo("gateService", "offline", map)
-      users.forEach(id => GateManager.sendMsg(online, id))
+      users.forEach(id => sendMsg(online, id))
     }
   }
 
   def main(args: Array[String]): Unit = {
-//    val kickUser = new KickUser
-//
-//    var map = new java.util.HashMap[String,String]
-//
-//  map.put("1","3")
-//
-//
-//
-//    println(JsonUtil.toJson(map))
+    //    val kickUser = new KickUser
+    //
+    //    var map = new java.util.HashMap[String,String]
+    //
+    //  map.put("1","3")
+    //
+    //
+    //
+    //    println(JsonUtil.toJson(map))
 
     val s = "1"
     val i = s.asInstanceOf[Int]
