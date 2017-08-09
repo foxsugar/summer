@@ -154,6 +154,141 @@ public class Hu1 {
     private static int count = 0;
 
 
+    public static void main(String[] args) {
+        int[] a = new int[]{
+//                3, 2, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 1, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0,
+                3, 3, 3, 0,
+                0, 0, 0
+        };
+        List list = new ArrayList();
+        List allList = new ArrayList();
+        List<CardGroup> groups = new ArrayList<>();
+        testHun(true, a, list, allList, groups, true);
+        System.out.println(list);
+        System.out.println(allList);
+    }
+
+    static void testHun(boolean isOut, int[] cards, List all, List allList, List<CardGroup> list, boolean isHasFengShun) {
+//        count++;
+//           System.out.println("====: " + count);
+
+        for (int i = 0; i < 34; i++) {
+            if (cards[i] == 0) {
+                continue;
+            }
+
+            //将
+            if (cards[i] >= 2 && !isHasJiang(list)) {
+                int[] newCards = Arrays.copyOf(cards, cards.length);
+                newCards[i] -= 2;
+                List<CardGroup> newList = new ArrayList(list);
+                newList.add(new CardGroup(CARD_GROUP_TYPE_JIANG, i));
+                if (isEmpty(newCards)) {
+                    add2List(all, newList);
+                } else {
+                    testHun(false, newCards, all, allList, newList, isHasFengShun);
+
+                }
+            }
+
+            //碰
+            if (cards[i] >= 3) {
+                int[] newCards = Arrays.copyOf(cards, cards.length);
+                newCards[i] -= 3;
+                List<CardGroup> newList = new ArrayList(list);
+                newList.add(new CardGroup(CARD_GROUP_TYPE_KE, i));
+                if (isEmpty(newCards)) {
+                    add2List(all, newList);
+                } else {
+                    testHun(false, newCards, all, allList, newList, isHasFengShun);
+                }
+            }
+            //顺
+            if (isShun(cards, i)) {
+                int[] newCards = Arrays.copyOf(cards, cards.length);
+                newCards[i] -= 1;
+                newCards[i + 1] -= 1;
+                newCards[i + 2] -= 1;
+                List<CardGroup> newList = new ArrayList(list);
+                newList.add(new CardGroup(CARD_GROUP_TYPE_SHUN, i));
+                if (isEmpty(newCards)) {
+                    add2List(all, newList);
+                } else {
+                    testHun(false, newCards, all, allList, newList, isHasFengShun);
+                }
+            }
+
+//            if (isOut) {
+//                System.out.println("index : " + i);
+//            }
+//            if (i==28) {
+
+//                System.out.println("isout : "+isOut +" index : "+i+"  groups : " + list +" allGroup : "+all);
+//            allList.add(list);
+            add2List(allList, list);
+            removeRepeat(allList);
+//            }
+
+
+        }
+    }
+
+
+    private static void removeRepeat(List<List<CardGroup>> lists) {
+        lists.sort((list1, list2) -> {
+            if (list1.size() > list2.size()) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+        List<List<CardGroup>> newList = new ArrayList<>();
+        for (List<CardGroup> desList : lists) {
+            isAllInclude(newList, desList);
+        }
+
+        lists = newList;
+        System.out.println("newlist"+lists);
+
+    }
+
+
+    private static boolean isAllInclude(List<List<CardGroup>> srcList, List<CardGroup> des) {
+        for (CardGroup cardGroup : des) {
+            if (srcList.size() == 0) {
+                srcList.add(des);
+            }else {
+                boolean isIn = true;
+                for(List<CardGroup> src : srcList){
+                    boolean isInList = isInList(src, cardGroup);
+                    if (!isInList) {
+                        System.out.println("buzai");
+                        isIn = false;
+                    }
+                }
+
+                if(!isIn){
+                    srcList.add(des);
+                }
+            }
+        }
+        return true;
+    }
+
+
+    private static boolean isInList(List<CardGroup> list, CardGroup cardGroup) {
+        for (CardGroup lc : list) {
+            if (lc.type == cardGroup.type || lc.card == cardGroup.type) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     static void test1(int[] cards, List all, List<CardGroup> list, boolean isHasFengShun) {
 //        count++;
 //           System.out.println("====: " + count);
@@ -341,20 +476,6 @@ public class Hu1 {
         return true;
     }
 
-    public static void main(String[] args) {
-        int[] a = new int[]{
-//                3, 2, 0, 0, 0, 0, 0, 0, 0,
-                2, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0,
-                3, 3, 3, 3,
-                0, 0, 0
-        };
-        List list = new ArrayList();
-        List<CardGroup> groups = new ArrayList<>();
-        test1(a, list, groups, true);
-        System.out.println(list);
-    }
 
     private static boolean isShun(int[] cards, int index) {
         if (index >= 25 || index == 7 || index == 8 || index == 16 || index == 17) {
@@ -578,44 +699,5 @@ public class Hu1 {
         }
     }
 
-
-//    private void findAllHu(List<Integer> list,List<Integer> pai) {
-//
-//        for (int i=0;i<list.size();i++) {
-//            List<Integer> remianList = new ArrayList<>(list);
-//            remianList.remove(i);
-//            findAllHu(remianList,count);
-//        }
-//
-//    }
-
-//    public static void main(String[] args) {
-//        Hu hu = new Hu();
-//        Integer[] l1 = new Integer[]{1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 4, 4};
-//        Integer[] l2 = new Integer[]{1, 2, 4, 11, 12, 14, 21, 22, 24, 5, 5, 4, 4, 4};
-//        List<Integer> list = new ArrayList<>();
-//        Collections.addAll(list, l1);
-//        //排序
-//        Collections.sort(list);
-//        System.out.println("sort = " + list.toString());
-////        hu.findJiang(list);
-////        hu.findShun(list);
-////        hu.findKe(list);
-//        System.out.println(hu.isHu(list));
-//
-//        long start = System.currentTimeMillis();
-////        for (int i = 0; i < 100000; i++) {
-//
-//        hu.isHu(list);
-////        }
-//        long end = System.currentTimeMillis();
-//        System.out.println("time = " + (end - start));
-//
-//
-//        List<Integer> cardlist = Arrays.asList(ALL_CARD);
-//        System.out.println(cardlist.size());
-//
-//
-//    }
 
 }

@@ -400,7 +400,7 @@ public class Room implements IfaceRoom {
         }
 
         //同意解散
-        if (agreeNum >= personNumber - 1) {
+        if (agreeNum >= personNumber - 1 && agreeNum>=2) {
             GameTimer.removeNode(timerNode);
             dissolutionRoom();
         }

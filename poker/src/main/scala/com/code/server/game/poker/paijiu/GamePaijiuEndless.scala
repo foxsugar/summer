@@ -77,7 +77,7 @@ class GamePaijiuEndless extends GamePaijiu {
         resultSet = resultSet.+(result)
         //庄家赢
         if (result > 0) {
-          val changeScore = other.getBetScore(bankerScore1 >= mix8Score)
+          val changeScore = other.getBetScore(bankerScore2 >= mix8Score)
           banker.score += changeScore
           other.score -= changeScore
           roomPaijiu.addUserSocre(banker.userId, changeScore)
@@ -94,7 +94,7 @@ class GamePaijiuEndless extends GamePaijiu {
 
     //全赢或全输
     if (resultSet.size == 1) {
-      val bankerStatiseics = this.roomPaijiu.getRoomStatisticsMap.get(banker)
+      val bankerStatiseics = this.roomPaijiu.getRoomStatisticsMap.get(bankerId)
       if (resultSet.contains(WIN)) bankerStatiseics.winAllTime += 1
       if (resultSet.contains(LOSE)) bankerStatiseics.loseAllTime += 1
     }
@@ -103,8 +103,9 @@ class GamePaijiuEndless extends GamePaijiu {
     val sortedUsers = winUsers.sortWith(compareByScore)
     for (playerInfo <- sortedUsers) {
       val score1 = getGroupScore(playerInfo.group1)
+      val score2 = getGroupScore(playerInfo.group2)
       //庄家应该输的钱
-      val bankerLoseScore = playerInfo.getBetScore(score1 >= mix8Score)
+      val bankerLoseScore = playerInfo.getBetScore(score2 >= mix8Score)
       val loseScore = if (bankerLoseScore > banker.score) banker.score else bankerLoseScore
 
       //分数变化
