@@ -157,18 +157,27 @@ public class Hu1 {
     public static void main(String[] args) {
         int[] a = new int[]{
 //                3, 2, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 1, 0, 0, 0, 0, 0, 0,
+                0, 0, 2, 1, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                3, 3, 3, 0,
+                0, 0, 0, 0,
                 0, 0, 0
         };
         List list = new ArrayList();
         List allList = new ArrayList();
         List<CardGroup> groups = new ArrayList<>();
         testHun(true, a, list, allList, groups, true);
-        System.out.println(list);
-        System.out.println(allList);
+
+        System.out.println("配好的 : "+list);
+        removeRepeat(allList);
+//        for(int ll : a){
+//            System.out.println(ll);
+//        }
+        System.out.println("部分: "+allList);
+    }
+
+    static void findGroup(int[] cards,List all){
+
     }
 
     static void testHun(boolean isOut, int[] cards, List all, List allList, List<CardGroup> list, boolean isHasFengShun) {
@@ -229,7 +238,7 @@ public class Hu1 {
 //                System.out.println("isout : "+isOut +" index : "+i+"  groups : " + list +" allGroup : "+all);
 //            allList.add(list);
             add2List(allList, list);
-            removeRepeat(allList);
+
 //            }
 
 
@@ -238,6 +247,7 @@ public class Hu1 {
 
 
     private static void removeRepeat(List<List<CardGroup>> lists) {
+        //按多少排序
         lists.sort((list1, list2) -> {
             if (list1.size() > list2.size()) {
                 return -1;
@@ -261,17 +271,21 @@ public class Hu1 {
             if (srcList.size() == 0) {
                 srcList.add(des);
             }else {
-                boolean isIn = true;
+                boolean isIn = false;
                 for(List<CardGroup> src : srcList){
                     boolean isInList = isInList(src, cardGroup);
-                    if (!isInList) {
-                        System.out.println("buzai");
-                        isIn = false;
+                    if (isInList) {
+//                        System.out.println("buzai");
+                        isIn = true;
+
                     }
                 }
 
                 if(!isIn){
+//                    System.out.println("不在要加入    srclist = "+srcList +"  des = "+des);
                     srcList.add(des);
+                }else{
+//                    System.out.println("已存在");
                 }
             }
         }
@@ -280,8 +294,9 @@ public class Hu1 {
 
 
     private static boolean isInList(List<CardGroup> list, CardGroup cardGroup) {
+//        System.out.println("list = "+ list+ " cardGroup : " +cardGroup);
         for (CardGroup lc : list) {
-            if (lc.type == cardGroup.type || lc.card == cardGroup.type) {
+            if (lc.type == cardGroup.type && lc.card == cardGroup.card) {
                 return true;
             }
         }
@@ -698,6 +713,8 @@ public class Hu1 {
                     ;
         }
     }
+
+
 
 
 }

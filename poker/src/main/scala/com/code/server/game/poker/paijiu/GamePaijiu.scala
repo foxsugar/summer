@@ -366,7 +366,7 @@ class GamePaijiu extends Game with PaijiuConstant {
   protected def bankerSetScoreStart(): Unit = {
     state = STATE_BANKER_SET_SCORE
     //推送开始下注
-    MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScoreStart", 0, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScoreStart", this.bankerId, users)
   }
 
   /**
@@ -375,7 +375,7 @@ class GamePaijiu extends Game with PaijiuConstant {
   protected def bankerBreakStart(): Unit = {
     state = STATE_BANKER_BREAK
     //推送开始下注
-    MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreakStart", 0, bankerId)
+    MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreakStart", this.bankerId, bankerId)
   }
 
   /**
@@ -386,7 +386,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     deal()
     state = STATE_OPEN
     //推送开始下注
-    MsgSender.sendMsg2Player("gamePaijiuService", "openStart", 0, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "openStart", this.bankerId, users)
   }
 
   /**
@@ -443,6 +443,10 @@ class GamePaijiu extends Game with PaijiuConstant {
     if (roomPaijiu.getCurGameNumber != 1) return ErrorCode.BANKER_SET_SCORE_GAMENUM_ERROR
     roomPaijiu.bankerScore = score
     roomPaijiu.bankerInitScore = score
+    MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScoreResult", score, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScore", 0, userId)
+    //下注
+    betStart()
     0
   }
 
@@ -462,7 +466,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     } else {
       betStart()
     }
-
+    MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreak", 0, userId)
     0
   }
 

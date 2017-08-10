@@ -116,6 +116,9 @@ public class Room implements IfaceRoom {
 
     public int joinRoom(long userId, boolean isJoin) {
 
+        if (userId == 0) {
+            return ErrorCode.JOIN_ROOM_USERID_IS_0;
+        }
 
         if (this.users.contains(userId)) {
             return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;

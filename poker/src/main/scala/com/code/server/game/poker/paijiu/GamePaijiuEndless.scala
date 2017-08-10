@@ -23,9 +23,11 @@ class GamePaijiuEndless extends GamePaijiu {
     //码牌
     initCards()
 
+    bankerId = roomPaijiu.getBankerId
+
     room.getCurGameNumber match {
       case 1 => fightForBankerStart()
-      case 2 => betStart()
+      case _ if room.getCurGameNumber % 2 == 0 =>betStart()
       case _ => bankerBreakStart()
     }
   }
