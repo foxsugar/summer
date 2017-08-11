@@ -552,6 +552,7 @@ public class RoomInfo extends Room {
         roomVo.drawForLeaveChip = this.getDrawForLeaveChip();
         roomVo.personNumber = this.getPersonNumber();
         roomVo.hasNine = this.getHasNine();
+        roomVo.isOpen = this.isOpen;
         roomVo.setMode(this.getMode());
         roomVo.setModeTotal(this.getModeTotal());
         roomVo.setEach(this.getEach());

@@ -817,8 +817,12 @@ public class Room implements IfaceRoom {
         return this;
     }
 
+    public boolean isOpen() {
+        return isOpen;
+    }
 
-
-
-
+    public Room setOpen(boolean open) {
+        isOpen = open;
+        return this;
+    }
 }
