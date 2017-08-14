@@ -1,4 +1,4 @@
 #!/bin/sh
-sh stoplogin.sh
-sh buildlogin.sh
-sh startlogin.sh
+sh stoppoker.sh
+sh buildpoker.sh
+sh startpoker.sh
