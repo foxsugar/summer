@@ -1,9 +1,8 @@
 package com.code.server.admin.action;
 
-import com.code.server.util.JsonUtil;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,12 +19,17 @@ import java.util.Map;
 public class UserAction {
 
     @RequestMapping(value = "/login")
-    public String login(@PathVariable String username, @PathVariable String password, HttpServletRequest request, String callback,HttpServletResponse response) {
+    @ResponseBody
+    public Object login( HttpServletRequest request,HttpServletResponse response) {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
         System.out.println(username);
         System.out.println(password);
+
         Map<String, Object> result = new HashMap<>();
+
         result.put("result","ok");
-        return JsonUtil.toJson(result);
+        return result;
 
     }
 

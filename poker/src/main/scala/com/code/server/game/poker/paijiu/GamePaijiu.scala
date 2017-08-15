@@ -168,7 +168,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     * @return
     */
   protected def checkBet(bet: Bet): Boolean = {
-    bet.one > 0 && bet.two > 0
+    bet.one > 0 && bet.two >= 0
   }
 
   /**
@@ -443,7 +443,8 @@ class GamePaijiu extends Game with PaijiuConstant {
     if (roomPaijiu.getCurGameNumber != 1) return ErrorCode.BANKER_SET_SCORE_GAMENUM_ERROR
     roomPaijiu.bankerScore = score
     roomPaijiu.bankerInitScore = score
-    MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScoreResult", score, users)
+    val result = Map("score"->score)
+    MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScoreResult", result.asJava, users)
     MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScore", 0, userId)
     //下注
     betStart()

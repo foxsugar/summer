@@ -31,6 +31,8 @@ public class RoomInfo extends Room {
     protected Map<Long, Integer> dianPaoNum = new HashMap<>();
     protected Map<Long, Integer> lianZhuangNum = new HashMap<>();
     protected Map<Long, Integer> moBaoNum = new HashMap<>();
+    //荒庄后是否换庄家
+    private boolean isChangeBankerAfterHZ = false;
 
 
     protected String each = "";//4人平分房卡

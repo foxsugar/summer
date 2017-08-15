@@ -39,6 +39,7 @@ class GamePaijiuEndless extends GamePaijiu {
     //庄家设置分数
     val banker = playerCardInfos(bankerId)
     banker.score = roomPaijiu.bankerScore
+    roomPaijiu.getUserScores.put(bankerId,banker.score)
     super.betStart()
 
   }
