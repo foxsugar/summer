@@ -32,7 +32,7 @@ public class RoomInfo extends Room {
     protected Map<Long, Integer> lianZhuangNum = new HashMap<>();
     protected Map<Long, Integer> moBaoNum = new HashMap<>();
     //荒庄后是否换庄家
-    private boolean isChangeBankerAfterHZ = false;
+    private boolean isChangeBankerAfterHuangZhuang = false;
 
 
     protected String each = "";//4人平分房卡
@@ -536,6 +536,14 @@ public class RoomInfo extends Room {
         return this;
     }
 
+    public boolean isChangeBankerAfterHuangZhuang() {
+        return isChangeBankerAfterHuangZhuang;
+    }
+
+    public RoomInfo setChangeBankerAfterHuangZhuang(boolean changeBankerAfterHuangZhuang) {
+        isChangeBankerAfterHuangZhuang = changeBankerAfterHuangZhuang;
+        return this;
+    }
 
     @Override
     public IfaceRoomVo toVo(long userId) {

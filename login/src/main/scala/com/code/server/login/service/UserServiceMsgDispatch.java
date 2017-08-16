@@ -73,6 +73,9 @@ public class UserServiceMsgDispatch {
                 return gameUserService.getReplay(msgKey, params.get("id").asLong());
             case "setReplay":
                 return gameUserService.setReplay(msgKey, params.get("id").asLong());
+            case "shareWX":
+                return gameUserService.shareWX(msgKey, params.get("game").asText());
+
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

@@ -18,4 +18,6 @@ class GamePaijiuVo extends IfaceGameVo{
   var state: Int = 0
 
   var lastCards:util.List[Int] = _
+
+  var bankerInitScore:Int = 0
 }

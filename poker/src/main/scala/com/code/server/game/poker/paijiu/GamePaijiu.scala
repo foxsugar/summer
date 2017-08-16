@@ -504,6 +504,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     val gamePaijiuVo = new GamePaijiuVo
     gamePaijiuVo.bankerId = this.bankerId
     gamePaijiuVo.state = this.state
+    gamePaijiuVo.bankerInitScore = roomPaijiu.bankerInitScore
     this.playerCardInfos.foreach { case (userId, playerInfo) =>
       gamePaijiuVo.playerCardInfos.put(userId, playerInfo.toVo(watchUser))
     }
