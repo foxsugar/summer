@@ -81,15 +81,22 @@ class GamePaijiuEndless extends GamePaijiu {
         //庄家赢
         if (result > 0) {
           val changeScore = other.getBetScore(bankerScore2 >= mix8Score)
-          banker.score += changeScore
-          other.score -= changeScore
+          banker.addScore(roomPaijiu,changeScore)
+          other.addScore(roomPaijiu,-changeScore)
+          roomPaijiu.bankerScore += changeScore
           roomPaijiu.addUserSocre(banker.userId, changeScore)
           roomPaijiu.addUserSocre(other.userId, -changeScore)
           other.winState = LOSE
 
+          logger.info("庄家赢得钱: " + changeScore)
+
+
+
         } else if (result < 0) {
           other.winState = WIN
           winUsers = winUsers.+:(other)
+        }else{
+          logger.info("和了")
         }
 
       }
@@ -114,8 +121,9 @@ class GamePaijiuEndless extends GamePaijiu {
       logger.info("庄家的钱: " + banker.score)
 
       //分数变化
-      banker.score -= loseScore
-      playerInfo.score += loseScore
+      banker.addScore(roomPaijiu, -loseScore.toInt)
+      roomPaijiu.bankerScore -= loseScore.toInt
+      playerInfo.addScore(roomPaijiu, loseScore.toInt)
       roomPaijiu.addUserSocre(banker.userId, -loseScore)
       roomPaijiu.addUserSocre(playerInfo.userId, loseScore)
     }
