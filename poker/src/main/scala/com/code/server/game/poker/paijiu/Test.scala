@@ -64,16 +64,21 @@ object Test {
     print(l1)
   }
   def testShuffle() = {
-    var list = List(1,23,5,5,7,8,9,2)
+    val list = List(1,23,5,5,7,8,9,2)
     val rand = Random
 //    rand.setSeed(rand.nextInt(100))
-    rand.shuffle(list)
-    print(list)
-    print(rand.shuffle(list))
+//    rand.shuffle(list)
+    print( rand.shuffle(list))
+    print( rand.shuffle(list))
+
   }
   def testSild = {
     val list = List(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
     print(list.sliding(4,4).toList)
+  }
+  def testslice(): Unit ={
+    val list = List(0,1,2,3,4,5,6,7,8)
+    print(list.slice(0,8))
   }
   def testMap1 = {
     var map = mutable.Map(1 -> 2, 2 -> 3).asJava
@@ -104,10 +109,11 @@ object Test {
 //    testMap()
 //    testMuList
 //    testList
-//    testShuffle
+    testShuffle
 //    testSild
 //    testMap1
 //    testPlayerVo
-    testCardGroup()
+//    testCardGroup()
+//    testslice
   }
 }

@@ -2,7 +2,7 @@ package com.code.server.game.poker.service
 
 import com.code.server.constant.game.CardStruct
 import com.code.server.constant.response.ErrorCode
-import com.code.server.game.poker.doudizhu.{GameDouDiZhu, GameDouDiZhuGold}
+import com.code.server.game.poker.doudizhu.GameDouDiZhu
 import com.code.server.game.poker.paijiu.GamePaijiu
 import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
@@ -74,7 +74,17 @@ object GameService {
     case "open"=>
       val group1 = params.path("group1").asText()
       val group2 = params.path("group2").asText()
-      game.open(userId,group1,group2)
+      game.open(userId, group1, group2)
+    case "fightForBanker" =>
+      val flag = params.path("flag").asBoolean()
+      game.fightForBanker(userId, flag)
+    case "bankerSetScore" =>
+      val score = params.path("score").asInt()
+      game.bankerSetScore(userId, score)
+
+    case "bankerBreak" =>
+      val flag = params.path("flag").asBoolean()
+      game.bankerBreak(userId, flag)
 
 
     case _ =>

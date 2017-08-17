@@ -1,20 +1,15 @@
 buildscript {
 	ext {
-		springBootVersion = '1.5.3.RELEASE'
+		springBootVersion = '1.5.6.RELEASE'
 	}
 	repositories {
-		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-//		mavenCentral()
+		mavenCentral()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
 }
-allprojects {
-	repositories {
-		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-	}
-}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
@@ -28,12 +23,7 @@ repositories {
 
 
 dependencies {
-	compile project(path: ':util')
-	compile project(path: ':constant')
-	compile project(path: ':redis')
-	compile project(path: ':db')
-	compile('org.springframework.boot:spring-boot-starter-data-redis')
-	compile('org.springframework.kafka:spring-kafka')
-	runtime('mysql:mysql-connector-java')
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-starter-web')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

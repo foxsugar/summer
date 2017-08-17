@@ -52,6 +52,7 @@ public class PlayerCardsInfoFactory {
                 break;
             case "15":
                 playerCardsInfo = new PlayerCardsInfoSZ_LQ().setIsHasFengShun(true);
+                room.setChangeBankerAfterHuangZhuang(true);
                 break;
             default:
                 logger.error("初始化 playercardsInfo 错误");

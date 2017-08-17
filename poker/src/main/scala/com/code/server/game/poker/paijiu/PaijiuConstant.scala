@@ -18,8 +18,8 @@ trait PaijiuConstant {
   //杂8的名字  大于等于杂8输两道
   val MIX_8 = "mixeight"
 
-  val win:Int = 1
-  val lose: Int = -1
-  val draw:Int = 0
+  val WIN:Int = 1
+  val LOSE: Int = -1
+  val DRAW:Int = 0
 
 }

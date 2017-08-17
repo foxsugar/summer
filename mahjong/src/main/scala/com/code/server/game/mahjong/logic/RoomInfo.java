@@ -31,6 +31,8 @@ public class RoomInfo extends Room {
     protected Map<Long, Integer> dianPaoNum = new HashMap<>();
     protected Map<Long, Integer> lianZhuangNum = new HashMap<>();
     protected Map<Long, Integer> moBaoNum = new HashMap<>();
+    //荒庄后是否换庄家
+    private boolean isChangeBankerAfterHuangZhuang = false;
 
 
     protected String each = "";//4人平分房卡
@@ -534,6 +536,14 @@ public class RoomInfo extends Room {
         return this;
     }
 
+    public boolean isChangeBankerAfterHuangZhuang() {
+        return isChangeBankerAfterHuangZhuang;
+    }
+
+    public RoomInfo setChangeBankerAfterHuangZhuang(boolean changeBankerAfterHuangZhuang) {
+        isChangeBankerAfterHuangZhuang = changeBankerAfterHuangZhuang;
+        return this;
+    }
 
     @Override
     public IfaceRoomVo toVo(long userId) {
@@ -552,6 +562,7 @@ public class RoomInfo extends Room {
         roomVo.drawForLeaveChip = this.getDrawForLeaveChip();
         roomVo.personNumber = this.getPersonNumber();
         roomVo.hasNine = this.getHasNine();
+        roomVo.isOpen = this.isOpen;
         roomVo.setMode(this.getMode());
         roomVo.setModeTotal(this.getModeTotal());
         roomVo.setEach(this.getEach());

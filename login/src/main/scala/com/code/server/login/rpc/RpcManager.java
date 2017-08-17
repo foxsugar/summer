@@ -65,7 +65,12 @@ public class RpcManager {
         try {
 //            for(int i=0;i<19;i++){
 
-            charge("123.56.8.137", 10239, 1000);
+//            charge("123.56.8.137", 10239, 1000);
+//            charge("192.168.1.132", 777, 1000);
+            charge("192.168.1.132", 10001084, 1000);
+            charge("192.168.1.132", 10001082, 1000);
+            charge("192.168.1.132", 3, 1000);
+//            charge("192.168.1.132", 999, 1000);
 //            }
 //            charge("123.56.8.137",10002,100);
 //            charge("123.56.8.137",10003,100);
@@ -86,7 +91,7 @@ public class RpcManager {
 
             TTransport adminTransport = null;
             try {
-                adminTransport = TransportManager.getTransport("192.168.1.150", 9999);
+                adminTransport = TransportManager.getTransport("192.168.1.132", 9999);
             } catch (TTransportException e) {
                 e.printStackTrace();
             }

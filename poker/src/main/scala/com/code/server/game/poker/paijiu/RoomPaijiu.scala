@@ -32,6 +32,19 @@ class RoomPaijiu extends Room {
 
   override def startGame(): Unit = {
     //do nothing
+    if(this.curGameNumber>1) {
+      MsgSender.sendMsg2Player(new ResponseVo("gameService", "gamePaijiuBegin", "ok"), this.getUsers)
+      //开始游戏
+      val game = getGameInstance
+      this.game = game
+      game.startGame(users, this)
+
+      //扣钱
+      if (!isOpen && isCreaterJoin) spendMoney()
+      this.isInGame = true
+      this.isOpen = true
+      pushScoreChange()
+    }
   }
 
 
@@ -48,6 +61,8 @@ class RoomPaijiu extends Room {
     val readyCount = userStatus.values().stream().filter(status => status == IGameConstant.STATUS_READY).count()
     if (readyCount < 2) return ErrorCode.READY_NUM_ERROR
 
+    //设置persionnum
+    this.setPersonNumber(userScores.size())
 
     //没准备的人
     var removeList = List[java.lang.Long]()

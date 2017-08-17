@@ -8,6 +8,9 @@ public class RoomStatistics {
     public int winTime;
     public int failedTime;
     public double maxScore;
+    public int winAllTime;
+    public int loseAllTime;
+    public String maxCardGroup;
 
     public RoomStatistics() {
     }

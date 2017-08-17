@@ -2,9 +2,6 @@ package com.code.server.constant.response
 
 import java.util
 
-import scala.collection.JavaConverters._
-import scala.collection.mutable
-
 /**
   * Created by sunxianping on 2017/7/28.
   */
@@ -19,4 +16,8 @@ class GamePaijiuVo extends IfaceGameVo{
 
   //状态
   var state: Int = 0
+
+  var lastCards:util.List[Int] = _
+
+  var bankerInitScore:Int = 0
 }

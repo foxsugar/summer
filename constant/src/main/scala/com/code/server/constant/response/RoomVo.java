@@ -35,6 +35,7 @@ public class RoomVo implements IfaceRoomVo {
     public boolean isCreaterJoin;
     public long remainTime = -1;
     public long dissloutionUser = -1;
+    public boolean isOpen;
 
     public RoomVo() {
     }
@@ -225,6 +226,15 @@ public class RoomVo implements IfaceRoomVo {
 
     public RoomVo setDissloutionUser(long dissloutionUser) {
         this.dissloutionUser = dissloutionUser;
+        return this;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public RoomVo setOpen(boolean open) {
+        isOpen = open;
         return this;
     }
 }

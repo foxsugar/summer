@@ -116,6 +116,9 @@ public class Room implements IfaceRoom {
 
     public int joinRoom(long userId, boolean isJoin) {
 
+        if (userId == 0) {
+            return ErrorCode.JOIN_ROOM_USERID_IS_0;
+        }
 
         if (this.users.contains(userId)) {
             return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;
@@ -400,7 +403,7 @@ public class Room implements IfaceRoom {
         }
 
         //同意解散
-        if (agreeNum >= personNumber - 1) {
+        if (agreeNum >= personNumber - 1 && agreeNum>=2) {
             GameTimer.removeNode(timerNode);
             dissolutionRoom();
         }
@@ -814,8 +817,12 @@ public class Room implements IfaceRoom {
         return this;
     }
 
+    public boolean isOpen() {
+        return isOpen;
+    }
 
-
-
-
+    public Room setOpen(boolean open) {
+        isOpen = open;
+        return this;
+    }
 }

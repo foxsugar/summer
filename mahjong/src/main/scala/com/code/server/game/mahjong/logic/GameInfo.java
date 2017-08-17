@@ -172,6 +172,14 @@ public class GameInfo extends Game {
         noticeDissolutionResult();
         //通知所有玩家结束
         room.clearReadyStatus();
+        //庄家换下个人
+        if(room instanceof RoomInfo){
+            RoomInfo roomInfo = (RoomInfo)room;
+            if(roomInfo.isChangeBankerAfterHuangZhuang()){
+                room.setBankerId(nextTurnId(room.getBankerId()));
+            }
+
+        }
 //        if(HuUtil.getUserAndScore(this.room.getUserScores()).contains("否")){
 //        	logger.info("<<<牌局得分>>>"+HuUtil.getUserAndScore(this.room.getUserScores()));
 //        }

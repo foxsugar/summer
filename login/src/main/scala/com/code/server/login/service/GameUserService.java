@@ -308,6 +308,20 @@ public class GameUserService {
         return 0;
     }
 
+    public int shareWX(KafkaMsgKey msgKey, String game){
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(msgKey.getUserId());
+        if (userBean == null) {
+            return ErrorCode.YOU_HAVE_NOT_LOGIN;
+        }
+        int shareCount = userBean.getUserInfo().getShareWXCount();
+        if (shareCount == 0) {
+            userBean.getUserInfo().setShareWXCount(shareCount + 1);
+            //todo 充值记录
+        }
+        return 0;
+    }
+
     public static void main(String[] args) {
         String s = "家用饮水机";
         String s2 = "";
