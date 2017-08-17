@@ -1,6 +1,6 @@
 package com.code.server.game.poker.service
 
-import com.code.server.game.poker.doudizhu.RoomDouDiZhu
+import com.code.server.game.poker.doudizhu.{RoomDouDiZhu, RoomDouDiZhuGold}
 import com.code.server.game.poker.paijiu.RoomPaijiu
 import com.fasterxml.jackson.databind.JsonNode
 
@@ -27,6 +27,13 @@ object PokerRoomService {
         val gameType = params.path("gameType").asText()
         val gameNumber = params.path("gameNumber").asInt()
         return RoomPaijiu.createRoom(userId,roomType, gameType,gameNumber)
+
+      case "joinGoldRoom" =>
+        val goldRoomType = params.get("goldRoomType").asDouble()
+        val roomType = params.get("roomType").asText()
+        val gameType = params.get("gameType").asText()
+        return RoomDouDiZhuGold.joinGoldRoom(userId,goldRoomType,roomType,gameType);
+
       case _ =>
         return -1
     }

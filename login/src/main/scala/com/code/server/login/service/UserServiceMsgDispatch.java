@@ -48,7 +48,7 @@ public class UserServiceMsgDispatch {
                 String roomType = params.get("roomType").asText();
                 return gameUserService.getUserRecodeByUserId(msgKey,roomType);
             }
-            case "bindReferrer": {
+            case "bindReferrer": {//邀请码
                 int referrerId = params.get("referrerId").asInt();
                 return gameUserService.bindReferrer(msgKey, referrerId);
 
