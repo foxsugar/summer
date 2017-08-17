@@ -25,6 +25,9 @@ public class RedisManager {
     public static RoomRedisService getRoomRedisService(){
         return SpringUtil.getBean(RoomRedisService.class);
     }
+    public static GoldRoomRedisService getGoldRoomRedisService(){
+        return SpringUtil.getBean(GoldRoomRedisService.class);
+    }
 
     public static GateRedisService getGateRedisService(){
         return SpringUtil.getBean(GateRedisService.class);

@@ -15,6 +15,9 @@ public interface IConstant {
     //房间 玩家
     String ROOM_USER = "room_user";
 
+    //金币房间 玩家
+    String GOLDROOM_USER = "goldRoom_user";
+
     //玩家-网关
     String USER_GATE = "user_gate";
     //玩家货币

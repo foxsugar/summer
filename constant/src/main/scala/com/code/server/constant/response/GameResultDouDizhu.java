@@ -14,6 +14,7 @@ public class GameResultDouDizhu {
     public boolean isSpring;
     public int multiple;
     public boolean isReopen;
+    public double goldRoomType;
     public List<Integer> tableCards = new ArrayList<>();
     public Map<Long, Double> userScores = new HashMap<>();
 
@@ -78,5 +79,13 @@ public class GameResultDouDizhu {
     public GameResultDouDizhu setUserScores(Map<Long, Double> userScores) {
         this.userScores = userScores;
         return this;
+    }
+
+    public double getGoldRoomType() {
+        return goldRoomType;
+    }
+
+    public void setGoldRoomType(double goldRoomType) {
+        this.goldRoomType = goldRoomType;
     }
 }
