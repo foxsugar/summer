@@ -52,6 +52,7 @@ public class PlayerCardsInfoFactory {
                 break;
             case "15":
                 playerCardsInfo = new PlayerCardsInfoSZ_LQ().setIsHasFengShun(true);
+                //设置荒庄轮庄
                 room.setChangeBankerAfterHuangZhuang(true);
                 break;
             default:

@@ -52,8 +52,9 @@ class GamePaijiu extends Game with PaijiuConstant {
     initCards()
 
     //轮庄
-    val isChangeBanker = roomPaijiu.getCurGameNumber == roomPaijiu.getCurGameNumber / roomPaijiu.getUsers.size()
-    if (isChangeBanker) {
+    val changeStep = roomPaijiu.getGameNumber / roomPaijiu.getUsers.size()
+//    val isChangeBanker = roomPaijiu.getCurGameNumber == roomPaijiu.getCurGameNumber / roomPaijiu.getUsers.size()
+    if (roomPaijiu.getCurGameNumber !=1 && (roomPaijiu.getCurGameNumber-1) % changeStep == 0) {
       logger.info("轮庄 === curgameNum :" + roomPaijiu.getCurGameNumber)
       val nextBanker = nextTurnId(roomPaijiu.getBankerId)
       roomPaijiu.setBankerId(nextBanker)
