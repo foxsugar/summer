@@ -42,4 +42,11 @@ public class PokerMsgConsumer {
     public void listen_room(ConsumerRecord<String, String> record ) {
         MsgDispatch.dispatch(record);
     }
+
+    @KafkaListener(id = "pokerGoldRoomService", topicPartitions = {
+            @TopicPartition(topic = "pokerGoldRoomService", partitions = "${serverConfig.serverId}")
+    })
+    public void listen_goldroom(ConsumerRecord<String, String> record ) {
+        MsgDispatch.dispatch(record);
+    }
 }
