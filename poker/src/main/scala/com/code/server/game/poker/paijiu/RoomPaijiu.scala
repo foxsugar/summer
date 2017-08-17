@@ -1,12 +1,13 @@
 package com.code.server.game.poker.paijiu
 
 import com.code.server.constant.game.IGameConstant
-import com.code.server.constant.response.{ErrorCode, ResponseVo}
+import com.code.server.constant.response.{ErrorCode, IfaceRoomVo, ResponseVo, RoomPaijiuVo}
 import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
 import com.code.server.game.room.{Game, Room}
 import com.code.server.util.SpringUtil
+import org.springframework.beans.BeanUtils
 
 import scala.beans.BeanProperty
 
@@ -94,8 +95,18 @@ class RoomPaijiu extends Room {
     0
   }
 
+  override def toVo(userId: Long): IfaceRoomVo = {
+    val roomVo:RoomPaijiuVo = new RoomPaijiuVo
+    BeanUtils.copyProperties(super.toVo(userId), roomVo)
+    roomVo.setBankerInitScore(this.bankerInitScore)
+    roomVo.setBankerScore(this.bankerScore)
+    roomVo.setBankerId(this.bankerId)
+    roomVo
 
+  }
 }
+
+
 
 object RoomPaijiu extends Room {
   def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int): Int = {
