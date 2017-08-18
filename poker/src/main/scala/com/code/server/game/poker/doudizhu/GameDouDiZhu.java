@@ -22,14 +22,14 @@ import java.util.stream.Collectors;
  * Created by sunxianping on 2017/3/13.
  */
 public class GameDouDiZhu extends Game {
-    private static final Logger logger = LoggerFactory.getLogger(GameDouDiZhu.class);
+    protected static final Logger logger = LoggerFactory.getLogger(GameDouDiZhu.class);
 
     protected int initCardNum = 17;//每人17张
     protected List<Integer> cards = new ArrayList<>();//牌
     protected List<Integer> disCards = new ArrayList<>();//丢弃的牌
     protected List<Integer> tableCards = new ArrayList<>();//底牌
     protected Map<Long, PlayerCardInfoDouDiZhu> playerCardInfos = new HashMap<>();
-    private Random rand = new Random();
+    protected Random rand = new Random();
     protected long dizhu = -1;//地主
     protected Set<Long> chooseJiaoSet = new HashSet<>();//叫过地主的人
     protected Set<Long> chooseQiangSet = new HashSet<>();//抢过地主的人
