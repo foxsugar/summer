@@ -2,7 +2,7 @@ package com.code.server.game.poker.service
 
 import com.code.server.constant.game.CardStruct
 import com.code.server.constant.response.ErrorCode
-import com.code.server.game.poker.doudizhu.GameDouDiZhu
+import com.code.server.game.poker.doudizhu.{GameDouDiZhu, GameDouDiZhuGold}
 import com.code.server.game.poker.paijiu.GamePaijiu
 import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
