@@ -1,8 +1,12 @@
 package com.code.server.game.poker.doudizhu;
 
 
+import com.code.server.constant.game.CardStruct;
+import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.GameResultDouDizhu;
+import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 
 /**
@@ -64,5 +68,70 @@ public class GameDouDiZhuGold extends GameDouDiZhu {
         MsgSender.sendMsg2Player("gameService", "gameResult", gameResultDouDizhu, users);
 
         replay.setResult(gameResultDouDizhu);
+    }
+
+
+    /**
+     * 出牌
+     *
+     * @param userId
+     */
+    public int play(long userId, CardStruct cardStruct) {
+        PlayerCardInfoDouDiZhu playerCardInfo = playerCardInfos.get(userId);
+        //不可出牌
+        if (!playerCardInfo.checkPlayCard(lastCardStruct, cardStruct, lasttype)) {
+            return ErrorCode.CAN_NOT_PLAY;
+        }
+
+        userPlayCount.add(userId);
+        playerCardInfo.setPlayCount(playerCardInfo.getPlayCount() + 1);
+
+        long nextUserCard = nextTurnId(cardStruct.getUserId()); //下一个出牌的人
+
+        cardStruct.setNextUserId(nextUserCard);
+        cardStruct.setUserId(userId);
+
+        playTurn = nextUserCard;
+
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "playResponse", cardStruct), this.users);
+        lasttype = cardStruct.getType();//保存这次出牌的类型
+        lastCardStruct = cardStruct;//保存这次出牌的牌型
+
+
+        //删除牌
+        playerCardInfo.cards.removeAll(cardStruct.getCards());
+
+        //处理炸
+        handleBomb(cardStruct);
+
+        //回放
+        replay.getOperate().add(Operate.getOperate_PLAY(userId,cardStruct,false));
+
+        //牌打完
+        if (playerCardInfo.cards.size() == 0) {
+            PlayerCardInfoDouDiZhu playerCardInfoDizhu = playerCardInfos.get(dizhu);
+            //是否是春天
+            if (userPlayCount.size() == 1 || playerCardInfoDizhu.getPlayCount() == 1) {
+                isSpring = true;
+                multiple *= 2;
+            }
+
+            compute(playerCardInfo.getUserId() == dizhu);
+
+            sendResult(false, playerCardInfo.getUserId() == dizhu);
+
+
+            //生成记录
+            genRecord();
+
+            room.clearReadyStatus(true);
+            RoomManager.removeRoom(room.getRoomId());
+            //sendFinalResult();
+
+        }
+        MsgSender.sendMsg2Player("gameService", "play", 0, userId);
+//        userId.sendMsg("gameService", "play", 0);
+        updateLastOperateTime();
+        return 0;
     }
 }
