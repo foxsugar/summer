@@ -177,7 +177,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
         	}
     	}
 
-		else if(this.roomInfo.getGameType().equals("LQ")){
+		else if(this.roomInfo.getGameType().equals("HL")){
 			if(isZimo){
 				if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3"))){//平胡
 					for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
