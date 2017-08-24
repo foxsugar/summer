@@ -39,11 +39,11 @@ public class PayCallback {
     private static final Map<Integer, Integer> chargeMoney = new HashMap<>();
 
     static{
-        chargeMoney.put(5,50);
-        chargeMoney.put(10,110);
-        chargeMoney.put(20,230);
-        chargeMoney.put(50,600);
-        chargeMoney.put(100,1300);
+        chargeMoney.put(5,60);
+        chargeMoney.put(10,140);
+        chargeMoney.put(20,300);
+        chargeMoney.put(50,800);
+        chargeMoney.put(100,1800);
     }
     /**
      * 接受微信回调
