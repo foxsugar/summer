@@ -22,4 +22,9 @@ class PlayerCardInfoPaijiuVo extends IfacePlayerInfoVo{
 
   var isOpenCard :Boolean = false
 
+  var isFightForBanker:Boolean = false
+
+  //是否选择过抢庄
+  var isHasFightForBanker:Boolean = false
+
 }

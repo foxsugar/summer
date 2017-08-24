@@ -12,6 +12,7 @@ public interface IConstant {
 
     //玩家-房间 关系
     String USER_ROOM = "user_room";
+    String USER_PREPAARE_ROOM = "user_prepare_room:";
     //房间 玩家
     String ROOM_USER = "room_user";
 

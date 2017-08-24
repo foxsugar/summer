@@ -75,6 +75,8 @@ public class UserServiceMsgDispatch {
                 return gameUserService.setReplay(msgKey, params.get("id").asLong());
             case "shareWX":
                 return gameUserService.shareWX(msgKey, params.get("game").asText());
+            case "getPrepareRoom":
+                return gameUserService.getPrepareRoom(msgKey);
 
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;

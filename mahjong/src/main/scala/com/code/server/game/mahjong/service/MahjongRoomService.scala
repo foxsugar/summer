@@ -154,6 +154,7 @@ object MahjongRoomService {
     roomInfo.setRoomType(roomType)
     roomInfo.init(roomId, userId, modeTotal, mode, multiple, gameNumber, personNumber, userId, 0)
     roomInfo.setEach(each)
+    roomInfo.setCreaterJoin(isJoin)
     var code = 0
     if (isJoin) {
       code = roomInfo.joinRoom(userId,true)

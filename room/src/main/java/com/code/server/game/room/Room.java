@@ -4,6 +4,7 @@ package com.code.server.game.room;
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
@@ -108,7 +109,6 @@ public class Room implements IfaceRoom {
         this.maxZhaCount = multiple;
         this.createNeedMoney = this.getNeedMoney();
         this.isAddGold = DataManager.data.getRoomDataMap().get(this.gameType).getIsAddGold() == 1;
-
 
 
     }
@@ -402,7 +402,7 @@ public class Room implements IfaceRoom {
         }
 
         //同意解散
-        if (agreeNum >= personNumber - 1 && agreeNum>=2) {
+        if (agreeNum >= personNumber - 1 && agreeNum >= 2) {
             GameTimer.removeNode(timerNode);
             dissolutionRoom();
         }
@@ -430,6 +430,22 @@ public class Room implements IfaceRoom {
 
     @Override
     public int startGameByClient(long userId) {
+        return 0;
+    }
+
+    @Override
+    public int getPrepareRoom(long userId) {
+        List<IfaceRoomVo> result = new ArrayList<>();
+        if (RoomManager.getPrepareRoom().containsKey(userId)) {
+            for (String roomId : RoomManager.getPrepareRoom().get(userId)) {
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                if (room != null) {
+                    result.add(room.toVo(userId));
+                }
+            }
+        }
+        MsgSender.sendMsg2Player("roomService", "roomList", result, userId);
+        MsgSender.sendMsg2Player("roomService", "getPrepareRoom", 0, userId);
         return 0;
     }
 
@@ -555,6 +571,18 @@ public class Room implements IfaceRoom {
         return roomVo;
     }
 
+    @Override
+    public PrepareRoom getPrepareRoomVo() {
+        PrepareRoom prepareRoom = new PrepareRoom();
+        prepareRoom.createTime = System.currentTimeMillis();
+        prepareRoom.gameType = this.getGameType();
+        prepareRoom.roomType = this.getRoomType();
+        prepareRoom.roomId = this.roomId;
+        prepareRoom.multiple = this.multiple;
+        prepareRoom.gameNumber = this.gameNumber;
+        return prepareRoom;
+    }
+
     public String getRoomId() {
         return roomId;
     }
@@ -593,6 +621,8 @@ public class Room implements IfaceRoom {
     public List<Long> getUsers() {
         return users;
     }
+
+
 
     public Room setUsers(List<Long> users) {
         this.users = users;
@@ -817,9 +847,10 @@ public class Room implements IfaceRoom {
     }
 
 
-    public boolean isGoldRoom(){
+    public boolean isGoldRoom() {
         return goldRoomType > 0.0;
     }
+
     public boolean isOpen() {
         return isOpen;
     }

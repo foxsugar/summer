@@ -2,6 +2,7 @@ package com.code.server.game.room;
 
 
 import com.code.server.constant.game.IGameConstant;
+import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.response.IfaceRoomVo;
 
 import java.util.List;
@@ -48,6 +49,9 @@ public interface IfaceRoom extends IGameConstant {
      */
     int startGameByClient(long userId);
 
+
+    int getPrepareRoom(long userId);
+
     /**
      * 获得游戏
      * @return
@@ -57,4 +61,6 @@ public interface IfaceRoom extends IGameConstant {
     IfaceRoomVo toVo(long userId);
 
     List<Long> getUsers();
+
+    PrepareRoom getPrepareRoomVo();
 }

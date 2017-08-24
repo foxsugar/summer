@@ -41,7 +41,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 	@Override
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card){
 		super.gangCompute(room,gameInfo,isMing,diangangUser,card);
-    	if(this.roomInfo.getGameType().equals("HT") || this.roomInfo.getGameType().equals("JL") ||this.roomInfo.getGameType().equals("DS") ||this.roomInfo.getGameType().equals("LQ")){
+    	if(this.roomInfo.getGameType().equals("HT") || this.roomInfo.getGameType().equals("JL") ||this.roomInfo.getGameType().equals("DS") ||this.roomInfo.getGameType().equals("LQ") || this.roomInfo.getGameType().equals("HL")){
     		if(!isMing){//暗杠
             	for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
             		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());

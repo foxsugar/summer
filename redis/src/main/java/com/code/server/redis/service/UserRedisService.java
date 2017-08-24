@@ -1,5 +1,6 @@
 package com.code.server.redis.service;
 
+import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.game.UserBean;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.dao.IUserRedis;
@@ -11,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +46,37 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
         user_room.delete(USER_ROOM, ""+userId);
 
     }
+
+    @Override
+    public Map<String,PrepareRoom> getPerpareRoom(long userId) {
+        BoundValueOperations<String,Map<String,PrepareRoom>> user_prepare_room = redisTemplate.boundValueOps(getUserPerpareRoomKey(userId));
+
+        return user_prepare_room.get();
+    }
+
+    @Override
+    public void removePerpareRoom(long userId, String roomId) {
+        BoundValueOperations<String,Map<String,PrepareRoom>> user_prepare_room = redisTemplate.boundValueOps(getUserPerpareRoomKey(userId));
+        Map<String, PrepareRoom> room = user_prepare_room.get();
+        if (room != null) {
+            room.remove(roomId);
+        }
+        user_prepare_room.set(room);
+
+    }
+
+    @Override
+    public void addPerpareRoom(long userId, PrepareRoom prepareRoom) {
+        BoundValueOperations<String,Map<String,PrepareRoom>> user_prepare_room = redisTemplate.boundValueOps(getUserPerpareRoomKey(userId));
+
+        Map<String, PrepareRoom> room = user_prepare_room.get();
+        if (room == null) {
+            room = new HashMap<>();
+        }
+        room.put((prepareRoom.roomId), prepareRoom);
+        user_prepare_room.set(room);
+    }
+
 
     @Override
     public String getGateId(long userId) {
@@ -218,5 +248,9 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
 
     private String getUserTokenKey(long userId) {
         return USER_TOKEN + userId;
+    }
+
+    private String getUserPerpareRoomKey(long userId){
+        return USER_PREPAARE_ROOM + userId;
     }
 }

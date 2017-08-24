@@ -1,6 +1,7 @@
 package com.code.server.login.service;
 
 
+import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.game.Record;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.IKafaTopic;
@@ -319,6 +320,27 @@ public class GameUserService {
             userBean.getUserInfo().setShareWXCount(shareCount + 1);
             //todo 充值记录
         }
+        return 0;
+    }
+
+    public int getPrepareRoom(KafkaMsgKey msgKey){
+        long userId = msgKey.getUserId();
+
+        Map<String, PrepareRoom> rooms = RedisManager.getUserRedisService().getPerpareRoom(userId);
+        Map<Object, Object> result = new HashMap<>();
+        List<Map<String, Object>> list = new ArrayList<>();
+        if (rooms != null) {
+            for (Map.Entry<String, PrepareRoom> entry : rooms.entrySet()) {
+                Map<String, Object> temp = new HashMap<>();
+                temp.put("room",entry.getValue());
+                temp.put("user",RedisManager.getUserRedisService().getUserBeans(RedisManager.getRoomRedisService().getUsers(entry.getKey())));
+
+                list.add(temp);
+            }
+        }
+        result.put("result", list);
+        ResponseVo vo = new ResponseVo("userService", "getPrepareRoom", result);
+        sendMsg(msgKey, vo);
         return 0;
     }
 

@@ -1,6 +1,8 @@
 package com.code.server.game.mahjong.logic;
 
 
+import com.code.server.constant.game.PrepareRoom;
+import com.code.server.constant.game.PrepareRoomMj;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
 import com.code.server.game.room.Room;
@@ -290,6 +292,8 @@ public class RoomInfo extends Room {
             } else if (16 == gameNumber) {
                 result = 60;
             }
+        }else if("HL".equals(gameType)){
+            result = 1;
         } else {
             result = 3;
         }
@@ -571,5 +575,20 @@ public class RoomInfo extends Room {
             roomVo.game = this.game.toVo(userId);
         }
         return roomVo;
+    }
+
+    @Override
+    public PrepareRoom getPrepareRoomVo() {
+        PrepareRoomMj prepareRoom = new PrepareRoomMj();
+
+        prepareRoom.createTime = System.currentTimeMillis();
+        prepareRoom.gameType = this.getGameType();
+        prepareRoom.roomType = this.getRoomType();
+        prepareRoom.roomId = this.roomId;
+        prepareRoom.multiple = this.multiple;
+        prepareRoom.gameNumber = this.gameNumber;
+        prepareRoom.mode = this.mode;
+        prepareRoom.modeTotal = this.modeTotal;
+        return prepareRoom;
     }
 }

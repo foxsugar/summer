@@ -485,7 +485,7 @@ public class CardTypeUtil {
             }
             int value = i / 4;
 
-//            System.out.println(MessageFormat.format("cardType.put(\"{0}\",{1});", key, value));
+//            System.out.println(MessageFormat.format("huType.put(\"{0}\",{1});", key, value));
             System.out.println(MessageFormat.format("ALL_CARD.add(\"{0}\");", key));
         }
     }

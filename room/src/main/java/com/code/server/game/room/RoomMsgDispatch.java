@@ -116,6 +116,10 @@ public class RoomMsgDispatch {
                 return room.startGameByClient(userId);
 
             }
+            case "getPrepareRoom":{
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                room.getPrepareRoom(userId);
+            }
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

@@ -524,7 +524,7 @@ private static void change(){
 //        System.out.println(playerCardsInfo.isCanHu_zimo("088"));
         System.out.println(playerCardsInfo.isCanTing(playerCardsInfo.cards));
 //        List<String> cs = playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.getCards());
-//        int type = CardTypeUtil.getTypeByCard("060");
+//        int cardType = CardTypeUtil.getTypeByCard("060");
 //        HuUtil.isHu(cs, playerCardsInfo, CardTypeUtil.cardType.get("060"), new HuLimit(3));
 //        System.out.println(HuUtil.isHu(playerCardsInfo.getCards(), playerCardsInfo, null));
 //        System.out.println(HuUtil.isHu(playerCardsInfo.cards,playerCardsInfo,new HuLimit(6)));

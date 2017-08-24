@@ -31,17 +31,20 @@ public class Hu1 {
             31, 32, 33, 34, 35, 36, 37,
             31, 32, 33, 34, 35, 36, 37
     };
-    private static final int TYPE_WAN = 0;//万 1~9
-    private static final int TYPE_BING = 1;//饼 11~19
-    private static final int TYPE_TIAO = 2;//条 21~29
-    private static final int TYPE_ZI = 3;//字 31~37 东南西北中发白
+    public static final int TYPE_WAN = 0;//万 1~9
+    public static final int TYPE_BING = 1;//饼 11~19
+    public static final int TYPE_TIAO = 2;//条 21~29
+    public static final int TYPE_ZI = 3;//字 31~37 东南西北中发白
 
-    private static final int CARD_GROUP_TYPE_JIANG = 0;//将
-    private static final int CARD_GROUP_TYPE_SHUN = 1;//顺
-    private static final int CARD_GROUP_TYPE_KE = 2;//刻
-    private static final int CARD_GROUP_TYPE_GANG = 3;//杠
-    private static final int CARD_GROUP_TYPE_FENG_SHUN = 4;//风顺
-    private static final int CARD_GROUP_TYPE_ZFB = 5;//中发白
+    public static final int CARD_GROUP_TYPE_JIANG = 0;//将
+    public static final int CARD_GROUP_TYPE_SHUN = 1;//顺
+    public static final int CARD_GROUP_TYPE_KE = 2;//刻
+    public static final int CARD_GROUP_TYPE_GANG = 3;//杠
+    public static final int CARD_GROUP_TYPE_FENG_SHUN = 4;//风顺
+    public static final int CARD_GROUP_TYPE_ZFB = 5;//中发白
+    public static final int CARD_GROUP_TYPE_TWO_HUN = 6;//两个混
+    public static final int CARD_GROUP_TYPE_THREE_HUN = 7;//三个混
+    public static final int CARD_GROUP_TYPE_TWO_HUN_JIANG = 8;//两个 将
 
 
     /**
@@ -139,9 +142,9 @@ public class Hu1 {
     }
 
     private static final Comparator<CardGroup> comparator = (o1, o2) -> {
-        if (o1.type < o2.type) {
+        if (o1.huType < o2.huType) {
             return -1;
-        } else if (o1.type == o2.type) {
+        } else if (o1.huType == o2.huType) {
             if (o1.card <= o2.card) {
                 return -1;
             } else {
@@ -157,32 +160,34 @@ public class Hu1 {
     public static void main(String[] args) {
         int[] a = new int[]{
 //                3, 2, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 2, 1, 0, 0, 0, 0, 0,
+                0, 0, 2, 3, 3, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0,
                 0, 0, 0
         };
-        List list = new ArrayList();
-        List allList = new ArrayList();
+        List<List<CardGroup>> list = new ArrayList<>();
+        List<List<CardGroup>> allList = new ArrayList<>();
         List<CardGroup> groups = new ArrayList<>();
-        testHun(true, a, list, allList, groups, true);
+        testHun(true, a, list, allList, groups);
 
-        System.out.println("配好的 : "+list);
-        removeRepeat(allList);
+        System.out.println("配好的 : " + list);
+        allList = removeRepeat(allList);
 //        for(int ll : a){
 //            System.out.println(ll);
 //        }
-        System.out.println("部分: "+allList);
+        System.out.println("部分: " + allList);
     }
 
-    static void findGroup(int[] cards,List all){
+    static void findGroup(int[] cards, List all) {
 
     }
 
-    static void testHun(boolean isOut, int[] cards, List all, List allList, List<CardGroup> list, boolean isHasFengShun) {
-//        count++;
-//           System.out.println("====: " + count);
+    private static void getRemainCard(int[] cards, List<List<CardGroup>> list) {
+
+    }
+
+    static void testHun(boolean isOut, int[] cards, List<List<CardGroup>> complete, List<List<CardGroup>> noComplete, List<CardGroup> temp) {
 
         for (int i = 0; i < 34; i++) {
             if (cards[i] == 0) {
@@ -190,15 +195,15 @@ public class Hu1 {
             }
 
             //将
-            if (cards[i] >= 2 && !isHasJiang(list)) {
+            if (cards[i] >= 2 && !isHasJiang(temp)) {
                 int[] newCards = Arrays.copyOf(cards, cards.length);
                 newCards[i] -= 2;
-                List<CardGroup> newList = new ArrayList(list);
+                List<CardGroup> newList = new ArrayList(temp);
                 newList.add(new CardGroup(CARD_GROUP_TYPE_JIANG, i));
                 if (isEmpty(newCards)) {
-                    add2List(all, newList);
+                    add2List(complete, newList);
                 } else {
-                    testHun(false, newCards, all, allList, newList, isHasFengShun);
+                    testHun(false, newCards, complete, noComplete, newList);
 
                 }
             }
@@ -207,12 +212,12 @@ public class Hu1 {
             if (cards[i] >= 3) {
                 int[] newCards = Arrays.copyOf(cards, cards.length);
                 newCards[i] -= 3;
-                List<CardGroup> newList = new ArrayList(list);
+                List<CardGroup> newList = new ArrayList(temp);
                 newList.add(new CardGroup(CARD_GROUP_TYPE_KE, i));
                 if (isEmpty(newCards)) {
-                    add2List(all, newList);
+                    add2List(complete, newList);
                 } else {
-                    testHun(false, newCards, all, allList, newList, isHasFengShun);
+                    testHun(false, newCards, complete, noComplete, newList);
                 }
             }
             //顺
@@ -221,32 +226,23 @@ public class Hu1 {
                 newCards[i] -= 1;
                 newCards[i + 1] -= 1;
                 newCards[i + 2] -= 1;
-                List<CardGroup> newList = new ArrayList(list);
+                List<CardGroup> newList = new ArrayList(temp);
                 newList.add(new CardGroup(CARD_GROUP_TYPE_SHUN, i));
                 if (isEmpty(newCards)) {
-                    add2List(all, newList);
+                    add2List(complete, newList);
                 } else {
-                    testHun(false, newCards, all, allList, newList, isHasFengShun);
+                    testHun(false, newCards, complete, noComplete, newList);
                 }
             }
 
-//            if (isOut) {
-//                System.out.println("index : " + i);
-//            }
-//            if (i==28) {
-
-//                System.out.println("isout : "+isOut +" index : "+i+"  groups : " + list +" allGroup : "+all);
-//            allList.add(list);
-            add2List(allList, list);
-
-//            }
+            add2List(noComplete, temp);
 
 
         }
     }
 
 
-    private static void removeRepeat(List<List<CardGroup>> lists) {
+    public static List<List<CardGroup>> removeRepeat(List<List<CardGroup>> lists) {
         //按多少排序
         lists.sort((list1, list2) -> {
             if (list1.size() > list2.size()) {
@@ -261,8 +257,10 @@ public class Hu1 {
         }
 
         lists = newList;
-        System.out.println("newlist"+lists);
 
+//        System.out.println("newlist" + newList);
+
+        return newList;
     }
 
 
@@ -270,9 +268,9 @@ public class Hu1 {
         for (CardGroup cardGroup : des) {
             if (srcList.size() == 0) {
                 srcList.add(des);
-            }else {
+            } else {
                 boolean isIn = false;
-                for(List<CardGroup> src : srcList){
+                for (List<CardGroup> src : srcList) {
                     boolean isInList = isInList(src, cardGroup);
                     if (isInList) {
 //                        System.out.println("buzai");
@@ -281,10 +279,10 @@ public class Hu1 {
                     }
                 }
 
-                if(!isIn){
+                if (!isIn) {
 //                    System.out.println("不在要加入    srclist = "+srcList +"  des = "+des);
                     srcList.add(des);
-                }else{
+                } else {
 //                    System.out.println("已存在");
                 }
             }
@@ -296,7 +294,7 @@ public class Hu1 {
     private static boolean isInList(List<CardGroup> list, CardGroup cardGroup) {
 //        System.out.println("list = "+ list+ " cardGroup : " +cardGroup);
         for (CardGroup lc : list) {
-            if (lc.type == cardGroup.type && lc.card == cardGroup.card) {
+            if (lc.huType == cardGroup.huType && lc.card == cardGroup.card) {
                 return true;
             }
         }
@@ -429,7 +427,7 @@ public class Hu1 {
     public static HuCardType convert2HuCardType(List<CardGroup> list) {
         HuCardType huCardType = new HuCardType();
         for (CardGroup cardGroup : list) {
-            switch (cardGroup.type) {
+            switch (cardGroup.huType) {
                 case CARD_GROUP_TYPE_JIANG:
                     huCardType.jiang = cardGroup.card;
                     break;
@@ -450,23 +448,23 @@ public class Hu1 {
     }
 
 
-    private static boolean isHasZFB(int[] cards, int index) {
+    public static boolean isHasZFB(int[] cards, int index) {
         if (index != 31) {
             return false;
         }
         return cards[index] >= 1 && cards[index + 1] >= 1 && cards[index + 2] >= 1;
     }
 
-    private static boolean isHasJiang(List<CardGroup> list) {
+    public static boolean isHasJiang(List<CardGroup> list) {
         for (CardGroup cardGroup : list) {
-            if (cardGroup.type == CARD_GROUP_TYPE_JIANG) {
+            if (cardGroup.huType == CARD_GROUP_TYPE_JIANG) {
                 return true;
             }
         }
         return false;
     }
 
-    private static void add2List(List<List<CardGroup>> list, List<CardGroup> cardGroups) {
+    public static void add2List(List<List<CardGroup>> list, List<CardGroup> cardGroups) {
         cardGroups.sort(comparator);
         boolean equal = false;
         for (List<CardGroup> l : list) {
@@ -479,12 +477,12 @@ public class Hu1 {
         }
     }
 
-    private static boolean isEqual(List<CardGroup> list1, List<CardGroup> list2) {
+    public static boolean isEqual(List<CardGroup> list1, List<CardGroup> list2) {
         if (list1.size() != list2.size()) {
             return false;
         }
         for (int i = 0; i < list1.size(); i++) {
-            if (list1.get(i).type != list2.get(i).type || list1.get(i).card != list2.get(i).card) {
+            if (list1.get(i).huType != list2.get(i).huType || list1.get(i).card != list2.get(i).card) {
                 return false;
             }
         }
@@ -492,7 +490,7 @@ public class Hu1 {
     }
 
 
-    private static boolean isShun(int[] cards, int index) {
+    public static boolean isShun(int[] cards, int index) {
         if (index >= 25 || index == 7 || index == 8 || index == 16 || index == 17) {
             return false;
         }
@@ -601,7 +599,7 @@ public class Hu1 {
      * @param group
      */
     private void cardRemoveGroup(List<Integer> list, CardGroup group) {
-        switch (group.type) {
+        switch (group.huType) {
             case CARD_GROUP_TYPE_JIANG:
                 removeCard(list, group.card);
                 removeCard(list, group.card);
@@ -693,28 +691,26 @@ public class Hu1 {
         List<CardGroup> all = new ArrayList<>();
     }
 
-    /**
-     * 胡牌分组
-     */
-    public static class CardGroup {
-        public CardGroup(int type, int card) {
-            this.card = card;
-            this.type = type;
-        }
-
-        int type;
-        int card;
-
-        @Override
-        public String toString() {
-            return
-//                    "type=" + type +
-                    type + "," + card
-                    ;
-        }
-    }
-
-
+//    /**
+//     * 胡牌分组
+//     */
+//    public static class CardGroup {
+//        public CardGroup(int huType, int card) {
+//            this.card = card;
+//            this.huType = huType;
+//        }
+//
+//        int huType;
+//        int card;
+//
+//        @Override
+//        public String toString() {
+//            return
+////                    "huType=" + huType +
+//                    huType + "," + card
+//                    ;
+//        }
+//    }
 
 
 }

@@ -1218,8 +1218,8 @@ public class GameInfoJiuZhou extends GameInfo {
 //            }
 //        }
 //        for (String c : cs) {
-//            int type = CardTypeUtil.getTypeByCard(c);
-//            if (type == ct) {
+//            int cardType = CardTypeUtil.getTypeByCard(c);
+//            if (cardType == ct) {
 //                count++;
 //            }
 //        }

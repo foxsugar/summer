@@ -19,6 +19,7 @@ public class RoomManager {
 
     private static Map<Double, List<Room>> fullGoldRoom = new HashMap<>();
     private static Map<Double,List<Room>> notFullGoldRoom = new HashMap<>();
+    private static Map<Long, List<String>> prepareRoom = new HashMap<>();
 
     private static RoomManager ourInstance = new RoomManager();
 
@@ -94,8 +95,19 @@ public class RoomManager {
 
     public static void removeRoom(String roomId) {
         //本地内存删除room
+        IfaceRoom room = getInstance().rooms.get(roomId);
         getInstance().rooms.remove(roomId);
         RedisManager.removeRoomAllInfo(roomId);
+        //删除代开房
+        if(room != null && room instanceof Room){
+            Room rm = (Room)room;
+            if(!rm.isCreaterJoin()){
+                RedisManager.getUserRedisService().removePerpareRoom(rm.getCreateUser(), rm.getRoomId());
+//                if (prepareRoom.containsKey(rm.getCreateUser())) {
+//                    prepareRoom.get(rm.getCreateUser()).remove(rm.getRoomId());
+//                }
+            }
+        }
     }
 
     public static void addRoom(String roomId,String serverId, Room room) {
@@ -123,6 +135,10 @@ public class RoomManager {
         }
         getInstance().rooms.put(roomId, room);
         RedisManager.getRoomRedisService().setServerId(roomId,serverId);
+        //加入代开房列表
+        if(!room.isCreaterJoin()){
+            RedisManager.getUserRedisService().addPerpareRoom(room.getCreateUser(), room.getPrepareRoomVo());
+        }
     }
 
     public static Room getNullRoom(Double roomType){
@@ -132,5 +148,13 @@ public class RoomManager {
         }else {
             return null;
         }
+    }
+
+    public static Map<Long, List<String>> getPrepareRoom() {
+        return prepareRoom;
+    }
+
+    public static void setPrepareRoom(Map<Long, List<String>> prepareRoom) {
+        RoomManager.prepareRoom = prepareRoom;
     }
 }

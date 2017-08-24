@@ -242,8 +242,8 @@ public class HuUtil implements HuType {
     static List<HuCardType> agari(int[] n, boolean... isHasFengShun) {
         List<HuCardType> ret = new ArrayList<>();
 
-        List<List<Hu1.CardGroup>> list = new ArrayList();
-        List<Hu1.CardGroup> groups = new ArrayList<>();
+        List<List<CardGroup>> list = new ArrayList();
+        List<CardGroup> groups = new ArrayList<>();
         boolean isHasF = isHasFengShun.length != 0 && isHasFengShun[0];
         Hu1.test1(n,list,groups,isHasF);
         return Hu1.convert(list);

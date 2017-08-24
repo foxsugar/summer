@@ -179,8 +179,8 @@ object NettyMsgDispatch {
     msgKey.setUserId(userId)
     method match {
       //加入房间有roomId
-      case "joinRoom" =>
-        val roomId = params.get("roomId").asText()
+      case "joinRoom"=>
+        val roomId = params.path("roomId").asText()
         val partition = getPartitionByRoomId(roomId)
         if (partition == null) {
           sendMsg(new ResponseVo("roomService", method, ErrorCode.CAN_NOT_NO_ROOM), userId)
@@ -189,6 +189,7 @@ object NettyMsgDispatch {
           msgKey.setPartition(partition.toInt)
           SpringUtil.getBean(classOf[MsgProducer]).send2Partition(service, partition.toInt, msgKey, msg)
         }
+
 
 
       //解散房间等其他消息

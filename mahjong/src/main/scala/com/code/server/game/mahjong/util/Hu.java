@@ -639,7 +639,7 @@ public class Hu {
         @Override
         public String toString() {
             return
-//                    "type=" + type +
+//                    "huType=" + huType +
                     type + "," + firstCard
                     ;
         }

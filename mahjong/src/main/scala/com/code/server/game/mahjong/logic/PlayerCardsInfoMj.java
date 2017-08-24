@@ -573,7 +573,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         long diangang = -1;
         if (cardNum.containsKey(cardType) && cardNum.get(cardType) == 4) {
             if (pengType.containsKey(cardType)) {//碰的类型包含这个 是明杠
-                //diangang = pengType.get(cardType);
+                //diangang = pengType.get(huType);
                 pengType.remove(cardType);//从碰中移除
                 mingGangType.put(cardType, diangang);
                 isMing = true;

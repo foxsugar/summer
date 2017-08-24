@@ -737,7 +737,7 @@ public class PlayerCardsInfoJZ extends PlayerCardsInfoQAMT {
             if (cardNum == 0) {
                 continue;
             }
-//            if (type == 2 && !isHasSanfengdan) {//四风蛋
+//            if (cardType == 2 && !isHasSanfengdan) {//四风蛋
 //                result += cardNum -3;
 //            } else {
                 result += cardNum -2;

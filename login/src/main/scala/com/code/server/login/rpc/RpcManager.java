@@ -67,9 +67,13 @@ public class RpcManager {
 
 //            charge("123.56.8.137", 10239, 1000);
 //            charge("192.168.1.132", 777, 1000);
-            charge("192.168.1.132", 10001084, 1000);
-            charge("192.168.1.132", 10001082, 1000);
-            charge("192.168.1.132", 3, 1000);
+//            charge("47.92.37.165", 1, 10000);
+//            charge("47.92.37.165", 2, 10000);
+//            charge("47.92.37.165", 3, 10000);
+
+            changeInit("47.92.37.165",10000);
+//            charge("192.168.1.132", 10001082, 1000);
+//            charge("192.168.1.132", 3, 1000);
 //            charge("192.168.1.132", 999, 1000);
 //            }
 //            charge("123.56.8.137",10002,100);
@@ -130,6 +134,15 @@ public class RpcManager {
         order.setNum(num);
         order.setType(1);
         client.charge(order);
+        adminTransport.close();
+    }
+
+    private static void changeInit(String ip, int num) throws TException {
+        TTransport adminTransport = TransportManager.getTransport(ip, 9090);
+
+        GameRPC.Client client = GameRpcClient.getAClient(adminTransport);
+//                    client.getUserInfo(1);
+        client.modifyInitMoney(10000);
         adminTransport.close();
     }
 
