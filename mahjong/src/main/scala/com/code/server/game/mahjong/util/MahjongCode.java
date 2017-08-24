@@ -112,8 +112,8 @@ public class MahjongCode {
 		    }
 		};
 	
-	//胡同分数
-	public static final Map<String, Integer> HUTOSCOREFORHT = new HashMap<String, Integer>() {
+	//欢乐棋牌分数
+	public static final Map<String, Integer> HUTOSCOREFORLQ = new HashMap<String, Integer>() {
 		{
 				put("201", 3);
 				put("222", 9);
@@ -121,9 +121,22 @@ public class MahjongCode {
 				put("244", 9);
 				put("253", 18);
 				put("266", 18);
+				put("288", 27);
 		}
 	};
-		
+
+
+	//胡同分数
+	public static final Map<String, Integer> HUTOSCOREFORHT = new HashMap<String, Integer>() {
+		{
+			put("201", 3);
+			put("222", 9);
+			put("235", 9);
+			put("244", 9);
+			put("253", 18);
+			put("266", 18);
+		}
+	};
 		
 	//番数
 	public static final Map<String, Integer> HUTOTURN = new HashMap<String, Integer>() {
