@@ -32,8 +32,11 @@ object HuWithHun {
     Hu1.testHun(true, noHunCards, list, allList, groups)
 
     System.out.println("配好的 : " + list)
+
+
+
     //有配成的
-    if (list.size() < 0) {
+    if (list.size() > 0) {
       //如果有混 肯定全是混组成的牌型
       if (hunNum > 0) {
         //三个混的数量
@@ -51,37 +54,34 @@ object HuWithHun {
 
       }
 
-//      list
+      //      list
       println(list.size())
       println(list)
-    } else {
-
-      allList = Hu1.removeRepeat(allList)
-
-
-      var complete: util.List[util.List[CardGroup]] = new util.ArrayList()
-      var temp: util.List[CardGroup] = new util.ArrayList()
-      //没有凑成附子
-      if (allList.size() == 0) {
-        println("没有凑成附子")
-        getKaoPai(noHunCards, complete, temp, hunNum)
-      } else {
-        for (cardGroupList <- allList.asScala) {
-          var newCards = for (c <- noHunCards) yield c
-          val remainInfo = getRemainCards(newCards, cardGroupList)
-//          var newComplete = new util.ArrayList(complete)
-          getKaoPai(remainInfo._1, complete, cardGroupList, hunNum)
-          println("组成的一半: "+cardGroupList)
-          println("带混的最终牌型: " + complete)
-        }
-      }
-
-      System.out.println("部分: " + allList)
-      println("==================================hun==============")
-      println(complete.size())
-      println(complete)
-//      complete
     }
+    var complete: util.List[util.List[CardGroup]] = new util.ArrayList(list)
+    allList = Hu1.removeRepeat(allList)
+
+
+
+    var temp: util.List[CardGroup] = new util.ArrayList()
+    //没有凑成附子
+    if (allList.size() == 0) {
+      println("没有凑成附子")
+      getKaoPai(noHunCards, complete, temp, hunNum)
+    } else {
+      for (cardGroupList <- allList.asScala) {
+        var newCards = for (c <- noHunCards) yield c
+        val remainInfo = getRemainCards(newCards, cardGroupList)
+        getKaoPai(remainInfo._1, complete, cardGroupList, hunNum)
+        println("组成的一半: " + cardGroupList)
+        println("带混的最终牌型: " + complete)
+      }
+    }
+
+    println("==================================hun==============")
+    println(complete.size())
+    println(complete)
+
   }
 
 
@@ -214,7 +214,7 @@ object HuWithHun {
 
 
   def getKaoPai(cards: Array[Int], complete: util.List[util.List[CardGroup]], cardGroupList: util.List[CardGroup], hunNum: Int): Unit = {
-    count_hun +=1
+    count_hun += 1
     println("-----dai hun --- " + count_hun)
     for (i <- cards.indices if cards(i) != 0) {
       //凑将
