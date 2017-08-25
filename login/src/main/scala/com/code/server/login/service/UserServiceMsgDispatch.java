@@ -74,7 +74,7 @@ public class UserServiceMsgDispatch {
             case "setReplay":
                 return gameUserService.setReplay(msgKey, params.get("id").asLong());
             case "shareWX":
-                return gameUserService.shareWX(msgKey, params.get("game").asText());
+                return gameUserService.shareWX(msgKey, params.path("game").asText());
             case "getPrepareRoom":
                 return gameUserService.getPrepareRoom(msgKey);
 

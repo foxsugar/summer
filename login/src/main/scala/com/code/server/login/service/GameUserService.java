@@ -317,9 +317,11 @@ public class GameUserService {
         }
         int shareCount = userBean.getUserInfo().getShareWXCount();
         if (shareCount == 0) {
-            userBean.getUserInfo().setShareWXCount(shareCount + 1);
+            userBean.getUserInfo().setShareWXCount(shareCount + 2);
             //todo 充值记录
         }
+        ResponseVo vo = new ResponseVo("userService", "shareWX", 0);
+        sendMsg(msgKey, vo);
         return 0;
     }
 

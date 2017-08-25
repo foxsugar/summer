@@ -9,6 +9,7 @@ import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.timer.GameTimer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -176,6 +177,11 @@ public class RoomInfo extends Room {
         if (curGameNumber == 1) {
             spendMoney();
         }
+        //游戏开始 代建房 去除定时解散
+        if(!isOpen && !this.isCreaterJoin()){
+            GameTimer.removeNode(prepareRoomTimerNode);
+        }
+
         gameInfo.init(0, this.bankerId, this.users, this);
         gameInfo.fapai();
         this.game = gameInfo;
@@ -272,7 +278,7 @@ public class RoomInfo extends Room {
     }
 
 
-    protected int getCreateMoney() {
+    public static int getCreateMoney(String gameType , int gameNumber){
         int result = 0;
         if ("JC".equals(gameType)) {
             if (1 == gameNumber) {
@@ -298,6 +304,9 @@ public class RoomInfo extends Room {
             result = 3;
         }
         return result;
+    }
+    protected int getCreateMoney() {
+        return getCreateMoney(gameType, gameNumber);
     }
 
     public boolean isAddGold() {

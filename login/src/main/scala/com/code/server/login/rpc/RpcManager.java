@@ -16,6 +16,8 @@ import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
 import org.apache.thrift.TException;
 import org.apache.thrift.server.TServer;
+import org.apache.thrift.transport.TFramedTransport;
+import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
@@ -125,7 +127,9 @@ public class RpcManager {
 
     private static void charge(String ip, int id, int num) throws TException {
 
-        TTransport adminTransport = TransportManager.getTransport(ip, 9090);
+        TTransport adminTransport = new TFramedTransport(new TSocket(ip, 9090));
+        adminTransport.open();
+//        TTransport adminTransport = TransportManager.getTransport(ip, 9090);
 
         GameRPC.Client client = GameRpcClient.getAClient(adminTransport);
 //                    client.getUserInfo(1);
@@ -133,8 +137,12 @@ public class RpcManager {
         order.setUserId(id);
         order.setNum(num);
         order.setType(1);
-        client.charge(order);
+        int rtn = client.charge(order);
         adminTransport.close();
+        //充值成功
+        if(rtn == 0){
+            //todo 插入一条充值记录
+        }
     }
 
     private static void changeInit(String ip, int num) throws TException {
