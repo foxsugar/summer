@@ -30,11 +30,11 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
     private static final Map<Double,Integer> useMoney = new HashMap<>();
 
     static {
-        needMoney.put(20D,50);
-        needMoney.put(50D,200);
-        needMoney.put(100D,500);
+        needMoney.put(10D,60);
+        needMoney.put(50D,300);
+        needMoney.put(100D,1000);
 
-        useMoney.put(20D,2);
+        useMoney.put(10D,2);
         useMoney.put(50D,4);
         useMoney.put(100D,6);
     }
