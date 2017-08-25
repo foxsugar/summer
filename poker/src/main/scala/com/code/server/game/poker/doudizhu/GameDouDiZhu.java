@@ -766,4 +766,12 @@ public class GameDouDiZhu extends Game {
         this.tableScore = tableScore;
         return this;
     }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
 }
