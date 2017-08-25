@@ -11,6 +11,7 @@ import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.config.IConstant;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
+import com.code.server.util.timer.TimerNode;
 
 /**
  * Created by sunxianping on 2017/3/13.
@@ -68,7 +69,9 @@ public class RoomDouDiZhu extends Room {
         if(!isJoin){
             //给代建房 开房者 扣钱
             room.spendMoney();
-            GameTimer.addTimerNode(IConstant.HOUR_1,false,room::dissolutionRoom);
+            TimerNode prepareRoomNode = new TimerNode(System.currentTimeMillis(),IConstant.HOUR_1,false, room::dissolutionRoom);
+            room.prepareRoomTimerNode = prepareRoomNode;
+            GameTimer.addTimerNode(prepareRoomNode);
         }
 
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);

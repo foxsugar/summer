@@ -13,9 +13,9 @@ object HuWithHun {
 
   def test() = {
     val a = Array[Int](//                3, 2, 0, 0, 0, 0, 0, 0, 0,
-      3, 0, 0, 0, 0, 0, 0, 0, 0,
+      7, 0, 0, 0, 0, 0, 0, 0, 0,
+      3, 3, 1, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0,
-      2, 0, 3, 0, 3, 0, 3, 0, 0,
       0, 0, 0, 0,
       0, 0, 0)
     import java.util
@@ -32,7 +32,7 @@ object HuWithHun {
     Hu1.testHun(true, noHunCards, list, allList, groups)
 
     System.out.println("配好的 : " + list)
-
+    System.out.println("没配好的 : " + allList)
 
 
     //有配成的
@@ -59,32 +59,63 @@ object HuWithHun {
       println(list)
     }
     var complete: util.List[util.List[CardGroup]] = new util.ArrayList(list)
-    allList = Hu1.removeRepeat(allList)
+    //    allList = Hu1.removeRepeat(allList)
 
+    println("去重的 : " + allList)
 
 
     var temp: util.List[CardGroup] = new util.ArrayList()
     //没有凑成附子
     if (allList.size() == 0) {
       println("没有凑成附子")
-      getKaoPai(noHunCards, complete, temp, hunNum)
+
+      if(hunIsEnough(noHunCards,temp,hunNum)){
+        val remainCardNum = getCardNum(noHunCards)
+        val isHasJiang = Hu1.isHasJiang(temp)
+        val needGroupSize = 5 - temp.size
+        val need2HunNum = getNeed2HunNum(remainCardNum,hunNum,needGroupSize,isHasJiang)
+        getKaoPai(noHunCards, complete, temp, hunNum,need2HunNum)
+      }
+
+
     } else {
       for (cardGroupList <- allList.asScala) {
         var newCards = for (c <- noHunCards) yield c
-        val remainInfo = getRemainCards(newCards, cardGroupList)
-        getKaoPai(remainInfo._1, complete, cardGroupList, hunNum)
-        println("组成的一半: " + cardGroupList)
-        println("带混的最终牌型: " + complete)
+        val (cs, cdl) = getRemainCards(newCards, cardGroupList)
+        //是否可以胡的初次判断 混必须满足最少需求个数
+
+        val remainCardNum = getCardNum(cs)
+        if(hunIsEnough(cs,cdl,hunNum)){
+
+          val isHasJiang = Hu1.isHasJiang(cdl)
+          val needGroupSize = 5 - cdl.size
+          var need2HunNum = getNeed2HunNum(remainCardNum,hunNum,needGroupSize,isHasJiang)
+          println("两个混的数量 = "+need2HunNum)
+//          need2HunNum = 7
+//          getKaoPai(cs, complete, cardGroupList, hunNum,need2HunNum)
+          getKaoPai1(cs, complete, cardGroupList, hunNum)
+          println("组成的一半: " + cardGroupList)
+//          println("带混的最终牌型: " + complete)
+        }
       }
     }
-
+    complete = Hu1.removeRepeat(complete)
     println("==================================hun==============")
+    println(" 不是5 个附子的数量 = "+complete.stream().filter(l=>l.size()!=5).count())
     println(complete.size())
     println(complete)
 
   }
 
 
+  def hunIsEnough(cards:Array[Int], cardGroupList:util.List[CardGroup], hunNum:Int):Boolean = {
+    val cardNum = getCardNum(cards)
+    if(Hu1.isHasJiang(cardGroupList)){
+      hunNum >= cardNum/2
+    }else{
+      hunNum >= (cardNum-1)/2
+    }
+  }
   /**
     * 获得混牌的类型 (包括顺延的一张)
     *
@@ -192,15 +223,16 @@ object HuWithHun {
         cardgroup.add(0)
       }
 
+      result.add(cardgroup)
     }
     //混填充
     var index = rem
     for (i <- 0 until hunNum) {
-      result.get(index).add(1)
-      index += 1
-      if (index > needGroupNum) {
+      if (index >= needGroupNum) {
         index = 0
       }
+      result.get(index).add(1)
+      index += 1
     }
     //混的个数为2的
     var resultNum = 0
@@ -213,7 +245,7 @@ object HuWithHun {
   }
 
 
-  def getKaoPai(cards: Array[Int], complete: util.List[util.List[CardGroup]], cardGroupList: util.List[CardGroup], hunNum: Int): Unit = {
+  def getKaoPai(cards: Array[Int], complete: util.List[util.List[CardGroup]], cardGroupList: util.List[CardGroup], hunNum: Int , hun2Num:Int): Unit = {
     count_hun += 1
     println("-----dai hun --- " + count_hun)
     for (i <- cards.indices if cards(i) != 0) {
@@ -227,7 +259,7 @@ object HuWithHun {
         if (getCardNum(newCards) == 0) {
           Hu1.add2List(complete, newCardGroupList)
         } else {
-          getKaoPai(newCards, complete, newCardGroupList, hunNum - 1)
+          getKaoPai(newCards, complete, newCardGroupList, hunNum - 1,hun2Num)
         }
       }
 
@@ -243,7 +275,7 @@ object HuWithHun {
         if (getCardNum(newCards) == 0 && hunNum - 1 == 0) {
           Hu1.add2List(complete, newCardGroupList)
         } else {
-          getKaoPai(newCards, complete, newCardGroupList, hunNum - 2)
+          getKaoPai(newCards, complete, newCardGroupList, hunNum - 2,hun2Num)
         }
       }
 
@@ -259,7 +291,7 @@ object HuWithHun {
         if (getCardNum(newCards) == 0 && hunNum - 1 == 0) {
           Hu1.add2List(complete, newCardGroupList)
         } else {
-          getKaoPai(newCards, complete, newCardGroupList, hunNum - 1)
+          getKaoPai(newCards, complete, newCardGroupList, hunNum - 1,hun2Num)
         }
       }
 
@@ -274,7 +306,7 @@ object HuWithHun {
         if (getCardNum(newCards) == 0 && hunNum - 1 == 0) {
           Hu1.add2List(complete, newCardGroupList)
         } else {
-          getKaoPai(newCards, complete, newCardGroupList, hunNum - 1)
+          getKaoPai(newCards, complete, newCardGroupList, hunNum - 1,hun2Num)
         }
       }
 
@@ -289,12 +321,12 @@ object HuWithHun {
         if (getCardNum(newCards) == 0 && hunNum - 1 == 0) {
           Hu1.add2List(complete, newCardGroupList)
         } else {
-          getKaoPai(newCards, complete, newCardGroupList, hunNum - 1)
+          getKaoPai(newCards, complete, newCardGroupList, hunNum - 1,hun2Num)
         }
       }
 
       //两个混
-      if (hunNum > 1) {
+      if (hunNum > 1 && hun2Num >0) {
         var newCardGroupList = new util.ArrayList(cardGroupList)
         newCardGroupList.add(new CardGroup(Hu1.CARD_GROUP_TYPE_TWO_HUN, i, 2))
         var newCards = for (c <- cards) yield c
@@ -303,7 +335,136 @@ object HuWithHun {
         if (getCardNum(newCards) == 0 && hunNum - 2 == 0) {
           Hu1.add2List(complete, newCardGroupList)
         } else {
-          getKaoPai(newCards, complete, newCardGroupList, hunNum - 2)
+          getKaoPai(newCards, complete, newCardGroupList, hunNum - 2,hun2Num-1)
+        }
+      }
+
+      //两个混凑将
+
+      if (hunNum > 1 && !Hu1.isHasJiang(cardGroupList) && hun2Num>0) {
+        var newCardGroupList = new util.ArrayList(cardGroupList)
+        newCardGroupList.add(new CardGroup(Hu1.CARD_GROUP_TYPE_TWO_HUN_JIANG, i, 2))
+        var newCards = for (c <- cards) yield c
+
+        //数量
+        if (getCardNum(newCards) == 0 && hunNum - 2 == 0) {
+          Hu1.add2List(complete, newCardGroupList)
+        } else {
+          getKaoPai(newCards, complete, newCardGroupList, hunNum - 2,hun2Num-1)
+        }
+      }
+
+      //三个混
+      if (hunNum > 2 && hunNum - 3 == 0) {
+        var newCardGroupList = new util.ArrayList(cardGroupList)
+        newCardGroupList.add(new CardGroup(Hu1.CARD_GROUP_TYPE_THREE_HUN, i, 3))
+        var newCards = for (c <- cards) yield c
+
+        //数量
+        if (getCardNum(newCards) == 0) {
+          Hu1.add2List(complete, newCardGroupList)
+        } else {
+          getKaoPai(newCards, complete, newCardGroupList, hunNum - 3,hun2Num)
+        }
+      }
+
+
+    }
+
+  }
+
+
+  def getKaoPai1(cards: Array[Int], complete: util.List[util.List[CardGroup]], cardGroupList: util.List[CardGroup], hunNum: Int): Unit = {
+    count_hun += 1
+    println("-----dai hun --- " + count_hun)
+    for (i <- cards.indices if cards(i) != 0) {
+      //凑将
+      if (hunNum > 0 && cards(i) >= 1 && !Hu1.isHasJiang(cardGroupList)) {
+        var newCardGroupList = new util.ArrayList(cardGroupList)
+        newCardGroupList.add(new CardGroup(Hu1.CARD_GROUP_TYPE_JIANG, i, 1))
+        var newCards = for (c <- cards) yield c
+        newCards(i) -= 1
+        //数量
+        if (getCardNum(newCards) == 0) {
+          Hu1.add2List(complete, newCardGroupList)
+        } else {
+          getKaoPai1(newCards, complete, newCardGroupList, hunNum - 1)
+        }
+      }
+
+      //两张牌凑成顺
+
+      //凑刻
+      if (hunNum > 0 && cards(i) >= 2) {
+        var newCardGroupList = new util.ArrayList(cardGroupList)
+        newCardGroupList.add(new CardGroup(Hu1.CARD_GROUP_TYPE_KE, i, 1))
+        var newCards = for (c <- cards) yield c
+        newCards(i) -= 2
+        //数量
+        if (getCardNum(newCards) == 0 && hunNum - 1 == 0) {
+          Hu1.add2List(complete, newCardGroupList)
+        } else {
+          getKaoPai1(newCards, complete, newCardGroupList, hunNum - 2)
+        }
+      }
+
+
+      //凑顺 前
+      if (hunNum > 0 && isHasShun(i) && cards(i) >= 1 && cards(i + 1) >= 1 && i != 0 && i != 9 && i != 18) {
+        var newCardGroupList = new util.ArrayList(cardGroupList)
+        newCardGroupList.add(new CardGroup(Hu1.CARD_GROUP_TYPE_SHUN, i - 1, 1))
+        var newCards = for (c <- cards) yield c
+        newCards(i) -= 1
+        newCards(i + 1) -= 1
+        //数量
+        if (getCardNum(newCards) == 0 && hunNum - 1 == 0) {
+          Hu1.add2List(complete, newCardGroupList)
+        } else {
+          getKaoPai1(newCards, complete, newCardGroupList, hunNum - 1)
+        }
+      }
+
+      //凑顺 后
+      if (hunNum > 0 && isHasShun(i) && cards(i) >= 1 && cards(i + 1) >= 1) {
+        var newCardGroupList = new util.ArrayList(cardGroupList)
+        newCardGroupList.add(new CardGroup(Hu1.CARD_GROUP_TYPE_SHUN, i, 1))
+        var newCards = for (c <- cards) yield c
+        newCards(i) -= 1
+        newCards(i + 1) -= 1
+        //数量
+        if (getCardNum(newCards) == 0 && hunNum - 1 == 0) {
+          Hu1.add2List(complete, newCardGroupList)
+        } else {
+          getKaoPai1(newCards, complete, newCardGroupList, hunNum - 1)
+        }
+      }
+
+      //凑顺 中间
+      if (hunNum > 0 && isHasShun(i) && cards(i) >= 1 && cards(i + 2) >= 1) {
+        var newCardGroupList = new util.ArrayList(cardGroupList)
+        newCardGroupList.add(new CardGroup(Hu1.CARD_GROUP_TYPE_SHUN, i, 1))
+        var newCards = for (c <- cards) yield c
+        newCards(i) -= 1
+        newCards(i + 2) -= 1
+        //数量
+        if (getCardNum(newCards) == 0 && hunNum - 1 == 0) {
+          Hu1.add2List(complete, newCardGroupList)
+        } else {
+          getKaoPai1(newCards, complete, newCardGroupList, hunNum - 1)
+        }
+      }
+
+      //两个混
+      if (hunNum > 1 ) {
+        var newCardGroupList = new util.ArrayList(cardGroupList)
+        newCardGroupList.add(new CardGroup(Hu1.CARD_GROUP_TYPE_TWO_HUN, i, 2))
+        var newCards = for (c <- cards) yield c
+        newCards(i) -= 1
+        //数量
+        if (getCardNum(newCards) == 0 && hunNum - 2 == 0) {
+          Hu1.add2List(complete, newCardGroupList)
+        } else {
+          getKaoPai1(newCards, complete, newCardGroupList, hunNum - 2)
         }
       }
 
@@ -318,7 +479,7 @@ object HuWithHun {
         if (getCardNum(newCards) == 0 && hunNum - 2 == 0) {
           Hu1.add2List(complete, newCardGroupList)
         } else {
-          getKaoPai(newCards, complete, newCardGroupList, hunNum - 2)
+          getKaoPai1(newCards, complete, newCardGroupList, hunNum - 2)
         }
       }
 
@@ -332,7 +493,7 @@ object HuWithHun {
         if (getCardNum(newCards) == 0) {
           Hu1.add2List(complete, newCardGroupList)
         } else {
-          getKaoPai(newCards, complete, newCardGroupList, hunNum - 3)
+          getKaoPai1(newCards, complete, newCardGroupList, hunNum - 3)
         }
       }
 
@@ -340,7 +501,6 @@ object HuWithHun {
     }
 
   }
-
 
   /**
     * 是否有顺的初级判断

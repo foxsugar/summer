@@ -247,6 +247,8 @@ public class Hu1 {
         lists.sort((list1, list2) -> {
             if (list1.size() > list2.size()) {
                 return -1;
+            }else if(list1.size() == list2.size()){
+                return 0;
             } else {
                 return 1;
             }
@@ -457,7 +459,7 @@ public class Hu1 {
 
     public static boolean isHasJiang(List<CardGroup> list) {
         for (CardGroup cardGroup : list) {
-            if (cardGroup.huType == CARD_GROUP_TYPE_JIANG) {
+            if (cardGroup.huType == CARD_GROUP_TYPE_JIANG || cardGroup.huType == CARD_GROUP_TYPE_TWO_HUN_JIANG) {
                 return true;
             }
         }

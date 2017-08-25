@@ -199,22 +199,14 @@ object MahjongRoomService {
     if (!isCanCreate(modeTotal, mode, "" + multiple)) {
       return ErrorCode.CANNOT_CREATE_ROOM_PARAMETER_IS_ERROR
     }
+    val money: Double = RedisManager.getUserRedisService.getUserMoney(userId)
+    val need = RoomInfo.getCreateMoney(gameType, gameNumber)
+    if(money < need) {
+      return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY
+    }
+    RedisManager.getUserRedisService.addUserMoney(userId, -need)
     if ("LQ" == gameType) {
-      val money: Double = RedisManager.getUserRedisService.getUserMoney(userId)
-      if (8 == gameNumber) {
-        if (money < 30) {
-          return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY
-        }
-        RedisManager.getUserRedisService.addUserMoney(userId, -30)
-        RedisManager.addGold(userId, 3)
-      }
-      else if (16 == gameNumber) {
-        if (money < 60) {
-          return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY
-        }
-        RedisManager.getUserRedisService.addUserMoney(userId, -60)
-        RedisManager.addGold(userId, 6)
-      }
+      RedisManager.addGold(userId, need/10)
     }
     val (code, roomInfo) = createRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType, "2", false,roomType)
     if (code != 0) {
@@ -228,15 +220,10 @@ object MahjongRoomService {
         try {
           val roomInfo: RoomInfo = RoomManager.getRoom(roomId).asInstanceOf[RoomInfo]
           if (roomInfo != null && !roomInfo.isInGame && roomInfo.getCurGameNumber == 1) {
+            val need = RoomInfo.getCreateMoney(gameType, gameNumber)
+            RedisManager.getUserRedisService.addUserMoney(userId, need)
             if ("LQ" == roomInfo.getGameType) {
-              if (8 == roomInfo.getGameNumber) {
-                RedisManager.getUserRedisService.addUserMoney(userId, 30)
-                RedisManager.addGold(userId, -3)
-              }
-              else if (16 == roomInfo.getGameNumber) {
-                RedisManager.getUserRedisService.addUserMoney(userId, 60)
-                RedisManager.addGold(userId, -6)
-              }
+              RedisManager.addGold(userId, -need / 10)
             }
             RoomManager.removeRoom(roomInfo.getRoomId)
           }
@@ -248,7 +235,7 @@ object MahjongRoomService {
         }
       }
     })
-    roomInfo.setTimerNode(node)
+    roomInfo.setPrepareRoomTimerNode(node)
     GameTimer.addTimerNode(node)
     MsgSender.sendMsg2Player(new ResponseVo("mahjongRoomService", "createRoomButNotInRoom", roomInfo.toJSONObject), userId)
     return 0

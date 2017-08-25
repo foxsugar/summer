@@ -46,6 +46,7 @@ public class Room implements IfaceRoom {
     protected boolean isInGame;
     protected boolean isHasDissolutionRequest;
     protected transient TimerNode timerNode;
+    protected transient TimerNode prepareRoomTimerNode;
     protected Game game;
     protected int personNumber;
     protected boolean isOpen;
@@ -332,6 +333,10 @@ public class Room implements IfaceRoom {
         //扣钱
         if (!isOpen && isCreaterJoin) {
             spendMoney();
+        }
+        //游戏开始 代建房 去除定时解散
+        if(!isOpen && !this.isCreaterJoin()){
+            GameTimer.removeNode(prepareRoomTimerNode);
         }
         game.startGame(users, this);
         this.isOpen = true;
@@ -860,4 +865,12 @@ public class Room implements IfaceRoom {
         return this;
     }
 
+    public TimerNode getPrepareRoomTimerNode() {
+        return prepareRoomTimerNode;
+    }
+
+    public Room setPrepareRoomTimerNode(TimerNode prepareRoomTimerNode) {
+        this.prepareRoomTimerNode = prepareRoomTimerNode;
+        return this;
+    }
 }
