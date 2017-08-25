@@ -50,6 +50,7 @@ class GamePaijiuEndless extends GamePaijiu {
   override def gameOver(): Unit = {
     compute()
     sendResult()
+    genRecord()
     this.roomPaijiu.clearReadyStatus(true)
     val banker = playerCardInfos(bankerId)
     if (banker.score <= 0 || banker.score >= roomPaijiu.bankerInitScore * roomPaijiu.getUsers.size()) {

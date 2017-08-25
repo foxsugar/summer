@@ -234,11 +234,24 @@ class GamePaijiu extends Game with PaijiuConstant {
   protected def gameOver(): Unit = {
     compute()
     sendResult()
+    genRecord()
     this.roomPaijiu.clearReadyStatus(true)
     sendFinalResult()
 
   }
 
+
+  override protected def genRecord(): Unit = {
+
+    import com.code.server.util.IdWorker
+    val id = IdWorker.getDefaultInstance.nextId
+    val map = new util.HashMap[Long,java.lang.Double]()
+    for(playerInfo <- playerCardInfos){
+      map.put(playerInfo._2.userId, playerInfo._2.score)
+    }
+    genRecord(map, this.roomPaijiu, id)
+//    genRecord(playerCardInfos.values.toMap((playerInfo)=>))
+  }
 
   /**
     * 结算
