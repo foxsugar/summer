@@ -149,7 +149,7 @@ public class PlayerCardInfoDouDiZhuLinfen extends PlayerCardInfoDouDiZhu {
             if (len == 6 && CardUtil.getTypeByCard(cards.get(0)).intValue() == CardUtil.getTypeByCard(cards.get(len - 3)).intValue()
                     && CardUtil.getTypeByCard(cards.get(1)).intValue() == CardUtil.getTypeByCard(cards.get(len - 3)).intValue()
                     && CardUtil.getTypeByCard(cards.get(2)).intValue() == CardUtil.getTypeByCard(cards.get(len - 3)).intValue()
-                    && CardUtil.getTypeByCard(cards.get(len - 1)).intValue() != CardUtil.getTypeByCard(cards.get(len - 2)).intValue()) {
+                    ) {
                 return CardStruct.type_四带二;
             }
             List<Integer> cardList = new ArrayList<>();
@@ -168,7 +168,7 @@ public class PlayerCardInfoDouDiZhuLinfen extends PlayerCardInfoDouDiZhu {
                     && getFeiJi(cardList) && getShunDel2DaXiao(cards)) {
                 return CardStruct.type_飞机;
             }
-            if (getFeiJiChiBang(cardList) && getShunDel2DaXiao(cards)) {
+            if (getFeiJiChiBang(cardList)) {
                 return CardStruct.type_飞机带翅膀;
             } else {
                 return 0;
