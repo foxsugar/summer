@@ -28,9 +28,9 @@ public class GameRpcHandler implements GameRPC.AsyncIface {
     public void charge(Order order, AsyncMethodCallback<Integer> resultHandler) throws TException {
         long userId = order.getUserId();
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        UserService userService = SpringUtil.getBean(UserService.class);
+        User user = userService.getUserByUserId(userId);
         if (userBean == null) {
-            UserService userService = SpringUtil.getBean(UserService.class);
-            User user = userService.getUserByUserId(userId);
             if (user != null) {
                 if (order.getType() == ChargeType.money.getValue()) {
                     user.setMoney(user.getMoney() + order.getNum());
@@ -44,7 +44,9 @@ public class GameRpcHandler implements GameRPC.AsyncIface {
 
         } else {//在redis里
             if (order.getType() == ChargeType.money.getValue()) {
-                RedisManager.getUserRedisService().addUserMoney(userId, order.getNum());
+                double nowMoney = RedisManager.getUserRedisService().addUserMoney(userId, order.getNum());
+                user.setMoney(nowMoney);
+                userService.save(user);
             } else if (order.getType() == ChargeType.gold.getValue()) {
                 RedisManager.addGold(userId, order.getNum());
             }
