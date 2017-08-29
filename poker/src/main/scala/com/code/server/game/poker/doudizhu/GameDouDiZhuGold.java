@@ -12,6 +12,7 @@ import com.code.server.redis.service.RedisManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by sunxianping on 2017/3/13.
@@ -242,5 +243,18 @@ public class GameDouDiZhuGold extends GameDouDiZhu {
         updateLastOperateTime();
         //通知其他人游戏已经开始
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameBegin", "ok"), this.getUsers());
+    }
+
+    @Override
+    protected void handleBomb(CardStruct cardStruct) {
+
+        if (cardStruct.getType() == CardStruct.type_炸) {
+        List<Integer> cards = cardStruct.getCards();
+        zhaCount += 1;//记录炸的数量
+        multiple *= 2;//记录倍数
+        } else if (cardStruct.getType() == CardStruct.type_火箭) {
+            zhaCount += 1;//记录炸的数量
+            multiple *= 2;//记录倍数
+        }
     }
 }
