@@ -3,6 +3,8 @@ package com.code.server.game.poker;
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.exception.RegisterFailedException;
 import com.code.server.game.poker.config.ServerConfig;
+import com.code.server.game.poker.doudizhu.DouDiZhuGoldRobot;
+import com.code.server.game.poker.robot.RobotManager;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
@@ -30,6 +32,12 @@ public class PokerApplication {
 		ThreadPool.execute(GameTimer.getInstance()::fire);
 		//心跳
 		GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), IConstant.SECOND_5,true,()->RedisManager.getGameRedisService().heart(serverConfig.getServerId())));
+
+		//机器人线程
+		RobotManager robotManager = RobotManager.getInstance();
+		//添加斗地主的机器人
+		robotManager.addRobot(new DouDiZhuGoldRobot());
+		ThreadPool.getInstance().executor.execute(robotManager);
 
 //		MsgConsumer.startAConsumer("gameService", serverConfig.getServerId(), MsgDispatch::dispatch);
 //		MsgConsumer.startAConsumer("reconnService", serverConfig.getServerId(), MsgDispatch::dispatch);
