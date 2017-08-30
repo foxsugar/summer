@@ -798,6 +798,19 @@ public class GameInfo extends Game {
         return 0;
     }
 
+    /**
+     * 设置庄家
+     * @param winnerId
+     */
+    private void setBanker(long winnerId){
+        if(winnerId == this.getFirstTurn()){
+
+            room.setBankerId(winnerId);
+        }else {
+           long nextId = nextTurnId(this.getFirstTurn());
+            room.setBankerId(nextId);
+        }
+    }
 
     /**
      * 胡牌
@@ -822,7 +835,8 @@ public class GameInfo extends Game {
             if (!playerCardsInfo.isCanHu_zimo(catchCard)) {
                 return ErrorCode.CAN_NOT_HU;
             }
-            room.setBankerId(userId);
+
+            setBanker(userId);
             playerCardsInfo.hu_zm(room, this, catchCard);
             //回放
             replay.getOperate().add(operateReqResp);
@@ -841,7 +855,7 @@ public class GameInfo extends Game {
             if (!playerCardsInfo.isCanHu_dianpao(card)) {
                 return ErrorCode.CAN_NOT_HU;
             }
-            room.setBankerId(userId);
+            setBanker(userId);
             //从等待列表删除
 //            if (waitingforList.size() > 0) {
             WaitDetail waitDetail = waitingforList.get(0);

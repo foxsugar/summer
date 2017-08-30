@@ -1,5 +1,7 @@
 package com.code.server.game.mahjong.logic;
 
+import com.code.server.game.mahjong.util.HuUtil;
+
 import java.util.List;
 
 /**
@@ -14,7 +16,20 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
     @Override
     public boolean isCanHu_zimo(String card) {
-        return super.isCanHu_zimo(card);
+
+        List<String> cs = getCardsNoChiPengGang(cards);
+        System.out.println("检测是否可胡自摸= " + cs);
+        int cardType = CardTypeUtil.cardType.get(card);
+
+        return HuUtil.isHu(cs, this,cardType , null).size()>0;
+
+    }
+
+    private boolean isGangKai(){
+
+        int size = this.operateList.size();
+
+        return size != 0 && this.operateList.get(size - 1) == type_gang;
     }
 
 

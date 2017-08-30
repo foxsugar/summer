@@ -245,8 +245,8 @@ public class HuUtil implements HuType {
         List<List<CardGroup>> list = new ArrayList();
         List<CardGroup> groups = new ArrayList<>();
         boolean isHasF = isHasFengShun.length != 0 && isHasFengShun[0];
-        Hu1.test1(n,list,groups,isHasF);
-        return Hu1.convert(list);
+        Hu.isHu(n,list,groups,isHasF);
+        return Hu.convert(list);
 //        for (int i = 0; i < 34; i++) {
 //
 //            for (int ke_first = 0; ke_first < 2; ke_first++) {

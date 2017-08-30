@@ -558,6 +558,7 @@ public class RoomInfo extends Room {
         return this;
     }
 
+
     @Override
     public IfaceRoomVo toVo(long userId) {
         RoomInfoVo roomVo = new RoomInfoVo();

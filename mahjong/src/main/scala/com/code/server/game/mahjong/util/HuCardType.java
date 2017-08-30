@@ -20,6 +20,9 @@ public class HuCardType implements HuType {
     public Set<Integer> anGang = new HashSet<>();
     public List<Integer> shun = new ArrayList<>();//顺中的第一个
     public List<Integer> ke = new ArrayList<>();
+    public List<Integer> hun2 = new ArrayList<>();
+    public List<Integer> hun3 = new ArrayList<>();
+    public boolean hunJiang = false;
     public int jiang = -1;
 
     public List<List<Integer>> feng_shun = new ArrayList<>();
@@ -102,16 +105,20 @@ public class HuCardType implements HuType {
 
     @Override
     public String toString() {
-        return "jiang = " + jiang +
-                "\nfeng = " + feng_shun +
-                "\nzi = " + zi_shun +
-                "\npeng = " + peng +
-                "\nmingGang = " + mingGang +
-                "\nanGang = " + anGang +
-                "\nshun = " + shun +
-                "\nke = " + ke +
-                "\nchi = " + chi
-                ;
+        return "HuCardType{" +
+                "chi=" + chi +
+                ", peng=" + peng +
+                ", mingGang=" + mingGang +
+                ", anGang=" + anGang +
+                ", shun=" + shun +
+                ", ke=" + ke +
+                ", hun2=" + hun2 +
+                ", hun3=" + hun3 +
+                ", hunJiang=" + hunJiang +
+                ", jiang=" + jiang +
+                ", feng_shun=" + feng_shun +
+                ", zi_shun=" + zi_shun +
+                '}';
     }
 
     public Set<Integer> getPeng() {
@@ -214,6 +221,33 @@ public class HuCardType implements HuType {
 
     public HuCardType setCheckYiZhangying(boolean checkYiZhangying) {
         isCheckYiZhangying = checkYiZhangying;
+        return this;
+    }
+
+    public List<Integer> getHun2() {
+        return hun2;
+    }
+
+    public HuCardType setHun2(List<Integer> hun2) {
+        this.hun2 = hun2;
+        return this;
+    }
+
+    public List<Integer> getHun3() {
+        return hun3;
+    }
+
+    public HuCardType setHun3(List<Integer> hun3) {
+        this.hun3 = hun3;
+        return this;
+    }
+
+    public boolean isHunJiang() {
+        return hunJiang;
+    }
+
+    public HuCardType setHunJiang(boolean hunJiang) {
+        this.hunJiang = hunJiang;
         return this;
     }
 }
