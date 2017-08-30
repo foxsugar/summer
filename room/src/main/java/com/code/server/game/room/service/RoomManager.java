@@ -74,9 +74,13 @@ public class RoomManager {
         ArrayList<Room> templist = new ArrayList<>();
         templist.addAll(list);
         if (list != null) {
-            templist.remove(room);
+            for (Room m:list) {
+                if(m.getRoomId().equals(room.getRoomId())){
+                    templist.remove(m);
+                }
+            }
         }
-        templist.add(room);
+        //templist.add(room);
         fullGoldRoom.put(room.getGoldRoomType(),templist);
 
         List<Room> fulllist = notFullGoldRoom.get(room.getGoldRoomType());
@@ -87,10 +91,16 @@ public class RoomManager {
 
     public static void removeRoomFromMap(Room room){
         List<Room> list = notFullGoldRoom.get(room.getGoldRoomType());
+        ArrayList<Room> templist = new ArrayList<>();
+        templist.addAll(list);
         if (list != null) {
-            list.remove(room);
+            for (Room m:list) {
+                if(m.getRoomId().equals(room.getRoomId())){
+                    templist.remove(m);
+                }
+            }
         }
-        notFullGoldRoom.put(room.getGoldRoomType(),list);
+        notFullGoldRoom.put(room.getGoldRoomType(),templist);
     }
 
     public static void removeRoom(String roomId) {
