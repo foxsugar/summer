@@ -98,7 +98,7 @@ public class GameDouDiZhuGold extends GameDouDiZhu {
             }else{
                 RedisManager.getUserRedisService().addUserMoney(tempList.get(1), person2OfGame);
                 RedisManager.getUserRedisService().addUserMoney(dizhu, -person2OfGame);
-                this.room.getUserScores().put(tempList.get(1),-person2OfGame);
+                this.room.getUserScores().put(tempList.get(1),person2OfGame);
                 this.room.getUserScores().put(dizhu,this.room.getUserScores().get(dizhu)-person2OfGame);
             }
 
