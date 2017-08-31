@@ -419,6 +419,7 @@ public class RoomInfo extends Room {
         result.put("personNumber", this.personNumber);
         result.put("createUser", this.createUser);
         result.put("userList", RedisManager.getUserRedisService().getUserBeans(this.users));
+        result.put("mustZimo",this.mustZimo);
         result.put("each", this.each);//1是4个分开付，0是user付
 
 
@@ -561,6 +562,13 @@ public class RoomInfo extends Room {
         return this;
     }
 
+    public int getMustZimo() {
+        return mustZimo;
+    }
+
+    public void setMustZimo(int mustZimo) {
+        this.mustZimo = mustZimo;
+    }
 
     @Override
     public IfaceRoomVo toVo(long userId) {
@@ -602,6 +610,7 @@ public class RoomInfo extends Room {
         prepareRoom.gameNumber = this.gameNumber;
         prepareRoom.mode = this.mode;
         prepareRoom.modeTotal = this.modeTotal;
+        prepareRoom.mustZimo = this.mustZimo;
         return prepareRoom;
     }
 }

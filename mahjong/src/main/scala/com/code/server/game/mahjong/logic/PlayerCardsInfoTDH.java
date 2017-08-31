@@ -53,20 +53,15 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 
 	@Override
 	public boolean isCanHu_zimo(String card) {
-
 		if("11".equals(this.roomInfo.getMode())||"12".equals(this.roomInfo.getMode())||"13".equals(this.roomInfo.getMode())||"14".equals(this.roomInfo.getMode())){
 			if (!isTing){
 				return false;
 			}
 		}
-		if (!isTing) {
-			return false;
-		}
 		List<String> cs = getCardsNoChiPengGang(cards);
 		System.out.println("检测是否可胡自摸= " + cs);
 		int cardType = CardTypeUtil.cardType.get(card);
 		return HuUtil.isHu(cs, this,cardType , null).size()>0;
-
 	}
 
 
