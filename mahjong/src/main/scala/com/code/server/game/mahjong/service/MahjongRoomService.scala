@@ -54,7 +54,7 @@ object MahjongRoomService {
         val personNumber: Int = paramsjSONObject.get("personNumber").asInt
         val gameType: String = paramsjSONObject.get("gameType").asText
         val roomType = paramsjSONObject.get("roomType").asText()
-        val mustZimo: Int = paramsjSONObject.get("mustZimo").asInt
+        val mustZimo: Int = paramsjSONObject.path("mustZimo").asInt
         code = createRoomButNotInRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType,roomType,mustZimo)
 
       }
