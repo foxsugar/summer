@@ -397,6 +397,14 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
      * @return
      */
     public boolean isCanHu_dianpao(String card) {
+        if(roomInfo.mustZimo==1){
+            return false;
+        }
+        if("11".equals(this.roomInfo.getMode())||"12".equals(this.roomInfo.getMode())||"13".equals(this.roomInfo.getMode())||"14".equals(this.roomInfo.getMode())){
+            if (!isTing){
+                return false;
+            }
+        }
         List<String> temp = getCardsAddThisCard(card);
         List<String> noPengAndGang = getCardsNoChiPengGang(temp);
         System.out.println("检测是否可胡点炮= " + noPengAndGang);
@@ -410,6 +418,11 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
      * @return
      */
     public boolean isCanHu_zimo(String card) {
+        if("11".equals(this.roomInfo.getMode())||"12".equals(this.roomInfo.getMode())||"13".equals(this.roomInfo.getMode())||"14".equals(this.roomInfo.getMode())){
+            if (!isTing){
+                return false;
+            }
+        }
         List<String> cs = getCardsNoChiPengGang(cards);
         System.out.println("检测是否可胡自摸= " + cs);
         int cardType = CardTypeUtil.cardType.get(card);

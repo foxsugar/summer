@@ -87,7 +87,7 @@ public class GameInfo extends Game {
         this.cardSize = 13;
         this.playerSize = room.getPersonNumber();
         //不带风
-        if ("3".equals(room.getMode()) || "4".equals(room.getMode())) {
+        if ("3".equals(room.getMode()) || "4".equals(room.getMode())||"13".equals(room.getMode())||"14".equals(room.getMode())) {
             remainCards.removeAll(CardTypeUtil.FENG_CARD);
             remainCards.removeAll(CardTypeUtil.ZI_CARD);
         } else if (GSJ_NOFENG.equals(room.getMode())) {

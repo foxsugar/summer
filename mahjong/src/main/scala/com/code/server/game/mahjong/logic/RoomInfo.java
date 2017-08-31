@@ -40,6 +40,8 @@ public class RoomInfo extends Room {
 
     protected String each = "";//4人平分房卡
 
+    protected int  mustZimo = 0;//是否必须自摸，1是0否
+
     public String getEach() {
         return each;
     }
@@ -64,7 +66,7 @@ public class RoomInfo extends Room {
      * @Creater: Clark
      * @Description: 创建房间
      */
-    public void init(String roomId, long userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, long createUser, long bankerId) {
+    public void init(String roomId, long userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, long createUser, long bankerId,int mustZimo) {
         this.roomId = roomId;
         this.modeTotal = modeTotal;
         this.mode = mode;
@@ -77,6 +79,7 @@ public class RoomInfo extends Room {
         this.bankerMap.put(1, bankerId);
         this.maxCircle = gameNumber;
         this.circleNumber.put(1, 1);
+        this.mustZimo = mustZimo;
     }
 
 
