@@ -276,7 +276,7 @@ public class GameUserService {
 
         //充值记录
         Charge charge = new Charge();
-        charge.setRecharge_source("5");
+        charge.setRecharge_source(""+IChargeType.BIND_REFERRER);
         charge.setUserid(userBean.getId());
         charge.setUsername(userBean.getUsername());
         charge.setStatus(1);
@@ -338,6 +338,7 @@ public class GameUserService {
         //分享记录
         Charge charge = new Charge();
         charge.setOrderId("" + IdWorker.getDefaultInstance().nextId());
+        charge.setUsername(userBean.getUsername());
         charge.setMoney(money);
         charge.setMoney_point(money);
         charge.setCreatetime(new Date());

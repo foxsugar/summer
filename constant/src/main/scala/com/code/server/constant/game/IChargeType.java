@@ -6,4 +6,5 @@ package com.code.server.constant.game;
 public interface IChargeType {
     int WX = 1;
     int SHARE = 3;
+    int BIND_REFERRER = 5;
 }
