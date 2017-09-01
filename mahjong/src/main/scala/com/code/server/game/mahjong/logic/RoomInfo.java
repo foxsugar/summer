@@ -40,8 +40,6 @@ public class RoomInfo extends Room {
 
     protected String each = "";//4人平分房卡
 
-    protected int  mustZimo = 0;//是否必须自摸，1是0否
-
     public String getEach() {
         return each;
     }
@@ -591,6 +589,7 @@ public class RoomInfo extends Room {
         roomVo.setMode(this.getMode());
         roomVo.setModeTotal(this.getModeTotal());
         roomVo.setEach(this.getEach());
+        roomVo.setMustZimo(this.mustZimo);
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.getGame() != null) {
             roomVo.game = this.game.toVo(userId);

@@ -37,7 +37,17 @@ public class RoomVo implements IfaceRoomVo {
     public long dissloutionUser = -1;
     public boolean isOpen;
 
+    public int mustZimo = 0;
+
     public RoomVo() {
+    }
+
+    public int getMustZimo() {
+        return mustZimo;
+    }
+
+    public void setMustZimo(int mustZimo) {
+        this.mustZimo = mustZimo;
     }
 
     public String getRoomType() {

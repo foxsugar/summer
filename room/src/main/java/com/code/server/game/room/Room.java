@@ -60,7 +60,7 @@ public class Room implements IfaceRoom {
     protected boolean isCreaterJoin = true;//是否是代开房
     protected boolean isAddGold;
     protected Map<Long, RoomStatistics> roomStatisticsMap = new HashMap<>();//统计
-
+    public int mustZimo = 0;//1是0否
 
     public static int joinRoomQuick(MsgSender player, int type) {
 
@@ -573,6 +573,7 @@ public class Room implements IfaceRoom {
             long time = this.getTimerNode().getStart() + this.getTimerNode().getInterval() - System.currentTimeMillis();
             roomVo.setRemainTime(time);
         }
+
         return roomVo;
     }
 
@@ -863,6 +864,14 @@ public class Room implements IfaceRoom {
     public Room setOpen(boolean open) {
         isOpen = open;
         return this;
+    }
+
+    public int getMustZimo() {
+        return mustZimo;
+    }
+
+    public void setMustZimo(int mustZimo) {
+        this.mustZimo = mustZimo;
     }
 
     public TimerNode getPrepareRoomTimerNode() {
