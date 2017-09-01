@@ -52,5 +52,23 @@ public interface HuType {
     int hu_直对 = 55;
     int hu_海底捞 = 56;
 
+
     int hu_吊将 = 60;
+
+    int hu_捉五 = 70;
+    int hu_混儿吊捉五 = 71;
+
+    int hu_龙 = 80;
+    int hu_本混龙 = 81;
+
+    int hu_捉五龙 = 90;
+    int hu_本混捉五龙 = 91;
+
+    int hu_混儿吊龙 = 100;
+    int hu_混儿吊本混龙 = 101;
+
+    int hu_混儿吊捉五龙 = 110;
+    int hu_混儿吊捉五本混龙 = 111;
+
+
 }
