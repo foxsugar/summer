@@ -329,11 +329,16 @@ public class GameUserService {
 
         double money = getShareMoney(game);
         int shareCount = userBean.getUserInfo().getShareWXCount();
-        userBean.getUserInfo().setShareWXCount(shareCount + 1);
+
         //加钱
-        RedisManager.getUserRedisService().addUserMoney(msgKey.getUserId(), money);
+        double nowMoney = RedisManager.getUserRedisService().addUserMoney(msgKey.getUserId(), money);
+        userBean.setMoney(nowMoney);
         //分享时间
         userBean.getUserInfo().setLastShareTime(now);
+        //分享次数
+        userBean.getUserInfo().setShareWXCount(shareCount + 1);
+        //保存
+        RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
 
         //分享记录
         Charge charge = new Charge();
@@ -347,7 +352,6 @@ public class GameUserService {
         charge.setStatus(1);
         chargeService.save(charge);
 
-
         ResponseVo vo = new ResponseVo("userService", "shareWX", 0);
         sendMsg(msgKey, vo);
         return 0;
@@ -360,6 +364,8 @@ public class GameUserService {
      * @return
      */
     private static double getShareMoney(String projectName) {
+        //todo 从constant里读取
+        ServerManager.constant.getShareMoney();
         switch (projectName) {
             case IProjectName.JINGNAN:
                 return 2;
