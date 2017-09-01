@@ -493,7 +493,8 @@ private static void change(){
 //        playerCardsInfo.isHasShuye = true;
 //        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","042","124","135"};
 //        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","134","042","124","135"};
-        String[] s = new String[]{"000","001","002",     "036",  "037","038",    "052", "053","054",    "080","081","082",    "112","113"};
+        String[] s = new String[]{"000","001","002",     "008",  "009","010",    "020", "021","022",    "024","028","032",    "106","107"};
+//        String[] s = new String[]{"000","001","002",     "036",  "037","038",    "052", "053","054",    "080","081","082",    "112","113"};
 
 //        String[] s = new String[]{"076","077","078",     "080",  "084","085",    "088", "089","090",    "092","093","096",    "100","101"};
 
@@ -502,6 +503,7 @@ private static void change(){
         playerCardsInfo.init(playerCardsInfo.cards);
         List<String> list = Arrays.asList(s);
         playerCardsInfo.cards.addAll(list);
+        System.out.println("!!!!!!!!!!!!"+HuUtil.isHu(list,playerCardsInfo,0,new HuLimit(0)));
 //        playerCardsInfo.anGangType.add(24);
 //        playerCardsInfo.mingGangType.put(0,1);
 //        playerCardsInfo.pengType.put(0,1);

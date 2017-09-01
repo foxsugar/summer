@@ -10,5 +10,6 @@ public class PrepareRoom {
     public long createTime;
     public int multiple;
     public int gameNumber;
+    public int mustZimo;
 
 }

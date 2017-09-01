@@ -64,7 +64,7 @@ public class RoomInfo extends Room {
      * @Creater: Clark
      * @Description: 创建房间
      */
-    public void init(String roomId, long userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, long createUser, long bankerId) {
+    public void init(String roomId, long userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, long createUser, long bankerId,int mustZimo) {
         this.roomId = roomId;
         this.modeTotal = modeTotal;
         this.mode = mode;
@@ -77,6 +77,7 @@ public class RoomInfo extends Room {
         this.bankerMap.put(1, bankerId);
         this.maxCircle = gameNumber;
         this.circleNumber.put(1, 1);
+        this.mustZimo = mustZimo;
     }
 
 
@@ -416,6 +417,7 @@ public class RoomInfo extends Room {
         result.put("personNumber", this.personNumber);
         result.put("createUser", this.createUser);
         result.put("userList", RedisManager.getUserRedisService().getUserBeans(this.users));
+        result.put("mustZimo",this.mustZimo);
         result.put("each", this.each);//1是4个分开付，0是user付
 
 
@@ -558,6 +560,13 @@ public class RoomInfo extends Room {
         return this;
     }
 
+    public int getMustZimo() {
+        return mustZimo;
+    }
+
+    public void setMustZimo(int mustZimo) {
+        this.mustZimo = mustZimo;
+    }
 
     @Override
     public IfaceRoomVo toVo(long userId) {
@@ -580,6 +589,7 @@ public class RoomInfo extends Room {
         roomVo.setMode(this.getMode());
         roomVo.setModeTotal(this.getModeTotal());
         roomVo.setEach(this.getEach());
+        roomVo.setMustZimo(this.mustZimo);
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.getGame() != null) {
             roomVo.game = this.game.toVo(userId);
@@ -599,6 +609,7 @@ public class RoomInfo extends Room {
         prepareRoom.gameNumber = this.gameNumber;
         prepareRoom.mode = this.mode;
         prepareRoom.modeTotal = this.modeTotal;
+        prepareRoom.mustZimo = this.mustZimo;
         return prepareRoom;
     }
 }

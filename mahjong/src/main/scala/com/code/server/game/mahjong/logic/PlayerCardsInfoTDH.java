@@ -31,9 +31,40 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 	}
 
 	@Override
-	public boolean isCanTing(List<String> cards) {
-		return false;
+	public boolean isCanPengAddThisCard(String card) {
+		//听之后不能碰牌
+		if (isTing) {
+			return false;
+		}
+		return super.isCanPengAddThisCard(card);
 	}
+
+	@Override
+	public boolean isCanTing(List<String> cards) {
+		if (isTing) {
+			return false;
+		}
+		if("1".equals(this.roomInfo.getMode())||"2".equals(this.roomInfo.getMode())||"3".equals(this.roomInfo.getMode())||"4".equals(this.roomInfo.getMode())){
+			return false;
+		}else{
+			return getTingCardType(getCardsNoChiPengGang(cards),null).size()>0;
+		}
+	}
+
+	@Override
+	public boolean isCanHu_zimo(String card) {
+		if("11".equals(this.roomInfo.getMode())||"12".equals(this.roomInfo.getMode())||"13".equals(this.roomInfo.getMode())||"14".equals(this.roomInfo.getMode())){
+			if (!isTing){
+				return false;
+			}
+		}
+		List<String> cs = getCardsNoChiPengGang(cards);
+		System.out.println("检测是否可胡自摸= " + cs);
+		int cardType = CardTypeUtil.cardType.get(card);
+		return HuUtil.isHu(cs, this,cardType , null).size()>0;
+	}
+
+
 	public boolean isHasChi(String card){
 		return false;
 	}
@@ -179,7 +210,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 
 		else if(this.roomInfo.getGameType().equals("HL")){
 			if(isZimo){
-				if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3"))){//平胡
+				if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3")||room.getMode().equals("11")||room.getMode().equals("13"))){//平胡
 					for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
 						gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
 						room.setUserSocre(i, - 2 * room.getMultiple());
@@ -188,7 +219,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 					room.setUserSocre(this.userId, 2 * room.getPersonNumber() * room.getMultiple());
 					this.fan = 2;
 //        			this.winType.add(HuType.hu_普通胡);
-				}else if(room.getModeTotal().equals("2") && (room.getMode().equals("2")||room.getMode().equals("4"))){//大胡
+				}else if(room.getModeTotal().equals("2") && (room.getMode().equals("2")||room.getMode().equals("4")||room.getMode().equals("12")||room.getMode().equals("14"))){//大胡
 					if(3==MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)+"")){
 						for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
 							gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
@@ -210,14 +241,14 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 				}
 			}
 			else{
-				if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3"))){//平胡
+				if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3")||room.getMode().equals("11")||room.getMode().equals("13"))){//平胡
 					gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 3 * room.getMultiple());
 					this.score = this.score + 3 * room.getMultiple();
 					room.setUserSocre(dianpaoUser, - 3 * room.getMultiple());
 					room.setUserSocre(this.userId, 3 * room.getMultiple());
 					this.fan = 3;
 //        			this.winType.add(HuType.hu_普通胡);
-				}else if(room.getModeTotal().equals("2") && (room.getMode().equals("2")||room.getMode().equals("4"))){//大胡
+				}else if(room.getModeTotal().equals("2") && (room.getMode().equals("2")||room.getMode().equals("4")||room.getMode().equals("12")||room.getMode().equals("14"))){//大胡
 					gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)));
 					this.score = this.score + room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType));
 					room.setUserSocre(dianpaoUser, - room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)));
