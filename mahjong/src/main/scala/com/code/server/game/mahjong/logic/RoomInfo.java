@@ -83,6 +83,9 @@ public class RoomInfo extends Room {
 
     @Override
     protected boolean isCanJoinCheckMoney(long userId) {
+        if(!isCreaterJoin){
+            return true;
+        }
         double money = RedisManager.getUserRedisService().getUserMoney(userId);
         if (userId == createUser) {
             if ("SY".equals(gameType)) {
