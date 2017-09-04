@@ -8,6 +8,7 @@ public class UserInfo {
 
     private int playGameTime = 0;
     private int shareWXCount = 0;
+    private long lastShareTime = 0;
 
     public int getTotalPlayGameNumber() {
         return totalPlayGameNumber;
@@ -33,6 +34,15 @@ public class UserInfo {
 
     public UserInfo setShareWXCount(int shareWXCount) {
         this.shareWXCount = shareWXCount;
+        return this;
+    }
+
+    public long getLastShareTime() {
+        return lastShareTime;
+    }
+
+    public UserInfo setLastShareTime(long lastShareTime) {
+        this.lastShareTime = lastShareTime;
         return this;
     }
 }

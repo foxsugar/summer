@@ -485,14 +485,16 @@ private static void change(){
     public static void main(String[] args) {
         System.out.println(isHasMode("0",MODE_YIMENPAI));
         change();
-        PlayerCardsInfoSZ_LQ playerCardsInfo = new PlayerCardsInfoSZ_LQ();
+//        PlayerCardsInfoSZ_LQ playerCardsInfo = new PlayerCardsInfoSZ_LQ();
+        PlayerCardsInfoTDH playerCardsInfo = new PlayerCardsInfoTDH();
         playerCardsInfo.isHasFengShun = true;
 
-        playerCardsInfo.isHasYimenpai = true;
-        playerCardsInfo.isHasShuye = true;
+//        playerCardsInfo.isHasYimenpai = true;
+//        playerCardsInfo.isHasShuye = true;
 //        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","042","124","135"};
 //        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","134","042","124","135"};
         String[] s = new String[]{"000","001","002",     "008",  "009","010",    "020", "021","022",    "024","028","032",    "106","107"};
+//        String[] s = new String[]{"000","001","002",     "036",  "037","038",    "052", "053","054",    "080","081","082",    "112","113"};
 
 //        String[] s = new String[]{"076","077","078",     "080",  "084","085",    "088", "089","090",    "092","093","096",    "100","101"};
 
@@ -522,8 +524,8 @@ private static void change(){
 //        playerCardsInfo.tingSet.add(15);
 //        System.out.println(playerCardsInfo.isCanTing());
 //        System.out.println("==="+playerCardsInfo.getYiZhangYingSet(playerCardsInfo.getCardsNoChiPengGang(temp),null));
-//        System.out.println(playerCardsInfo.isCanHu_zimo("088"));
-        System.out.println(playerCardsInfo.isCanTing(playerCardsInfo.cards));
+        System.out.println(playerCardsInfo.isCanHu_zimo("113"));
+//        System.out.println(playerCardsInfo.isCanTing(playerCardsInfo.cards));
 //        List<String> cs = playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.getCards());
 //        int cardType = CardTypeUtil.getTypeByCard("060");
 //        HuUtil.isHu(cs, playerCardsInfo, CardTypeUtil.cardType.get("060"), new HuLimit(3));

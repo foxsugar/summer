@@ -1,9 +1,7 @@
 package com.code.server.login.service;
 
 
-import com.code.server.constant.game.PrepareRoom;
-import com.code.server.constant.game.Record;
-import com.code.server.constant.game.UserBean;
+import com.code.server.constant.game.*;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
@@ -21,6 +19,7 @@ import com.code.server.kafka.MsgProducer;
 import com.code.server.login.rpc.RpcManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
+import com.code.server.util.DateUtil;
 import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import org.springframework.beans.BeanUtils;
@@ -51,6 +50,9 @@ public class GameUserService {
 
     @Autowired
     UserRecordService userRecordService;
+
+    @Autowired
+    ChargeService chargeService;
 
     /**
      * 给人充钱
@@ -110,7 +112,7 @@ public class GameUserService {
 
     public static UserBean user2userBean(User user) {
         UserBean userBean = new UserBean();
-        BeanUtils.copyProperties(user,userBean);
+        BeanUtils.copyProperties(user, userBean);
 //        userBean.setId(user.getId());
 //        userBean.setUsername(user.getUsername());
 //        userBean.setImage(user.getImage());
@@ -131,7 +133,7 @@ public class GameUserService {
     public static User userBean2User(UserBean userBean) {
         User user = new User();
 
-        BeanUtils.copyProperties(userBean,user);
+        BeanUtils.copyProperties(userBean, user);
 //        user.setId(userBean.getId());
 //        user.setUsername(userBean.getUsername());
 //        user.setImage(userBean.getImage());
@@ -175,35 +177,36 @@ public class GameUserService {
     }
 
     public int getServerInfo(KafkaMsgKey msgKey) {
-        sendMsg(msgKey, new ResponseVo("userService","getServerInfo",ServerManager.constant));
+        sendMsg(msgKey, new ResponseVo("userService", "getServerInfo", ServerManager.constant));
         return 0;
     }
 
-    public int reportingCoord(KafkaMsgKey msgKey,String coord) {
+    public int reportingCoord(KafkaMsgKey msgKey, String coord) {
         long userId = msgKey.getUserId();
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         if (userBean != null) {
             userBean.setCoord(coord);
             RedisManager.getUserRedisService().setUserBean(userBean);
         }
-        sendMsg(msgKey, new ResponseVo("userService","reportingCoord",0));
+        sendMsg(msgKey, new ResponseVo("userService", "reportingCoord", 0));
         return 0;
     }
 
     /**
      * 获得同一房间的所有人坐标
+     *
      * @param msgKey
      * @return
      */
-    public int getCoords(KafkaMsgKey msgKey){
+    public int getCoords(KafkaMsgKey msgKey) {
         long userId = msgKey.getUserId();
         String roomId = RedisManager.getUserRedisService().getRoomId(userId);
         if (roomId == null) {
             return ErrorCode.CAN_NOT_NO_ROOM;
         }
         Set<Long> users = RedisManager.getRoomRedisService().getUsers(roomId);
-        Map<Long,Object> result = RedisManager.getUserRedisService().getUserBeans(users).stream().collect(Collectors.toMap(UserBean::getId,UserBean::getCoord));
-        sendMsg(msgKey, new ResponseVo("userService","getCoords",result));
+        Map<Long, Object> result = RedisManager.getUserRedisService().getUserBeans(users).stream().collect(Collectors.toMap(UserBean::getId, UserBean::getCoord));
+        sendMsg(msgKey, new ResponseVo("userService", "getCoords", result));
         return 0;
     }
 
@@ -213,10 +216,10 @@ public class GameUserService {
      * @param msgKey
      * @return
      */
-    public int getUserRecodeByUserId(KafkaMsgKey msgKey,String roomType) {
+    public int getUserRecodeByUserId(KafkaMsgKey msgKey, String roomType) {
         UserRecord userRecord = userRecordService.getUserRecordByUserId(msgKey.getUserId());
         List<Record.RoomRecord> roomRecordList = new ArrayList<>();
-        if (userRecord != null && userRecord.getRecord()!=null && userRecord.getRecord().getRoomRecords().containsKey(roomType)) {
+        if (userRecord != null && userRecord.getRecord() != null && userRecord.getRecord().getRoomRecords().containsKey(roomType)) {
             roomRecordList.addAll(userRecord.getRecord().getRoomRecords().get(roomType));
         }
         ResponseVo vo = new ResponseVo("userService", "getUserRecodeByUserId", roomRecordList);
@@ -270,7 +273,7 @@ public class GameUserService {
         }
         double money = 100;
         userBean.setReferee(referrerId);
-        RedisManager.getUserRedisService().updateUserBean(userBean.getId(),userBean);
+        RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
         RedisManager.getUserRedisService().addUserMoney(msgKey.getUserId(), money);
 
 
@@ -279,7 +282,7 @@ public class GameUserService {
 
         //充值记录
         Charge charge = new Charge();
-        charge.setRecharge_source("5");
+        charge.setRecharge_source(""+IChargeType.BIND_REFERRER);
         charge.setUserid(userBean.getId());
         charge.setUsername(userBean.getUsername());
         charge.setStatus(1);
@@ -292,7 +295,8 @@ public class GameUserService {
 
         return 0;
     }
-    public int getReplay(KafkaMsgKey msgKey, long id){
+
+    public int getReplay(KafkaMsgKey msgKey, long id) {
         Replay r = SpringUtil.getBean(ReplayService.class).getReplay(id);
         if (r == null) {
             return ErrorCode.REPLAY_NOT_EXIST;
@@ -303,7 +307,8 @@ public class GameUserService {
         sendMsg(msgKey, vo);
         return 0;
     }
-    public int setReplay(KafkaMsgKey msgKey, long id){
+
+    public int setReplay(KafkaMsgKey msgKey, long id) {
         ReplayService rs = SpringUtil.getBean(ReplayService.class);
 //        boolean isSuccess = rs.decReplayCount(id);
 //        if (!isSuccess) {
@@ -315,23 +320,70 @@ public class GameUserService {
         return 0;
     }
 
-    public int shareWX(KafkaMsgKey msgKey, String game){
+    public int shareWX(KafkaMsgKey msgKey, String game) {
 
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(msgKey.getUserId());
         if (userBean == null) {
             return ErrorCode.YOU_HAVE_NOT_LOGIN;
         }
-        int shareCount = userBean.getUserInfo().getShareWXCount();
-        if (shareCount == 0) {
-            userBean.getUserInfo().setShareWXCount(shareCount + 2);
-            //todo 充值记录
+        long lastShareTime = userBean.getUserInfo().getLastShareTime();
+        long now = System.currentTimeMillis();
+
+        if (DateUtil.isSameDate(lastShareTime, now)) {
+            return ErrorCode.CANNOT_SHARE;
         }
+
+        double money = getShareMoney(game);
+        int shareCount = userBean.getUserInfo().getShareWXCount();
+
+        //加钱
+        double nowMoney = RedisManager.getUserRedisService().addUserMoney(msgKey.getUserId(), money);
+        userBean.setMoney(nowMoney);
+        //分享时间
+        userBean.getUserInfo().setLastShareTime(now);
+        //分享次数
+        userBean.getUserInfo().setShareWXCount(shareCount + 1);
+        //保存
+        RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
+
+        //分享记录
+        Charge charge = new Charge();
+        charge.setOrderId("" + IdWorker.getDefaultInstance().nextId());
+        charge.setUsername(userBean.getUsername());
+        charge.setMoney(money);
+        charge.setMoney_point(money);
+        charge.setCreatetime(new Date());
+        charge.setCallbacktime(new Date());
+        charge.setRecharge_source(""+IChargeType.SHARE);
+        charge.setStatus(1);
+        chargeService.save(charge);
+
         ResponseVo vo = new ResponseVo("userService", "shareWX", 0);
         sendMsg(msgKey, vo);
         return 0;
     }
 
-    public int getPrepareRoom(KafkaMsgKey msgKey){
+    /**
+     * 分享获得钱数
+     *
+     * @param projectName
+     * @return
+     */
+    private static double getShareMoney(String projectName) {
+        //todo 从constant里读取
+        ServerManager.constant.getShareMoney();
+        switch (projectName) {
+            case IProjectName.JINGNAN:
+                return 2;
+            case IProjectName.LONGQI:
+                return 10;
+            default:
+                return 0;
+        }
+
+    }
+
+    public int getPrepareRoom(KafkaMsgKey msgKey) {
         long userId = msgKey.getUserId();
 
         Map<String, PrepareRoom> rooms = RedisManager.getUserRedisService().getPerpareRoom(userId);
@@ -340,8 +392,8 @@ public class GameUserService {
         if (rooms != null) {
             for (Map.Entry<String, PrepareRoom> entry : rooms.entrySet()) {
                 Map<String, Object> temp = new HashMap<>();
-                temp.put("room",entry.getValue());
-                temp.put("user",RedisManager.getUserRedisService().getUserBeans(RedisManager.getRoomRedisService().getUsers(entry.getKey())));
+                temp.put("room", entry.getValue());
+                temp.put("user", RedisManager.getUserRedisService().getUserBeans(RedisManager.getRoomRedisService().getUsers(entry.getKey())));
 
                 list.add(temp);
             }

@@ -21,6 +21,7 @@ public class Constant {
     private String versionOfAndroid;//安卓版本
     private String versionOfIos;//IOS版本
     private int appleCheck;
+    private int shareMoney;//分享获得的钱
 
 
     public long getId() {
@@ -114,17 +115,29 @@ public class Constant {
         return this;
     }
 
+    public int getShareMoney() {
+        return shareMoney;
+    }
+
+    public Constant setShareMoney(int shareMoney) {
+        this.shareMoney = shareMoney;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Constant{" +
                 "id=" + id +
                 ", marquee='" + marquee + '\'' +
+                ", marquee1='" + marquee1 + '\'' +
+                ", marquee2='" + marquee2 + '\'' +
                 ", download='" + download + '\'' +
                 ", download2='" + download2 + '\'' +
                 ", initMoney=" + initMoney +
                 ", versionOfAndroid='" + versionOfAndroid + '\'' +
                 ", versionOfIos='" + versionOfIos + '\'' +
                 ", appleCheck=" + appleCheck +
+                ", shareMoney=" + shareMoney +
                 '}';
     }
 }
