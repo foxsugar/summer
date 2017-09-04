@@ -80,6 +80,10 @@ public class GameUserService {
                 userRedisService.addUserMoney(rechargeUserId, money);
                 //减掉充值玩家相应的钱数
                 userRedisService.addUserMoney(userid, -money);
+                Map<String, Object> results = new HashMap<String, Object>();
+                results.put("result", "success");
+                ResponseVo vo = new ResponseVo("userService", "giveOtherMoney", results);
+                sendMsg(msgKey, vo);
             } else {
 
                 User accepter = userService.getUserByUserId(rechargeUserId);
@@ -89,11 +93,13 @@ public class GameUserService {
                 } else {
                     accepter.setMoney(accepter.getMoney() + money);
                     userService.save(accepter);
-
                     //减掉充值玩家相应的钱数
                     userRedisService.setUserMoney(userid, userMoney - money);
+                    Map<String, Object> results = new HashMap<String, Object>();
+                    results.put("result", "success");
+                    ResponseVo vo = new ResponseVo("userService", "giveOtherMoney", results);
+                    sendMsg(msgKey, vo);
                 }
-
             }
         } else {
             return ErrorCode.NOT_HAVE_MORE_MONEY;
