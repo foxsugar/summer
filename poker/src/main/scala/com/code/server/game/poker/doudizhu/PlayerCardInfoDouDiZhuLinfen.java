@@ -28,7 +28,7 @@ public class PlayerCardInfoDouDiZhuLinfen extends PlayerCardInfoDouDiZhu {
     public Integer getListmin(List<Integer> cardList, Integer card) {
         Integer index = 0;
         for (int i = 0; i < cardList.size(); i++) {
-            if (cardList.get(i) == card) {
+            if (cardList.get(i) == card.intValue()) {
                 index = i;
             }
         }
