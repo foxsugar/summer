@@ -96,7 +96,11 @@ public class RoomInfo extends Room {
                 if (each.equals("0") && money < 30) {
                     return false;
                 }
-            } else {
+            } else if ("HL".equals(gameType)) {
+                if (each.equals("0") && money < 1) {
+                    return false;
+                }
+            }else {
                 if (money < 3) {
                     return false;
                 }
