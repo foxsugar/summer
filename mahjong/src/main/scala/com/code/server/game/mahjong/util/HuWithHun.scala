@@ -110,7 +110,7 @@ object HuWithHun {
       huCardTypeList.forEach(huType => println(huType))
 
 
-      huCardTypeList.forEach(li => getHuType(li, hun, lastCard))
+      huCardTypeList.forEach(li => getHuType(li, hun, lastCard, hunNum))
       huCardTypeList
 
 
@@ -138,7 +138,7 @@ object HuWithHun {
   }
 
 
-  def getHuType(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int): Int = {
+  def getHuType(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int, hunNum:Int): Int = {
     var huList = new util.ArrayList[Int]()
     huList.add(isZhuo5(huCardType, hun, lastCard))
     huList.add(isLong(huCardType, hun, lastCard))
@@ -208,12 +208,22 @@ object HuWithHun {
     0
   }
 
-  def isSuBenhunLong(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int):Int = {
+  /**
+    * 素本混龙
+    * @param huCardType
+    * @param hun
+    * @param lastCard
+    * @return
+    */
+  def isSuBenhunLong(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int,hunNum:Int):Int = {
+    if(hunNum != 3) return 0
     if(huCardType.jiangOneHun != -1) return 0
     if(huCardType.hun3.size() > 0) return 0
     if(huCardType.hun2.size() > 0) return 0
     if(huCardType.hunJiang) return 0
     if(huCardType.shun.size() != 3) return 0
+    //是龙
+
     0
   }
   /**

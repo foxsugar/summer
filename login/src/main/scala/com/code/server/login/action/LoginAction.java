@@ -141,7 +141,7 @@ public class LoginAction {
         }
 
         //黑名单
-        boolean isInBlackList = ServerManager.constant.getBlackList().contains(Long.valueOf(userId));
+        boolean isInBlackList = ServerManager.constant.getBlackList().contains(userId);
         if(isInBlackList){
             code = ErrorCode.BLACK_LIST;
         }else {
@@ -203,7 +203,7 @@ public class LoginAction {
         }
 
         //黑名单
-        boolean isInBlackList = ServerManager.constant.getBlackList().contains(Long.valueOf(userId));
+        boolean isInBlackList = ServerManager.constant.getBlackList().contains(userId);
         if(isInBlackList){
             code = ErrorCode.BLACK_LIST;
         }else {
@@ -260,11 +260,11 @@ public class LoginAction {
     @RequestMapping("/addblacklist")
     public Map<String, Object> addBlackList(String userId) {
 
-        Long uid = Long.valueOf(userId);
+
         if (ServerManager.constant.getBlackList() == null) {
-            ServerManager.constant.setBlackList(new HashSet<Long>());
+            ServerManager.constant.setBlackList(new HashSet<String>());
         }
-        ServerManager.constant.getBlackList().add(uid);
+        ServerManager.constant.getBlackList().add(userId);
         Map<String, Object> result = new HashMap<>();
         result.put("userId", ServerManager.constant.getBlackList());
 
@@ -272,6 +272,19 @@ public class LoginAction {
         return result;
     }
 
+    @RequestMapping("/removeblacklist")
+    public Map<String, Object> removeBlackList(String userId) {
+
+        if (ServerManager.constant.getBlackList() == null) {
+            ServerManager.constant.setBlackList(new HashSet<String>());
+        }
+        ServerManager.constant.getBlackList().remove(userId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("userId", ServerManager.constant.getBlackList());
+
+        constantService.constantDao.save(ServerManager.constant);
+        return result;
+    }
 
     public Map<String, Object> getParams(String url, Object params, int code) {
         Map<String, Object> results = new HashMap<>();

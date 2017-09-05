@@ -31,7 +31,7 @@ public class Constant extends BaseEntity {
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
-    private Set<Long> blackList = new HashSet<>();
+    private Set<String> blackList = new HashSet<>();
 
 
     public long getId() {
@@ -134,11 +134,11 @@ public class Constant extends BaseEntity {
         return this;
     }
 
-    public Set<Long> getBlackList() {
+    public Set<String> getBlackList() {
         return blackList;
     }
 
-    public Constant setBlackList(Set<Long> blackList) {
+    public Constant setBlackList(Set<String> blackList) {
         this.blackList = blackList;
         return this;
     }
