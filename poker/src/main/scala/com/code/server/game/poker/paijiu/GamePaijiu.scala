@@ -354,7 +354,7 @@ class GamePaijiu extends Game with PaijiuConstant {
   protected def betStart(): Unit = {
     state = STATE_BET
 
-    val param = Map("bankerId" -> this.bankerId)
+    val param = Map("bankerId" -> this.bankerId,"curGameNumber"->this.roomPaijiu.getCurGameNumber)
     //推送开始下注
     MsgSender.sendMsg2Player("gamePaijiuService", "betStart", param.asJava, users)
     //双数局 通知上把牌
