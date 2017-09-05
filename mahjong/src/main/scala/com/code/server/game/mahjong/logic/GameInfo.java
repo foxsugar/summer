@@ -35,7 +35,7 @@ public class GameInfo extends Game {
     protected int cardSize;//牌数量
 
     protected int gameModel;//游戏类型
-    protected List<String> remainCards = new ArrayList<>();//剩下的牌
+    protected List<String> remainCards = new ArrayList<>();//剩下的牌User
     protected String disCard;//出的牌
     protected long turnId;//轮到谁出牌
     protected long lastPlayUserId = -1;//上个出牌的人
@@ -66,6 +66,9 @@ public class GameInfo extends Game {
     protected int changeBaoSize = 0;
 
     protected List<Map<Long, Integer>> userOperateList = new ArrayList<>();
+
+    protected List<Integer> hun = new ArrayList<>();
+    protected List<String> hunRemoveCards = new ArrayList<>();
 
     protected ReplayMj replay = new ReplayMj();
 

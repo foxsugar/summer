@@ -55,6 +55,8 @@ public interface HuType {
 
     int hu_吊将 = 60;
 
+    int hu_混吊 = 65;
+
     int hu_捉五 = 70;
     int hu_混儿吊捉五 = 71;
 
@@ -69,6 +71,11 @@ public interface HuType {
 
     int hu_混儿吊捉五龙 = 110;
     int hu_混儿吊捉五本混龙 = 111;
+
+    int hu_素本混龙 = 120;
+
+    int hu_杠开 = 150;
+    int hu_素 = 151;
 
 
 }

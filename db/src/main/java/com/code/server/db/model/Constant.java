@@ -1,13 +1,18 @@
 package com.code.server.db.model;
 
+import com.code.server.db.utils.BaseEntity;
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by win7 on 2017/3/10.
  */
 @Entity
 @Table(name = "constant")
-public class Constant {
+public class Constant extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,6 +27,11 @@ public class Constant {
     private String versionOfIos;//IOS版本
     private int appleCheck;
     private int shareMoney;//分享获得的钱
+
+    @Type(type = "json")
+    @Lob
+    @Column(columnDefinition = "json")
+    private Set<Long> blackList = new HashSet<>();
 
 
     public long getId() {
@@ -121,6 +131,15 @@ public class Constant {
 
     public Constant setShareMoney(int shareMoney) {
         this.shareMoney = shareMoney;
+        return this;
+    }
+
+    public Set<Long> getBlackList() {
+        return blackList;
+    }
+
+    public Constant setBlackList(Set<Long> blackList) {
+        this.blackList = blackList;
         return this;
     }
 

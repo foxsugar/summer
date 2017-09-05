@@ -23,6 +23,7 @@ public class HuCardType implements HuType {
     public List<Integer> hun2 = new ArrayList<>();
     public List<Integer> hun3 = new ArrayList<>();
     public boolean hunJiang = false;
+    public int jiangOneHun = -1;
     public int jiang = -1;
 
     public List<List<Integer>> feng_shun = new ArrayList<>();
@@ -115,6 +116,7 @@ public class HuCardType implements HuType {
                 ", hun2=" + hun2 +
                 ", hun3=" + hun3 +
                 ", hunJiang=" + hunJiang +
+                ", jiangOneHun=" + jiangOneHun +
                 ", jiang=" + jiang +
                 ", feng_shun=" + feng_shun +
                 ", zi_shun=" + zi_shun +
@@ -248,6 +250,15 @@ public class HuCardType implements HuType {
 
     public HuCardType setHunJiang(boolean hunJiang) {
         this.hunJiang = hunJiang;
+        return this;
+    }
+
+    public int getJiangOneHun() {
+        return jiangOneHun;
+    }
+
+    public HuCardType setJiangOneHun(int jiangOneHun) {
+        this.jiangOneHun = jiangOneHun;
         return this;
     }
 }
