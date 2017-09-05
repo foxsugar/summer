@@ -214,7 +214,7 @@ object HuWithHun {
     if(huCardType.hun2.size() > 0) return 0
     if(huCardType.hunJiang) return 0
     if(huCardType.shun.size() != 3) return 0
-
+    0
   }
   /**
     * 是否是龙
