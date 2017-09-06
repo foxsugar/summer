@@ -74,9 +74,9 @@ class GamePaijiuEndless extends GamePaijiu {
         val otherScore1 = getGroupScore(other.group1)
         val otherScore2 = getGroupScore(other.group2)
         var result: Int = 0
-        if (bankerScore1 > otherScore1) result += 1
+        if (bankerScore1 >= otherScore1) result += 1
         if (bankerScore1 < otherScore1) result -= 1
-        if (bankerScore2 > otherScore2) result += 1
+        if (bankerScore2 >= otherScore2) result += 1
         if (bankerScore2 < otherScore2) result -= 1
         resultSet = resultSet.+(result)
         //庄家赢

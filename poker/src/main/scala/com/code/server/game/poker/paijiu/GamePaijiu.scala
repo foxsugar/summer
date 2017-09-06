@@ -308,9 +308,9 @@ class GamePaijiu extends Game with PaijiuConstant {
     val otherScore1 = getGroupScore(other.group1)
     val otherScore2 = getGroupScore(other.group2)
     var result: Int = 0
-    if (bankerScore1 > otherScore1) result += 1
+    if (bankerScore1 >= otherScore1) result += 1
     if (bankerScore1 < otherScore1) result -= 1
-    if (bankerScore2 > otherScore2) result += 1
+    if (bankerScore2 >= otherScore2) result += 1
     if (bankerScore2 < otherScore2) result -= 1
     //庄家赢
     if (result > 0) {
