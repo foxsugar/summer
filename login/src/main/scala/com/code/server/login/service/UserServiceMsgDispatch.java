@@ -77,6 +77,8 @@ public class UserServiceMsgDispatch {
                 return gameUserService.shareWX(msgKey, params.path("game").asText());
             case "getPrepareRoom":
                 return gameUserService.getPrepareRoom(msgKey);
+            case "getRecordsByRoom":
+                return gameUserService.getRecordsByRoom(msgKey,params.path("roomUid").asLong());
 
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;

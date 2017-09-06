@@ -20,6 +20,8 @@ public class Replay extends BaseEntity {
     @Column(columnDefinition = "longtext")
     private String data;
 
+    private long roomUuid;
+
     public int getLeftCount() {
         return leftCount;
     }
@@ -44,5 +46,14 @@ public class Replay extends BaseEntity {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public long getRoomUuid() {
+        return roomUuid;
+    }
+
+    public Replay setRoomUuid(long roomUuid) {
+        this.roomUuid = roomUuid;
+        return this;
     }
 }

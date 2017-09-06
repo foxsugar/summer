@@ -26,6 +26,7 @@ public class ReplayService {
     public Integer getReplayLeftCount(long id) {
         return replayDao.getReplayCountById(id);
     }
+
     public void decReplayCount(long id){
         Integer count = getReplayLeftCount(id);
         if (count != null) {

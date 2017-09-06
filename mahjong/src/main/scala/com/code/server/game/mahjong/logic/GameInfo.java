@@ -939,6 +939,9 @@ public class GameInfo extends Game {
 
             MsgSender.sendMsg2Player("gameService", "noticeDissolutionResult", gameOfResult, users);
 
+            //战绩
+            this.room.genRoomRecord();
+
         }
 
 

@@ -7,13 +7,8 @@ import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserVo;
-import com.code.server.db.Service.ChargeService;
-import com.code.server.db.Service.ReplayService;
-import com.code.server.db.Service.UserRecordService;
-import com.code.server.db.Service.UserService;
-import com.code.server.db.model.Charge;
-import com.code.server.db.model.Replay;
-import com.code.server.db.model.User;
+import com.code.server.db.Service.*;
+import com.code.server.db.model.*;
 import com.code.server.db.model.UserRecord;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.rpc.RpcManager;
@@ -50,6 +45,8 @@ public class GameUserService {
 
     @Autowired
     UserRecordService userRecordService;
+    @Autowired
+    GameRecordService gameRecordService;
 
     @Autowired
     ChargeService chargeService;
@@ -218,7 +215,7 @@ public class GameUserService {
      */
     public int getUserRecodeByUserId(KafkaMsgKey msgKey, String roomType) {
         UserRecord userRecord = userRecordService.getUserRecordByUserId(msgKey.getUserId());
-        List<Record.RoomRecord> roomRecordList = new ArrayList<>();
+        List<RoomRecord> roomRecordList = new ArrayList<>();
         if (userRecord != null && userRecord.getRecord() != null && userRecord.getRecord().getRoomRecords().containsKey(roomType)) {
             roomRecordList.addAll(userRecord.getRecord().getRoomRecords().get(roomType));
         }
@@ -400,6 +397,15 @@ public class GameUserService {
         }
         result.put("result", list);
         ResponseVo vo = new ResponseVo("userService", "getPrepareRoom", result);
+        sendMsg(msgKey, vo);
+        return 0;
+    }
+
+    public int getRecordsByRoom(KafkaMsgKey msgKey, long roomUid) {
+        List<com.code.server.db.model.GameRecord> list = gameRecordService.gameRecordDao.getGameRecordByUuid(roomUid);
+        Map<Object, Object> result = new HashMap<>();
+        result.put("result", list);
+        ResponseVo vo = new ResponseVo("userService", "getRecordsByRoom", result);
         sendMsg(msgKey, vo);
         return 0;
     }

@@ -5,6 +5,7 @@ import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.db.Service.ConstantService;
+import com.code.server.db.Service.GameRecordService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.model.Constant;
 import com.code.server.db.model.User;
@@ -283,6 +284,14 @@ public class LoginAction {
         result.put("userId", ServerManager.constant.getBlackList());
 
         constantService.constantDao.save(ServerManager.constant);
+        return result;
+    }
+
+    @RequestMapping("/removeRecord")
+    public Map<String, Object> removeRecord(String roomUid) {
+
+        Map<String, Object> result = new HashMap<>();
+        SpringUtil.getBean(GameRecordService.class).decGameRecordCount(Long.valueOf(roomUid));
         return result;
     }
 

@@ -1,13 +1,15 @@
 package com.code.server.game.room;
 
 
-import com.code.server.constant.game.Record;
+import com.code.server.constant.game.GameRecord;
 import com.code.server.constant.game.UserBean;
+import com.code.server.constant.game.UserRecord;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.IfaceGameVo;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 
 import java.util.ArrayList;
@@ -53,25 +55,27 @@ public class Game implements IfaceGame{
         data.put("room_uuid", room.getUuid());
 
 
-        Record.RoomRecord roomRecord = new Record.RoomRecord();
-        roomRecord.setTime(System.currentTimeMillis());
-        roomRecord.setType(room.getRoomType());
-        roomRecord.setId(id);
-        scores.entrySet().forEach((playerInfo) -> {
-            Record.UserRecord userRecord = new Record.UserRecord();
-            userRecord.setScore(playerInfo.getValue());
-            userRecord.setUserId(playerInfo.getKey());
+        GameRecord gameRecord = new GameRecord();
+        gameRecord.setCurGameNumber(room.getCurGameNumber());
+
+
+
+        scores.forEach((key, value) -> {
+            UserRecord userRecord = new UserRecord();
+            userRecord.setScore(value);
+            userRecord.setUserId(key);
             userRecord.setRoomId(room.getRoomId());
-            UserBean userBean = RedisManager.getUserRedisService().getUserBean(playerInfo.getKey());
+            UserBean userBean = RedisManager.getUserRedisService().getUserBean(key);
             if (userBean != null) {
                 userRecord.setName(userBean.getUsername());
             }
-            roomRecord.addRecord(userRecord);
+            gameRecord.getRecords().add(userRecord);
         });
+        data.put("record", JsonUtil.toJson(gameRecord));
 
-        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_GEN_RECORD);
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_GAME_RECORD);
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
-        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, data);
     }
 
     @Override

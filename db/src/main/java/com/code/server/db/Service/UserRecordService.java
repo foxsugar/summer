@@ -1,7 +1,6 @@
 package com.code.server.db.Service;
 
-import com.code.server.constant.game.Record;
-import com.code.server.db.dao.IReplayDao;
+import com.code.server.constant.game.RoomRecord;
 import com.code.server.db.dao.IUserRecordDao;
 import com.code.server.db.model.UserRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,8 @@ public class UserRecordService {
     @Autowired
     private ReplayService replayService;
 
+    private GameRecordService gameRecordService;
+
 
     /**
      * 添加一条战绩 超过指定条数后删除第一条
@@ -31,14 +32,17 @@ public class UserRecordService {
      * @param roomRecord
      * @return
      */
-    public UserRecord addRecord(long userid, Record.RoomRecord roomRecord) {
+    public UserRecord addRecord(long userid, RoomRecord roomRecord) {
         UserRecord userRecords = userRecordDao.findOne(userid);
 
-        Record.RoomRecord rc = userRecords.getRecord().addRoomRecord(roomRecord);
+        RoomRecord rc = userRecords.getRecord().addRoomRecord(roomRecord);
         //有删除的战绩
         if (rc != null) {
-            long replayId = rc.getId();
-            replayService.decReplayCount(replayId);
+//            long replayId = rc.getId();
+//            replayService.decReplayCount(replayId);
+
+            long roomUid = rc.getId();
+            gameRecordService.decGameRecordCount(roomUid);
 
 
         }

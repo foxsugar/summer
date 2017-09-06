@@ -401,6 +401,9 @@ public class GameDouDiZhu extends Game {
 
             RoomManager.removeRoom(room.getRoomId());
 
+            //战绩
+            this.room.genRoomRecord();
+
         }
     }
 
