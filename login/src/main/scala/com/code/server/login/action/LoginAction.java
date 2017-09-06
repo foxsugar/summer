@@ -141,7 +141,7 @@ public class LoginAction {
         }
 
         //黑名单
-        boolean isInBlackList = ServerManager.constant.getBlackList().contains(userId);
+        boolean isInBlackList = ServerManager.constant.getBlackList()!=null && ServerManager.constant.getBlackList().contains(userId);
         if(isInBlackList){
             code = ErrorCode.BLACK_LIST;
         }else {
@@ -203,7 +203,7 @@ public class LoginAction {
         }
 
         //黑名单
-        boolean isInBlackList = ServerManager.constant.getBlackList().contains(userId);
+        boolean isInBlackList = ServerManager.constant.getBlackList() != null && ServerManager.constant.getBlackList().contains(userId);
         if(isInBlackList){
             code = ErrorCode.BLACK_LIST;
         }else {
