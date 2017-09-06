@@ -171,9 +171,10 @@ public class GameDouDiZhu extends Game {
                 zhaCount += 1;//记录炸的数量
                 multiple *= 2;//记录倍数
             }
-        } else if (cardStruct.getType() == CardStruct.type_火箭) {
-            zhaCount += 1;//记录炸的数量
-            multiple *= 2;//记录倍数
+            else if (cardStruct.getType() == CardStruct.type_火箭) {
+                zhaCount += 1;//记录炸的数量
+                multiple *= 2;//记录倍数
+            }
         }
     }
 
@@ -193,6 +194,9 @@ public class GameDouDiZhu extends Game {
         return 0;
     }
 
+    public int sayHello() {
+        return 0;
+    }
 
     /**
      * 洗牌
