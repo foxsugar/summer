@@ -9,6 +9,7 @@ import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.config.IConstant;
+import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
@@ -76,6 +77,9 @@ public class RoomDouDiZhu extends Room {
 
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         RoomManager.addRoom(room.roomId, "" + serverConfig.getServerId(), room);
+
+        IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);
+        room.setUuid(idWorker.nextId());
 
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createRoom", room.toVo(userId)), userId);
 

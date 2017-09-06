@@ -27,6 +27,7 @@ public class Room implements IfaceRoom {
 
     private static final Logger logger = LoggerFactory.getLogger(Room.class);
 
+    protected long uuid;
     protected String roomType;
     protected String roomId;
     protected int createType;//房卡或金币
@@ -87,6 +88,8 @@ public class Room implements IfaceRoom {
 
         }
     }
+
+
 
     public int getNeedMoney() throws DataNotFoundException {
 
@@ -888,6 +891,15 @@ public class Room implements IfaceRoom {
 
     public Room setPrepareRoomTimerNode(TimerNode prepareRoomTimerNode) {
         this.prepareRoomTimerNode = prepareRoomTimerNode;
+        return this;
+    }
+
+    public long getUuid() {
+        return uuid;
+    }
+
+    public Room setUuid(long uuid) {
+        this.uuid = uuid;
         return this;
     }
 }

@@ -13,6 +13,7 @@ import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 
 import java.util.HashMap;
@@ -106,6 +107,9 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
 
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         RoomManager.addRoom(nullRoom.getRoomId(), "" + serverConfig.getServerId(), nullRoom);
+        IdWorker idWorker = new IdWorker(serverConfig.getServerId(),0);
+        nullRoom.setUuid(idWorker.nextId());
+
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "joinGoldRoom", nullRoom.toVo(userId)), userId);
 
         return 0;

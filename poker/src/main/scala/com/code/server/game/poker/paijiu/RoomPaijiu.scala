@@ -6,7 +6,7 @@ import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
 import com.code.server.game.room.{Game, Room}
-import com.code.server.util.SpringUtil
+import com.code.server.util.{IdWorker, SpringUtil}
 import org.springframework.beans.BeanUtils
 
 import scala.beans.BeanProperty
@@ -124,6 +124,8 @@ object RoomPaijiu extends Room {
 
     val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
     RoomManager.addRoom(roomPaijiu.getRoomId, "" + serverConfig.getServerId, roomPaijiu)
+    val idword = new IdWorker(serverConfig.getServerId,0)
+    roomPaijiu.setUuid(idword.nextId())
 
     MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createPaijiuRoom", roomPaijiu.toVo(userId)), userId)
     0

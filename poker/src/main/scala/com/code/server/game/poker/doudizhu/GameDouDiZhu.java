@@ -425,6 +425,8 @@ public class GameDouDiZhu extends Game {
 
     }
 
+
+
     protected void playStepStart(long dizhu) {
         this.canQiangUser = -1;
         this.canJiaoUser = -1;

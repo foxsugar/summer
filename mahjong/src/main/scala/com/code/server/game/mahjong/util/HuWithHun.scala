@@ -143,6 +143,7 @@ object HuWithHun {
     huList.add(isZhuo5(huCardType, hun, lastCard))
     huList.add(isLong(huCardType, hun, lastCard))
     huList.add(isHunDiao(huCardType, hun, lastCard))
+    huList.add(isSuBenhunLong(huCardType, hun, lastCard,hunNum))
     var t = getMaxHuType(huList)
     huCardType.specialHuList.add(t)
     println("最大牌型: " + t)
@@ -223,6 +224,7 @@ object HuWithHun {
     if(huCardType.hunJiang) return 0
     if(huCardType.shun.size() != 3) return 0
     //是龙
+    if(isLong(huCardType,hun,lastCard)!=0) return HuType.hu_素本混龙
 
     0
   }
