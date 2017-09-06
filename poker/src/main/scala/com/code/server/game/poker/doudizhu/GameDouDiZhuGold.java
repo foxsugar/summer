@@ -9,10 +9,7 @@ import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by sunxianping on 2017/3/13.
@@ -256,5 +253,17 @@ public class GameDouDiZhuGold extends GameDouDiZhu {
             zhaCount += 1;//记录炸的数量
             multiple *= 2;//记录倍数
         }
+    }
+
+
+    /*
+    ============================
+    ========== Test ============
+    ============================
+    */
+    public int sayHello() {
+
+        logger.info("Just say hello!!!" );
+        return 0;
     }
 }

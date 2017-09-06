@@ -236,6 +236,10 @@ public class Room implements IfaceRoom {
         if (isInGame) {
             return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME;
         }
+
+        List<Long> noticeList = new ArrayList<>();
+        noticeList.addAll(this.getUsers());
+
         //删除玩家房间映射关系
         roomRemoveUser(userId);
 
@@ -245,7 +249,7 @@ public class Room implements IfaceRoom {
 
             Notice n = new Notice();
             n.setMessage("roomNum " + this.getRoomId() + " :has destroy success!");
-            MsgSender.sendMsg2Player(new ResponseVo("roomService", "destroyRoom", n), this.getUsers());
+            MsgSender.sendMsg2Player(new ResponseVo("roomService", "destroyRoom", n), noticeList);
             //删除房间
 //            GameManager.getInstance().rooms.remove(roomId);
 

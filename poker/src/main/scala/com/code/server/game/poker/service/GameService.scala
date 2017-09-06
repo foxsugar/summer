@@ -40,6 +40,8 @@ object GameService {
       game.play(userId, cardStruct)
     case "pass" =>
       game.pass(userId)
+    case "sayHello" =>
+      game.sayHello()
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }
