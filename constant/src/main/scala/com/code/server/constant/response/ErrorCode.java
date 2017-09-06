@@ -25,6 +25,7 @@ public class ErrorCode {
 	public static final int CANNOT_CREATE_ROOM_MONEY = 1000016;
 	public static final int REDIS_NO_TOKEN = 1000017;
 	public static final int CANNOT_SHARE = 1000018;
+	public static final int BLACK_LIST = 1000019;
 
 	//userId获取不到Role
 	public static final int USERID_ERROR = 110001;

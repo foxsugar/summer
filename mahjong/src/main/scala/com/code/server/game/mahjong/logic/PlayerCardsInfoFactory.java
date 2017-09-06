@@ -55,6 +55,9 @@ public class PlayerCardsInfoFactory {
                 //设置荒庄轮庄
                 room.setChangeBankerAfterHuangZhuang(true);
                 break;
+            case "20":
+                playerCardsInfo = new PlayerCardsInfoTJ();
+                break;
             default:
                 logger.error("初始化 playercardsInfo 错误");
                 return null;

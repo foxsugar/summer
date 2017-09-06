@@ -69,6 +69,11 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     protected boolean isShowAnGang = true;
     protected Set<Integer> yiZhangyingSet = new HashSet<>();
 
+    protected int laZhuang = 0;//拉庄个数
+    protected boolean isPlayHun = false;//是否打出混
+
+
+
 
 
     /**
@@ -698,6 +703,9 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         return temp;
     }
 
+    public int getChiPengGangNum(){
+        return this.chiCards.size() + this.pengType.size() + this.mingGangType.size() + this.anGangType.size();
+    }
 
 
     

@@ -45,6 +45,7 @@ public class Hu {
     public static final int CARD_GROUP_TYPE_TWO_HUN = 6;//两个混
     public static final int CARD_GROUP_TYPE_THREE_HUN = 7;//三个混
     public static final int CARD_GROUP_TYPE_TWO_HUN_JIANG = 8;//两个 将
+    public static final int CARD_GROUP_TYPE_ONE_HUN_JIANG = 9;//带一个混的将
 
 
     /**
@@ -453,6 +454,9 @@ public class Hu {
                     break;
                 case CARD_GROUP_TYPE_TWO_HUN_JIANG:
                     huCardType.hunJiang = true;
+                    break;
+                case CARD_GROUP_TYPE_ONE_HUN_JIANG:
+                    huCardType.jiangOneHun = cardGroup.card;
                     break;
 
 

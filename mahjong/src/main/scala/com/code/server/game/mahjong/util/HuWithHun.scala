@@ -14,29 +14,12 @@ object HuWithHun {
 
   var count_hun = 0
 
-  def test() = {
-    //        val a = Array[Int](//                3, 2, 0, 0, 0, 0, 0, 0, 0,
-    //          13, 1, 0, 0, 0, 0, 0, 0, 0,
-    //          0, 0, 0, 0, 0, 0, 0, 0, 0,
-    //          0, 0, 0, 0, 0, 0, 0, 0, 0,
-    //          0, 0, 0, 0,
-    //          0, 0, 0)
 
-    val a = Array[Int](//                3, 2, 0, 0, 0, 0, 0, 0, 0,
-      5, 1, 1, 1, 1, 1, 1, 1, 1,
-      0, 0, 0, 0, 0, 1, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0,
-      0, 0, 0)
-    import java.util
+  def getHuCardType(a:Array[Int],chiPengGangNum:Int, hun:util.List[Integer],lastCard:Int):util.List[HuCardType] = {
 
-    val huIndex = 0
-    var hun = new util.ArrayList[Int]()
-    hun.add(0)
-    hun.add(1)
-    var lastCard = 4
 
-    val (noHunCards, hunNum) = getNoHunCardsAndHunNum(a, huIndex)
+    val (noHunCards, hunNum) = getNoHunCardsAndHunNum(a,hun)
+
     println("混的数量 : " + hunNum)
     //    for(c<- noHunCards if c !=0) println(c)
 
@@ -48,11 +31,13 @@ object HuWithHun {
     System.out.println("配好的 : " + list)
     System.out.println("没配好的 : " + allList)
 
+    var finalResult:util.List[HuCardType] = new util.ArrayList[HuCardType]()
     //全都是混
     if (hunNum == getCardNum(a)) {
       list.add(new util.ArrayList[CardGroup]())
     }
-    //有配成的或者都是混
+
+    //有配成的
     if (list.size() > 0) {
       //如果有混 肯定全是混组成的牌型
       if (hunNum > 0) {
@@ -73,61 +58,65 @@ object HuWithHun {
       println(list)
     }
 
+      var complete: util.List[util.List[CardGroup]] = new util.ArrayList(list)
+      //    allList = Hu.removeRepeat(allList)
 
-    var complete: util.List[util.List[CardGroup]] = new util.ArrayList(list)
-    //    allList = Hu.removeRepeat(allList)
-
-    println("去重的 : " + allList)
-
-
-    var temp: util.List[CardGroup] = new util.ArrayList()
-    //没有凑成附子
-    if (allList.size() == 0) {
-      println("没有凑成附子")
-
-      if (hunIsEnough(noHunCards, temp, hunNum)) {
-        val remainCardNum = getCardNum(noHunCards)
-        val isHasJiang = Hu.isHasJiang(temp)
-        val needGroupSize = 5 - temp.size
-        val need2HunNum = getNeed2HunNum(remainCardNum, hunNum, needGroupSize, isHasJiang)
-        getKaoPai(noHunCards, complete, temp, hunNum, need2HunNum)
-      }
+      println("去重的 : " + allList)
 
 
-    } else {
-      for (cardGroupList <- allList.asScala) {
-        var newCards = for (c <- noHunCards) yield c
-        val (cs, cdl) = getRemainCards(newCards, cardGroupList)
-        //是否可以胡的初次判断 混必须满足最少需求个数
+      var temp: util.List[CardGroup] = new util.ArrayList()
+      //没有凑成附子
+      if (allList.size() == 0) {
+        println("没有凑成附子")
 
-        val remainCardNum = getCardNum(cs)
-        if (hunIsEnough(cs, cdl, hunNum)) {
+        if (hunIsEnough(noHunCards, temp, hunNum)) {
+          val remainCardNum = getCardNum(noHunCards)
+          val isHasJiang = Hu.isHasJiang(temp)
+          val needGroupSize = 5 - chiPengGangNum -temp.size
+          val need2HunNum = getNeed2HunNum(remainCardNum, hunNum, needGroupSize, isHasJiang)
+          getKaoPai(noHunCards, complete, temp, hunNum, need2HunNum)
+        }
 
-          val isHasJiang = Hu.isHasJiang(cdl)
-          val needGroupSize = 5 - cdl.size
-          var need2HunNum = getNeed2HunNum(remainCardNum, hunNum, needGroupSize, isHasJiang)
-          println("两个混的数量 = " + need2HunNum)
-          //          need2HunNum = 7
-          getKaoPai(cs, complete, cardGroupList, hunNum, need2HunNum)
-          //          getKaoPai1(cs, complete, cardGroupList, hunNum)
-          println("组成的一半: " + cardGroupList)
-          //          println("带混的最终牌型: " + complete)
+
+      } else {
+        for (cardGroupList <- allList.asScala) {
+          var newCards = for (c <- noHunCards) yield c
+          val (cs, cdl) = getRemainCards(newCards, cardGroupList)
+          //是否可以胡的初次判断 混必须满足最少需求个数
+
+          val remainCardNum = getCardNum(cs)
+          if (hunIsEnough(cs, cdl, hunNum)) {
+
+            val isHasJiang = Hu.isHasJiang(cdl)
+            val needGroupSize = 5 - chiPengGangNum- cdl.size
+            var need2HunNum = getNeed2HunNum(remainCardNum, hunNum, needGroupSize, isHasJiang)
+            println("两个混的数量 = " + need2HunNum)
+            //          need2HunNum = 7
+            getKaoPai(cs, complete, cardGroupList, hunNum, need2HunNum)
+            //          getKaoPai1(cs, complete, cardGroupList, hunNum)
+            println("组成的一半: " + cardGroupList)
+            //          println("带混的最终牌型: " + complete)
+          }
         }
       }
-    }
-    complete = Hu.removeRepeat(complete)
-    println("==================================hun==============")
-    println(" 不是5 个附子的数量 = " + complete.stream().filter(l => l.size() != 5).count())
-    println(complete.size())
-    // println(complete)
+      complete = Hu.removeRepeat(complete)
+      println("==================================hun==============")
+      println(" 不是5 个附子的数量 = " + complete.stream().filter(l => l.size() != 5).count())
+      println(complete.size())
+      // println(complete)
 
-    var huCardTypeList = new util.ArrayList[HuCardType]()
-    complete.forEach(li => huCardTypeList.add(Hu.convert2HuCardType(li)))
-    huCardTypeList.forEach(huType => println(huType))
+      var huCardTypeList: util.List[HuCardType] = new util.ArrayList[HuCardType]()
+      complete.forEach(li => huCardTypeList.add(Hu.convert2HuCardType(li)))
+      huCardTypeList.forEach(huType => println(huType))
 
 
-    huCardTypeList.forEach(li => getHuType(li, hun, lastCard))
+      huCardTypeList.forEach(li => getHuType(li, hun, lastCard, hunNum))
+      huCardTypeList
+
+
+//    finalResult
   }
+
 
 
   def isHu(cardGroupList: util.List[CardGroup], lastCard: Int): Boolean = {
@@ -141,7 +130,7 @@ object HuWithHun {
     * @param cardType
     * @return
     */
-  private def isHun(hun: util.List[Int], cardType: Int): Boolean = {
+  private def isHun(hun: util.List[Integer], cardType: Int): Boolean = {
     for (h <- hun.asScala) {
       if (cardType == h) return true
     }
@@ -149,11 +138,13 @@ object HuWithHun {
   }
 
 
-  def getHuType(huCardType: HuCardType, hun: util.List[Int], lastCard: Int): Int = {
+  def getHuType(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int, hunNum:Int): Int = {
     var huList = new util.ArrayList[Int]()
     huList.add(isZhuo5(huCardType, hun, lastCard))
     huList.add(isLong(huCardType, hun, lastCard))
+    huList.add(isHunDiao(huCardType, hun, lastCard))
     var t = getMaxHuType(huList)
+    huCardType.specialHuList.add(t)
     println("最大牌型: " + t)
     t
   }
@@ -166,7 +157,7 @@ object HuWithHun {
     * @param lastCard
     * @return
     */
-  def isZhuo5(huCardType: HuCardType, hun: util.List[Int], lastCard: Int): Int = {
+  def isZhuo5(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int): Int = {
     //不是五万 不是混 肯定不是捉5
     if (lastCard != 4 && !isHun(hun, lastCard)) {
       return 0
@@ -191,6 +182,50 @@ object HuWithHun {
     0
   }
 
+
+  /**
+    * 是否是混吊
+    * @param huCardType
+    * @param hun
+    * @param lastCard
+    * @return
+    */
+  def isHunDiao(huCardType: HuCardType, hun:util.List[Integer], lastCard:Int):Int = {
+    var result = 0
+    val cardIsHun = isHun(hun, lastCard)
+    //最后抓的牌是混
+    if(cardIsHun) {
+      if(huCardType.hunJiang) result = HuType.hu_混吊
+      if(huCardType.hun3.size() > 0) result = HuType.hu_混吊
+
+    }else{//不是混
+      for(hun2Type <- huCardType.hun2.asScala){
+        if(hun2Type == lastCard) result = HuType.hu_混吊
+      }
+      //一个混的将
+      if(huCardType.jiangOneHun == lastCard) result = HuType.hu_混吊
+    }
+    0
+  }
+
+  /**
+    * 素本混龙
+    * @param huCardType
+    * @param hun
+    * @param lastCard
+    * @return
+    */
+  def isSuBenhunLong(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int,hunNum:Int):Int = {
+    if(hunNum != 3) return 0
+    if(huCardType.jiangOneHun != -1) return 0
+    if(huCardType.hun3.size() > 0) return 0
+    if(huCardType.hun2.size() > 0) return 0
+    if(huCardType.hunJiang) return 0
+    if(huCardType.shun.size() != 3) return 0
+    //是龙
+
+    0
+  }
   /**
     * 是否是龙
     *
@@ -199,14 +234,11 @@ object HuWithHun {
     * @param lastCard
     * @return
     */
-  def isLong(huCardType: HuCardType, hun: util.List[Int], lastCard: Int): Int = {
+  def isLong(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int): Int = {
     var huList = new util.ArrayList[Int]()
-
     huList.add(getLongType(huCardType, FanUtil.ytl1, hun, lastCard))
     huList.add(getLongType(huCardType, FanUtil.ytl2, hun, lastCard))
     huList.add(getLongType(huCardType, FanUtil.ytl3, hun, lastCard))
-
-
     getMaxHuType(huList)
 
   }
@@ -221,7 +253,7 @@ object HuWithHun {
     * @param lastCard
     * @return
     */
-  def getLongType(huCardType: HuCardType, targetLong: util.List[Integer], hun: util.List[Int], lastCard: Int): Int = {
+  def getLongType(huCardType: HuCardType, targetLong: util.List[Integer], hun: util.List[Integer], lastCard: Int): Int = {
     var needShunList = new util.ArrayList(targetLong)
     //顺有的牌
     var removeList = new util.ArrayList[Integer]()
@@ -273,7 +305,7 @@ object HuWithHun {
         if (needShunList.size() <= huCardType.hun3.size()) {
           //去掉三个混
           for (i <- 0 until needShunList.size()) {
-            huCardType.hun3.remove(i.toInt)
+            huCardType.hun3.remove(0)
           }
           longTypeSet.addAll(analyseLongType(huCardType, lastCardIsHun, lastCard, isWan))
         }
@@ -330,7 +362,7 @@ object HuWithHun {
         if (lastCard == 4) longTypeSet.add(HuType.hu_混儿吊捉五龙) else longTypeSet.add(HuType.hu_混儿吊龙)
       }
       //抓来的牌是将
-      if (huCardType.jiang == lastCard) longTypeSet.add(HuType.hu_混儿吊龙)
+      if (huCardType.jiangOneHun == lastCard) longTypeSet.add(HuType.hu_混儿吊龙)
 
       //有四五六万不在龙里
       if (huCardType.shun.contains(3)) longTypeSet.add(HuType.hu_捉五龙)
@@ -351,7 +383,7 @@ object HuWithHun {
     * @param long
     * @return
     */
-  def isBenHuner(hun: util.List[Int], long: util.List[Integer]): Boolean = {
+  def isBenHuner(hun: util.List[Integer], long: util.List[Integer]): Boolean = {
     return CardTypeUtil.getCardGroupByCardType(hun.get(0)) == CardTypeUtil.getCardGroupByCardType(long.get(0))
   }
 
@@ -389,8 +421,8 @@ object HuWithHun {
     * @param index
     * @return
     */
-  def getHunType(index: Int): util.List[Int] = {
-    var result: util.List[Int] = new util.ArrayList()
+  def getHunType(index: Int): util.List[Integer] = {
+    var result: util.List[Integer] = new util.ArrayList()
     val second = index match {
       case 8 => 0
       case 17 => 1
@@ -410,8 +442,8 @@ object HuWithHun {
     * @param index
     * @return
     */
-  def getHunTypeGDF(index: Int): util.List[Int] = {
-    var result: util.List[Int] = new util.ArrayList()
+  def getHunTypeGDF(index: Int): util.List[Integer] = {
+    var result: util.List[Integer] = new util.ArrayList()
     val second = index match {
       case 7 =>
         result.add(7)
@@ -455,19 +487,17 @@ object HuWithHun {
   }
 
 
-  /**
-    * 获得去掉混的牌和混的数量
-    *
-    * @param cards
-    * @param index
-    * @return
-    */
-  def getNoHunCardsAndHunNum(cards: Array[Int], index: Int): (Array[Int], Int) = {
+    /**
+      * 获得去掉混的牌和混的数量
+      * @param cards
+      * @param hun
+      * @return
+      */
+  def getNoHunCardsAndHunNum(cards: Array[Int], hun:util.List[Integer]): (Array[Int], Int) = {
     val newCards = for (c <- cards) yield c
-    val huns = getHunType(index)
     var count = 0
     for (index <- newCards.indices) {
-      if (huns.contains(index)) {
+      if (hun.contains(index)) {
         count += newCards(index)
         newCards(index) = 0
       }
@@ -565,12 +595,12 @@ object HuWithHun {
 
   def getKaoPai(cards: Array[Int], complete: util.List[util.List[CardGroup]], cardGroupList: util.List[CardGroup], hunNum: Int, hun2Num: Int): Unit = {
     count_hun += 1
-    println("-----dai hun --- " + count_hun)
+//    println("-----dai hun --- " + count_hun)
     for (i <- cards.indices if cards(i) != 0) {
       //凑将
       if (hunNum > 0 && cards(i) >= 1 && !Hu.isHasJiang(cardGroupList)) {
         var newCardGroupList = new util.ArrayList(cardGroupList)
-        newCardGroupList.add(new CardGroup(Hu.CARD_GROUP_TYPE_JIANG, i, 1))
+        newCardGroupList.add(new CardGroup(Hu.CARD_GROUP_TYPE_ONE_HUN_JIANG, i, 1))
         var newCards = for (c <- cards) yield c
         newCards(i) -= 1
         //数量
@@ -832,7 +862,21 @@ object HuWithHun {
   }
 
   def main(args: Array[String]) = {
-    test()
+//    test()
+
+    val a = Array[Int](//                3, 2, 0, 0, 0, 0, 0, 0, 0,
+      11, 1, 0, 0, 0, 1, 0, 0, 0,
+      0, 0, 0, 0, 0, 1, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0,
+      0, 0, 0)
+
+    val huIndex = 0
+    var hun = getHunTypeGDF(huIndex)
+    var lastCard = 4
+
+//    println(getHuCardType(a,0,hun,lastCard))
+    getHuCardType(a,0,hun,lastCard).forEach(hucardType=>println(hucardType))
     //    var list: util.List[Int] = new util.ArrayList[Int]()
     //    list.add(3)
     //    list.add(1)

@@ -203,6 +203,10 @@ public class Room implements IfaceRoom {
     }
 
     protected boolean isCanJoinCheckMoney(long userId) {
+        //代建房
+        if(!isCreaterJoin){
+            return true;
+        }
         if (isAA) {
             if (RedisManager.getUserRedisService().getUserMoney(userId) < createNeedMoney) {
                 return false;

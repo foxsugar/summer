@@ -29,6 +29,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 
@@ -139,8 +140,15 @@ public class LoginAction {
             params.put("userId", userId);
         }
 
+        //黑名单
+        boolean isInBlackList = ServerManager.constant.getBlackList().contains(userId);
+        if(isInBlackList){
+            code = ErrorCode.BLACK_LIST;
+        }else {
+            setHostAndPort(userId,params, code == 0);
+        }
 
-        setHostAndPort(userId,params, code == 0);
+
         System.err.println(params);
         return getParams("login", params, code);
     }
@@ -194,7 +202,14 @@ public class LoginAction {
             params.put("userId", userId);
         }
 
-        setHostAndPort(userId,params, code == 0);
+        //黑名单
+        boolean isInBlackList = ServerManager.constant.getBlackList().contains(userId);
+        if(isInBlackList){
+            code = ErrorCode.BLACK_LIST;
+        }else {
+            setHostAndPort(userId,params, code == 0);
+        }
+
 
         return getParams("checkOpenId", params, code);
     }
@@ -242,6 +257,34 @@ public class LoginAction {
         return params;
     }
 
+    @RequestMapping("/addblacklist")
+    public Map<String, Object> addBlackList(String userId) {
+
+
+        if (ServerManager.constant.getBlackList() == null) {
+            ServerManager.constant.setBlackList(new HashSet<String>());
+        }
+        ServerManager.constant.getBlackList().add(userId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("userId", ServerManager.constant.getBlackList());
+
+        constantService.constantDao.save(ServerManager.constant);
+        return result;
+    }
+
+    @RequestMapping("/removeblacklist")
+    public Map<String, Object> removeBlackList(String userId) {
+
+        if (ServerManager.constant.getBlackList() == null) {
+            ServerManager.constant.setBlackList(new HashSet<String>());
+        }
+        ServerManager.constant.getBlackList().remove(userId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("userId", ServerManager.constant.getBlackList());
+
+        constantService.constantDao.save(ServerManager.constant);
+        return result;
+    }
 
     public Map<String, Object> getParams(String url, Object params, int code) {
         Map<String, Object> results = new HashMap<>();
