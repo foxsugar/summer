@@ -11,6 +11,7 @@ import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +47,11 @@ public class Game implements IfaceGame{
     }
 
     protected void genRecord(Map<Long,Double> scores, Room room,long id) {
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("count", scores.size());
+        data.put("room_uuid", room.getUuid());
+
 
         Record.RoomRecord roomRecord = new Record.RoomRecord();
         roomRecord.setTime(System.currentTimeMillis());

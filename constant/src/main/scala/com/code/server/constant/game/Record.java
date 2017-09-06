@@ -81,6 +81,28 @@ public class Record {
         }
     }
 
+    public static class GameRecord{
+        private int curGameNumber;
+        List<UserRecord> records = new ArrayList<>();
+
+        public int getCurGameNumber() {
+            return curGameNumber;
+        }
+
+        public GameRecord setCurGameNumber(int curGameNumber) {
+            this.curGameNumber = curGameNumber;
+            return this;
+        }
+
+        public List<UserRecord> getRecords() {
+            return records;
+        }
+
+        public GameRecord setRecords(List<UserRecord> records) {
+            this.records = records;
+            return this;
+        }
+    }
     public static class UserRecord {
         public UserRecord() {
         }

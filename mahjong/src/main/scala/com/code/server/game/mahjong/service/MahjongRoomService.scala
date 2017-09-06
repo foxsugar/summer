@@ -3,16 +3,13 @@ package com.code.server.game.mahjong.service
 import com.code.server.constant.game.IGameConstant
 import com.code.server.constant.response.{ErrorCode, ResponseVo}
 import com.code.server.game.mahjong.config.ServerConfig
-import com.code.server.game.mahjong.logic.RoomFactory
-import com.code.server.game.mahjong.logic.RoomInfo
+import com.code.server.game.mahjong.logic.{RoomFactory, RoomInfo}
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
 import com.code.server.redis.service.RedisManager
-import com.code.server.util.SpringUtil
-import com.code.server.util.timer.GameTimer
-import com.code.server.util.timer.ITimeHandler
-import com.code.server.util.timer.TimerNode
+import com.code.server.util.{IdWorker, SpringUtil}
+import com.code.server.util.timer.{GameTimer, ITimeHandler, TimerNode}
 import com.fasterxml.jackson.databind.JsonNode
 
 /**
@@ -167,6 +164,8 @@ object MahjongRoomService {
     }
     val serverId: Int = SpringUtil.getBean(classOf[ServerConfig]).getServerId
     RoomManager.addRoom(roomInfo.getRoomId, "" + serverId, roomInfo)
+    val idWorker = new IdWorker(serverId,0)
+    roomInfo.setUuid(idWorker.nextId())
     return (code, roomInfo)
   }
 

@@ -3,13 +3,18 @@ package com.code.server.login.service;
 import com.code.server.constant.game.Record;
 import com.code.server.constant.kafka.IkafkaMsgId;
 import com.code.server.constant.kafka.KafkaMsgKey;
+import com.code.server.db.Service.GameRecordService;
 import com.code.server.db.Service.ReplayService;
 import com.code.server.db.Service.UserRecordService;
+import com.code.server.db.Service.UserRoomRecordService;
+import com.code.server.db.model.GameRecord;
 import com.code.server.db.model.Replay;
 import com.code.server.db.model.UserRecord;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
+import com.fasterxml.jackson.databind.JsonNode;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,6 +24,8 @@ public class CenterMsgService implements IkafkaMsgId {
 
 
     private static UserRecordService userRecordService = SpringUtil.getBean(UserRecordService.class);
+    private static UserRoomRecordService userRoomRecordService = SpringUtil.getBean(UserRoomRecordService.class);
+    private static GameRecordService gameRecordService = SpringUtil.getBean(GameRecordService.class);
 
     private static ReplayService replayService = SpringUtil.getBean(ReplayService.class);
 
@@ -30,6 +37,13 @@ public class CenterMsgService implements IkafkaMsgId {
                 break;
             case KAFKA_MSG_ID_REPLAY:
                 replay(msg);
+                break;
+            case KAFKA_MSG_ID_GAME_RECORD:
+                genGameRecord(msg);
+                break;
+            case KAFKA_MSG_ID_ROOM_RECORD:
+                genRoomRecord(msg);
+                break;
 
 
         }
@@ -67,4 +81,25 @@ public class CenterMsgService implements IkafkaMsgId {
         }
 
     }
+    private static void genGameRecord(String msg){
+        if (msg != null) {
+            JsonNode jsonNode = JsonUtil.readTree(msg);
+            long room_uuid = jsonNode.path("room_uuid").asLong();
+            int count = jsonNode.path("count").asInt();
+            Record.GameRecord data = JsonUtil.readValue(jsonNode.path("record").asText(), Record.GameRecord.class);
+            GameRecord gameRecord = new GameRecord();
+            gameRecord.setDate(new Date());
+            gameRecord.setRoom_uuid(room_uuid);
+            gameRecord.setLeftCount(count);
+            gameRecord.setGameRecord(data);
+            gameRecordService.gameRecordDao.save(gameRecord);
+        }
+    }
+
+    private static void genRoomRecord(String msg){
+
+
+    }
+
+
 }
