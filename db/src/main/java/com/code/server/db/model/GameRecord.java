@@ -26,6 +26,8 @@ public class GameRecord {
 
     private int leftCount;
 
+    private long replayId;
+
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
@@ -74,6 +76,15 @@ public class GameRecord {
 
     public GameRecord setLeftCount(int leftCount) {
         this.leftCount = leftCount;
+        return this;
+    }
+
+    public long getReplayId() {
+        return replayId;
+    }
+
+    public GameRecord setReplayId(long replayId) {
+        this.replayId = replayId;
         return this;
     }
 }

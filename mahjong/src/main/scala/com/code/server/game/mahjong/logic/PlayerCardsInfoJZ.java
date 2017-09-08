@@ -8,6 +8,9 @@ import com.code.server.game.mahjong.util.HuUtil;
 
 import java.util.*;
 
+/**
+ * 九州麻将
+ */
 public class PlayerCardsInfoJZ extends PlayerCardsInfoQAMT {
 
     protected static final Integer[] yao = new Integer[]{0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33};

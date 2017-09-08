@@ -194,7 +194,39 @@ public class GameInfo extends Game {
         }
     }
 
+    /**
+     * 摸一张牌
+     * @param playerCardsInfo
+     * @return
+     */
+    protected String getMoPaiCard(PlayerCardsInfoMj playerCardsInfo){
+        //拿出一张
+        String card = null;
+        //有换牌需求
+        if (isTest && playerCardsInfo.nextNeedCard != -1) {
+            String needCard = getCardByTypeFromRemainCards(playerCardsInfo.nextNeedCard);
+            playerCardsInfo.nextNeedCard = -1;
+            if (needCard != null) {
+                card = needCard;
+                remainCards.remove(needCard);
+            } else {
+                card = remainCards.remove(0);
+            }
+        } else {
+            card = remainCards.remove(0);
+        }
+        return card;
+    }
 
+
+    /**
+     * 是否荒庄
+     * @param playerCardsInfo
+     * @return
+     */
+    protected boolean isHuangzhuang(PlayerCardsInfoMj playerCardsInfo){
+        return playerCardsInfo.isHuangzhuang(this);
+    }
     /**
      * 摸牌
      *
@@ -206,7 +238,7 @@ public class GameInfo extends Game {
 
         PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
 
-        if (playerCardsInfo.isHuangzhuang(this)) {
+        if (isHuangzhuang(playerCardsInfo)) {
             handleHuangzhuang(userId);
             return;
         }
@@ -223,20 +255,20 @@ public class GameInfo extends Game {
         }
 
         //拿出一张
-        String card = null;
+        String card = getMoPaiCard(playerCardsInfo);
         //有换牌需求
-        if (isTest && playerCardsInfo.nextNeedCard != -1) {
-            String needCard = getCardByTypeFromRemainCards(playerCardsInfo.nextNeedCard);
-            playerCardsInfo.nextNeedCard = -1;
-            if (needCard != null) {
-                card = needCard;
-                remainCards.remove(needCard);
-            } else {
-                card = remainCards.remove(0);
-            }
-        } else {
-            card = remainCards.remove(0);
-        }
+//        if (isTest && playerCardsInfo.nextNeedCard != -1) {
+//            String needCard = getCardByTypeFromRemainCards(playerCardsInfo.nextNeedCard);
+//            playerCardsInfo.nextNeedCard = -1;
+//            if (needCard != null) {
+//                card = needCard;
+//                remainCards.remove(needCard);
+//            } else {
+//                card = remainCards.remove(0);
+//            }
+//        } else {
+//            card = remainCards.remove(0);
+//        }
 
         playerCardsInfo.mopai(card);
         //

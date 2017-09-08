@@ -53,6 +53,7 @@ public class Game implements IfaceGame{
         Map<String, Object> data = new HashMap<>();
         data.put("count", scores.size());
         data.put("room_uuid", room.getUuid());
+        data.put("replay_id", id);
 
 
         GameRecord gameRecord = new GameRecord();

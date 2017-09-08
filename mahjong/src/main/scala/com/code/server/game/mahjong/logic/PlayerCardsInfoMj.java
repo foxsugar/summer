@@ -26,14 +26,14 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     protected List<String> cards = new ArrayList<>();//手上的牌
     protected List<String> disCards = new ArrayList<>();//丢弃的牌
-    protected Map<Integer,Long> pengType = new HashMap<>();//碰
+    protected Map<Integer, Long> pengType = new HashMap<>();//碰
     protected Set<Integer> anGangType = new HashSet<>();//暗杠
-    protected Map<Integer,Long> mingGangType = new HashMap<>();//明杠
+    protected Map<Integer, Long> mingGangType = new HashMap<>();//明杠
     protected Set<Integer> chiType = new HashSet<>();
     protected List<List<String>> chiCards = new ArrayList<>();
-    protected Map<Integer,List<String>> xuanfengDan = new HashMap<>();
+    protected Map<Integer, List<String>> xuanfengDan = new HashMap<>();
     protected boolean isTing = false;
-//    protected double score;//分数
+    //    protected double score;//分数
     protected Set<Integer> tingSet = new HashSet<>();//听得牌
     protected int lastOperate;//上次的操作
     protected String catchCard;//上次摸得牌
@@ -73,11 +73,9 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     protected boolean isPlayHun = false;//是否打出混
 
 
-
-
-
     /**
      * 根据发的牌初始化
+     *
      * @param cards
      */
     public void init(List<String> cards) {
@@ -86,15 +84,17 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     /**
      * 是否荒庄
+     *
      * @param gameInfo
      * @return
      */
-    public boolean isHuangzhuang(GameInfo gameInfo){
-        return gameInfo.getRemainCards().size()<=0;
+    public boolean isHuangzhuang(GameInfo gameInfo) {
+        return gameInfo.getRemainCards().size() <= 0;
     }
 
     /**
      * 摸牌
+     *
      * @param card
      */
     public void mopai(String card) {
@@ -103,26 +103,27 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         this.lastOperate = type_mopai;
         this.catchCard = card;
         operateList.add(type_mopai);
-        this.gameInfo.addUserOperate(this.userId,type_mopai);
+        this.gameInfo.addUserOperate(this.userId, type_mopai);
     }
 
     /**
      * 出牌
+     *
      * @param card
      */
     public void chupai(String card) {
         boolean isRemove = this.cards.remove(card);
-        if(!isRemove){
-            gameInfo.logger.error("userId : "+userId+" 删牌 没有删掉 : "+card);
-            gameInfo.logger.error("玩家的牌 : "+this.cards);
-            gameInfo.logger.error("明杠 : "+this.mingGangType);
-            gameInfo.logger.error("暗杠 : "+this.anGangType);
+        if (!isRemove) {
+            gameInfo.logger.error("userId : " + userId + " 删牌 没有删掉 : " + card);
+            gameInfo.logger.error("玩家的牌 : " + this.cards);
+            gameInfo.logger.error("明杠 : " + this.mingGangType);
+            gameInfo.logger.error("暗杠 : " + this.anGangType);
 
         }
         this.disCards.add(card);
         this.lastOperate = type_play;
         operateList.add(type_play);
-        this.gameInfo.addUserOperate(this.userId,type_play);
+        this.gameInfo.addUserOperate(this.userId, type_play);
     }
 
     public void chi(String card, String one, String two) {
@@ -138,11 +139,12 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         chiType.add(CardTypeUtil.cardType.get(temp.get(0)));
         this.lastOperate = type_chi;
         operateList.add(type_chi);
-        this.gameInfo.addUserOperate(this.userId,type_chi);
+        this.gameInfo.addUserOperate(this.userId, type_chi);
     }
 
     /**
      * 碰
+     *
      * @param card
      * @param playUser 碰的谁的牌
      */
@@ -158,7 +160,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
                 gangBlackList.add(cardType);
             }
         }
-        this.gameInfo.addUserOperate(this.userId,type_peng);
+        this.gameInfo.addUserOperate(this.userId, type_peng);
 
     }
 
@@ -171,14 +173,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         this.disCards.add(null);
 
         this.isTing = true;
-        tingSet = getTingCardType(cards,null);
+        tingSet = getTingCardType(cards, null);
         this.lastOperate = type_ting;
         operateList.add(type_ting);
-        this.gameInfo.addUserOperate(this.userId,type_ting);
+        this.gameInfo.addUserOperate(this.userId, type_ting);
     }
 
     /**
      * 获得临时牌集合
+     *
      * @param disCard
      * @return
      */
@@ -191,6 +194,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     /**
      * 每种牌的数量 34种
+     *
      * @param cards
      * @return
      */
@@ -209,18 +213,19 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     /**
      * 检测出牌是否合法
+     *
      * @param card
      * @return
      */
     public boolean checkPlayCard(String card) {
-        if(!this.cards.contains(card)){
+        if (!this.cards.contains(card)) {
             return false;
         }
         List<String> temp = getCardsNoChiPengGang(cards);
         boolean isMore = (temp.size() - 2) % 3 == 0;//去掉将如果能整除说明手牌多一张
         int ct = CardTypeUtil.cardType.get(card);
         boolean isHas = temp.contains(card);
-        for(String c : temp){
+        for (String c : temp) {
             int type = CardTypeUtil.cardType.get(c);
             if (type == ct) {
                 isHas = true;
@@ -233,6 +238,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     /**
      * 是否可吃这张牌
+     *
      * @param card
      * @param one
      * @param two
@@ -253,18 +259,18 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
             return false;
         }
         int group = CardTypeUtil.getCardGroup(card);
-        if(CardTypeUtil.GROUP_FENG == group || CardTypeUtil.GROUP_ZI == group){
+        if (CardTypeUtil.GROUP_FENG == group || CardTypeUtil.GROUP_ZI == group) {
             return false;
         }
         boolean isSameGroup = CardTypeUtil.getCardGroup(card) == CardTypeUtil.getCardGroup(one)
-                && CardTypeUtil.getCardGroup(card)== CardTypeUtil.getCardGroup(two);
-        return isSameGroup && cardsNum.containsKey(oneType) && cardsNum.get(oneType)>0
-                && cardsNum.containsKey(twoType) && cardsNum.get(twoType)>0;
+                && CardTypeUtil.getCardGroup(card) == CardTypeUtil.getCardGroup(two);
+        return isSameGroup && cardsNum.containsKey(oneType) && cardsNum.get(oneType) > 0
+                && cardsNum.containsKey(twoType) && cardsNum.get(twoType) > 0;
     }
 
 
-    public boolean isHasChi(String card){
-        return getChiList(getCardsNoChiPengGang(cards),card).size() > 0;
+    public boolean isHasChi(String card) {
+        return getChiList(getCardsNoChiPengGang(cards), card).size() > 0;
     }
 
     public boolean isCanChiTing(String card) {
@@ -275,11 +281,11 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         return false;
     }
 
-    private boolean isHasThisCard(Map<Integer, Integer> map,int type) {
-        return map.containsKey(type) && map.get(type)>0;
+    private boolean isHasThisCard(Map<Integer, Integer> map, int type) {
+        return map.containsKey(type) && map.get(type) > 0;
     }
 
-    private String getACardByType(List<String> list,int type){
+    private String getACardByType(List<String> list, int type) {
         for (String l : list) {
             int t = CardTypeUtil.cardType.get(l);
             if (t == type) {
@@ -291,22 +297,23 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     /**
      * 获得可以构成吃的列表
+     *
      * @param card
      * @return
      */
-    public List<List<String>> getChiList(List<String> cards,String card) {
+    public List<List<String>> getChiList(List<String> cards, String card) {
         int cardType = CardTypeUtil.cardType.get(card);
         List<List<String>> result = new ArrayList<>();
         List<String> temp = new ArrayList<>();
         temp.addAll(cards);
         Map<Integer, Integer> cardsNum = getCardNum(temp);
         int group = CardTypeUtil.getCardGroup(card);
-        if(group == CardTypeUtil.GROUP_FENG || group == CardTypeUtil.GROUP_ZI){
+        if (group == CardTypeUtil.GROUP_FENG || group == CardTypeUtil.GROUP_ZI) {
             return result;
         }
         //吃的这张牌是第一张
-        if (isHasThisCard(cardsNum,cardType + 1) && CardTypeUtil.getCardGroupByCardType(cardType+1)==group
-                && isHasThisCard(cardsNum,cardType + 2) && CardTypeUtil.getCardGroupByCardType(cardType+2)==group ) {
+        if (isHasThisCard(cardsNum, cardType + 1) && CardTypeUtil.getCardGroupByCardType(cardType + 1) == group
+                && isHasThisCard(cardsNum, cardType + 2) && CardTypeUtil.getCardGroupByCardType(cardType + 2) == group) {
 
             List<String> chi = new ArrayList<>();
             chi.add(getACardByType(temp, cardType + 1));
@@ -315,8 +322,8 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
             result.add(chi);
         }
         //吃的这张牌是第二张
-        if (isHasThisCard(cardsNum,cardType - 1) && CardTypeUtil.getCardGroupByCardType(cardType-1)==group
-                && isHasThisCard(cardsNum,cardType + 1) && CardTypeUtil.getCardGroupByCardType(cardType+1)==group) {
+        if (isHasThisCard(cardsNum, cardType - 1) && CardTypeUtil.getCardGroupByCardType(cardType - 1) == group
+                && isHasThisCard(cardsNum, cardType + 1) && CardTypeUtil.getCardGroupByCardType(cardType + 1) == group) {
             List<String> chi = new ArrayList<>();
             chi.add(getACardByType(temp, cardType - 1));
             chi.add(getACardByType(temp, cardType + 1));
@@ -324,8 +331,8 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
             result.add(chi);
         }
         //吃的这张牌是第三张
-        if (isHasThisCard(cardsNum,cardType - 1) && CardTypeUtil.getCardGroupByCardType(cardType-1)==group
-                && isHasThisCard(cardsNum,cardType -2) && CardTypeUtil.getCardGroupByCardType(cardType-2)==group) {
+        if (isHasThisCard(cardsNum, cardType - 1) && CardTypeUtil.getCardGroupByCardType(cardType - 1) == group
+                && isHasThisCard(cardsNum, cardType - 2) && CardTypeUtil.getCardGroupByCardType(cardType - 2) == group) {
             List<String> chi = new ArrayList<>();
             chi.add(getACardByType(temp, cardType - 1));
             chi.add(getACardByType(temp, cardType - 2));
@@ -345,6 +352,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     /**
      * 能否碰这张牌
+     *
      * @param card
      * @return
      */
@@ -352,13 +360,14 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         List<String> temp = getCardsNoChiPengGang(cards);
         int cardType = CardTypeUtil.cardType.get(card);
         Map<Integer, Integer> cardsNum = getCardNum(temp);
-        return cardsNum.containsKey(cardType) && cardsNum.get(cardType)>=2;
+        return cardsNum.containsKey(cardType) && cardsNum.get(cardType) >= 2;
 
 
     }
 
     /**
      * 加上这张牌能否杠
+     *
      * @param card
      * @return
      */
@@ -378,6 +387,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     /**
      * 能否杠这张牌
+     *
      * @param card
      * @return
      */
@@ -398,15 +408,16 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     /**
      * 是否可以胡这张牌
+     *
      * @param card
      * @return
      */
     public boolean isCanHu_dianpao(String card) {
-        if(roomInfo.mustZimo==1){
+        if (roomInfo.mustZimo == 1) {
             return false;
         }
-        if("11".equals(this.roomInfo.getMode())||"12".equals(this.roomInfo.getMode())||"13".equals(this.roomInfo.getMode())||"14".equals(this.roomInfo.getMode())){
-            if (!isTing){
+        if ("11".equals(this.roomInfo.getMode()) || "12".equals(this.roomInfo.getMode()) || "13".equals(this.roomInfo.getMode()) || "14".equals(this.roomInfo.getMode())) {
+            if (!isTing) {
                 return false;
             }
         }
@@ -414,11 +425,12 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         List<String> noPengAndGang = getCardsNoChiPengGang(temp);
         System.out.println("检测是否可胡点炮= " + noPengAndGang);
         int cardType = CardTypeUtil.cardType.get(card);
-        return HuUtil.isHu(noPengAndGang, this,cardType , null).size()>0;
+        return HuUtil.isHu(noPengAndGang, this, cardType, null).size() > 0;
     }
 
     /**
      * 是否可胡 自摸
+     *
      * @param card
      * @return
      */
@@ -426,23 +438,25 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         List<String> cs = getCardsNoChiPengGang(cards);
         System.out.println("检测是否可胡自摸= " + cs);
         int cardType = CardTypeUtil.cardType.get(card);
-        return HuUtil.isHu(cs, this,cardType , null).size()>0;
+        return HuUtil.isHu(cs, this, cardType, null).size() > 0;
 
     }
 
     /**
      * 是否有杠
+     *
      * @return
      */
     public boolean isHasGang() {
         List<String> temp = new ArrayList<>();
         temp.addAll(cards);
         Set set = getHasGangList(temp);
-        return set.size()>0;
+        return set.size() > 0;
     }
 
     /**
      * 得到能杠的列表(去掉已经杠过的)
+     *
      * @param cards
      * @return
      */
@@ -478,15 +492,16 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     /**
      * 是否有旋风蛋
+     *
      * @param cards
      * @return
      */
-    public boolean isHasXuanfengDan(List<String> cards,String card){
-       return false;
+    public boolean isHasXuanfengDan(List<String> cards, String card) {
+        return false;
     }
 
 
-    protected void setCanBeOperate(boolean chi,boolean peng,boolean gang,boolean ting,boolean hu,boolean chiTing,boolean pengTing){
+    protected void setCanBeOperate(boolean chi, boolean peng, boolean gang, boolean ting, boolean hu, boolean chiTing, boolean pengTing) {
         this.canBeChi = chi;
         this.canBePeng = peng;
         this.canBeGang = gang;
@@ -497,7 +512,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     }
 
 
-    public boolean isHasSpecialHu(int huType){
+    public boolean isHasSpecialHu(int huType) {
         return specialHuScore.containsKey(huType);
     }
 
@@ -506,14 +521,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     }
 
 
-    public boolean isMoreOneCard(){
+    public boolean isMoreOneCard() {
         List<String> temp = new ArrayList<>();
         temp.addAll(cards);
         List<String> cs = getCardsNoChiPengGang(temp);
-        return (cs.size() -2) % 3 == 0;
+        return (cs.size() - 2) % 3 == 0;
     }
+
     public boolean isCanTing(List<String> cards) {
-        return getTingCardType(getCardsNoChiPengGang(cards),null).size()>0;
+        return getTingCardType(getCardsNoChiPengGang(cards), null).size() > 0;
     }
 
     public Set<Integer> getTingCardType(List<String> cards, HuLimit limit) {
@@ -531,10 +547,10 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
                 List<String> tempCards = new ArrayList<>();
                 tempCards.addAll(handCards);
                 tempCards.remove(card);
-                tingList.addAll(HuUtil.isTing(tempCards, this,limit));
+                tingList.addAll(HuUtil.isTing(tempCards, this, limit));
             }
         } else {
-            tingList.addAll(HuUtil.isTing(handCards, this,limit));
+            tingList.addAll(HuUtil.isTing(handCards, this, limit));
         }
         return tingList;
     }
@@ -553,15 +569,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
                 List<String> tempCards = new ArrayList<>();
                 tempCards.addAll(handCards);
                 tempCards.remove(card);
-                tingList.addAll(HuUtil.getTingHuList(tempCards, this,limit,card));
+                tingList.addAll(HuUtil.getTingHuList(tempCards, this, limit, card));
             }
         } else {
-            tingList.addAll(HuUtil.getTingHuList(handCards, this,limit,null));
+            tingList.addAll(HuUtil.getTingHuList(handCards, this, limit, null));
         }
         return tingList;
     }
 
-    public boolean isYizhangying(List<String> cards, String huCard){
+    public boolean isYizhangying(List<String> cards, String huCard) {
         List<String> temp = new ArrayList<>();
         temp.addAll(cards);
         temp.remove(huCard);
@@ -618,24 +634,25 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     }
 
     //杠牌分数计算
-    public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card){
+    public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card) {
         this.lastOperate = type_gang;
 
         operateList.add(type_gang);
-        this.gameInfo.addUserOperate(this.userId,type_gang);
+        this.gameInfo.addUserOperate(this.userId, type_gang);
     }
 
     //胡牌分数计算
-    public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card){
+    public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
 
     }
 
-    public void computeALLGang(){
+    public void computeALLGang() {
 
     }
 
     /**
      * 从牌中删除
+     *
      * @param list
      * @param cards
      */
@@ -655,7 +672,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     public List<String> getCardsNoChiPengGang(List<String> list) {
         List<String> temp = new ArrayList<>();
         temp.addAll(list);
-        for(List<String> xfd : xuanfengDan.values()){
+        for (List<String> xfd : xuanfengDan.values()) {
             temp.removeAll(xfd);
 //            removeCards(temp, xfd);
         }
@@ -697,32 +714,31 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         for (List<String> chi : chiCards) {
             temp.removeAll(chi);
         }
-        for(List<String> xuanfeng : xuanfengDan.values()){
+        for (List<String> xuanfeng : xuanfengDan.values()) {
             temp.removeAll(xuanfeng);
         }
         return temp;
     }
 
-    public int getChiPengGangNum(){
+    public int getChiPengGangNum() {
         return this.chiCards.size() + this.pengType.size() + this.mingGangType.size() + this.anGangType.size();
     }
 
 
-    
     /**
-	* 类描述：   自摸分数计算
-	* 创建人：Clark  
-	* 创建时间：2016年12月4日 下午4:51:18   
-	* 修改人：Clark  
-	* 修改时间：2016年12月4日 下午4:51:18   
-	* 修改备注：   
-	* @version 1.0    
-	*
-	 */
+     * 类描述：   自摸分数计算
+     * 创建人：Clark
+     * 创建时间：2016年12月4日 下午4:51:18
+     * 修改人：Clark
+     * 修改时间：2016年12月4日 下午4:51:18
+     * 修改备注：
+     *
+     * @version 1.0
+     */
 
-    public void hu_zm(RoomInfo room,GameInfo gameInfo,String card) {
+    public void hu_zm(RoomInfo room, GameInfo gameInfo, String card) {
         this.huCard = card;
-        huCompute(room, gameInfo, true,0, card);
+        huCompute(room, gameInfo, true, 0, card);
         this.lastOperate = type_hu;
         gameInfo.isAlreadyHu = true;
         this.isAlreadyHu = true;
@@ -734,18 +750,18 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         }
     }
 
-	/** 
-	* 类描述：   胡点炮分数计算
-	* 创建人：Clark  
-	* 创建时间：2016年12月4日 下午4:51:48   
-	* 修改人：Clark  
-	* 修改时间：2016年12月4日 下午4:51:48   
-	* 修改备注：   
-	* @version 1.0    
-	*
-	 */
+    /**
+     * 类描述：   胡点炮分数计算
+     * 创建人：Clark
+     * 创建时间：2016年12月4日 下午4:51:48
+     * 修改人：Clark
+     * 修改时间：2016年12月4日 下午4:51:48
+     * 修改备注：
+     *
+     * @version 1.0
+     */
 
-	public void hu_dianpao(RoomInfo room, GameInfo gameInfo, long dianpaoUser, String disCard) {
+    public void hu_dianpao(RoomInfo room, GameInfo gameInfo, long dianpaoUser, String disCard) {
         //胡牌次数
         room.addHuNum(this.userId);
         //连庄次数
@@ -757,11 +773,10 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
         this.cards.add(disCard);
         this.huCard = disCard;
-        huCompute(room,gameInfo,false,dianpaoUser,disCard);
+        huCompute(room, gameInfo, false, dianpaoUser, disCard);
         this.lastOperate = type_hu;
 
-	}
-
+    }
 
 
     /**
@@ -783,8 +798,8 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         }
     }
 
-    public double addScore(int s){
-        this.score = this.score +s;
+    public double addScore(int s) {
+        this.score = this.score + s;
         return this.score;
     }
 
@@ -792,7 +807,8 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         this.gangScore = this.gangScore + score;
         return this.gangScore;
     }
-    protected void setWinTypeResult(HuCardType huCardType){
+
+    protected void setWinTypeResult(HuCardType huCardType) {
         this.winType.addAll(huCardType.specialHuList);
     }
 
@@ -800,23 +816,23 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         if (list.size() <= 0) {
             return null;
         }
-       Collections.sort(list, new Comparator<HuCardType>() {
-           @Override
-           public int compare(HuCardType o1, HuCardType o2) {
-               if (o1.fan > o2.fan) {
-                   return -1;
-               } else if (o1.fan < o2.fan) {
-                   return 1;
-               } else {
-                   return 0;
-               }
-           }
-       });
+        Collections.sort(list, new Comparator<HuCardType>() {
+            @Override
+            public int compare(HuCardType o1, HuCardType o2) {
+                if (o1.fan > o2.fan) {
+                    return -1;
+                } else if (o1.fan < o2.fan) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
 
         return list.get(0);
     }
 
-    public void baoDan(String card){
+    public void baoDan(String card) {
         //加入手牌列表
         this.cards.add(card);
         this.lastOperate = type_mopai;
@@ -824,9 +840,9 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         operateList.add(type_mopai);
     }
 
-    protected static boolean isHasMode(String mode,int type) {
+    protected static boolean isHasMode(String mode, int type) {
         int c = Integer.parseInt(mode);
-        return (c&(1<<type))>>type==1;
+        return (c & (1 << type)) >> type == 1;
     }
 
     public static void main(String[] args) {
@@ -838,7 +854,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 //        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","042","124","135"};
 //        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","134","042","124","135"};
 //        String[] s = new String[]{"124","128","132",     "016",  "017","018",    "020",     "024","025","026",   "028","029",    "032","033"};
-        String[] s = new String[]{"012","013","014",     "016",  "017","018",    "020",     "024","025","026",   "028","029",    "032","033"};
+        String[] s = new String[]{"012", "013", "014", "016", "017", "018", "020", "024", "025", "026", "028", "029", "032", "033"};
 
         List<String> cs = Arrays.asList(s);
         playerCardsInfo.cards = cs;
@@ -874,7 +890,6 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     public void setDisCards(List<String> disCards) {
         this.disCards = disCards;
     }
-
 
 
     public Set<Integer> getAnGangType() {

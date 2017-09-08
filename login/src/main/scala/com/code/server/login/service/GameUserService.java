@@ -403,7 +403,9 @@ public class GameUserService {
 
     public int getRecordsByRoom(KafkaMsgKey msgKey, long roomUid) {
         List<com.code.server.db.model.GameRecord> list = gameRecordService.gameRecordDao.getGameRecordByUuid(roomUid);
+
         Map<Object, Object> result = new HashMap<>();
+
         result.put("result", list);
         ResponseVo vo = new ResponseVo("userService", "getRecordsByRoom", result);
         sendMsg(msgKey, vo);
