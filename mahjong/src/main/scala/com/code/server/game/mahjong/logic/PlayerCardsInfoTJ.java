@@ -13,23 +13,41 @@ import java.util.Set;
 public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
 
+    public static List<Integer> zhuo5AndLong = new ArrayList<>();
 
+    static{
+        zhuo5AndLong.add(hu_捉五);
+        zhuo5AndLong.add(hu_混儿吊捉五);
+
+        zhuo5AndLong.add(hu_龙);
+        zhuo5AndLong.add(hu_本混龙);
+
+        zhuo5AndLong.add(hu_捉五龙);
+        zhuo5AndLong.add(hu_本混捉五龙);
+
+        zhuo5AndLong.add(hu_混儿吊龙);
+        zhuo5AndLong.add(hu_混儿吊本混龙);
+
+        zhuo5AndLong.add(hu_混儿吊捉五龙);
+        zhuo5AndLong.add(hu_混儿吊捉五本混龙);
+
+        zhuo5AndLong.add(hu_素本混龙);
+    }
 
 
     @Override
     public void init(List<String> cards) {
         super.init(cards);
 
-
-        specialHuScore.put(hu_混吊, 1);
+        specialHuScore.put(hu_混吊, 2);
 
         specialHuScore.put(hu_捉五, 3);
         specialHuScore.put(hu_混儿吊捉五, 3);
 
-        specialHuScore.put(hu_龙, 1);
+        specialHuScore.put(hu_龙, 4);
         specialHuScore.put(hu_本混龙, 1);
 
-        specialHuScore.put(hu_捉五龙, 1);
+        specialHuScore.put(hu_捉五龙, 7);
         specialHuScore.put(hu_本混捉五龙, 3);
 
         specialHuScore.put(hu_混儿吊龙, 10);
@@ -37,6 +55,10 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
         specialHuScore.put(hu_混儿吊捉五龙, 7);
         specialHuScore.put(hu_混儿吊捉五本混龙, 50);
+
+        if (this.roomInfo.isHasMode(GameInfoTJ.mode_素本混龙)) {
+            specialHuScore.put(hu_素本混龙, 50);
+        }
 
 
     }
@@ -53,7 +75,28 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
         int lastCard = CardTypeUtil.getTypeByCard(card);
         int chiPengGangNum = getChiPengGangNum();
-        return HuUtil.isHu(this, this.cards, chiPengGangNum, this.gameInfo.hun, lastCard).size() > 0;
+
+        //是否是杠开
+        boolean isGangKai = isGangKai();
+
+        //是否是素胡
+        boolean isSuHu = isSuHu();
+
+        //是否是天胡
+        boolean isTianHu = this.operateList.size()==1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
+
+
+        List<HuCardType> huList = HuUtil.isHu(this, this.cards, chiPengGangNum, this.gameInfo.hun, lastCard);
+        HuCardType maxHuType = getMaxScoreHuCardType(huList);
+
+        if(huList.size() > 0) {
+            List<Integer> huTypeList = new ArrayList<>(maxHuType.specialHuList);
+            huTypeList.retainAll(zhuo5AndLong);
+            return huTypeList.size() > 0 || isGangKai || isSuHu || isTianHu;
+        }else{
+            return false;
+        }
+
 
     }
 
@@ -81,7 +124,8 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         //是否是素胡
         boolean isSuHu = isSuHu();
 
-        boolean isTianHu = this.operateList.size()==1 && this.operateList.get(0) == type_mopai;
+        //是否是天胡
+        boolean isTianHu = this.operateList.size()==1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
 
         HuCardType maxHuType = getMaxScoreHuCardType(huList);
 
@@ -90,11 +134,16 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         if(isSuHu) score *= 4;
         if(isTianHu) score *= 4;
 
-        //todo 拉龙五 翻倍
+        // 拉龙五 翻倍
+        if (this.roomInfo.isHasMode(GameInfoTJ.mode_拉龙五)) {
+            List<Integer> huTypeList = new ArrayList<>(maxHuType.specialHuList);
+            huTypeList.retainAll(zhuo5AndLong);
+            if (huTypeList.size() > 0) {
+                score *= 2;
+            }
+        }
 
         computeAddScore(score, this.getUserId(), false);
-
-
     }
 
     /**
@@ -197,11 +246,14 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
     @Override
     public boolean isHasGang() {
-        //todo 是否带金杠
         List<String> temp = new ArrayList<>();
         temp.addAll(cards);
         Set set = getHasGangList(temp);
-        set.removeAll(this.gameInfo.hun);
+
+        //是否带金杠
+        if(!this.roomInfo.isHasMode(GameInfoTJ.mode_金杠)){
+            set.removeAll(this.gameInfo.hun);
+        }
         return set.size() > 0;
     }
 
@@ -216,6 +268,11 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
     public boolean isCanPengAddThisCard(String card) {
         //不能碰混
         return !this.gameInfo.hun.contains(CardTypeUtil.getTypeByCard(card)) && super.isCanPengAddThisCard(card);
+    }
+
+    @Override
+    public boolean isCanGangThisCard(String card) {
+        return super.isCanGangThisCard(card);
     }
 
     @Override

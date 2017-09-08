@@ -957,13 +957,6 @@ public class GameInfo extends Game {
     public void noticeDissolutionResult() {
         if (isRoomOver()) {
             List<UserOfResult> userOfResultList = this.room.getUserOfResult();
-//
-//            for (long userId : users) {
-//                //删除玩家房间映射关系
-////                room.roomRemoveUser(userId);
-//
-//            }
-
             // 存储返回
             GameOfResult gameOfResult = new GameOfResult();
             gameOfResult.setUserList(userOfResultList);

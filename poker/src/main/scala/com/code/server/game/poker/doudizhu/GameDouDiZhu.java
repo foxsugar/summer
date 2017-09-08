@@ -134,15 +134,19 @@ public class GameDouDiZhu extends Game {
         handleBomb(cardStruct);
 
         //回放
-        replay.getOperate().add(Operate.getOperate_PLAY(userId,cardStruct,false));
+        replay.getOperate().add(Operate.getOperate_PLAY(userId, cardStruct, false));
 
         //牌打完
         if (playerCardInfo.cards.size() == 0) {
             PlayerCardInfoDouDiZhu playerCardInfoDizhu = playerCardInfos.get(dizhu);
             //是否是春天
+
             if (userPlayCount.size() == 1 || playerCardInfoDizhu.getPlayCount() == 1) {
                 isSpring = true;
-                multiple *= 2;
+                //炸 封顶的情况
+                if (zhaCount < room.getMultiple() || room.getMultiple() == -1) {
+                    multiple *= 2;
+                }
             }
 
             compute(playerCardInfo.getUserId() == dizhu);
@@ -170,8 +174,7 @@ public class GameDouDiZhu extends Game {
                 List<Integer> cards = cardStruct.getCards();
                 zhaCount += 1;//记录炸的数量
                 multiple *= 2;//记录倍数
-            }
-            else if (cardStruct.getType() == CardStruct.type_火箭) {
+            } else if (cardStruct.getType() == CardStruct.type_火箭) {
                 zhaCount += 1;//记录炸的数量
                 multiple *= 2;//记录倍数
             }
@@ -189,7 +192,7 @@ public class GameDouDiZhu extends Game {
         MsgSender.sendMsg2Player("gameService", "pass", 0, userId);
 
         //回放
-        replay.getOperate().add(Operate.getOperate_PLAY(userId,null,true));
+        replay.getOperate().add(Operate.getOperate_PLAY(userId, null, true));
         updateLastOperateTime();
         return 0;
     }
@@ -255,7 +258,7 @@ public class GameDouDiZhu extends Game {
     /**
      * 叫地主的人重置为这把叫地主的人(再叫一次)
      */
-    protected void resetJiaodizhuUser(){
+    protected void resetJiaodizhuUser() {
         long user = nextTurnId(nextTurnId(room.getBankerId()));
         room.setBankerId(user);
     }
@@ -263,13 +266,14 @@ public class GameDouDiZhu extends Game {
     /**
      * 流局处理
      */
-    protected void handleLiuju(){
+    protected void handleLiuju() {
         sendResult(true, false);
         room.clearReadyStatus(false);
         sendFinalResult();
         //重置叫地主的人
         resetJiaodizhuUser();
     }
+
     /**
      * 叫地主
      *
@@ -333,7 +337,7 @@ public class GameDouDiZhu extends Game {
 
 
         //回放
-        replay.getOperate().add(Operate.getOperate_JDZ(userId,score,!isJiao));
+        replay.getOperate().add(Operate.getOperate_JDZ(userId, score, !isJiao));
 
         return 0;
     }
@@ -429,7 +433,6 @@ public class GameDouDiZhu extends Game {
     }
 
 
-
     protected void playStepStart(long dizhu) {
         this.canQiangUser = -1;
         this.canJiaoUser = -1;
@@ -443,7 +446,7 @@ public class GameDouDiZhu extends Game {
     /**
      * 底牌加到地主身上
      */
-    protected void dizhuAddTableCards(){
+    protected void dizhuAddTableCards() {
         //把底牌加到地主身上
         PlayerCardInfoDouDiZhu playerCardInfo = playerCardInfos.get(dizhu);
         if (playerCardInfo != null) {
@@ -452,6 +455,7 @@ public class GameDouDiZhu extends Game {
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "showTableCard", tableCards), users);
         }
     }
+
     /**
      * 开始打牌
      *
@@ -467,9 +471,9 @@ public class GameDouDiZhu extends Game {
     /**
      * 开始游戏后的处理
      */
-    protected void doAfterStart(){
+    protected void doAfterStart() {
         //玩家所有的牌
-        for(PlayerCardInfoDouDiZhu playerCardInfoDouDiZhu : playerCardInfos.values()){
+        for (PlayerCardInfoDouDiZhu playerCardInfoDouDiZhu : playerCardInfos.values()) {
             playerCardInfoDouDiZhu.allCards.addAll(playerCardInfoDouDiZhu.cards);
 
             //回放 玩家的牌
@@ -528,12 +532,9 @@ public class GameDouDiZhu extends Game {
         }
 
 
-
-
-
         updateLastOperateTime();
         //回放
-        replay.getOperate().add(Operate.getOperate_QDZ(userId,!isQiang));
+        replay.getOperate().add(Operate.getOperate_QDZ(userId, !isQiang));
         return 0;
     }
 
@@ -564,8 +565,6 @@ public class GameDouDiZhu extends Game {
         ResponseVo vo = new ResponseVo("gameService", "canqiang", result);
         MsgSender.sendMsg2Player(vo, users);
     }
-
-
 
 
     @Override

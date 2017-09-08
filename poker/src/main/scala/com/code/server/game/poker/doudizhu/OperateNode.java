@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 临汾斗地主 控制流程
  * Created by sunxianping on 2017/7/11.
  */
 public class OperateNode {
