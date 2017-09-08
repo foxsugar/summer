@@ -12,6 +12,10 @@ import java.util.Set;
  */
 public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
+
+
+
+
     @Override
     public void init(List<String> cards) {
         super.init(cards);

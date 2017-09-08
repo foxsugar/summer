@@ -127,6 +127,11 @@ public class RoomInfo extends Room {
     }
 
 
+    protected boolean isHasMode(int type) {
+        int c = Integer.parseInt(this.mode);
+        return (c & (1 << type)) >> type == 1;
+    }
+
     public void setUserSocre(long userId, double score) {
         if (!userScores.containsKey(userId)) {
 //            logger.error("===设置分数时出错 userId = "+userId +"users: "+userScores.toString());
@@ -292,6 +297,9 @@ public class RoomInfo extends Room {
 
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), users);
 //        serverContext.sendToOnlinePlayer(noticeEndResult, this.users);
+
+        //战绩
+        genRoomRecord();
 
     }
 

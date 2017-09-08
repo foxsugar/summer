@@ -9,6 +9,15 @@ import java.util.*;
  */
 public class GameInfoTJ extends GameInfo {
 
+    private static final int mode_素本混龙 = 0;
+    private static final int mode_拉龙五 = 1;
+    private static final int mode_无杠黄庄 = 2;
+    private static final int mode_金杠 = 3;
+    private static final int mode_铲 = 4;
+    private static final int mode_天胡 = 5;
+
+
+
     protected List<String> chanCards = new ArrayList<>();//铲的牌
 
 
@@ -132,7 +141,7 @@ public class GameInfoTJ extends GameInfo {
     public int chupai(long userId, String card) {
         int rtn = super.chupai(userId, card);
 
-        if (rtn == 0) {
+        if (rtn == 0 && this.room.isHasMode(mode_铲)) {
             //铲
             if (chanCards.size() <= 7) {
 
