@@ -14,6 +14,7 @@ import java.util.Map;
 public class ReplayMj {
     private long id;
     private int count;
+    private long room_uuid;
 
     private Map<Long, List<String>> cards = new HashMap<>();
     private List<OperateReqResp> operate = new ArrayList<>();
@@ -71,6 +72,15 @@ public class ReplayMj {
 
     public ReplayMj setRoomInfo(Map<String, Object> roomInfo) {
         this.roomInfo = roomInfo;
+        return this;
+    }
+
+    public long getRoom_uuid() {
+        return room_uuid;
+    }
+
+    public ReplayMj setRoom_uuid(long room_uuid) {
+        this.room_uuid = room_uuid;
         return this;
     }
 }

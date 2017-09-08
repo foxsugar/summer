@@ -1010,6 +1010,7 @@ public class GameInfo extends Game {
 
         replay.setId(id);
         replay.setCount(playerCardsInfos.size());
+        replay.setRoom_uuid(this.room.getUuid());
         replay.setRoomInfo(this.getRoom().toJSONObject());
 
         KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_REPLAY);

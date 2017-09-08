@@ -23,7 +23,6 @@ public class RoomDouDiZhu extends Room {
     public static final int PERSONNUM = 3;
 
 
-
     @Override
     protected Game getGameInstance() {
         switch (gameType) {
@@ -44,13 +43,22 @@ public class RoomDouDiZhu extends Room {
 
     }
 
-    public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType, boolean isAA, boolean isJoin) throws DataNotFoundException {
-        RoomDouDiZhu room = null;
+
+    public static RoomDouDiZhu getRoomInstance(String roomType){
         switch (roomType) {
-            case "1":  room = new RoomDouDiZhu();
-            case "3":  room = new RoomDouDiZhuPlus();
-            default: room = new RoomDouDiZhu();
+            case "1":
+                return new RoomDouDiZhu();
+            case "3":
+                return new RoomDouDiZhuPlus();
+            default:
+                return new RoomDouDiZhu();
         }
+
+    }
+
+    public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType, boolean isAA, boolean isJoin) throws DataNotFoundException {
+        RoomDouDiZhu room = getRoomInstance(roomType);
+
         room.personNumber = PERSONNUM;
 
         room.roomId = getRoomIdStr(genRoomId());
@@ -63,18 +71,17 @@ public class RoomDouDiZhu extends Room {
         room.init(gameNumber, multiple);
 
 
-
-        int code = room.joinRoom(userId,isJoin);
+        int code = room.joinRoom(userId, isJoin);
         if (code != 0) {
             return code;
         }
 
 
         //代建房 定时解散
-        if(!isJoin){
+        if (!isJoin) {
             //给代建房 开房者 扣钱
             room.spendMoney();
-            TimerNode prepareRoomNode = new TimerNode(System.currentTimeMillis(),IConstant.HOUR_1,false, room::dissolutionRoom);
+            TimerNode prepareRoomNode = new TimerNode(System.currentTimeMillis(), IConstant.HOUR_1, false, room::dissolutionRoom);
             room.prepareRoomTimerNode = prepareRoomNode;
             GameTimer.addTimerNode(prepareRoomNode);
         }

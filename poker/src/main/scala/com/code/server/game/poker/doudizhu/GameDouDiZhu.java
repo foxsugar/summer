@@ -424,6 +424,8 @@ public class GameDouDiZhu extends Game {
         //回放
         replay.setId(id);
         replay.setCount(playerCardInfos.size());
+        replay.setRoom_uuid(this.room.getUuid());
+
         replay.setRoomInfo(this.room.toVo(0));
 
         KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_REPLAY);

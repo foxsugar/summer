@@ -76,10 +76,12 @@ public class CenterMsgService implements IkafkaMsgId {
         if (msg != null) {
             long id = JsonUtil.readTree(msg).path("id").asLong();
             int count = JsonUtil.readTree(msg).path("count").asInt();
+            long room_uuid = JsonUtil.readTree(msg).path("room_uuid").asLong();
             Replay replay = new Replay();
             replay.setId(id);
             replay.setLeftCount(count);
             replay.setData(msg);
+            replay.setRoomUuid(room_uuid);
             replayService.save(replay);
         }
 
