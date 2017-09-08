@@ -164,8 +164,7 @@ public class PlayerCardInfoDouDiZhuLinfen extends PlayerCardInfoDouDiZhu {
                 return CardStruct.type_连对;
             }
 
-            if (len % 3 == 0 && (len / 3 == 2 || len / 3 > 2)
-                    && getFeiJi(cardList) && getShunDel2DaXiao(cards)) {
+            if (len % 3 == 0 && (len / 3 == 2 || len / 3 > 2) && getFeiJi(cardList)) {
                 return CardStruct.type_飞机;
             }
             if (getFeiJiChiBang(cardList)) {
