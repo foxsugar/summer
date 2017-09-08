@@ -104,6 +104,9 @@ public class RoomInfo extends Room {
                 if (each.equals("0") && money < 4) {
                     return false;
                 }
+                if (each.equals("1") && money < 1) {
+                    return false;
+                }
             }else {
                 if (money < 3) {
                     return false;
@@ -388,14 +391,26 @@ public class RoomInfo extends Room {
     }
 
     public void spendMoneyEach() {
-        for (long userId : users) {
-            int money = 10;
-            if (gameNumber == 16) {
-                money = 20;
+        if("LQ".equals(this.getRoomType())){
+            for (long userId : users) {
+                int money = 10;
+                if (gameNumber == 16) {
+                    money = 20;
+                }
+                RedisManager.getUserRedisService().addUserMoney(userId, -money);
+                if (isAddGold()) {
+                    RedisManager.addGold(this.createUser, money / 10);
+                }
             }
-            RedisManager.getUserRedisService().addUserMoney(userId, -money);
-            if (isAddGold()) {
-                RedisManager.addGold(this.createUser, money / 10);
+        }else if("TC".equals(this.getRoomType())){
+            for (long userId : users) {
+                int money = 1;
+                RedisManager.getUserRedisService().addUserMoney(userId, -money);
+            }
+        }else{
+            for (long userId : users) {
+                int money = 1;
+                RedisManager.getUserRedisService().addUserMoney(userId, -money);
             }
         }
     }
