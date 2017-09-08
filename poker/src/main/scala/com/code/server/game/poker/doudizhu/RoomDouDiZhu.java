@@ -45,8 +45,12 @@ public class RoomDouDiZhu extends Room {
     }
 
     public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType, boolean isAA, boolean isJoin) throws DataNotFoundException {
-
-        RoomDouDiZhu room = new RoomDouDiZhu();
+        RoomDouDiZhu room = null;
+        switch (roomType) {
+            case "1":  room = new RoomDouDiZhu();
+            case "3":  room = new RoomDouDiZhuPlus();
+            default: room = new RoomDouDiZhu();
+        }
         room.personNumber = PERSONNUM;
 
         room.roomId = getRoomIdStr(genRoomId());

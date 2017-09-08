@@ -73,6 +73,8 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
             switch (roomType) {
                 case "2":
                     nullRoom = new RoomDouDiZhuGold();
+                case "3":
+                    nullRoom = new RoomDouDiZhuPlus();
                 default:
                     nullRoom = new RoomDouDiZhuGold();
             }

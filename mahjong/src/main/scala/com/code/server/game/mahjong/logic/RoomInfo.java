@@ -100,6 +100,10 @@ public class RoomInfo extends Room {
                 if (each.equals("0") && money < 1) {
                     return false;
                 }
+            }else if ("TC".equals(gameType)) {
+                if (each.equals("0") && money < 4) {
+                    return false;
+                }
             }else {
                 if (money < 3) {
                     return false;
@@ -111,6 +115,10 @@ public class RoomInfo extends Room {
                     return false;
                 }
                 if (each.equals("1") && money < 20 && this.gameNumber == 16) {
+                    return false;
+                }
+            }else if ("TC".equals(gameType)) {
+                if (each.equals("1") && money < 1) {
                     return false;
                 }
             }
@@ -161,7 +169,7 @@ public class RoomInfo extends Room {
             case "JL":
             case "DS":
 //            case "HT":
-            case "DY":
+            case "DY"://大运
                 return new GameInfo().setHasJieGangHu(true);
             case "TJ":
                 return new GameInfoTJ().setHasJieGangHu(true);
@@ -310,6 +318,8 @@ public class RoomInfo extends Room {
             }
         }else if("HL".equals(gameType)){
             result = 1;
+        }else if("TC".equals(gameType)){
+            result = 4;
         } else {
             result = 3;
         }

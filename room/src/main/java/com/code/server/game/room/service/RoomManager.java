@@ -21,6 +21,8 @@ public class RoomManager {
     private static Map<Double,List<Room>> notFullGoldRoom = new HashMap<>();
     private static Map<Long, List<String>> prepareRoom = new HashMap<>();
 
+    private static List<Room> robotRoom = new ArrayList<>();
+
     private static RoomManager ourInstance = new RoomManager();
 
     public static RoomManager getInstance() {
@@ -167,4 +169,22 @@ public class RoomManager {
     public static void setPrepareRoom(Map<Long, List<String>> prepareRoom) {
         RoomManager.prepareRoom = prepareRoom;
     }
+
+    public Map<String, IfaceRoom> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(Map<String, IfaceRoom> rooms) {
+        this.rooms = rooms;
+    }
+
+    public static List<Room> getRobotRoom() {
+        return robotRoom;
+    }
+
+    public static void setRobotRoom(List<Room> robotRoom) {
+        RoomManager.robotRoom = robotRoom;
+    }
+
+
 }
