@@ -169,7 +169,7 @@ public class RoomInfo extends Room {
             case "DY":
                 return new GameInfo().setHasJieGangHu(true);
             case "TJ":
-                return new GameInfoTJ().setHasJieGangHu(true);
+                return new GameInfoTJ().setHasJieGangHu(false);
             default:
                 return new GameInfo();
         }

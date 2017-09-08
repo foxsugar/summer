@@ -38,6 +38,8 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-data-redis')
 	compile('org.springframework.boot:spring-boot-starter-jdbc')
+//	provided group: 'com.mysema.querydsl', name: 'querydsl-apt', version: '3.7.4'
+//	compile group: 'com.mysema.querydsl', name: 'querydsl-jpa', version: '3.7.4'
 	compile 'com.google.code.gson:gson:2.6.2'
 	//jackson
 	compile 'com.fasterxml.jackson.core:jackson-core:2.8.7'

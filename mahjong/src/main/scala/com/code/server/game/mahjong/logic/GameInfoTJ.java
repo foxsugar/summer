@@ -9,12 +9,12 @@ import java.util.*;
  */
 public class GameInfoTJ extends GameInfo {
 
-    private static final int mode_素本混龙 = 0;
-    private static final int mode_拉龙五 = 1;
-    private static final int mode_无杠黄庄 = 2;
-    private static final int mode_金杠 = 3;
-    private static final int mode_铲 = 4;
-    private static final int mode_天胡 = 5;
+    public static final int mode_素本混龙 = 0;
+    public static final int mode_拉龙五 = 1;
+    public static final int mode_无杠黄庄 = 2;
+    public static final int mode_金杠 = 3;
+    public static final int mode_铲 = 4;
+    public static final int mode_天胡 = 5;
 
 
 
@@ -83,11 +83,14 @@ public class GameInfoTJ extends GameInfo {
         //算杠分
         computeAllGang();
 
-        boolean isHasGang = playerCardsInfos.values().stream().filter(playerInfo->playerInfo.getScore()!=0).count() != 0;
-        //没有杠的话 每个人给庄家2分
-        if (!isHasGang) {
-            PlayerCardsInfoTJ banker = (PlayerCardsInfoTJ)playerCardsInfos.get(this.firstTurn);
-            banker.computeAddScore(2,this.firstTurn, false);
+        //无杠荒庄
+        if(this.room.isHasMode(mode_无杠黄庄)){
+            boolean isHasGang = playerCardsInfos.values().stream().filter(playerInfo->playerInfo.getScore()!=0).count() != 0;
+            //没有杠的话 每个人给庄家2分
+            if (!isHasGang) {
+                PlayerCardsInfoTJ banker = (PlayerCardsInfoTJ)playerCardsInfos.get(this.firstTurn);
+                banker.computeAddScore(2,this.firstTurn, false);
+            }
         }
         sendResult(false, userId);
         noticeDissolutionResult();
@@ -157,6 +160,23 @@ public class GameInfoTJ extends GameInfo {
         }
         return rtn;
     }
+
+
+    protected void doGang_hand_after(PlayerCardsInfoMj playerCardsInfo, boolean isMing, int userId, String card) {
+        boolean isJinGang = this.hun.contains(CardTypeUtil.getTypeByCard(card));
+        playerCardsInfo.gangCompute(room, this, isMing, -1, card);
+        //金杠直接胡
+        if (isJinGang) {
+            computeAllGang();
+            handleHu(playerCardsInfo);
+        }else{
+            mopai(playerCardsInfo.getUserId(), "userId : " + playerCardsInfo.getUserId() + " 自摸杠抓牌");
+        }
+        turnId = playerCardsInfo.getUserId();
+
+
+    }
+
 
     /**
      * 牌是否一样
