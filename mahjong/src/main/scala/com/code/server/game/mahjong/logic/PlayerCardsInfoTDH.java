@@ -351,17 +351,25 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 			else{
 				if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3")||room.getMode().equals("11")||room.getMode().equals("13"))){//平胡
 					if (this.userId == this.gameInfo.firstTurn) {//庄赢
-						gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - ((room.getPersonNumber() - 1) ) * room.getMultiple());
-						this.score = this.score + ((room.getPersonNumber() - 1)) * room.getMultiple();
-						room.setUserSocre(dianpaoUser, -((room.getPersonNumber() - 1)) * room.getMultiple());
-						room.setUserSocre(this.userId, ((room.getPersonNumber() - 1)) * room.getMultiple());
+						gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - ((room.getPersonNumber() - 1)) * room.getMultiple()*2);
+						this.score = this.score + ((room.getPersonNumber() - 1)) * room.getMultiple() *2;
+						room.setUserSocre(dianpaoUser, -((room.getPersonNumber() - 1)) * room.getMultiple() *2);
+						room.setUserSocre(this.userId, ((room.getPersonNumber() - 1)) * room.getMultiple() *2);
 						this.fan = 1;
 					} else {
-						gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - (room.getPersonNumber()) * room.getMultiple());
-						this.score = this.score + (room.getPersonNumber()) * room.getMultiple();
-						room.setUserSocre(dianpaoUser, -(room.getPersonNumber()) * room.getMultiple());
-						room.setUserSocre(this.userId, (room.getPersonNumber()) * room.getMultiple());
-						this.fan = 1;
+						if(dianpaoUser==this.gameInfo.firstTurn){//庄点炮
+							gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - ((room.getPersonNumber() - 1)) * room.getMultiple()*2);
+							this.score = this.score + ((room.getPersonNumber() - 1)) * room.getMultiple()*2;
+							room.setUserSocre(dianpaoUser, -((room.getPersonNumber() - 1)) * room.getMultiple()*2);
+							room.setUserSocre(this.userId, ((room.getPersonNumber() - 1)) * room.getMultiple()*2);
+							this.fan = 1;
+						}else{
+							gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - ((room.getPersonNumber() - 1)) * room.getMultiple());
+							this.score = this.score + ((room.getPersonNumber() - 1)) * room.getMultiple();
+							room.setUserSocre(dianpaoUser, -((room.getPersonNumber() - 1)) * room.getMultiple());
+							room.setUserSocre(this.userId, ((room.getPersonNumber() - 1)) * room.getMultiple());
+							this.fan = 1;
+						}
 					}
 					/*gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 3 * room.getMultiple());
 					this.score = this.score + 3 * room.getMultiple();
@@ -371,17 +379,30 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 //        			this.winType.add(HuType.hu_普通胡);
 				}else if(room.getModeTotal().equals("2") && (room.getMode().equals("2")||room.getMode().equals("4")||room.getMode().equals("12")||room.getMode().equals("14"))){//大胡
 					if (this.userId == this.gameInfo.firstTurn) {//庄赢
-						gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - ((room.getPersonNumber() - 1) ) * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)));
-						this.score = this.score + ((room.getPersonNumber() - 1)) * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType));
-						room.setUserSocre(dianpaoUser, -((room.getPersonNumber() - 1)) * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)));
-						room.setUserSocre(this.userId, ((room.getPersonNumber() - 1)) * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)));
-						this.fan = MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType));
+						gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - ((room.getPersonNumber() - 1) ) * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType))*2/3);
+						this.score = this.score + ((room.getPersonNumber() - 1)) * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)*2/3);
+						room.setUserSocre(dianpaoUser, -((room.getPersonNumber() - 1)) * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType))*2/3);
+						room.setUserSocre(this.userId, ((room.getPersonNumber() - 1)) * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType))*2/3);
+						this.fan = MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)*2/3);
 					} else {
-						gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - (room.getPersonNumber()) * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)));
+						if(dianpaoUser==this.gameInfo.firstTurn){//庄点炮
+							gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - ((room.getPersonNumber() - 1)) * room.getMultiple()* MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType))*2/3);
+							this.score = this.score + ((room.getPersonNumber() - 1)) * room.getMultiple()* MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType))*2/3;
+							room.setUserSocre(dianpaoUser, -((room.getPersonNumber() - 1)) * room.getMultiple()* MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType))*2/3);
+							room.setUserSocre(this.userId, ((room.getPersonNumber() - 1)) * room.getMultiple()* MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType))*2/3);
+							this.fan = 1;
+						}else{
+							gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - ((room.getPersonNumber() - 1)) * room.getMultiple()* MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType))/3);
+							this.score = this.score + ((room.getPersonNumber() - 1)) * room.getMultiple()* MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType))/3;
+							room.setUserSocre(dianpaoUser, -((room.getPersonNumber() - 1)) * room.getMultiple()* MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType))/3);
+							room.setUserSocre(this.userId, ((room.getPersonNumber() - 1)) * room.getMultiple()* MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType))/3);
+							this.fan = 1;
+						}
+						/*gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - (room.getPersonNumber()) * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)));
 						this.score = this.score + (room.getPersonNumber()) * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType));
 						room.setUserSocre(dianpaoUser, -(room.getPersonNumber()) * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)));
 						room.setUserSocre(this.userId, (room.getPersonNumber()) * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)));
-						this.fan = MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType));
+						this.fan = MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType));*/
 					}
 					/*gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)));
 					this.score = this.score + room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType));
