@@ -14,6 +14,7 @@ import java.util.Map;
 public class ReplayDouDiZhu {
     private long id;
     private int count;
+    private long room_uuid;
 
     private Map<Long, List<Integer>> cards = new HashMap<>();
     private List<Operate> operate = new ArrayList<>();
@@ -74,6 +75,15 @@ public class ReplayDouDiZhu {
 
     public ReplayDouDiZhu setResult(GameResultDouDizhu result) {
         this.result = result;
+        return this;
+    }
+
+    public long getRoom_uuid() {
+        return room_uuid;
+    }
+
+    public ReplayDouDiZhu setRoom_uuid(long room_uuid) {
+        this.room_uuid = room_uuid;
         return this;
     }
 }
