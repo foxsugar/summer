@@ -292,6 +292,9 @@ class GamePaijiu extends Game with PaijiuConstant {
       gameOfResult.setUserList(userOfResultList)
       MsgSender.sendMsg2Player("gameService", "gamePaijiuFinalResult", gameOfResult, users)
       RoomManager.removeRoom(roomPaijiu.getRoomId)
+
+      //战绩
+      this.roomPaijiu.genRoomRecord()
     }
   }
 

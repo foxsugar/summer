@@ -19,4 +19,8 @@ public interface IReplayDao extends PagingAndSortingRepository<Replay, Long>{
     @Modifying
     @Query(value = "update replay set left_count=left_count-1 where id=?1", nativeQuery = true)
     void decReplayCountById(long id);
+
+
+    @Transactional
+    void deleteAllByRoomUuid(long roomUuid);
 }

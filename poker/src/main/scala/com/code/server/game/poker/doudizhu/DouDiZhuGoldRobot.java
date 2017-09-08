@@ -64,8 +64,6 @@ public class DouDiZhuGoldRobot implements IDouDiZhuRobot,IGameConstant {
         ResponseRobotVo result = new ResponseRobotVo("gameService", "jiaoDizhu",put);
         SpringUtil.getBean(MsgProducer.class).send2Partition("gameService",partition, msgKey, result);
 
-        ResponseRobotVo result2 = new ResponseRobotVo("gameService", "sayHello",put);
-        SpringUtil.getBean(MsgProducer.class).send2Partition("gameService",partition, msgKey, result2);
     }
 
     @Override

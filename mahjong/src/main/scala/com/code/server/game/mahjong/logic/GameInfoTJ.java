@@ -55,10 +55,78 @@ public class GameInfoTJ extends GameInfo {
         this.hun = HuWithHun.getHunTypeGDF(cardType);
     }
 
+
     @Override
-    protected void mopai(long userId, String... wz) {
-        super.mopai(userId, wz);
+    protected boolean isHuangzhuang(PlayerCardsInfoMj playerCardsInfo){
+        //是否是杠后摸牌
+        int size = playerCardsInfo.operateList.size();
+        if(size>0 && playerCardsInfo.operateList.get(size - 1) == PlayerCardsInfoMj.type_gang && chanCards.size()>0){
+            return false;
+        }else {
+            return remainCards.size()==0;
+        }
+
     }
+
+    @Override
+    protected void handleHuangzhuang(long userId) {
+
+        //算杠分
+        computeAllGang();
+
+        boolean isHasGang = playerCardsInfos.values().stream().filter(playerInfo->playerInfo.getScore()!=0).count() != 0;
+        //没有杠的话 每个人给庄家2分
+        if (!isHasGang) {
+            PlayerCardsInfoTJ banker = (PlayerCardsInfoTJ)playerCardsInfos.get(this.firstTurn);
+            banker.computeAddScore(2,this.firstTurn, false);
+        }
+        sendResult(false, userId);
+        noticeDissolutionResult();
+        //通知所有玩家结束
+        room.clearReadyStatus();
+        //庄家换下个人
+        if(room instanceof RoomInfo){
+            RoomInfo roomInfo = (RoomInfo)room;
+            if(roomInfo.isChangeBankerAfterHuangZhuang()){
+                room.setBankerId(nextTurnId(room.getBankerId()));
+            }
+
+        }
+
+    }
+    /**
+     * 摸一张牌
+     * @param playerCardsInfo
+     * @return
+     */
+    @Override
+    protected String getMoPaiCard(PlayerCardsInfoMj playerCardsInfo){
+        //拿出一张
+        String card = null;
+        //有换牌需求
+        if (isTest && playerCardsInfo.nextNeedCard != -1) {
+            String needCard = getCardByTypeFromRemainCards(playerCardsInfo.nextNeedCard);
+            playerCardsInfo.nextNeedCard = -1;
+            if (needCard != null) {
+                card = needCard;
+                remainCards.remove(needCard);
+            } else {
+                card = remainCards.remove(0);
+            }
+        } else {
+            //是否是杠后摸牌
+            int size = playerCardsInfo.operateList.size();
+            //如果是杠后摸牌 从废牌里拿出一张
+            if(size>0 && playerCardsInfo.operateList.get(size - 1) == PlayerCardsInfoMj.type_gang && chanCards.size()>0){
+                card = chanCards.remove(0);
+            }else {
+                card = remainCards.remove(0);
+            }
+        }
+        return card;
+    }
+
+
 
     @Override
     public int chupai(long userId, String card) {

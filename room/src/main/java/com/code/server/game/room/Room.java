@@ -4,13 +4,15 @@ package com.code.server.game.room;
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.exception.DataNotFoundException;
-import com.code.server.constant.game.PrepareRoom;
-import com.code.server.constant.game.RoomStatistics;
-import com.code.server.constant.game.UserBean;
+import com.code.server.constant.game.*;
+import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.*;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
+import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
 import org.slf4j.Logger;
@@ -501,6 +503,9 @@ public class Room implements IfaceRoom {
         gameOfResult.setUserList(userOfResultList);
         gameOfResult.setEndTime(LocalDateTime.now().toString());
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), users);
+
+        //战绩
+        genRoomRecord();
     }
 
 
@@ -588,6 +593,7 @@ public class Room implements IfaceRoom {
         return roomVo;
     }
 
+
     @Override
     public PrepareRoom getPrepareRoomVo() {
         PrepareRoom prepareRoom = new PrepareRoom();
@@ -598,6 +604,32 @@ public class Room implements IfaceRoom {
         prepareRoom.multiple = this.multiple;
         prepareRoom.gameNumber = this.gameNumber;
         return prepareRoom;
+    }
+
+    /**
+     * 生成房间战绩
+     */
+    public void genRoomRecord(){
+        RoomRecord roomRecord = new RoomRecord();
+        roomRecord.setRoomId(this.roomId);
+        roomRecord.setId(this.getUuid());
+        roomRecord.setType(this.roomType);
+        roomRecord.setTime(System.currentTimeMillis());
+        this.userScores.forEach((key, value) -> {
+            UserRecord userRecord = new UserRecord();
+            userRecord.setScore(value);
+            userRecord.setUserId(key);
+            UserBean userBean = RedisManager.getUserRedisService().getUserBean(key);
+            if (userBean != null) {
+                userRecord.setName(userBean.getUsername());
+            }
+            roomRecord.getRecords().add(userRecord);
+        });
+
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ROOM_RECORD);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord);
+
     }
 
     public String getRoomId() {

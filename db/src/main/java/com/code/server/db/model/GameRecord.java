@@ -1,6 +1,5 @@
 package com.code.server.db.model;
 
-import com.code.server.constant.game.Record;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
@@ -14,22 +13,25 @@ import java.util.Date;
 @DynamicUpdate
 @Entity
 @Table(name = "game_record",
-        indexes = {@Index(name = "room_uuid", columnList = "room_uuid")})
+        indexes = {@Index(name = "uuid", columnList = "uuid")})
 public class GameRecord {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private long room_uuid;
+    private long uuid;
 
     private Date date;
 
     private int leftCount;
 
+    private long replayId;
+
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
-    private Record.GameRecord gameRecord;
+    private com.code.server.constant.game.GameRecord gameRecord;
 
 
     public long getId() {
@@ -41,21 +43,21 @@ public class GameRecord {
         return this;
     }
 
-    public Record.GameRecord getGameRecord() {
+    public com.code.server.constant.game.GameRecord getGameRecord() {
         return gameRecord;
     }
 
-    public GameRecord setGameRecord(Record.GameRecord gameRecord) {
+    public GameRecord setGameRecord(com.code.server.constant.game.GameRecord gameRecord) {
         this.gameRecord = gameRecord;
         return this;
     }
 
-    public long getRoom_uuid() {
-        return room_uuid;
+    public long getUuid() {
+        return uuid;
     }
 
-    public GameRecord setRoom_uuid(long room_uuid) {
-        this.room_uuid = room_uuid;
+    public GameRecord setUuid(long uuid) {
+        this.uuid = uuid;
         return this;
     }
 
@@ -74,6 +76,15 @@ public class GameRecord {
 
     public GameRecord setLeftCount(int leftCount) {
         this.leftCount = leftCount;
+        return this;
+    }
+
+    public long getReplayId() {
+        return replayId;
+    }
+
+    public GameRecord setReplayId(long replayId) {
+        this.replayId = replayId;
         return this;
     }
 }

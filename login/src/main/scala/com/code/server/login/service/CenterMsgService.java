@@ -1,21 +1,25 @@
 package com.code.server.login.service;
 
 import com.code.server.constant.game.Record;
+import com.code.server.constant.game.RoomRecord;
 import com.code.server.constant.kafka.IkafkaMsgId;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.db.Service.GameRecordService;
 import com.code.server.db.Service.ReplayService;
 import com.code.server.db.Service.UserRecordService;
-import com.code.server.db.Service.UserRoomRecordService;
 import com.code.server.db.model.GameRecord;
 import com.code.server.db.model.Replay;
 import com.code.server.db.model.UserRecord;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.Gson;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2017/6/16.
@@ -24,7 +28,6 @@ public class CenterMsgService implements IkafkaMsgId {
 
 
     private static UserRecordService userRecordService = SpringUtil.getBean(UserRecordService.class);
-    private static UserRoomRecordService userRoomRecordService = SpringUtil.getBean(UserRoomRecordService.class);
     private static GameRecordService gameRecordService = SpringUtil.getBean(GameRecordService.class);
 
     private static ReplayService replayService = SpringUtil.getBean(ReplayService.class);
@@ -50,10 +53,10 @@ public class CenterMsgService implements IkafkaMsgId {
     }
 
     private static void genRecord(String msg) {
-        Record.RoomRecord roomRecord = JsonUtil.readValue(msg, Record.RoomRecord.class);
+        RoomRecord roomRecord = JsonUtil.readValue(msg, RoomRecord.class);
 
-        List<Record.UserRecord> lists = roomRecord.getRecords();
-        for (Record.UserRecord userRecord : lists) {
+        List<com.code.server.constant.game.UserRecord> lists = roomRecord.getRecords();
+        for (com.code.server.constant.game.UserRecord userRecord : lists) {
             UserRecord addRecord = userRecordService.getUserRecordByUserId(userRecord.getUserId());
             if (addRecord != null) {
                 userRecordService.addRecord(userRecord.getUserId(), roomRecord);
@@ -83,22 +86,46 @@ public class CenterMsgService implements IkafkaMsgId {
     }
     private static void genGameRecord(String msg){
         if (msg != null) {
+            System.out.println(msg);
             JsonNode jsonNode = JsonUtil.readTree(msg);
-            long room_uuid = jsonNode.path("room_uuid").asLong();
-            int count = jsonNode.path("count").asInt();
-            Record.GameRecord data = JsonUtil.readValue(jsonNode.path("record").asText(), Record.GameRecord.class);
+            Map<String,Object> map = JsonUtil.readValue(msg, new TypeReference<HashMap<String,Object>>() {});
+
+            long room_uuid = (Long)map.get("room_uuid");
+            long replay_id = (Long)map.get("replay_id");
+            int count = (int)map.get("count");
+            String recordStr = jsonNode.path("record").asText();
+            System.out.println(recordStr);
+            Gson gson = new Gson();
+            com.code.server.constant.game.GameRecord data = gson.fromJson(recordStr, com.code.server.constant.game.GameRecord.class);
+//            com.code.server.constant.game.GameRecord data = (com.code.server.constant.game.GameRecord)map.get("record");
             GameRecord gameRecord = new GameRecord();
             gameRecord.setDate(new Date());
-            gameRecord.setRoom_uuid(room_uuid);
+            gameRecord.setUuid(room_uuid);
             gameRecord.setLeftCount(count);
             gameRecord.setGameRecord(data);
+            gameRecord.setReplayId(replay_id);
             gameRecordService.gameRecordDao.save(gameRecord);
         }
     }
 
     private static void genRoomRecord(String msg){
+        RoomRecord roomRecord = JsonUtil.readValue(msg, RoomRecord.class);
 
+        List<com.code.server.constant.game.UserRecord> lists = roomRecord.getRecords();
+        for (com.code.server.constant.game.UserRecord userRecord : lists) {
+            UserRecord addRecord = userRecordService.getUserRecordByUserId(userRecord.getUserId());
+            if (addRecord != null) {
+                userRecordService.addRecord(userRecord.getUserId(), roomRecord);
+            } else {
+                Record record = new Record();
+                record.addRoomRecord(roomRecord);
 
+                UserRecord newRecord = new UserRecord();
+                newRecord.setId(userRecord.getUserId());
+                newRecord.setRecord(record);
+                userRecordService.save(newRecord);
+            }
+        }
     }
 
 
