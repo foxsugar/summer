@@ -391,7 +391,7 @@ public class RoomInfo extends Room {
     }
 
     public void spendMoneyEach() {
-        if("LQ".equals(this.getRoomType())){
+        if("LQ".equals(this.getGameType())){
             for (long userId : users) {
                 int money = 10;
                 if (gameNumber == 16) {
@@ -402,7 +402,7 @@ public class RoomInfo extends Room {
                     RedisManager.addGold(this.createUser, money / 10);
                 }
             }
-        }else if("TC".equals(this.getRoomType())){
+        }else if("TC".equals(this.getGameType())){
             for (long userId : users) {
                 int money = 1;
                 RedisManager.getUserRedisService().addUserMoney(userId, -money);
