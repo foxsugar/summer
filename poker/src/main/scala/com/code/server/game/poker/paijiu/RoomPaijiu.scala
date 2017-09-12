@@ -25,6 +25,10 @@ class RoomPaijiu extends Room {
   var bankerScore: Int = 0
   var bankerInitScore: Int = 0
 
+  var isTest:Boolean = true
+
+  var testUserId:Long = 0
+
 
   override protected def getGameInstance: Game = gameType match {
     case "11" => new GamePaijiuEndless

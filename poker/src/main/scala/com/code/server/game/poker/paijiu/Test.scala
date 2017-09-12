@@ -1,6 +1,5 @@
 package com.code.server.game.poker.paijiu
 
-import com.code.server.constant.data.DataManager
 import com.code.server.constant.response.PlayerCardInfoPaijiuVo
 import com.code.server.util.JsonUtil
 
@@ -73,7 +72,8 @@ object Test {
 
   }
   def testSild = {
-    val list = List(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
+//    val list = List(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
+    val list = List(1,2,3,4,5,6,7,8,9,10,11,12)
     print(list.sliding(4,4).toList)
   }
   def testslice(): Unit ={
@@ -95,13 +95,13 @@ object Test {
     print(pl)
 
   }
-  def testCardGroup():Unit = {
-//    val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
-    //加载数据
-    DataManager.initData("E:\\summer\\data\\static_data.json")
-    val gamePaijiu = new GamePaijiu
-    gamePaijiu.getGroupScore("15,30")
-  }
+//  def testCardGroup():Unit = {
+////    val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
+//    //加载数据
+//    DataManager.initData("E:\\summer\\data\\static_data.json")
+//    val gamePaijiu = new GamePaijiu
+//    gamePaijiu.getGroupScore("15,30")
+//  }
   def main(args: Array[String]): Unit = {
 //    test1()
 //    testSame()
@@ -109,8 +109,8 @@ object Test {
 //    testMap()
 //    testMuList
 //    testList
-    testShuffle
-//    testSild
+//    testShuffle
+    testSild
 //    testMap1
 //    testPlayerVo
 //    testCardGroup()
