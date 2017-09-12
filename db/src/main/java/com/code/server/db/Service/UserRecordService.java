@@ -23,6 +23,7 @@ public class UserRecordService {
     @Autowired
     private ReplayService replayService;
 
+    @Autowired
     private GameRecordService gameRecordService;
 
 
