@@ -265,11 +265,11 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 				if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3")||room.getMode().equals("11")||room.getMode().equals("13"))){//平胡
 					if (this.userId == this.gameInfo.firstTurn) {//庄赢
 						for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
-							gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
-							room.setUserSocre(i, -2 * room.getMultiple());
+							gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 4 * room.getMultiple());
+							room.setUserSocre(i, -4 * room.getMultiple());
 						}
-						this.score = this.score + 2 * room.getPersonNumber() * room.getMultiple();
-						room.setUserSocre(this.userId, 2 * room.getPersonNumber() * room.getMultiple());
+						this.score = this.score + 4 * room.getPersonNumber() * room.getMultiple();
+						room.setUserSocre(this.userId, 4 * room.getPersonNumber() * room.getMultiple());
 						this.fan = 2;
 					} else {
 						for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
@@ -296,11 +296,11 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 					if(3==MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)+"")){
 						if (this.userId == this.gameInfo.firstTurn) {//庄赢
 							for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
-								gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
-								room.setUserSocre(i, -2 * room.getMultiple());
+								gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 4 * room.getMultiple());
+								room.setUserSocre(i, -4 * room.getMultiple());
 							}
-							this.score = this.score + 2 * room.getPersonNumber() * room.getMultiple();
-							room.setUserSocre(this.userId, 2 * room.getPersonNumber() * room.getMultiple());
+							this.score = this.score + 4 * room.getPersonNumber() * room.getMultiple();
+							room.setUserSocre(this.userId, 4 * room.getPersonNumber() * room.getMultiple());
 							this.fan = 2;
 						} else {
 							for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
@@ -318,11 +318,11 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 					}else{
 						if (this.userId == this.gameInfo.firstTurn) {//庄赢
 							for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
-								gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple());
-								room.setUserSocre(i, -MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple());
+								gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple()*2);
+								room.setUserSocre(i, -MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple()*2);
 							}
-							this.score = this.score + MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getPersonNumber() * room.getMultiple();
-							room.setUserSocre(this.userId, MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getPersonNumber() * room.getMultiple());
+							this.score = this.score + MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getPersonNumber() * room.getMultiple()*2;
+							room.setUserSocre(this.userId, MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getPersonNumber() * room.getMultiple()*2);
 							this.fan = MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType));
 						} else {
 							for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
@@ -456,7 +456,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
         	}
     	}
     	
-    	if(!this.roomInfo.getGameType().equals("HT") && !this.roomInfo.getGameType().equals("JL") && !this.roomInfo.getGameType().equals("DS") && !this.roomInfo.getGameType().equals("HL")){
+    	if(!this.roomInfo.getGameType().equals("HT") && !this.roomInfo.getGameType().equals("JL") && !this.roomInfo.getGameType().equals("DS") && !this.roomInfo.getGameType().equals("HL") && !this.roomInfo.getGameType().equals("TC")){
     		if(this.anGangType.size()>0){
     			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
             		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * this.anGangType.size() * room.getMultiple());

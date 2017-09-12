@@ -21,7 +21,6 @@ public class GameDouDiZhuPlus extends GameDouDiZhuGold {
 
         this.users.forEach(userId -> {
         RedisManager.getUserRedisService().addUserMoney(userId, - roomDouDiZhuPlus.getUsesMoney().get(room.getGoldRoomType()));
-        if (room.isAddGold()) RedisManager.addGold(userId, roomDouDiZhuPlus.getUsesMoney().get(room.getGoldRoomType()) / 10);
         });
 
         this.room = room;

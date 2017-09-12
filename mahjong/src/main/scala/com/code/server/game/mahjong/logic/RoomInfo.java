@@ -356,20 +356,25 @@ public class RoomInfo extends Room {
             if (isAddGold()) {
                 RedisManager.addGold(this.createUser, -money / 10);
             }
-
-
         }
     }
 
     public void drawBackEach() {
-        for (long userId : users) {
-            int money = 10;
-            if (gameNumber == 16) {
-                money = 20;
+        if("LQ".equals(this.getGameType())){
+            for (long userId : users) {
+                int money = 10;
+                if (gameNumber == 16) {
+                    money = 20;
+                }
+                RedisManager.getUserRedisService().addUserMoney(userId, money);
+                if (isAddGold()) {
+                    RedisManager.addGold(this.createUser, -money / 10);
+                }
             }
-            RedisManager.getUserRedisService().addUserMoney(userId, money);
-            if (isAddGold()) {
-                RedisManager.addGold(this.createUser, -money / 10);
+        }else if("TC".equals(this.getGameType())){
+            for (long userId : users) {
+                int money = 1;
+                RedisManager.getUserRedisService().addUserMoney(userId, money);
             }
         }
     }
