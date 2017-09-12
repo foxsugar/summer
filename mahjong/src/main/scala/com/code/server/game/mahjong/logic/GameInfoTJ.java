@@ -38,6 +38,8 @@ public class GameInfoTJ extends GameInfo {
         this.cardSize = 13;
         this.playerSize = room.getPersonNumber();
 
+        //打乱顺序
+        Collections.shuffle(remainCards);
         initHun(room);
     }
 

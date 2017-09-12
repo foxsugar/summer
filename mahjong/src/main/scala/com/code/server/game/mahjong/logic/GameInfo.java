@@ -106,16 +106,14 @@ public class GameInfo extends Game {
             remainCards.removeAll(CardTypeUtil.ZI_CARD);
 
         }
-
-        //打乱顺序
-        Collections.shuffle(remainCards);
     }
 
     /**
      * 发牌
      */
     public void fapai() {
-
+        //打乱顺序
+        Collections.shuffle(remainCards);
         for (int i = 0; i < playerSize; i++) {
             PlayerCardsInfoMj playerCardsInfo = PlayerCardsInfoFactory.getInstance(room);
             playerCardsInfo.setGameInfo(this);
