@@ -89,6 +89,10 @@ object GameService {
       game.bankerBreak(userId, flag)
 
 
+    case "exchange" =>
+      game.exchange(userId)
+    case "setTestUser" =>
+      game.setTestUser(userId)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }
