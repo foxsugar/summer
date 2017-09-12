@@ -318,23 +318,23 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 					}else{
 						if (this.userId == this.gameInfo.firstTurn) {//庄赢
 							for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
-								gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple()/3*4);
-								room.setUserSocre(i, -MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple()/3*4);
+								gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple()*2);
+								room.setUserSocre(i, -MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple()*2);
 							}
-							this.score = this.score + MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getPersonNumber() * room.getMultiple()/3*4;
-							room.setUserSocre(this.userId, MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getPersonNumber() * room.getMultiple()/3*4);
+							this.score = this.score + MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getPersonNumber() * room.getMultiple()*2;
+							room.setUserSocre(this.userId, MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getPersonNumber() * room.getMultiple()*2);
 							this.fan = MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType));
 						} else {
 							for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
-								gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple()/3*2);
-								room.setUserSocre(i, -MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple()/3*2);
+								gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple());
+								room.setUserSocre(i, -MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple());
 							}
 							//庄输2倍，在此多减一倍
-							gameInfo.getPlayerCardsInfos().get(this.gameInfo.firstTurn).setScore(gameInfo.getPlayerCardsInfos().get(this.gameInfo.firstTurn).getScore() - MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple()/3*2);
-							room.setUserSocre(this.gameInfo.firstTurn, -MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple()/3*2);
+							gameInfo.getPlayerCardsInfos().get(this.gameInfo.firstTurn).setScore(gameInfo.getPlayerCardsInfos().get(this.gameInfo.firstTurn).getScore() - MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple());
+							room.setUserSocre(this.gameInfo.firstTurn, -MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple());
 
-							this.score = this.score + (room.getPersonNumber() + 1) * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple()/3*2;
-							room.setUserSocre(this.userId, (room.getPersonNumber() + 1) * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple()/3*2);
+							this.score = this.score + (room.getPersonNumber() + 1) * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple();
+							room.setUserSocre(this.userId, (room.getPersonNumber() + 1) * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)) * room.getMultiple());
 							this.fan = MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType));
 						}
 						/*for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
