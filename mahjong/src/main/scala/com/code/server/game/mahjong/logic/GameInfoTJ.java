@@ -1,6 +1,7 @@
 package com.code.server.game.mahjong.logic;
 
 import com.code.server.game.mahjong.util.HuWithHun;
+import com.code.server.game.room.kafka.MsgSender;
 
 import java.util.*;
 
@@ -62,6 +63,9 @@ public class GameInfoTJ extends GameInfo {
         int cardType = CardTypeUtil.getTypeByCard(card);
         //todo 刮大风
         this.hun = HuWithHun.getHunTypeGDF(cardType);
+
+        //通知混
+        MsgSender.sendMsg2Player("gameService","noticeHun",this.hun,users);
     }
 
 
@@ -153,6 +157,8 @@ public class GameInfoTJ extends GameInfo {
                 if (chanCardSize % this.users.size() == 0) {
                     if(isCardSame(chanCards.subList(chanCardSize -4, chanCardSize))){
                         //todo 通知有铲
+                        //通知混
+                        MsgSender.sendMsg2Player("gameService","noticeChan",0,users);
                     }
 
                 }
