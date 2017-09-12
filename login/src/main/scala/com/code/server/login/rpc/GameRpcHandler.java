@@ -1,20 +1,25 @@
 package com.code.server.login.rpc;
 
 
+import com.code.server.constant.game.IChargeType;
 import com.code.server.constant.game.UserBean;
+import com.code.server.db.Service.ChargeService;
 import com.code.server.db.Service.ConstantService;
 import com.code.server.db.Service.UserService;
+import com.code.server.db.model.Charge;
 import com.code.server.db.model.User;
 import com.code.server.login.service.ServerManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
 import com.code.server.rpc.idl.*;
+import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import org.apache.thrift.TException;
 import org.apache.thrift.async.AsyncMethodCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -30,6 +35,7 @@ public class GameRpcHandler implements GameRPC.AsyncIface {
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         UserService userService = SpringUtil.getBean(UserService.class);
         User user = userService.getUserByUserId(userId);
+        String name = "";
         if (userBean == null) {
             if (user != null) {
                 if (order.getType() == ChargeType.money.getValue()) {
@@ -38,11 +44,13 @@ public class GameRpcHandler implements GameRPC.AsyncIface {
                     user.setGold(user.getGold() + order.getNum());
                 }
                 userService.save(user);
+                name = user.getUsername();
             } else {
                 resultHandler.onComplete(RPCError.NO_USER.getValue());
             }
 
         } else {//在redis里
+            name = userBean.getUsername();
             if (order.getType() == ChargeType.money.getValue()) {
                 double nowMoney = RedisManager.getUserRedisService().addUserMoney(userId, order.getNum());
                 user.setMoney(nowMoney);
@@ -50,6 +58,22 @@ public class GameRpcHandler implements GameRPC.AsyncIface {
             } else if (order.getType() == ChargeType.gold.getValue()) {
                 RedisManager.addGold(userId, order.getNum());
             }
+        }
+        //充值记录
+        if (order.getAgentId() != 0 && order.getType() == ChargeType.money.getValue()) {
+            Charge charge = new Charge();
+            charge.setOrderId(""+IdWorker.getDefaultInstance().nextId());
+            charge.setUserid(order.getUserId());
+            charge.setUsername(name);
+            charge.setCreatetime(new Date());
+            charge.setCallbacktime(new Date());
+            charge.setOrigin(order.getAgentId());
+            charge.setMoney(order.getNum());
+            charge.setMoney_point(order.getNum());
+            charge.setRecharge_source(""+IChargeType.AGENT);
+            charge.setStatus(1);
+            SpringUtil.getBean(ChargeService.class).save(charge);
+
         }
         resultHandler.onComplete(0);
     }
