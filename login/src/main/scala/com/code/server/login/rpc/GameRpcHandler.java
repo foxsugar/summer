@@ -47,6 +47,7 @@ public class GameRpcHandler implements GameRPC.AsyncIface {
                 name = user.getUsername();
             } else {
                 resultHandler.onComplete(RPCError.NO_USER.getValue());
+                return;
             }
 
         } else {//在redis里
