@@ -270,8 +270,8 @@ class GamePaijiu extends Game with PaijiuConstant {
     val id = IdWorker.getDefaultInstance.nextId
     val map = new util.HashMap[Long, java.lang.Double]()
     for (playerInfo <- playerCardInfos) {
-      val desScore = if(playerInfo._2.userId == this.roomPaijiu.getBankerId) this.roomPaijiu.bankerInitScore else 0
-      map.put(playerInfo._2.userId, playerInfo._2.score - desScore)
+    //  val desScore = if(playerInfo._2.userId == this.roomPaijiu.getBankerId) this.roomPaijiu.bankerInitScore else 0
+      map.put(playerInfo._2.userId, playerInfo._2.score)
     }
     genRecord(map, this.roomPaijiu, id)
     //    genRecord(playerCardInfos.values.toMap((playerInfo)=>))
@@ -317,6 +317,9 @@ class GamePaijiu extends Game with PaijiuConstant {
       gameOfResult.setUserList(userOfResultList)
       MsgSender.sendMsg2Player("gameService", "gamePaijiuFinalResult", gameOfResult, users)
       RoomManager.removeRoom(roomPaijiu.getRoomId)
+
+      //庄家初始分 再减掉
+      roomPaijiu.addUserSocre(this.roomPaijiu.getBankerId, -this.roomPaijiu.bankerInitScore)
 
       //战绩
       this.roomPaijiu.genRoomRecord()
