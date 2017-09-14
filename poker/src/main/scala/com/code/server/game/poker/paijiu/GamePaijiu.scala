@@ -270,7 +270,8 @@ class GamePaijiu extends Game with PaijiuConstant {
     val id = IdWorker.getDefaultInstance.nextId
     val map = new util.HashMap[Long, java.lang.Double]()
     for (playerInfo <- playerCardInfos) {
-      map.put(playerInfo._2.userId, playerInfo._2.score)
+      val desScore = if(playerInfo._2.userId == this.roomPaijiu.getBankerId) this.roomPaijiu.bankerInitScore else 0
+      map.put(playerInfo._2.userId, playerInfo._2.score - desScore)
     }
     genRecord(map, this.roomPaijiu, id)
     //    genRecord(playerCardInfos.values.toMap((playerInfo)=>))
