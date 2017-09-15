@@ -23,6 +23,7 @@ public class UserRecordService {
     @Autowired
     private ReplayService replayService;
 
+    @Autowired
     private GameRecordService gameRecordService;
 
 
@@ -34,21 +35,13 @@ public class UserRecordService {
      */
     public UserRecord addRecord(long userid, RoomRecord roomRecord) {
         UserRecord userRecords = userRecordDao.findOne(userid);
-
         RoomRecord rc = userRecords.getRecord().addRoomRecord(roomRecord);
         //有删除的战绩
         if (rc != null) {
-//            long replayId = rc.getId();
-//            replayService.decReplayCount(replayId);
-
             long roomUid = rc.getId();
             gameRecordService.decGameRecordCount(roomUid);
-
-
         }
         return userRecordDao.save(userRecords);
-
-
     }
 
     public UserRecord getUserRecordByUserId(long userId){

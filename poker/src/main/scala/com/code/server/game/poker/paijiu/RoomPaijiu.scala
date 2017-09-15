@@ -25,6 +25,10 @@ class RoomPaijiu extends Room {
   var bankerScore: Int = 0
   var bankerInitScore: Int = 0
 
+  var isTest:Boolean = true
+
+  var testUserId:Long = 0
+
 
   override protected def getGameInstance: Game = gameType match {
     case "11" => new GamePaijiuEndless
@@ -104,6 +108,40 @@ class RoomPaijiu extends Room {
     roomVo
 
   }
+
+  /**
+    * 解散房间
+    */
+  override protected def dissolutionRoom(): Unit = {
+    //庄家初始分 再减掉
+    import java.time.LocalDateTime
+
+    import com.code.server.constant.response.{GameOfResult, ResponseVo}
+    import com.code.server.game.room.kafka.MsgSender
+    import com.code.server.game.room.service.RoomManager
+    RoomManager.removeRoom(this.roomId)
+    // 结果类
+    val userOfResultList = getUserOfResult
+
+    //代开房 并且游戏未开始
+    if (!isCreaterJoin && !this.isInGame && (this.curGameNumber ==1)) drawBack()
+    this.isInGame = false
+
+    // 存储返回
+    val gameOfResult = new GameOfResult
+
+    gameOfResult.setUserList(userOfResultList)
+    gameOfResult.setEndTime(LocalDateTime.now.toString)
+    MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), users)
+
+    //庄家初始分 再减掉
+    this.addUserSocre(this.getBankerId, -this.bankerInitScore)
+
+    //战绩
+    genRoomRecord()
+  }
+
+
 }
 
 

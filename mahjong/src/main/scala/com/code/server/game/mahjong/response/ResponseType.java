@@ -18,4 +18,8 @@ public interface ResponseType {
     String METHOD_TYPE_ALL_PASS = "allPass";
 
 
+    String METHOD_TYPE_NOTICE_HUN = "noticeHun";
+
+
+
 }

@@ -53,7 +53,7 @@ class GamePaijiu extends Game with PaijiuConstant {
 
     //轮庄
     val changeStep = roomPaijiu.getGameNumber / roomPaijiu.getUsers.size()
-    if (roomPaijiu.getCurGameNumber !=1 && (roomPaijiu.getCurGameNumber-1) % changeStep == 0) {
+    if (roomPaijiu.getCurGameNumber != 1 && (roomPaijiu.getCurGameNumber - 1) % changeStep == 0) {
       logger.info("轮庄 === curgameNum :" + roomPaijiu.getCurGameNumber)
       val nextBanker = nextTurnId(roomPaijiu.getBankerId)
       roomPaijiu.setBankerId(nextBanker)
@@ -105,13 +105,34 @@ class GamePaijiu extends Game with PaijiuConstant {
     * 发牌
     */
   protected def deal(): Unit = {
-    val slidList = cards.sliding(4, 4).toList
-    var count = 0
-    for (playerInfo <- playerCardInfos.values) {
-      playerInfo.cards ++= slidList(count)
-      count += 1
-      //发牌通知
-      MsgSender.sendMsg2Player("gamePaijiuService", "getCards", playerInfo.cards.asJava, playerInfo.userId)
+    //测试的发牌
+    if (this.roomPaijiu.isTest && this.roomPaijiu.getCurGameNumber % 2 == 0 && this.roomPaijiu.testUserId !=0) {
+      val (maxCards,newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(cards)
+      val testPlayer = playerCardInfos(this.roomPaijiu.testUserId)
+      testPlayer.cards = maxCards
+
+      val slidList = newCards.sliding(4, 4).toList
+      var count = 0
+
+
+      for(playerInfo <- playerCardInfos.values if playerInfo.userId != this.roomPaijiu.testUserId){
+        playerInfo.cards ++= slidList(count)
+        count += 1
+        //发牌通知
+        MsgSender.sendMsg2Player("gamePaijiuService", "getCards", playerInfo.cards.asJava, playerInfo.userId)
+      }
+
+      //状态置回
+      this.roomPaijiu.testUserId = 0
+    } else {
+      val slidList = cards.sliding(4, 4).toList
+      var count = 0
+      for (playerInfo <- playerCardInfos.values) {
+        playerInfo.cards ++= slidList(count)
+        count += 1
+        //发牌通知
+        MsgSender.sendMsg2Player("gamePaijiuService", "getCards", playerInfo.cards.asJava, playerInfo.userId)
+      }
     }
   }
 
@@ -240,16 +261,19 @@ class GamePaijiu extends Game with PaijiuConstant {
   }
 
 
+  /**
+    * 生成战绩
+    */
   override protected def genRecord(): Unit = {
 
     import com.code.server.util.IdWorker
     val id = IdWorker.getDefaultInstance.nextId
-    val map = new util.HashMap[Long,java.lang.Double]()
-    for(playerInfo <- playerCardInfos){
+    val map = new util.HashMap[Long, java.lang.Double]()
+    for (playerInfo <- playerCardInfos) {
       map.put(playerInfo._2.userId, playerInfo._2.score)
     }
     genRecord(map, this.roomPaijiu, id)
-//    genRecord(playerCardInfos.values.toMap((playerInfo)=>))
+    //    genRecord(playerCardInfos.values.toMap((playerInfo)=>))
   }
 
   /**
@@ -292,6 +316,9 @@ class GamePaijiu extends Game with PaijiuConstant {
       gameOfResult.setUserList(userOfResultList)
       MsgSender.sendMsg2Player("gameService", "gamePaijiuFinalResult", gameOfResult, users)
       RoomManager.removeRoom(roomPaijiu.getRoomId)
+
+      //庄家初始分 再减掉
+      roomPaijiu.addUserSocre(this.roomPaijiu.getBankerId, -this.roomPaijiu.bankerInitScore)
 
       //战绩
       this.roomPaijiu.genRoomRecord()
@@ -347,6 +374,39 @@ class GamePaijiu extends Game with PaijiuConstant {
     DataManager.data.getPaijiuCardGroupScoreDataMap.get(name).getScore
   }
 
+
+  /**
+    * 交换(测试用)
+    *
+    * @param userId
+    */
+  def exchange(userId: Long): Int = {
+    //单数局
+    if (this.roomPaijiu.getCurGameNumber % 2 != 0) {
+      val player = playerCardInfos(userId)
+      val allCards = this.roomPaijiu.cards ++ player.cards
+      val (maxGroup, newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(allCards)
+      this.roomPaijiu.cards = newCards
+      player.cards = maxGroup
+      MsgSender.sendMsg2Player("gamePaijiuService", "exchange", Map("cards" -> player.cards).asJava, this.users)
+      0
+    } else {
+
+      ErrorCode.BET_PARAM_ERROR
+    }
+  }
+
+  /**
+    * 设置测试的id
+    *
+    * @param userId
+    */
+  def setTestUser(userId: Long): Int = {
+    this.roomPaijiu.testUserId = userId
+    MsgSender.sendMsg2Player("gamePaijiuService", "setTestUser", 0, this.users)
+    0
+  }
+
   protected def getGroupScoreByName(name: String): Int = {
     DataManager.data.getPaijiuCardGroupScoreDataMap.get(name).getScore
   }
@@ -357,7 +417,7 @@ class GamePaijiu extends Game with PaijiuConstant {
   protected def betStart(): Unit = {
     state = STATE_BET
 
-    val param = Map("bankerId" -> this.bankerId,"curGameNumber"->this.roomPaijiu.getCurGameNumber)
+    val param = Map("bankerId" -> this.bankerId, "curGameNumber" -> this.roomPaijiu.getCurGameNumber)
     //推送开始下注
     MsgSender.sendMsg2Player("gamePaijiuService", "betStart", param.asJava, users)
     //双数局 通知上把牌
@@ -459,7 +519,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     if (roomPaijiu.getCurGameNumber != 1) return ErrorCode.BANKER_SET_SCORE_GAMENUM_ERROR
     roomPaijiu.bankerScore = score
     roomPaijiu.bankerInitScore = score
-    val result = Map("score"->score)
+    val result = Map("score" -> score)
     MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScoreResult", result.asJava, users)
     MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScore", 0, userId)
     //下注
@@ -486,6 +546,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreak", 0, userId)
     0
   }
+
 
   /**
     * 抢庄后选定庄家
