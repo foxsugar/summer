@@ -167,8 +167,6 @@ public class Room implements IfaceRoom {
         this.userScores.put(userId, 0D);
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         addUser2RoomRedis(userId);
-
-
     }
 
     public void roomRemoveUser(long userId) {

@@ -87,10 +87,15 @@ public class RoomMsgDispatch {
             }
             case "getReady": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
-                if (room == null) {
+                IfaceRoom roomPuls = RoomManager.getPlusRoom(roomId);
+                if (room == null && roomPuls == null) {
                     return ErrorCode.CAN_NOT_NO_ROOM;
                 }
-                return room.getReady(userId);
+                if(roomPuls != null){
+                    return roomPuls.getReady(userId);
+                }else if(room != null){
+                    return room.getReady(userId);
+                }
             }
             case "dissolveRoom": {
                 IfaceRoom room = RoomManager.getRoom(roomId);

@@ -1,7 +1,11 @@
 package com.code.server.game.poker.doudizhu;
 
 
+import com.code.server.constant.data.DataManager;
+import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.room.Game;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.timer.GameTimer;
 
@@ -44,6 +48,7 @@ public class RoomDouDiZhuPlus extends RoomDouDiZhu {
         }
         game.startGame(users, this);
         this.isOpen = true;
+        spendMoney();
         pushScoreChange();
     }
 
@@ -73,4 +78,26 @@ public class RoomDouDiZhuPlus extends RoomDouDiZhu {
     }
 
 
+    public void init(int gameNumber, int multiple) throws DataNotFoundException {
+        this.goldRoomType = multiple;
+        this.multiple = -1;
+        this.gameNumber = gameNumber;
+        this.isInGame = false;
+        this.maxZhaCount = 9999;
+        this.createNeedMoney = this.getNeedMoney();
+        this.isAddGold = DataManager.data.getRoomDataMap().get(this.gameType).getIsAddGold() == 1;
+    }
+
+    public int getNeedMoney() {
+       return (int)this.goldRoomType;
+    }
+
+
+    public void pushScoreChange() {
+        Map<Long, Double> userMoneys = new HashMap<>();
+        for (Long l: users) {
+            userMoneys.put(l,RedisManager.getUserRedisService().getUserMoney(l));
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userMoneys), this.getUsers());
+    }
 }
