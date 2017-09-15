@@ -114,8 +114,31 @@ class RoomPaijiu extends Room {
     */
   override protected def dissolutionRoom(): Unit = {
     //庄家初始分 再减掉
+    import java.time.LocalDateTime
+
+    import com.code.server.constant.response.{GameOfResult, ResponseVo}
+    import com.code.server.game.room.kafka.MsgSender
+    import com.code.server.game.room.service.RoomManager
+    RoomManager.removeRoom(this.roomId)
+    // 结果类
+    val userOfResultList = getUserOfResult
+
+    //代开房 并且游戏未开始
+    if (!isCreaterJoin && !this.isInGame && (this.curGameNumber ==1)) drawBack()
+    this.isInGame = false
+
+    // 存储返回
+    val gameOfResult = new GameOfResult
+
+    gameOfResult.setUserList(userOfResultList)
+    gameOfResult.setEndTime(LocalDateTime.now.toString)
+    MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), users)
+
+    //庄家初始分 再减掉
     this.addUserSocre(this.getBankerId, -this.bankerInitScore)
-    super.dissolutionRoom()
+
+    //战绩
+    genRoomRecord()
   }
 
 
