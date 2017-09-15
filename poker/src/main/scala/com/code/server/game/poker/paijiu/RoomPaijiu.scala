@@ -108,6 +108,17 @@ class RoomPaijiu extends Room {
     roomVo
 
   }
+
+  /**
+    * 解散房间
+    */
+  override protected def dissolutionRoom(): Unit = {
+    //庄家初始分 再减掉
+    this.addUserSocre(this.getBankerId, -this.bankerInitScore)
+    super.dissolutionRoom()
+  }
+
+
 }
 
 
