@@ -3,6 +3,8 @@ package com.code.server.game.poker.doudizhu;
 
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.response.ErrorCode;
+import com.code.server.constant.response.NoticeReady;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.kafka.MsgSender;
@@ -31,6 +33,47 @@ public class RoomDouDiZhuPlus extends RoomDouDiZhu {
         usesMoney.put(50D,4);
         usesMoney.put(100D,6);
     }
+
+
+    public int getReady(long userId) {
+        if (RedisManager.getUserRedisService().getUserMoney(userId) < needsMoney.get(goldRoomType)) {
+            return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
+        }
+        if (!this.users.contains(userId)) {
+            return ErrorCode.CANNOT_FIND_THIS_USER;
+        }
+        if (isInGame) {
+            return ErrorCode.CANNOT_FIND_THIS_USER;
+        }
+
+        this.userStatus.put(userId, STATUS_READY);
+
+        int readyNum = 0;
+        for (Map.Entry<Long, Integer> entry : this.userStatus.entrySet()) {
+            if (entry.getValue() == STATUS_READY) {
+                readyNum += 1;
+            }
+        }
+
+        pushScoreChange();
+
+        //通知客户端谁是否准备
+        Map<String, Integer> userStatus = new HashMap<>();
+        for (Long i : this.userStatus.keySet()) {
+            userStatus.put(i + "", this.userStatus.get(i));
+        }
+        NoticeReady noticeReady = new NoticeReady();
+        noticeReady.setUserStatus(userStatus);
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "noticeReady", noticeReady), this.users);
+
+        //开始游戏
+        if (readyNum >= personNumber) {
+            startGame();
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "getReady", 0), userId);
+        return 0;
+    }
+
 
     @Override
     protected Game getGameInstance() {

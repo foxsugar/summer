@@ -10,7 +10,9 @@ import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2017/3/13.
@@ -136,6 +138,8 @@ public class GameDouDiZhuPlus extends GameDouDiZhu {
         MsgSender.sendMsg2Player("gameService", "gameResult", gameResultDouDizhu, users);
 
         replay.setResult(gameResultDouDizhu);
+
+        pushScoreChange();
     }
 
 
@@ -153,4 +157,11 @@ public class GameDouDiZhuPlus extends GameDouDiZhu {
     }
 
 
+    public void pushScoreChange() {
+        Map<Long, Double> userMoneys = new HashMap<>();
+        for (Long l: users) {
+            userMoneys.put(l,RedisManager.getUserRedisService().getUserMoney(l));
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userMoneys), this.getUsers());
+    }
 }
