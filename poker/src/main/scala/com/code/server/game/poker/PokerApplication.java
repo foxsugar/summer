@@ -3,6 +3,7 @@ package com.code.server.game.poker;
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.exception.RegisterFailedException;
 import com.code.server.game.poker.config.ServerConfig;
+import com.code.server.game.poker.doudizhu.DouDiZhuGoldRobot;
 import com.code.server.game.poker.robot.RobotManager;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.RedisManager;
@@ -13,6 +14,7 @@ import com.code.server.util.timer.TimerNode;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+
 
 import java.io.IOException;
 
