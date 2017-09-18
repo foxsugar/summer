@@ -3,7 +3,6 @@ package com.code.server.game.poker;
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.exception.RegisterFailedException;
 import com.code.server.game.poker.config.ServerConfig;
-import com.code.server.game.poker.doudizhu.DouDiZhuGoldRobot;
 import com.code.server.game.poker.robot.RobotManager;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.RedisManager;
