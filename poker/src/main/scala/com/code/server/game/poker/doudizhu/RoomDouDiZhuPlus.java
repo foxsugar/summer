@@ -4,14 +4,18 @@ package com.code.server.game.poker.doudizhu;
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.response.ErrorCode;
+import com.code.server.constant.response.Notice;
 import com.code.server.constant.response.NoticeReady;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.timer.GameTimer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,6 +41,7 @@ public class RoomDouDiZhuPlus extends RoomDouDiZhu {
 
     public int getReady(long userId) {
         if (RedisManager.getUserRedisService().getUserMoney(userId) < needsMoney.get(goldRoomType)) {
+            quitRoom(userId);
             return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
         }
         if (!this.users.contains(userId)) {
@@ -142,5 +147,31 @@ public class RoomDouDiZhuPlus extends RoomDouDiZhu {
             userMoneys.put(l,RedisManager.getUserRedisService().getUserMoney(l));
         }
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userMoneys), this.getUsers());
+    }
+
+    public int quitRoom(long userId) {
+        if (!this.users.contains(userId)) {
+            return ErrorCode.CANNOT_QUIT_ROOM_NOT_EXIST;
+
+        }
+        if (isInGame) {
+            return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME;
+        }
+
+        List<Long> noticeList = new ArrayList<>();
+        noticeList.addAll(this.getUsers());
+
+        //删除玩家房间映射关系
+        roomRemoveUser(userId);
+        if (this.createUser == userId) {//房主解散
+
+            Notice n = new Notice();
+            n.setMessage("roomNum " + this.getRoomId() + " :has destroy success!");
+            MsgSender.sendMsg2Player(new ResponseVo("roomService", "destroyRoom", n), noticeList);
+
+            RoomManager.removeRoom(this.roomId);
+        }
+        noticeQuitRoom(userId);
+        return 0;
     }
 }

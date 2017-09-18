@@ -164,4 +164,19 @@ public class GameDouDiZhuPlus extends GameDouDiZhu {
         }
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userMoneys), this.getUsers());
     }
+
+    public void init(List<Long> users, long dizhuUser) {
+        //初始化玩家
+        for (Long uid : users) {
+            PlayerCardInfoDouDiZhu playerCardInfo = getGameTypePlayerCardInfo();
+            playerCardInfo.userId = uid;
+            playerCardInfos.put(uid, playerCardInfo);
+        }
+        this.users.addAll(users);
+
+
+        shuffle();
+        deal();
+        chooseDizhu(room.getUsers().get(rand.nextInt(3)));
+    }
 }
