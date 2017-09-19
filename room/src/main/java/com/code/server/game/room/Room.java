@@ -895,7 +895,7 @@ public class Room implements IfaceRoom {
 
 
     public boolean isGoldRoom() {
-        return goldRoomType > 0.0;
+        return goldRoomType > 0.0 && "2".equals(roomType);
     }
 
     public boolean isOpen() {

@@ -78,7 +78,7 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
                     nullRoom = new RoomDouDiZhuPlus();
                     break;
                 default:
-                    nullRoom = new RoomDouDiZhuGold();
+                    nullRoom = new RoomDouDiZhuPlus();
                     break;
             }
             nullRoom.setPersonNumber(PERSONNUM);

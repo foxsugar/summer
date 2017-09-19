@@ -38,6 +38,35 @@ public class RoomDouDiZhuPlus extends RoomDouDiZhu {
         usesMoney.put(100D,6);
     }
 
+    public int joinRoom(long userId, boolean isJoin) {
+
+        if (userId == 0) {
+            return ErrorCode.JOIN_ROOM_USERID_IS_0;
+        }
+        if (this.users.contains(userId)) {
+            return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;
+        }
+        if (this.users.size() >= this.personNumber) {
+            return ErrorCode.CANNOT_JOIN_ROOM_IS_FULL;
+
+        }
+        if (RedisManager.getUserRedisService().getRoomId(userId) != null) {
+            return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;
+        }
+        if (!isCanJoinCheckMoney(userId)) {
+            return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
+        }
+
+
+        pushScoreChange();
+        if (isJoin) {
+            roomAddUser(userId);
+            //加进玩家-房间映射表
+            noticeJoinRoom(userId);
+        }
+
+        return 0;
+    }
 
     public int getReady(long userId) {
         if (RedisManager.getUserRedisService().getUserMoney(userId) < needsMoney.get(goldRoomType)) {
