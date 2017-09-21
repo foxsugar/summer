@@ -25,8 +25,8 @@ public class RoomDouDiZhuPlus extends RoomDouDiZhu {
 
     public static final int PERSONNUM = 3;
 
-    private static final Map<Double,Integer> needsMoney = new HashMap<>();
-    private static final Map<Double,Integer> usesMoney = new HashMap<>();
+    public static final Map<Double,Integer> needsMoney = new HashMap<>();
+    public static final Map<Double,Integer> usesMoney = new HashMap<>();
 
     static {
         needsMoney.put(10D,60);
@@ -37,6 +37,7 @@ public class RoomDouDiZhuPlus extends RoomDouDiZhu {
         usesMoney.put(50D,4);
         usesMoney.put(100D,6);
     }
+
 
     public int joinRoom(long userId, boolean isJoin) {
 
@@ -203,4 +204,13 @@ public class RoomDouDiZhuPlus extends RoomDouDiZhu {
         noticeQuitRoom(userId);
         return 0;
     }
+
+
+
+
+
+
+
+
+
 }
