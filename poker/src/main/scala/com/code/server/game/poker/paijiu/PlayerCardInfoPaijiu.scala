@@ -73,7 +73,8 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
     playerCardInfoPaijiuVo.userId = this.userId
     playerCardInfoPaijiuVo.winState = this.winState
     playerCardInfoPaijiuVo.score = this.score
-
+    playerCardInfoPaijiuVo.isFightForBanker = this.isFightForBanker
+    playerCardInfoPaijiuVo.isHasFightForBanker = this.isHasFightForBanker
 
     playerCardInfoPaijiuVo
   }
