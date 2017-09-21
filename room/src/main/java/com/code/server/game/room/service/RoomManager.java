@@ -36,6 +36,16 @@ public class RoomManager {
         return getInstance().rooms.get(roomId);
     }
 
+    public static IfaceRoom getPlusRoom(String roomId){
+        Room room = null;
+        for (Room r:robotRoom) {
+            if(roomId.equals(r.getRoomId())){
+                room = r;
+            }
+        }
+        return room;
+    }
+
     public static List<Room> getFullGoldRoom(Double goldRoomType){
         return getInstance().fullGoldRoom.get(goldRoomType);
     }
@@ -146,6 +156,7 @@ public class RoomManager {
             }
         }
         getInstance().rooms.put(roomId, room);
+        robotRoom.add(room);
         RedisManager.getRoomRedisService().setServerId(roomId,serverId);
         //加入代开房列表
         if(!room.isCreaterJoin()){

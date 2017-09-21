@@ -167,8 +167,6 @@ public class Room implements IfaceRoom {
         this.userScores.put(userId, 0D);
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         addUser2RoomRedis(userId);
-
-
     }
 
     public void roomRemoveUser(long userId) {
@@ -897,7 +895,7 @@ public class Room implements IfaceRoom {
 
 
     public boolean isGoldRoom() {
-        return goldRoomType > 0.0;
+        return goldRoomType > 0.0 && "2".equals(roomType);
     }
 
     public boolean isOpen() {

@@ -73,10 +73,13 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
             switch (roomType) {
                 case "2":
                     nullRoom = new RoomDouDiZhuGold();
+                    break;
                 case "3":
                     nullRoom = new RoomDouDiZhuPlus();
+                    break;
                 default:
-                    nullRoom = new RoomDouDiZhuGold();
+                    nullRoom = new RoomDouDiZhuPlus();
+                    break;
             }
             nullRoom.setPersonNumber(PERSONNUM);
             nullRoom.setRoomId(getRoomIdStr(genRoomId()));
@@ -175,5 +178,13 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
         this.gameNumber = gameNumber;
         this.isInGame = false;
         this.maxZhaCount = multiple;
+    }
+
+    public void pushScoreChange() {
+        Map<Long, Double> userMoneys = new HashMap<>();
+        for (Long l: users) {
+            userMoneys.put(l,RedisManager.getUserRedisService().getUserMoney(l));
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userMoneys), this.getUsers());
     }
 }
