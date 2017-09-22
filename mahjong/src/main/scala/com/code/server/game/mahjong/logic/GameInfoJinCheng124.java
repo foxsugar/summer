@@ -41,6 +41,7 @@ public class GameInfoJinCheng124 extends GameInfo {
             remainCards.removeAll(CardTypeUtil.FENG_CARD);
             remainCards.removeAll(CardTypeUtil.ZI_CARD);
         }
+        fapai();
     }
 
     protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {

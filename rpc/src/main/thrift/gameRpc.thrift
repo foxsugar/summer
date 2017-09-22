@@ -1,5 +1,5 @@
 namespace java com.code.server.rpc.idl
-
+namespace py gameIdl
 
 struct User {
   1: i64 id = 0,
@@ -29,39 +29,39 @@ struct OnlineNum{
 
 service GameRPC{
     //充值
-    i32 charge(Order order),
+    i32 charge(1:Order order),
 
    //获得用户信息
-   User getUserInfo(i64 userId),
+   User getUserInfo(1:i64 userId),
 
    //交易库存斗
-   i32 exchange(Order order),
+   i32 exchange(1:Order order),
 
     //修改公告
-   i32 modifyMarquee(string str),
+   i32 modifyMarquee(1:string str),
     //修改下载地址
-   i32 modifyDownload(string str),
+   i32 modifyDownload(1:string str),
     //修改安卓版本
-   i32 modifyAndroidVersion(string str),
+   i32 modifyAndroidVersion(1:string str),
     //修改ios版本
-   i32 modifyIOSVersion(string str),
+   i32 modifyIOSVersion(1:string str),
    //shutdown
    i32 shutdown(),
    //修改初始金钱
-   i32 modifyInitMoney(i32 money),
+   i32 modifyInitMoney(1:i32 money),
    //是否苹果审查
-   i32 modifyAppleCheck(i32 status),
+   i32 modifyAppleCheck(1:i32 status),
 
-   i32 modifyDownload2(string str),
+   i32 modifyDownload2(1:string str),
 
-   i32 addBlackList(i64 userId),
+   i32 addBlackList(1:i64 userId),
 
-   i32 removeBlackList(i64 userId),
+   i32 removeBlackList(1:i64 userId),
 
    set<i64> getBlackList();
 
    OnlineNum getOnlineUser();
 
-   i32 bindReferee(i64 userId,i32 referee);
+   i32 bindReferee(1:i64 userId,2:i32 referee);
 }
 

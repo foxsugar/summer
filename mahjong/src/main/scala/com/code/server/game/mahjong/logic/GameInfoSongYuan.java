@@ -46,6 +46,7 @@ public class GameInfoSongYuan extends GameInfo {
 
         System.out.println("发牌的数量 : "+remainCards.size());
 
+        fapai();
     }
 
 

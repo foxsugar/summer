@@ -859,7 +859,7 @@ object HuWithHun {
     * @return
     */
   def isHasShun(index: Int): Boolean = {
-    if (index >= 26 || index == 8 || index == 17) false
+    if (index >= 26 || index == 8 || index == 17) return false
     true
   }
 

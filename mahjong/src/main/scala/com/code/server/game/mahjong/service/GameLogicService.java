@@ -2,6 +2,7 @@ package com.code.server.game.mahjong.service;
 
 
 import com.code.server.game.mahjong.logic.GameInfo;
+import com.code.server.game.mahjong.logic.GameInfoTJ;
 import com.code.server.game.mahjong.logic.RoomInfo;
 import com.code.server.game.room.IfaceRoom;
 import com.code.server.game.room.kafka.MsgSender;
@@ -77,6 +78,10 @@ public class GameLogicService {
                 List<String> xuanfengCardList = JsonUtil.readValue(xuanfengCard, new TypeReference<List<String>>() {
                 });
 //                code = xuanfengdan(roomId, userId, xuanfengType, xuanfengCardList);
+                break;
+            case "laZhuang":
+                int num = paramsjSONObject.path("num").asInt();
+                code = ((GameInfoTJ)getGameInfo(roomId)).laZhuang(userId, num);
                 break;
         }
         if (code == 0) {

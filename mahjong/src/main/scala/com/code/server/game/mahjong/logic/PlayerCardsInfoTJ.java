@@ -86,7 +86,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         boolean isTianHu = this.operateList.size()==1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
 
 
-        List<HuCardType> huList = HuUtil.isHu(this, this.cards, chiPengGangNum, this.gameInfo.hun, lastCard);
+        List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), chiPengGangNum, this.gameInfo.hun, lastCard);
         HuCardType maxHuType = getMaxScoreHuCardType(huList);
 
         if(huList.size() > 0) {
@@ -116,7 +116,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
         int lastCard = CardTypeUtil.getTypeByCard(card);
         int chiPengGangNum = getChiPengGangNum();
-        List<HuCardType> huList = HuUtil.isHu(this, this.cards, chiPengGangNum, this.gameInfo.hun, lastCard);
+        List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), chiPengGangNum, this.gameInfo.hun, lastCard);
 
         //是否是杠开
         boolean isGangKai = isGangKai();
@@ -164,8 +164,9 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         if (userId == this.gameInfo.getFirstTurn()) {
             score *= 2;
             //庄家拉庄
-            if (own.laZhuang > 0) {
-                score *= (1 << own.laZhuang);
+
+            if (this.roomInfo.laZhuang.get(userId) > 0) {
+                score *= (1 << this.roomInfo.laZhuang.get(userId));
             }
         }
 
@@ -179,8 +180,8 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
                 myScore *= 2;
             }
             //拉庄
-            if (playerCardsInfo.laZhuang > 0) {
-                myScore *= 1 << laZhuang;
+            if (this.roomInfo.laZhuang.get(playerCardsInfo.getUserId()) > 0) {
+                myScore *= 1 << this.roomInfo.laZhuang.get(playerCardsInfo.getUserId());
             }
 
             //房间倍数

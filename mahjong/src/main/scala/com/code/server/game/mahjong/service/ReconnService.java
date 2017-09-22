@@ -60,6 +60,8 @@ public class ReconnService {
             allMessage.setUserScores(roomInfo.getUserScores());
             allMessage.setUserStatus(roomInfo.getUserStatus());
             allMessage.setCircleNum(roomInfo.getCurCircle());//圈数
+            allMessage.getLaZhuang().putAll(roomInfo.getLaZhuang());
+            allMessage.getLaZhuangStatus().putAll(roomInfo.getLaZhuangStatus());
             for (UserBean userBean : RedisManager.getUserRedisService().getUserBeans(roomInfo.getUsers())) {
                 userList.add(userBean.toVo());
             }

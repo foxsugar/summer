@@ -40,6 +40,7 @@ public class GameInfoJinCheng extends GameInfo {
             remainCards.removeAll(CardTypeUtil.FENG_CARD);
             remainCards.removeAll(CardTypeUtil.ZI_CARD);
         }
+        fapai();
     }
     
     /**

@@ -1,4 +1,5 @@
 namespace java com.code.server.rpc.idl
+namespace py adminIdl
 
 include "response.thrift"
 
