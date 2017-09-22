@@ -2,14 +2,21 @@ package com.code.server.game.poker.doudizhu;
 
 
 import com.code.server.constant.game.CardStruct;
-import com.code.server.constant.response.ErrorCode;
-import com.code.server.constant.response.GameResultDouDizhu;
-import com.code.server.constant.response.ResponseVo;
+import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.KafkaMsgKey;
+import com.code.server.constant.response.*;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
+import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.IdWorker;
+import com.code.server.util.SpringUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by sunxianping on 2017/3/13.
@@ -189,10 +196,30 @@ public class GameDouDiZhuGold extends GameDouDiZhu {
             genRecord();
 
             room.clearReadyStatus(true);
+            List<UserOfResult> userOfResultList = this.room.getUserOfResult();
+            // 存储返回
+            GameOfResult gameOfResult = new GameOfResult();
+            gameOfResult.setUserList(userOfResultList);
+            MsgSender.sendMsg2Player("gameService", "gameFinalResult", gameOfResult, users);
+
             RoomManager.removeRoom(room.getRoomId());
-            //sendFinalResult();
+
+            //战绩
+            this.room.genRoomRecord();
 
         }
+
+        /*a:for (Long l:room.getUsers()) {
+            if (RedisManager.getUserRedisService().getUserMoney(l) < RoomDouDiZhuPlus.needsMoney.get(room.getGoldRoomType())){
+                room.clearReadyStatus(true);
+                RoomManager.removeRoom(room.getRoomId());
+                //战绩
+                this.room.genRoomRecord();
+                break a;
+
+            }
+        }*/
+
         MsgSender.sendMsg2Player("gameService", "play", 0, userId);
 //        userId.sendMsg("gameService", "play", 0);
         updateLastOperateTime();
@@ -255,6 +282,24 @@ public class GameDouDiZhuGold extends GameDouDiZhu {
         }
     }
 
+    protected void genRecord() {
+
+        room.setRoomType("3");
+        long id = IdWorker.getDefaultInstance().nextId();
+        genRecord(playerCardInfos.values().stream().collect
+                (Collectors.toMap(PlayerCardInfoDouDiZhu::getUserId, PlayerCardInfoDouDiZhu::getScore)), room, id);
+
+        //回放
+        replay.setId(id);
+        replay.setCount(playerCardInfos.size());
+        replay.setRoom_uuid(this.room.getUuid());
+
+        replay.setRoomInfo(this.room.toVo(0));
+
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_REPLAY);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, replay);
+    }
 
     /*
     ============================
