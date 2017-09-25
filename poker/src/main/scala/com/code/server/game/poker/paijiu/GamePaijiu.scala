@@ -469,7 +469,9 @@ class GamePaijiu extends Game with PaijiuConstant {
     * 掷骰子
     */
   def crap(userId: Long): Int = {
+    if(state != START_CRAP) return ErrorCode.CRAP_PARAM_ERROR
     if (userId != bankerId) return ErrorCode.NOT_BANKER
+
     val rand = new Random()
     val num1 = rand.nextInt(6) + 1
     val num2 = rand.nextInt(6) + 1
