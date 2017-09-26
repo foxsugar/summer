@@ -1,6 +1,7 @@
 package com.code.server.game.mahjong.logic;
 
 import com.code.server.game.mahjong.util.HuCardType;
+import com.code.server.game.mahjong.util.HuType;
 import com.code.server.game.mahjong.util.HuUtil;
 
 import java.util.ArrayList;
@@ -133,6 +134,11 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         if(isGangKai) score *= 2;
         if(isSuHu) score *= 4;
         if(isTianHu) score *= 4;
+
+        setWinTypeResult(maxHuType);
+        if(isGangKai) this.winType.add(HuType.hu_杠开);
+        if(isSuHu) this.winType.add(HuType.hu_素);
+        if(isTianHu) this.winType.add(HuType.hu_天胡);
 
         // 拉龙五 翻倍
         if (this.roomInfo.isHasMode(GameInfoTJ.mode_拉龙五)) {
