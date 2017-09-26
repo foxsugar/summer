@@ -1,6 +1,7 @@
 package com.code.server.game.mahjong.logic;
 
 import com.code.server.game.mahjong.response.ErrorCode;
+import com.code.server.game.mahjong.util.HuType;
 import com.code.server.game.mahjong.util.HuWithHun;
 import com.code.server.game.room.kafka.MsgSender;
 
@@ -65,19 +66,19 @@ public class GameInfoTJ extends GameInfo {
         } else {//选了并且还有未拉庄的
 
             boolean isNotice = this.room.laZhuang.keySet().stream().filter(id -> id != firstTurn && this.room.laZhuang.get(id) == 0).count() != 0;
-            if(isNotice){
+            if (isNotice) {
                 MsgSender.sendMsg2Player("gameService", "laZhuang", this.room.laZhuang, users);
-            }else{
+            } else {
                 initHun(room);
             }
         }
     }
 
-     public int laZhuang(long userId, int num){
+    public int laZhuang(long userId, int num) {
         //是庄家
         if (userId == firstTurn) {
             //庄家已经选了
-            if(this.room.laZhuangStatus.get(userId)){
+            if (this.room.laZhuangStatus.get(userId)) {
                 return ErrorCode.CAN_NOT_LAZHUANG;
             }
             this.room.laZhuangStatus.put(userId, true);
@@ -85,13 +86,13 @@ public class GameInfoTJ extends GameInfo {
             //开始游戏
             initHun(room);
 
-        }else{
+        } else {
             //都选择了拉庄 或者 都选择过
             this.room.laZhuangStatus.put(userId, true);
             this.room.laZhuang.put(userId, num);
-            boolean isAllChoise = this.room.laZhuangStatus.values().stream().filter(s->!s).count() == 0;
+            boolean isAllChoise = this.room.laZhuangStatus.values().stream().filter(s -> !s).count() == 0;
             boolean isAllLa = this.room.laZhuang.keySet().stream().filter(id -> id != firstTurn && this.room.laZhuang.get(id) == 0).count() == 0;
-            if(isAllChoise || isAllLa ){
+            if (isAllChoise || isAllLa) {
                 initHun(room);
             }
 
@@ -173,8 +174,8 @@ public class GameInfoTJ extends GameInfo {
                 room.setBankerId(nextTurnId(room.getBankerId()));
 
                 //清理拉庄信息
-                this.users.forEach(uid->{
-                    room.laZhuangStatus.put(uid,false);
+                this.users.forEach(uid -> {
+                    room.laZhuangStatus.put(uid, false);
                     room.laZhuang.put(uid, 0);
                 });
             }
@@ -197,8 +198,8 @@ public class GameInfoTJ extends GameInfo {
 
             //清理拉庄信息
 
-            this.users.forEach(uid->{
-                room.laZhuangStatus.put(uid,false);
+            this.users.forEach(uid -> {
+                room.laZhuangStatus.put(uid, false);
                 room.laZhuang.put(uid, 0);
             });
         }
@@ -269,6 +270,7 @@ public class GameInfoTJ extends GameInfo {
         playerCardsInfo.gangCompute(room, this, isMing, -1, card);
         //金杠直接胡
         if (isJinGang) {
+            playerCardsInfo.winType.add(HuType.hu_金杠);
             computeAllGang();
             handleHu(playerCardsInfo);
         } else {
