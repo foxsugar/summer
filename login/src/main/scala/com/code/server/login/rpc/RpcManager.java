@@ -220,6 +220,7 @@ public class RpcManager {
         ThreadPool.getInstance().executor.execute(() -> {
             try {
                 if (serverConfig.getStartNewGameRpc() == 1) {
+                    System.out.println("start new----------");
                     gameRpcServer = GameRpcServer.StartServer(serverConfig.getGameRpcServerPort(), new GameRpcNewHandler());
                 } else {
                     gameRpcServer = GameRpcServer.StartServer(serverConfig.getGameRpcServerPort(), new GameRpcHandler());

@@ -16,7 +16,7 @@ public class ServerConfig {
     private int gameRpcServerPort;
     private String adminRpcHost;
     private int adminRpcPort;
-    private int startNewGameRpc;
+    private int startNewGameRpc=0;
 
 
     private  String appId;//应用id
