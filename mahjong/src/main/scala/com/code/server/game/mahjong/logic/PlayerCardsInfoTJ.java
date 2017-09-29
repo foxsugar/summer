@@ -5,6 +5,7 @@ import com.code.server.game.mahjong.util.HuType;
 import com.code.server.game.mahjong.util.HuUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -323,5 +324,46 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
     @Override
     public boolean isCanTing(List<String> cards) {
         return false;
+    }
+
+    private static void change(){
+        String s = "077, 080, 085, 017, 029, 014, 001, 090, 004, 009, 022, 026, 079, 030";
+        String result = "";
+        for (String ss : s.split(",")) {
+            result = result+"\""+ss.trim()+"\",";
+        }
+        System.out.println(result);
+    }
+
+    public static void main(String[] args) {
+        PlayerCardsInfoTJ playerCardsInfo = new PlayerCardsInfoTJ();
+
+        change();
+
+
+        playerCardsInfo.isHasFengShun = true;
+
+
+        String[] s = new String[]{"077","080","085","017","029","014","001","090","004","009","022","026","079","030"};
+
+        List<Integer> hun = new ArrayList<>();
+        hun.add(5);
+        hun.add(6);
+        hun.add(7);
+
+
+        RoomInfo roomInfo = new RoomInfo();
+        roomInfo.setMode("1000");
+        playerCardsInfo.setRoomInfo(roomInfo);
+        playerCardsInfo.cards = new ArrayList<>();
+        playerCardsInfo.init(playerCardsInfo.cards);
+
+
+        List<String> list = Arrays.asList(s);
+        playerCardsInfo.cards.addAll(list);
+
+        List<HuCardType> huList = HuUtil.isHu(playerCardsInfo, playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards), 0, hun, 7);
+        System.out.println(huList);
+
     }
 }
