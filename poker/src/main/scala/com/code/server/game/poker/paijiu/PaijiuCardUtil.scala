@@ -65,13 +65,20 @@ object PaijiuCardUtil {
     newCards ++= cards
 
     for (group <- cardScore) {
+
       val card1 = group._1.split(",")(0).toInt
       val card2 = group._1.split(",")(1).toInt
       var haveList:List[Int] = List()
       haveList = haveList.+:(card1)
       haveList = haveList.+:(card2)
-      val isHas = newCards.asJava.containsAll(haveList.asJava)
-      if (isHas) {
+      var isHasCard:Boolean = false
+      if(card1 == card2){
+        isHasCard = newCards.count(cd=>cd == card1) == 2
+      }else{
+        isHasCard = newCards.asJava.containsAll(haveList.asJava)
+      }
+
+      if (isHasCard) {
         newCards = newCards.diff(haveList)
         return (haveList, newCards)
       }
@@ -79,5 +86,8 @@ object PaijiuCardUtil {
     }
     null
   }
+
+
+
 
 }

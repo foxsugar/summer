@@ -295,8 +295,12 @@ object HuWithHun {
 
       //删除 匹配的
       needShunList.removeAll(needRemoveList)
+//      println(hun2RemoveList.size())
+//      if(hun2RemoveList.size() == 2) {
+//        println("--")
+//      }
       for (index <- hun2RemoveList.asScala) {
-        huCardType.hun2.remove(index.toInt)
+        huCardType.hun2.remove(hun2RemoveList.get(index).asInstanceOf[Integer])
       }
 
       //组成龙了

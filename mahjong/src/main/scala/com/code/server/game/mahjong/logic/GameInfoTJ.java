@@ -62,12 +62,12 @@ public class GameInfoTJ extends GameInfo {
             //通知坐庄
             Map<String, Object> bid = new HashMap<>();
             bid.put("userId", firstTurn);
-            MsgSender.sendMsg2Player("gameService", "zuoZhuang", bid, users);
+            MsgSender.sendMsg2Player("gameService", "zuoZhuang", this.room.laZhuang, users);
         } else {//选了并且还有未拉庄的
 
             boolean isNotice = this.room.laZhuang.keySet().stream().filter(id -> id != firstTurn && this.room.laZhuang.get(id) == 0).count() != 0;
             if (isNotice) {
-                MsgSender.sendMsg2Player("gameService", "laZhuang", this.room.laZhuang, users);
+                MsgSender.sendMsg2Player("gameService", "laZhuangAll", this.room.laZhuang, users);
             } else {
                 initHun(room);
             }
@@ -101,7 +101,7 @@ public class GameInfoTJ extends GameInfo {
         Map<String, Object> data = new HashMap<>();
         data.put("userId", userId);
         data.put("num", num);
-        MsgSender.sendMsg2Player("gameService", "laZhuang", data, users);
+        MsgSender.sendMsg2Player("gameService", "laZhuang", this.room.laZhuang, users);
 
         return 0;
     }
