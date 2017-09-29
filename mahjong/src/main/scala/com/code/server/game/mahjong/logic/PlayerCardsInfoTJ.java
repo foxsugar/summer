@@ -57,8 +57,13 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         specialHuScore.put(hu_混儿吊捉五龙, 7);
         specialHuScore.put(hu_混儿吊捉五本混龙, 50);
 
+        specialHuScore.put(hu_素, 4);
+
+
+
+
         if (this.roomInfo.isHasMode(GameInfoTJ.mode_素本混龙)) {
-            specialHuScore.put(hu_素本混龙, 50);
+            specialHuScore.put(hu_素本混龙, 16);
         }
 
 
@@ -129,6 +134,9 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         boolean isTianHu = this.operateList.size()==1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
 
         HuCardType maxHuType = getMaxScoreHuCardType(huList);
+        if (maxHuType.fan == 0) {
+            maxHuType.fan = 1;
+        }
 
         int score = maxHuType.fan * this.roomInfo.getMultiple();
         if(isGangKai) score *= 2;
@@ -179,6 +187,10 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         int subScore = 0;
         //其他人赔付
         for (PlayerCardsInfoMj playerCardsInfo : this.gameInfo.playerCardsInfos.values()) {
+
+            if (playerCardsInfo.getUserId() == userId) {
+                continue;
+            }
 
             int myScore = score;
             //是庄家
@@ -247,7 +259,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
      */
     protected boolean isGangKai() {
         int size = this.operateList.size();
-        return size != 0 && this.operateList.get(size - 1) == type_gang;
+        return size >= 2 && this.operateList.get(size - 2) == type_gang;
     }
 
 

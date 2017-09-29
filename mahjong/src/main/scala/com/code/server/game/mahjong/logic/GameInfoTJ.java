@@ -106,6 +106,10 @@ public class GameInfoTJ extends GameInfo {
         return 0;
     }
 
+    protected boolean isRoomOver() {
+        return room.getCurCircle() > room.maxCircle;
+    }
+
     /**
      * 初始化混
      *

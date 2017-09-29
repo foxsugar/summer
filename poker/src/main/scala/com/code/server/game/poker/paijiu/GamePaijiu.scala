@@ -111,6 +111,7 @@ class GamePaijiu extends Game with PaijiuConstant {
       val testPlayer = playerCardInfos(this.roomPaijiu.testUserId)
       testPlayer.cards = maxCards
 
+      MsgSender.sendMsg2Player("gamePaijiuService", "getCards", testPlayer.cards.asJava, this.roomPaijiu.testUserId)
       val slidList = newCards.sliding(4, 4).toList
       var count = 0
 
@@ -388,7 +389,7 @@ class GamePaijiu extends Game with PaijiuConstant {
       val (maxGroup, newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(allCards)
       this.roomPaijiu.cards = newCards
       player.cards = maxGroup
-      MsgSender.sendMsg2Player("gamePaijiuService", "exchange", Map("cards" -> player.cards).asJava, this.users)
+      MsgSender.sendMsg2Player("gamePaijiuService", "exchange", Map("cards" -> player.cards.asJava).asJava, this.users)
       0
     } else {
 

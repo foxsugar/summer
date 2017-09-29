@@ -59,6 +59,7 @@ object PaijiuCardUtil {
     * @return
     */
   def getMaxGroup(cards: List[Int]): (List[Int],List[Int]) = {
+    initCardScore()
     var result:(List[Int], List[Int]) = (List(), List())
     var newCards:List[Int] = List()
     newCards ++= cards
