@@ -385,9 +385,16 @@ class GamePaijiu extends Game with PaijiuConstant {
     //单数局
     if (this.roomPaijiu.getCurGameNumber % 2 != 0) {
       val player = playerCardInfos(userId)
+      val oldCards = player.cards
       val allCards = this.roomPaijiu.cards ++ player.cards
       val (maxGroup, newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(allCards)
+
+      //一副新牌 重新洗
+      var cardList = DataManager.data.getPaijiuCardDataMap.values().asScala.map(card => card.getCard).toList
+      val rand = new Random
+      cardList = rand.shuffle(cardList)
       this.roomPaijiu.cards = newCards
+      this.roomPaijiu.lastGameCards = cardList.diff(newCards)
       player.cards = maxGroup
       MsgSender.sendMsg2Player("gamePaijiuService", "exchange", Map("cards" -> player.cards.asJava).asJava, this.users)
       0
