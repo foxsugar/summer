@@ -25,6 +25,7 @@ public class HuCardType implements HuType {
     public boolean hunJiang = false;
     public int jiangOneHun = -1;
     public int jiang = -1;
+    public List<ShunHaveHun> shunHaveHuns = new ArrayList<>();
 
     public List<List<Integer>> feng_shun = new ArrayList<>();
     public int zi_shun;//有几个中发白组合
@@ -259,6 +260,15 @@ public class HuCardType implements HuType {
 
     public HuCardType setJiangOneHun(int jiangOneHun) {
         this.jiangOneHun = jiangOneHun;
+        return this;
+    }
+
+    public List<ShunHaveHun> getShunHaveHuns() {
+        return shunHaveHuns;
+    }
+
+    public HuCardType setShunHaveHuns(List<ShunHaveHun> shunHaveHuns) {
+        this.shunHaveHuns = shunHaveHuns;
         return this;
     }
 }
