@@ -73,7 +73,7 @@ public class RpcManager {
 //            charge("47.92.37.165", 2, 10000);
 //            charge("47.92.37.165", 3, 10000);
 
-            changeInit("47.92.37.165",10000);
+            changeInit("47.92.37.165", 10000);
 //            charge("192.168.1.132", 10001082, 1000);
 //            charge("192.168.1.132", 3, 1000);
 //            charge("192.168.1.132", 999, 1000);
@@ -140,7 +140,7 @@ public class RpcManager {
         int rtn = client.charge(order);
         adminTransport.close();
         //充值成功
-        if(rtn == 0){
+        if (rtn == 0) {
             //todo 插入一条充值记录
         }
     }
@@ -218,9 +218,13 @@ public class RpcManager {
 
     public void startGameRpcServer() {
         ThreadPool.getInstance().executor.execute(() -> {
-
             try {
-                gameRpcServer = GameRpcServer.StartServer(serverConfig.getGameRpcServerPort(), new GameRpcHandler());
+                if (serverConfig.getStartNewGameRpc() == 1) {
+                    System.out.println("start new----------");
+                    gameRpcServer = GameRpcServer.StartServer(serverConfig.getGameRpcServerPort(), new GameRpcNewHandler());
+                } else {
+                    gameRpcServer = GameRpcServer.StartServer(serverConfig.getGameRpcServerPort(), new GameRpcHandler());
+                }
             } catch (TTransportException e) {
                 e.printStackTrace();
                 logger.error("启动rpc失败");

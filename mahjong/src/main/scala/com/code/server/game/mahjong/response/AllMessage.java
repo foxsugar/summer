@@ -40,6 +40,9 @@ public class AllMessage {
 	private int circleNum;
 	private long remainTime = -1;
 
+	private Map<Long, Integer> laZhuang = new HashMap<>();
+	private Map<Long, Boolean> laZhuangStatus = new HashMap<>();
+
 
 	public Map<String, Object> getRoom() {
 		return room;
@@ -156,6 +159,24 @@ public class AllMessage {
 
 	public AllMessage setRemainTime(long remainTime) {
 		this.remainTime = remainTime;
+		return this;
+	}
+
+	public Map<Long, Integer> getLaZhuang() {
+		return laZhuang;
+	}
+
+	public AllMessage setLaZhuang(Map<Long, Integer> laZhuang) {
+		this.laZhuang = laZhuang;
+		return this;
+	}
+
+	public Map<Long, Boolean> getLaZhuangStatus() {
+		return laZhuangStatus;
+	}
+
+	public AllMessage setLaZhuangStatus(Map<Long, Boolean> laZhuangStatus) {
+		this.laZhuangStatus = laZhuangStatus;
 		return this;
 	}
 }

@@ -178,8 +178,16 @@ object HuWithHun {
     }
     //一个混或者没有混
     for (shun <- huCardType.shun.asScala) {
-      if (shun == 3) return HuType.hu_捉五
+      if (shun == 3 && lastCard ==4) return HuType.hu_捉五
     }
+    for (shunHaveHun <- huCardType.shunHaveHuns.asScala){
+
+      if(shunHaveHun.getShun == 3){
+        //另两张牌 没有5万
+        if(!shunHaveHun.getOther.contains(4)) return HuType.hu_捉五
+      }
+    }
+
     0
   }
 
@@ -295,8 +303,12 @@ object HuWithHun {
 
       //删除 匹配的
       needShunList.removeAll(needRemoveList)
+//      println(hun2RemoveList.size())
+//      if(hun2RemoveList.size() == 2) {
+//        println("--")
+//      }
       for (index <- hun2RemoveList.asScala) {
-        huCardType.hun2.remove(index.toInt)
+        huCardType.hun2.remove(hun2RemoveList.get(index).asInstanceOf[Integer])
       }
 
       //组成龙了
@@ -599,6 +611,7 @@ object HuWithHun {
     count_hun += 1
 //    println("-----dai hun --- " + count_hun)
     for (i <- cards.indices if cards(i) != 0) {
+
       //凑将
       if (hunNum > 0 && cards(i) >= 1 && !Hu.isHasJiang(cardGroupList)) {
         var newCardGroupList = new util.ArrayList(cardGroupList)
@@ -634,6 +647,16 @@ object HuWithHun {
       if (hunNum > 0 && isHasShun(i) && cards(i) >= 1 && cards(i + 1) >= 1 && i != 0 && i != 9 && i != 18) {
         var newCardGroupList = new util.ArrayList(cardGroupList)
         newCardGroupList.add(new CardGroup(Hu.CARD_GROUP_TYPE_SHUN, i - 1, 1))
+
+        var list = new util.ArrayList[Integer]()
+        list.add(i)
+        list.add(i + 1)
+        var shh = new ShunHaveHun()
+        shh.setHun(i-1)
+        shh.setOther(list)
+        shh.setShun(i - 1)
+        newCardGroupList.add(new CardGroup(Hu.CARD_GROUP_TYPE_SHUN_ONE_SHUN, i - 1, shh))
+
         var newCards = for (c <- cards) yield c
         newCards(i) -= 1
         newCards(i + 1) -= 1
@@ -649,6 +672,16 @@ object HuWithHun {
       if (hunNum > 0 && isHasShun(i) && cards(i) >= 1 && cards(i + 1) >= 1) {
         var newCardGroupList = new util.ArrayList(cardGroupList)
         newCardGroupList.add(new CardGroup(Hu.CARD_GROUP_TYPE_SHUN, i, 1))
+
+        var list = new util.ArrayList[Integer]()
+        list.add(i)
+        list.add(i + 1)
+        var shh = new ShunHaveHun()
+        shh.setHun(i+2)
+        shh.setOther(list)
+        shh.setShun(i)
+        newCardGroupList.add(new CardGroup(Hu.CARD_GROUP_TYPE_SHUN_ONE_SHUN, i, shh))
+
         var newCards = for (c <- cards) yield c
         newCards(i) -= 1
         newCards(i + 1) -= 1
@@ -664,6 +697,16 @@ object HuWithHun {
       if (hunNum > 0 && isHasShun(i) && cards(i) >= 1 && cards(i + 2) >= 1) {
         var newCardGroupList = new util.ArrayList(cardGroupList)
         newCardGroupList.add(new CardGroup(Hu.CARD_GROUP_TYPE_SHUN, i, 1))
+
+        var list = new util.ArrayList[Integer]()
+        list.add(i)
+        list.add(i + 2)
+        var shh = new ShunHaveHun()
+        shh.setHun(i+1)
+        shh.setOther(list)
+        shh.setShun(i)
+        newCardGroupList.add(new CardGroup(Hu.CARD_GROUP_TYPE_SHUN_ONE_SHUN, i, shh))
+
         var newCards = for (c <- cards) yield c
         newCards(i) -= 1
         newCards(i + 2) -= 1
@@ -859,7 +902,7 @@ object HuWithHun {
     * @return
     */
   def isHasShun(index: Int): Boolean = {
-    if (index >= 26 || index == 8 || index == 17) false
+    if (index >= 26 || index == 8 || index == 17) return false
     true
   }
 

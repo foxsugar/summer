@@ -20,7 +20,7 @@
 //namespace cpp tutorial
 
 namespace java com.code.server.rpc.idl
-
+namespace py adminIdl
 
 //namespace php tutorial
 //namespace perl tutorial

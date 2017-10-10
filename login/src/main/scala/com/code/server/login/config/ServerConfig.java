@@ -16,6 +16,7 @@ public class ServerConfig {
     private int gameRpcServerPort;
     private String adminRpcHost;
     private int adminRpcPort;
+    private int startNewGameRpc=0;
 
 
     private  String appId;//应用id
@@ -120,5 +121,14 @@ public class ServerConfig {
 
     public void setNotifyUrl(String notifyUrl) {
         this.notifyUrl = notifyUrl;
+    }
+
+    public int getStartNewGameRpc() {
+        return startNewGameRpc;
+    }
+
+    public ServerConfig setStartNewGameRpc(int startNewGameRpc) {
+        this.startNewGameRpc = startNewGameRpc;
+        return this;
     }
 }

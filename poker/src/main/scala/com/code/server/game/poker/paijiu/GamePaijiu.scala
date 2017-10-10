@@ -111,6 +111,7 @@ class GamePaijiu extends Game with PaijiuConstant {
       val testPlayer = playerCardInfos(this.roomPaijiu.testUserId)
       testPlayer.cards = maxCards
 
+      MsgSender.sendMsg2Player("gamePaijiuService", "getCards", testPlayer.cards.asJava, this.roomPaijiu.testUserId)
       val slidList = newCards.sliding(4, 4).toList
       var count = 0
 
@@ -384,11 +385,18 @@ class GamePaijiu extends Game with PaijiuConstant {
     //单数局
     if (this.roomPaijiu.getCurGameNumber % 2 != 0) {
       val player = playerCardInfos(userId)
+      val oldCards = player.cards
       val allCards = this.roomPaijiu.cards ++ player.cards
       val (maxGroup, newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(allCards)
+
+      //一副新牌 重新洗
+      var cardList = DataManager.data.getPaijiuCardDataMap.values().asScala.map(card => card.getCard).toList
+      val rand = new Random
+      cardList = rand.shuffle(cardList)
       this.roomPaijiu.cards = newCards
+      this.roomPaijiu.lastGameCards = cardList.diff(newCards)
       player.cards = maxGroup
-      MsgSender.sendMsg2Player("gamePaijiuService", "exchange", Map("cards" -> player.cards).asJava, this.users)
+      MsgSender.sendMsg2Player("gamePaijiuService", "exchange", Map("cards" -> player.cards.asJava).asJava, this.users)
       0
     } else {
 
@@ -469,7 +477,9 @@ class GamePaijiu extends Game with PaijiuConstant {
     * 掷骰子
     */
   def crap(userId: Long): Int = {
+    if(state != START_CRAP) return ErrorCode.CRAP_PARAM_ERROR
     if (userId != bankerId) return ErrorCode.NOT_BANKER
+
     val rand = new Random()
     val num1 = rand.nextInt(6) + 1
     val num2 = rand.nextInt(6) + 1

@@ -1,29 +1,167 @@
 {
   "roomRecords": {
-    "2": [
+    "1": [
       {
-        "id": 6311115043220099072,
-        "time": 0,
-        "type": "2",
-        "roomId": "384919",
+        "id": 6311847072559529984,
+        "time": 1504863679290,
+        "type": "1",
+        "roomId": "150425",
         "records": [
           {
-            "name": "999",
-            "score": -6,
+            "name": "喜子",
+            "score": -21,
             "roomId": null,
-            "userId": 10001084
+            "userId": 10002940
           },
           {
-            "name": "333",
-            "score": -12,
+            "name": "呵呵",
+            "score": 4,
             "roomId": null,
-            "userId": 4
+            "userId": 10003597
           },
           {
-            "name": "101010",
+            "name": "aaa000",
+            "score": 71,
+            "roomId": null,
+            "userId": 10003461
+          },
+          {
+            "name": "^O^",
+            "score": -54,
+            "roomId": null,
+            "userId": 10003269
+          }
+        ]
+      }
+    ],
+    "2": [
+      {
+        "id": 6311821605475586048,
+        "time": 1504856493590,
+        "type": "2",
+        "roomId": "069649",
+        "records": [
+          {
+            "name": "喜子",
+            "score": 0,
+            "roomId": null,
+            "userId": 10002940
+          },
+          {
+            "name": "p淘备用发单员",
+            "score": -9,
+            "roomId": null,
+            "userId": 10002913
+          },
+          {
+            "name": "^O^",
+            "score": 9,
+            "roomId": null,
+            "userId": 10003269
+          }
+        ]
+      },
+      {
+        "id": 6311825776702525440,
+        "time": 1504856880716,
+        "type": "2",
+        "roomId": "459274",
+        "records": [
+          {
+            "name": "喜子",
+            "score": -9,
+            "roomId": null,
+            "userId": 10002940
+          },
+          {
+            "name": "^O^",
             "score": 18,
             "roomId": null,
-            "userId": 10001094
+            "userId": 10003269
+          },
+          {
+            "name": "aaa000",
+            "score": -9,
+            "roomId": null,
+            "userId": 10003461
+          }
+        ]
+      },
+      {
+        "id": 6311829313935249408,
+        "time": 1504857603852,
+        "type": "2",
+        "roomId": "461539",
+        "records": [
+          {
+            "name": "喜子",
+            "score": 0,
+            "roomId": null,
+            "userId": 10002940
+          },
+          {
+            "name": "^O^",
+            "score": 0,
+            "roomId": null,
+            "userId": 10003269
+          },
+          {
+            "name": "aaa000",
+            "score": 0,
+            "roomId": null,
+            "userId": 10003461
+          }
+        ]
+      },
+      {
+        "id": 6311837268755746816,
+        "time": 1504860498224,
+        "type": "2",
+        "roomId": "470155",
+        "records": [
+          {
+            "name": "喜子",
+            "score": -75,
+            "roomId": null,
+            "userId": 10002940
+          },
+          {
+            "name": "aaa000",
+            "score": 96,
+            "roomId": null,
+            "userId": 10003461
+          },
+          {
+            "name": "^O^",
+            "score": -21,
+            "roomId": null,
+            "userId": 10003269
+          }
+        ]
+      },
+      {
+        "id": 6311842550466613248,
+        "time": 1504861595401,
+        "type": "2",
+        "roomId": "422706",
+        "records": [
+          {
+            "name": "喜子",
+            "score": 0,
+            "roomId": null,
+            "userId": 10002940
+          },
+          {
+            "name": "aaa000",
+            "score": -18,
+            "roomId": null,
+            "userId": 10003461
+          },
+          {
+            "name": "^O^",
+            "score": 18,
+            "roomId": null,
+            "userId": 10003269
           }
         ]
       }

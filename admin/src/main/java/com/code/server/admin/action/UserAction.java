@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,8 +29,40 @@ public class UserAction {
         System.out.println(password);
 
         Map<String, Object> result = new HashMap<>();
+        Map<String, Object> data = new HashMap<>();
+        data.put("token", 1);
+
+        result.put("code", 20000);
+
+        result.put("data", data);
 
         result.put("result","ok");
+        return result;
+
+    }
+
+
+    @RequestMapping(value = "/info")
+    @ResponseBody
+    public Object getInfo( HttpServletRequest request,HttpServletResponse response) {
+
+
+        String token = request.getParameter("token");
+        System.out.println(token);
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("code", 20000);
+
+        Map<String, Object> data = new HashMap<>();
+        List<String> roles = new ArrayList<>();
+        roles.add("admin");
+        data.put("role", roles);
+        data.put("name", "sun");
+        data.put("avatar", "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+        result.put("data", data);
+
+
+
         return result;
 
     }

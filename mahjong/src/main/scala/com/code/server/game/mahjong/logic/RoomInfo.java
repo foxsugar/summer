@@ -30,6 +30,8 @@ public class RoomInfo extends Room {
 
     protected boolean isHasGangBlackList = true;
 
+    protected Map<Long, Integer> laZhuang = new HashMap<>();
+    protected Map<Long, Boolean> laZhuangStatus = new HashMap<>();
     protected Map<Long, Integer> huNum = new HashMap<>();
     protected Map<Long, Integer> dianPaoNum = new HashMap<>();
     protected Map<Long, Integer> lianZhuangNum = new HashMap<>();
@@ -165,6 +167,13 @@ public class RoomInfo extends Room {
         //每局的庄家
         this.bankerMap.put(curGameNumber, bankerId);
 
+        //选择状态置成没选过
+        this.users.forEach(uid->{
+            if (uid != bankerId) {
+                laZhuangStatus.put(uid, false);
+            }
+        });
+
 
     }
 
@@ -196,6 +205,7 @@ public class RoomInfo extends Room {
     }
 
     public void startGame() {
+
         //确定庄家
         if (this.bankerId == 0) {
             this.bankerId = users.get(0);
@@ -218,7 +228,7 @@ public class RoomInfo extends Room {
         }
 
         gameInfo.init(0, this.bankerId, this.users, this);
-        gameInfo.fapai();
+//        gameInfo.fapai();
         this.game = gameInfo;
 
 
@@ -690,6 +700,24 @@ public class RoomInfo extends Room {
 
     public void setMustZimo(int mustZimo) {
         this.mustZimo = mustZimo;
+    }
+
+    public Map<Long, Integer> getLaZhuang() {
+        return laZhuang;
+    }
+
+    public RoomInfo setLaZhuang(Map<Long, Integer> laZhuang) {
+        this.laZhuang = laZhuang;
+        return this;
+    }
+
+    public Map<Long, Boolean> getLaZhuangStatus() {
+        return laZhuangStatus;
+    }
+
+    public RoomInfo setLaZhuangStatus(Map<Long, Boolean> laZhuangStatus) {
+        this.laZhuangStatus = laZhuangStatus;
+        return this;
     }
 
     @Override

@@ -77,5 +77,9 @@ public interface HuType {
     int hu_杠开 = 150;
     int hu_素 = 151;
 
+    int hu_天胡 = 160;
+
+    int hu_金杠 = 165;
+
 
 }

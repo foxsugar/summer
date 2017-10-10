@@ -106,6 +106,7 @@ public class GameInfo extends Game {
             remainCards.removeAll(CardTypeUtil.ZI_CARD);
 
         }
+        fapai();
     }
 
     /**
@@ -1353,6 +1354,8 @@ public class GameInfo extends Game {
         this.userOperateList.add(result);
     }
 
+
+
     protected void doChiTing(PlayerCardsInfoMj playerCardsInfo, long userId, String one, String two) {
     }
 
@@ -1637,6 +1640,15 @@ public class GameInfo extends Game {
 
     public GameInfo setUserOperateList(List<Map<Long, Integer>> userOperateList) {
         this.userOperateList = userOperateList;
+        return this;
+    }
+
+    public List<Integer> getHun() {
+        return hun;
+    }
+
+    public GameInfo setHun(List<Integer> hun) {
+        this.hun = hun;
         return this;
     }
 }

@@ -18,6 +18,8 @@ public interface ErrorCode {
     public static final int CAN_PLAYCARD_IS_HU = 1011;
     public static final int CAN_NOT_XUANFENG = 1012;
 
+    public static final int CAN_NOT_LAZHUANG = 1020;
+
     public static final int CARD_ERROR = 2000;
     public static final int USER_ERROR = 2001;
 }

@@ -93,6 +93,7 @@ public class ErrorCode {
 	public static final int BANKER_SET_SCORE_GAMENUM_ERROR = 500026;
 	public static final int BANKER_BREAK_GAMENUM_ERROR = 500027;
 	public static final int READY_NUM_ERROR = 500028;
+	public static final int CRAP_PARAM_ERROR = 500029;
 
 	//扎金花
 	public static final int NOT_GET_MEMPAI = 600001;

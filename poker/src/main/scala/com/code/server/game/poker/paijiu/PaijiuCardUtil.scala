@@ -59,24 +59,40 @@ object PaijiuCardUtil {
     * @return
     */
   def getMaxGroup(cards: List[Int]): (List[Int],List[Int]) = {
+    initCardScore()
     var result:(List[Int], List[Int]) = (List(), List())
     var newCards:List[Int] = List()
     newCards ++= cards
 
+    println(newCards)
     for (group <- cardScore) {
+
       val card1 = group._1.split(",")(0).toInt
       val card2 = group._1.split(",")(1).toInt
       var haveList:List[Int] = List()
       haveList = haveList.+:(card1)
       haveList = haveList.+:(card2)
-      val isHas = newCards.asJava.containsAll(haveList.asJava)
-      if (isHas) {
+      var isHasCard:Boolean = false
+      if(card1 == card2){
+        isHasCard = newCards.count(cd=>cd == card1) == 2
+        if (isHasCard) println("两张相同的")
+      }else{
+        isHasCard = newCards.asJava.containsAll(haveList.asJava)
+        if(isHasCard) println("不同的")
+      }
+
+      if (isHasCard) {
+        println("去掉的牌 : " , haveList)
         newCards = newCards.diff(haveList)
+        println("剩下的牌 : ",newCards)
         return (haveList, newCards)
       }
 
     }
     null
   }
+
+
+
 
 }
