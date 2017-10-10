@@ -36,4 +36,13 @@ public class ShunHaveHun {
         this.shun = shun;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "ShunHaveHun{" +
+                "hun=" + hun +
+                ", other=" + other +
+                ", shun=" + shun +
+                '}';
+    }
 }

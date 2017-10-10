@@ -72,6 +72,8 @@ public class GameInfo extends Game {
 
     protected ReplayMj replay = new ReplayMj();
 
+    protected List<String> chanCards = new ArrayList<>();//铲的牌
+
 
     /**
      * 初始化方法
@@ -994,6 +996,8 @@ public class GameInfo extends Game {
             list.add(resp);
         }
         result.setUserInfos(list);
+        result.setLaZhuang(this.room.laZhuang);
+        result.setLaZhuangStatus(this.room.laZhuangStatus);
         MsgSender.sendMsg2Player(vo, users);
 
 
@@ -1354,6 +1358,18 @@ public class GameInfo extends Game {
         this.userOperateList.add(result);
     }
 
+    /**
+     * 牌是否一样
+     *
+     * @param cards
+     * @return
+     */
+    protected boolean isCardSame(List<String> cards) {
+        Set<Integer> set = new HashSet<>();
+        cards.forEach(card -> set.add(CardTypeUtil.getTypeByCard(card)));
+        return set.size() == 1;
+
+    }
 
 
     protected void doChiTing(PlayerCardsInfoMj playerCardsInfo, long userId, String one, String two) {

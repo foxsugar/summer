@@ -121,6 +121,7 @@ public class HuCardType implements HuType {
                 ", jiang=" + jiang +
                 ", feng_shun=" + feng_shun +
                 ", zi_shun=" + zi_shun +
+                ", shunHaveHuns=" + shunHaveHuns +
                 '}';
     }
 

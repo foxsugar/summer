@@ -20,7 +20,7 @@ public class GameInfoTJ extends GameInfo {
     public static final int mode_天胡 = 5;
 
 
-    protected List<String> chanCards = new ArrayList<>();//铲的牌
+
 
 
     /**
@@ -92,7 +92,16 @@ public class GameInfoTJ extends GameInfo {
             this.room.laZhuang.put(userId, num);
             boolean isAllChoise = this.room.laZhuangStatus.values().stream().filter(s -> !s).count() == 0;
             boolean isAllLa = this.room.laZhuang.keySet().stream().filter(id -> id != firstTurn && this.room.laZhuang.get(id) == 0).count() == 0;
-            if (isAllChoise || isAllLa) {
+
+            boolean flag = true;
+            for (Map.Entry<Long,Boolean> las : this.room.laZhuangStatus.entrySet()) {
+                if (las.getKey() != firstTurn) {
+                    if (!las.getValue() && this.room.laZhuang.get(las.getKey()) == 0) {
+                        flag = false;
+                    }
+                }
+            }
+            if (flag) {
                 initHun(room);
             }
 
@@ -285,19 +294,6 @@ public class GameInfoTJ extends GameInfo {
 
     }
 
-
-    /**
-     * 牌是否一样
-     *
-     * @param cards
-     * @return
-     */
-    private boolean isCardSame(List<String> cards) {
-        Set<Integer> set = new HashSet<>();
-        cards.forEach(card -> set.add(CardTypeUtil.getTypeByCard(card)));
-        return set.size() == 1;
-
-    }
 
     /**
      * 获得铲的个数

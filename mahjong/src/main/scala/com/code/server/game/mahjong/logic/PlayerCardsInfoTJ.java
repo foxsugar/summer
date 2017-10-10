@@ -44,18 +44,18 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         specialHuScore.put(hu_混吊, 2);
 
         specialHuScore.put(hu_捉五, 3);
-        specialHuScore.put(hu_混儿吊捉五, 3);
+        specialHuScore.put(hu_混儿吊捉五, 6);
 
         specialHuScore.put(hu_龙, 4);
-        specialHuScore.put(hu_本混龙, 1);
+        specialHuScore.put(hu_本混龙, 8);
 
         specialHuScore.put(hu_捉五龙, 7);
-        specialHuScore.put(hu_本混捉五龙, 3);
+        specialHuScore.put(hu_本混捉五龙, 14);
 
         specialHuScore.put(hu_混儿吊龙, 10);
-        specialHuScore.put(hu_混儿吊本混龙, 1);
+        specialHuScore.put(hu_混儿吊本混龙, 16);
 
-        specialHuScore.put(hu_混儿吊捉五龙, 7);
+        specialHuScore.put(hu_混儿吊捉五龙, 14);
         specialHuScore.put(hu_混儿吊捉五本混龙, 50);
 
         specialHuScore.put(hu_素, 4);
@@ -347,12 +347,12 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         playerCardsInfo.isHasFengShun = true;
 
 
-        String[] s = new String[]{"072","073","074","120","121","122", "012","088","092","096", "000","001","016","084"};
+        String[] s = new String[]{"072","076","080","084","088","092", "089",  "012","016","020", "044","048","052","068"};
 
         List<Integer> hun = new ArrayList<>();
-        hun.add(19);
-        hun.add(20);
-        hun.add(21);
+        hun.add(9);
+        hun.add(10);
+        hun.add(17);
 
 
         RoomInfo roomInfo = new RoomInfo();
@@ -365,14 +365,16 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         playerCardsInfo.init(playerCardsInfo.cards);
 
 
-        playerCardsInfo.pengType.put(18,0L);
-        playerCardsInfo.pengType.put(30,0L);
+//        playerCardsInfo.pengType.put(18,0L);
+//        playerCardsInfo.pengType.put(30,0L);
 
         List<String> list = Arrays.asList(s);
         playerCardsInfo.cards.addAll(list);
 
-        List<HuCardType> huList = HuUtil.isHu(playerCardsInfo, playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards), playerCardsInfo.getChiPengGangNum(), hun, 7);
-        boolean isCanHu = playerCardsInfo.isCanHu_zimo("084");
+        List<HuCardType> huList = HuUtil.isHu(playerCardsInfo,
+                playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
+                playerCardsInfo.getChiPengGangNum(), hun, 17);
+        boolean isCanHu = playerCardsInfo.isCanHu_zimo("068");
         System.out.println("是否可以胡: "+isCanHu);
         System.out.println(huList);
 
