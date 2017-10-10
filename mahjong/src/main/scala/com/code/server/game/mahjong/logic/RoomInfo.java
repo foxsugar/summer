@@ -40,6 +40,15 @@ public class RoomInfo extends Room {
 
     protected String each = "";//4人平分房卡
 
+    //扎金花
+    protected Map<Long, Integer> baoziNum = new HashMap<>();
+    protected Map<Long, Integer> tonghuashunNum = new HashMap<>();
+    protected Map<Long, Integer> tonghuaNum = new HashMap<>();
+    protected Map<Long, Integer> shunziNum = new HashMap<>();
+    protected Map<Long, Integer> duiziNum = new HashMap<>();
+    protected Map<Long, Integer> sanpaiNum = new HashMap<>();
+
+
     public String getEach() {
         return each;
     }
@@ -260,6 +269,26 @@ public class RoomInfo extends Room {
             }
             if (this.getMoBaoNum().containsKey(eachUser.getId())) {
                 resultObj.setMoBaoNum(this.getMoBaoNum().get(eachUser.getId()));
+            }
+
+            //设置牌型次数
+            if (this.getBaoziNum().containsKey(eachUser.getId())) {
+                resultObj.setBaoziNum(this.getBaoziNum().get(eachUser.getId()));
+            }
+            if (this.getTonghuashunNum().containsKey(eachUser.getId())) {
+                resultObj.setTonghuashunNum(this.getTonghuashunNum().get(eachUser.getId()));
+            }
+            if (this.getTonghuaNum().containsKey(eachUser.getId())) {
+                resultObj.setTonghuaNum(this.getTonghuaNum().get(eachUser.getId()));
+            }
+            if (this.getShunziNum().containsKey(eachUser.getId())) {
+                resultObj.setShunziNum(this.getShunziNum().get(eachUser.getId()));
+            }
+            if (this.getDuiziNum().containsKey(eachUser.getId())) {
+                resultObj.setDuiziNum(this.getDuiziNum().get(eachUser.getId()));
+            }
+            if (this.getSanpaiNum().containsKey(eachUser.getId())) {
+                resultObj.setSanpaiNum(this.getSanpaiNum().get(eachUser.getId()));
             }
 
             userOfResultList.add(resultObj);
@@ -587,6 +616,54 @@ public class RoomInfo extends Room {
     public RoomInfo setMoBaoNum(Map<Long, Integer> moBaoNum) {
         this.moBaoNum = moBaoNum;
         return this;
+    }
+
+    public Map<Long, Integer> getBaoziNum() {
+        return baoziNum;
+    }
+
+    public void setBaoziNum(Map<Long, Integer> baoziNum) {
+        this.baoziNum = baoziNum;
+    }
+
+    public Map<Long, Integer> getTonghuashunNum() {
+        return tonghuashunNum;
+    }
+
+    public void setTonghuashunNum(Map<Long, Integer> tonghuashunNum) {
+        this.tonghuashunNum = tonghuashunNum;
+    }
+
+    public Map<Long, Integer> getTonghuaNum() {
+        return tonghuaNum;
+    }
+
+    public void setTonghuaNum(Map<Long, Integer> tonghuaNum) {
+        this.tonghuaNum = tonghuaNum;
+    }
+
+    public Map<Long, Integer> getShunziNum() {
+        return shunziNum;
+    }
+
+    public void setShunziNum(Map<Long, Integer> shunziNum) {
+        this.shunziNum = shunziNum;
+    }
+
+    public Map<Long, Integer> getDuiziNum() {
+        return duiziNum;
+    }
+
+    public void setDuiziNum(Map<Long, Integer> duiziNum) {
+        this.duiziNum = duiziNum;
+    }
+
+    public Map<Long, Integer> getSanpaiNum() {
+        return sanpaiNum;
+    }
+
+    public void setSanpaiNum(Map<Long, Integer> sanpaiNum) {
+        this.sanpaiNum = sanpaiNum;
     }
 
     public boolean isCanDissloution() {

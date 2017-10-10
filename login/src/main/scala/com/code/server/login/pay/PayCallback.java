@@ -201,7 +201,6 @@ public class PayCallback {
             response.getWriter().write(returnXML);
             response.getWriter().flush();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 

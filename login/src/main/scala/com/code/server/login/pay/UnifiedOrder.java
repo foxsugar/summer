@@ -63,7 +63,6 @@ public class UnifiedOrder {
         try {
             bodyUTF8 = new String(body.getBytes(), "UTF-8");
         } catch (UnsupportedEncodingException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 

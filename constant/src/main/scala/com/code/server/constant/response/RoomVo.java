@@ -39,6 +39,8 @@ public class RoomVo implements IfaceRoomVo {
 
     public int mustZimo = 0;
 
+
+
     public RoomVo() {
     }
 

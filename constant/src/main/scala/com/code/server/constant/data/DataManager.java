@@ -77,7 +77,6 @@ public class DataManager implements IGameConstant {
             }
             fr.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             System.out.println("File reader出错");
 

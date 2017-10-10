@@ -65,6 +65,12 @@ public class Room implements IfaceRoom {
     protected Map<Long, RoomStatistics> roomStatisticsMap = new HashMap<>();//统计
     public int mustZimo = 0;//1是0否
 
+    //扎金花专用
+    protected double caiFen;
+    protected int menPai;
+    protected int cricleNumber;//轮数
+
+
     public static int joinRoomQuick(MsgSender player, int type) {
 
         return 0;
@@ -115,8 +121,6 @@ public class Room implements IfaceRoom {
         this.maxZhaCount = multiple;
         this.createNeedMoney = this.getNeedMoney();
         this.isAddGold = DataManager.data.getRoomDataMap().get(this.gameType).getIsAddGold() == 1;
-
-
     }
 
 
@@ -149,7 +153,6 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
-    //TODO
     protected void addUser2RoomRedis(long userId) {
         RedisManager.getUserRedisService().setRoomId(userId, roomId);
         RedisManager.getRoomRedisService().addUser(roomId, userId);
@@ -931,5 +934,29 @@ public class Room implements IfaceRoom {
     public Room setUuid(long uuid) {
         this.uuid = uuid;
         return this;
+    }
+
+    public double getCaiFen() {
+        return caiFen;
+    }
+
+    public void setCaiFen(double caiFen) {
+        this.caiFen = caiFen;
+    }
+
+    public int getMenPai() {
+        return menPai;
+    }
+
+    public void setMenPai(int menPai) {
+        this.menPai = menPai;
+    }
+
+    public int getCricleNumber() {
+        return cricleNumber;
+    }
+
+    public void setCricleNumber(int cricleNumber) {
+        this.cricleNumber = cricleNumber;
     }
 }
