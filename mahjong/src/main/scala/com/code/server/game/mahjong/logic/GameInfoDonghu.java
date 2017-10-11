@@ -10,6 +10,8 @@ import java.util.Map;
  */
 public class GameInfoDonghu extends GameInfo {
 
+    public static final int mode_大胡 = 0;
+    public static final int mode_平胡 = 1;
 
     public static final Map<Integer, Integer> gang_take_out_card = new HashMap<>();
 
