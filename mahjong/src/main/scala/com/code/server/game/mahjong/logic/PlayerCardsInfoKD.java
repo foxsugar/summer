@@ -109,6 +109,7 @@ public class PlayerCardsInfoKD extends PlayerCardsInfoMj {
 	private boolean isCanTingAfterGang(List<String> cards,int cardType){
 		//先删除这次杠的
 		removeCardByType(cards,cardType,4);
+		//去掉碰
 		for(int pt : pengType.keySet()){//如果杠的是之前碰过的牌
 			if (pt != cardType) {
 				removeCardByType(cards,pt,3);

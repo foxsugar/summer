@@ -89,8 +89,8 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         //是否是素胡
         boolean isSuHu = isSuHu();
 
-        //是否是天胡
-        boolean isTianHu = this.operateList.size()==1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
+        //是否是天胡 只有庄家能天胡
+        boolean isTianHu = this.userId == this.gameInfo.getFirstTurn() && this.operateList.size()==1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
 
 
 
@@ -134,7 +134,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         boolean isSuHu = isSuHu();
 
         //是否是天胡
-        boolean isTianHu = this.operateList.size()==1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
+        boolean isTianHu = this.userId == this.gameInfo.getFirstTurn() && this.operateList.size()==1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
 
         HuCardType maxHuType = getMaxScoreHuCardType(huList);
 
