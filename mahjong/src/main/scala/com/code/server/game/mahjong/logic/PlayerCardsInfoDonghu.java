@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by sunxianping on 2017/10/10.
  */
-public class PlayerCardInfoDonghu extends PlayerCardsInfoSS {
+public class PlayerCardsInfoDonghu extends PlayerCardsInfoSS {
 
 
     @Override
@@ -18,14 +18,16 @@ public class PlayerCardInfoDonghu extends PlayerCardsInfoSS {
         this.cards = cards;
         isHasTing = true;
 
-        specialHuScore.put(hu_清一色, 1);
-        specialHuScore.put(hu_一条龙, 1);
-        specialHuScore.put(hu_七小对, 1);
-        specialHuScore.put(hu_十三幺, 1);
-        specialHuScore.put(hu_豪华七小对, 1);
-        specialHuScore.put(hu_双豪七小对, 1);
-        specialHuScore.put(hu_三豪七小对, 1);
-        specialHuScore.put(hu_清龙, 1);
+        specialHuScore.put(hu_七小对, 2);
+        specialHuScore.put(hu_十三不靠, 2);
+
+//        specialHuScore.put(hu_清一色, 1);
+//        specialHuScore.put(hu_一条龙, 1);
+//        specialHuScore.put(hu_十三幺, 1);
+//        specialHuScore.put(hu_豪华七小对, 1);
+//        specialHuScore.put(hu_双豪七小对, 1);
+//        specialHuScore.put(hu_三豪七小对, 1);
+//        specialHuScore.put(hu_清龙, 1);
 
         specialHuScore.put(hu_缺一门, 0);
         specialHuScore.put(hu_缺两门, 0);
@@ -34,7 +36,7 @@ public class PlayerCardInfoDonghu extends PlayerCardsInfoSS {
             specialHuScore.put(hu_清一色, 3);
             specialHuScore.put(hu_一条龙, 3);
             specialHuScore.put(hu_七小对, 3);
-            specialHuScore.put(hu_十三幺, 6);
+
             specialHuScore.put(hu_豪华七小对, 6);
             specialHuScore.put(hu_双豪七小对, 6);
             specialHuScore.put(hu_三豪七小对, 6);
@@ -97,17 +99,59 @@ public class PlayerCardInfoDonghu extends PlayerCardsInfoSS {
 
     @Override
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card) {
-        super.gangCompute(room, gameInfo, isMing, diangangUser, card);
+        this.lastOperate = type_gang;
+        operateList.add(type_gang);
+        this.gameInfo.addUserOperate(this.userId, type_gang);
     }
 
     @Override
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
 
+        //算杠
+        int gangScore = this.mingGangType.size() + this.anGangType.size() * 2;
+        int subGang = 0;
+        //自摸三个人赔
+        if (isZimo) {
+            for (PlayerCardsInfoMj playerCardInfo : this.gameInfo.playerCardsInfos.values()) {
+                if (playerCardInfo.getUserId() != this.userId) {
+                    playerCardInfo.addScore(-gangScore);
+                    playerCardInfo.addGangScore(-gangScore);
+                    subGang += gangScore;
+                }
+            }
+
+        } else {//点炮的人赔
+            PlayerCardsInfoMj dianpaoPlayer = this.gameInfo.playerCardsInfos.get(dianpaoUser);
+            dianpaoPlayer.addScore(-gangScore);
+            dianpaoPlayer.addGangScore(-gangScore);
+            subGang += gangScore;
+        }
+        this.addGangScore(subGang);
+        this.addScore(subGang);
+
+
         List<String> cs = getCardsNoChiPengGang(cards);
-        List<HuCardType> huList = HuUtil.isHu(cs, this,CardTypeUtil.cardType.get(card), new HuLimit(0));
+        List<HuCardType> huList = HuUtil.isHu(cs, this, CardTypeUtil.cardType.get(card), new HuLimit(0));
         // 设置胡牌类型
         HuCardType huCardType = getMaxScoreHuCardType(huList);
         this.winType.addAll(huCardType.specialHuList);
+        int score = huCardType.fan == 0 ? 1 : huCardType.fan;
+        int subScore = 0;
+        boolean isBanker = this.userId == gameInfo.getFirstTurn();
+        if(isBanker) score += 1;
+
+        //其他人扣分
+        for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
+            if(playerCardsInfoMj.getUserId() != userId){
+                int scoreTemp = score;
+                //如果是庄家多输一分
+                if(playerCardsInfoMj.getUserId() == this.gameInfo.getFirstTurn()){
+                    scoreTemp += 1;
+                }
+                playerCardsInfoMj.addScore(-scoreTemp);
+                subScore += scoreTemp;
+            }
+        }
 
 
     }

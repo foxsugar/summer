@@ -14,6 +14,7 @@ public interface HuType {
     int hu_普通七小对 = 6;//普通七小对
     int hu_三豪七小对 = 7;//三豪华七小对
     int hu_双豪七小对 = 8;//双豪七小对_山西
+    int hu_十三不靠 = 9;//十三不靠
 
     int hu_缺一门 = 10;
     int hu_缺两门 = 11;

@@ -347,12 +347,12 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         playerCardsInfo.isHasFengShun = true;
 
 
-        String[] s = new String[]{"072","076","080","084","088","092", "089",  "012","016","020", "044","048","052","068"};
+        String[] s = new String[]{"000","004","008","012","016","020", "024",  "028","032", "036", "040","044","108","109"};
 
         List<Integer> hun = new ArrayList<>();
-        hun.add(9);
-        hun.add(10);
-        hun.add(17);
+        hun.add(0);
+        hun.add(1);
+        hun.add(2);
 
 
         RoomInfo roomInfo = new RoomInfo();
@@ -373,10 +373,12 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
         List<HuCardType> huList = HuUtil.isHu(playerCardsInfo,
                 playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
-                playerCardsInfo.getChiPengGangNum(), hun, 17);
-        boolean isCanHu = playerCardsInfo.isCanHu_zimo("068");
+                playerCardsInfo.getChiPengGangNum(), hun, 9);
+        boolean isCanHu = playerCardsInfo.isCanHu_zimo("036");
         System.out.println("是否可以胡: "+isCanHu);
-        System.out.println(huList);
+        huList.stream().forEach(h-> System.out.println(h.specialHuList));
+//        System.out.println(huList);
+
 
     }
 }
