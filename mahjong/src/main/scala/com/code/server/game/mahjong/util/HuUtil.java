@@ -601,6 +601,10 @@ public class HuUtil implements HuType {
 
     public static boolean is13BuKao(List<String> cards, PlayerCardsInfoMj playerCardsInfo){
 
+        if(cards.size() != 14){
+            return false;
+        }
+
         Collections.sort(cards);
         //判断是不是有且仅有东南西北中发白加上将
         List<Integer> list = new ArrayList<>();
@@ -910,7 +914,6 @@ public class HuUtil implements HuType {
 
         while (true){
 
-
             System.out.println("1请输入第一张牌");
             String a = sc.next();
             System.out.println("1请输入第二张牌");
@@ -947,7 +950,6 @@ public class HuUtil implements HuType {
             System.out.println("==================");
             System.out.println(res);
         }
-
 
     }
 
