@@ -139,9 +139,9 @@ object HuWithHun {
 
 
   def getHuType(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int, hunNum:Int): Int = {
-    if(huCardType.hun3.size() ==1) {
-      print("----")
-    }
+//    if(huCardType.hun3.size() ==1) {
+//      print("----")
+//    }
     var huList = new util.ArrayList[Int]()
     huList.add(isZhuo5(huCardType, hun, lastCard))
     huList.add(isSuBenhunLong(huCardType, hun, lastCard,hunNum))
@@ -253,9 +253,9 @@ object HuWithHun {
     */
   def isLong(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int): Int = {
     var huList = new util.ArrayList[Int]()
-    huList.add(getLongType(huCardType, FanUtil.ytl1, hun, lastCard))
-    huList.add(getLongType(huCardType, FanUtil.ytl2, hun, lastCard))
-    huList.add(getLongType(huCardType, FanUtil.ytl3, hun, lastCard))
+    huList.add(getLongType(huCardType.copy(), FanUtil.ytl1, hun, lastCard))
+    huList.add(getLongType(huCardType.copy(), FanUtil.ytl2, hun, lastCard))
+    huList.add(getLongType(huCardType.copy(), FanUtil.ytl3, hun, lastCard))
     getMaxHuType(huList)
 
   }

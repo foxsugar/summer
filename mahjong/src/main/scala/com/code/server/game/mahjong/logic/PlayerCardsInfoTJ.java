@@ -52,7 +52,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         specialHuScore.put(hu_捉五龙, 7);
         specialHuScore.put(hu_本混捉五龙, 14);
 
-        specialHuScore.put(hu_混儿吊龙, 10);
+        specialHuScore.put(hu_混儿吊龙, 8);
         specialHuScore.put(hu_混儿吊本混龙, 16);
 
         specialHuScore.put(hu_混儿吊捉五龙, 14);

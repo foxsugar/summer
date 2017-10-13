@@ -4,6 +4,7 @@ package com.code.server.game.mahjong.util;
 
 import com.code.server.game.mahjong.logic.PlayerCardsInfoMj;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -123,6 +124,12 @@ public class HuCardType implements HuType {
                 ", zi_shun=" + zi_shun +
                 ", shunHaveHuns=" + shunHaveHuns +
                 '}';
+    }
+
+    public HuCardType copy(){
+        HuCardType huCardType = new HuCardType();
+        BeanUtils.copyProperties(this, huCardType);
+        return huCardType;
     }
 
     public Set<Integer> getPeng() {
