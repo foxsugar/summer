@@ -20,11 +20,11 @@ public class PlayerCardInfoHitGoldFlower implements IfacePlayerInfo {
     protected double allScore;
 
     //1表示显示
-    protected String call = "1";//跟注
-    protected String raise = "1";//加注
-    protected String fold = "1";//弃牌
-    protected String kill = "1";//比牌
-    protected String see = "1";//看牌
+    protected String call;//跟注
+    protected String raise;//加注
+    protected String fold;//弃牌
+    protected String kill;//比牌
+    protected String see;//看牌
 
 
 
@@ -32,16 +32,35 @@ public class PlayerCardInfoHitGoldFlower implements IfacePlayerInfo {
     public IfacePlayerInfoVo toVo() {
         PlayerCardInfoHitGoldFlowerVo vo = new PlayerCardInfoHitGoldFlowerVo();
         vo.userId = this.userId;
-        vo.handcards = this.handcards;
         vo.score = this.score;
         vo.caifen = this.caifen;
         vo.cardType = this.cardType;
+
+        vo.call = this.getCall();//跟注
+        vo.raise = this.getRaise();//加注
+        vo.fold = this.getFold();//弃牌
+        vo.kill = this.getKill();//比牌
+        vo.see = this.getSee();//看牌
+
         return vo;
     }
 
     @Override
     public IfacePlayerInfoVo toVo(long watchUser) {
-        return null;
+        PlayerCardInfoHitGoldFlowerVo vo = new PlayerCardInfoHitGoldFlowerVo();
+        vo.userId = this.userId;
+        vo.handcards = this.handcards;
+        vo.score = this.score;
+        vo.caifen = this.caifen;
+        vo.cardType = this.cardType;
+
+        vo.call = this.getCall();//跟注
+        vo.raise = this.getRaise();//加注
+        vo.fold = this.getFold();//弃牌
+        vo.kill = this.getKill();//比牌
+        vo.see = this.getSee();//看牌
+
+        return vo;
     }
 
     public long getUserId() {
@@ -125,7 +144,7 @@ public class PlayerCardInfoHitGoldFlower implements IfacePlayerInfo {
     }
 
     public double getAllScore() {
-        return score+caifen;
+        return allScore;
     }
 
     public void setAllScore(double allScore) {

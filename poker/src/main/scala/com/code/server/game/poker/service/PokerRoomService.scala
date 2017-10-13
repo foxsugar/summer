@@ -28,7 +28,7 @@ object PokerRoomService {
         val gameNumber = params.get("gameNumber").asInt()
         val personNumber = params.get("personNumber").asInt()
         val cricleNumber = params.get("cricleNumber").asInt()
-        val multiple = params.get("maxMultiple").asInt()
+        val multiple = params.get("multiple").asInt()
         val caiFen = params.get("caiFen").asInt()
         val menPai = params.get("menPai").asInt()
 
@@ -37,6 +37,12 @@ object PokerRoomService {
         val isJoin = params.path("isJoin").asBoolean(true)
 
         return RoomHitGoldFlower.createHitGoldFlowerRoom(userId, gameNumber,personNumber,cricleNumber,multiple,caiFen,menPai,gameType, roomType,isAA,isJoin)
+
+      case "startGameByClient" =>
+        val roomId = params.get("roomId").asText()
+        return RoomHitGoldFlower.startGameByClient(userId,roomId);
+
+
 
       case "createPaijiuRoom"=>
         val roomType = params.path("roomType").asText()

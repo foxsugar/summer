@@ -13,6 +13,8 @@ public class GameResultHitGoldFlower {
     public int multiple;
     public List<Integer> tableCards = new ArrayList<>();
     public Map<Long, Double> userScores = new HashMap<>();
+    public List<Long> winnerList = new ArrayList<>();
+    public Long bankerId;
 
     public List<IfacePlayerInfoVo> getPlayerCardInfos() {
         return playerCardInfos;
@@ -50,5 +52,21 @@ public class GameResultHitGoldFlower {
     public GameResultHitGoldFlower setUserScores(Map<Long, Double> userScores) {
         this.userScores = userScores;
         return this;
+    }
+
+    public List<Long> getWinnerList() {
+        return winnerList;
+    }
+
+    public void setWinnerList(List<Long> winnerList) {
+        this.winnerList = winnerList;
+    }
+
+    public Long getBankerId() {
+        return bankerId;
+    }
+
+    public void setBankerId(Long bankerId) {
+        this.bankerId = bankerId;
     }
 }
