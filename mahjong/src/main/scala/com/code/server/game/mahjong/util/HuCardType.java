@@ -4,7 +4,6 @@ package com.code.server.game.mahjong.util;
 
 import com.code.server.game.mahjong.logic.PlayerCardsInfoMj;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -128,7 +127,15 @@ public class HuCardType implements HuType {
 
     public HuCardType copy(){
         HuCardType huCardType = new HuCardType();
-        BeanUtils.copyProperties(this, huCardType);
+        huCardType.fan = this.fan;
+        huCardType.specialHuList.addAll(this.specialHuList);
+        huCardType.shunHaveHuns.addAll(this.shunHaveHuns);
+        huCardType.shun.addAll(this.shun);
+        huCardType.jiangOneHun = this.jiangOneHun;
+        huCardType.ke.addAll(this.ke);
+        huCardType.hun2.addAll(this.hun2);
+        huCardType.hun3.addAll(this.hun3);
+
         return huCardType;
     }
 

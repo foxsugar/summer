@@ -130,21 +130,24 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         //是否是杠开
         boolean isGangKai = isGangKai();
 
-        //是否是素胡
-        boolean isSuHu = isSuHu();
+
 
         //是否是天胡
         boolean isTianHu = this.userId == this.gameInfo.getFirstTurn() && this.operateList.size()==1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
 
         HuCardType maxHuType = getMaxScoreHuCardType(huList);
 
+        //是否是素胡
+        boolean isSuHu = isSuHu() && maxHuType.fan==0;
+
         if (maxHuType.fan == 0) {
-            maxHuType.fan = 1;
+            maxHuType.fan = 4;
         }
+
 
         int score = maxHuType.fan * this.roomInfo.getMultiple();
         if(isGangKai) score *= 2;
-        if(isSuHu) score *= 4;
+        if(isSuHu) score *= 2;
         if(isTianHu) score *= 4;
 
         setWinTypeResult(maxHuType);
@@ -347,12 +350,12 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         playerCardsInfo.isHasFengShun = true;
 
 
-        String[] s = new String[]{"000","004","008","012","016","020", "024",  "028","032", "036", "040","044","108","109"};
+        String[] s = new String[]{"036","040","044","048","052","056", "060",  "064","068", "072", "073","012","016","020"};
 
         List<Integer> hun = new ArrayList<>();
-        hun.add(0);
-        hun.add(1);
-        hun.add(2);
+        hun.add(30);
+        hun.add(31);
+        hun.add(32);
 
 
         RoomInfo roomInfo = new RoomInfo();
@@ -373,8 +376,8 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
         List<HuCardType> huList = HuUtil.isHu(playerCardsInfo,
                 playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
-                playerCardsInfo.getChiPengGangNum(), hun, 9);
-        boolean isCanHu = playerCardsInfo.isCanHu_zimo("036");
+                playerCardsInfo.getChiPengGangNum(), hun, 4);
+        boolean isCanHu = playerCardsInfo.isCanHu_zimo("016");
         System.out.println("是否可以胡: "+isCanHu);
         huList.stream().forEach(h-> System.out.println(h.specialHuList));
 //        System.out.println(huList);
