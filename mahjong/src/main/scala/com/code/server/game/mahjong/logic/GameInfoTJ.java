@@ -245,7 +245,8 @@ public class GameInfoTJ extends GameInfo {
             int size = playerCardsInfo.operateList.size();
             //如果是杠后摸牌 从废牌里拿出一张
             if (size > 0 && playerCardsInfo.operateList.get(size - 1) == PlayerCardsInfoMj.type_gang && chanCards.size() > 0) {
-                card = chanCards.remove(0);
+
+                card = hunRemoveCards.remove(0);
             } else {
                 card = remainCards.remove(0);
             }
