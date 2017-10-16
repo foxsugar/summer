@@ -116,6 +116,7 @@ public class PlayerCardsInfoDonghu extends PlayerCardsInfoSS {
                 if (playerCardInfo.getUserId() != this.userId) {
                     playerCardInfo.addScore(-gangScore);
                     playerCardInfo.addGangScore(-gangScore);
+                    this.roomInfo.addUserSocre(playerCardInfo.getUserId(), -gangScore);
                     subGang += gangScore;
                 }
             }
@@ -124,10 +125,12 @@ public class PlayerCardsInfoDonghu extends PlayerCardsInfoSS {
             PlayerCardsInfoMj dianpaoPlayer = this.gameInfo.playerCardsInfos.get(dianpaoUser);
             dianpaoPlayer.addScore(-gangScore);
             dianpaoPlayer.addGangScore(-gangScore);
+            this.roomInfo.addUserSocre(dianpaoPlayer.getUserId(), -gangScore);
             subGang += gangScore;
         }
         this.addGangScore(subGang);
         this.addScore(subGang);
+        this.roomInfo.addUserSocre(this.userId, subGang);
 
 
         List<String> cs = getCardsNoChiPengGang(cards);
@@ -150,9 +153,16 @@ public class PlayerCardsInfoDonghu extends PlayerCardsInfoSS {
                 }
                 playerCardsInfoMj.addScore(-scoreTemp);
                 subScore += scoreTemp;
+
+                playerCardsInfoMj.addScore(-scoreTemp);
+                this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -scoreTemp);
             }
         }
 
+        //
+
+        this.addScore(subScore);
+        this.roomInfo.addUserSocre(this.userId, subScore);
 
     }
 }

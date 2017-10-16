@@ -99,7 +99,8 @@ object HuWithHun {
           }
         }
       }
-      complete = Hu.removeRepeat(complete)
+    //todo 去掉去重
+//      complete = Hu.removeRepeat(complete)
       println("==================================hun==============")
       println(" 不是5 个附子的数量 = " + complete.stream().filter(l => l.size() != 5).count())
       println(complete.size())
@@ -142,6 +143,7 @@ object HuWithHun {
 //    if(huCardType.hun3.size() ==1) {
 //      print("----")
 //    }
+
     var huList = new util.ArrayList[Int]()
     huList.add(isZhuo5(huCardType, hun, lastCard))
     huList.add(isSuBenhunLong(huCardType, hun, lastCard,hunNum))
@@ -235,7 +237,7 @@ object HuWithHun {
     }
     if(huCardType.jiangOneHun != -1) return 0
 //    if(huCardType.hun3.size() > 0) return 0
-    if(huCardType.hun2.size() > 0) return 0
+//    if(huCardType.hun2.size() > 0) return 0
     if(huCardType.hunJiang) return 0
     if(huCardType.shun.size() < 3) return 0
     //是龙
