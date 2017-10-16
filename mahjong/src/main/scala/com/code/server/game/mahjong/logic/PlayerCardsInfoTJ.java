@@ -44,18 +44,18 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         specialHuScore.put(hu_混吊, 2);
 
         specialHuScore.put(hu_捉五, 3);
-        specialHuScore.put(hu_混儿吊捉五, 3);
+        specialHuScore.put(hu_混儿吊捉五, 6);
 
         specialHuScore.put(hu_龙, 4);
-        specialHuScore.put(hu_本混龙, 1);
+        specialHuScore.put(hu_本混龙, 8);
 
         specialHuScore.put(hu_捉五龙, 7);
-        specialHuScore.put(hu_本混捉五龙, 3);
+        specialHuScore.put(hu_本混捉五龙, 14);
 
-        specialHuScore.put(hu_混儿吊龙, 10);
-        specialHuScore.put(hu_混儿吊本混龙, 1);
+        specialHuScore.put(hu_混儿吊龙, 8);
+        specialHuScore.put(hu_混儿吊本混龙, 16);
 
-        specialHuScore.put(hu_混儿吊捉五龙, 7);
+        specialHuScore.put(hu_混儿吊捉五龙, 14);
         specialHuScore.put(hu_混儿吊捉五本混龙, 50);
 
         specialHuScore.put(hu_素, 4);
@@ -89,8 +89,8 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         //是否是素胡
         boolean isSuHu = isSuHu();
 
-        //是否是天胡
-        boolean isTianHu = this.operateList.size()==1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
+        //是否是天胡 只有庄家能天胡
+        boolean isTianHu = this.userId == this.gameInfo.getFirstTurn() && this.operateList.size()==1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
 
 
 
@@ -130,21 +130,24 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         //是否是杠开
         boolean isGangKai = isGangKai();
 
-        //是否是素胡
-        boolean isSuHu = isSuHu();
+
 
         //是否是天胡
-        boolean isTianHu = this.operateList.size()==1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
+        boolean isTianHu = this.userId == this.gameInfo.getFirstTurn() && this.operateList.size()==1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
 
         HuCardType maxHuType = getMaxScoreHuCardType(huList);
 
+        //是否是素胡
+        boolean isSuHu = isSuHu() && maxHuType.fan==0;
+
         if (maxHuType.fan == 0) {
-            maxHuType.fan = 1;
+            maxHuType.fan = 4;
         }
+
 
         int score = maxHuType.fan * this.roomInfo.getMultiple();
         if(isGangKai) score *= 2;
-        if(isSuHu) score *= 4;
+        if(isSuHu) score *= 2;
         if(isTianHu) score *= 4;
 
         setWinTypeResult(maxHuType);
@@ -347,12 +350,12 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         playerCardsInfo.isHasFengShun = true;
 
 
-        String[] s = new String[]{"072","073","074","120","121","122", "012","088","092","096", "000","001","016","084"};
+        String[] s = new String[]{"036","040","044","048","052","056", "060",  "064","068", "072", "073","012","016","020"};
 
         List<Integer> hun = new ArrayList<>();
-        hun.add(19);
-        hun.add(20);
-        hun.add(21);
+        hun.add(30);
+        hun.add(31);
+        hun.add(32);
 
 
         RoomInfo roomInfo = new RoomInfo();
@@ -365,16 +368,20 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         playerCardsInfo.init(playerCardsInfo.cards);
 
 
-        playerCardsInfo.pengType.put(18,0L);
-        playerCardsInfo.pengType.put(30,0L);
+//        playerCardsInfo.pengType.put(18,0L);
+//        playerCardsInfo.pengType.put(30,0L);
 
         List<String> list = Arrays.asList(s);
         playerCardsInfo.cards.addAll(list);
 
-        List<HuCardType> huList = HuUtil.isHu(playerCardsInfo, playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards), playerCardsInfo.getChiPengGangNum(), hun, 7);
-        boolean isCanHu = playerCardsInfo.isCanHu_zimo("084");
+        List<HuCardType> huList = HuUtil.isHu(playerCardsInfo,
+                playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
+                playerCardsInfo.getChiPengGangNum(), hun, 4);
+        boolean isCanHu = playerCardsInfo.isCanHu_zimo("016");
         System.out.println("是否可以胡: "+isCanHu);
-        System.out.println(huList);
+        huList.stream().forEach(h-> System.out.println(h.specialHuList));
+//        System.out.println(huList);
+
 
     }
 }

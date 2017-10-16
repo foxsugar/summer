@@ -55,7 +55,8 @@ class GamePaijiuEndless extends GamePaijiu {
     genRecord()
     this.roomPaijiu.clearReadyStatus(true)
     val banker = playerCardInfos(bankerId)
-    if (banker.score <= 0 || banker.score >= roomPaijiu.bankerInitScore * roomPaijiu.getUsers.size()) {
+//    if (banker.score <= 0 || banker.score >= roomPaijiu.bankerInitScore * roomPaijiu.getUsers.size()) {
+    if (banker.score <= 0 || banker.score >= 600) {
       sendFinalResult()
     }
   }

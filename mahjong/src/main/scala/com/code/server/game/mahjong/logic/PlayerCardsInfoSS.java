@@ -13,7 +13,7 @@ public class PlayerCardsInfoSS extends PlayerCardsInfoMj {
 	private static final int ZIMO_MIN_SCORE = 0;
 	private static final int DIANPAO_MIN_SCORE = 0;
 
-	private boolean isHasTing;
+	protected boolean isHasTing;
 
 	@Override
 	public void init(List<String> cards) {
@@ -110,7 +110,7 @@ public class PlayerCardsInfoSS extends PlayerCardsInfoMj {
 	 * @param cardType
 	 * @return
 	 */
-	private boolean isCanTingAfterGang(List<String> cards, int cardType) {
+	protected boolean isCanTingAfterGang(List<String> cards, int cardType) {
 		// 先删除这次杠的
 		removeCardByType(cards, cardType, 4);
 		for (int pt : pengType.keySet()) {// 如果杠的是之前碰过的牌

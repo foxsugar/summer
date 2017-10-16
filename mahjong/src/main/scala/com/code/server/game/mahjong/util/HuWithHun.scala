@@ -139,11 +139,15 @@ object HuWithHun {
 
 
   def getHuType(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int, hunNum:Int): Int = {
+//    if(huCardType.hun3.size() ==1) {
+//      print("----")
+//    }
     var huList = new util.ArrayList[Int]()
     huList.add(isZhuo5(huCardType, hun, lastCard))
-    huList.add(isLong(huCardType, hun, lastCard))
-    huList.add(isHunDiao(huCardType, hun, lastCard))
     huList.add(isSuBenhunLong(huCardType, hun, lastCard,hunNum))
+    huList.add(isHunDiao(huCardType, hun, lastCard))
+    //todo huCardType 在这个判断力被修改了  暂时方法哦最后判断 记得fix
+    huList.add(isLong(huCardType, hun, lastCard))
     var t = getMaxHuType(huList)
     huCardType.specialHuList.add(t)
     println("最大牌型: " + t)
@@ -226,11 +230,14 @@ object HuWithHun {
     */
   def isSuBenhunLong(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int,hunNum:Int):Int = {
     if(hunNum != 3) return 0
+    if(huCardType.hun3.size() == 1) {
+      print("000")
+    }
     if(huCardType.jiangOneHun != -1) return 0
-    if(huCardType.hun3.size() > 0) return 0
+//    if(huCardType.hun3.size() > 0) return 0
     if(huCardType.hun2.size() > 0) return 0
     if(huCardType.hunJiang) return 0
-    if(huCardType.shun.size() != 3) return 0
+    if(huCardType.shun.size() < 3) return 0
     //是龙
     if(isLong(huCardType,hun,lastCard)!=0) return HuType.hu_素本混龙
 
@@ -246,9 +253,9 @@ object HuWithHun {
     */
   def isLong(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int): Int = {
     var huList = new util.ArrayList[Int]()
-    huList.add(getLongType(huCardType, FanUtil.ytl1, hun, lastCard))
-    huList.add(getLongType(huCardType, FanUtil.ytl2, hun, lastCard))
-    huList.add(getLongType(huCardType, FanUtil.ytl3, hun, lastCard))
+    huList.add(getLongType(huCardType.copy(), FanUtil.ytl1, hun, lastCard))
+    huList.add(getLongType(huCardType.copy(), FanUtil.ytl2, hun, lastCard))
+    huList.add(getLongType(huCardType.copy(), FanUtil.ytl3, hun, lastCard))
     getMaxHuType(huList)
 
   }
@@ -304,11 +311,12 @@ object HuWithHun {
       //删除 匹配的
       needShunList.removeAll(needRemoveList)
 //      println(hun2RemoveList.size())
-//      if(hun2RemoveList.size() == 2) {
+//      if(hun2RemoveList.size() == 1) {
 //        println("--")
 //      }
       for (index <- hun2RemoveList.asScala) {
-        huCardType.hun2.remove(hun2RemoveList.get(index).asInstanceOf[Integer])
+
+        huCardType.hun2.remove(index.asInstanceOf[Integer])
       }
 
       //组成龙了
@@ -383,7 +391,8 @@ object HuWithHun {
     }
 
     //万字的龙并且捉5
-    if ((lastCardIsHun || lastCard == 4) && isWan) longTypeSet.add(HuType.hu_捉五龙)
+    if (lastCardIsHun || lastCard == 4)  longTypeSet.add(HuType.hu_捉五龙)
+//    if ((lastCardIsHun || lastCard == 4) && isWan) longTypeSet.add(HuType.hu_捉五龙)
 
     longTypeSet.add(HuType.hu_龙)
     longTypeSet

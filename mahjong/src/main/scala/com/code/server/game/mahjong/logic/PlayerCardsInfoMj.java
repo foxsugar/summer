@@ -839,6 +839,17 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         operateList.add(type_mopai);
     }
 
+    protected int getCardGroup(List<String> cs){
+        Set<Integer> set = new HashSet<>();
+        for (String s : cs) {
+            int group = CardTypeUtil.getCardGroup(s);
+            if (group == CardTypeUtil.GROUP_TONG || group == CardTypeUtil.GROUP_TIAO || group == CardTypeUtil.GROUP_WAN) {
+                set.add(group);
+            }
+        }
+        return set.size();
+    }
+
     protected static boolean isHasMode(String mode, int type) {
         int c = Integer.parseInt(mode);
         return (c & (1 << type)) >> type == 1;

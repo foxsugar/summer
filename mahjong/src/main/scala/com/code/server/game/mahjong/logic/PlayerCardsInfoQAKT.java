@@ -211,16 +211,6 @@ public class PlayerCardsInfoQAKT extends PlayerCardsInfoMj {
         return result;
     }
 
-    protected int getCardGroup(List<String> cs){
-        Set<Integer> set = new HashSet<>();
-        for (String s : cs) {
-            int group = CardTypeUtil.getCardGroup(s);
-            if (group == CardTypeUtil.GROUP_TONG || group == CardTypeUtil.GROUP_TIAO || group == CardTypeUtil.GROUP_WAN) {
-                set.add(group);
-            }
-        }
-        return set.size();
-    }
 
     @Override
     public boolean isCanChiTing(String card) {

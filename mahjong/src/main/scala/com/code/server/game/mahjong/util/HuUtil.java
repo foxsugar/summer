@@ -599,6 +599,239 @@ public class HuUtil implements HuType {
 
     }
 
+    public static boolean is13BuKao(List<String> cards, PlayerCardsInfoMj playerCardsInfo){
+
+        if(cards.size() != 14){
+            return false;
+        }
+
+        Collections.sort(cards);
+        //判断是不是有且仅有东南西北中发白加上将
+        List<Integer> list = new ArrayList<>();
+
+        List<Integer> list2 = new ArrayList<>();
+
+        for (int i = 0; i < cards.size(); i++){
+
+            int index = Integer.parseInt(cards.get(i));
+            if (index >= 108 && index <= 135){
+                list.add((index - 108) / 4);
+            }else {
+                list2.add(index);
+            }
+        }
+
+        if (list.size() != 8){
+            return false;
+        }
+
+        HashSet h = new HashSet(list);
+        list.clear();
+        list.addAll(h);
+        Collections.sort(list);
+        if (list.size() != 7){
+            return false;
+        }
+        System.out.println("含有东南西北中发白带将");
+
+        //判断六张牌是不是都是万或都是筒或都是条
+        int last = 0;
+        for(int i = 0; i < list2.size(); i++){
+            int a = list2.get(i);
+            int current = isWanTongTiao(a);
+            if(last != current && i != 0){
+                last = 0;
+                break;
+            }
+            last = current;
+        }
+
+        //如果种类相同
+        if(last != 0){
+
+            //因为进行了排序所以要把牌拆开
+
+            boolean isFind = false;
+            for(int i = 0; i < list2.size(); i++){
+
+                for(int j = i + 1; j < list2.size(); j++){
+
+                    for(int k = j + 1; k < list2.size(); k++){
+
+                        int item1 = list2.get(i);
+                        int item2 = list2.get(j);
+                        int item3 = list2.get(k);
+
+                        //判断花色
+
+                        int yushu1 = item1 % 4;
+                        int yushu2 = item2 % 4;
+                        int yushu3 = item3 % 4;
+
+                        //是不是一个颜色
+                        if(!((yushu1 == yushu2) && (yushu1 == yushu3))){
+                            continue;
+                        }
+
+                        int ret = m147_258_369_158(item1 / 4, item2 / 4, item3 / 4);
+                        if(ret != 0){
+                            //现在找到了符和的一个序列
+                            //判断剩下的序列
+                            List<Integer> sList = new ArrayList<>();
+
+                            for(int w = 0; w < list2.size(); w++){
+                                if(!(w == i || w == j || w == k )){
+                                    sList.add(list2.get(w));
+                                }
+                            }
+
+                            yushu1 = sList.get(0) % 4;
+                            yushu2 = sList.get(1) % 4;
+                            yushu3 = sList.get(2) % 4;
+
+                            //是不是一个颜色
+                            if(!((yushu1 == yushu2) && (yushu1 == yushu3))){
+
+                                continue;
+                            }
+
+                            int ret2 = m147_258_369_158(sList.get(0) / 4, sList.get(1) / 4, sList.get(2) / 4);
+
+                            if((ret2 != 0 ) && (ret != ret2)){
+
+                                isFind = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (isFind == true){
+                        break;
+                    }
+                }
+
+                if (isFind == true){
+                    break;
+                }
+            }
+
+           if (!isFind){
+               return false;
+           }
+
+
+        }else{
+
+            int result1 = m13buKaoType(list2.get(0), list2.get(1), list2.get(2));
+            int result2 = m13buKaoType(list2.get(3), list2.get(4), list2.get(5));
+
+            if(result1 == 0 || result2 == 0){
+                return false;
+            }
+
+            int type1 = result1 / 100;
+            int type2 = result2 / 100;
+
+            int cType1 = result1 % 10;
+            int cType2 = result2 % 10;
+
+            if(type1 == type2 && cType1 == cType2){
+                return false;
+            }
+
+        }
+
+        return true;
+    }
+
+    public static int isWanTongTiao(int d){
+
+        int ret = 0;
+
+        if ((d / 4 < 9) && (d / 4 >=0)){
+            //万
+            ret = 1;
+        }else if(d / 4 < 18){
+            ret = 2;
+            //条
+        }else  if(d / 4 < 27){
+            ret = 3;
+            //筒
+        }else {
+            ret = 0;
+        }
+        return ret;
+    }
+
+    public static int m147_258_369_158(int shang1, int shang2, int shang3){
+
+        if(shang1 == 0 && shang2 == 3 && shang3 == 6){
+            return 1;
+        }else if(shang1 == 9 && shang2 == 12 && shang3 == 15){
+            return 1;
+        }else if(shang1 == 18 && shang2 == 21 && shang3 == 24){
+            return 1;
+        }else if(shang1 == 1 && shang2 == 4 && shang3 == 7){
+            return 2;
+        }else if(shang1 == 10 && shang2 == 13 && shang3 == 16){
+            return 2;
+        }else if(shang1 == 19 && shang2 == 22 && shang3 == 25){
+            return 2;
+        }else if(shang1 == 2 && shang2 == 5 && shang3 == 8){
+            return 3;
+        }else if(shang1 == 11 && shang2 == 14 && shang3 == 17){
+            return 3;
+        }else if(shang1 == 20 && shang2 == 23 && shang3 == 26){
+            return 3;
+        }else if(shang1 == 0 && shang2 == 4 && shang3 == 7){
+            return 4;
+        }
+        else if(shang1 == 9 && shang2 == 13 && shang3 == 16){
+            return 4;
+        }
+        else if(shang1 == 18 && shang2 == 22 && shang3 == 25){
+            return 4;
+        }
+        return 0;
+    }
+
+    public static int m13buKaoType(int a, int b, int c){
+
+        int ret1 = isWanTongTiao(a);
+        int ret2 = isWanTongTiao(b);
+        int ret3 = isWanTongTiao(c);
+
+        int ret = 0;
+        if ( (ret1 == ret2) && (ret1 == ret3) && (ret1 != 0)){
+            ret = ret1;
+        }else {
+            return 0;
+        }
+
+        int shang1 = a / 4;
+        int yu1 = a %4;
+
+        int shang2 = b / 4;
+        int yu2 = b % 4;
+
+        int shang3 = c / 4;
+        int yu3 = c % 4;
+
+        //花色是否相同
+        if(!((yu1 == yu2) && (yu1 == yu3))){
+            return 0;
+        }
+
+        int res = m147_258_369_158(shang1, shang2, shang3);
+        if(res == 0){
+            return 0;
+        }
+
+        //百位代表万筒条， 十位代表花色， 个位代表 那种牌型
+        int x = res + yu1 * 10 + ret * 100;
+
+        return x;
+    }
 
     public static boolean is13Yao(List<String> cards, PlayerCardsInfoMj playerCardsInfo) {
         List<String> temp = new ArrayList<>();
@@ -619,7 +852,7 @@ public class HuUtil implements HuType {
     }
 
 
-    public static void main(String[] args) {
+        public static void main(String[] args) {
 
 
         int[] hai = {
@@ -644,6 +877,79 @@ public class HuUtil implements HuType {
             System.out.println();
         }
 
+        List<String> list = new ArrayList<String>();
+
+//        list.add("108");
+//        list.add("112");
+//        list.add("116");
+//        list.add("120");
+//        list.add("124");
+//        list.add("128");
+//        list.add("132");
+//        list.add("133");
+
+
+//        list.add("000");
+//        list.add("024");
+//        list.add("012");
+
+//        list.add("036");
+//        list.add("048");
+//        list.add("060");
+
+//        list.add("040");
+//        list.add("052");
+//        list.add("064");
+
+//        list.add("044");
+//        list.add("056");
+//        list.add("068");
+
+//            boolean res =  is13BuKao(list, null);
+//
+//            System.out.println(res);
+
+        Scanner sc = new Scanner(System.in);
+
+
+        while (true){
+
+            System.out.println("1请输入第一张牌");
+            String a = sc.next();
+            System.out.println("1请输入第二张牌");
+            String b = sc.next();
+            System.out.println("1请输入第三张牌");
+            String c = sc.next();
+
+            System.out.println("2请输入第一张牌");
+            String d = sc.next();
+            System.out.println("2请输入第二张牌");
+            String e = sc.next();
+            System.out.println("2请输入第三张牌");
+            String f = sc.next();
+
+            list.clear();
+            list.add("108");
+            list.add("112");
+            list.add("116");
+            list.add("120");
+            list.add("124");
+            list.add("128");
+            list.add("132");
+            list.add("133");
+
+            list.add(a);
+            list.add(b);
+            list.add(c);
+
+            list.add(d);
+            list.add(e);
+            list.add(f);
+
+            boolean res =  is13BuKao(list, null);
+            System.out.println("==================");
+            System.out.println(res);
+        }
 
     }
 
