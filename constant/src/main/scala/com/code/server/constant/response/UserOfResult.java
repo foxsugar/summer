@@ -22,6 +22,13 @@ public class UserOfResult {
     private int lianZhuangNum;
     private long time;
 
+    private int baoziNum;
+    private int tonghuashunNum;
+    private int tonghuaNum;
+    private int shunziNum;
+    private int duiziNum;
+    private int sanpaiNum;
+
     private RoomStatistics roomStatistics;
 
     public long getUserId() {
@@ -139,5 +146,53 @@ public class UserOfResult {
     public UserOfResult setRoomStatistics(RoomStatistics roomStatistics) {
         this.roomStatistics = roomStatistics;
         return this;
+    }
+
+    public int getBaoziNum() {
+        return baoziNum;
+    }
+
+    public void setBaoziNum(int baoziNum) {
+        this.baoziNum = baoziNum;
+    }
+
+    public int getTonghuashunNum() {
+        return tonghuashunNum;
+    }
+
+    public void setTonghuashunNum(int tonghuashunNum) {
+        this.tonghuashunNum = tonghuashunNum;
+    }
+
+    public int getTonghuaNum() {
+        return tonghuaNum;
+    }
+
+    public void setTonghuaNum(int tonghuaNum) {
+        this.tonghuaNum = tonghuaNum;
+    }
+
+    public int getShunziNum() {
+        return shunziNum;
+    }
+
+    public void setShunziNum(int shunziNum) {
+        this.shunziNum = shunziNum;
+    }
+
+    public int getDuiziNum() {
+        return duiziNum;
+    }
+
+    public void setDuiziNum(int duiziNum) {
+        this.duiziNum = duiziNum;
+    }
+
+    public int getSanpaiNum() {
+        return sanpaiNum;
+    }
+
+    public void setSanpaiNum(int sanpaiNum) {
+        this.sanpaiNum = sanpaiNum;
     }
 }

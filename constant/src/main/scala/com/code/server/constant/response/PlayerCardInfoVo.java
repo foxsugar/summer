@@ -15,6 +15,8 @@ public class PlayerCardInfoVo implements IfacePlayerInfoVo {
     public boolean isQiang;
     public double score;
 
+
+
     public PlayerCardInfoVo() {
     }
 

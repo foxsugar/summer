@@ -95,10 +95,11 @@ public class ErrorCode {
 	public static final int READY_NUM_ERROR = 500028;
 	public static final int CRAP_PARAM_ERROR = 500029;
 
-
-
-
-
+	//扎金花
+	public static final int NOT_GET_MEMPAI = 600001;
+	public static final int NOT_YOU_TURN = 600002;
+	public static final int BET_WRONG = 600003;
+	public static final int NOT_KILL = 600004;
 
 
 

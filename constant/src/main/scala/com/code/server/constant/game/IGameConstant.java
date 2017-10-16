@@ -27,6 +27,8 @@ public interface IGameConstant extends IkafkaMsgId{
     String GAMETYPE_LONGQI_LINFEN = "3";//龙七 临汾斗地主
     String GAMETYPE_LONGQI_LINFEN_NO_QIANG = "4";//龙七 临汾斗地主 没有踢
 
+    //炸金花
+    String GAMETYPE_HITGOLDFLOWER = "11";//普通扎金花
 
     int STEP_JIAO_DIZHU = 1;//步骤 叫地主
     int STEP_QIANG_DIZHU = 2;//步骤 抢地主
