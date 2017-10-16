@@ -1,19 +1,85 @@
 package com.code.server.game.poker.hitgoldflower;
 import java.lang.reflect.Field;
 import java.text.NumberFormat;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-public class ListUtils {  
+public class ListUtils {
+
+
+    public static Map<Integer,Integer> cardCode = new HashMap<>();
+    static {
+        cardCode.put(1,2);
+        cardCode.put(2,3);
+        cardCode.put(3,4);
+        cardCode.put(4,5);
+
+        cardCode.put(5,50);
+        cardCode.put(6,51);
+        cardCode.put(7,52);
+        cardCode.put(8,53);
+
+        cardCode.put(9,46);
+        cardCode.put(10,47);
+        cardCode.put(11,48);
+        cardCode.put(12,49);
+
+        cardCode.put(13,42);
+        cardCode.put(14,43);
+        cardCode.put(15,44);
+        cardCode.put(16,45);
+
+        cardCode.put(17,38);
+        cardCode.put(18,39);
+        cardCode.put(19,40);
+        cardCode.put(20,41);
+
+        cardCode.put(21,34);
+        cardCode.put(22,35);
+        cardCode.put(23,36);
+        cardCode.put(24,37);
+
+        cardCode.put(25,30);
+        cardCode.put(26,31);
+        cardCode.put(27,32);
+        cardCode.put(28,33);
+
+        cardCode.put(29,26);
+        cardCode.put(30,27);
+        cardCode.put(31,28);
+        cardCode.put(32,29);
+
+        cardCode.put(33,22);
+        cardCode.put(34,23);
+        cardCode.put(35,24);
+        cardCode.put(36,25);
+
+        cardCode.put(37,18);
+        cardCode.put(38,19);
+        cardCode.put(39,20);
+        cardCode.put(40,21);
+
+        cardCode.put(41,14);
+        cardCode.put(42,15);
+        cardCode.put(43,16);
+        cardCode.put(44,17);
+
+        cardCode.put(45,10);
+        cardCode.put(46,11);
+        cardCode.put(47,12);
+        cardCode.put(48,13);
+
+        cardCode.put(49,6);
+        cardCode.put(50,7);
+        cardCode.put(51,8);
+        cardCode.put(52,9);
+    }
+
+
     /** 
      * 对list的元素按照多个属性名称排序, 
      * list元素的属性可以是数字（byte、short、int、long、float、double等，支持正数、负数、0）、char、String、java.util.Date 
      *  
-     *  
-     * @param lsit 
-     * @param sortname 
+     *
      *            list元素的属性名称 
      * @param isAsc 
      *            true升序，false降序 

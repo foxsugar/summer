@@ -200,6 +200,12 @@ public class Room implements IfaceRoom {
         userOfRoom.setInRoomNumber(users.size());
         userOfRoom.setReadyNumber(readyNumber);
 
+        Map<Long, Double> scoresMap = new HashMap<>();
+        for (Long l:users) {
+            scoresMap.put(l,1000.0);
+        }
+        userOfRoom.setUserScores(scoresMap);
+
 
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "joinRoom", this.toVo(userId)), userId);
 

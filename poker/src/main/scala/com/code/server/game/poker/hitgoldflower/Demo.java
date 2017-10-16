@@ -333,6 +333,17 @@ public class Demo {
 		System.out.println("====================");
 		System.out.println(p1.getCategory());
 		System.out.println(p1.getCategory().toString());
+
+
+
+		Player asker = new Player(222L, ListUtils.cardCode.get(32), ListUtils.cardCode.get(42), ListUtils.cardCode.get(23));
+		Player accepter = new Player(333L, ListUtils.cardCode.get(40), ListUtils.cardCode.get(24), ListUtils.cardCode.get(36));
+
+		ArrayList<Player> winnerList = Player.findWinners(asker,accepter);
+
+		Long winnerId = winnerList.size()==1?winnerList.get(0).getUid():winnerList.get(1).getUid();
+		System.out.println("winnerId====="+winnerList.toString());
+		System.out.println("winnerId====="+winnerId);
 	}
 
 }

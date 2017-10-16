@@ -206,7 +206,7 @@ public class RoomHitGoldFlower extends Room {
             UserOfResult resultObj = new UserOfResult();
             resultObj.setUsername(eachUser.getUsername());
             resultObj.setImage(eachUser.getImage());
-            resultObj.setScores(this.userScores.get(eachUser.getId()) + "");
+            resultObj.setScores(this.userScores.get(eachUser.getId())-1000.0 + "");
             resultObj.setUserId(eachUser.getId());
             resultObj.setTime(time);
             resultObj.setRoomStatistics(roomStatisticsMap.get(eachUser.getId()));
@@ -340,6 +340,14 @@ public class RoomHitGoldFlower extends Room {
         BeanUtils.copyProperties(this, roomVo);
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.game != null) {
+            Map<Long,Double> userScoresTemp = new HashMap<>();
+            GameHitGoldFlower gameTemp = (GameHitGoldFlower)this.getGame();
+            if(gameTemp!=null){
+                for (Long l: gameTemp.getPlayerCardInfos().keySet()){
+                    userScoresTemp.put(l,this.userScores.get(l)-gameTemp.getPlayerCardInfos().get(l).getAllScore());
+                }
+            }
+            roomVo.setUserScores(userScoresTemp);
             roomVo.game = this.game.toVo(userId);
         }
         if (this.getTimerNode() != null) {

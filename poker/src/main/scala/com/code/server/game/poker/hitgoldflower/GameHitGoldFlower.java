@@ -24,7 +24,7 @@ public class GameHitGoldFlower extends Game {
     private static final Double MAX_BET_NUM = 1000.0;//最大投注数
 
     protected List<Integer> cards = new ArrayList<>();//牌
-    protected Map<Long, PlayerCardInfoHitGoldFlower> playerCardInfos = new HashMap<>();
+    public Map<Long, PlayerCardInfoHitGoldFlower> playerCardInfos = new HashMap<>();
     protected Random rand = new Random();
 
     private int curRoundNumber=1;//当前轮数
@@ -96,12 +96,12 @@ public class GameHitGoldFlower extends Game {
         }
 
         if(seeUser.contains(userId)){
-            if(addChip!=chip*2+2 && addChip!=chip*2*2 && addChip!=chip*2*4){
+            if(addChip!=chip*2+2 && addChip!=chip*2*2 && addChip!=chip*2*4 && addChip!=1000.0){
                 return ErrorCode.BET_WRONG;
             }
             chip = addChip/2;
         }else{
-            if(addChip!=chip+2 && addChip!=chip*2 && addChip!=chip*4){
+            if(addChip!=chip+2 && addChip!=chip*2 && addChip!=chip*4 && addChip!=500.0){
                 return ErrorCode.BET_WRONG;
             }
             chip = addChip;
@@ -203,7 +203,7 @@ public class GameHitGoldFlower extends Game {
 
         logger.info(userId +"  看牌"+playerCardInfos.get(userId).getHandcards());
 
-        if (curRoundNumber<=room.getMenPai()) {
+        if (playerCardInfos.get(userId).getCurRoundNumber()<=room.getMenPai()) {
             return ErrorCode.NOT_GET_MEMPAI;
         }
         seeUser.add(userId);
@@ -241,14 +241,21 @@ public class GameHitGoldFlower extends Game {
         }
         //Todo 拒绝了，不能看
 
+        Map<String, Object> resultR = new HashMap<>();
+        resultR.put("userId",askerId);
+
         if(seeUser.contains(askerId)){
             playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore()+chip*2);
+            resultR.put("addChip",chip*2);
         }else{
             playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore()+chip);
+            resultR.put("addChip",chip);
         }
+        ResponseVo voR = new ResponseVo("gameService", "raiseResponse", resultR);
+        MsgSender.sendMsg2Player(voR, users);
 
-        Player asker = new Player(askerId, playerCardInfos.get(askerId).getHandcards().get(0), playerCardInfos.get(askerId).getHandcards().get(1), playerCardInfos.get(askerId).getHandcards().get(2));
-        Player accepter = new Player(accepterId, playerCardInfos.get(accepterId).getHandcards().get(0), playerCardInfos.get(accepterId).getHandcards().get(1), playerCardInfos.get(accepterId).getHandcards().get(2));
+        Player asker = new Player(askerId, ListUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(0)), ListUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(1)), ListUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(2)));
+        Player accepter = new Player(accepterId, ListUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(0)), ListUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(1)), ListUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(2)));
 
         ArrayList<Player> winnerList = Player.findWinners(asker,accepter);
 
@@ -260,20 +267,25 @@ public class GameHitGoldFlower extends Game {
         ResponseVo vo = new ResponseVo("gameService", "killResponse", result);
         MsgSender.sendMsg2Player(vo, users);
 
-        noticeAction(curUserId);
+        aliveUser.remove(winnerId==askerId?accepterId:askerId);
 
-        //处理结果
-        List<Long> list = new ArrayList<>();
-        list.add(winnerId);
-        compute(list);
-        sendResult();
-        genRecord();
+        if(aliveUser.size()>1){
+            noticeAction(curUserId);
+        }else{
+            //处理结果
+            List<Long> list = new ArrayList<>();
+            list.add(winnerId);
+            compute(list);
+            sendResult();
+            genRecord();
 
-        room.setBankerId(winnerId);
-        room.clearReadyStatus(true);
-        sendFinalResult();
+            room.setBankerId(winnerId);
+            room.clearReadyStatus(true);
+            sendFinalResult();
+        }
 
         MsgSender.sendMsg2Player("gameService", "kill", 0, askerId);
+
         updateLastOperateTime();
 
         return 0;
@@ -295,7 +307,7 @@ public class GameHitGoldFlower extends Game {
         }
         //设置每个人的牌类型
         for (PlayerCardInfoHitGoldFlower playerCardInfo : playerCardInfos.values()) {
-            Player p = new Player(playerCardInfo.getUserId(), playerCardInfo.getHandcards().get(0), playerCardInfo.getHandcards().get(1), playerCardInfo.getHandcards().get(2));
+            Player p = new Player(playerCardInfo.getUserId(), ListUtils.cardCode.get(playerCardInfo.getHandcards().get(0)), ListUtils.cardCode.get(playerCardInfo.getHandcards().get(1)), ListUtils.cardCode.get(playerCardInfo.getHandcards().get(2)));
             playerCardInfo.setCardType(p.getCategory().toString());
             playerCardInfo.setCardType(PokerItem.is235(p.getPokers())?"BaoZiShaShou":"DanZi");
             //添加次数
@@ -343,9 +355,11 @@ public class GameHitGoldFlower extends Game {
             if(winList.contains(playerCardInfo.getUserId())){
                 room.addUserSocre(playerCardInfo.getUserId(),playerCardInfo.getScore()-playerCardInfo.getAllScore());
                 room.addUserSocre(playerCardInfo.getUserId(),playerCardInfo.getCaifen());
+                playerCardInfo.setFinalScore(playerCardInfo.getScore()-playerCardInfo.getAllScore()+playerCardInfo.getCaifen());
             }else{
                 room.addUserSocre(playerCardInfo.getUserId(),-playerCardInfo.getAllScore());
                 room.addUserSocre(playerCardInfo.getUserId(),-playerCardInfo.getCaifen());
+                playerCardInfo.setFinalScore(-playerCardInfo.getAllScore()-playerCardInfo.getCaifen());
             }
         }
     }
@@ -355,15 +369,31 @@ public class GameHitGoldFlower extends Game {
      */
     protected void sendResult() {
         GameResultHitGoldFlower gameResultHitGoldFlower = new GameResultHitGoldFlower();
+
+        //将room保存到playerCardInfos
+        double personNumberTemp = 0.0;
+        double nagetiveTotal = 0.0;
+        for (Long l :this.playerCardInfos.keySet()) {
+            if(this.playerCardInfos.get(l).getScore()<0){
+                personNumberTemp+=1;
+                nagetiveTotal+=this.playerCardInfos.get(l).getScore();
+            }
+        }
+        for (Long l :this.playerCardInfos.keySet()) {
+            if(this.playerCardInfos.get(l).getScore()>0){
+                this.playerCardInfos.get(l).setScore(-nagetiveTotal/(playerCardInfos.size()-personNumberTemp));
+            }
+        }
+
         for (PlayerCardInfoHitGoldFlower playerCardInfo : playerCardInfos.values()) {
-            gameResultHitGoldFlower.getPlayerCardInfos().add(playerCardInfo.toVo());
+            gameResultHitGoldFlower.getPlayerCardInfos().add(playerCardInfo.toVoHaveHandcards());
         }
 
         gameResultHitGoldFlower.getUserScores().putAll(this.room.getUserScores());
         List<Long> winnerList = new ArrayList<>();
-        for (Long l:this.room.getUserScores().keySet()) {
-            if(this.room.getUserScores().get(l)>1000.0){
-                winnerList.add(l);
+        for (PlayerCardInfoHitGoldFlower playerCardInfo : playerCardInfos.values()) {
+            if(playerCardInfo.getFinalScore()>0){
+                winnerList.add(playerCardInfo.getUserId());
             }
         }
         gameResultHitGoldFlower.setWinnerList(winnerList);
@@ -424,7 +454,8 @@ public class GameHitGoldFlower extends Game {
         playerCardInfo.setCall("1");
         playerCardInfo.setKill("1");
         playerCardInfo.setSee("1");
-        if(seeUser.contains(userId) || curRoundNumber <= room.getMenPai()){
+
+        if(seeUser.contains(userId) || getMaxRoundNumber() <= room.getMenPai()){
             playerCardInfo.setSee("0");
         }
         if(seeUser.contains(userId)){
@@ -464,7 +495,8 @@ public class GameHitGoldFlower extends Game {
         playerCardInfo.setCall("1");
         playerCardInfo.setKill("1");
         playerCardInfo.setSee("1");
-        if(seeUser.contains(curUserId) || curRoundNumber <= room.getMenPai()){
+        playerCardInfo.setCurRoundNumber(playerCardInfo.getCurRoundNumber()+1);
+        if(seeUser.contains(curUserId) || getMaxRoundNumber() <= room.getMenPai()){
             playerCardInfo.setSee("0");
         }
         if(seeUser.contains(curUserId)){
@@ -506,7 +538,7 @@ public class GameHitGoldFlower extends Game {
      * 洗牌
      */
     protected void shuffle() {
-        for (int i = 2; i < 54; i++) {
+        for (int i = 1; i < 53; i++) {
             cards.add(i);
         }
         Collections.shuffle(cards);
@@ -540,12 +572,7 @@ public class GameHitGoldFlower extends Game {
         if (nextId >= aliveUser.size()) {
             nextId = 0;
         }
-        //加圈数
-
-        if(aliveUser.get(nextId).equals(room.getBankerId())){
-            curRoundNumber+=1;
-        }
-        if(curRoundNumber>room.getCricleNumber()||aliveUser.size()==1){
+        if(getMaxRoundNumberB()||aliveUser.size()==1){
             campareAllCards();
         }
         return aliveUser.get(nextId);
@@ -562,7 +589,7 @@ public class GameHitGoldFlower extends Game {
         ArrayList<Long> winList = new ArrayList<>();
         ArrayList<Player> winnerList = null;
         for (Long l : aliveUser) {
-            Player p = new Player(l, playerCardInfos.get(l).getHandcards().get(0), playerCardInfos.get(l).getHandcards().get(1), playerCardInfos.get(l).getHandcards().get(2));
+            Player p = new Player(l, ListUtils.cardCode.get(playerCardInfos.get(l).getHandcards().get(0)), ListUtils.cardCode.get(playerCardInfos.get(l).getHandcards().get(1)), ListUtils.cardCode.get(playerCardInfos.get(l).getHandcards().get(2)));
             list.add(p);
         }
         if (list.size() == 5) {
@@ -702,7 +729,7 @@ public class GameHitGoldFlower extends Game {
         vo.aliveUser = this.getAliveUser();
         vo.seeUser = this.getSeeUser();
         vo.curUserId = this.getCurUserId();
-        vo.curRoundNumber = this.getCurRoundNumber();
+        vo.curRoundNumber = getMaxRoundNumber();
 
         Double temp = 0.0;
         //玩家牌信息
@@ -716,5 +743,35 @@ public class GameHitGoldFlower extends Game {
         }
         vo.allTableChip = temp;
         return vo;
+    }
+
+    public int getMaxRoundNumber(){
+        int max = 1;
+        for (Long l :playerCardInfos.keySet()) {
+            if(playerCardInfos.get(l).getCurRoundNumber()>max){
+                max = playerCardInfos.get(l).getCurRoundNumber();
+            }else{
+                max = max;
+            }
+        }
+        return max;
+    }
+
+    /**
+     * 判断是否大于最大轮数
+     * @return
+     */
+    public boolean getMaxRoundNumberB(){
+        boolean maxRound = false;
+        int tempCount = 0;
+        for (Long l :playerCardInfos.keySet()) {
+            if(aliveUser.contains(l) && playerCardInfos.get(l).getCurRoundNumber()==room.getCricleNumber()){
+                tempCount +=1;
+            }
+        }
+        if(tempCount==aliveUser.size()){
+            maxRound = true;
+        }
+        return maxRound;
     }
 }

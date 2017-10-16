@@ -17,7 +17,9 @@ public class PlayerCardInfoHitGoldFlower implements IfacePlayerInfo {
     protected double score;
     protected double caifen;
     protected String cardType;
-    protected double allScore;
+    protected double allScore;//总下注
+    protected double finalScore;//单局输赢，用于判断谁赢了
+
 
     //1表示显示
     protected String call;//跟注
@@ -26,7 +28,7 @@ public class PlayerCardInfoHitGoldFlower implements IfacePlayerInfo {
     protected String kill;//比牌
     protected String see;//看牌
 
-
+    public int curRoundNumber;//当前轮数
 
     @Override
     public IfacePlayerInfoVo toVo() {
@@ -35,6 +37,7 @@ public class PlayerCardInfoHitGoldFlower implements IfacePlayerInfo {
         vo.score = this.score;
         vo.caifen = this.caifen;
         vo.cardType = this.cardType;
+        vo.allScore = this.allScore;
 
         vo.call = this.getCall();//跟注
         vo.raise = this.getRaise();//加注
@@ -53,12 +56,31 @@ public class PlayerCardInfoHitGoldFlower implements IfacePlayerInfo {
         vo.score = this.score;
         vo.caifen = this.caifen;
         vo.cardType = this.cardType;
+        vo.allScore = this.allScore;
 
         vo.call = this.getCall();//跟注
         vo.raise = this.getRaise();//加注
         vo.fold = this.getFold();//弃牌
         vo.kill = this.getKill();//比牌
         vo.see = this.getSee();//看牌
+
+        return vo;
+    }
+
+    public IfacePlayerInfoVo toVoHaveHandcards() {
+        PlayerCardInfoHitGoldFlowerVo vo = new PlayerCardInfoHitGoldFlowerVo();
+        vo.userId = this.userId;
+        vo.score = this.score;
+        vo.caifen = this.caifen;
+        vo.cardType = this.cardType;
+
+        vo.call = this.getCall();//跟注
+        vo.raise = this.getRaise();//加注
+        vo.fold = this.getFold();//弃牌
+        vo.kill = this.getKill();//比牌
+        vo.see = this.getSee();//看牌
+        vo.curRoundNumber = this.getCurRoundNumber();
+        vo.handcards = this.getHandcards();
 
         return vo;
     }
@@ -149,6 +171,22 @@ public class PlayerCardInfoHitGoldFlower implements IfacePlayerInfo {
 
     public void setAllScore(double allScore) {
         this.allScore = allScore;
+    }
+
+    public int getCurRoundNumber() {
+        return curRoundNumber;
+    }
+
+    public void setCurRoundNumber(int curRoundNumber) {
+        this.curRoundNumber = curRoundNumber;
+    }
+
+    public double getFinalScore() {
+        return finalScore;
+    }
+
+    public void setFinalScore(double finalScore) {
+        this.finalScore = finalScore;
     }
 }
 

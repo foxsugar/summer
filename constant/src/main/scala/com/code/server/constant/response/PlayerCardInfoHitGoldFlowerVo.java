@@ -19,7 +19,8 @@ public class PlayerCardInfoHitGoldFlowerVo implements IfacePlayerInfoVo {
     public String fold;//弃牌
     public String kill;//比牌
     public String see;//看牌
-
+    public double allScore;
+    public int curRoundNumber;//当前轮数
 
     public PlayerCardInfoHitGoldFlowerVo() {
 
@@ -103,5 +104,21 @@ public class PlayerCardInfoHitGoldFlowerVo implements IfacePlayerInfoVo {
 
     public void setSee(String see) {
         this.see = see;
+    }
+
+    public double getAllScore() {
+        return allScore;
+    }
+
+    public void setAllScore(double allScore) {
+        this.allScore = allScore;
+    }
+
+    public int getCurRoundNumber() {
+        return curRoundNumber;
+    }
+
+    public void setCurRoundNumber(int curRoundNumber) {
+        this.curRoundNumber = curRoundNumber;
     }
 }

@@ -115,7 +115,7 @@ public class Player {
 	
 	public static ArrayList<Player> findWinners(Player...player){
 		
-		if(player.length > 2){
+		if(player.length > 1){
 			//如果有235 和豹子 还有其他 就不处理
 
 			//判断豹子
@@ -166,14 +166,12 @@ public class Player {
 			Player p1 = player[i];
 			for(int j = i + 1; j < player.length; j++){
 				//对数组进行排序
-				Player p2 = player[j];
+				if (player[i].comparePlayer(player[j]) == 2){
 
-				if(p1.comparePlayer(p2) == 2){
 					Player temp = player[i];
 					player[i] = player[j];
-					p1 = player[i];
 					player[j] = temp;
-				}	
+				}
 			}
 		}
 		ArrayList<Player> list = new ArrayList<Player>();
@@ -213,7 +211,7 @@ public class Player {
 		int value1 = Player.catoryValue(p1.category);
 		int value2 = Player.catoryValue(p2.category);
 		
-		if(value1 > value1){
+		if(value1 > value2){
 			return 2;
 		}else if(value1 < value2){
 			return 0;
