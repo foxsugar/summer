@@ -391,7 +391,7 @@ object HuWithHun {
     }
 
     //万字的龙并且捉5
-    if (lastCardIsHun || lastCard == 4)  longTypeSet.add(HuType.hu_捉五龙)
+//    if (lastCardIsHun || lastCard == 4)  longTypeSet.add(HuType.hu_捉五龙)
 //    if ((lastCardIsHun || lastCard == 4) && isWan) longTypeSet.add(HuType.hu_捉五龙)
 
     longTypeSet.add(HuType.hu_龙)
