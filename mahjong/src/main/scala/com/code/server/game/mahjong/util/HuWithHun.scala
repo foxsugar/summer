@@ -232,16 +232,14 @@ object HuWithHun {
     */
   def isSuBenhunLong(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int,hunNum:Int):Int = {
     if(hunNum != 3) return 0
-    if(huCardType.hun3.size() == 1) {
-      print("000")
-    }
     if(huCardType.jiangOneHun != -1) return 0
 //    if(huCardType.hun3.size() > 0) return 0
 //    if(huCardType.hun2.size() > 0) return 0
     if(huCardType.hunJiang) return 0
     if(huCardType.shun.size() < 3) return 0
     //是龙
-    if(isLong(huCardType,hun,lastCard)!=0) return HuType.hu_素本混龙
+    val longType = isLong(huCardType,hun,lastCard)
+    if(longType == HuType.hu_本混龙 || longType==HuType.hu_本混捉五龙 || longType==HuType.hu_混儿吊本混龙 ||longType==HuType.hu_混儿吊捉五本混龙) return HuType.hu_素本混龙
 
     0
   }
@@ -389,7 +387,7 @@ object HuWithHun {
       if (huCardType.jiangOneHun == lastCard) longTypeSet.add(HuType.hu_混儿吊龙)
 
       //有四五六万不在龙里
-      if (huCardType.shun.contains(3)) longTypeSet.add(HuType.hu_捉五龙)
+      if ( lastCard == 4 && huCardType.shun.contains(3)) longTypeSet.add(HuType.hu_捉五龙)
     }
 
     //万字的龙并且捉5
