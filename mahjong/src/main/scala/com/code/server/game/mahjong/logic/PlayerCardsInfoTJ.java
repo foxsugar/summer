@@ -138,7 +138,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         HuCardType maxHuType = getMaxScoreHuCardType(huList);
 
         //是否是素胡
-        boolean isSuHu = isSuHu() && maxHuType.fan==0;
+        boolean isSuHu = isSuHu() && maxHuType.fan!=0;
 
         if (maxHuType.fan == 0) {
             maxHuType.fan = 4;

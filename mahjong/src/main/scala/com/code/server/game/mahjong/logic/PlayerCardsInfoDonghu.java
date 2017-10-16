@@ -108,25 +108,26 @@ public class PlayerCardsInfoDonghu extends PlayerCardsInfoSS {
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
 
         //算杠
-        int gangScore = this.mingGangType.size() + this.anGangType.size() * 2;
+        int gangScore = (this.mingGangType.size() + this.anGangType.size() * 2) * this.roomInfo.getMultiple();
         int subGang = 0;
         //自摸三个人赔
         if (isZimo) {
             for (PlayerCardsInfoMj playerCardInfo : this.gameInfo.playerCardsInfos.values()) {
                 if (playerCardInfo.getUserId() != this.userId) {
-                    playerCardInfo.addScore(-gangScore);
-                    playerCardInfo.addGangScore(-gangScore);
-                    this.roomInfo.addUserSocre(playerCardInfo.getUserId(), -gangScore);
-                    subGang += gangScore;
+                    int gangScoreTemp = gangScore * this.roomInfo.getMultiple();
+                    playerCardInfo.addScore(-gangScoreTemp);
+                    playerCardInfo.addGangScore(-gangScoreTemp);
+                    this.roomInfo.addUserSocre(playerCardInfo.getUserId(), -gangScoreTemp);
+                    subGang += gangScoreTemp;
                 }
             }
 
         } else {//点炮的人赔
             PlayerCardsInfoMj dianpaoPlayer = this.gameInfo.playerCardsInfos.get(dianpaoUser);
-            dianpaoPlayer.addScore(-gangScore);
-            dianpaoPlayer.addGangScore(-gangScore);
-            this.roomInfo.addUserSocre(dianpaoPlayer.getUserId(), -gangScore);
-            subGang += gangScore;
+            dianpaoPlayer.addScore(-gangScore * this.roomInfo.getMultiple());
+            dianpaoPlayer.addGangScore(-gangScore * this.roomInfo.getMultiple());
+            this.roomInfo.addUserSocre(dianpaoPlayer.getUserId(), -gangScore * this.roomInfo.getMultiple());
+            subGang += gangScore * this.roomInfo.getMultiple();
         }
         this.addGangScore(subGang);
         this.addScore(subGang);
@@ -151,10 +152,9 @@ public class PlayerCardsInfoDonghu extends PlayerCardsInfoSS {
                 if(playerCardsInfoMj.getUserId() == this.gameInfo.getFirstTurn()){
                     scoreTemp += 1;
                 }
+                scoreTemp = scoreTemp * this.roomInfo.getMultiple();
                 playerCardsInfoMj.addScore(-scoreTemp);
                 subScore += scoreTemp;
-
-                playerCardsInfoMj.addScore(-scoreTemp);
                 this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -scoreTemp);
             }
         }
