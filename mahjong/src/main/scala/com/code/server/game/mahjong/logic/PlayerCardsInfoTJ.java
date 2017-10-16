@@ -17,7 +17,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
     public static List<Integer> zhuo5AndLong = new ArrayList<>();
 
-    static{
+    static {
         zhuo5AndLong.add(hu_捉五);
         zhuo5AndLong.add(hu_混儿吊捉五);
 
@@ -61,8 +61,6 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         specialHuScore.put(hu_素, 4);
 
 
-
-
         if (this.roomInfo.isHasMode(GameInfoTJ.mode_素本混龙)) {
             specialHuScore.put(hu_素本混龙, 16);
         }
@@ -90,19 +88,18 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         boolean isSuHu = isSuHu();
 
         //是否是天胡 只有庄家能天胡
-        boolean isTianHu = this.userId == this.gameInfo.getFirstTurn() && this.operateList.size()==1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
-
+        boolean isTianHu = this.userId == this.gameInfo.getFirstTurn() && this.operateList.size() == 1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
 
 
         List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), chiPengGangNum, this.gameInfo.hun, lastCard);
         HuCardType maxHuType = getMaxScoreHuCardType(huList);
 
 //        if(maxHuType.fan > 0 || isGangKai || isSuHu || isTianHu)
-        if(huList.size() > 0) {
+        if (huList.size() > 0) {
             List<Integer> huTypeList = new ArrayList<>(maxHuType.specialHuList);
             huTypeList.retainAll(zhuo5AndLong);
             return huTypeList.size() > 0 || isGangKai || isSuHu || isTianHu;
-        }else{
+        } else {
             return false;
         }
 
@@ -131,27 +128,32 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         boolean isGangKai = isGangKai();
 
         //是否是天胡
-        boolean isTianHu = this.userId == this.gameInfo.getFirstTurn() && this.operateList.size()==1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
+        boolean isTianHu = this.userId == this.gameInfo.getFirstTurn() && this.operateList.size() == 1 && this.operateList.get(0) == type_mopai && this.roomInfo.isHasMode(GameInfoTJ.mode_天胡);
 
         boolean isSuHu = isSuHu();
 
         HuCardType maxHuType = getMaxScoreHuCardType(huList);
 
+        boolean isTiliu = maxHuType.fan == 0 && !isSuHu;
+
         //是否是素胡
         if (maxHuType.fan == 0) {
-            maxHuType.fan = 2;
+            maxHuType.fan = isTiliu ? 1 : 2;
         }
 
+        if (isGangKai && isTiliu) maxHuType.fan = 3;
 
         int score = maxHuType.fan * this.roomInfo.getMultiple();
-        if(isGangKai) score *= 2;
-        if(isSuHu) score *= 2;
-        if(isTianHu) score *= 4;
+
+        if (isGangKai && !isTiliu) score *= 2;
+
+        if (isSuHu) score *= 2;
+        if (isTianHu) score *= 4;
 
         setWinTypeResult(maxHuType);
-        if(isGangKai) this.winType.add(HuType.hu_杠开);
-        if(isSuHu) this.winType.add(HuType.hu_素);
-        if(isTianHu) this.winType.add(HuType.hu_天胡);
+        if (isGangKai) this.winType.add(HuType.hu_杠开);
+        if (isSuHu) this.winType.add(HuType.hu_素);
+        if (isTianHu) this.winType.add(HuType.hu_天胡);
 
         // 拉龙五 翻倍
         if (this.roomInfo.isHasMode(GameInfoTJ.mode_拉龙五)) {
@@ -168,15 +170,15 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
     /**
      * 计算铲
      */
-    public void computeChan(){
+    public void computeChan() {
         GameInfoTJ gameInfoTJ = (GameInfoTJ) this.gameInfo;
         int size = gameInfoTJ.getChanNum();
         int score = size * 2;
-        computeAddScore(-score, this.gameInfo.getFirstTurn(),true );
+        computeAddScore(-score, this.gameInfo.getFirstTurn(), true);
     }
 
 
-    public void computeAddScore(int score, long userId,boolean isGang){
+    public void computeAddScore(int score, long userId, boolean isGang) {
 
         PlayerCardsInfoMj own = this.gameInfo.playerCardsInfos.get(userId);
         //是庄家
@@ -211,17 +213,16 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
             myScore *= this.roomInfo.getMultiple();
 
             //减去杠分
-            if(isGang) playerCardsInfo.addGangScore(-myScore);
+            if (isGang) playerCardsInfo.addGangScore(-myScore);
             playerCardsInfo.addScore(-myScore);
             this.roomInfo.addUserSocre(playerCardsInfo.getUserId(), -myScore);
             subScore += myScore;
         }
 
         //自己加上杠分
-        if(isGang) own.addGangScore(subScore);
+        if (isGang) own.addGangScore(subScore);
         own.addScore(subScore);
         this.roomInfo.addUserSocre(this.getUserId(), subScore);
-
 
 
     }
@@ -275,7 +276,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         Set set = getHasGangList(temp);
 
         //是否带金杠
-        if(!this.roomInfo.isHasMode(GameInfoTJ.mode_金杠)){
+        if (!this.roomInfo.isHasMode(GameInfoTJ.mode_金杠)) {
             set.removeAll(this.gameInfo.hun);
         }
         return set.size() > 0;
@@ -330,11 +331,11 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         return false;
     }
 
-    private static void change(){
+    private static void change() {
         String s = "077, 080, 085, 017, 029, 014, 001, 090, 004, 009, 022, 026, 079, 030";
         String result = "";
         for (String ss : s.split(",")) {
-            result = result+"\""+ss.trim()+"\",";
+            result = result + "\"" + ss.trim() + "\",";
         }
         System.out.println(result);
     }
@@ -348,7 +349,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         playerCardsInfo.isHasFengShun = true;
 
 
-        String[] s = new String[]{"036","040","044","048","052","056", "060",  "064","068", "128", "129","012","016","020"};
+        String[] s = new String[]{"036", "040", "044", "048", "052", "056", "060", "064", "068", "128", "129", "012", "016", "020"};
 
         List<Integer> hun = new ArrayList<>();
         hun.add(17);
@@ -376,8 +377,8 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
                 playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
                 playerCardsInfo.getChiPengGangNum(), hun, 4);
         boolean isCanHu = playerCardsInfo.isCanHu_zimo("016");
-        System.out.println("是否可以胡: "+isCanHu);
-        huList.stream().forEach(h-> System.out.println(h.specialHuList));
+        System.out.println("是否可以胡: " + isCanHu);
+        huList.stream().forEach(h -> System.out.println(h.specialHuList));
 //        System.out.println(huList);
 
 
