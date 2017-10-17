@@ -49,7 +49,7 @@ public class PlayerCardsInfoDonghu extends PlayerCardsInfoSS {
     }
 
     public boolean isCanTing(List<String> cards) {
-        List<HuCardType> list = getTingHuCardType(getCardsNoChiPengGang(cards), null);
+        List<HuCardType> list = getTingHuCardType(getCardsNoChiPengGang(cards), new HuLimit(0));
         return !isTing && list.stream().filter(hct -> hct.specialHuList.contains(hu_缺一门) || hct.specialHuList.contains(hu_缺两门)).count() > 0;
 
     }

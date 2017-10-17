@@ -474,7 +474,7 @@ public class PlayerCardsInfoSZ extends PlayerCardsInfoMj {
         return result;
     }
 private static void change(){
-        String s = "104, 091, 130, 088, 077, 078, 058, 002, 070, 049, 047, 081, 090, 068";
+        String s = "081, 121, 115, 116, 110, 126, 130, 134, 003, 014, 024, 093, 107, 059";
     String result = "";
     for (String ss : s.split(",")) {
         result = result+"\""+ss.trim()+"\",";
@@ -486,20 +486,24 @@ private static void change(){
         System.out.println(isHasMode("0",MODE_YIMENPAI));
         change();
 //        PlayerCardsInfoSZ_LQ playerCardsInfo = new PlayerCardsInfoSZ_LQ();
-        PlayerCardsInfoTDH playerCardsInfo = new PlayerCardsInfoTDH();
+//        PlayerCardsInfoTDH playerCardsInfo = new PlayerCardsInfoTDH();
+        PlayerCardsInfoDonghu playerCardsInfo = new PlayerCardsInfoDonghu();
         playerCardsInfo.isHasFengShun = true;
 
 //        playerCardsInfo.isHasYimenpai = true;
 //        playerCardsInfo.isHasShuye = true;
 //        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","042","124","135"};
 //        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","134","042","124","135"};
-        String[] s = new String[]{"000","001","002",     "008",  "009","010",    "020", "021","022",    "024","028","032",    "106","107"};
+        String[] s = new String[]{"081","121","115","116","110","126","130","134","003","014","024","093","107","059"};
 //        String[] s = new String[]{"000","001","002",     "036",  "037","038",    "052", "053","054",    "080","081","082",    "112","113"};
 
 //        String[] s = new String[]{"076","077","078",     "080",  "084","085",    "088", "089","090",    "092","093","096",    "100","101"};
 
 
         playerCardsInfo.cards = new ArrayList<>();
+        RoomInfo roomInfo = new RoomInfo();
+        roomInfo.setMode("14");
+        playerCardsInfo.setRoomInfo(roomInfo);
         playerCardsInfo.init(playerCardsInfo.cards);
         List<String> list = Arrays.asList(s);
         playerCardsInfo.cards.addAll(list);
@@ -522,9 +526,9 @@ private static void change(){
 //        playerCardsInfo.isTing = true;
         playerCardsInfo.tingSet = new HashSet<>();
 //        playerCardsInfo.tingSet.add(15);
-//        System.out.println(playerCardsInfo.isCanTing());
+        System.out.println(playerCardsInfo.isCanTing(list));
 //        System.out.println("==="+playerCardsInfo.getYiZhangYingSet(playerCardsInfo.getCardsNoChiPengGang(temp),null));
-        System.out.println(playerCardsInfo.isCanHu_zimo("113"));
+//        System.out.println(playerCardsInfo.isCanHu_zimo("113"));
 //        System.out.println(playerCardsInfo.isCanTing(playerCardsInfo.cards));
 //        List<String> cs = playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.getCards());
 //        int cardType = CardTypeUtil.getTypeByCard("060");
