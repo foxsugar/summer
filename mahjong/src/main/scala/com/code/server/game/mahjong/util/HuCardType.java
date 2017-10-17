@@ -125,6 +125,20 @@ public class HuCardType implements HuType {
                 '}';
     }
 
+    public HuCardType copy(){
+        HuCardType huCardType = new HuCardType();
+        huCardType.fan = this.fan;
+        huCardType.specialHuList.addAll(this.specialHuList);
+        huCardType.shunHaveHuns.addAll(this.shunHaveHuns);
+        huCardType.shun.addAll(this.shun);
+        huCardType.jiangOneHun = this.jiangOneHun;
+        huCardType.ke.addAll(this.ke);
+        huCardType.hun2.addAll(this.hun2);
+        huCardType.hun3.addAll(this.hun3);
+
+        return huCardType;
+    }
+
     public Set<Integer> getPeng() {
         return peng;
     }

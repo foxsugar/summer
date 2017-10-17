@@ -143,6 +143,10 @@ public class HuUtil implements HuType {
             if (playerCardsInfo.isHasSpecialHu(hu_三豪七小对) && isHaoHuaQixiaodui(cards, playerCardsInfo, 3)) {
                 huList.add(HuCardType.getSpecialHuInstance(hu_三豪七小对).setFan(playerCardsInfo.getSpecialHuScore(hu_三豪七小对)));
             }
+            if (playerCardsInfo.isHasSpecialHu(hu_十三不靠) && is13BuKao(cards, playerCardsInfo)) {
+                huList.add(HuCardType.getSpecialHuInstance(hu_十三不靠).setFan(playerCardsInfo.getSpecialHuScore(hu_十三不靠)));
+            }
+
         }
 
 

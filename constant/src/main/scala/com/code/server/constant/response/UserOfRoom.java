@@ -1,7 +1,9 @@
 package com.code.server.constant.response;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UserOfRoom {
     
@@ -11,8 +13,8 @@ public class UserOfRoom {
     private int readyNumber;
     
     private List<UserVo> userList = new ArrayList<>();
-    
-    
+
+	protected Map<Long, Double> userScores = new HashMap<>();
     
     public int getInRoomNumber() {
 		return inRoomNumber;
@@ -37,5 +39,13 @@ public class UserOfRoom {
 	public UserOfRoom setUserList(List<UserVo> userList) {
 		this.userList = userList;
 		return this;
+	}
+
+	public Map<Long, Double> getUserScores() {
+		return userScores;
+	}
+
+	public void setUserScores(Map<Long, Double> userScores) {
+		this.userScores = userScores;
 	}
 }

@@ -3,6 +3,7 @@ package com.code.server.game.poker.service
 import com.code.server.constant.game.CardStruct
 import com.code.server.constant.response.ErrorCode
 import com.code.server.game.poker.doudizhu.{GameDouDiZhu, GameDouDiZhuGold}
+import com.code.server.game.poker.hitgoldflower.GameHitGoldFlower
 import com.code.server.game.poker.paijiu.GamePaijiu
 import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
@@ -20,6 +21,7 @@ object GameService {
       case x:GameDouDiZhu =>dispatchGameDDZService(userId,method,game.asInstanceOf[GameDouDiZhu],params)
       case x:GameDouDiZhuGold =>dispatchGameDDZGoldService(userId,method,game.asInstanceOf[GameDouDiZhuGold],params)
       case x:GamePaijiu =>dispatchGamePJService(userId,method,game.asInstanceOf[GamePaijiu],params)
+      case x:GameHitGoldFlower =>dispatchGameHGFService(userId,method,game.asInstanceOf[GameHitGoldFlower],params)
     }
 
   }
@@ -96,6 +98,25 @@ object GameService {
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }
+
+  private def dispatchGameHGFService(userId:Long,method: String, game: GameHitGoldFlower, params: JsonNode):Int = method match {
+    case "raise" =>
+      val addChip = params.path("addChip").asLong(0)
+      game.raise(userId,addChip);
+    case "call"=>
+      game.call(userId);
+    case "fold" =>
+      game.fold(userId);
+    case "see" =>
+      game.see(userId);
+    case "kill" =>
+      val accepterId = params.path("accepterId").asLong(0)
+      game.kill(userId,accepterId);
+
+    case _ =>
+      ErrorCode.REQUEST_PARAM_ERROR
+  }
+
 
   def getGame(roomId : String):IfaceGame = {
     RoomManager.getRoom(roomId).getGame
