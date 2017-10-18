@@ -15,10 +15,13 @@ object PaijiuCardUtil {
     if (cardScore.nonEmpty) return
 
     for (card <- DataManager.data.getPaijiuCardGroupDataMap.asScala) {
+
       val key = card._1
       val groupName = card._2.getName
       val score: Int = DataManager.data.getPaijiuCardGroupScoreDataMap.get(groupName).getScore
-      cardScore = cardScore.+:((key, score))
+      if(score <= 60){
+        cardScore = cardScore.+:((key, score))
+      }
     }
     //排序
     cardScore = cardScore.sortWith(compare)
