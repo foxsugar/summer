@@ -32,7 +32,7 @@ public class PlayerCardsInfoDonghu extends PlayerCardsInfoSS {
         specialHuScore.put(hu_缺一门, 0);
         specialHuScore.put(hu_缺两门, 0);
 
-        if (isHasMode(this.roomInfo.getMode(), GameInfoDonghu.mode_大胡)) {
+        if (!isHasMode(this.roomInfo.getMode(), GameInfoDonghu.mode_大胡)) {
             specialHuScore.put(hu_清一色, 3);
             specialHuScore.put(hu_一条龙, 3);
             specialHuScore.put(hu_七小对, 3);
