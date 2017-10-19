@@ -99,7 +99,8 @@ object HuWithHun {
           }
         }
       }
-      complete = Hu.removeRepeat(complete)
+    //todo 去掉去重
+//      complete = Hu.removeRepeat(complete)
       println("==================================hun==============")
       println(" 不是5 个附子的数量 = " + complete.stream().filter(l => l.size() != 5).count())
       println(complete.size())
@@ -110,7 +111,7 @@ object HuWithHun {
       huCardTypeList.forEach(huType => println(huType))
 
 
-      huCardTypeList.forEach(li => getHuType(li, hun, lastCard, hunNum))
+      huCardTypeList.forEach(li => getHuType(a,li, hun, lastCard, hunNum))
       huCardTypeList
 
 
@@ -138,13 +139,14 @@ object HuWithHun {
   }
 
 
-  def getHuType(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int, hunNum:Int): Int = {
+  def getHuType(cards:Array[Int], huCardType: HuCardType, hun: util.List[Integer], lastCard: Int, hunNum:Int): Int = {
 //    if(huCardType.hun3.size() ==1) {
 //      print("----")
 //    }
+
     var huList = new util.ArrayList[Int]()
     huList.add(isZhuo5(huCardType, hun, lastCard))
-    huList.add(isSuBenhunLong(huCardType, hun, lastCard,hunNum))
+    huList.add(isSuBenhunLong(cards, huCardType, hun, lastCard,hunNum))
     huList.add(isHunDiao(huCardType, hun, lastCard))
     //todo huCardType 在这个判断力被修改了  暂时方法哦最后判断 记得fix
     huList.add(isLong(huCardType, hun, lastCard))
@@ -228,20 +230,31 @@ object HuWithHun {
     * @param lastCard
     * @return
     */
-  def isSuBenhunLong(huCardType: HuCardType, hun: util.List[Integer], lastCard: Int,hunNum:Int):Int = {
+  def isSuBenhunLong(cards:Array[Int], huCardType: HuCardType, hun: util.List[Integer], lastCard: Int,hunNum:Int):Int = {
     if(hunNum != 3) return 0
-    if(huCardType.hun3.size() == 1) {
-      print("000")
-    }
+    if(getDiffHun(cards, hun) != 3) return 0
     if(huCardType.jiangOneHun != -1) return 0
 //    if(huCardType.hun3.size() > 0) return 0
-    if(huCardType.hun2.size() > 0) return 0
+//    if(huCardType.hun2.size() > 0) return 0
     if(huCardType.hunJiang) return 0
     if(huCardType.shun.size() < 3) return 0
     //是龙
-    if(isLong(huCardType,hun,lastCard)!=0) return HuType.hu_素本混龙
+    val longType = isLong(huCardType,hun,lastCard)
+
+    if(longType == HuType.hu_本混龙 || longType==HuType.hu_本混捉五龙 || longType==HuType.hu_混儿吊本混龙 ||longType==HuType.hu_混儿吊捉五本混龙) return HuType.hu_素本混龙
+
 
     0
+  }
+
+  private def getDiffHun(cards:Array[Int], hun:util.List[Integer]): Int ={
+    var count = 0
+    for(index <- cards.indices) {
+      if(hun.contains(index)){
+        count += 1
+      }
+    }
+    count
   }
   /**
     * 是否是龙
@@ -387,11 +400,11 @@ object HuWithHun {
       if (huCardType.jiangOneHun == lastCard) longTypeSet.add(HuType.hu_混儿吊龙)
 
       //有四五六万不在龙里
-      if (huCardType.shun.contains(3)) longTypeSet.add(HuType.hu_捉五龙)
+      if ( lastCard == 4 && huCardType.shun.contains(3)) longTypeSet.add(HuType.hu_捉五龙)
     }
 
     //万字的龙并且捉5
-    if (lastCardIsHun || lastCard == 4)  longTypeSet.add(HuType.hu_捉五龙)
+//    if (lastCardIsHun || lastCard == 4)  longTypeSet.add(HuType.hu_捉五龙)
 //    if ((lastCardIsHun || lastCard == 4) && isWan) longTypeSet.add(HuType.hu_捉五龙)
 
     longTypeSet.add(HuType.hu_龙)

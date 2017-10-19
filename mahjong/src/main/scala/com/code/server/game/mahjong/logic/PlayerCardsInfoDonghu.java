@@ -16,7 +16,7 @@ public class PlayerCardsInfoDonghu extends PlayerCardsInfoSS {
     public void init(List<String> cards) {
 
         this.cards = cards;
-        isHasTing = true;
+        isHasTing = false;
 
         specialHuScore.put(hu_七小对, 2);
         specialHuScore.put(hu_十三不靠, 2);
@@ -49,8 +49,9 @@ public class PlayerCardsInfoDonghu extends PlayerCardsInfoSS {
     }
 
     public boolean isCanTing(List<String> cards) {
-        List<HuCardType> list = getTingHuCardType(getCardsNoChiPengGang(cards), null);
-        return !isTing && list.stream().filter(hct -> hct.specialHuList.contains(hu_缺一门) || hct.specialHuList.contains(hu_缺两门)).count() > 0;
+        return false;
+//        List<HuCardType> list = getTingHuCardType(getCardsNoChiPengGang(cards), new HuLimit(0));
+//        return !isTing && list.stream().filter(hct -> hct.specialHuList.contains(hu_缺一门) || hct.specialHuList.contains(hu_缺两门)).count() > 0;
 
     }
 
@@ -80,7 +81,7 @@ public class PlayerCardsInfoDonghu extends PlayerCardsInfoSS {
 
     @Override
     public boolean isCanHu_dianpao(String card) {
-        if (!isTing) return false;
+//        if (!isTing) return false;
 
         List<String> temp = getCardsAddThisCard(card);
         int groupCount = getCardGroup(temp);
@@ -89,7 +90,7 @@ public class PlayerCardsInfoDonghu extends PlayerCardsInfoSS {
 
     @Override
     public boolean isCanHu_zimo(String card) {
-        if (!isTing) return false;
+//        if (!isTing) return false;
 
         List<String> temp = getCardsAddThisCard(card);
         int groupCount = getCardGroup(temp);
@@ -108,26 +109,30 @@ public class PlayerCardsInfoDonghu extends PlayerCardsInfoSS {
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
 
         //算杠
-        int gangScore = this.mingGangType.size() + this.anGangType.size() * 2;
+        int gangScore = (this.mingGangType.size() + this.anGangType.size() * 2) * this.roomInfo.getMultiple();
         int subGang = 0;
         //自摸三个人赔
         if (isZimo) {
             for (PlayerCardsInfoMj playerCardInfo : this.gameInfo.playerCardsInfos.values()) {
                 if (playerCardInfo.getUserId() != this.userId) {
-                    playerCardInfo.addScore(-gangScore);
-                    playerCardInfo.addGangScore(-gangScore);
-                    subGang += gangScore;
+                    int gangScoreTemp = gangScore * this.roomInfo.getMultiple();
+                    playerCardInfo.addScore(-gangScoreTemp);
+                    playerCardInfo.addGangScore(-gangScoreTemp);
+                    this.roomInfo.addUserSocre(playerCardInfo.getUserId(), -gangScoreTemp);
+                    subGang += gangScoreTemp;
                 }
             }
 
         } else {//点炮的人赔
             PlayerCardsInfoMj dianpaoPlayer = this.gameInfo.playerCardsInfos.get(dianpaoUser);
-            dianpaoPlayer.addScore(-gangScore);
-            dianpaoPlayer.addGangScore(-gangScore);
-            subGang += gangScore;
+            dianpaoPlayer.addScore(-gangScore * this.roomInfo.getMultiple());
+            dianpaoPlayer.addGangScore(-gangScore * this.roomInfo.getMultiple());
+            this.roomInfo.addUserSocre(dianpaoPlayer.getUserId(), -gangScore * this.roomInfo.getMultiple());
+            subGang += gangScore * this.roomInfo.getMultiple();
         }
         this.addGangScore(subGang);
         this.addScore(subGang);
+        this.roomInfo.addUserSocre(this.userId, subGang);
 
 
         List<String> cs = getCardsNoChiPengGang(cards);
@@ -138,21 +143,36 @@ public class PlayerCardsInfoDonghu extends PlayerCardsInfoSS {
         int score = huCardType.fan == 0 ? 1 : huCardType.fan;
         int subScore = 0;
         boolean isBanker = this.userId == gameInfo.getFirstTurn();
-        if(isBanker) score += 1;
+        if (isBanker) score += 1;
 
         //其他人扣分
-        for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
-            if(playerCardsInfoMj.getUserId() != userId){
-                int scoreTemp = score;
-                //如果是庄家多输一分
-                if(playerCardsInfoMj.getUserId() == this.gameInfo.getFirstTurn()){
-                    scoreTemp += 1;
+        if (isZimo) {
+
+            for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
+                if (playerCardsInfoMj.getUserId() != userId) {
+                    int scoreTemp = score;
+                    //如果是庄家多输一分
+                    if (playerCardsInfoMj.getUserId() == this.gameInfo.getFirstTurn()) {
+                        scoreTemp += 1;
+                    }
+                    scoreTemp = scoreTemp * this.roomInfo.getMultiple();
+                    playerCardsInfoMj.addScore(-scoreTemp);
+                    subScore += scoreTemp;
+                    this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -scoreTemp);
                 }
-                playerCardsInfoMj.addScore(-scoreTemp);
-                subScore += scoreTemp;
             }
+        } else {
+            PlayerCardsInfoMj dianpao = this.gameInfo.playerCardsInfos.get(dianpaoUser);
+            int tempScore = dianpao.getUserId() == this.gameInfo.getFirstTurn() ? score + 1 : score;
+            dianpao.addScore(-tempScore);
+            this.roomInfo.addUserSocre(dianpao.getUserId(), -tempScore);
+            subScore = tempScore;
         }
 
+        //
+
+        this.addScore(subScore);
+        this.roomInfo.addUserSocre(this.userId, subScore);
 
     }
 }

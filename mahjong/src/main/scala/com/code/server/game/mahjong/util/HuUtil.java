@@ -143,6 +143,10 @@ public class HuUtil implements HuType {
             if (playerCardsInfo.isHasSpecialHu(hu_三豪七小对) && isHaoHuaQixiaodui(cards, playerCardsInfo, 3)) {
                 huList.add(HuCardType.getSpecialHuInstance(hu_三豪七小对).setFan(playerCardsInfo.getSpecialHuScore(hu_三豪七小对)));
             }
+            if (playerCardsInfo.isHasSpecialHu(hu_十三不靠) && is13BuKao(cards, playerCardsInfo)) {
+                huList.add(HuCardType.getSpecialHuInstance(hu_十三不靠).setFan(playerCardsInfo.getSpecialHuScore(hu_十三不靠)));
+            }
+
         }
 
 
@@ -664,14 +668,14 @@ public class HuUtil implements HuType {
 
                         //判断花色
 
-                        int yushu1 = item1 % 4;
-                        int yushu2 = item2 % 4;
-                        int yushu3 = item3 % 4;
+//                        int yushu1 = item1 % 4;
+//                        int yushu2 = item2 % 4;
+//                        int yushu3 = item3 % 4;
 
-                        //是不是一个颜色
-                        if(!((yushu1 == yushu2) && (yushu1 == yushu3))){
-                            continue;
-                        }
+//                        //是不是一个颜色
+//                        if(!((yushu1 == yushu2) && (yushu1 == yushu3))){
+//                            continue;
+//                        }
 
                         int ret = m147_258_369_158(item1 / 4, item2 / 4, item3 / 4);
                         if(ret != 0){
@@ -685,15 +689,15 @@ public class HuUtil implements HuType {
                                 }
                             }
 
-                            yushu1 = sList.get(0) % 4;
-                            yushu2 = sList.get(1) % 4;
-                            yushu3 = sList.get(2) % 4;
+//                            yushu1 = sList.get(0) % 4;
+//                            yushu2 = sList.get(1) % 4;
+//                            yushu3 = sList.get(2) % 4;
 
-                            //是不是一个颜色
-                            if(!((yushu1 == yushu2) && (yushu1 == yushu3))){
-
-                                continue;
-                            }
+//                            //是不是一个颜色
+//                            if(!((yushu1 == yushu2) && (yushu1 == yushu3))){
+//
+//                                continue;
+//                            }
 
                             int ret2 = m147_258_369_158(sList.get(0) / 4, sList.get(1) / 4, sList.get(2) / 4);
 
@@ -785,11 +789,9 @@ public class HuUtil implements HuType {
             return 3;
         }else if(shang1 == 0 && shang2 == 4 && shang3 == 7){
             return 4;
-        }
-        else if(shang1 == 9 && shang2 == 13 && shang3 == 16){
+        }else if(shang1 == 9 && shang2 == 13 && shang3 == 16){
             return 4;
-        }
-        else if(shang1 == 18 && shang2 == 22 && shang3 == 25){
+        } else if(shang1 == 18 && shang2 == 22 && shang3 == 25){
             return 4;
         }
         return 0;
@@ -818,9 +820,9 @@ public class HuUtil implements HuType {
         int yu3 = c % 4;
 
         //花色是否相同
-        if(!((yu1 == yu2) && (yu1 == yu3))){
-            return 0;
-        }
+//        if(!((yu1 == yu2) && (yu1 == yu3))){
+//            return 0;
+//        }
 
         int res = m147_258_369_158(shang1, shang2, shang3);
         if(res == 0){
@@ -909,47 +911,71 @@ public class HuUtil implements HuType {
 //
 //            System.out.println(res);
 
-        Scanner sc = new Scanner(System.in);
+//        Scanner sc = new Scanner(System.in);
+//
+//
+//        while (true){
+//
+//            System.out.println("1请输入第一张牌");
+//            String a = sc.next();
+//            System.out.println("1请输入第二张牌");
+//            String b = sc.next();
+//            System.out.println("1请输入第三张牌");
+//            String c = sc.next();
+//
+//            System.out.println("2请输入第一张牌");
+//            String d = sc.next();
+//            System.out.println("2请输入第二张牌");
+//            String e = sc.next();
+//            System.out.println("2请输入第三张牌");
+//            String f = sc.next();
+//
+//            list.clear();
+//            list.add("108");
+//            list.add("109");
+//            list.add("112");
+//            list.add("116");
+//            list.add("120");
+//            list.add("124");
+//            list.add("128");
+//            list.add("132");
+////            list.add("133");
+//
+//            list.add(a);
+//            list.add(b);
+//            list.add(c);
+//
+//            list.add(d);
+//            list.add(e);
+//            list.add(f);
+//
+//            boolean res =  is13BuKao(list, null);
+//            System.out.println("==================");
+//            System.out.println(res);
+//        }
 
 
-        while (true){
-
-            System.out.println("1请输入第一张牌");
-            String a = sc.next();
-            System.out.println("1请输入第二张牌");
-            String b = sc.next();
-            System.out.println("1请输入第三张牌");
-            String c = sc.next();
-
-            System.out.println("2请输入第一张牌");
-            String d = sc.next();
-            System.out.println("2请输入第二张牌");
-            String e = sc.next();
-            System.out.println("2请输入第三张牌");
-            String f = sc.next();
 
             list.clear();
-            list.add("108");
-            list.add("112");
+            list.add("081");
+            list.add("121");
+            list.add("115");
             list.add("116");
-            list.add("120");
-            list.add("124");
-            list.add("128");
-            list.add("132");
-            list.add("133");
+            list.add("110");
+            list.add("126");
+            list.add("130");
+            list.add("134");
 
-            list.add(a);
-            list.add(b);
-            list.add(c);
-
-            list.add(d);
-            list.add(e);
-            list.add(f);
+            list.add("003");
+            list.add("014");
+            list.add("024");
+            list.add("093");
+            list.add("107");
+            list.add("119");
 
             boolean res =  is13BuKao(list, null);
             System.out.println("==================");
             System.out.println(res);
-        }
 
     }
 
