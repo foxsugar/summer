@@ -12,4 +12,8 @@ public class PrepareRoom {
     public int gameNumber;
     public int mustZimo;
 
+    public double caiFen;
+    public int menPai;
+    public int cricleNumber;//轮数
+
 }

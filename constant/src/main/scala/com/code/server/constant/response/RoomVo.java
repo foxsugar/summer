@@ -44,6 +44,8 @@ public class RoomVo implements IfaceRoomVo {
     protected int menPai;
     protected int cricleNumber;//轮数
 
+    public long canStartUserId;//代建房专用，告诉谁可以手动开始
+
     public RoomVo() {
     }
 
@@ -277,4 +279,11 @@ public class RoomVo implements IfaceRoomVo {
         this.cricleNumber = cricleNumber;
     }
 
+    public long getCanStartUserId() {
+        return canStartUserId;
+    }
+
+    public void setCanStartUserId(long canStartUserId) {
+        this.canStartUserId = canStartUserId;
+    }
 }

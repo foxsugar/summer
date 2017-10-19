@@ -764,6 +764,9 @@ public class RoomInfo extends Room {
         prepareRoom.mode = this.mode;
         prepareRoom.modeTotal = this.modeTotal;
         prepareRoom.mustZimo = this.mustZimo;
+        prepareRoom.caiFen = this.caiFen;
+        prepareRoom.menPai = this.menPai;
+        prepareRoom.cricleNumber = this.cricleNumber;
         return prepareRoom;
     }
 }
