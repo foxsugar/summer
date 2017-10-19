@@ -11,8 +11,8 @@ import java.util.Map;
  */
 public class GameInfoDonghu extends GameInfo {
 
-    public static final int mode_大胡 = 0;
-    public static final int mode_平胡 = 1;
+    public static final int mode_平胡 = 0;
+    public static final int mode_大胡 = 1;
     public static final int mode_抬庄 = 2;
     public static final int mode_后合 = 3;
     public static final int mode_四杠荒庄 = 4;
