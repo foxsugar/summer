@@ -24,9 +24,6 @@ object ReconnService {
     if (room != null) {
       reconnectResp.setExist(true)
       reconnectResp.setRoom(room.toVo(userId))
-      if(room.getGame!=null){
-        reconnectResp.setGame(room.getGame.toVo())
-      }
       //在线状态
       room.getUsers.forEach(user=>reconnectResp.getOfflineStatus.put(user,RedisManager.getUserRedisService.getGateId(user)!= null))
     }

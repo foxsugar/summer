@@ -15,7 +15,9 @@ public class UserOfRoom {
     private List<UserVo> userList = new ArrayList<>();
 
 	protected Map<Long, Double> userScores = new HashMap<>();
-    
+
+	protected Long canStartUserId;
+
     public int getInRoomNumber() {
 		return inRoomNumber;
 	}
@@ -47,5 +49,13 @@ public class UserOfRoom {
 
 	public void setUserScores(Map<Long, Double> userScores) {
 		this.userScores = userScores;
+	}
+
+	public Long getCanStartUserId() {
+		return canStartUserId;
+	}
+
+	public void setCanStartUserId(Long canStartUserId) {
+		this.canStartUserId = canStartUserId;
 	}
 }

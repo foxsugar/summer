@@ -205,7 +205,7 @@ public class Room implements IfaceRoom {
             scoresMap.put(l,1000.0);
         }
         userOfRoom.setUserScores(scoresMap);
-
+        userOfRoom.setCanStartUserId(users.get(0));
 
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "joinRoom", this.toVo(userId)), userId);
 
@@ -596,7 +596,9 @@ public class Room implements IfaceRoom {
             long time = this.getTimerNode().getStart() + this.getTimerNode().getInterval() - System.currentTimeMillis();
             roomVo.setRemainTime(time);
         }
-
+        if(users.size()>0){
+            roomVo.setCanStartUserId(users.get(0));
+        }
         return roomVo;
     }
 
@@ -610,6 +612,9 @@ public class Room implements IfaceRoom {
         prepareRoom.roomId = this.roomId;
         prepareRoom.multiple = this.multiple;
         prepareRoom.gameNumber = this.gameNumber;
+        prepareRoom.caiFen = this.caiFen;
+        prepareRoom.menPai = this.menPai;
+        prepareRoom.cricleNumber = this.cricleNumber;
         return prepareRoom;
     }
 

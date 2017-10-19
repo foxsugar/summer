@@ -55,7 +55,7 @@ class RoomPaijiu extends Room {
 
   override def startGameByClient(userId: Long): Int = {
     //玩家是房主
-    if (this.createUser != userId) return ErrorCode.ROOM_START_NOT_CREATEUSER
+    if (this.users.get(0) != userId) return ErrorCode.ROOM_START_NOT_CREATEUSER
 
     //第一局
     if (this.curGameNumber != 1) return ErrorCode.ROOM_START_CAN_NOT
@@ -169,4 +169,24 @@ object RoomPaijiu extends Room {
     0
   }
 
+  def createRoomNotInRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,isCreaterJoin:Boolean): Int = {
+    val roomPaijiu = new RoomPaijiu
+    roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId()))
+    roomPaijiu.setRoomType(roomType)
+    roomPaijiu.setGameType(gameType)
+    roomPaijiu.setGameNumber(gameNumber)
+    roomPaijiu.setBankerId(userId)
+    roomPaijiu.setCreateUser(userId)
+    roomPaijiu.setPersonNumber(4)
+    roomPaijiu.setCreaterJoin(isCreaterJoin);
+    roomPaijiu.init(gameNumber, 1)
+
+    val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
+    RoomManager.addRoom(roomPaijiu.getRoomId, "" + serverConfig.getServerId, roomPaijiu)
+    val idword = new IdWorker(serverConfig.getServerId,0)
+    roomPaijiu.setUuid(idword.nextId())
+
+    MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createPaijiuRoomNotInRoom", roomPaijiu.toVo(userId)), userId)
+    0
+}
 }

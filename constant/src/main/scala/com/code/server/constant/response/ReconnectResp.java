@@ -10,8 +10,6 @@ public class ReconnectResp {
 
     private IfaceRoomVo room;
 
-    private IfaceGameVo game;
-
     private boolean isExist;
 
     private Map<Long, Boolean> offlineStatus = new HashMap<>();//在线状态
@@ -35,13 +33,6 @@ public class ReconnectResp {
         return this;
     }
 
-    public IfaceGameVo getGame() {
-        return game;
-    }
-
-    public void setGame(IfaceGameVo game) {
-        this.game = game;
-    }
 
     public Map<Long, Boolean> getOfflineStatus() {
         return offlineStatus;

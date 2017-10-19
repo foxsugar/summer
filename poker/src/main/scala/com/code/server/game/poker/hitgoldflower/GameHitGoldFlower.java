@@ -262,17 +262,37 @@ public class GameHitGoldFlower extends Game {
         Long winnerId = winnerList.size()==1?winnerList.get(0).getUid():winnerList.get(1).getUid();
 
         Map<String, Long> result = new HashMap<>();
+        result.put("askerId",winnerId);
         result.put("winnerId",winnerId);
         result.put("loserId",winnerId==askerId?accepterId:askerId);
         ResponseVo vo = new ResponseVo("gameService", "killResponse", result);
         MsgSender.sendMsg2Player(vo, users);
 
-        aliveUser.remove(winnerId==askerId?accepterId:askerId);
+        if(aliveUser.size()>2){
+            if(winnerId==askerId){
+                aliveUser.remove(winnerId==askerId?accepterId:askerId);
+            }
 
-        if(aliveUser.size()>1){
-            noticeAction(curUserId);
+            if(aliveUser.size()>1){
+                noticeAction(curUserId);
+            }else{
+                //处理结果
+                List<Long> list = new ArrayList<>();
+                list.add(winnerId);
+                compute(list);
+                sendResult();
+                genRecord();
+
+                room.setBankerId(winnerId);
+                room.clearReadyStatus(true);
+                sendFinalResult();
+            }
+
+            if(winnerId!=askerId){
+                aliveUser.remove(winnerId==askerId?accepterId:askerId);
+            }
         }else{
-            //处理结果
+            aliveUser.remove(winnerId==askerId?accepterId:askerId);
             List<Long> list = new ArrayList<>();
             list.add(winnerId);
             compute(list);
@@ -346,20 +366,20 @@ public class GameHitGoldFlower extends Game {
         }
         for (PlayerCardInfoHitGoldFlower playerCardInfo : playerCardInfos.values()) {
             if(winList.contains(playerCardInfo.getUserId())){
-                playerCardInfo.setScore(totalChip/winList.size());
+                playerCardInfo.setScore(room.getMultiple()*totalChip/winList.size());
             }else{
-                playerCardInfo.setScore(-playerCardInfo.getAllScore());
+                playerCardInfo.setScore(-room.getMultiple()*playerCardInfo.getAllScore());
             }
         }
         for (PlayerCardInfoHitGoldFlower playerCardInfo : playerCardInfos.values()) {
             if(winList.contains(playerCardInfo.getUserId())){
-                room.addUserSocre(playerCardInfo.getUserId(),playerCardInfo.getScore()-playerCardInfo.getAllScore());
+                room.addUserSocre(playerCardInfo.getUserId(),playerCardInfo.getScore()-room.getMultiple()*playerCardInfo.getAllScore());
                 room.addUserSocre(playerCardInfo.getUserId(),playerCardInfo.getCaifen());
-                playerCardInfo.setFinalScore(playerCardInfo.getScore()-playerCardInfo.getAllScore()+playerCardInfo.getCaifen());
+                playerCardInfo.setFinalScore(playerCardInfo.getScore()-room.getMultiple()*playerCardInfo.getAllScore()+playerCardInfo.getCaifen());
             }else{
-                room.addUserSocre(playerCardInfo.getUserId(),-playerCardInfo.getAllScore());
+                room.addUserSocre(playerCardInfo.getUserId(),-room.getMultiple()*playerCardInfo.getAllScore());
                 room.addUserSocre(playerCardInfo.getUserId(),-playerCardInfo.getCaifen());
-                playerCardInfo.setFinalScore(-playerCardInfo.getAllScore()-playerCardInfo.getCaifen());
+                playerCardInfo.setFinalScore(-room.getMultiple()*playerCardInfo.getAllScore()-playerCardInfo.getCaifen());
             }
         }
     }
