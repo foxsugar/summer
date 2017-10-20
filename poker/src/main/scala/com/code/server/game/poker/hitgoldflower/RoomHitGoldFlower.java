@@ -196,6 +196,7 @@ public class RoomHitGoldFlower extends Room {
         this.userStatus.put(userId, 0);
         this.userScores.put(userId, 1000D);
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
+        this.canStartUserId = users.get(0);
         addUser2RoomRedis(userId);
     }
 

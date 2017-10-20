@@ -487,6 +487,9 @@ public class GameHitGoldFlower extends Game {
                 playerCardInfo.setRaise("0");
             }
         }
+        if(getMaxRoundNumber() <= room.getMenPai()){
+            playerCardInfo.setKill("0");
+        }
 
         Map<String, Object> result = new HashMap<>();
         result.put("playerCardInfo", playerCardInfo);
