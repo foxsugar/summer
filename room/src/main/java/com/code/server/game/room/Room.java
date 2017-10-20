@@ -70,6 +70,7 @@ public class Room implements IfaceRoom {
     protected int menPai;
     protected int cricleNumber;//轮数
 
+    public Long canStartUserId=0l;
 
     public static int joinRoomQuick(MsgSender player, int type) {
 
@@ -169,6 +170,7 @@ public class Room implements IfaceRoom {
         this.userStatus.put(userId, 0);
         this.userScores.put(userId, 0D);
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
+        this.canStartUserId = users.get(0);
         addUser2RoomRedis(userId);
     }
 
@@ -969,5 +971,13 @@ public class Room implements IfaceRoom {
 
     public void setCricleNumber(int cricleNumber) {
         this.cricleNumber = cricleNumber;
+    }
+
+    public Long getCanStartUserId() {
+        return canStartUserId;
+    }
+
+    public void setCanStartUserId(Long canStartUserId) {
+        this.canStartUserId = canStartUserId;
     }
 }
