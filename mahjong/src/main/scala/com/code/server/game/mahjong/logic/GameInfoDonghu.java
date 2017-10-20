@@ -11,8 +11,8 @@ import java.util.Map;
  */
 public class GameInfoDonghu extends GameInfo {
 
-    public static final int mode_平胡 = 0;
-    public static final int mode_大胡 = 1;
+    public static final int mode_大胡 = 0;
+    public static final int mode_平胡 = 1;
     public static final int mode_抬庄 = 2;
     public static final int mode_后合 = 3;
     public static final int mode_四杠荒庄 = 4;
@@ -48,12 +48,12 @@ public class GameInfoDonghu extends GameInfo {
         //通知所有玩家结束
         room.clearReadyStatus();
         //庄家换下个人
-        if (room instanceof RoomInfo) {
-            RoomInfo roomInfo = (RoomInfo) room;
-            room.setBankerId(nextTurnId(room.getBankerId()));
+//        if (room instanceof RoomInfo) {
+//            RoomInfo roomInfo = (RoomInfo) room;
+//            room.setBankerId(nextTurnId(room.getBankerId()));
 
 
-        }
+//        }
     }
 
     /**
@@ -88,24 +88,22 @@ public class GameInfoDonghu extends GameInfo {
             chanCards.add(card);
             //达成台庄
             if (chanCards.size() >= 4 && isCardSame(chanCards.subList(0, 4))) {
-
+                //换庄家
+                if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_抬庄)) {
+                    long newBanker = nextTurnId(this.firstTurn);
+                    this.setFirstTurn(newBanker);
+                    this.room.setBankerId(newBanker);
+                    Map<String, Object> r = new HashMap<>();
+                    r.put("banker", this.getFirstTurn());
+                    MsgSender.sendMsg2Player("gameService", "noticeTaizhuang", r, users);
+                }
 
                 //如果 后合模式 直接荒庄
                 if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_后合)) {
                     //输给每人三分
-                    handle_houhe(this.firstTurn);
+//                    handle_houhe(this.firstTurn);
                     //荒庄
                     handleHuangzhuang(userId);
-                } else {
-                    //换庄家
-                    if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_抬庄)) {
-                        long newBanker = nextTurnId(this.firstTurn);
-                        this.setFirstTurn(newBanker);
-                        this.room.setBankerId(newBanker);
-                        Map<String, Object> r = new HashMap<>();
-                        r.put("banker", this.getFirstTurn());
-                        MsgSender.sendMsg2Player("gameService", "noticeTaizhuang", r, users);
-                    }
                 }
 
             }

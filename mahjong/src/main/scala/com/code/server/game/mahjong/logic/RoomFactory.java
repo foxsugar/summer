@@ -19,6 +19,8 @@ public class RoomFactory {
                 return ((RoomInfo)new RoomInfo().setGameType(gameType)).setHasGangBlackList(false);
             case "LQ":
                 return ((RoomInfo)new RoomInfo().setGameType(gameType)).setChangeBankerAfterHuangZhuang(true);
+            case "DH":
+                return ((RoomInfo)new RoomInfo().setGameType(gameType)).setHasGangBlackList(false);
             default:
                 return (RoomInfo)new RoomInfo().setGameType(gameType);
         }

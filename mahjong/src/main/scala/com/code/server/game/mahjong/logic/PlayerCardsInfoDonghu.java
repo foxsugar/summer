@@ -41,6 +41,7 @@ public class PlayerCardsInfoDonghu extends PlayerCardsInfoSS {
             specialHuScore.put(hu_双豪七小对, 6);
             specialHuScore.put(hu_三豪七小对, 6);
             specialHuScore.put(hu_清龙, 6);
+            specialHuScore.put(hu_十三不靠, 6);
 
             specialHuScore.put(hu_缺一门, 0);
             specialHuScore.put(hu_缺两门, 0);
