@@ -118,6 +118,13 @@ public class RoomInfo extends Room {
                 if (each.equals("1") && money < 1) {
                     return false;
                 }
+            }else if("DH".equals(gameType)){
+                if (each.equals("0") && money < 4) {
+                    return false;
+                }
+                if (each.equals("1") && money < 1) {
+                    return false;
+                }
             }else {
                 if (money < 3) {
                     return false;
@@ -372,6 +379,8 @@ public class RoomInfo extends Room {
             result = 1;
         }else if("TC".equals(gameType)){
             result = 4;
+        }else if("DH".equals(gameType)){
+            result = 1;
         } else {
             result = 3;
         }
