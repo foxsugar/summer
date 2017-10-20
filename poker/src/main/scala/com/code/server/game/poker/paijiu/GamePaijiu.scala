@@ -459,7 +459,8 @@ class GamePaijiu extends Game with PaijiuConstant {
   protected def bankerBreakStart(): Unit = {
     state = STATE_BANKER_BREAK
     //推送开始下注
-    MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreakStart", this.bankerId, bankerId)
+    val result = Map("bankerId" -> this.bankerId)
+    MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreakStart", result.asJava, users)
   }
 
   /**
