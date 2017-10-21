@@ -119,7 +119,7 @@ public class RoomInfo extends Room {
                     return false;
                 }
             }else if("DH".equals(gameType)){
-                if (each.equals("0") && money < 4) {
+                if (each.equals("0") && money < 1) {
                     return false;
                 }
                 if (each.equals("1") && money < 1) {
