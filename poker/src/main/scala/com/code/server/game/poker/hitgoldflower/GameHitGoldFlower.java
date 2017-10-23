@@ -325,7 +325,9 @@ public class GameHitGoldFlower extends Game {
         for (PlayerCardInfoHitGoldFlower playerCardInfo : playerCardInfos.values()) {
             Player p = new Player(playerCardInfo.getUserId(), ListUtils.cardCode.get(playerCardInfo.getHandcards().get(0)), ListUtils.cardCode.get(playerCardInfo.getHandcards().get(1)), ListUtils.cardCode.get(playerCardInfo.getHandcards().get(2)));
             playerCardInfo.setCardType(p.getCategory().toString());
-            playerCardInfo.setCardType(PokerItem.is235(p.getPokers())?"BaoZiShaShou":"DanZi");
+            if(PokerItem.is235(p.getPokers())){
+                playerCardInfo.setCardType("BaoZiShaShou");
+            }
             //添加次数
             if("BaoZi".equals(playerCardInfo.getCardType())){
                 roomHitGoldFlower.addBaoziNum(playerCardInfo.getUserId());
