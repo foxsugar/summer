@@ -19,6 +19,7 @@ public class GameHitGoldFlowerVo extends GameVo {
     public List<Integer> leaveCards = new ArrayList<>();//剩余的牌，暂时无用
     public List<Long> aliveUser = new ArrayList<>();//存活的人
     public List<Long> seeUser = new ArrayList<>();//看牌的人
+    public List<Long> loseUser = new ArrayList<>();//看牌的人
     public Long curUserId;
     public Double allTableChip;
 }

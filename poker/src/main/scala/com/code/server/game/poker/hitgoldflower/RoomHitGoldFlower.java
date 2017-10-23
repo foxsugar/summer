@@ -134,9 +134,9 @@ public class RoomHitGoldFlower extends Room {
             return ErrorCode.ROOM_START_CAN_NOT;
         }
         //玩家是房主
-        if (room.createUser != userId){
+        /*if (room.createUser != userId){
             return ErrorCode.ROOM_START_NOT_CREATEUSER;
-        }
+        }*/
 
         //第一局
         if (room.curGameNumber != 1){

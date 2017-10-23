@@ -33,6 +33,7 @@ public class GameHitGoldFlower extends Game {
     protected List<Integer> leaveCards = new ArrayList<>();//剩余的牌，暂时无用
     protected List<Long> aliveUser = new ArrayList<>();//存活的人
     protected List<Long> seeUser = new ArrayList<>();//看牌的人
+    protected List<Long> loseUser = new ArrayList<>();//输牌的人
     protected Long curUserId;
 
 
@@ -241,30 +242,25 @@ public class GameHitGoldFlower extends Game {
         }
         //Todo 拒绝了，不能看
 
-        Map<String, Object> resultR = new HashMap<>();
-        resultR.put("userId",askerId);
-
-        if(seeUser.contains(askerId)){
-            playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore()+chip*2);
-            resultR.put("addChip",chip*2);
-        }else{
-            playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore()+chip);
-            resultR.put("addChip",chip);
-        }
-        ResponseVo voR = new ResponseVo("gameService", "raiseResponse", resultR);
-        MsgSender.sendMsg2Player(voR, users);
-
         Player asker = new Player(askerId, ListUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(0)), ListUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(1)), ListUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(2)));
         Player accepter = new Player(accepterId, ListUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(0)), ListUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(1)), ListUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(2)));
 
         ArrayList<Player> winnerList = Player.findWinners(asker,accepter);
 
         Long winnerId = winnerList.size()==1?winnerList.get(0).getUid():winnerList.get(1).getUid();
+        loseUser.add(winnerId==askerId?accepterId:askerId);
 
-        Map<String, Long> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         result.put("askerId",winnerId);
         result.put("winnerId",winnerId);
         result.put("loserId",winnerId==askerId?accepterId:askerId);
+        if(seeUser.contains(askerId)){
+            playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore()+chip*2);
+            result.put("addChip",chip*2);
+        }else{
+            playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore()+chip);
+            result.put("addChip",chip);
+        }
         ResponseVo vo = new ResponseVo("gameService", "killResponse", result);
         MsgSender.sendMsg2Player(vo, users);
 
@@ -743,6 +739,14 @@ public class GameHitGoldFlower extends Game {
         this.lastOperateTime = lastOperateTime;
     }
 
+    public List<Long> getLoseUser() {
+        return loseUser;
+    }
+
+    public void setLoseUser(List<Long> loseUser) {
+        this.loseUser = loseUser;
+    }
+
     @Override
     public IfaceGameVo toVo(long userId) {
         GameHitGoldFlowerVo vo = new GameHitGoldFlowerVo();
@@ -753,6 +757,7 @@ public class GameHitGoldFlower extends Game {
         vo.seeUser = this.getSeeUser();
         vo.curUserId = this.getCurUserId();
         vo.curRoundNumber = getMaxRoundNumber();
+        vo.loseUser = this.getLoseUser();
 
         Double temp = 0.0;
         //玩家牌信息
