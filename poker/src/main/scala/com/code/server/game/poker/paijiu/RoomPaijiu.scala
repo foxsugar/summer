@@ -168,14 +168,16 @@ object RoomPaijiu extends Room {
     MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createPaijiuRoom", roomPaijiu.toVo(userId)), userId)
     0
   }
-
   def createRoomNotInRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,isCreaterJoin:Boolean): Int = {
+    RoomPaijiuByNotInRoom.createRoomNotInRoom(userId,roomType,gameType,gameNumber,isCreaterJoin)
+  }
+  /*def createRoomNotInRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,isCreaterJoin:Boolean): Int = {
     val roomPaijiu = new RoomPaijiu
     roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId()))
     roomPaijiu.setRoomType(roomType)
     roomPaijiu.setGameType(gameType)
     roomPaijiu.setGameNumber(gameNumber)
-    roomPaijiu.setBankerId(userId)
+    roomPaijiu.setBankerId(0l)
     roomPaijiu.setCreateUser(userId)
     roomPaijiu.setPersonNumber(4)
     roomPaijiu.setCreaterJoin(isCreaterJoin);
@@ -188,5 +190,5 @@ object RoomPaijiu extends Room {
 
     MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createPaijiuRoomNotInRoom", roomPaijiu.toVo(userId)), userId)
     0
-}
+}*/
 }
