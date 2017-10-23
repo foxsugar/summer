@@ -1,12 +1,14 @@
 package com.code.server.game.poker.paijiu;
 
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.config.IConstant;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
@@ -41,6 +43,15 @@ public class RoomPaijiuByNotInRoom extends Room {
         //代建房 定时解散
         if (!isCreaterJoin) {
             //给代建房 开房者 扣钱
+            if(24==gameNumber){
+                if(RedisManager.getUserRedisService().getUserMoney(userId) < 2){
+                    return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
+                }
+            }else if(0 == gameNumber || 12 == gameNumber){
+                if(RedisManager.getUserRedisService().getUserMoney(userId) < 1){
+                    return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
+                }
+            }
             roomPaijiu.spendMoney();
             TimerNode prepareRoomNode = new TimerNode(System.currentTimeMillis(), IConstant.HOUR_1, false, roomPaijiu::dissolutionRoom);
             roomPaijiu.prepareRoomTimerNode = prepareRoomNode;
@@ -57,5 +68,4 @@ public class RoomPaijiuByNotInRoom extends Room {
 
         return 0;
     }
-
 }
