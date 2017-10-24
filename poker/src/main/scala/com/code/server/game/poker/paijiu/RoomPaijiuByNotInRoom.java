@@ -34,7 +34,7 @@ public class RoomPaijiuByNotInRoom extends Room {
         roomPaijiu.setRoomType(roomType);
         roomPaijiu.setGameType(gameType);
         roomPaijiu.setGameNumber(gameNumber);
-        roomPaijiu.setBankerId(0l);
+        roomPaijiu.setBankerId(0L);
         roomPaijiu.setCreateUser(userId);
         roomPaijiu.setPersonNumber(4);
         roomPaijiu.setCreaterJoin(isCreaterJoin);
@@ -43,15 +43,10 @@ public class RoomPaijiuByNotInRoom extends Room {
         //代建房 定时解散
         if (!isCreaterJoin) {
             //给代建房 开房者 扣钱
-            if(24==gameNumber){
-                if(RedisManager.getUserRedisService().getUserMoney(userId) < 2){
-                    return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
-                }
-            }else if(0 == gameNumber || 12 == gameNumber){
-                if(RedisManager.getUserRedisService().getUserMoney(userId) < 1){
-                    return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
-                }
+            if (RedisManager.getUserRedisService().getUserMoney(userId) < roomPaijiu.getCreateNeedMoney()) {
+                return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
             }
+
             roomPaijiu.spendMoney();
             TimerNode prepareRoomNode = new TimerNode(System.currentTimeMillis(), IConstant.HOUR_1, false, roomPaijiu::dissolutionRoom);
             roomPaijiu.prepareRoomTimerNode = prepareRoomNode;

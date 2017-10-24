@@ -2,6 +2,7 @@ package com.code.server.game.poker.doudizhu;
 
 
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Game;
@@ -9,6 +10,7 @@ import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.config.IConstant;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
@@ -81,6 +83,9 @@ public class RoomDouDiZhu extends Room {
 
         //代建房 定时解散
         if (!isJoin) {
+            if (RedisManager.getUserRedisService().getUserMoney(userId) < room.createNeedMoney) {
+                return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
+            }
             //给代建房 开房者 扣钱
             room.spendMoney();
             TimerNode prepareRoomNode = new TimerNode(System.currentTimeMillis(), IConstant.HOUR_1, false, room::dissolutionRoom);
