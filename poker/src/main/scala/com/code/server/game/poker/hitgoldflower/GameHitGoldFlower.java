@@ -251,7 +251,7 @@ public class GameHitGoldFlower extends Game {
         loseUser.add(winnerId==askerId?accepterId:askerId);
 
         Map<String, Object> result = new HashMap<>();
-        result.put("askerId",winnerId);
+        result.put("askerId",askerId);
         result.put("winnerId",winnerId);
         result.put("loserId",winnerId==askerId?accepterId:askerId);
         if(seeUser.contains(askerId)){
@@ -519,6 +519,9 @@ public class GameHitGoldFlower extends Game {
         playerCardInfo.setCurRoundNumber(playerCardInfo.getCurRoundNumber()+1);
         if(seeUser.contains(curUserId) || getMaxRoundNumber() <= room.getMenPai()){
             playerCardInfo.setSee("0");
+        }
+        if(getMaxRoundNumber() <= room.getMenPai()){
+            playerCardInfo.setKill("0");
         }
         if(seeUser.contains(curUserId)){
             if(chip>=MAX_BET_NUM){
