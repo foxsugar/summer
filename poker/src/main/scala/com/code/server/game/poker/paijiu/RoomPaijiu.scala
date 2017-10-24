@@ -6,6 +6,7 @@ import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
 import com.code.server.game.room.{Game, Room}
+import com.code.server.util.timer.GameTimer
 import com.code.server.util.{IdWorker, SpringUtil}
 import org.springframework.beans.BeanUtils
 
@@ -43,6 +44,9 @@ class RoomPaijiu extends Room {
       val game = getGameInstance
       this.game = game
       game.startGame(users, this)
+
+      //游戏开始 代建房 去除定时解散
+      if (!isOpen && !this.isCreaterJoin) GameTimer.removeNode(prepareRoomTimerNode)
 
       //扣钱
       if (!isOpen && isCreaterJoin) spendMoney()
@@ -90,6 +94,9 @@ class RoomPaijiu extends Room {
     val game = getGameInstance
     this.game = game
     game.startGame(users, this)
+
+    //游戏开始 代建房 去除定时解散
+    if (!isOpen && !this.isCreaterJoin) GameTimer.removeNode(prepareRoomTimerNode)
 
     //扣钱
     if (!isOpen && isCreaterJoin) spendMoney()
