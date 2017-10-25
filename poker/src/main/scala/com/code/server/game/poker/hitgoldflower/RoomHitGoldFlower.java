@@ -104,6 +104,9 @@ public class RoomHitGoldFlower extends Room {
         //代建房 定时解散
         if (!isJoin) {
             //给代建房 开房者 扣钱
+            if(RedisManager.getUserRedisService().getUserMoney(userId) < room.createNeedMoney){
+                return ErrorCode.CANNOT_CREATE_ROOM_MONEY;
+            }
             room.spendMoney();
             TimerNode prepareRoomNode = new TimerNode(System.currentTimeMillis(), IConstant.HOUR_1, false, room::dissolutionRoom);
             room.prepareRoomTimerNode = prepareRoomNode;
