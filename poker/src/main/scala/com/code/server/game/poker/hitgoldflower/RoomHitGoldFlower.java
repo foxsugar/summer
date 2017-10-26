@@ -45,13 +45,9 @@ public class RoomHitGoldFlower extends Room {
     protected Map<Long, Integer> duiziNum = new HashMap<>();
     protected Map<Long, Integer> sanpaiNum = new HashMap<>();
 
-    public static final Map<Integer,Integer> needsMoney = new HashMap<>();
 
-    static {
-        needsMoney.put(6,1);
-        needsMoney.put(12,2);
-        needsMoney.put(20,3);
-    }
+
+
 
     @Override
     protected Game getGameInstance() {
@@ -90,8 +86,6 @@ public class RoomHitGoldFlower extends Room {
         room.menPai = menPai;
         room.bankerId = userId;
         room.cricleNumber = cricleNumber;
-
-        room.createNeedMoney = needsMoney.get(gameNumber);
 
         room.init(gameNumber, multiple);
 
@@ -171,6 +165,11 @@ public class RoomHitGoldFlower extends Room {
             room.roomRemoveUser(i);
         }
 
+        //游戏开始 代建房 去除定时解散
+        if(!room.isOpen && !room.isCreaterJoin()){
+            GameTimer.removeNode(room.prepareRoomTimerNode);
+        }
+
         //通知其他人游戏已经开始
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameHitGoldFlowerBegin", "ok"), room.users);
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "startGameByClient", 0), userId);
@@ -186,12 +185,6 @@ public class RoomHitGoldFlower extends Room {
     }
 
 
-    public void init(int gameNumber, int multiple) throws DataNotFoundException {
-        this.multiple = multiple;
-        this.gameNumber = gameNumber;
-        this.isInGame = false;
-        this.bankerId = createUser;
-    }
 
     protected void roomAddUser(long userId) {
 

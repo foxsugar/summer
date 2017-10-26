@@ -74,7 +74,7 @@ object Test {
   def testSild = {
     val list = List(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
 //    val list = List(1,2,3,4,5,6,7,8,9,10,11,12)
-    print(list.sliding(4,4).toList)
+    print(list.sliding(2,2).toList)
   }
   def testslice(): Unit ={
     val list = List(0,1,2,3,4,5,6,7,8)

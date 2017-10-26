@@ -33,6 +33,8 @@ class RoomPaijiu extends Room {
 
   override protected def getGameInstance: Game = gameType match {
     case "11" => new GamePaijiuEndless
+    case "12"=> new GamePaijiu2Cards
+    case "13"=>new GamePaijiu2CardsEndless
     case _ => new GamePaijiu
   }
 
