@@ -5,7 +5,6 @@ import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
-import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
@@ -25,27 +24,27 @@ public class RoomDouDiZhu extends Room {
     public static final int PERSONNUM = 3;
 
 
-    @Override
-    protected Game getGameInstance() {
-        switch (gameType) {
-            case GAMETYPE_LINFEN:
-                return new GameDouDiZhuLinFen();
-            case GAMETYPE_QIANAN:
-                return new GameDouDiZhuQianAn();
-            case GAMETYPE_LONGQI:
-                return new GameDouDiZhu();
-            case GAMETYPE_LONGQI_LINFEN:
-                return new GameDouDiZhuLinFenLongQi();
-            case GAMETYPE_LONGQI_LINFEN_NO_QIANG:
-                return new GameDouDiZhuLinFenNoQiang();
-
-            case GAMETYPE_LONGQI_NO_QIANG:
-                return new GameDouDiZhuNoQiang();
-            default:
-                return new GameDouDiZhu();
-        }
-
-    }
+//    @Override
+//    protected Game getGameInstance() {
+//        switch (gameType) {
+//            case GAMETYPE_LINFEN:
+//                return new GameDouDiZhuLinFen();
+//            case GAMETYPE_QIANAN:
+//                return new GameDouDiZhuQianAn();
+//            case GAMETYPE_LONGQI:
+//                return new GameDouDiZhu();
+//            case GAMETYPE_LONGQI_LINFEN:
+//                return new GameDouDiZhuLinFenLongQi();
+//            case GAMETYPE_LONGQI_LINFEN_NO_QIANG:
+//                return new GameDouDiZhuLinFenNoQiang();
+//
+//            case GAMETYPE_LONGQI_NO_QIANG:
+//                return new GameDouDiZhuNoQiang();
+//            default:
+//                return new GameDouDiZhu();
+//        }
+//
+//    }
 
 
     public static RoomDouDiZhu getRoomInstance(String roomType){

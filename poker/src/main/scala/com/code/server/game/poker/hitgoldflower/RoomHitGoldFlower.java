@@ -19,7 +19,6 @@ import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
 import com.code.server.game.poker.config.ServerConfig;
-import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
@@ -49,16 +48,16 @@ public class RoomHitGoldFlower extends Room {
 
 
 
-    @Override
-    protected Game getGameInstance() {
-        switch (gameType) {
-            case GAMETYPE_HITGOLDFLOWER:
-                return new GameHitGoldFlower();
-            default:
-                return new GameHitGoldFlower();
-        }
-
-    }
+//    @Override
+//    protected Game getGameInstance() {
+//        switch (gameType) {
+//            case GAMETYPE_HITGOLDFLOWER:
+//                return new GameHitGoldFlower();
+//            default:
+//                return new GameHitGoldFlower();
+//        }
+//
+//    }
 
 
     public static RoomHitGoldFlower getRoomInstance(String roomType){

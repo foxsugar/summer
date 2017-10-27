@@ -3,9 +3,9 @@ package com.code.server.game.poker.paijiu
 import com.code.server.constant.game.IGameConstant
 import com.code.server.constant.response.{ErrorCode, IfaceRoomVo, ResponseVo, RoomPaijiuVo}
 import com.code.server.game.poker.config.ServerConfig
+import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
-import com.code.server.game.room.{Game, Room}
 import com.code.server.util.timer.GameTimer
 import com.code.server.util.{IdWorker, SpringUtil}
 import org.springframework.beans.BeanUtils
@@ -31,12 +31,12 @@ class RoomPaijiu extends Room {
   var testUserId:Long = 0
 
 
-  override protected def getGameInstance: Game = gameType match {
-    case "11" => new GamePaijiuEndless
-    case "12"=> new GamePaijiu2Cards
-    case "13"=>new GamePaijiu2CardsEndless
-    case _ => new GamePaijiu
-  }
+//  override protected def getGameInstance: Game = gameType match {
+//    case "11" => new GamePaijiuEndless
+//    case "12"=> new GamePaijiu2Cards
+//    case "13"=>new GamePaijiu2CardsEndless
+//    case _ => new GamePaijiu
+//  }
 
   override def startGame(): Unit = {
     //do nothing
