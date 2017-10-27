@@ -3588,6 +3588,16 @@ public final class StaticDataProto {
      * <code>int32 isAddGold = 4;</code>
      */
     int getIsAddGold();
+
+    /**
+     * <code>string instanceName = 5;</code>
+     */
+    java.lang.String getInstanceName();
+    /**
+     * <code>string instanceName = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getInstanceNameBytes();
   }
   /**
    * Protobuf type {@code RoomData}
@@ -3603,6 +3613,7 @@ public final class StaticDataProto {
     private RoomData() {
       id_ = "";
       isAddGold_ = 0;
+      instanceName_ = "";
     }
 
     @java.lang.Override
@@ -3665,6 +3676,12 @@ public final class StaticDataProto {
             case 32: {
 
               isAddGold_ = input.readInt32();
+              break;
+            }
+            case 42: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              instanceName_ = s;
               break;
             }
           }
@@ -3899,6 +3916,40 @@ public final class StaticDataProto {
       return isAddGold_;
     }
 
+    public static final int INSTANCENAME_FIELD_NUMBER = 5;
+    private volatile java.lang.Object instanceName_;
+    /**
+     * <code>string instanceName = 5;</code>
+     */
+    public java.lang.String getInstanceName() {
+      java.lang.Object ref = instanceName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        instanceName_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string instanceName = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getInstanceNameBytes() {
+      java.lang.Object ref = instanceName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        instanceName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -3928,6 +3979,9 @@ public final class StaticDataProto {
           3);
       if (isAddGold_ != 0) {
         output.writeInt32(4, isAddGold_);
+      }
+      if (!getInstanceNameBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, instanceName_);
       }
     }
 
@@ -3963,6 +4017,9 @@ public final class StaticDataProto {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(4, isAddGold_);
       }
+      if (!getInstanceNameBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, instanceName_);
+      }
       memoizedSize = size;
       return size;
     }
@@ -3987,6 +4044,8 @@ public final class StaticDataProto {
           other.internalGetEachMoney());
       result = result && (getIsAddGold()
           == other.getIsAddGold());
+      result = result && getInstanceName()
+          .equals(other.getInstanceName());
       return result;
     }
 
@@ -4009,6 +4068,8 @@ public final class StaticDataProto {
       }
       hash = (37 * hash) + ISADDGOLD_FIELD_NUMBER;
       hash = (53 * hash) + getIsAddGold();
+      hash = (37 * hash) + INSTANCENAME_FIELD_NUMBER;
+      hash = (53 * hash) + getInstanceName().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -4159,6 +4220,8 @@ public final class StaticDataProto {
         internalGetMutableEachMoney().clear();
         isAddGold_ = 0;
 
+        instanceName_ = "";
+
         return this;
       }
 
@@ -4189,6 +4252,7 @@ public final class StaticDataProto {
         result.eachMoney_ = internalGetEachMoney();
         result.eachMoney_.makeImmutable();
         result.isAddGold_ = isAddGold_;
+        result.instanceName_ = instanceName_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -4241,6 +4305,10 @@ public final class StaticDataProto {
             other.internalGetEachMoney());
         if (other.getIsAddGold() != 0) {
           setIsAddGold(other.getIsAddGold());
+        }
+        if (!other.getInstanceName().isEmpty()) {
+          instanceName_ = other.instanceName_;
+          onChanged();
         }
         onChanged();
         return this;
@@ -4606,6 +4674,75 @@ public final class StaticDataProto {
       public Builder clearIsAddGold() {
         
         isAddGold_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object instanceName_ = "";
+      /**
+       * <code>string instanceName = 5;</code>
+       */
+      public java.lang.String getInstanceName() {
+        java.lang.Object ref = instanceName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          instanceName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string instanceName = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getInstanceNameBytes() {
+        java.lang.Object ref = instanceName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          instanceName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string instanceName = 5;</code>
+       */
+      public Builder setInstanceName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        instanceName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string instanceName = 5;</code>
+       */
+      public Builder clearInstanceName() {
+        
+        instanceName_ = getDefaultInstance().getInstanceName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string instanceName = 5;</code>
+       */
+      public Builder setInstanceNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        instanceName_ = value;
         onChanged();
         return this;
       }
@@ -6452,22 +6589,23 @@ public final class StaticDataProto {
       "a\022\n\n\002id\030\001 \001(\005\022\014\n\004card\030\002 \001(\005\"/\n\023PaijiuCar" +
       "dGroupData\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\"5\n\030",
       "PaijiuCardGroupScoreData\022\n\n\002id\030\001 \001(\t\022\r\n\005" +
-      "score\030\002 \001(\005\"\333\001\n\010RoomData\022\n\n\002id\030\001 \001(\t\022#\n\005" +
+      "score\030\002 \001(\005\"\361\001\n\010RoomData\022\n\n\002id\030\001 \001(\t\022#\n\005" +
       "money\030\002 \003(\0132\024.RoomData.MoneyEntry\022+\n\teac" +
       "hMoney\030\003 \003(\0132\030.RoomData.EachMoneyEntry\022\021" +
-      "\n\tisAddGold\030\004 \001(\005\032,\n\nMoneyEntry\022\013\n\003key\030\001" +
-      " \001(\005\022\r\n\005value\030\002 \001(\005:\0028\001\0320\n\016EachMoneyEntr" +
-      "y\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\005:\0028\001\"\275\002\n\010Te" +
-      "stData\022\n\n\002id\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\022\013\n\003age\030" +
-      "\003 \001(\005\022\013\n\003exp\030\004 \003(\005\022%\n\006weapon\030\005 \003(\0132\025.Tes" +
-      "tData.WeaponEntry\022\020\n\010testLong\030\006 \001(\003\022\022\n\nt",
-      "estDouble\030\007 \001(\001\022\026\n\016testListDouble\030\010 \003(\001\022" +
-      "3\n\rtestMapDouble\030\t \003(\0132\034.TestData.TestMa" +
-      "pDoubleEntry\032-\n\013WeaponEntry\022\013\n\003key\030\001 \001(\005" +
-      "\022\r\n\005value\030\002 \001(\t:\0028\001\0324\n\022TestMapDoubleEntr" +
-      "y\022\013\n\003key\030\001 \001(\003\022\r\n\005value\030\002 \001(\001:\0028\001B?\n\035com" +
-      ".code.server.constant.dataB\017StaticDataPr" +
-      "oto\252\002\014com.bsl.datab\006proto3"
+      "\n\tisAddGold\030\004 \001(\005\022\024\n\014instanceName\030\005 \001(\t\032" +
+      ",\n\nMoneyEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(" +
+      "\005:\0028\001\0320\n\016EachMoneyEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005" +
+      "value\030\002 \001(\005:\0028\001\"\275\002\n\010TestData\022\n\n\002id\030\001 \001(\005" +
+      "\022\014\n\004name\030\002 \001(\t\022\013\n\003age\030\003 \001(\005\022\013\n\003exp\030\004 \003(\005" +
+      "\022%\n\006weapon\030\005 \003(\0132\025.TestData.WeaponEntry\022",
+      "\020\n\010testLong\030\006 \001(\003\022\022\n\ntestDouble\030\007 \001(\001\022\026\n" +
+      "\016testListDouble\030\010 \003(\001\0223\n\rtestMapDouble\030\t" +
+      " \003(\0132\034.TestData.TestMapDoubleEntry\032-\n\013We" +
+      "aponEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\t:\0028" +
+      "\001\0324\n\022TestMapDoubleEntry\022\013\n\003key\030\001 \001(\003\022\r\n\005" +
+      "value\030\002 \001(\001:\0028\001B?\n\035com.code.server.const" +
+      "ant.dataB\017StaticDataProto\252\002\014com.bsl.data" +
+      "b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -6540,7 +6678,7 @@ public final class StaticDataProto {
     internal_static_RoomData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_RoomData_descriptor,
-        new java.lang.String[] { "Id", "Money", "EachMoney", "IsAddGold", });
+        new java.lang.String[] { "Id", "Money", "EachMoney", "IsAddGold", "InstanceName", });
     internal_static_RoomData_MoneyEntry_descriptor =
       internal_static_RoomData_descriptor.getNestedTypes().get(0);
     internal_static_RoomData_MoneyEntry_fieldAccessorTable = new
