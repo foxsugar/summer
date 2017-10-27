@@ -1,6 +1,6 @@
 package com.code.server.game.poker.paijiu
 
-import com.code.server.constant.game.IGameConstant
+import com.code.server.constant.game.{IGameConstant, RoomStatistics}
 import com.code.server.constant.response.{ErrorCode, IfaceRoomVo, ResponseVo, RoomPaijiuVo}
 import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.room.Room
@@ -108,8 +108,18 @@ class RoomPaijiu extends Room {
     0
   }
 
+  override protected def roomAddUser(userId: Long): Unit = {
+    this.users.add(userId)
+    this.userStatus.put(userId, 0)
+    this.userScores.put(userId, 0D)
+    this.roomStatisticsMap.put(userId, new RoomStatistics(userId))
+    this.canStartUserId = users.get(0)
+    if (!isCreaterJoin) this.bankerId = users.get(0)
+    addUser2RoomRedis(userId)
+  }
+
   override def toVo(userId: Long): IfaceRoomVo = {
-    val roomVo:RoomPaijiuVo = new RoomPaijiuVo
+    val roomVo = new RoomPaijiuVo
     BeanUtils.copyProperties(super.toVo(userId), roomVo)
     roomVo.setBankerInitScore(this.bankerInitScore)
     roomVo.setBankerScore(this.bankerScore)

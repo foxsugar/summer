@@ -167,9 +167,6 @@ public class Room implements IfaceRoom {
         this.userScores.put(userId, 0D);
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         this.canStartUserId = users.get(0);
-        if ("3".equals(this.roomType)) {
-            this.bankerId = users.get(0);
-        }
         addUser2RoomRedis(userId);
     }
 
