@@ -176,7 +176,7 @@ public class GameInfoTJ extends GameInfo {
                 banker.computeAddScore(2, this.firstTurn, false);
             }
         }
-        sendResult(false, userId);
+        sendResult(false, userId, null);
         noticeDissolutionResult();
         //通知所有玩家结束
         room.clearReadyStatus();
@@ -200,7 +200,7 @@ public class GameInfoTJ extends GameInfo {
 
     protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
         isAlreadyHu = true;
-        sendResult(true, playerCardsInfo.userId);
+        sendResult(true, playerCardsInfo.userId, null);
         //圈
         if (this.getFirstTurn() != playerCardsInfo.getUserId()) {
             //换庄

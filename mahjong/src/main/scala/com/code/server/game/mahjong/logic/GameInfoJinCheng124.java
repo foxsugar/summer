@@ -46,7 +46,7 @@ public class GameInfoJinCheng124 extends GameInfo {
 
     protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
         isAlreadyHu = true;
-        sendResult(true, playerCardsInfo.userId);
+        sendResult(true, playerCardsInfo.userId, null);
         //圈
         if (this.getFirstTurn() != playerCardsInfo.getUserId()) {
             //换庄

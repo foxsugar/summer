@@ -73,7 +73,7 @@ public class GameInfoSongYuan extends GameInfo {
      */
     protected void handleHuangzhuang(long userId) {
         computeAllGang();
-        sendResult(false, userId);
+        sendResult(false, userId, null);
 //        room.addOneToCircleNumber();
 //        int nextId = nextTurnId(this.getFirstTurn());
 //        room.setBankerId(nextId);
@@ -248,7 +248,7 @@ public class GameInfoSongYuan extends GameInfo {
 
     protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
         isAlreadyHu = true;
-        sendResult(true, playerCardsInfo.getUserId());
+        sendResult(true, playerCardsInfo.getUserId(), null);
         //圈
         if (this.getFirstTurn() != playerCardsInfo.getUserId()) {
             //换庄

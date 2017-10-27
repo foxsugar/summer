@@ -65,12 +65,9 @@ public class Room implements IfaceRoom {
     protected Map<Long, RoomStatistics> roomStatisticsMap = new HashMap<>();//统计
     public int mustZimo = 0;//1是0否
 
-    //扎金花专用
-    protected double caiFen;
-    protected int menPai;
-    protected int cricleNumber;//轮数
 
-    public Long canStartUserId=0l;
+
+    public Long canStartUserId = 0L;
 
     public static int joinRoomQuick(MsgSender player, int type) {
 
@@ -97,7 +94,6 @@ public class Room implements IfaceRoom {
 
         }
     }
-
 
 
     public int getNeedMoney() throws DataNotFoundException {
@@ -171,7 +167,7 @@ public class Room implements IfaceRoom {
         this.userScores.put(userId, 0D);
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         this.canStartUserId = users.get(0);
-        if("3".equals(this.roomType)){
+        if ("3".equals(this.roomType)) {
             this.bankerId = users.get(0);
         }
         addUser2RoomRedis(userId);
@@ -205,11 +201,6 @@ public class Room implements IfaceRoom {
         userOfRoom.setInRoomNumber(users.size());
         userOfRoom.setReadyNumber(readyNumber);
 
-        Map<Long, Double> scoresMap = new HashMap<>();
-        for (Long l:users) {
-            scoresMap.put(l,1000.0);
-        }
-        userOfRoom.setUserScores(scoresMap);
         userOfRoom.setCanStartUserId(users.get(0));
 
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "joinRoom", this.toVo(userId)), userId);
@@ -221,7 +212,7 @@ public class Room implements IfaceRoom {
 
     protected boolean isCanJoinCheckMoney(long userId) {
         //代建房
-        if(!isCreaterJoin){
+        if (!isCreaterJoin) {
             return true;
         }
         if (isAA) {
@@ -344,7 +335,17 @@ public class Room implements IfaceRoom {
 
 
     protected Game getGameInstance() {
-        return new Game();
+        StaticDataProto.RoomData roomData = DataManager.data.getRoomDataMap().get(gameType);
+        Game game = new Game();
+        if (roomData != null) {
+            roomData.getInstanceName();
+            try {
+                game = (Game) Class.forName(roomData.getInstanceName()).newInstance();
+            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return game;
     }
 
     protected void initRoomStatisticsMap(long userId) {
@@ -360,7 +361,7 @@ public class Room implements IfaceRoom {
             spendMoney();
         }
         //游戏开始 代建房 去除定时解散
-        if(!isOpen && !this.isCreaterJoin()){
+        if (!isOpen && !this.isCreaterJoin()) {
             GameTimer.removeNode(prepareRoomTimerNode);
         }
         game.startGame(users, this);
@@ -601,7 +602,7 @@ public class Room implements IfaceRoom {
             long time = this.getTimerNode().getStart() + this.getTimerNode().getInterval() - System.currentTimeMillis();
             roomVo.setRemainTime(time);
         }
-        if(users.size()>0){
+        if (users.size() > 0) {
             roomVo.setCanStartUserId(users.get(0));
         }
         return roomVo;
@@ -617,16 +618,13 @@ public class Room implements IfaceRoom {
         prepareRoom.roomId = this.roomId;
         prepareRoom.multiple = this.multiple;
         prepareRoom.gameNumber = this.gameNumber;
-        prepareRoom.caiFen = this.caiFen;
-        prepareRoom.menPai = this.menPai;
-        prepareRoom.cricleNumber = this.cricleNumber;
         return prepareRoom;
     }
 
     /**
      * 生成房间战绩
      */
-    public void genRoomRecord(){
+    public void genRoomRecord() {
         RoomRecord roomRecord = new RoomRecord();
         roomRecord.setRoomId(this.roomId);
         roomRecord.setId(this.getUuid());
@@ -687,7 +685,6 @@ public class Room implements IfaceRoom {
     public List<Long> getUsers() {
         return users;
     }
-
 
 
     public Room setUsers(List<Long> users) {
@@ -952,29 +949,7 @@ public class Room implements IfaceRoom {
         return this;
     }
 
-    public double getCaiFen() {
-        return caiFen;
-    }
 
-    public void setCaiFen(double caiFen) {
-        this.caiFen = caiFen;
-    }
-
-    public int getMenPai() {
-        return menPai;
-    }
-
-    public void setMenPai(int menPai) {
-        this.menPai = menPai;
-    }
-
-    public int getCricleNumber() {
-        return cricleNumber;
-    }
-
-    public void setCricleNumber(int cricleNumber) {
-        this.cricleNumber = cricleNumber;
-    }
 
     public Long getCanStartUserId() {
         return canStartUserId;

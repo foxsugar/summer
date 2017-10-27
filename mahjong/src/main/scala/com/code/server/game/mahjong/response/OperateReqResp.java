@@ -17,6 +17,7 @@ public class OperateReqResp {
     public static final int type_xuanfengdan = 9;
     public static final int type_mopai = 10;
     public static final int type_play = 11;
+    public static final int type_yipaoduoxiang = 12;//一炮多响
 
 
 
@@ -29,6 +30,7 @@ public class OperateReqResp {
     private boolean isMing;
     private List<String> chiCards;
     private List<String> xuanfengCards;
+    private List<Long> yipaoduoxiangUser;
 
     public int getOperateType() {
         return operateType;
@@ -91,6 +93,15 @@ public class OperateReqResp {
 
     public OperateReqResp setXuanfengCards(List<String> xuanfengCards) {
         this.xuanfengCards = xuanfengCards;
+        return this;
+    }
+
+    public List<Long> getYipaoduoxiangUser() {
+        return yipaoduoxiangUser;
+    }
+
+    public OperateReqResp setYipaoduoxiangUser(List<Long> yipaoduoxiangUser) {
+        this.yipaoduoxiangUser = yipaoduoxiangUser;
         return this;
     }
 }
