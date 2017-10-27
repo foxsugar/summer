@@ -13,9 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Created by sunxianping on 2017/3/13.
- */
+
 public class GameHitGoldFlower extends Game {
     protected static final Logger logger = LoggerFactory.getLogger(GameHitGoldFlower.class);
 
@@ -37,7 +35,7 @@ public class GameHitGoldFlower extends Game {
     protected Long curUserId;
 
 
-    protected Room room;
+    protected RoomHitGoldFlower room;
 
     protected long lastOperateTime;
 
@@ -62,7 +60,7 @@ public class GameHitGoldFlower extends Game {
     }
 
     public void startGame(List<Long> users, Room room) {
-        this.room = room;
+        this.room = (RoomHitGoldFlower) room;
         init(users);
         updateLastOperateTime();
         //通知其他人游戏已经开始
@@ -704,12 +702,14 @@ public class GameHitGoldFlower extends Game {
         this.seeUser = seeUser;
     }
 
-    public Room getRoom() {
+
+    public RoomHitGoldFlower getRoom() {
         return room;
     }
 
-    public void setRoom(Room room) {
+    public GameHitGoldFlower setRoom(RoomHitGoldFlower room) {
         this.room = room;
+        return this;
     }
 
     public List<Integer> getCards() {

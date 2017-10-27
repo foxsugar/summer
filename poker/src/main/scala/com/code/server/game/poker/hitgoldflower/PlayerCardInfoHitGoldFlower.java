@@ -7,9 +7,7 @@ import com.code.server.game.room.IfacePlayerInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by sunxianping on 2017/3/14.
- */
+
 public class PlayerCardInfoHitGoldFlower implements IfacePlayerInfo {
 
     public long userId;
