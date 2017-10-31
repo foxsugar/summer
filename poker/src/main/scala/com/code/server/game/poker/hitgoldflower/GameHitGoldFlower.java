@@ -169,7 +169,7 @@ public class GameHitGoldFlower extends Game {
 
         logger.info(userId +"  弃牌!!!");
 
-        aliveUser.remove(userId);
+
 
         Map<String, Object> result = new HashMap<>();
         result.put("userId",userId);
@@ -177,7 +177,8 @@ public class GameHitGoldFlower extends Game {
         ResponseVo vo = new ResponseVo("gameService", "foldResponse", result);
         MsgSender.sendMsg2Player(vo, users);
 
-        if(aliveUser.size()==1){
+        if(aliveUser.size()==2){
+            aliveUser.remove(userId);
             //处理结果
             compute(aliveUser);
             sendResult();
@@ -187,7 +188,8 @@ public class GameHitGoldFlower extends Game {
             room.clearReadyStatus(true);
             sendFinalResult();
         }else{
-            noticeAction(userId);
+            noticeActionByFold(userId);
+            aliveUser.remove(userId);
         }
 
         MsgSender.sendMsg2Player("gameService", "fold", 0, userId);
@@ -541,7 +543,59 @@ public class GameHitGoldFlower extends Game {
     }
 
 
+    /**
+     * 通知操作按钮(下一个)
+     *
+     * @param userId
+     */
+    protected void noticeActionByFold(long userId) {
+        int index = aliveUser.indexOf(userId);
 
+        int nextId = index + 1;
+        if (nextId >= aliveUser.size()) {
+            nextId = 0;
+        }
+        if(getMaxRoundNumberB()||aliveUser.size()==1){
+            campareAllCards();
+        }
+        curUserId =  aliveUser.get(nextId);
+
+        /**
+         protected String call = "1";//跟注
+         protected String raise = "0";//加注  ===
+         protected String fold = "1";//弃牌
+         protected String kill = "1";//比牌
+         protected String see = "0";//看牌    ===
+         */
+        PlayerCardInfoHitGoldFlower playerCardInfo = playerCardInfos.get(curUserId);
+        playerCardInfo.setRaise("1");
+        playerCardInfo.setFold("1");
+        playerCardInfo.setCall("1");
+        playerCardInfo.setKill("1");
+        playerCardInfo.setSee("1");
+        playerCardInfo.setCurRoundNumber(playerCardInfo.getCurRoundNumber()+1);
+        if(seeUser.contains(curUserId) || getMaxRoundNumber() <= room.getMenPai()){
+            playerCardInfo.setSee("0");
+        }
+        if(getMaxRoundNumber() <= room.getMenPai()){
+            playerCardInfo.setKill("0");
+        }
+        if(seeUser.contains(curUserId)){
+            if(chip>=MAX_BET_NUM){
+                playerCardInfo.setRaise("0");
+            }
+        }else{
+            if(chip>=MAX_BET_NUM/2){
+                playerCardInfo.setRaise("0");
+            }
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("playerCardInfo", playerCardInfo);
+        result.put("chip", chip);
+        ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
+        MsgSender.sendMsg2Player(vo, users);
+    }
 
 
     //===========================================
