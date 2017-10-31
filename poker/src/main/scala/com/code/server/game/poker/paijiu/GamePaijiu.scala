@@ -218,7 +218,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     }
 
     //是否已经全开牌
-    val isAllOpen = playerCardInfos.count { case (uid, playerInfo) => playerInfo.group1 == null && playerInfo.group2 == null } == 0
+    val isAllOpen = isAllPlayerOpen()
     if (isAllOpen) {
       gameOver()
     }
@@ -226,6 +226,14 @@ class GamePaijiu extends Game with PaijiuConstant {
     MsgSender.sendMsg2Player("gamePaijiuService", "openResult", Map("userId" -> userId).asJava, users)
     MsgSender.sendMsg2Player("gamePaijiuService", "open", 0, userId)
     0
+  }
+
+  /**
+    * 是否所有人都开牌
+    * @return
+    */
+  protected def isAllPlayerOpen():Boolean = {
+    playerCardInfos.count { case (uid, playerInfo) => playerInfo.group1 == null && playerInfo.group2 == null } == 0
   }
 
   /**

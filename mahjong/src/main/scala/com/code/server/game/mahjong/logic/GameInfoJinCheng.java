@@ -55,7 +55,7 @@ public class GameInfoJinCheng extends GameInfo {
 
         handleHuangzhuangScore();
 
-        sendResult(false, userId);
+        sendResult(false, userId, null);
         /*room.addOneToCircleNumber();
         int nextId = nextTurnId(this.getFirstTurn());
         room.setBankerId(nextId);*/
@@ -84,7 +84,7 @@ public class GameInfoJinCheng extends GameInfo {
 
     protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
         isAlreadyHu = true;
-        sendResult(true, playerCardsInfo.userId);
+        sendResult(true, playerCardsInfo.userId, null);
         //圈
         if (this.getFirstTurn() != playerCardsInfo.getUserId()) {
             //换庄

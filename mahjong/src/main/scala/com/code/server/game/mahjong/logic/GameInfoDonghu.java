@@ -43,7 +43,7 @@ public class GameInfoDonghu extends GameInfo {
 
     @Override
     protected void handleHuangzhuang(long userId) {
-        sendResult(false, userId);
+        sendResult(false, userId, null);
         noticeDissolutionResult();
         //通知所有玩家结束
         room.clearReadyStatus();

@@ -92,7 +92,7 @@ public class GameInfo extends Game {
         this.cardSize = 13;
         this.playerSize = room.getPersonNumber();
         //不带风
-        if ("3".equals(room.getMode()) || "4".equals(room.getMode())||"13".equals(room.getMode())||"14".equals(room.getMode())) {
+        if ("3".equals(room.getMode()) || "4".equals(room.getMode()) || "13".equals(room.getMode()) || "14".equals(room.getMode())) {
             remainCards.removeAll(CardTypeUtil.FENG_CARD);
             remainCards.removeAll(CardTypeUtil.ZI_CARD);
         } else if (GSJ_NOFENG.equals(room.getMode())) {
@@ -174,14 +174,14 @@ public class GameInfo extends Game {
             default:
                 turnResultToZeroOnHuangZhuang();
         }
-        sendResult(false, userId);
+        sendResult(false, userId, null);
         noticeDissolutionResult();
         //通知所有玩家结束
         room.clearReadyStatus();
         //庄家换下个人
-        if(room instanceof RoomInfo){
-            RoomInfo roomInfo = (RoomInfo)room;
-            if(roomInfo.isChangeBankerAfterHuangZhuang()){
+        if (room instanceof RoomInfo) {
+            RoomInfo roomInfo = (RoomInfo) room;
+            if (roomInfo.isChangeBankerAfterHuangZhuang()) {
                 room.setBankerId(nextTurnId(room.getBankerId()));
             }
 
@@ -199,10 +199,11 @@ public class GameInfo extends Game {
 
     /**
      * 摸一张牌
+     *
      * @param playerCardsInfo
      * @return
      */
-    protected String getMoPaiCard(PlayerCardsInfoMj playerCardsInfo){
+    protected String getMoPaiCard(PlayerCardsInfoMj playerCardsInfo) {
         //拿出一张
         String card = null;
         //有换牌需求
@@ -224,12 +225,14 @@ public class GameInfo extends Game {
 
     /**
      * 是否荒庄
+     *
      * @param playerCardsInfo
      * @return
      */
-    protected boolean isHuangzhuang(PlayerCardsInfoMj playerCardsInfo){
+    protected boolean isHuangzhuang(PlayerCardsInfoMj playerCardsInfo) {
         return playerCardsInfo.isHuangzhuang(this);
     }
+
     /**
      * 摸牌
      *
@@ -403,11 +406,46 @@ public class GameInfo extends Game {
             long nextId = nextTurnId(turnId);
             mopai(nextId, "userId : " + userId + " 出牌");
         } else {
-            //比较
-            compare(waitingforList);
+            //todo 一炮多响
+            if (this.room.isYipaoduoxiang &&waitingforList.stream().filter(waitDetail -> waitDetail.isHu).count() >= 2) {
+                handleYiPaoDuoXiang();
+            } else {
+                //比较
+                compare(waitingforList);
+            }
         }
         return 0;
 
+    }
+
+    protected void handleYiPaoDuoXiang() {
+
+        List<Long> yipaoduoxiang = new ArrayList<>();
+
+        //删除弃牌
+        deleteDisCard(lastPlayUserId, disCard);
+        this.waitingforList.forEach(waitDetail -> {
+            long uid = waitDetail.myUserId;
+            yipaoduoxiang.add(uid);
+            PlayerCardsInfoMj playerCardsInfoMj = playerCardsInfos.get(uid);
+            playerCardsInfoMj.hu_dianpao(room, this, lastPlayUserId, disCard);
+        });
+
+        //todo 下次的庄家
+
+        //回放
+        OperateReqResp operateReqResp = new OperateReqResp();
+        operateReqResp.setYipaoduoxiangUser(yipaoduoxiang);
+        operateReqResp.setOperateType(OperateReqResp.type_yipaoduoxiang);
+        operateReqResp.setIsMing(true);
+        replay.getOperate().add(operateReqResp);
+
+//        handleHu(playerCardsInfo);
+
+        isAlreadyHu = true;
+        sendResult(true, -1L, yipaoduoxiang);
+        noticeDissolutionResult();
+        room.clearReadyStatus();
     }
 
 
@@ -669,7 +707,6 @@ public class GameInfo extends Game {
             MsgSender.sendMsg2Player(vo, users);
 
 
-
             if (isHasJieGangHu && isMing) {
 
                 for (Map.Entry<Long, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
@@ -838,14 +875,15 @@ public class GameInfo extends Game {
 
     /**
      * 设置庄家
+     *
      * @param winnerId
      */
-    private void setBanker(long winnerId){
-        if(winnerId == this.getFirstTurn()){
+    private void setBanker(long winnerId) {
+        if (winnerId == this.getFirstTurn()) {
 
             room.setBankerId(winnerId);
-        }else {
-           long nextId = nextTurnId(this.getFirstTurn());
+        } else {
+            long nextId = nextTurnId(this.getFirstTurn());
             room.setBankerId(nextId);
         }
     }
@@ -947,7 +985,7 @@ public class GameInfo extends Game {
 
     protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
         isAlreadyHu = true;
-        sendResult(true, playerCardsInfo.getUserId());
+        sendResult(true, playerCardsInfo.getUserId(), null);
         noticeDissolutionResult();
         room.clearReadyStatus();
     }
@@ -977,16 +1015,20 @@ public class GameInfo extends Game {
 
     /**
      * 发送结果
-     *
-     * @param isHasWinner
+     *  @param isHasWinner
      * @param winnerId
+     * @param yipaoduoxiang
      */
-    protected void sendResult(boolean isHasWinner, long winnerId) {
+    protected void sendResult(boolean isHasWinner, Long winnerId, List<Long> yipaoduoxiang) {
         ResultResp result = new ResultResp();
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_RESULT, result);
 
         if (isHasWinner) {
-            result.setWinnerId(winnerId);
+            if (yipaoduoxiang == null) {
+                result.setWinnerId(winnerId);
+            }else{
+                result.setYipaoduoxiang(yipaoduoxiang);
+            }
             result.setBaoCard(baoCard);
         }
         List<PlayerCardsResp> list = new ArrayList<>();
@@ -1102,7 +1144,7 @@ public class GameInfo extends Game {
         //从等待列表删除
 //        if (waitingforList.size() > 0) {
         WaitDetail waitDetail = waitingforList.get(0);
-        if (waitDetail != null & waitDetail.myUserId == userId && waitDetail.isChi) {
+        if (waitDetail != null && waitDetail.myUserId == userId && waitDetail.isChi) {
             waitingforList.clear();
         } else {
             return ErrorCode.NOT_TURN;

@@ -352,12 +352,6 @@ public class PlayerCardsInfoQAKT extends PlayerCardsInfoMj {
         return super.isCanPengAddThisCard(card);
     }
 
-    @Override
-    public void hu_dianpao(RoomInfo room, GameInfo gameInfo, long dianpaoUser, String disCard) {
-
-        super.hu_dianpao(room, gameInfo, dianpaoUser, disCard);
-    }
-
     private int getScoreByHuCardType(HuCardType huCardType,int cardType) {
         int score_init = 1;
         if (huCardType.specialHuList.contains(hu_夹张)) {

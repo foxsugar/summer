@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by sunxianping on 2017/3/29.
@@ -63,7 +64,7 @@ public class GameRpcNewHandler implements GameRPCNew.AsyncIface {
         //充值记录
         if (order.getAgentId() != 0 && order.getType() == ChargeType.money.getValue()) {
             Charge charge = new Charge();
-            charge.setOrderId(""+IdWorker.getDefaultInstance().nextId());
+            charge.setOrderId("" + IdWorker.getDefaultInstance().nextId());
             charge.setUserid(order.getUserId());
             charge.setUsername(name);
             charge.setCreatetime(new Date());
@@ -71,7 +72,7 @@ public class GameRpcNewHandler implements GameRPCNew.AsyncIface {
             charge.setOrigin(order.getAgentId());
             charge.setMoney(order.getNum());
             charge.setMoney_point(order.getNum());
-            charge.setRecharge_source(""+IChargeType.AGENT);
+            charge.setRecharge_source("" + IChargeType.AGENT);
             charge.setStatus(1);
             SpringUtil.getBean(ChargeService.class).save(charge);
 
@@ -196,7 +197,9 @@ public class GameRpcNewHandler implements GameRPCNew.AsyncIface {
 
     @Override
     public void getBlackList(AsyncMethodCallback<Set<Long>> resultHandler) throws TException {
-
+        ServerManager.init();
+        Set<Long> set = ServerManager.constant.getBlackList().stream().mapToLong(Long::valueOf).boxed().collect(Collectors.toSet());
+        resultHandler.onComplete(set);
     }
 
     @Override
@@ -210,7 +213,7 @@ public class GameRpcNewHandler implements GameRPCNew.AsyncIface {
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         if (userBean != null) {
             userBean.setReferee(referee);
-            RedisManager.getUserRedisService().updateUserBean(userBean.getId(),userBean);
+            RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
         } else {
             UserService userService = SpringUtil.getBean(UserService.class);
             User user = userService.getUserByUserId(userId);

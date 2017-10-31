@@ -1,11 +1,11 @@
 package com.code.server.game.poker.paijiu
 
-import com.code.server.constant.game.IGameConstant
+import com.code.server.constant.game.{IGameConstant, RoomStatistics}
 import com.code.server.constant.response.{ErrorCode, IfaceRoomVo, ResponseVo, RoomPaijiuVo}
 import com.code.server.game.poker.config.ServerConfig
+import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
-import com.code.server.game.room.{Game, Room}
 import com.code.server.util.timer.GameTimer
 import com.code.server.util.{IdWorker, SpringUtil}
 import org.springframework.beans.BeanUtils
@@ -31,10 +31,12 @@ class RoomPaijiu extends Room {
   var testUserId:Long = 0
 
 
-  override protected def getGameInstance: Game = gameType match {
-    case "11" => new GamePaijiuEndless
-    case _ => new GamePaijiu
-  }
+//  override protected def getGameInstance: Game = gameType match {
+//    case "11" => new GamePaijiuEndless
+//    case "12"=> new GamePaijiu2Cards
+//    case "13"=>new GamePaijiu2CardsEndless
+//    case _ => new GamePaijiu
+//  }
 
   override def startGame(): Unit = {
     //do nothing
@@ -106,8 +108,18 @@ class RoomPaijiu extends Room {
     0
   }
 
+  override protected def roomAddUser(userId: Long): Unit = {
+    this.users.add(userId)
+    this.userStatus.put(userId, 0)
+    this.userScores.put(userId, 0D)
+    this.roomStatisticsMap.put(userId, new RoomStatistics(userId))
+    this.canStartUserId = users.get(0)
+    if (!isCreaterJoin) this.bankerId = users.get(0)
+    addUser2RoomRedis(userId)
+  }
+
   override def toVo(userId: Long): IfaceRoomVo = {
-    val roomVo:RoomPaijiuVo = new RoomPaijiuVo
+    val roomVo = new RoomPaijiuVo
     BeanUtils.copyProperties(super.toVo(userId), roomVo)
     roomVo.setBankerInitScore(this.bankerInitScore)
     roomVo.setBankerScore(this.bankerScore)

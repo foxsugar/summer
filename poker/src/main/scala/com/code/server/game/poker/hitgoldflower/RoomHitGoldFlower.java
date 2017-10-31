@@ -15,11 +15,11 @@ package com.code.server.game.poker.hitgoldflower;
 
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.IGameConstant;
+import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
 import com.code.server.game.poker.config.ServerConfig;
-import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
@@ -38,6 +38,11 @@ import java.util.Map;
 
 public class RoomHitGoldFlower extends Room {
 
+    //扎金花专用
+    protected double caiFen;
+    protected int menPai;
+    protected int cricleNumber;//轮数
+
     protected Map<Long, Integer> baoziNum = new HashMap<>();
     protected Map<Long, Integer> tonghuashunNum = new HashMap<>();
     protected Map<Long, Integer> tonghuaNum = new HashMap<>();
@@ -45,24 +50,20 @@ public class RoomHitGoldFlower extends Room {
     protected Map<Long, Integer> duiziNum = new HashMap<>();
     protected Map<Long, Integer> sanpaiNum = new HashMap<>();
 
-    public static final Map<Integer,Integer> needsMoney = new HashMap<>();
 
-    static {
-        needsMoney.put(6,1);
-        needsMoney.put(12,2);
-        needsMoney.put(20,3);
-    }
 
-    @Override
-    protected Game getGameInstance() {
-        switch (gameType) {
-            case GAMETYPE_HITGOLDFLOWER:
-                return new GameHitGoldFlower();
-            default:
-                return new GameHitGoldFlower();
-        }
 
-    }
+
+//    @Override
+//    protected Game getGameInstance() {
+//        switch (gameType) {
+//            case GAMETYPE_HITGOLDFLOWER:
+//                return new GameHitGoldFlower();
+//            default:
+//                return new GameHitGoldFlower();
+//        }
+//
+//    }
 
 
     public static RoomHitGoldFlower getRoomInstance(String roomType){
@@ -90,8 +91,6 @@ public class RoomHitGoldFlower extends Room {
         room.menPai = menPai;
         room.bankerId = userId;
         room.cricleNumber = cricleNumber;
-
-        room.createNeedMoney = needsMoney.get(gameNumber);
 
         room.init(gameNumber, multiple);
 
@@ -171,6 +170,11 @@ public class RoomHitGoldFlower extends Room {
             room.roomRemoveUser(i);
         }
 
+        //游戏开始 代建房 去除定时解散
+        if(!room.isOpen && !room.isCreaterJoin()){
+            GameTimer.removeNode(room.prepareRoomTimerNode);
+        }
+
         //通知其他人游戏已经开始
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameHitGoldFlowerBegin", "ok"), room.users);
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "startGameByClient", 0), userId);
@@ -181,16 +185,57 @@ public class RoomHitGoldFlower extends Room {
         return 0;
     }
 
+
+    @Override
+    public void noticeJoinRoom(long userId) {
+        List<UserVo> usersList = new ArrayList<>();
+        UserOfRoom userOfRoom = new UserOfRoom();
+        int readyNumber = 0;
+//        for (long uid : users) {
+//            User user = this.userMap.get(uid);
+//            usersList.add(GameManager.getUserVo(user));
+//        }
+
+
+        for (UserBean userBean : RedisManager.getUserRedisService().getUserBeans(users)) {
+            userOfRoom.getUserList().add(userBean.toVo());
+        }
+
+
+        userOfRoom.setInRoomNumber(users.size());
+        userOfRoom.setReadyNumber(readyNumber);
+
+        Map<Long, Double> scoresMap = new HashMap<>();
+        for (Long l : users) {
+            scoresMap.put(l, 1000.0);
+        }
+        userOfRoom.setUserScores(scoresMap);
+        userOfRoom.setCanStartUserId(users.get(0));
+
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "joinRoom", this.toVo(userId)), userId);
+
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "roomNotice", userOfRoom), this.getUsers());
+
+
+    }
+
     public void spendMoney() {
         RedisManager.getUserRedisService().addUserMoney(this.createUser, -createNeedMoney);
     }
 
-
-    public void init(int gameNumber, int multiple) throws DataNotFoundException {
-        this.multiple = multiple;
-        this.gameNumber = gameNumber;
-        this.isInGame = false;
-        this.bankerId = createUser;
+    @Override
+    public PrepareRoom getPrepareRoomVo() {
+        PrepareRoom prepareRoom = new PrepareRoom();
+        prepareRoom.createTime = System.currentTimeMillis();
+        prepareRoom.gameType = this.getGameType();
+        prepareRoom.roomType = this.getRoomType();
+        prepareRoom.roomId = this.roomId;
+        prepareRoom.multiple = this.multiple;
+        prepareRoom.gameNumber = this.gameNumber;
+        prepareRoom.caiFen = this.caiFen;
+        prepareRoom.menPai = this.menPai;
+        prepareRoom.cricleNumber = this.cricleNumber;
+        return prepareRoom;
     }
 
     protected void roomAddUser(long userId) {
@@ -360,5 +405,30 @@ public class RoomHitGoldFlower extends Room {
         }
 
         return roomVo;
+    }
+
+
+    public double getCaiFen() {
+        return caiFen;
+    }
+
+    public void setCaiFen(double caiFen) {
+        this.caiFen = caiFen;
+    }
+
+    public int getMenPai() {
+        return menPai;
+    }
+
+    public void setMenPai(int menPai) {
+        this.menPai = menPai;
+    }
+
+    public int getCricleNumber() {
+        return cricleNumber;
+    }
+
+    public void setCricleNumber(int cricleNumber) {
+        this.cricleNumber = cricleNumber;
     }
 }
