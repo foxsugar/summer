@@ -19,7 +19,7 @@ public class GameHitGoldFlower extends Game {
 
     private static final Double INIT_BOTTOM_CHIP = 1.0;//底注
     private static final int INIT_CARD_NUM = 3;//玩家牌数3张
-    private static final Double MAX_BET_NUM = 1000.0;//最大投注数
+    private static final Double MAX_BET_NUM = 100.0;//最大投注数
 
     protected List<Integer> cards = new ArrayList<>();//牌
     public Map<Long, PlayerCardInfoHitGoldFlower> playerCardInfos = new HashMap<>();
@@ -95,12 +95,12 @@ public class GameHitGoldFlower extends Game {
         }
 
         if(seeUser.contains(userId)){
-            if(addChip!=chip*2+2 && addChip!=chip*2*2 && addChip!=chip*2*4 && addChip!=1000.0){
+            if(addChip!=chip*2+2 && addChip!=chip*2*2 && addChip!=chip*2*4 && addChip!=MAX_BET_NUM){
                 return ErrorCode.BET_WRONG;
             }
             chip = addChip/2;
         }else{
-            if(addChip!=chip+2 && addChip!=chip*2 && addChip!=chip*4 && addChip!=500.0){
+            if(addChip!=chip+2 && addChip!=chip*2 && addChip!=chip*4 && addChip!=MAX_BET_NUM/2){
                 return ErrorCode.BET_WRONG;
             }
             chip = addChip;
