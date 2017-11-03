@@ -206,11 +206,18 @@ public class RoomHitGoldFlower extends Room {
         userOfRoom.setReadyNumber(readyNumber);
 
         Map<Long, Double> scoresMap = new HashMap<>();
-        for (Long l : users) {
-            scoresMap.put(l, 1000.0);
+        if("30".equals(getGameType())){
+            for (Long l : users) {
+                scoresMap.put(l, 1000.0);
+            }
+        }else{
+            for (Long l : users) {
+                scoresMap.put(l, 0.0);
+            }
         }
         userOfRoom.setUserScores(scoresMap);
         userOfRoom.setCanStartUserId(users.get(0));
+
 
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "joinRoom", this.toVo(userId)), userId);
 
@@ -242,7 +249,12 @@ public class RoomHitGoldFlower extends Room {
 
         this.users.add(userId);
         this.userStatus.put(userId, 0);
-        this.userScores.put(userId, 1000D);
+
+        if("30".equals(getGameType())){
+            this.userScores.put(userId, 1000.0);
+        }else{
+            this.userScores.put(userId, 0.0);
+        }
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         this.canStartUserId = users.get(0);
         addUser2RoomRedis(userId);
@@ -255,7 +267,11 @@ public class RoomHitGoldFlower extends Room {
             UserOfResult resultObj = new UserOfResult();
             resultObj.setUsername(eachUser.getUsername());
             resultObj.setImage(eachUser.getImage());
-            resultObj.setScores(this.userScores.get(eachUser.getId())-1000.0 + "");
+            if("30".equals(getGameType())){
+                resultObj.setScores(this.userScores.get(eachUser.getId()) + "");
+            }else{
+                resultObj.setScores(this.userScores.get(eachUser.getId())-1000.0 + "");
+            }
             resultObj.setUserId(eachUser.getId());
             resultObj.setTime(time);
             resultObj.setRoomStatistics(roomStatisticsMap.get(eachUser.getId()));

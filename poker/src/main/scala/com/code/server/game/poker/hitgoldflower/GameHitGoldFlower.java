@@ -1,6 +1,7 @@
 package com.code.server.game.poker.hitgoldflower;
 
 
+import com.code.server.constant.data.DataManager;
 import com.code.server.constant.response.*;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
@@ -19,7 +20,6 @@ public class GameHitGoldFlower extends Game {
 
     private static final Double INIT_BOTTOM_CHIP = 1.0;//底注
     private static final int INIT_CARD_NUM = 3;//玩家牌数3张
-    private static final Double MAX_BET_NUM = 100.0;//最大投注数
 
     protected List<Integer> cards = new ArrayList<>();//牌
     public Map<Long, PlayerCardInfoHitGoldFlower> playerCardInfos = new HashMap<>();
@@ -38,7 +38,8 @@ public class GameHitGoldFlower extends Game {
     protected RoomHitGoldFlower room;
 
     protected long lastOperateTime;
-
+    //private Double MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();//最大下注数
+    private Double MAX_BET_NUM = 0.0;
 
     public void init(List<Long> users) {
         //初始化玩家
@@ -93,7 +94,7 @@ public class GameHitGoldFlower extends Game {
         if (userId!=curUserId) {//判断是否到顺序
             return ErrorCode.NOT_YOU_TURN;
         }
-
+        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
         if(seeUser.contains(userId)){
             if(addChip!=chip*2+2 && addChip!=chip*2*2 && addChip!=chip*2*4 && addChip!=MAX_BET_NUM){
                 return ErrorCode.BET_WRONG;
@@ -459,6 +460,8 @@ public class GameHitGoldFlower extends Game {
      */
     protected void noticeActionSelf(long userId) {
 
+        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
+
         /**
          protected String call = "1";//跟注
          protected String raise = "0";//加注  ===
@@ -502,6 +505,7 @@ public class GameHitGoldFlower extends Game {
      * @param userId
      */
     protected void noticeAction(long userId) {
+        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
         curUserId = nextActioner(userId);
         /**
          protected String call = "1";//跟注
@@ -547,6 +551,7 @@ public class GameHitGoldFlower extends Game {
      * @param userId
      */
     protected void noticeActionByFold(long userId) {
+        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
         int index = aliveUser.indexOf(userId);
 
         int nextId = index + 1;

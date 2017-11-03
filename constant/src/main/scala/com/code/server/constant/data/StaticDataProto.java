@@ -3551,11 +3551,16 @@ public final class StaticDataProto {
         int key);
 
     /**
-     * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+     * <code>double maxBet = 3;</code>
+     */
+    double getMaxBet();
+
+    /**
+     * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
      */
     int getEachMoneyCount();
     /**
-     * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+     * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
      */
     boolean containsEachMoney(
         int key);
@@ -3566,35 +3571,35 @@ public final class StaticDataProto {
     java.util.Map<java.lang.Integer, java.lang.Integer>
     getEachMoney();
     /**
-     * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+     * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
      */
     java.util.Map<java.lang.Integer, java.lang.Integer>
     getEachMoneyMap();
     /**
-     * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+     * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
      */
 
     int getEachMoneyOrDefault(
         int key,
         int defaultValue);
     /**
-     * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+     * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
      */
 
     int getEachMoneyOrThrow(
         int key);
 
     /**
-     * <code>int32 isAddGold = 4;</code>
+     * <code>int32 isAddGold = 5;</code>
      */
     int getIsAddGold();
 
     /**
-     * <code>string instanceName = 5;</code>
+     * <code>string instanceName = 6;</code>
      */
     java.lang.String getInstanceName();
     /**
-     * <code>string instanceName = 5;</code>
+     * <code>string instanceName = 6;</code>
      */
     com.google.protobuf.ByteString
         getInstanceNameBytes();
@@ -3612,6 +3617,7 @@ public final class StaticDataProto {
     }
     private RoomData() {
       id_ = "";
+      maxBet_ = 0D;
       isAddGold_ = 0;
       instanceName_ = "";
     }
@@ -3660,11 +3666,16 @@ public final class StaticDataProto {
                   money__.getKey(), money__.getValue());
               break;
             }
-            case 26: {
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+            case 25: {
+
+              maxBet_ = input.readDouble();
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
                 eachMoney_ = com.google.protobuf.MapField.newMapField(
                     EachMoneyDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000004;
+                mutable_bitField0_ |= 0x00000008;
               }
               com.google.protobuf.MapEntry<java.lang.Integer, java.lang.Integer>
               eachMoney__ = input.readMessage(
@@ -3673,12 +3684,12 @@ public final class StaticDataProto {
                   eachMoney__.getKey(), eachMoney__.getValue());
               break;
             }
-            case 32: {
+            case 40: {
 
               isAddGold_ = input.readInt32();
               break;
             }
-            case 42: {
+            case 50: {
               java.lang.String s = input.readStringRequireUtf8();
 
               instanceName_ = s;
@@ -3706,7 +3717,7 @@ public final class StaticDataProto {
       switch (number) {
         case 2:
           return internalGetMoney();
-        case 3:
+        case 4:
           return internalGetEachMoney();
         default:
           throw new RuntimeException(
@@ -3831,7 +3842,16 @@ public final class StaticDataProto {
       return map.get(key);
     }
 
-    public static final int EACHMONEY_FIELD_NUMBER = 3;
+    public static final int MAXBET_FIELD_NUMBER = 3;
+    private double maxBet_;
+    /**
+     * <code>double maxBet = 3;</code>
+     */
+    public double getMaxBet() {
+      return maxBet_;
+    }
+
+    public static final int EACHMONEY_FIELD_NUMBER = 4;
     private static final class EachMoneyDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.Integer, java.lang.Integer> defaultEntry =
@@ -3858,7 +3878,7 @@ public final class StaticDataProto {
       return internalGetEachMoney().getMap().size();
     }
     /**
-     * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+     * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
      */
 
     public boolean containsEachMoney(
@@ -3874,14 +3894,14 @@ public final class StaticDataProto {
       return getEachMoneyMap();
     }
     /**
-     * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+     * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
      */
 
     public java.util.Map<java.lang.Integer, java.lang.Integer> getEachMoneyMap() {
       return internalGetEachMoney().getMap();
     }
     /**
-     * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+     * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
      */
 
     public int getEachMoneyOrDefault(
@@ -3893,7 +3913,7 @@ public final class StaticDataProto {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+     * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
      */
 
     public int getEachMoneyOrThrow(
@@ -3907,19 +3927,19 @@ public final class StaticDataProto {
       return map.get(key);
     }
 
-    public static final int ISADDGOLD_FIELD_NUMBER = 4;
+    public static final int ISADDGOLD_FIELD_NUMBER = 5;
     private int isAddGold_;
     /**
-     * <code>int32 isAddGold = 4;</code>
+     * <code>int32 isAddGold = 5;</code>
      */
     public int getIsAddGold() {
       return isAddGold_;
     }
 
-    public static final int INSTANCENAME_FIELD_NUMBER = 5;
+    public static final int INSTANCENAME_FIELD_NUMBER = 6;
     private volatile java.lang.Object instanceName_;
     /**
-     * <code>string instanceName = 5;</code>
+     * <code>string instanceName = 6;</code>
      */
     public java.lang.String getInstanceName() {
       java.lang.Object ref = instanceName_;
@@ -3934,7 +3954,7 @@ public final class StaticDataProto {
       }
     }
     /**
-     * <code>string instanceName = 5;</code>
+     * <code>string instanceName = 6;</code>
      */
     public com.google.protobuf.ByteString
         getInstanceNameBytes() {
@@ -3971,17 +3991,20 @@ public final class StaticDataProto {
           internalGetMoney(),
           MoneyDefaultEntryHolder.defaultEntry,
           2);
+      if (maxBet_ != 0D) {
+        output.writeDouble(3, maxBet_);
+      }
       com.google.protobuf.GeneratedMessageV3
         .serializeIntegerMapTo(
           output,
           internalGetEachMoney(),
           EachMoneyDefaultEntryHolder.defaultEntry,
-          3);
+          4);
       if (isAddGold_ != 0) {
-        output.writeInt32(4, isAddGold_);
+        output.writeInt32(5, isAddGold_);
       }
       if (!getInstanceNameBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, instanceName_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, instanceName_);
       }
     }
 
@@ -4003,6 +4026,10 @@ public final class StaticDataProto {
         size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(2, money__);
       }
+      if (maxBet_ != 0D) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(3, maxBet_);
+      }
       for (java.util.Map.Entry<java.lang.Integer, java.lang.Integer> entry
            : internalGetEachMoney().getMap().entrySet()) {
         com.google.protobuf.MapEntry<java.lang.Integer, java.lang.Integer>
@@ -4011,14 +4038,14 @@ public final class StaticDataProto {
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(3, eachMoney__);
+            .computeMessageSize(4, eachMoney__);
       }
       if (isAddGold_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, isAddGold_);
+          .computeInt32Size(5, isAddGold_);
       }
       if (!getInstanceNameBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, instanceName_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, instanceName_);
       }
       memoizedSize = size;
       return size;
@@ -4040,6 +4067,10 @@ public final class StaticDataProto {
           .equals(other.getId());
       result = result && internalGetMoney().equals(
           other.internalGetMoney());
+      result = result && (
+          java.lang.Double.doubleToLongBits(getMaxBet())
+          == java.lang.Double.doubleToLongBits(
+              other.getMaxBet()));
       result = result && internalGetEachMoney().equals(
           other.internalGetEachMoney());
       result = result && (getIsAddGold()
@@ -4062,6 +4093,9 @@ public final class StaticDataProto {
         hash = (37 * hash) + MONEY_FIELD_NUMBER;
         hash = (53 * hash) + internalGetMoney().hashCode();
       }
+      hash = (37 * hash) + MAXBET_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getMaxBet()));
       if (!internalGetEachMoney().getMap().isEmpty()) {
         hash = (37 * hash) + EACHMONEY_FIELD_NUMBER;
         hash = (53 * hash) + internalGetEachMoney().hashCode();
@@ -4170,7 +4204,7 @@ public final class StaticDataProto {
         switch (number) {
           case 2:
             return internalGetMoney();
-          case 3:
+          case 4:
             return internalGetEachMoney();
           default:
             throw new RuntimeException(
@@ -4183,7 +4217,7 @@ public final class StaticDataProto {
         switch (number) {
           case 2:
             return internalGetMutableMoney();
-          case 3:
+          case 4:
             return internalGetMutableEachMoney();
           default:
             throw new RuntimeException(
@@ -4217,6 +4251,8 @@ public final class StaticDataProto {
         id_ = "";
 
         internalGetMutableMoney().clear();
+        maxBet_ = 0D;
+
         internalGetMutableEachMoney().clear();
         isAddGold_ = 0;
 
@@ -4249,6 +4285,7 @@ public final class StaticDataProto {
         result.id_ = id_;
         result.money_ = internalGetMoney();
         result.money_.makeImmutable();
+        result.maxBet_ = maxBet_;
         result.eachMoney_ = internalGetEachMoney();
         result.eachMoney_.makeImmutable();
         result.isAddGold_ = isAddGold_;
@@ -4301,6 +4338,9 @@ public final class StaticDataProto {
         }
         internalGetMutableMoney().mergeFrom(
             other.internalGetMoney());
+        if (other.getMaxBet() != 0D) {
+          setMaxBet(other.getMaxBet());
+        }
         internalGetMutableEachMoney().mergeFrom(
             other.internalGetEachMoney());
         if (other.getIsAddGold() != 0) {
@@ -4529,6 +4569,32 @@ public final class StaticDataProto {
         return this;
       }
 
+      private double maxBet_ ;
+      /**
+       * <code>double maxBet = 3;</code>
+       */
+      public double getMaxBet() {
+        return maxBet_;
+      }
+      /**
+       * <code>double maxBet = 3;</code>
+       */
+      public Builder setMaxBet(double value) {
+        
+        maxBet_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>double maxBet = 3;</code>
+       */
+      public Builder clearMaxBet() {
+        
+        maxBet_ = 0D;
+        onChanged();
+        return this;
+      }
+
       private com.google.protobuf.MapField<
           java.lang.Integer, java.lang.Integer> eachMoney_;
       private com.google.protobuf.MapField<java.lang.Integer, java.lang.Integer>
@@ -4556,7 +4622,7 @@ public final class StaticDataProto {
         return internalGetEachMoney().getMap().size();
       }
       /**
-       * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+       * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
        */
 
       public boolean containsEachMoney(
@@ -4572,14 +4638,14 @@ public final class StaticDataProto {
         return getEachMoneyMap();
       }
       /**
-       * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+       * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
        */
 
       public java.util.Map<java.lang.Integer, java.lang.Integer> getEachMoneyMap() {
         return internalGetEachMoney().getMap();
       }
       /**
-       * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+       * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
        */
 
       public int getEachMoneyOrDefault(
@@ -4591,7 +4657,7 @@ public final class StaticDataProto {
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+       * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
        */
 
       public int getEachMoneyOrThrow(
@@ -4611,7 +4677,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+       * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
        */
 
       public Builder removeEachMoney(
@@ -4630,7 +4696,7 @@ public final class StaticDataProto {
         return internalGetMutableEachMoney().getMutableMap();
       }
       /**
-       * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+       * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
        */
       public Builder putEachMoney(
           int key,
@@ -4642,7 +4708,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;int32, int32&gt; eachMoney = 3;</code>
+       * <code>map&lt;int32, int32&gt; eachMoney = 4;</code>
        */
 
       public Builder putAllEachMoney(
@@ -4654,13 +4720,13 @@ public final class StaticDataProto {
 
       private int isAddGold_ ;
       /**
-       * <code>int32 isAddGold = 4;</code>
+       * <code>int32 isAddGold = 5;</code>
        */
       public int getIsAddGold() {
         return isAddGold_;
       }
       /**
-       * <code>int32 isAddGold = 4;</code>
+       * <code>int32 isAddGold = 5;</code>
        */
       public Builder setIsAddGold(int value) {
         
@@ -4669,7 +4735,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>int32 isAddGold = 4;</code>
+       * <code>int32 isAddGold = 5;</code>
        */
       public Builder clearIsAddGold() {
         
@@ -4680,7 +4746,7 @@ public final class StaticDataProto {
 
       private java.lang.Object instanceName_ = "";
       /**
-       * <code>string instanceName = 5;</code>
+       * <code>string instanceName = 6;</code>
        */
       public java.lang.String getInstanceName() {
         java.lang.Object ref = instanceName_;
@@ -4695,7 +4761,7 @@ public final class StaticDataProto {
         }
       }
       /**
-       * <code>string instanceName = 5;</code>
+       * <code>string instanceName = 6;</code>
        */
       public com.google.protobuf.ByteString
           getInstanceNameBytes() {
@@ -4711,7 +4777,7 @@ public final class StaticDataProto {
         }
       }
       /**
-       * <code>string instanceName = 5;</code>
+       * <code>string instanceName = 6;</code>
        */
       public Builder setInstanceName(
           java.lang.String value) {
@@ -4724,7 +4790,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>string instanceName = 5;</code>
+       * <code>string instanceName = 6;</code>
        */
       public Builder clearInstanceName() {
         
@@ -4733,7 +4799,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>string instanceName = 5;</code>
+       * <code>string instanceName = 6;</code>
        */
       public Builder setInstanceNameBytes(
           com.google.protobuf.ByteString value) {
@@ -6589,23 +6655,23 @@ public final class StaticDataProto {
       "a\022\n\n\002id\030\001 \001(\005\022\014\n\004card\030\002 \001(\005\"/\n\023PaijiuCar" +
       "dGroupData\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\"5\n\030",
       "PaijiuCardGroupScoreData\022\n\n\002id\030\001 \001(\t\022\r\n\005" +
-      "score\030\002 \001(\005\"\361\001\n\010RoomData\022\n\n\002id\030\001 \001(\t\022#\n\005" +
-      "money\030\002 \003(\0132\024.RoomData.MoneyEntry\022+\n\teac" +
-      "hMoney\030\003 \003(\0132\030.RoomData.EachMoneyEntry\022\021" +
-      "\n\tisAddGold\030\004 \001(\005\022\024\n\014instanceName\030\005 \001(\t\032" +
-      ",\n\nMoneyEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(" +
-      "\005:\0028\001\0320\n\016EachMoneyEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005" +
-      "value\030\002 \001(\005:\0028\001\"\275\002\n\010TestData\022\n\n\002id\030\001 \001(\005" +
-      "\022\014\n\004name\030\002 \001(\t\022\013\n\003age\030\003 \001(\005\022\013\n\003exp\030\004 \003(\005" +
-      "\022%\n\006weapon\030\005 \003(\0132\025.TestData.WeaponEntry\022",
-      "\020\n\010testLong\030\006 \001(\003\022\022\n\ntestDouble\030\007 \001(\001\022\026\n" +
-      "\016testListDouble\030\010 \003(\001\0223\n\rtestMapDouble\030\t" +
-      " \003(\0132\034.TestData.TestMapDoubleEntry\032-\n\013We" +
-      "aponEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\t:\0028" +
-      "\001\0324\n\022TestMapDoubleEntry\022\013\n\003key\030\001 \001(\003\022\r\n\005" +
-      "value\030\002 \001(\001:\0028\001B?\n\035com.code.server.const" +
-      "ant.dataB\017StaticDataProto\252\002\014com.bsl.data" +
-      "b\006proto3"
+      "score\030\002 \001(\005\"\201\002\n\010RoomData\022\n\n\002id\030\001 \001(\t\022#\n\005" +
+      "money\030\002 \003(\0132\024.RoomData.MoneyEntry\022\016\n\006max" +
+      "Bet\030\003 \001(\001\022+\n\teachMoney\030\004 \003(\0132\030.RoomData." +
+      "EachMoneyEntry\022\021\n\tisAddGold\030\005 \001(\005\022\024\n\014ins" +
+      "tanceName\030\006 \001(\t\032,\n\nMoneyEntry\022\013\n\003key\030\001 \001" +
+      "(\005\022\r\n\005value\030\002 \001(\005:\0028\001\0320\n\016EachMoneyEntry\022" +
+      "\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\005:\0028\001\"\275\002\n\010Test" +
+      "Data\022\n\n\002id\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\022\013\n\003age\030\003 " +
+      "\001(\005\022\013\n\003exp\030\004 \003(\005\022%\n\006weapon\030\005 \003(\0132\025.TestD",
+      "ata.WeaponEntry\022\020\n\010testLong\030\006 \001(\003\022\022\n\ntes" +
+      "tDouble\030\007 \001(\001\022\026\n\016testListDouble\030\010 \003(\001\0223\n" +
+      "\rtestMapDouble\030\t \003(\0132\034.TestData.TestMapD" +
+      "oubleEntry\032-\n\013WeaponEntry\022\013\n\003key\030\001 \001(\005\022\r" +
+      "\n\005value\030\002 \001(\t:\0028\001\0324\n\022TestMapDoubleEntry\022" +
+      "\013\n\003key\030\001 \001(\003\022\r\n\005value\030\002 \001(\001:\0028\001B?\n\035com.c" +
+      "ode.server.constant.dataB\017StaticDataProt" +
+      "o\252\002\014com.bsl.datab\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -6678,7 +6744,7 @@ public final class StaticDataProto {
     internal_static_RoomData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_RoomData_descriptor,
-        new java.lang.String[] { "Id", "Money", "EachMoney", "IsAddGold", "InstanceName", });
+        new java.lang.String[] { "Id", "Money", "MaxBet", "EachMoney", "IsAddGold", "InstanceName", });
     internal_static_RoomData_MoneyEntry_descriptor =
       internal_static_RoomData_descriptor.getNestedTypes().get(0);
     internal_static_RoomData_MoneyEntry_fieldAccessorTable = new
