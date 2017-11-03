@@ -3,6 +3,8 @@ package com.code.server.constant.game;
 import com.code.server.constant.db.UserInfo;
 import com.code.server.constant.response.UserVo;
 
+import java.util.Date;
+
 /**
  * Created by sunxianping on 2017/5/27.
  */
@@ -24,6 +26,9 @@ public class UserBean implements IUserBean {
     private int referee;
     private UserInfo userInfo;
     private String coord = "";
+
+    private Date registDate;
+    private Date lastLoginDate;
 
     @Override
     public UserVo toVo() {
@@ -181,6 +186,24 @@ public class UserBean implements IUserBean {
 
     public UserBean setCoord(String coord) {
         this.coord = coord;
+        return this;
+    }
+
+    public Date getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public UserBean setLastLoginDate(Date lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
+        return this;
+    }
+
+    public Date getRegistDate() {
+        return registDate;
+    }
+
+    public UserBean setRegistDate(Date registDate) {
+        this.registDate = registDate;
         return this;
     }
 }

@@ -43,6 +43,7 @@ public class ReconnService {
         result.put("roomType", roomInfo.getRoomType());
         result.put("dissloutionUser", roomInfo.getDissloutionUser());//申请解散房间的人
         result.put("mustZimo",roomInfo.getMustZimo());
+        result.put("yipaoduoxiang", roomInfo.isYipaoduoxiang());
 
         return result;
     }

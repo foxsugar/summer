@@ -1,6 +1,7 @@
 package com.code.server.game.room.kafka;
 
 import com.code.server.game.room.RoomMsgDispatch;
+import com.code.server.game.room.Server2ServerMsgDispatch;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -27,5 +28,17 @@ public class RoomMsgConsumer {
 
 
 
+
+    @KafkaListener(id = "server2server", topicPartitions = {
+            @TopicPartition(topic = "server2server_topic", partitions = "${serverConfig.serverId}")
+    })
+    public void listen_server2server(ConsumerRecord<String, String> record ) {
+        String key = record.key();
+        String value = record.value();
+        Server2ServerMsgDispatch.dispatch(record);
+
+
+
+    }
 
 }

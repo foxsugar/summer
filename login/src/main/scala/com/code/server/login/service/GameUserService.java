@@ -8,7 +8,9 @@ import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserVo;
 import com.code.server.db.Service.*;
-import com.code.server.db.model.*;
+import com.code.server.db.model.Charge;
+import com.code.server.db.model.Replay;
+import com.code.server.db.model.User;
 import com.code.server.db.model.UserRecord;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.rpc.RpcManager;
@@ -17,6 +19,7 @@ import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.DateUtil;
 import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -399,6 +402,18 @@ public class GameUserService {
         ResponseVo vo = new ResponseVo("userService", "getPrepareRoom", result);
         sendMsg(msgKey, vo);
         return 0;
+    }
+
+    public int kickUser(KafkaMsgKey msgKey , JsonNode params, JsonNode allParams){
+        //获得该room所在的逻辑服务器id
+        String roomId = params.path("roomId").asText();
+        String serverId = RedisManager.getRoomRedisService().getServerId(roomId);
+        if (serverId == null) {
+            return ErrorCode.NO_THIS_ROOM;
+        }
+
+        kafkaMsgProducer.send2Partition(IKafaTopic.SERVER_SERVER_TOPIC, Integer.valueOf(serverId), msgKey, allParams.asText() );
+       return 0;
     }
 
     public int getRecordsByRoom(KafkaMsgKey msgKey, long roomUid) {

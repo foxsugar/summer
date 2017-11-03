@@ -102,6 +102,9 @@ public class ErrorCode {
 	public static final int NOT_KILL = 600004;
 
 
+	public static final int NO_THIS_ROOM = 700001;
+
+
 
 
 	static class ErrorCodeRepeatChecker {

@@ -425,13 +425,16 @@ public class GameInfo extends Game {
         //删除弃牌
         deleteDisCard(lastPlayUserId, disCard);
         this.waitingforList.forEach(waitDetail -> {
-            long uid = waitDetail.myUserId;
-            yipaoduoxiang.add(uid);
-            PlayerCardsInfoMj playerCardsInfoMj = playerCardsInfos.get(uid);
-            playerCardsInfoMj.hu_dianpao(room, this, lastPlayUserId, disCard);
+            if (waitDetail.isHu) {
+                long uid = waitDetail.myUserId;
+                yipaoduoxiang.add(uid);
+                PlayerCardsInfoMj playerCardsInfoMj = playerCardsInfos.get(uid);
+                playerCardsInfoMj.hu_dianpao(room, this, lastPlayUserId, disCard);
+            }
         });
 
         //todo 下次的庄家
+        this.room.setBankerId(yipaoduoxiang.get(0));
 
         //回放
         OperateReqResp operateReqResp = new OperateReqResp();

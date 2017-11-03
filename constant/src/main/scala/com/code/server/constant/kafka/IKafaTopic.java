@@ -10,4 +10,5 @@ public interface IKafaTopic {
     String RECONN_TOPIC = "reconnService";
     String INNER_GATE_TOPIC = "inner_gate_topic";
     String CENTER_TOPIC = "center_topic";
+    String SERVER_SERVER_TOPIC = "server2server_topic";
 }

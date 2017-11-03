@@ -8,6 +8,7 @@ public class RoomInfoVo extends RoomVo {
     public String modeTotal;
     public String mode;
     public String each;
+    public boolean yipaoduoxiang;
 
 
     public String getModeTotal() {
@@ -34,6 +35,15 @@ public class RoomInfoVo extends RoomVo {
 
     public RoomInfoVo setEach(String each) {
         this.each = each;
+        return this;
+    }
+
+    public boolean isYipaoduoxiang() {
+        return yipaoduoxiang;
+    }
+
+    public RoomInfoVo setYipaoduoxiang(boolean yipaoduoxiang) {
+        this.yipaoduoxiang = yipaoduoxiang;
         return this;
     }
 }
