@@ -1,6 +1,7 @@
 package com.code.server.game.poker.hitgoldflower;
 
 
+import com.code.server.constant.data.DataManager;
 import com.code.server.constant.response.*;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
@@ -19,7 +20,6 @@ public class GameHitGoldFlower extends Game {
 
     private static final Double INIT_BOTTOM_CHIP = 1.0;//底注
     private static final int INIT_CARD_NUM = 3;//玩家牌数3张
-    private static final Double MAX_BET_NUM = 1000.0;//最大投注数
 
     protected List<Integer> cards = new ArrayList<>();//牌
     public Map<Long, PlayerCardInfoHitGoldFlower> playerCardInfos = new HashMap<>();
@@ -38,7 +38,8 @@ public class GameHitGoldFlower extends Game {
     protected RoomHitGoldFlower room;
 
     protected long lastOperateTime;
-
+    //private Double MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();//最大下注数
+    private Double MAX_BET_NUM = 0.0;
 
     public void init(List<Long> users) {
         //初始化玩家
@@ -93,14 +94,14 @@ public class GameHitGoldFlower extends Game {
         if (userId!=curUserId) {//判断是否到顺序
             return ErrorCode.NOT_YOU_TURN;
         }
-
+        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
         if(seeUser.contains(userId)){
-            if(addChip!=chip*2+2 && addChip!=chip*2*2 && addChip!=chip*2*4 && addChip!=1000.0){
+            if(addChip!=chip*2+2 && addChip!=chip*2*2 && addChip!=chip*2*4 && addChip!=MAX_BET_NUM){
                 return ErrorCode.BET_WRONG;
             }
             chip = addChip/2;
         }else{
-            if(addChip!=chip+2 && addChip!=chip*2 && addChip!=chip*4 && addChip!=500.0){
+            if(addChip!=chip+2 && addChip!=chip*2 && addChip!=chip*4 && addChip!=MAX_BET_NUM/2){
                 return ErrorCode.BET_WRONG;
             }
             chip = addChip;
@@ -167,7 +168,7 @@ public class GameHitGoldFlower extends Game {
 
         logger.info(userId +"  弃牌!!!");
 
-        aliveUser.remove(userId);
+
 
         Map<String, Object> result = new HashMap<>();
         result.put("userId",userId);
@@ -175,7 +176,8 @@ public class GameHitGoldFlower extends Game {
         ResponseVo vo = new ResponseVo("gameService", "foldResponse", result);
         MsgSender.sendMsg2Player(vo, users);
 
-        if(aliveUser.size()==1){
+        if(aliveUser.size()==2){
+            aliveUser.remove(userId);
             //处理结果
             compute(aliveUser);
             sendResult();
@@ -185,7 +187,8 @@ public class GameHitGoldFlower extends Game {
             room.clearReadyStatus(true);
             sendFinalResult();
         }else{
-            noticeAction(userId);
+            noticeActionByFold(userId);
+            aliveUser.remove(userId);
         }
 
         MsgSender.sendMsg2Player("gameService", "fold", 0, userId);
@@ -457,6 +460,8 @@ public class GameHitGoldFlower extends Game {
      */
     protected void noticeActionSelf(long userId) {
 
+        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
+
         /**
          protected String call = "1";//跟注
          protected String raise = "0";//加注  ===
@@ -500,6 +505,7 @@ public class GameHitGoldFlower extends Game {
      * @param userId
      */
     protected void noticeAction(long userId) {
+        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
         curUserId = nextActioner(userId);
         /**
          protected String call = "1";//跟注
@@ -539,7 +545,60 @@ public class GameHitGoldFlower extends Game {
     }
 
 
+    /**
+     * 通知操作按钮(下一个)
+     *
+     * @param userId
+     */
+    protected void noticeActionByFold(long userId) {
+        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
+        int index = aliveUser.indexOf(userId);
 
+        int nextId = index + 1;
+        if (nextId >= aliveUser.size()) {
+            nextId = 0;
+        }
+        if(getMaxRoundNumberB()||aliveUser.size()==1){
+            campareAllCards();
+        }
+        curUserId =  aliveUser.get(nextId);
+
+        /**
+         protected String call = "1";//跟注
+         protected String raise = "0";//加注  ===
+         protected String fold = "1";//弃牌
+         protected String kill = "1";//比牌
+         protected String see = "0";//看牌    ===
+         */
+        PlayerCardInfoHitGoldFlower playerCardInfo = playerCardInfos.get(curUserId);
+        playerCardInfo.setRaise("1");
+        playerCardInfo.setFold("1");
+        playerCardInfo.setCall("1");
+        playerCardInfo.setKill("1");
+        playerCardInfo.setSee("1");
+        playerCardInfo.setCurRoundNumber(playerCardInfo.getCurRoundNumber()+1);
+        if(seeUser.contains(curUserId) || getMaxRoundNumber() <= room.getMenPai()){
+            playerCardInfo.setSee("0");
+        }
+        if(getMaxRoundNumber() <= room.getMenPai()){
+            playerCardInfo.setKill("0");
+        }
+        if(seeUser.contains(curUserId)){
+            if(chip>=MAX_BET_NUM){
+                playerCardInfo.setRaise("0");
+            }
+        }else{
+            if(chip>=MAX_BET_NUM/2){
+                playerCardInfo.setRaise("0");
+            }
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("playerCardInfo", playerCardInfo);
+        result.put("chip", chip);
+        ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
+        MsgSender.sendMsg2Player(vo, users);
+    }
 
 
     //===========================================
