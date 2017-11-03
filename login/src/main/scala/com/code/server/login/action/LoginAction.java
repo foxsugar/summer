@@ -135,6 +135,7 @@ public class LoginAction {
             } else {
                 redisToken = getToken(Long.valueOf(userId));
                 userRedisService.setToken(Long.valueOf(userId), redisToken);
+                userBean.setLastLoginDate(new Date());
             }
 
             params.put("token", redisToken);
@@ -195,6 +196,7 @@ public class LoginAction {
                 userBean.setUsername(username);
                 userBean.setImage(image);
                 userBean.setSex(sex);
+                userBean.setLastLoginDate(new Date());
                 userRedisService.updateUserBean(Long.valueOf(userId), userBean);
             }
             String redisToken =  getToken(Long.valueOf(userId));

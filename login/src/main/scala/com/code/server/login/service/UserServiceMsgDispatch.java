@@ -29,14 +29,14 @@ public class UserServiceMsgDispatch {
         String service = params.get("service").asText();
         String method = params.get("method").asText();
         JsonNode node = params.get("params");
-        int rtn = dispatchUserService(msgKey, method, node);
+        int rtn = dispatchUserService(msgKey, method, node, params);
         if (rtn != 0) {
             ResponseVo vo = new ResponseVo(service, method, rtn);
             kafkaMsgProducer.send2Partition(IKafaTopic.GATE_TOPIC, msgKey.getPartition(), "" + msgKey.getUserId(), vo);
         }
     }
 
-    private int dispatchUserService(KafkaMsgKey msgKey, String method, JsonNode params) {
+    private int dispatchUserService(KafkaMsgKey msgKey, String method, JsonNode params, JsonNode allParams) {
 
 //        String method = params.get("method").asText();
         switch (method) {
@@ -77,6 +77,8 @@ public class UserServiceMsgDispatch {
                 return gameUserService.shareWX(msgKey, params.path("game").asText());
             case "getPrepareRoom":
                 return gameUserService.getPrepareRoom(msgKey);
+            case "kickUser":
+                return gameUserService.kickUser(msgKey,params, allParams);
             case "getRecordsByRoom":
                 return gameUserService.getRecordsByRoom(msgKey,params.path("roomUid").asLong());
 

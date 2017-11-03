@@ -71,6 +71,9 @@ public class GameRedisService implements IGameRedis,IConstant{
         }
 
 
+
+
+
         //清除心跳
         redisTemplate.boundHashOps(HEART_GAME).delete(String.valueOf(serverId));
 

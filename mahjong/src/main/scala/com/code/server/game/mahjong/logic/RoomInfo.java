@@ -349,6 +349,12 @@ public class RoomInfo extends Room {
             } else if (16 == gameNumber) {
                 result = 60;
             }
+        }else if ("YSF".equals(gameType)) {
+            if (8 == gameNumber) {
+                result = 2;
+            } else if (16 == gameNumber) {
+                result = 4;
+            }
         }else if("HL".equals(gameType)){
             result = 1;
         }else if("TC".equals(gameType)){
@@ -490,6 +496,7 @@ public class RoomInfo extends Room {
         result.put("userList", RedisManager.getUserRedisService().getUserBeans(this.users));
         result.put("mustZimo",this.mustZimo);
         result.put("each", this.each);//1是4个分开付，0是user付
+        result.put("yipaoduoxiang", this.isYipaoduoxiang);
 
 
         return result;
@@ -685,6 +692,7 @@ public class RoomInfo extends Room {
         roomVo.personNumber = this.getPersonNumber();
         roomVo.hasNine = this.getHasNine();
         roomVo.isOpen = this.isOpen;
+        roomVo.yipaoduoxiang = this.isYipaoduoxiang;
         roomVo.setMode(this.getMode());
         roomVo.setModeTotal(this.getModeTotal());
         roomVo.setEach(this.getEach());
