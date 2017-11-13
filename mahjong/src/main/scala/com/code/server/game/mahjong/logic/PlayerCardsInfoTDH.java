@@ -241,18 +241,37 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 				}
 			}
 			else{
-				if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3")||room.getMode().equals("11")||room.getMode().equals("13"))){//平胡
+				if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3"))){//平胡
 					gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 3 * room.getMultiple());
 					this.score = this.score + 3 * room.getMultiple();
 					room.setUserSocre(dianpaoUser, - 3 * room.getMultiple());
 					room.setUserSocre(this.userId, 3 * room.getMultiple());
 					this.fan = 3;
 //        			this.winType.add(HuType.hu_普通胡);
-				}else if(room.getModeTotal().equals("2") && (room.getMode().equals("2")||room.getMode().equals("4")||room.getMode().equals("12")||room.getMode().equals("14"))){//大胡
+				}else if(room.getModeTotal().equals("2") && (room.getMode().equals("2")||room.getMode().equals("4"))){//大胡
 					gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)));
 					this.score = this.score + room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType));
 					room.setUserSocre(dianpaoUser, - room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)));
 					room.setUserSocre(this.userId, room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)));
+
+					this.fan = MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)+"");
+//        			this.winType = CardUtil.huForWinType(cards);
+				}else if(room.getModeTotal().equals("2") && (room.getMode().equals("11")||room.getMode().equals("13"))){//平胡,不包胡
+					for (Long l:gameInfo.getPlayerCardsInfos().keySet()) {
+						gameInfo.getPlayerCardsInfos().get(l).setScore(gameInfo.getPlayerCardsInfos().get(l).getScore() - 1 * room.getMultiple());
+						room.setUserSocre(l, -1 * room.getMultiple());
+					}
+					this.score = this.score + 4 * room.getMultiple();
+					room.setUserSocre(this.userId, 4 * room.getMultiple());
+					this.fan = 3;
+//        			this.winType.add(HuType.hu_普通胡);
+				}else if(room.getModeTotal().equals("2") && (room.getMode().equals("12")||room.getMode().equals("14"))){//大胡，不包胡
+					for (Long l:gameInfo.getPlayerCardsInfos().keySet()) {
+						gameInfo.getPlayerCardsInfos().get(l).setScore(gameInfo.getPlayerCardsInfos().get(l).getScore() - room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType))/3);
+						room.setUserSocre(l, - room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType))/3);
+					}
+					this.score = this.score + room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType))/3*4;
+					room.setUserSocre(this.userId, room.getMultiple() * MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType))/3*4);
 
 					this.fan = MahjongCode.HUTOSCOREFORLQ.get(""+CardUtil.huForScores(cards,huCardType)+"");
 //        			this.winType = CardUtil.huForWinType(cards);

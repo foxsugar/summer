@@ -268,9 +268,9 @@ public class RoomHitGoldFlower extends Room {
             resultObj.setUsername(eachUser.getUsername());
             resultObj.setImage(eachUser.getImage());
             if("30".equals(getGameType())){
-                resultObj.setScores(this.userScores.get(eachUser.getId()) + "");
-            }else{
                 resultObj.setScores(this.userScores.get(eachUser.getId())-1000.0 + "");
+            }else{
+                resultObj.setScores(this.userScores.get(eachUser.getId()) + "");
             }
             resultObj.setUserId(eachUser.getId());
             resultObj.setTime(time);
