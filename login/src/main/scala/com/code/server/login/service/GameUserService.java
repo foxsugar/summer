@@ -416,6 +416,18 @@ public class GameUserService {
        return 0;
     }
 
+    public int getRoomInfo(KafkaMsgKey msgKey , JsonNode params, JsonNode allParams){
+        //获得该room所在的逻辑服务器id
+        String roomId = params.path("roomId").asText();
+        String serverId = RedisManager.getRoomRedisService().getServerId(roomId);
+        if (serverId == null) {
+            return ErrorCode.NO_THIS_ROOM;
+        }
+        kafkaMsgProducer.send2Partition(IKafaTopic.SERVER_SERVER_TOPIC, Integer.valueOf(serverId), msgKey, allParams);
+        return 0;
+
+    }
+
     public int getRecordsByRoom(KafkaMsgKey msgKey, long roomUid) {
         List<com.code.server.db.model.GameRecord> list = gameRecordService.gameRecordDao.getGameRecordByUuid(roomUid);
 
@@ -438,86 +450,4 @@ public class GameUserService {
         }
     }
 
-//    private User createUser(String account, String password){
-//        User newUser = new User();
-////        newUser.setId(-100);
-////        newUser.setId(GameManager.getInstance().nextId());
-//        newUser.setAccount(account);
-//        newUser.setPassword(password);
-//        newUser.setOpenId(""+GameManager.getInstance().nextId());
-//        try {
-//            newUser.setUsername(URLDecoder.decode(account, "utf-8"));
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-//        newUser.setImage("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=253777390,947512827&fm=23&gp=0.jpg/96");
-//        newUser.setSex(1);
-//        newUser.setVip(0);
-//        newUser.setUuid("0");
-//        newUser.setMoney(GameManager.getInstance().constant.getInitMoney());
-//
-//        return newUser;
-//    }
-//
-//    public int getUserMessage(long userId,ChannelHandlerContext ctx) {
-//
-//        ThreadPool.getInstance().executor.execute(()->{
-//            UserService userService = SpringUtil.getBean(UserService.class);
-//            Player player  = GameManager.getInstance().players.get(userId);
-//            User user = null;
-//            if (player != null) {
-//                user = player.getUser();
-//            } else {
-//                user = userService.getUserByUserId(userId);
-//            }
-//            ResponseVo vo = new ResponseVo("userService","getUserMessage",getUserVo(user));
-//            MsgDispatch.sendMsg(ctx,vo);
-//        });
-//        return 0;
-//    }
-//
-//    public int getUserImage(long userId,ChannelHandlerContext ctx) {
-//        ThreadPool.getInstance().executor.execute(()->{
-//            UserService userService = SpringUtil.getBean(UserService.class);
-//            Player player  = GameManager.getInstance().players.get(userId);
-//            User user = null;
-//            if (player != null) {
-//                user = player.getUser();
-//            } else {
-//                user = userService.getUserByUserId(userId);
-//            }
-//
-//            JSONObject jSONObject = new JSONObject();
-//            jSONObject.put("Image", user.getImage());
-//
-//            ResponseVo vo = new ResponseVo("userService","getUserImage",jSONObject);
-//            MsgDispatch.sendMsg(ctx,vo);
-//        });
-//        return 0;
-//    }
-//
-//
-//    public int register(long userId,ChannelHandlerContext ctx) {
-//
-//        ThreadPool.getInstance().executor.execute(()->{
-//            UserService userService = SpringUtil.getBean(UserService.class);
-//            Player player  = GameManager.getInstance().players.get(userId);
-//            User user = null;
-//            if (player != null) {
-//                user = player.getUser();
-//            } else {
-//                user = userService.getUserByUserId(userId);
-//            }
-//            if(user==null){
-//                ResponseVo vo = new ResponseVo("userService","register",0);
-//                MsgDispatch.sendMsg(ctx,vo);
-//            }else{
-//                ResponseVo vo = new ResponseVo("userService","register",getUserVo(user));
-//                MsgDispatch.sendMsg(ctx,vo);
-//            }
-//        });
-//        return 0;
-
-
-//    }
 }

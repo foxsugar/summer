@@ -81,7 +81,8 @@ public class UserServiceMsgDispatch {
                 return gameUserService.kickUser(msgKey,params, allParams);
             case "getRecordsByRoom":
                 return gameUserService.getRecordsByRoom(msgKey,params.path("roomUid").asLong());
-
+            case "getRoomInfo":
+                return gameUserService.getRoomInfo(msgKey, params, allParams);
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

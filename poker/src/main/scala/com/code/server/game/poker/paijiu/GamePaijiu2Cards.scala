@@ -45,7 +45,7 @@ class GamePaijiu2Cards extends GamePaijiu {
     * @return
     */
   override protected def checkOpen(playerCardInfo: PlayerCardInfoPaijiu, group1: String, group2: String): Boolean = {
-    val allCard = Array.concat(group1.split(","), group2.split(",")).map(card => card.toInt).toList
+    val allCard = Array.concat(group1.split(",")).map(card => card.toInt).toList
 
     //开的牌和拥有的牌相同
     val isSame = playerCardInfo.cards.diff(allCard).isEmpty
