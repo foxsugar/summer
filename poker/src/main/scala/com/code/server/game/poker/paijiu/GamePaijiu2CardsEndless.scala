@@ -103,7 +103,7 @@ class GamePaijiu2CardsEndless extends GamePaijiuEndless {
     //排序后的
     val sortedUsers = winUsers.sortWith(compareByScore)
     for (playerInfo <- sortedUsers) {
-      val score2 = getGroupScore(playerInfo.group2)
+      val score2 = getGroupScore(playerInfo.group1)
       //庄家应该输的钱
       val bankerLoseScore = playerInfo.getBetScore(score2 >= mix8Score)
       val loseScore = if (bankerLoseScore > banker.score) banker.score else bankerLoseScore
