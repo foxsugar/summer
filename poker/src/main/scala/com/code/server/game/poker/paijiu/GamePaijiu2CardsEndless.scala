@@ -1,6 +1,8 @@
 package com.code.server.game.poker.paijiu
 
+import com.code.server.constant.data.DataManager
 import com.code.server.game.room.kafka.MsgSender
+
 import scala.collection.JavaConverters._
 
 /**
@@ -45,7 +47,7 @@ class GamePaijiu2CardsEndless extends GamePaijiuEndless {
     * @return
     */
   override protected def checkOpen(playerCardInfo: PlayerCardInfoPaijiu, group1: String, group2: String): Boolean = {
-    val allCard = Array.concat(group1.split(","), group2.split(",")).map(card => card.toInt).toList
+    val allCard = Array.concat(group1.split(",")).map(card => card.toInt).toList
 
     //开的牌和拥有的牌相同
     val isSame = playerCardInfo.cards.diff(allCard).isEmpty
@@ -101,7 +103,7 @@ class GamePaijiu2CardsEndless extends GamePaijiuEndless {
     //排序后的
     val sortedUsers = winUsers.sortWith(compareByScore)
     for (playerInfo <- sortedUsers) {
-      val score2 = getGroupScore(playerInfo.group2)
+      val score2 = getGroupScore(playerInfo.group1)
       //庄家应该输的钱
       val bankerLoseScore = playerInfo.getBetScore(score2 >= mix8Score)
       val loseScore = if (bankerLoseScore > banker.score) banker.score else bankerLoseScore
@@ -118,6 +120,21 @@ class GamePaijiu2CardsEndless extends GamePaijiuEndless {
     }
   }
 
+  override protected def getGroupScoreByName(name: String): Int = {
+    DataManager.data.getLaotiePaijiuCardGroupScoreDataMap.get(name).getScore
+  }
+
+  /**
+    * 获得牌型分数
+    *
+    * @param group
+    * @return
+    */
+  override def getGroupScore(group: String): Int = {
+    val name: String = DataManager.data.getPaijiuCardGroupDataMap.get(group).getName
+    logger.info("cardgroupName : " + name)
+    DataManager.data.getLaotiePaijiuCardGroupScoreDataMap.get(name).getScore
+  }
 
   /**
     * 排序

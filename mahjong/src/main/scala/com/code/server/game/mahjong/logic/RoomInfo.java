@@ -757,6 +757,7 @@ public class RoomInfo extends Room {
         prepareRoom.mode = this.mode;
         prepareRoom.modeTotal = this.modeTotal;
         prepareRoom.mustZimo = this.mustZimo;
+        prepareRoom.yipaoduoxiang = this.isYipaoduoxiang;
         return prepareRoom;
     }
 

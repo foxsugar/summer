@@ -39,10 +39,7 @@ public class RoomVo implements IfaceRoomVo {
 
     public int mustZimo = 0;
 
-    //扎金花专用
-    protected double caiFen;
-    protected int menPai;
-    protected int cricleNumber;//轮数
+
 
     public long canStartUserId;//代建房专用，告诉谁可以手动开始
 
@@ -255,29 +252,7 @@ public class RoomVo implements IfaceRoomVo {
         return this;
     }
 
-    public double getCaiFen() {
-        return caiFen;
-    }
 
-    public void setCaiFen(double caiFen) {
-        this.caiFen = caiFen;
-    }
-
-    public int getMenPai() {
-        return menPai;
-    }
-
-    public void setMenPai(int menPai) {
-        this.menPai = menPai;
-    }
-
-    public int getCricleNumber() {
-        return cricleNumber;
-    }
-
-    public void setCricleNumber(int cricleNumber) {
-        this.cricleNumber = cricleNumber;
-    }
 
     public long getCanStartUserId() {
         return canStartUserId;
