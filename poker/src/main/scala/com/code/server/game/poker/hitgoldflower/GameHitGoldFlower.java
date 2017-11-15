@@ -308,7 +308,36 @@ public class GameHitGoldFlower extends Game {
         return 0;
     }
 
+    /**
+     * 透视
+     * @return
+     */
+    public int perspective(long userId) {
+        Map<Long, Object> result = new HashMap<>();
+        for (Long l:playerCardInfos.keySet()) {
+            result.put(l,playerCardInfos.get(l).handcards);
+        }
+        ResponseVo vo = new ResponseVo("gameService", "perspective", result);
+        MsgSender.sendMsg2Player(vo, userId);
+        return 0;
+    }
 
+    /**
+     * 换牌
+     * type:baoZi,tongHuaShun,tongHua,shunZi,duiZi,erSanWu,SanPai
+     * @return
+     */
+    public int changeCard(long userId,String type) {
+        Map<Long, Object> result = new HashMap<>();
+        List<Integer> changeCards = new ArrayList<>();
+        changeCards.add(1);
+        changeCards.add(2);
+        changeCards.add(3);
+        result.put(userId,changeCards);
+        ResponseVo vo = new ResponseVo("gameService", "changeCard", result);
+        MsgSender.sendMsg2Player(vo, userId);
+        return 0;
+    }
     //=====================================
     //==============结束操作================
     //=====================================

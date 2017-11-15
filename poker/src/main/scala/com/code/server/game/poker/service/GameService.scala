@@ -112,7 +112,10 @@ object GameService {
     case "kill" =>
       val accepterId = params.path("accepterId").asLong(0)
       game.kill(userId,accepterId);
-
+    case "perspective" =>
+      game.perspective(userId);
+    case "changeCard" =>
+      game.changeCard(userId);
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

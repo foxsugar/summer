@@ -35,7 +35,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     protected boolean isTing = false;
     //    protected double score;//分数
     protected Set<Integer> tingSet = new HashSet<>();//听得牌
-    protected int lastOperate;//上次的操作
+    public int lastOperate;//上次的操作
     protected String catchCard;//上次摸得牌
     protected Set<Integer> winType = new HashSet<>();//胡牌类型
     protected boolean isHasFengShun;//有没有带风能当顺的玩法

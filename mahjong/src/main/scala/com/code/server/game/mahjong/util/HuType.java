@@ -82,5 +82,8 @@ public interface HuType {
 
     int hu_金杠 = 165;
 
+    int hu_断幺 = 170;//不能有字，1，9
+    int hu_混一色 = 171;//同一色加字
+
 
 }

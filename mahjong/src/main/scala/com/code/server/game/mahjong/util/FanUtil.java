@@ -21,6 +21,8 @@ public class FanUtil implements HuType {
     static List<Integer> ytl1 = new ArrayList<>();
     static List<Integer> ytl2 = new ArrayList<>();
     static List<Integer> ytl3 = new ArrayList<>();
+    static List<Integer> dy = new ArrayList<>();
+
 
     static {
         //3
@@ -50,6 +52,21 @@ public class FanUtil implements HuType {
         ytl3.add(18);
         ytl3.add(21);
         ytl3.add(24);
+
+        dy.add(0);
+        dy.add(8);
+        dy.add(9);
+        dy.add(17);
+        dy.add(18);
+        dy.add(26);
+
+        dy.add(27);
+        dy.add(28);
+        dy.add(29);
+        dy.add(30);
+        dy.add(31);
+        dy.add(32);
+        dy.add(33);
     }
 
     public static int compute(List<String> cards, HuCardType huCardType, int tingCardType, PlayerCardsInfoMj playerCardsInfo) {
@@ -144,6 +161,17 @@ public class FanUtil implements HuType {
             huCardType.specialHuList.add(hu_吊将);
             fan += playerCardsInfo.getSpecialHuScore(hu_吊将);
         }
+
+        if (playerCardsInfo.isHasSpecialHu(hu_断幺) && duanyao(cards, huCardType)) {
+            huCardType.specialHuList.add(hu_断幺);
+            fan += playerCardsInfo.getSpecialHuScore(hu_断幺);
+        }
+
+        if (playerCardsInfo.isHasSpecialHu(HuType.hu_混一色) && isHunyise(cards, huCardType)) {
+            huCardType.specialHuList.add(hu_混一色);
+            fan += playerCardsInfo.getSpecialHuScore(hu_混一色);
+        }
+
 
         fan = huCardType.clearRepeat(playerCardsInfo, fan);
         return fan;
@@ -279,6 +307,28 @@ public class FanUtil implements HuType {
     }
 
     /**
+     * 断幺
+     *
+     * @param cards
+     * @param huCardType
+     * @return
+     */
+    private static boolean duanyao(List<String> cards, HuCardType huCardType) {
+        boolean results = true;
+        a:for (String s:cards) {
+            if(dy.contains(CardTypeUtil.getTypeByCard(s))){
+                results = false;
+                break a;
+            }
+        }
+        if(dy.contains(huCardType)){
+            results = false;
+        }
+        return results;
+    }
+
+
+    /**
      * 获得所有组
      *
      * @param cards
@@ -355,6 +405,59 @@ public class FanUtil implements HuType {
 
         return set.size() <= 2;
 
+    }
+
+    /**
+     *混一色
+     * @param cards
+     * @param huCardType
+     * @return
+     */
+    private static boolean isHunyise(List<String> cards, HuCardType huCardType) {
+        boolean bHua = true;
+        boolean bZi = false;
+
+        a:for (String s:cards) {
+            if(CardTypeUtil.GROUP_WAN==CardTypeUtil.getCardGroup(s)){
+                for (String ss:cards) {
+                    if(CardTypeUtil.GROUP_TIAO==CardTypeUtil.getCardGroup(s)){
+                        bHua =false;
+                        break a;
+                    }else if(CardTypeUtil.GROUP_TONG==CardTypeUtil.getCardGroup(s)){
+                        bHua =false;
+                        break a;
+                    }
+                }
+            }else if(CardTypeUtil.GROUP_TIAO==CardTypeUtil.getCardGroup(s)){
+                for (String ss:cards) {
+                    if(CardTypeUtil.GROUP_WAN==CardTypeUtil.getCardGroup(s)){
+                        bHua =false;
+                        break a;
+                    }else if(CardTypeUtil.GROUP_TONG==CardTypeUtil.getCardGroup(s)){
+                        bHua =false;
+                        break a;
+                    }
+                }
+            }else if(CardTypeUtil.GROUP_TONG==CardTypeUtil.getCardGroup(s)){
+                for (String ss:cards) {
+                    if(CardTypeUtil.GROUP_WAN==CardTypeUtil.getCardGroup(s)){
+                        bHua =false;
+                        break a;
+                    }else if(CardTypeUtil.GROUP_TIAO==CardTypeUtil.getCardGroup(s)){
+                        bHua =false;
+                        break a;
+                    }
+                }
+            }
+        }
+
+        b:for (String s:cards) {
+            if ((CardTypeUtil.GROUP_FENG == CardTypeUtil.getCardGroup(s))||(CardTypeUtil.GROUP_ZI == CardTypeUtil.getCardGroup(s))) {
+                bZi = true;
+                break b;
+            }
+        }
+        return bHua && bZi;
     }
 
 

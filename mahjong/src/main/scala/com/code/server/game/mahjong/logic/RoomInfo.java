@@ -43,7 +43,8 @@ public class RoomInfo extends Room {
 
     protected String each = "";//4人平分房卡
 
-
+    protected boolean canChi;
+    protected boolean haveTing;
 
 
     public String getEach() {
@@ -102,7 +103,11 @@ public class RoomInfo extends Room {
                 if (each.equals("0") && money < 30) {
                     return false;
                 }
-            } else if ("HL".equals(gameType)) {
+            } else if ("NZZ".equals(gameType)) {
+                if (each.equals("0") && money < 20) {
+                    return false;
+                }
+            }else if ("HL".equals(gameType)) {
                 if (each.equals("0") && money < 1) {
                     return false;
                 }
@@ -135,6 +140,16 @@ public class RoomInfo extends Room {
                 }
             }else if ("TC".equals(gameType)) {
                 if (each.equals("1") && money < 1) {
+                    return false;
+                }
+            }else if ("NZZ".equals(gameType)) {
+                if (each.equals("1") && money < 5 && this.gameNumber == 4) {
+                    return false;
+                }
+                if (each.equals("1") && money < 8 && this.gameNumber == 8) {
+                    return false;
+                }
+                if (each.equals("1") && money < 10 && this.gameNumber == 12) {
                     return false;
                 }
             }
@@ -203,6 +218,8 @@ public class RoomInfo extends Room {
                 return new GameInfoTJ().setHasJieGangHu(false);
             case "DH":
                 return new GameInfoDonghu();
+            case "NZZ":
+                return new GameInfoNZZ().setHasJieGangHu(true);
             default:
                 return new GameInfo();
         }
@@ -337,7 +354,15 @@ public class RoomInfo extends Room {
             } else if (2 == gameNumber) {
                 result = 6;
             }
-        } else if ("SY".equals(gameType)) {
+        } else if ("NZZ".equals(gameType)) {
+            if (4 == gameNumber) {
+                result = 20;
+            } else if (8 == gameNumber) {
+                result = 30;
+            } else if (12 == gameNumber) {
+                result = 40;
+            }
+        }else if ("SY".equals(gameType)) {
             if (4 == gameNumber) {
                 result = 1;
             } else if (8 == gameNumber) {
@@ -371,7 +396,7 @@ public class RoomInfo extends Room {
     }
 
     public boolean isAddGold() {
-        return "LQ".equals(gameType);
+        return "LQ".equals(gameType)||"NZZ".equals(gameType);
     }
 
 
@@ -674,6 +699,22 @@ public class RoomInfo extends Room {
         return this;
     }
 
+    public boolean isCanChi() {
+        return canChi;
+    }
+
+    public void setCanChi(boolean canChi) {
+        this.canChi = canChi;
+    }
+
+    public boolean isHaveTing() {
+        return haveTing;
+    }
+
+    public void setHaveTing(boolean haveTing) {
+        this.haveTing = haveTing;
+    }
+
     @Override
     public IfaceRoomVo toVo(long userId) {
         RoomInfoVo roomVo = new RoomInfoVo();
@@ -718,4 +759,6 @@ public class RoomInfo extends Room {
         prepareRoom.mustZimo = this.mustZimo;
         return prepareRoom;
     }
+
+
 }
