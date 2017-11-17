@@ -314,6 +314,21 @@ public class FanUtil implements HuType {
      * @return
      */
     private static boolean duanyao(List<String> cards, HuCardType huCardType) {
+        List<Integer> tempList = new ArrayList<>();
+        tempList.add(0);
+        tempList.add(8);
+        tempList.add(9);
+        tempList.add(17);
+        tempList.add(18);
+        tempList.add(26);
+        tempList.add(27);
+        tempList.add(28);
+        tempList.add(29);
+        tempList.add(30);
+        tempList.add(31);
+        tempList.add(32);
+        tempList.add(33);
+
         boolean results = true;
         a:for (String s:cards) {
             if(dy.contains(CardTypeUtil.getTypeByCard(s))){
@@ -321,10 +336,48 @@ public class FanUtil implements HuType {
                 break a;
             }
         }
+
+        b:for (Integer s:huCardType.mingGang) {
+            if(tempList.contains(s)){
+                results = false;
+                break b;
+            }
+        }
+        c:for (Integer s:huCardType.anGang) {
+            if(tempList.contains(s)){
+                results = false;
+                break c;
+            }
+        }
+        d:for (Integer s:huCardType.peng) {
+            if(tempList.contains(s)){
+                results = false;
+                break d;
+            }
+        }
+        e:for (Integer s:huCardType.chi) {
+            if(tempList.contains(s)){
+                results = false;
+                break e;
+            }
+        }
         if(dy.contains(huCardType)){
             results = false;
         }
         return results;
+    }
+
+    public static void main(String[] args) {
+        ArrayList<String> list = new ArrayList();
+        list.add("135");list.add("014");list.add("053");
+        list.add("081");list.add("133");list.add("080");
+        list.add("051");list.add("099");list.add("134");
+        list.add("056");list.add("098");list.add("021");
+        list.add("082");list.add("016");
+
+        HuCardType h = new HuCardType();
+        h.specialHuList.add(hu_断幺);
+        System.out.print(duanyao(list,h));
     }
 
 

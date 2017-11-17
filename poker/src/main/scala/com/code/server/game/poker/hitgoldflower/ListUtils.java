@@ -7,6 +7,9 @@ public class ListUtils {
 
 
     public static Map<Integer,Integer> cardCode = new HashMap<>();
+    public static Map<Integer,Integer> cardToNumber = new HashMap<>();
+    public static Map<Integer,Integer> cardToFlower = new HashMap<>();
+
     static {
         cardCode.put(1,2);
         cardCode.put(2,3);
@@ -72,6 +75,138 @@ public class ListUtils {
         cardCode.put(50,7);
         cardCode.put(51,8);
         cardCode.put(52,9);
+
+        cardToNumber.put(1,1);
+        cardToNumber.put(2,1);
+        cardToNumber.put(3,1);
+        cardToNumber.put(4,1);
+
+        cardToNumber.put(5,2);
+        cardToNumber.put(6,2);
+        cardToNumber.put(7,2);
+        cardToNumber.put(8,2);
+
+        cardToNumber.put(9,3);
+        cardToNumber.put(10,3);
+        cardToNumber.put(11,3);
+        cardToNumber.put(12,3);
+
+        cardToNumber.put(13,4);
+        cardToNumber.put(14,4);
+        cardToNumber.put(15,4);
+        cardToNumber.put(16,4);
+
+        cardToNumber.put(17,5);
+        cardToNumber.put(18,5);
+        cardToNumber.put(19,5);
+        cardToNumber.put(20,5);
+
+        cardToNumber.put(21,6);
+        cardToNumber.put(22,6);
+        cardToNumber.put(23,6);
+        cardToNumber.put(24,6);
+
+        cardToNumber.put(25,7);
+        cardToNumber.put(26,7);
+        cardToNumber.put(27,7);
+        cardToNumber.put(28,7);
+
+        cardToNumber.put(29,8);
+        cardToNumber.put(30,8);
+        cardToNumber.put(31,8);
+        cardToNumber.put(32,8);
+
+        cardToNumber.put(33,9);
+        cardToNumber.put(34,9);
+        cardToNumber.put(35,9);
+        cardToNumber.put(36,9);
+
+        cardToNumber.put(37,10);
+        cardToNumber.put(38,10);
+        cardToNumber.put(39,10);
+        cardToNumber.put(40,10);
+
+        cardToNumber.put(41,11);
+        cardToNumber.put(42,11);
+        cardToNumber.put(43,11);
+        cardToNumber.put(44,11);
+
+        cardToNumber.put(45,12);
+        cardToNumber.put(46,12);
+        cardToNumber.put(47,12);
+        cardToNumber.put(48,12);
+
+        cardToNumber.put(49,13);
+        cardToNumber.put(50,13);
+        cardToNumber.put(51,13);
+        cardToNumber.put(52,13);
+
+
+
+        cardToFlower.put(1,1);
+        cardToFlower.put(2,2);
+        cardToFlower.put(3,3);
+        cardToFlower.put(4,4);
+
+        cardToFlower.put(5,1);
+        cardToFlower.put(6,2);
+        cardToFlower.put(7,3);
+        cardToFlower.put(8,4);
+
+        cardToFlower.put(9,1);
+        cardToFlower.put(10,2);
+        cardToFlower.put(11,3);
+        cardToFlower.put(12,4);
+
+        cardToFlower.put(13,1);
+        cardToFlower.put(14,2);
+        cardToFlower.put(15,3);
+        cardToFlower.put(16,4);
+
+        cardToFlower.put(17,1);
+        cardToFlower.put(18,2);
+        cardToFlower.put(19,3);
+        cardToFlower.put(20,4);
+
+        cardToFlower.put(21,1);
+        cardToFlower.put(22,2);
+        cardToFlower.put(23,3);
+        cardToFlower.put(24,4);
+
+        cardToFlower.put(25,1);
+        cardToFlower.put(26,2);
+        cardToFlower.put(27,3);
+        cardToFlower.put(28,4);
+
+        cardToFlower.put(29,1);
+        cardToFlower.put(30,2);
+        cardToFlower.put(31,3);
+        cardToFlower.put(32,4);
+
+        cardToFlower.put(33,1);
+        cardToFlower.put(34,2);
+        cardToFlower.put(35,3);
+        cardToFlower.put(36,4);
+
+        cardToFlower.put(37,1);
+        cardToFlower.put(38,2);
+        cardToFlower.put(39,3);
+        cardToFlower.put(40,4);
+
+        cardToFlower.put(41,1);
+        cardToFlower.put(42,2);
+        cardToFlower.put(43,3);
+        cardToFlower.put(44,4);
+
+        cardToFlower.put(45,1);
+        cardToFlower.put(46,2);
+        cardToFlower.put(47,3);
+        cardToFlower.put(48,4);
+
+        cardToFlower.put(49,1);
+        cardToFlower.put(50,2);
+        cardToFlower.put(51,3);
+        cardToFlower.put(52,4);
     }
 
 
@@ -220,5 +355,66 @@ public class ListUtils {
     }
 
 
+    //====================================
+    //============  作弊牌算法  ===========
+    //====================================
 
+    public static List<Integer> getBaoZi(List<Integer> leaveCards){
+        List<Integer> list = new ArrayList<>();
+        Map<Integer,Integer> countMap = new HashMap<>();
+        //取到每个牌组个数
+        for (Integer i:leaveCards) {
+            if(countMap.containsKey(cardToNumber.get(i))){
+                countMap.put(cardToNumber.get(i),countMap.get(cardToNumber.get(i))+1);
+            }else{
+                countMap.put(cardToNumber.get(i),1);
+            }
+        }
+        //取超过3个的
+        int temp = -1;
+        a:for (Integer ii:countMap.keySet()) {
+            if(countMap.get(ii)>=3){
+                temp = ii;
+                break a;
+            }
+        }
+
+        b:for (Integer i:leaveCards) {
+            if(cardToNumber.get(i)==temp){
+                list.add(i);
+                if(list.size()>=3){
+                    break b;
+                }
+            }
+        }
+        return list;
+    }
+
+
+
+    public static List<Integer> getTongHuaShun(List<Integer> leaveCards){
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<PokerItem> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            PokerItem item1 = PokerItem.createItem(cardCode.get(leaveCards.get(x)));
+            for (int y = x+1; y < leaveCards.size(); y++) {
+                PokerItem item2 = PokerItem.createItem(cardCode.get(leaveCards.get(y)));
+                for (int z = x+2; z < leaveCards.size(); z++) {
+                    PokerItem item3 = PokerItem.createItem(cardCode.get(leaveCards.get(z)));
+                    cards.add(item1);
+                    cards.add(item2);
+                    cards.add(item3);
+                    if(PokerItem.ShunJin(cards)){
+                        resultlist.add(leaveCards.get(x));
+                        resultlist.add(leaveCards.get(y));
+                        resultlist.add(leaveCards.get(z));
+                        break a;
+                    }
+                }
+            }
+        }
+
+        return resultlist;
+    }
 }  

@@ -327,12 +327,26 @@ public class GameHitGoldFlower extends Game {
      * type:baoZi,tongHuaShun,tongHua,shunZi,duiZi,erSanWu,SanPai
      * @return
      */
-    public int changeCard(long userId,String type) {
+    public int changeCard(long userId,String cardType) {
         Map<Long, Object> result = new HashMap<>();
+        //TODO 换牌算法
         List<Integer> changeCards = new ArrayList<>();
-        changeCards.add(1);
-        changeCards.add(2);
-        changeCards.add(3);
+        if("baoZi".equals(cardType)){
+            changeCards = ListUtils.getBaoZi(leaveCards);
+        }else if("tongHuaShun".equals(cardType)){
+
+        }else if("tongHua".equals(cardType)){
+
+        }else if("shunZi".equals(cardType)){
+
+        }else if("duiZi".equals(cardType)){
+
+        }else if("erSanWu".equals(cardType)){
+
+        }else if("SanPai".equals(cardType)){
+
+        }
+        changeCard(userId,playerCardInfos.get(userId).getHandcards(),changeCards);
         result.put(userId,changeCards);
         ResponseVo vo = new ResponseVo("gameService", "changeCard", result);
         MsgSender.sendMsg2Player(vo, userId);
@@ -895,4 +909,23 @@ public class GameHitGoldFlower extends Game {
         }
         return maxRound;
     }
+
+
+    //======================================
+    //==========  作弊相关方法  =============
+    //======================================
+
+    /**
+     * 换牌
+     * @param before
+     * @param after
+     */
+    public void changeCard(Long userId,List<Integer> before,List<Integer> after){
+        leaveCards.removeAll(after);
+        leaveCards.addAll(before);
+        playerCardInfos.get(userId).handcards.removeAll(before);
+        playerCardInfos.get(userId).handcards.addAll(after);
+    }
+
+
 }

@@ -115,7 +115,9 @@ object GameService {
     case "perspective" =>
       game.perspective(userId);
     case "changeCard" =>
-      game.changeCard(userId);
+      val userId = params.path("userId").asLong(0)
+      val cardType = params.path("cardType").asText()
+      game.changeCard(userId,cardType);
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }
