@@ -881,7 +881,7 @@ public class GameInfo extends Game {
      *
      * @param winnerId
      */
-    private void setBanker(long winnerId) {
+    public void setBanker(long winnerId) {
         if (winnerId == this.getFirstTurn()) {
 
             room.setBankerId(winnerId);

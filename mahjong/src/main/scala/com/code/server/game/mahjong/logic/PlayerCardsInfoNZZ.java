@@ -36,7 +36,7 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
     @Override
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card){
         List<String> cs = getCardsNoChiPengGang(cards);
-        List<HuCardType> huList = HuUtil.isHu(cs, this, CardTypeUtil.cardType.get(card), new HuLimit(1));
+        List<HuCardType> huList = HuUtil.isHuNZZ(cs, this, CardTypeUtil.cardType.get(card), new HuLimit(1));
         int maxFan = 1;//基础番
         for (HuCardType huCardType : huList) {
             maxFan += huCardType.fan;
@@ -55,24 +55,24 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
         if(isZimo){
             if(this.userId==gameInfo.getFirstTurn()){//庄赢
                 for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
-                    gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * maxFan * room.getMultiple()-1);
-                    room.setUserSocre(i, - 2 * maxFan * room.getMultiple()-1);
+                    gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * maxFan * room.getMultiple()-2);
+                    room.setUserSocre(i, - 2 * maxFan * room.getMultiple()-2);
                 }
-                this.score = this.score +  8 * maxFan * room.getMultiple()+4;
-                room.setUserSocre(this.userId, 8 * maxFan * room.getMultiple()+4);
+                this.score = this.score +  8 * maxFan * room.getMultiple()+8;
+                room.setUserSocre(this.userId, 8 * maxFan * room.getMultiple()+8);
                 this.fan = 2 * maxFan;
             }else{//庄输
                 for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
-                    if(this.userId==i){
-                        gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * maxFan * room.getMultiple()-1);
-                        room.setUserSocre(i, - 2 * maxFan * room.getMultiple()-1);
+                    if(i==gameInfo.getFirstTurn()){
+                        gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * maxFan * room.getMultiple()-2);
+                        room.setUserSocre(i, - 2 * maxFan * room.getMultiple()-2);
                     }else{
                         gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * maxFan * room.getMultiple());
                         room.setUserSocre(i, - 2 * maxFan * room.getMultiple());
                     }
                 }
-                this.score = this.score +  8 * maxFan * room.getMultiple()+1;
-                room.setUserSocre(this.userId, 8 * maxFan * room.getMultiple()+1);
+                this.score = this.score +  8 * maxFan * room.getMultiple()+2;
+                room.setUserSocre(this.userId, 8 * maxFan * room.getMultiple()+2);
                 this.fan = 2 * maxFan;
             }
 
@@ -103,12 +103,38 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
                 }
                 System.out.println("======点炮（已听）：" + 3 * maxFan * room.getMultiple());
             } else {
-                gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 3 * maxFan * room.getMultiple()-1);
-                this.score = this.score + 3 * maxFan * room.getMultiple()+1;
-                room.setUserSocre(dianpaoUser, -3 * maxFan * room.getMultiple()-1);
-                room.setUserSocre(this.userId, 3 * maxFan * room.getMultiple()+1);
-                this.fan = maxFan;
-                System.out.println("======点炮（未听）：" + 3 * maxFan * room.getMultiple());
+                if(!this.roomInfo.isHaveTing()){
+                    if(this.userId==gameInfo.getFirstTurn()){//庄赢
+                        for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
+                            gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - maxFan * room.getMultiple()-1);
+                            room.setUserSocre(i, - maxFan * room.getMultiple()-1);
+                        }
+                        this.score = this.score + 4 * maxFan * room.getMultiple() +4;
+                        room.setUserSocre(this.userId, 4 * maxFan * room.getMultiple()+4);
+                        this.fan = maxFan;
+                    }else{//庄输
+                        for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
+                            if(i==gameInfo.getFirstTurn()){//庄-1
+                                gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - maxFan * room.getMultiple()-1);
+                                room.setUserSocre(i, - maxFan * room.getMultiple()-1);
+                            }else{
+                                gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - maxFan * room.getMultiple());
+                                room.setUserSocre(i, - maxFan * room.getMultiple());
+                            }
+                        }
+                        this.score = this.score + 4 * maxFan * room.getMultiple()+1;
+                        room.setUserSocre(this.userId, 4 * maxFan * room.getMultiple()+1);
+                        this.fan = maxFan;
+                    }
+                    System.out.println("======点炮（已听）：" + 3 * maxFan * room.getMultiple());
+                }else{
+                    gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 3 * maxFan * room.getMultiple()-1);
+                    this.score = this.score + 3 * maxFan * room.getMultiple()+1;
+                    room.setUserSocre(dianpaoUser, -3 * maxFan * room.getMultiple()-1);
+                    room.setUserSocre(this.userId, 3 * maxFan * room.getMultiple()+1);
+                    this.fan = maxFan;
+                    System.out.println("======点炮（未听）：" + 3 * maxFan * room.getMultiple());
+                }
             }
         }
     }
@@ -139,14 +165,14 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
         if (roomInfo.mustZimo == 1) {
             return false;
         }
-        if (!isTing) {
+        if (!isTing && this.roomInfo.isHaveTing()) {
             return false;
         }
         List<String> temp = getCardsAddThisCard(card);
         List<String> noPengAndGang = getCardsNoChiPengGang(temp);
         System.out.println("检测是否可胡点炮= " + noPengAndGang);
         int cardType = CardTypeUtil.cardType.get(card);
-        return HuUtil.isHu(noPengAndGang, this, cardType, null).size() > 0;
+        return HuUtil.isHuNZZ(noPengAndGang, this, cardType, null).size() > 0;
     }
 
     @Override
@@ -159,7 +185,7 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
         List<String> cs = getCardsNoChiPengGang(cards);
         System.out.println("检测是否可胡自摸= " + cs);
         int cardType = CardTypeUtil.cardType.get(card);
-        return HuUtil.isHu(cs, this,cardType , null).size()>0;
+        return HuUtil.isHuNZZ(cs, this,cardType , null).size()>0;
     }
 
 
@@ -185,7 +211,7 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
                 System.out.println("============= 听的类型: "+huCardType.tingCardType);
                 HuCardType.setHuCardType(huCardType, this);
                 //听后牌有新添加的
-                int fanResult = FanUtil.compute(huCardType.cards, huCardType,huCardType.tingCardType , this);
+                int fanResult = FanUtil.computeNZZ(huCardType.cards, huCardType,huCardType.tingCardType , this);
                 System.out.println("算番的结果== : " + fanResult);
                 System.out.println("是否可听: "+(fanResult >= needFan));
                 if (fanResult >= needFan) {

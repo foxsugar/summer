@@ -360,52 +360,175 @@ public class ListUtils {
     //====================================
 
     public static List<Integer> getBaoZi(List<Integer> leaveCards){
-        List<Integer> list = new ArrayList<>();
-        Map<Integer,Integer> countMap = new HashMap<>();
-        //取到每个牌组个数
-        for (Integer i:leaveCards) {
-            if(countMap.containsKey(cardToNumber.get(i))){
-                countMap.put(cardToNumber.get(i),countMap.get(cardToNumber.get(i))+1);
-            }else{
-                countMap.put(cardToNumber.get(i),1);
-            }
-        }
-        //取超过3个的
-        int temp = -1;
-        a:for (Integer ii:countMap.keySet()) {
-            if(countMap.get(ii)>=3){
-                temp = ii;
-                break a;
-            }
-        }
-
-        b:for (Integer i:leaveCards) {
-            if(cardToNumber.get(i)==temp){
-                list.add(i);
-                if(list.size()>=3){
-                    break b;
-                }
-            }
-        }
-        return list;
-    }
-
-
-
-    public static List<Integer> getTongHuaShun(List<Integer> leaveCards){
         List<Integer> resultlist = new ArrayList<>();
 
         ArrayList<PokerItem> cards = new ArrayList<>();
         a:for (int x = 0; x < leaveCards.size(); x++) {
             PokerItem item1 = PokerItem.createItem(cardCode.get(leaveCards.get(x)));
-            for (int y = x+1; y < leaveCards.size(); y++) {
+            for (int y = x + 1; y < leaveCards.size(); y++) {
                 PokerItem item2 = PokerItem.createItem(cardCode.get(leaveCards.get(y)));
-                for (int z = x+2; z < leaveCards.size(); z++) {
+                for (int z = x + 2; z < leaveCards.size(); z++) {
                     PokerItem item3 = PokerItem.createItem(cardCode.get(leaveCards.get(z)));
                     cards.add(item1);
                     cards.add(item2);
                     cards.add(item3);
-                    if(PokerItem.ShunJin(cards)){
+                    if (PokerItem.BaoZi(cards)) {
+                        resultlist.add(leaveCards.get(x));
+                        resultlist.add(leaveCards.get(y));
+                        resultlist.add(leaveCards.get(z));
+                        break a;
+                    }
+                }
+            }
+        }
+        return resultlist;
+    }
+
+
+
+    public static List<Integer> getTongHuaShun(List<Integer> leaveCards) {
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<PokerItem> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            PokerItem item1 = PokerItem.createItem(cardCode.get(leaveCards.get(x)));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                PokerItem item2 = PokerItem.createItem(cardCode.get(leaveCards.get(y)));
+                for (int z = x + 2; z < leaveCards.size(); z++) {
+                    PokerItem item3 = PokerItem.createItem(cardCode.get(leaveCards.get(z)));
+                    cards.add(item1);
+                    cards.add(item2);
+                    cards.add(item3);
+                    if (PokerItem.ShunJin(cards)) {
+                        resultlist.add(leaveCards.get(x));
+                        resultlist.add(leaveCards.get(y));
+                        resultlist.add(leaveCards.get(z));
+                        break a;
+                    }
+                }
+            }
+        }
+        return resultlist;
+    }
+
+    public static List<Integer> getTongHua(List<Integer> leaveCards) {
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<PokerItem> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            PokerItem item1 = PokerItem.createItem(cardCode.get(leaveCards.get(x)));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                PokerItem item2 = PokerItem.createItem(cardCode.get(leaveCards.get(y)));
+                for (int z = x + 2; z < leaveCards.size(); z++) {
+                    PokerItem item3 = PokerItem.createItem(cardCode.get(leaveCards.get(z)));
+                    cards.add(item1);
+                    cards.add(item2);
+                    cards.add(item3);
+                    if (PokerItem.JinHua(cards)) {
+                        resultlist.add(leaveCards.get(x));
+                        resultlist.add(leaveCards.get(y));
+                        resultlist.add(leaveCards.get(z));
+                        break a;
+                    }
+                }
+            }
+        }
+
+        return resultlist;
+    }
+
+    public static List<Integer> getShunZi(List<Integer> leaveCards) {
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<PokerItem> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            PokerItem item1 = PokerItem.createItem(cardCode.get(leaveCards.get(x)));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                PokerItem item2 = PokerItem.createItem(cardCode.get(leaveCards.get(y)));
+                for (int z = x + 2; z < leaveCards.size(); z++) {
+                    PokerItem item3 = PokerItem.createItem(cardCode.get(leaveCards.get(z)));
+                    cards.add(item1);
+                    cards.add(item2);
+                    cards.add(item3);
+                    if (PokerItem.ShunZi(cards)) {
+                        resultlist.add(leaveCards.get(x));
+                        resultlist.add(leaveCards.get(y));
+                        resultlist.add(leaveCards.get(z));
+                        break a;
+                    }
+                }
+            }
+        }
+
+        return resultlist;
+    }
+
+    public static List<Integer> getDuiZi(List<Integer> leaveCards) {
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<PokerItem> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            PokerItem item1 = PokerItem.createItem(cardCode.get(leaveCards.get(x)));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                PokerItem item2 = PokerItem.createItem(cardCode.get(leaveCards.get(y)));
+                for (int z = x + 2; z < leaveCards.size(); z++) {
+                    PokerItem item3 = PokerItem.createItem(cardCode.get(leaveCards.get(z)));
+                    cards.add(item1);
+                    cards.add(item2);
+                    cards.add(item3);
+                    if (PokerItem.DuiZi(cards)) {
+                        resultlist.add(leaveCards.get(x));
+                        resultlist.add(leaveCards.get(y));
+                        resultlist.add(leaveCards.get(z));
+                        break a;
+                    }
+                }
+            }
+        }
+
+        return resultlist;
+    }
+
+    public static List<Integer> getErSanWu(List<Integer> leaveCards) {
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<PokerItem> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            PokerItem item1 = PokerItem.createItem(cardCode.get(leaveCards.get(x)));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                PokerItem item2 = PokerItem.createItem(cardCode.get(leaveCards.get(y)));
+                for (int z = x + 2; z < leaveCards.size(); z++) {
+                    PokerItem item3 = PokerItem.createItem(cardCode.get(leaveCards.get(z)));
+                    cards.add(item1);
+                    cards.add(item2);
+                    cards.add(item3);
+                    if (PokerItem.is235(cards)) {
+                        resultlist.add(leaveCards.get(x));
+                        resultlist.add(leaveCards.get(y));
+                        resultlist.add(leaveCards.get(z));
+                        break a;
+                    }
+                }
+            }
+        }
+
+        return resultlist;
+    }
+
+    public static List<Integer> getSanPai(List<Integer> leaveCards) {
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<PokerItem> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            PokerItem item1 = PokerItem.createItem(cardCode.get(leaveCards.get(x)));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                PokerItem item2 = PokerItem.createItem(cardCode.get(leaveCards.get(y)));
+                for (int z = x + 2; z < leaveCards.size(); z++) {
+                    PokerItem item3 = PokerItem.createItem(cardCode.get(leaveCards.get(z)));
+                    cards.add(item1);
+                    cards.add(item2);
+                    cards.add(item3);
+                    if (!PokerItem.BaoZi(cards)&&!PokerItem.ShunJin(cards)&&!PokerItem.JinHua(cards)&&!PokerItem.ShunZi(cards)&&!PokerItem.is235(cards)) {
                         resultlist.add(leaveCards.get(x));
                         resultlist.add(leaveCards.get(y));
                         resultlist.add(leaveCards.get(z));
