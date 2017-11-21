@@ -6,7 +6,10 @@ import com.code.server.game.mahjong.util.HuCardType;
 import com.code.server.game.mahjong.util.HuLimit;
 import com.code.server.game.mahjong.util.HuUtil;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 粘粽子
@@ -19,9 +22,9 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
     public void init(List<String> cards) {
         super.init(cards);
         specialHuScore.put(hu_缺一门,1);
-        specialHuScore.put(hu_边张,1);
+/*        specialHuScore.put(hu_边张,1);
         specialHuScore.put(hu_夹张,1);//砍张
-        specialHuScore.put(hu_吊张,1);
+        specialHuScore.put(hu_吊张,1);*/
         specialHuScore.put(hu_门清,1);
         specialHuScore.put(hu_断幺,1);
         specialHuScore.put(hu_一条龙,10);
@@ -29,6 +32,7 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
         specialHuScore.put(hu_字一色,20);
         specialHuScore.put(hu_清一色,10);
         specialHuScore.put(hu_十三幺,30);
+        specialHuScore.put(hu_一张赢,1);
     }
 
 
@@ -128,10 +132,17 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
                     }
                     System.out.println("======点炮（已听）：" + 3 * maxFan * room.getMultiple());
                 }else{
-                    gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 3 * maxFan * room.getMultiple()-1);
-                    this.score = this.score + 3 * maxFan * room.getMultiple()+1;
-                    room.setUserSocre(dianpaoUser, -3 * maxFan * room.getMultiple()-1);
-                    room.setUserSocre(this.userId, 3 * maxFan * room.getMultiple()+1);
+                    if(this.userId==gameInfo.getFirstTurn()){//庄赢
+                        gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 3 * maxFan * room.getMultiple()-3);
+                        this.score = this.score + 3 * maxFan * room.getMultiple()+3;
+                        room.setUserSocre(dianpaoUser, -3 * maxFan * room.getMultiple()-3);
+                        room.setUserSocre(this.userId, 3 * maxFan * room.getMultiple()+3);
+                    }else{
+                        gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 3 * maxFan * room.getMultiple()-1);
+                        this.score = this.score + 3 * maxFan * room.getMultiple()+1;
+                        room.setUserSocre(dianpaoUser, -3 * maxFan * room.getMultiple()-1);
+                        room.setUserSocre(this.userId, 3 * maxFan * room.getMultiple()+1);
+                    }
                     this.fan = maxFan;
                     System.out.println("======点炮（未听）：" + 3 * maxFan * room.getMultiple());
                 }
@@ -206,6 +217,8 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
 
             int needFan = 1;
             List<HuCardType> list = getTingHuCardType(tempCards,null);
+            Set<Integer> yzyTingSet = getYiZhangYingSet(tempCards, null);
+            System.out.println("=================一张赢的所有类型 : "+yzyTingSet);
             for (HuCardType huCardType : list) {
                 System.out.println("");
                 System.out.println("============= 听的类型: "+huCardType.tingCardType);
@@ -214,6 +227,11 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
                 int fanResult = FanUtil.computeNZZ(huCardType.cards, huCardType,huCardType.tingCardType , this);
                 System.out.println("算番的结果== : " + fanResult);
                 System.out.println("是否可听: "+(fanResult >= needFan));
+                //是一张赢
+                if (yzyTingSet.contains(huCardType.tingCardType) && huCardType.isCheckYiZhangying) {
+                    System.out.println("是一张赢加一番");
+                    fanResult++;
+                }
                 if (fanResult >= needFan) {
                     return true;
                 }
@@ -242,5 +260,35 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
         this.lastOperate = type_ting;
         operateList.add(type_ting);
         this.gameInfo.addUserOperate(this.userId, type_ting);
+        yiZhangyingSet = getYiZhangYingSet(getCardsNoChiPengGang(cards), null);
+    }
+
+    public Set<Integer> getYiZhangYingSet(List<String> cards, HuLimit limit) {
+        //获得没有碰和杠的牌
+        List<String> handCards = new ArrayList<>();
+        handCards.addAll(cards);
+
+        //是否多一张牌
+        int size = handCards.size();
+        boolean isMore = (size - 2) % 3 == 0;//去掉将如果能整除说明手牌多一张
+        Set<Integer> yzySet = new HashSet<>();
+        if (isMore) {//多一张
+            //循环去掉一张看能否听
+            for (String card : handCards) {
+                List<String> tempCards = new ArrayList<>();
+                tempCards.addAll(handCards);
+                tempCards.remove(card);
+                List<Integer> tingList = HuUtil.isTing(tempCards, this, limit);
+                if (tingList.size() == 1) {
+                    yzySet.addAll(tingList);
+                }
+            }
+        } else {
+            List<Integer> yzyList = HuUtil.isTing(handCards, this,limit);
+            if (yzyList.size() == 1) {
+                yzySet.addAll(yzyList);
+            }
+        }
+        return yzySet;
     }
 }

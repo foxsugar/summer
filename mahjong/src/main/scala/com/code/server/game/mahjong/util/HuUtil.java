@@ -1050,4 +1050,38 @@ public class HuUtil implements HuType {
 //    static final int zhong = 31;
 //    static final int fa = 32;
 //    static final int bai = 33;
+
+    /**
+     * 断幺
+     *
+     * @param cards
+     * @return
+     */
+    private static boolean duanyao(List<String> cards,  PlayerCardsInfoMj playerCardsInfo) {
+
+        List<Integer> tempList = new ArrayList<>();
+        tempList.add(0);
+        tempList.add(8);
+        tempList.add(9);
+        tempList.add(17);
+        tempList.add(18);
+        tempList.add(26);
+        tempList.add(27);
+        tempList.add(28);
+        tempList.add(29);
+        tempList.add(30);
+        tempList.add(31);
+        tempList.add(32);
+        tempList.add(33);
+
+        boolean results = true;
+        a:for (String s:playerCardsInfo.getCards()) {
+            if(tempList.contains(CardTypeUtil.getTypeByCard(s))){
+                results = false;
+                break a;
+            }
+        }
+
+        return results;
+    }
 }

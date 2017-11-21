@@ -201,25 +201,9 @@ public class FanUtil implements HuType {
             huCardType.specialHuList.add(hu_一条龙);
             fan += playerCardsInfo.getSpecialHuScore(hu_一条龙);
         }
-        if (playerCardsInfo.isHasSpecialHu(hu_夹张) && jiazhang(cards, huCardType, tingCardType)) {//hu_夹张
-            huCardType.specialHuList.add(hu_夹张);
-            fan += playerCardsInfo.getSpecialHuScore(hu_夹张);
-        }
-        if (playerCardsInfo.isHasSpecialHu(hu_边张) && bianzhang(cards, huCardType, tingCardType)) {//hu_边张
-            huCardType.specialHuList.add(hu_边张);
-            fan += playerCardsInfo.getSpecialHuScore(hu_边张);
-        }
-        if (playerCardsInfo.isHasSpecialHu(hu_吊张) && diaozhang(cards, huCardType, tingCardType)) {//hu_吊张
-            huCardType.specialHuList.add(hu_吊张);
-            fan += playerCardsInfo.getSpecialHuScore(hu_吊张);
-        }
         if (playerCardsInfo.isHasSpecialHu(hu_清一色) && isQingyise(cards, huCardType)) {
             huCardType.specialHuList.add(hu_清一色);
             fan += playerCardsInfo.getSpecialHuScore(hu_清一色);
-        }
-        if (playerCardsInfo.isHasSpecialHu(hu_吊将) && isDiaojiang(tingCardType, huCardType)) {
-            huCardType.specialHuList.add(hu_吊将);
-            fan += playerCardsInfo.getSpecialHuScore(hu_吊将);
         }
         if (playerCardsInfo.isHasSpecialHu(hu_断幺) && duanyao(cards, huCardType)) {
             huCardType.specialHuList.add(hu_断幺);
@@ -230,7 +214,6 @@ public class FanUtil implements HuType {
             huCardType.specialHuList.add(hu_混一色);
             fan += playerCardsInfo.getSpecialHuScore(hu_混一色);
         }
-
 
         fan = huCardType.clearRepeat(playerCardsInfo, fan);
         return fan;
