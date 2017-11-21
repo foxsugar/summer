@@ -6,4 +6,6 @@ package com.code.server.constant.game;
 public interface IProjectName {
     String LONGQI = "LONGQI";
     String JINGNAN = "JINGNAN";
+    String LAOTIE = "LAOTIE";
+    String TONGCHENG = "TONGCHENG";
 }

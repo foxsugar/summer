@@ -377,6 +377,10 @@ public class GameUserService {
                 return 2;
             case IProjectName.LONGQI:
                 return 10;
+            case IProjectName.LAOTIE:
+                return 2;
+            case IProjectName.TONGCHENG:
+                return 1;
             default:
                 return 0;
         }
