@@ -39,6 +39,7 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
     //胡牌分数计算
     @Override
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card){
+
         List<String> cs = getCardsNoChiPengGang(cards);
         List<HuCardType> huList = HuUtil.isHuNZZ(cs, this, CardTypeUtil.cardType.get(card), new HuLimit(1));
         int maxFan = 1;//基础番
@@ -55,6 +56,7 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
         //设置胡牌类型
         setWinTypeResult(getMaxScoreHuCardType(huList));
         this.fan = maxFan;
+
 
         if(isZimo){
             if(this.userId==gameInfo.getFirstTurn()){//庄赢
@@ -182,8 +184,9 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
         List<String> temp = getCardsAddThisCard(card);
         List<String> noPengAndGang = getCardsNoChiPengGang(temp);
         System.out.println("检测是否可胡点炮= " + noPengAndGang);
+        yiZhangyingSet = getYiZhangYingSet(getCardsNoChiPengGang(cards), null);
         int cardType = CardTypeUtil.cardType.get(card);
-        return HuUtil.isHuNZZ(noPengAndGang, this, cardType, null).size() > 0;
+        return HuUtil.isHuNZZ(noPengAndGang, this, cardType, new HuLimit(1)).size() > 0;
     }
 
     @Override
@@ -195,8 +198,9 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
         }
         List<String> cs = getCardsNoChiPengGang(cards);
         System.out.println("检测是否可胡自摸= " + cs);
+        yiZhangyingSet = getYiZhangYingSet(getCardsNoChiPengGang(cards), null);
         int cardType = CardTypeUtil.cardType.get(card);
-        return HuUtil.isHuNZZ(cs, this,cardType , null).size()>0;
+        return HuUtil.isHuNZZ(cs, this,cardType , new HuLimit(1)).size()>0;
     }
 
 

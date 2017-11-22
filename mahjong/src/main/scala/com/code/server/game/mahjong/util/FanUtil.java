@@ -508,53 +508,17 @@ public class FanUtil implements HuType {
      * @return
      */
     private static boolean isHunyise(List<String> cards, HuCardType huCardType) {
-        boolean bHua = true;
-        boolean bZi = false;
-
-        a:for (String s:cards) {
-            if(CardTypeUtil.GROUP_WAN==CardTypeUtil.getCardGroup(s)){
-                for (String ss:cards) {
-                    if(CardTypeUtil.GROUP_TIAO==CardTypeUtil.getCardGroup(ss)){
-                        bHua =false;
-                        break a;
-                    }else if(CardTypeUtil.GROUP_TONG==CardTypeUtil.getCardGroup(ss)){
-                        bHua =false;
-                        break a;
-                    }
-                }
-            }else if(CardTypeUtil.GROUP_TIAO==CardTypeUtil.getCardGroup(s)){
-                for (String ss:cards) {
-                    if(CardTypeUtil.GROUP_WAN==CardTypeUtil.getCardGroup(ss)){
-                        bHua =false;
-                        break a;
-                    }else if(CardTypeUtil.GROUP_TONG==CardTypeUtil.getCardGroup(ss)){
-                        bHua =false;
-                        break a;
-                    }
-                }
-            }else if(CardTypeUtil.GROUP_TONG==CardTypeUtil.getCardGroup(s)){
-                for (String ss:cards) {
-                    if(CardTypeUtil.GROUP_WAN==CardTypeUtil.getCardGroup(ss)){
-                        bHua =false;
-                        break a;
-                    }else if(CardTypeUtil.GROUP_TIAO==CardTypeUtil.getCardGroup(ss)){
-                        bHua =false;
-                        break a;
-                    }
-                }
+        Set<Integer> huaSet = new HashSet<>();
+        Set<Integer> ziSet = new HashSet<>();
+        for (int group : getAllGroup(cards, huCardType)) {
+            if (group == CardTypeUtil.GROUP_TONG || group == CardTypeUtil.GROUP_TIAO || group == CardTypeUtil.GROUP_WAN) {
+                huaSet.add(group);
+            }else{
+                ziSet.add(group);
             }
         }
 
-        b:for (String s:cards) {
-            if ((CardTypeUtil.GROUP_FENG == CardTypeUtil.getCardGroup(s))||(CardTypeUtil.GROUP_ZI == CardTypeUtil.getCardGroup(s))) {
-                bZi = true;
-                break b;
-            }
-        }
-
-
-
-        return bHua && bZi;
+        return huaSet.size()==1 && ziSet.size()>0;
     }
 
 
