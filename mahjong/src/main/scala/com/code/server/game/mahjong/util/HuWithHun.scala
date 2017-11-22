@@ -170,13 +170,18 @@ object HuWithHun {
       return 0
     }
 
+    val lstIsHun = isHun(hun, lastCard)
+
     //三个都是混
     if (huCardType.hun3.size() > 0) return HuType.hu_混儿吊捉五
     //两个混
     for (hun2Card <- huCardType.hun2.asScala) {
 
       if (hun2Card == 4) {
-        return HuType.hu_混儿吊捉五
+        if(lastCard == 4){
+          return HuType.hu_混儿吊捉五
+        }
+
       } else if (hun2Card == 3 || hun2Card == 5) {
         return HuType.hu_捉五
       }
