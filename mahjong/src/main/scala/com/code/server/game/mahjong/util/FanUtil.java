@@ -167,7 +167,7 @@ public class FanUtil implements HuType {
             fan += playerCardsInfo.getSpecialHuScore(hu_断幺);
         }
 
-        if (playerCardsInfo.isHasSpecialHu(HuType.hu_混一色) && isHunyise(cards, huCardType)) {
+        if (playerCardsInfo.isHasSpecialHu(HuType.hu_混一色) && isHunyise(playerCardsInfo.getCards(), huCardType)) {
             huCardType.specialHuList.add(hu_混一色);
             fan += playerCardsInfo.getSpecialHuScore(hu_混一色);
         }
@@ -177,6 +177,47 @@ public class FanUtil implements HuType {
         return fan;
     }
 
+
+    public static int computeNZZ(List<String> cards, HuCardType huCardType, int tingCardType, PlayerCardsInfoMj playerCardsInfo) {
+        int fan = huCardType.fan;
+        if (playerCardsInfo.isHasSpecialHu(hu_缺一门) && no_group_num(cards, huCardType) == 1) {//缺一门
+            huCardType.specialHuList.add(hu_缺一门);
+            fan += playerCardsInfo.getSpecialHuScore(hu_缺一门);
+        }
+        if (playerCardsInfo.isHasSpecialHu(hu_一张赢) && playerCardsInfo.getYiZhangyingSet().contains(tingCardType)) {//hu_一张赢
+            huCardType.specialHuList.add(hu_一张赢);
+            fan += playerCardsInfo.getSpecialHuScore(hu_一张赢);
+        }
+        if (playerCardsInfo.isHasSpecialHu(hu_门清) && is_mengqing(cards, huCardType)) {//门清
+            huCardType.specialHuList.add(hu_门清);
+            fan += playerCardsInfo.getSpecialHuScore(hu_门清);
+        }
+        if (playerCardsInfo.isHasSpecialHu(hu_字一色) && isZiyise(cards, huCardType)) {//字一色
+            huCardType.specialHuList.add(hu_字一色);
+            fan += playerCardsInfo.getSpecialHuScore(hu_字一色);
+        }
+
+        if (playerCardsInfo.isHasSpecialHu(hu_一条龙) && isYitiaolong(playerCardsInfo.getCards(), huCardType)) {
+            huCardType.specialHuList.add(hu_一条龙);
+            fan += playerCardsInfo.getSpecialHuScore(hu_一条龙);
+        }
+        if (playerCardsInfo.isHasSpecialHu(hu_清一色) && isQingyise(cards, huCardType)) {
+            huCardType.specialHuList.add(hu_清一色);
+            fan += playerCardsInfo.getSpecialHuScore(hu_清一色);
+        }
+        if (playerCardsInfo.isHasSpecialHu(hu_断幺) && duanyao(cards, huCardType)) {
+            huCardType.specialHuList.add(hu_断幺);
+            fan += playerCardsInfo.getSpecialHuScore(hu_断幺);
+        }
+
+        if (playerCardsInfo.isHasSpecialHu(HuType.hu_混一色) && isHunyise(playerCardsInfo.getCards(), huCardType)) {
+            huCardType.specialHuList.add(hu_混一色);
+            fan += playerCardsInfo.getSpecialHuScore(hu_混一色);
+        }
+
+        fan = huCardType.clearRepeat(playerCardsInfo, fan);
+        return fan;
+    }
 
     /**
      * 夹张
@@ -467,50 +508,17 @@ public class FanUtil implements HuType {
      * @return
      */
     private static boolean isHunyise(List<String> cards, HuCardType huCardType) {
-        boolean bHua = true;
-        boolean bZi = false;
-
-        a:for (String s:cards) {
-            if(CardTypeUtil.GROUP_WAN==CardTypeUtil.getCardGroup(s)){
-                for (String ss:cards) {
-                    if(CardTypeUtil.GROUP_TIAO==CardTypeUtil.getCardGroup(s)){
-                        bHua =false;
-                        break a;
-                    }else if(CardTypeUtil.GROUP_TONG==CardTypeUtil.getCardGroup(s)){
-                        bHua =false;
-                        break a;
-                    }
-                }
-            }else if(CardTypeUtil.GROUP_TIAO==CardTypeUtil.getCardGroup(s)){
-                for (String ss:cards) {
-                    if(CardTypeUtil.GROUP_WAN==CardTypeUtil.getCardGroup(s)){
-                        bHua =false;
-                        break a;
-                    }else if(CardTypeUtil.GROUP_TONG==CardTypeUtil.getCardGroup(s)){
-                        bHua =false;
-                        break a;
-                    }
-                }
-            }else if(CardTypeUtil.GROUP_TONG==CardTypeUtil.getCardGroup(s)){
-                for (String ss:cards) {
-                    if(CardTypeUtil.GROUP_WAN==CardTypeUtil.getCardGroup(s)){
-                        bHua =false;
-                        break a;
-                    }else if(CardTypeUtil.GROUP_TIAO==CardTypeUtil.getCardGroup(s)){
-                        bHua =false;
-                        break a;
-                    }
-                }
+        Set<Integer> huaSet = new HashSet<>();
+        Set<Integer> ziSet = new HashSet<>();
+        for (int group : getAllGroup(cards, huCardType)) {
+            if (group == CardTypeUtil.GROUP_TONG || group == CardTypeUtil.GROUP_TIAO || group == CardTypeUtil.GROUP_WAN) {
+                huaSet.add(group);
+            }else{
+                ziSet.add(group);
             }
         }
 
-        b:for (String s:cards) {
-            if ((CardTypeUtil.GROUP_FENG == CardTypeUtil.getCardGroup(s))||(CardTypeUtil.GROUP_ZI == CardTypeUtil.getCardGroup(s))) {
-                bZi = true;
-                break b;
-            }
-        }
-        return bHua && bZi;
+        return huaSet.size()==1 && ziSet.size()>0;
     }
 
 
@@ -559,9 +567,14 @@ public class FanUtil implements HuType {
         temp.addAll(cards);
         Map<Integer, Integer> cardMap = PlayerCardsInfoMj.getCardNum(temp);
 
-        boolean isHasLong1 = huCardType.shun.containsAll(ytl1);
-        boolean isHasLong2 = huCardType.shun.containsAll(ytl2);
-        boolean isHasLong3 = huCardType.shun.containsAll(ytl3);
+        List<Integer> list1 = new ArrayList<>();
+        list1.addAll(huCardType.shun);
+        list1.addAll(huCardType.chi);
+
+        boolean isHasLong1 = list1.containsAll(ytl1);
+        boolean isHasLong2 = list1.containsAll(ytl2);
+        boolean isHasLong3 = list1.containsAll(ytl3);
+
         boolean isHas = isHasLong1 || isHasLong2 || isHasLong3;
 //		boolean isHas = false;
 //		int ytlType = 0;

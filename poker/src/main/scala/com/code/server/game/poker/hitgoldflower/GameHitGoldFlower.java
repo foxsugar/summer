@@ -324,7 +324,7 @@ public class GameHitGoldFlower extends Game {
 
     /**
      * 换牌
-     * type:baoZi,tongHuaShun,tongHua,shunZi,duiZi,erSanWu,SanPai
+     * type:baoZi,tongHuaShun,tongHua,shunZi,duiZi,erSanWu,sanPai
      * @return
      */
     public int changeCard(long userId,String cardType) {
@@ -334,17 +334,17 @@ public class GameHitGoldFlower extends Game {
         if("baoZi".equals(cardType)){
             changeCards = ListUtils.getBaoZi(leaveCards);
         }else if("tongHuaShun".equals(cardType)){
-
+            changeCards = ListUtils.getTongHuaShun(leaveCards);
         }else if("tongHua".equals(cardType)){
-
+            changeCards = ListUtils.getTongHua(leaveCards);
         }else if("shunZi".equals(cardType)){
-
+            changeCards = ListUtils.getShunZi(leaveCards);
         }else if("duiZi".equals(cardType)){
-
+            changeCards = ListUtils.getDuiZi(leaveCards);
         }else if("erSanWu".equals(cardType)){
-
-        }else if("SanPai".equals(cardType)){
-
+            changeCards = ListUtils.getErSanWu(leaveCards);
+        }else if("sanPai".equals(cardType)){
+            changeCards = ListUtils.getSanPai(leaveCards);
         }
         changeCard(userId,playerCardInfos.get(userId).getHandcards(),changeCards);
         result.put(userId,changeCards);

@@ -284,7 +284,6 @@ public class GameInfoNZZ extends GameInfo {
     protected void mopai(long userId, String... wz) {
         System.err.println("摸牌===============================userId : " + userId);
 
-
         PlayerCardsInfoNZZ playerCardsInfo = (PlayerCardsInfoNZZ)playerCardsInfos.get(userId);
 
         if (isHuangzhuang(playerCardsInfo)) {
@@ -704,7 +703,7 @@ public class GameInfoNZZ extends GameInfo {
             if (playerCardsInfo.isCanHu_zimo(catchCard)) {
                 playerCardsInfo.hu_zm(room, this, catchCard);
                 handleHu(playerCardsInfo);
-
+                setBanker(userId);
             } else {
                 return ErrorCode.CAN_NOT_HU;
             }
@@ -720,8 +719,8 @@ public class GameInfoNZZ extends GameInfo {
             }
 
             if (playerCardsInfo.isCanHu_dianpao(card)) {
-
                 handleWait(userId, WaitDetail.huPoint);
+                setBanker(userId);
             } else {
                 return ErrorCode.CAN_NOT_HU;
             }
