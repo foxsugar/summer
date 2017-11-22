@@ -360,7 +360,7 @@ public class RoomInfo extends Room {
             } else if (8 == gameNumber) {
                 result = 30;
             } else if (12 == gameNumber) {
-                result = 40;
+                result = 45;
             }
         }else if ("SY".equals(gameType)) {
             if (4 == gameNumber) {
@@ -426,7 +426,21 @@ public class RoomInfo extends Room {
                     RedisManager.addGold(this.createUser, -money / 10);
                 }
             }
-        }else if("TC".equals(this.getGameType())){
+        }else if("NZZ".equals(this.getGameType())){
+            for (long userId : users) {
+                int money = 5;
+                if (gameNumber == 8) {
+                    money = 10;
+                }else if(gameNumber == 12){
+                    money = 15;
+                }
+                RedisManager.getUserRedisService().addUserMoney(userId, money);
+                if (isAddGold()) {
+                    RedisManager.addGold(this.createUser, -money / 10);
+                }
+            }
+        }
+        else if("TC".equals(this.getGameType())){
             for (long userId : users) {
                 int money = 1;
                 RedisManager.getUserRedisService().addUserMoney(userId, money);
@@ -456,6 +470,19 @@ public class RoomInfo extends Room {
                 int money = 10;
                 if (gameNumber == 16) {
                     money = 20;
+                }
+                RedisManager.getUserRedisService().addUserMoney(userId, -money);
+                if (isAddGold()) {
+                    RedisManager.addGold(this.createUser, money / 10);
+                }
+            }
+        }else if("NZZ".equals(this.getGameType())){
+            for (long userId : users) {
+                int money = 5;
+                if (gameNumber == 8) {
+                    money = 10;
+                }else if(gameNumber == 12){
+                    money = 15;
                 }
                 RedisManager.getUserRedisService().addUserMoney(userId, -money);
                 if (isAddGold()) {
