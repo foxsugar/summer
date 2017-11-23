@@ -177,48 +177,6 @@ public class FanUtil implements HuType {
         return fan;
     }
 
-
-    public static int computeNZZ(List<String> cards, HuCardType huCardType, int tingCardType, PlayerCardsInfoMj playerCardsInfo) {
-        int fan = huCardType.fan;
-        if (playerCardsInfo.isHasSpecialHu(hu_缺一门) && no_group_num(cards, huCardType) == 1) {//缺一门
-            huCardType.specialHuList.add(hu_缺一门);
-            fan += playerCardsInfo.getSpecialHuScore(hu_缺一门);
-        }
-        if (playerCardsInfo.isHasSpecialHu(hu_一张赢) && playerCardsInfo.getYiZhangyingSet().contains(tingCardType)) {//hu_一张赢
-            huCardType.specialHuList.add(hu_一张赢);
-            fan += playerCardsInfo.getSpecialHuScore(hu_一张赢);
-        }
-        if (playerCardsInfo.isHasSpecialHu(hu_门清) && is_mengqing(cards, huCardType)) {//门清
-            huCardType.specialHuList.add(hu_门清);
-            fan += playerCardsInfo.getSpecialHuScore(hu_门清);
-        }
-        if (playerCardsInfo.isHasSpecialHu(hu_字一色) && isZiyise(cards, huCardType)) {//字一色
-            huCardType.specialHuList.add(hu_字一色);
-            fan += playerCardsInfo.getSpecialHuScore(hu_字一色);
-        }
-
-        if (playerCardsInfo.isHasSpecialHu(hu_一条龙) && isYitiaolong(playerCardsInfo.getCards(), huCardType)) {
-            huCardType.specialHuList.add(hu_一条龙);
-            fan += playerCardsInfo.getSpecialHuScore(hu_一条龙);
-        }
-        if (playerCardsInfo.isHasSpecialHu(hu_清一色) && isQingyise(cards, huCardType)) {
-            huCardType.specialHuList.add(hu_清一色);
-            fan += playerCardsInfo.getSpecialHuScore(hu_清一色);
-        }
-        if (playerCardsInfo.isHasSpecialHu(hu_断幺) && duanyao(cards, huCardType)) {
-            huCardType.specialHuList.add(hu_断幺);
-            fan += playerCardsInfo.getSpecialHuScore(hu_断幺);
-        }
-
-        if (playerCardsInfo.isHasSpecialHu(HuType.hu_混一色) && isHunyise(playerCardsInfo.getCards(), huCardType)) {
-            huCardType.specialHuList.add(hu_混一色);
-            fan += playerCardsInfo.getSpecialHuScore(hu_混一色);
-        }
-
-        fan = huCardType.clearRepeat(playerCardsInfo, fan);
-        return fan;
-    }
-
     /**
      * 夹张
      *
