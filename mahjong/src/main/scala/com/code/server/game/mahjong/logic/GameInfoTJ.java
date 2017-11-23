@@ -66,8 +66,8 @@ public class GameInfoTJ extends GameInfo {
         } else {//选了并且还有未拉庄的
 
             boolean isNotice = this.room.laZhuang.keySet().stream().filter(id -> id != firstTurn && this.room.laZhuang.get(id) == 0).count() != 0;
+            MsgSender.sendMsg2Player("gameService", "laZhuangAll", this.room.laZhuang, users);
             if (isNotice) {
-                MsgSender.sendMsg2Player("gameService", "laZhuangAll", this.room.laZhuang, users);
             } else {
                 initHun(room);
             }

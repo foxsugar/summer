@@ -352,12 +352,12 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         playerCardsInfo.isHasFengShun = true;
 
 
-        String[] s = new String[]{"116", "117", "118", "100", "104",     "056", "060", "061", "064", "065",    "016", "020", "024", "028"};
+        String[] s = new String[]{"000", "004", "008", "012", "112",     "020", "024", "028", "032",  "036",    "040", "044", "052", "053"};
 
         List<Integer> hun = new ArrayList<>();
-        hun.add(13);
-        hun.add(14);
-        hun.add(15);
+        hun.add(28);
+        hun.add(29);
+        hun.add(30);
 
 
         RoomInfo roomInfo = new RoomInfo();
@@ -370,7 +370,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         playerCardsInfo.init(playerCardsInfo.cards);
 
 
-        playerCardsInfo.pengType.put(29,0L);
+//        playerCardsInfo.pengType.put(29,0L);
 //        playerCardsInfo.pengType.put(30,0L);
 
         List<String> list = Arrays.asList(s);
@@ -378,8 +378,8 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
         List<HuCardType> huList = HuUtil.isHu(playerCardsInfo,
                 playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
-                playerCardsInfo.getChiPengGangNum(), hun, 15);
-        boolean isCanHu = playerCardsInfo.isCanHu_zimo("060");
+                playerCardsInfo.getChiPengGangNum(), hun, 28);
+        boolean isCanHu = playerCardsInfo.isCanHu_zimo("112");
         System.out.println("是否可以胡: " + isCanHu);
         huList.stream().forEach(h -> System.out.println(h.specialHuList));
 //        System.out.println(huList);

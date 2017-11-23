@@ -131,7 +131,7 @@ class GamePaijiu2CardsEndless extends GamePaijiuEndless {
     * @return
     */
   override def getGroupScore(group: String): Int = {
-    val name: String = DataManager.data.getPaijiuCardGroupDataMap.get(group).getName
+    val name: String = DataManager.data.getLaotiePaijiuCardGroupDataMap.get(group).getName
     logger.info("cardgroupName : " + name)
     DataManager.data.getLaotiePaijiuCardGroupScoreDataMap.get(name).getScore
   }
