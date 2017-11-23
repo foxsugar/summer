@@ -549,7 +549,8 @@ public class RoomInfo extends Room {
         result.put("mustZimo",this.mustZimo);
         result.put("each", this.each);//1是4个分开付，0是user付
         result.put("yipaoduoxiang", this.isYipaoduoxiang);
-
+        result.put("canChi", this.canChi);
+        result.put("haveTing", this.haveTing);
 
         return result;
     }
@@ -785,6 +786,8 @@ public class RoomInfo extends Room {
         prepareRoom.modeTotal = this.modeTotal;
         prepareRoom.mustZimo = this.mustZimo;
         prepareRoom.yipaoduoxiang = this.isYipaoduoxiang;
+        prepareRoom.canChi = this.canChi;
+        prepareRoom.haveTing = this.haveTing;
         return prepareRoom;
     }
 
