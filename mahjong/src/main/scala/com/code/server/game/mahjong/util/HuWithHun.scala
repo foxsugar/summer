@@ -293,7 +293,7 @@ object HuWithHun {
     //顺有的牌
     var removeList = new util.ArrayList[Integer]()
     for (index <- targetLong.asScala) {
-      if (huCardType.shun.remove(index.asInstanceOf[Integer])) {
+      if (huCardType.shun.contains(index)) {
         removeList.add(index)
       }
     }
@@ -332,10 +332,10 @@ object HuWithHun {
 //      if(hun2RemoveList.size() == 1) {
 //        println("--")
 //      }
-      for (index <- hun2RemoveList.asScala) {
-
-        huCardType.hun2.remove(index.asInstanceOf[Integer])
-      }
+//      for (index <- hun2RemoveList.asScala) {
+//
+//        huCardType.hun2.remove(index.asInstanceOf[Integer])
+//      }
 
       //组成龙了
       if (needShunList.size() == 0) {
@@ -344,9 +344,9 @@ object HuWithHun {
         //三个混 组成龙的部分
         if (needShunList.size() <= huCardType.hun3.size()) {
           //去掉三个混
-          for (i <- 0 until needShunList.size()) {
-            huCardType.hun3.remove(0)
-          }
+//          for (i <- 0 until needShunList.size()) {
+//            huCardType.hun3.remove(0)
+//          }
           longTypeSet.addAll(analyseLongType(huCardType, lastCardIsHun, lastCard, isWan))
         }
       }
@@ -392,7 +392,17 @@ object HuWithHun {
     //最后抓的是混
     if (lastCardIsHun) {
       //三个混 或者 有四五六万的顺子
-      if (huCardType.hun3.size() > 0 || huCardType.shun.contains(3)) longTypeSet.add(HuType.hu_混儿吊捉五龙)
+      if(huCardType.hun3.size() > 0) longTypeSet.add(HuType.hu_混儿吊捉五龙)
+
+      for (shunHaveHun <- huCardType.shunHaveHuns.asScala){
+
+        if(shunHaveHun.getShun == 3){
+          //另两张牌 没有5万
+          if(!shunHaveHun.getOther.contains(4)) longTypeSet.add(HuType.hu_捉五龙)
+        }
+      }
+
+//      if (huCardType.hun3.size() > 0 || huCardType.shun.contains(3)) longTypeSet.add(HuType.hu_混儿吊捉五龙)
       //两个混的将
       if (huCardType.hunJiang) longTypeSet.add(HuType.hu_混儿吊龙)
     } else {
