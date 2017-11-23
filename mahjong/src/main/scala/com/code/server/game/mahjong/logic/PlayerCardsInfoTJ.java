@@ -181,6 +181,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
     public void computeAddScore(int score, long userId, boolean isGang) {
 
         PlayerCardsInfoMj own = this.gameInfo.playerCardsInfos.get(userId);
+        boolean isBankerWin = userId == this.gameInfo.getFirstTurn();
         //是庄家
         if (userId == this.gameInfo.getFirstTurn()) {
             score *= 2;
@@ -203,9 +204,11 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
             //是庄家
             if (playerCardsInfo.getUserId() == this.gameInfo.getFirstTurn()) {
                 myScore *= 2;
+
             }
+
             //拉庄
-            if (this.roomInfo.laZhuang.get(playerCardsInfo.getUserId()) > 0) {
+            if ((playerCardsInfo.getUserId() == this.gameInfo.getFirstTurn() || isBankerWin) && this.roomInfo.laZhuang.get(playerCardsInfo.getUserId()) > 0) {
                 myScore *= 1 << this.roomInfo.laZhuang.get(playerCardsInfo.getUserId());
             }
 
@@ -349,12 +352,12 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         playerCardsInfo.isHasFengShun = true;
 
 
-        String[] s = new String[]{"036", "040", "044", "048", "052", "056", "060", "064", "068", "128", "129", "012", "016", "020"};
+        String[] s = new String[]{"116", "117", "118", "100", "104",     "056", "060", "061", "064", "065",    "016", "020", "024", "028"};
 
         List<Integer> hun = new ArrayList<>();
-        hun.add(17);
-        hun.add(9);
-        hun.add(10);
+        hun.add(13);
+        hun.add(14);
+        hun.add(15);
 
 
         RoomInfo roomInfo = new RoomInfo();
@@ -367,7 +370,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         playerCardsInfo.init(playerCardsInfo.cards);
 
 
-//        playerCardsInfo.pengType.put(18,0L);
+        playerCardsInfo.pengType.put(29,0L);
 //        playerCardsInfo.pengType.put(30,0L);
 
         List<String> list = Arrays.asList(s);
@@ -375,8 +378,8 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
         List<HuCardType> huList = HuUtil.isHu(playerCardsInfo,
                 playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
-                playerCardsInfo.getChiPengGangNum(), hun, 4);
-        boolean isCanHu = playerCardsInfo.isCanHu_zimo("016");
+                playerCardsInfo.getChiPengGangNum(), hun, 15);
+        boolean isCanHu = playerCardsInfo.isCanHu_zimo("060");
         System.out.println("是否可以胡: " + isCanHu);
         huList.stream().forEach(h -> System.out.println(h.specialHuList));
 //        System.out.println(huList);
