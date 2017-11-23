@@ -148,7 +148,6 @@ object HuWithHun {
     huList.add(isZhuo5(huCardType, hun, lastCard))
     huList.add(isSuBenhunLong(cards, huCardType, hun, lastCard,hunNum))
     huList.add(isHunDiao(huCardType, hun, lastCard))
-    //todo huCardType 在这个判断力被修改了  暂时方法哦最后判断 记得fix
     huList.add(isLong(huCardType, hun, lastCard))
     var t = getMaxHuType(huList)
     huCardType.specialHuList.add(t)
