@@ -173,46 +173,6 @@ public class HuUtil implements HuType {
     }
 
 
-    /**
-     * 能胡的牌
-     *
-     * @param
-     * @param tingCardType
-     * @return
-     */
-    public static List<HuCardType> isHuNZZ(List<String> cards, PlayerCardsInfoMj playerCardsInfo, int tingCardType, HuLimit limit) {
-        List<HuCardType> huList = new ArrayList<>();
-        List<HuCardType> result = new ArrayList<>();
-        //带特殊胡法
-        if (playerCardsInfo.isHasSpecialHu()) {
-            if (playerCardsInfo.isHasSpecialHu(hu_十三幺) && is13Yao(cards, playerCardsInfo)) {
-                huList.add(HuCardType.getSpecialHuInstance(hu_十三幺).setFan(playerCardsInfo.getSpecialHuScore(hu_十三幺)));
-            }
-        }
-
-
-        //普通胡法
-        List<HuCardType> huCardTypes = agari(analyse(convert(cards)), playerCardsInfo.isHasFengShun());
-        huList.addAll(huCardTypes);
-
-        for (HuCardType huCardType : huList) {
-            //设置胡的类型
-            HuCardType.setHuCardType(huCardType, playerCardsInfo);
-
-            huCardType.tingCardType = tingCardType;
-            //不限制最低番数
-            if (limit == null || !limit.isLimitFan) {
-                result.add(huCardType);
-            } else {
-                huCardType.fan = FanUtil.computeNZZ(cards, huCardType, tingCardType, playerCardsInfo);
-                if (huCardType.fan >= limit.fan) {
-                    result.add(huCardType);
-                }
-            }
-        }
-        return result;
-    }
-
     public static List<HuCardType> isHu(PlayerCardsInfoMj playerCardsInfo, List<String> cards, int chiPengGangNum, List<Integer> hun, int lastCard) {
         List<HuCardType> huList = HuWithHun.getHuCardType(analyse(convert(cards)), chiPengGangNum, hun, lastCard);
 

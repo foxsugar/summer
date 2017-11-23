@@ -41,7 +41,7 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card){
 
         List<String> cs = getCardsNoChiPengGang(cards);
-        List<HuCardType> huList = HuUtil.isHuNZZ(cs, this, CardTypeUtil.cardType.get(card), new HuLimit(1));
+        List<HuCardType> huList = HuUtil.isHu(cs, this, CardTypeUtil.cardType.get(card), new HuLimit(1));
         int maxFan = 1;//基础番
         for (HuCardType huCardType : huList) {
             maxFan += huCardType.fan;
@@ -186,7 +186,7 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
         System.out.println("检测是否可胡点炮= " + noPengAndGang);
         yiZhangyingSet = getYiZhangYingSet(getCardsNoChiPengGang(cards), null);
         int cardType = CardTypeUtil.cardType.get(card);
-        return HuUtil.isHuNZZ(noPengAndGang, this, cardType, new HuLimit(1)).size() > 0;
+        return HuUtil.isHu(noPengAndGang, this, cardType, new HuLimit(1)).size() > 0;
     }
 
     @Override
@@ -200,7 +200,7 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
         System.out.println("检测是否可胡自摸= " + cs);
         yiZhangyingSet = getYiZhangYingSet(getCardsNoChiPengGang(cards), null);
         int cardType = CardTypeUtil.cardType.get(card);
-        return HuUtil.isHuNZZ(cs, this,cardType , new HuLimit(1)).size()>0;
+        return HuUtil.isHu(cs, this,cardType , new HuLimit(1)).size()>0;
     }
 
 
