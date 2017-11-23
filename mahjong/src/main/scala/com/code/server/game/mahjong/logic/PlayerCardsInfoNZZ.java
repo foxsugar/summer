@@ -228,7 +228,7 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
                 System.out.println("============= 听的类型: "+huCardType.tingCardType);
                 HuCardType.setHuCardType(huCardType, this);
                 //听后牌有新添加的
-                int fanResult = FanUtil.computeNZZ(huCardType.cards, huCardType,huCardType.tingCardType , this);
+                int fanResult = FanUtil.compute(huCardType.cards, huCardType,huCardType.tingCardType , this);
                 System.out.println("算番的结果== : " + fanResult);
                 System.out.println("是否可听: "+(fanResult >= needFan));
                 //是一张赢
