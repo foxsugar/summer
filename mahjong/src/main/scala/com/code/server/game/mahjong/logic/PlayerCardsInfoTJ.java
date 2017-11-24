@@ -143,7 +143,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
         if (isGangKai && isTiliu) maxHuType.fan = 3;
 
-        int score = maxHuType.fan * this.roomInfo.getMultiple();
+        int score = maxHuType.fan;
 
         if (isGangKai && !isTiliu) score *= 2;
 
