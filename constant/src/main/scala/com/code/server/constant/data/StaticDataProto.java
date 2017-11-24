@@ -223,45 +223,11 @@ public final class StaticDataProto {
         java.lang.String key);
 
     /**
-     * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-     */
-    int getShareDataCount();
-    /**
-     * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-     */
-    boolean containsShareData(
-        java.lang.String key);
-    /**
-     * Use {@link #getShareDataMap()} instead.
-     */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData>
-    getShareData();
-    /**
-     * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-     */
-    java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData>
-    getShareDataMap();
-    /**
-     * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-     */
-
-    com.code.server.constant.data.StaticDataProto.ShareData getShareDataOrDefault(
-        java.lang.String key,
-        com.code.server.constant.data.StaticDataProto.ShareData defaultValue);
-    /**
-     * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-     */
-
-    com.code.server.constant.data.StaticDataProto.ShareData getShareDataOrThrow(
-        java.lang.String key);
-
-    /**
-     * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
      */
     int getTestDataCount();
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
      */
     boolean containsTestData(
         int key);
@@ -272,19 +238,19 @@ public final class StaticDataProto {
     java.util.Map<java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData>
     getTestData();
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
      */
     java.util.Map<java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData>
     getTestDataMap();
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.TestData getTestDataOrDefault(
         int key,
         com.code.server.constant.data.StaticDataProto.TestData defaultValue);
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.TestData getTestDataOrThrow(
@@ -409,22 +375,9 @@ public final class StaticDataProto {
             }
             case 58: {
               if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
-                shareData_ = com.google.protobuf.MapField.newMapField(
-                    ShareDataDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000040;
-              }
-              com.google.protobuf.MapEntry<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData>
-              shareData__ = input.readMessage(
-                  ShareDataDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              shareData_.getMutableMap().put(
-                  shareData__.getKey(), shareData__.getValue());
-              break;
-            }
-            case 66: {
-              if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
                 testData_ = com.google.protobuf.MapField.newMapField(
                     TestDataDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000080;
+                mutable_bitField0_ |= 0x00000040;
               }
               com.google.protobuf.MapEntry<java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData>
               testData__ = input.readMessage(
@@ -466,8 +419,6 @@ public final class StaticDataProto {
         case 6:
           return internalGetRoomData();
         case 7:
-          return internalGetShareData();
-        case 8:
           return internalGetTestData();
         default:
           throw new RuntimeException(
@@ -937,83 +888,7 @@ public final class StaticDataProto {
       return map.get(key);
     }
 
-    public static final int SHAREDATA_FIELD_NUMBER = 7;
-    private static final class ShareDataDefaultEntryHolder {
-      static final com.google.protobuf.MapEntry<
-          java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData> defaultEntry =
-              com.google.protobuf.MapEntry
-              .<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData>newDefaultInstance(
-                  com.code.server.constant.data.StaticDataProto.internal_static_DataManager_ShareDataEntry_descriptor, 
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "",
-                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
-                  com.code.server.constant.data.StaticDataProto.ShareData.getDefaultInstance());
-    }
-    private com.google.protobuf.MapField<
-        java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData> shareData_;
-    private com.google.protobuf.MapField<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData>
-    internalGetShareData() {
-      if (shareData_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            ShareDataDefaultEntryHolder.defaultEntry);
-      }
-      return shareData_;
-    }
-
-    public int getShareDataCount() {
-      return internalGetShareData().getMap().size();
-    }
-    /**
-     * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-     */
-
-    public boolean containsShareData(
-        java.lang.String key) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      return internalGetShareData().getMap().containsKey(key);
-    }
-    /**
-     * Use {@link #getShareDataMap()} instead.
-     */
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData> getShareData() {
-      return getShareDataMap();
-    }
-    /**
-     * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-     */
-
-    public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData> getShareDataMap() {
-      return internalGetShareData().getMap();
-    }
-    /**
-     * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-     */
-
-    public com.code.server.constant.data.StaticDataProto.ShareData getShareDataOrDefault(
-        java.lang.String key,
-        com.code.server.constant.data.StaticDataProto.ShareData defaultValue) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData> map =
-          internalGetShareData().getMap();
-      return map.containsKey(key) ? map.get(key) : defaultValue;
-    }
-    /**
-     * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-     */
-
-    public com.code.server.constant.data.StaticDataProto.ShareData getShareDataOrThrow(
-        java.lang.String key) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData> map =
-          internalGetShareData().getMap();
-      if (!map.containsKey(key)) {
-        throw new java.lang.IllegalArgumentException();
-      }
-      return map.get(key);
-    }
-
-    public static final int TESTDATA_FIELD_NUMBER = 8;
+    public static final int TESTDATA_FIELD_NUMBER = 7;
     private static final class TestDataDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData> defaultEntry =
@@ -1040,7 +915,7 @@ public final class StaticDataProto {
       return internalGetTestData().getMap().size();
     }
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
      */
 
     public boolean containsTestData(
@@ -1056,14 +931,14 @@ public final class StaticDataProto {
       return getTestDataMap();
     }
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
      */
 
     public java.util.Map<java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData> getTestDataMap() {
       return internalGetTestData().getMap();
     }
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.TestData getTestDataOrDefault(
@@ -1075,7 +950,7 @@ public final class StaticDataProto {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.TestData getTestDataOrThrow(
@@ -1138,17 +1013,11 @@ public final class StaticDataProto {
           RoomDataDefaultEntryHolder.defaultEntry,
           6);
       com.google.protobuf.GeneratedMessageV3
-        .serializeStringMapTo(
-          output,
-          internalGetShareData(),
-          ShareDataDefaultEntryHolder.defaultEntry,
-          7);
-      com.google.protobuf.GeneratedMessageV3
         .serializeIntegerMapTo(
           output,
           internalGetTestData(),
           TestDataDefaultEntryHolder.defaultEntry,
-          8);
+          7);
     }
 
     public int getSerializedSize() {
@@ -1216,16 +1085,6 @@ public final class StaticDataProto {
         size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(6, roomData__);
       }
-      for (java.util.Map.Entry<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData> entry
-           : internalGetShareData().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData>
-        shareData__ = ShareDataDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
-        size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(7, shareData__);
-      }
       for (java.util.Map.Entry<java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData> entry
            : internalGetTestData().getMap().entrySet()) {
         com.google.protobuf.MapEntry<java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData>
@@ -1234,7 +1093,7 @@ public final class StaticDataProto {
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(8, testData__);
+            .computeMessageSize(7, testData__);
       }
       memoizedSize = size;
       return size;
@@ -1264,8 +1123,6 @@ public final class StaticDataProto {
           other.internalGetPaijiuCardGroupScoreData());
       result = result && internalGetRoomData().equals(
           other.internalGetRoomData());
-      result = result && internalGetShareData().equals(
-          other.internalGetShareData());
       result = result && internalGetTestData().equals(
           other.internalGetTestData());
       return result;
@@ -1301,10 +1158,6 @@ public final class StaticDataProto {
       if (!internalGetRoomData().getMap().isEmpty()) {
         hash = (37 * hash) + ROOMDATA_FIELD_NUMBER;
         hash = (53 * hash) + internalGetRoomData().hashCode();
-      }
-      if (!internalGetShareData().getMap().isEmpty()) {
-        hash = (37 * hash) + SHAREDATA_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetShareData().hashCode();
       }
       if (!internalGetTestData().getMap().isEmpty()) {
         hash = (37 * hash) + TESTDATA_FIELD_NUMBER;
@@ -1421,8 +1274,6 @@ public final class StaticDataProto {
           case 6:
             return internalGetRoomData();
           case 7:
-            return internalGetShareData();
-          case 8:
             return internalGetTestData();
           default:
             throw new RuntimeException(
@@ -1446,8 +1297,6 @@ public final class StaticDataProto {
           case 6:
             return internalGetMutableRoomData();
           case 7:
-            return internalGetMutableShareData();
-          case 8:
             return internalGetMutableTestData();
           default:
             throw new RuntimeException(
@@ -1484,7 +1333,6 @@ public final class StaticDataProto {
         internalGetMutablePaijiuCardGroupData().clear();
         internalGetMutablePaijiuCardGroupScoreData().clear();
         internalGetMutableRoomData().clear();
-        internalGetMutableShareData().clear();
         internalGetMutableTestData().clear();
         return this;
       }
@@ -1521,8 +1369,6 @@ public final class StaticDataProto {
         result.paijiuCardGroupScoreData_.makeImmutable();
         result.roomData_ = internalGetRoomData();
         result.roomData_.makeImmutable();
-        result.shareData_ = internalGetShareData();
-        result.shareData_.makeImmutable();
         result.testData_ = internalGetTestData();
         result.testData_.makeImmutable();
         onBuilt();
@@ -1578,8 +1424,6 @@ public final class StaticDataProto {
             other.internalGetPaijiuCardGroupScoreData());
         internalGetMutableRoomData().mergeFrom(
             other.internalGetRoomData());
-        internalGetMutableShareData().mergeFrom(
-            other.internalGetShareData());
         internalGetMutableTestData().mergeFrom(
             other.internalGetTestData());
         onChanged();
@@ -2348,129 +2192,6 @@ public final class StaticDataProto {
       }
 
       private com.google.protobuf.MapField<
-          java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData> shareData_;
-      private com.google.protobuf.MapField<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData>
-      internalGetShareData() {
-        if (shareData_ == null) {
-          return com.google.protobuf.MapField.emptyMapField(
-              ShareDataDefaultEntryHolder.defaultEntry);
-        }
-        return shareData_;
-      }
-      private com.google.protobuf.MapField<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData>
-      internalGetMutableShareData() {
-        onChanged();;
-        if (shareData_ == null) {
-          shareData_ = com.google.protobuf.MapField.newMapField(
-              ShareDataDefaultEntryHolder.defaultEntry);
-        }
-        if (!shareData_.isMutable()) {
-          shareData_ = shareData_.copy();
-        }
-        return shareData_;
-      }
-
-      public int getShareDataCount() {
-        return internalGetShareData().getMap().size();
-      }
-      /**
-       * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-       */
-
-      public boolean containsShareData(
-          java.lang.String key) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        return internalGetShareData().getMap().containsKey(key);
-      }
-      /**
-       * Use {@link #getShareDataMap()} instead.
-       */
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData> getShareData() {
-        return getShareDataMap();
-      }
-      /**
-       * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-       */
-
-      public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData> getShareDataMap() {
-        return internalGetShareData().getMap();
-      }
-      /**
-       * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-       */
-
-      public com.code.server.constant.data.StaticDataProto.ShareData getShareDataOrDefault(
-          java.lang.String key,
-          com.code.server.constant.data.StaticDataProto.ShareData defaultValue) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData> map =
-            internalGetShareData().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
-      }
-      /**
-       * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-       */
-
-      public com.code.server.constant.data.StaticDataProto.ShareData getShareDataOrThrow(
-          java.lang.String key) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData> map =
-            internalGetShareData().getMap();
-        if (!map.containsKey(key)) {
-          throw new java.lang.IllegalArgumentException();
-        }
-        return map.get(key);
-      }
-
-      public Builder clearShareData() {
-        internalGetMutableShareData().getMutableMap()
-            .clear();
-        return this;
-      }
-      /**
-       * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-       */
-
-      public Builder removeShareData(
-          java.lang.String key) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        internalGetMutableShareData().getMutableMap()
-            .remove(key);
-        return this;
-      }
-      /**
-       * Use alternate mutation accessors instead.
-       */
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData>
-      getMutableShareData() {
-        return internalGetMutableShareData().getMutableMap();
-      }
-      /**
-       * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-       */
-      public Builder putShareData(
-          java.lang.String key,
-          com.code.server.constant.data.StaticDataProto.ShareData value) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        if (value == null) { throw new java.lang.NullPointerException(); }
-        internalGetMutableShareData().getMutableMap()
-            .put(key, value);
-        return this;
-      }
-      /**
-       * <code>map&lt;string, .ShareData&gt; shareData = 7;</code>
-       */
-
-      public Builder putAllShareData(
-          java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.ShareData> values) {
-        internalGetMutableShareData().getMutableMap()
-            .putAll(values);
-        return this;
-      }
-
-      private com.google.protobuf.MapField<
           java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData> testData_;
       private com.google.protobuf.MapField<java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData>
       internalGetTestData() {
@@ -2497,7 +2218,7 @@ public final class StaticDataProto {
         return internalGetTestData().getMap().size();
       }
       /**
-       * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+       * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
        */
 
       public boolean containsTestData(
@@ -2513,14 +2234,14 @@ public final class StaticDataProto {
         return getTestDataMap();
       }
       /**
-       * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+       * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
        */
 
       public java.util.Map<java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData> getTestDataMap() {
         return internalGetTestData().getMap();
       }
       /**
-       * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+       * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.TestData getTestDataOrDefault(
@@ -2532,7 +2253,7 @@ public final class StaticDataProto {
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+       * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.TestData getTestDataOrThrow(
@@ -2552,7 +2273,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+       * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
        */
 
       public Builder removeTestData(
@@ -2571,7 +2292,7 @@ public final class StaticDataProto {
         return internalGetMutableTestData().getMutableMap();
       }
       /**
-       * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+       * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
        */
       public Builder putTestData(
           int key,
@@ -2583,7 +2304,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;int32, .TestData&gt; testData = 8;</code>
+       * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
        */
 
       public Builder putAllTestData(
@@ -6904,572 +6625,6 @@ public final class StaticDataProto {
 
   }
 
-  public interface ShareDataOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:ShareData)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>string id = 1;</code>
-     */
-    java.lang.String getId();
-    /**
-     * <code>string id = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getIdBytes();
-
-    /**
-     * <code>int32 num = 2;</code>
-     */
-    int getNum();
-  }
-  /**
-   * Protobuf type {@code ShareData}
-   */
-  public  static final class ShareData extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:ShareData)
-      ShareDataOrBuilder {
-    // Use ShareData.newBuilder() to construct.
-    private ShareData(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private ShareData() {
-      id_ = "";
-      num_ = 0;
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-    }
-    private ShareData(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      int mutable_bitField0_ = 0;
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!input.skipField(tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              id_ = s;
-              break;
-            }
-            case 16: {
-
-              num_ = input.readInt32();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.code.server.constant.data.StaticDataProto.internal_static_ShareData_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.code.server.constant.data.StaticDataProto.internal_static_ShareData_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.code.server.constant.data.StaticDataProto.ShareData.class, com.code.server.constant.data.StaticDataProto.ShareData.Builder.class);
-    }
-
-    public static final int ID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object id_;
-    /**
-     * <code>string id = 1;</code>
-     */
-    public java.lang.String getId() {
-      java.lang.Object ref = id_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        id_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string id = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getIdBytes() {
-      java.lang.Object ref = id_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        id_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int NUM_FIELD_NUMBER = 2;
-    private int num_;
-    /**
-     * <code>int32 num = 2;</code>
-     */
-    public int getNum() {
-      return num_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
-      }
-      if (num_ != 0) {
-        output.writeInt32(2, num_);
-      }
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
-      }
-      if (num_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, num_);
-      }
-      memoizedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.code.server.constant.data.StaticDataProto.ShareData)) {
-        return super.equals(obj);
-      }
-      com.code.server.constant.data.StaticDataProto.ShareData other = (com.code.server.constant.data.StaticDataProto.ShareData) obj;
-
-      boolean result = true;
-      result = result && getId()
-          .equals(other.getId());
-      result = result && (getNum()
-          == other.getNum());
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + ID_FIELD_NUMBER;
-      hash = (53 * hash) + getId().hashCode();
-      hash = (37 * hash) + NUM_FIELD_NUMBER;
-      hash = (53 * hash) + getNum();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.code.server.constant.data.StaticDataProto.ShareData parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.code.server.constant.data.StaticDataProto.ShareData parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.code.server.constant.data.StaticDataProto.ShareData parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.code.server.constant.data.StaticDataProto.ShareData parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.code.server.constant.data.StaticDataProto.ShareData parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.code.server.constant.data.StaticDataProto.ShareData parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.code.server.constant.data.StaticDataProto.ShareData parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static com.code.server.constant.data.StaticDataProto.ShareData parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.code.server.constant.data.StaticDataProto.ShareData parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.code.server.constant.data.StaticDataProto.ShareData parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(com.code.server.constant.data.StaticDataProto.ShareData prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code ShareData}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:ShareData)
-        com.code.server.constant.data.StaticDataProto.ShareDataOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.code.server.constant.data.StaticDataProto.internal_static_ShareData_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.code.server.constant.data.StaticDataProto.internal_static_ShareData_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.code.server.constant.data.StaticDataProto.ShareData.class, com.code.server.constant.data.StaticDataProto.ShareData.Builder.class);
-      }
-
-      // Construct using com.code.server.constant.data.StaticDataProto.ShareData.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      public Builder clear() {
-        super.clear();
-        id_ = "";
-
-        num_ = 0;
-
-        return this;
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.code.server.constant.data.StaticDataProto.internal_static_ShareData_descriptor;
-      }
-
-      public com.code.server.constant.data.StaticDataProto.ShareData getDefaultInstanceForType() {
-        return com.code.server.constant.data.StaticDataProto.ShareData.getDefaultInstance();
-      }
-
-      public com.code.server.constant.data.StaticDataProto.ShareData build() {
-        com.code.server.constant.data.StaticDataProto.ShareData result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public com.code.server.constant.data.StaticDataProto.ShareData buildPartial() {
-        com.code.server.constant.data.StaticDataProto.ShareData result = new com.code.server.constant.data.StaticDataProto.ShareData(this);
-        result.id_ = id_;
-        result.num_ = num_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.code.server.constant.data.StaticDataProto.ShareData) {
-          return mergeFrom((com.code.server.constant.data.StaticDataProto.ShareData)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.code.server.constant.data.StaticDataProto.ShareData other) {
-        if (other == com.code.server.constant.data.StaticDataProto.ShareData.getDefaultInstance()) return this;
-        if (!other.getId().isEmpty()) {
-          id_ = other.id_;
-          onChanged();
-        }
-        if (other.getNum() != 0) {
-          setNum(other.getNum());
-        }
-        onChanged();
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.code.server.constant.data.StaticDataProto.ShareData parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.code.server.constant.data.StaticDataProto.ShareData) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object id_ = "";
-      /**
-       * <code>string id = 1;</code>
-       */
-      public java.lang.String getId() {
-        java.lang.Object ref = id_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          id_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string id = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getIdBytes() {
-        java.lang.Object ref = id_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          id_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string id = 1;</code>
-       */
-      public Builder setId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        id_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string id = 1;</code>
-       */
-      public Builder clearId() {
-        
-        id_ = getDefaultInstance().getId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string id = 1;</code>
-       */
-      public Builder setIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        id_ = value;
-        onChanged();
-        return this;
-      }
-
-      private int num_ ;
-      /**
-       * <code>int32 num = 2;</code>
-       */
-      public int getNum() {
-        return num_;
-      }
-      /**
-       * <code>int32 num = 2;</code>
-       */
-      public Builder setNum(int value) {
-        
-        num_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int32 num = 2;</code>
-       */
-      public Builder clearNum() {
-        
-        num_ = 0;
-        onChanged();
-        return this;
-      }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:ShareData)
-    }
-
-    // @@protoc_insertion_point(class_scope:ShareData)
-    private static final com.code.server.constant.data.StaticDataProto.ShareData DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new com.code.server.constant.data.StaticDataProto.ShareData();
-    }
-
-    public static com.code.server.constant.data.StaticDataProto.ShareData getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<ShareData>
-        PARSER = new com.google.protobuf.AbstractParser<ShareData>() {
-      public ShareData parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new ShareData(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<ShareData> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<ShareData> getParserForType() {
-      return PARSER;
-    }
-
-    public com.code.server.constant.data.StaticDataProto.ShareData getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
   public interface TestDataOrBuilder extends
       // @@protoc_insertion_point(interface_extends:TestData)
       com.google.protobuf.MessageOrBuilder {
@@ -9195,11 +8350,6 @@ public final class StaticDataProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_DataManager_RoomDataEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_DataManager_ShareDataEntry_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_DataManager_ShareDataEntry_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_DataManager_TestDataEntry_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -9245,11 +8395,6 @@ public final class StaticDataProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_RoomData_EachMoneyEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ShareData_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ShareData_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_TestData_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -9273,7 +8418,7 @@ public final class StaticDataProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\027static_data_proto.proto\"\201\t\n\013DataManage" +
+      "\n\027static_data_proto.proto\"\223\010\n\013DataManage" +
       "r\022N\n\031laotiePaijiuCardGroupData\030\001 \003(\0132+.D" +
       "ataManager.LaotiePaijiuCardGroupDataEntr" +
       "y\022X\n\036laotiePaijiuCardGroupScoreData\030\002 \003(" +
@@ -9284,49 +8429,45 @@ public final class StaticDataProto {
       "ardGroupDataEntry\022L\n\030paijiuCardGroupScor" +
       "eData\030\005 \003(\0132*.DataManager.PaijiuCardGrou",
       "pScoreDataEntry\022,\n\010roomData\030\006 \003(\0132\032.Data" +
-      "Manager.RoomDataEntry\022.\n\tshareData\030\007 \003(\013" +
-      "2\033.DataManager.ShareDataEntry\022,\n\010testDat" +
-      "a\030\010 \003(\0132\032.DataManager.TestDataEntry\032\\\n\036L" +
-      "aotiePaijiuCardGroupDataEntry\022\013\n\003key\030\001 \001" +
-      "(\t\022)\n\005value\030\002 \001(\0132\032.LaotiePaijiuCardGrou" +
-      "pData:\0028\001\032f\n#LaotiePaijiuCardGroupScoreD" +
-      "ataEntry\022\013\n\003key\030\001 \001(\t\022.\n\005value\030\002 \001(\0132\037.L" +
-      "aotiePaijiuCardGroupScoreData:\0028\001\032F\n\023Pai" +
-      "jiuCardDataEntry\022\013\n\003key\030\001 \001(\005\022\036\n\005value\030\002",
-      " \001(\0132\017.PaijiuCardData:\0028\001\032P\n\030PaijiuCardG" +
-      "roupDataEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(" +
-      "\0132\024.PaijiuCardGroupData:\0028\001\032Z\n\035PaijiuCar" +
-      "dGroupScoreDataEntry\022\013\n\003key\030\001 \001(\t\022(\n\005val" +
-      "ue\030\002 \001(\0132\031.PaijiuCardGroupScoreData:\0028\001\032" +
-      ":\n\rRoomDataEntry\022\013\n\003key\030\001 \001(\t\022\030\n\005value\030\002" +
-      " \001(\0132\t.RoomData:\0028\001\032<\n\016ShareDataEntry\022\013\n" +
-      "\003key\030\001 \001(\t\022\031\n\005value\030\002 \001(\0132\n.ShareData:\0028" +
-      "\001\032:\n\rTestDataEntry\022\013\n\003key\030\001 \001(\005\022\030\n\005value" +
-      "\030\002 \001(\0132\t.TestData:\0028\001\"5\n\031LaotiePaijiuCar",
-      "dGroupData\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\";\n\036" +
-      "LaotiePaijiuCardGroupScoreData\022\n\n\002id\030\001 \001" +
-      "(\t\022\r\n\005score\030\002 \001(\005\"*\n\016PaijiuCardData\022\n\n\002i" +
-      "d\030\001 \001(\005\022\014\n\004card\030\002 \001(\005\"/\n\023PaijiuCardGroup" +
-      "Data\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\"5\n\030Paijiu" +
-      "CardGroupScoreData\022\n\n\002id\030\001 \001(\t\022\r\n\005score\030" +
-      "\002 \001(\005\"\201\002\n\010RoomData\022\n\n\002id\030\001 \001(\t\022#\n\005money\030" +
-      "\002 \003(\0132\024.RoomData.MoneyEntry\022\016\n\006maxBet\030\003 " +
-      "\001(\001\022+\n\teachMoney\030\004 \003(\0132\030.RoomData.EachMo" +
-      "neyEntry\022\021\n\tisAddGold\030\005 \001(\005\022\024\n\014instanceN",
-      "ame\030\006 \001(\t\032,\n\nMoneyEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005" +
-      "value\030\002 \001(\005:\0028\001\0320\n\016EachMoneyEntry\022\013\n\003key" +
-      "\030\001 \001(\005\022\r\n\005value\030\002 \001(\005:\0028\001\"$\n\tShareData\022\n" +
-      "\n\002id\030\001 \001(\t\022\013\n\003num\030\002 \001(\005\"\275\002\n\010TestData\022\n\n\002" +
-      "id\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\022\013\n\003age\030\003 \001(\005\022\013\n\003e" +
-      "xp\030\004 \003(\005\022%\n\006weapon\030\005 \003(\0132\025.TestData.Weap" +
-      "onEntry\022\020\n\010testLong\030\006 \001(\003\022\022\n\ntestDouble\030" +
-      "\007 \001(\001\022\026\n\016testListDouble\030\010 \003(\001\0223\n\rtestMap" +
-      "Double\030\t \003(\0132\034.TestData.TestMapDoubleEnt" +
-      "ry\032-\n\013WeaponEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030",
-      "\002 \001(\t:\0028\001\0324\n\022TestMapDoubleEntry\022\013\n\003key\030\001" +
-      " \001(\003\022\r\n\005value\030\002 \001(\001:\0028\001B?\n\035com.code.serv" +
-      "er.constant.dataB\017StaticDataProto\252\002\014com." +
-      "bsl.datab\006proto3"
+      "Manager.RoomDataEntry\022,\n\010testData\030\007 \003(\0132" +
+      "\032.DataManager.TestDataEntry\032\\\n\036LaotiePai" +
+      "jiuCardGroupDataEntry\022\013\n\003key\030\001 \001(\t\022)\n\005va" +
+      "lue\030\002 \001(\0132\032.LaotiePaijiuCardGroupData:\0028" +
+      "\001\032f\n#LaotiePaijiuCardGroupScoreDataEntry" +
+      "\022\013\n\003key\030\001 \001(\t\022.\n\005value\030\002 \001(\0132\037.LaotiePai" +
+      "jiuCardGroupScoreData:\0028\001\032F\n\023PaijiuCardD" +
+      "ataEntry\022\013\n\003key\030\001 \001(\005\022\036\n\005value\030\002 \001(\0132\017.P" +
+      "aijiuCardData:\0028\001\032P\n\030PaijiuCardGroupData",
+      "Entry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.Paij" +
+      "iuCardGroupData:\0028\001\032Z\n\035PaijiuCardGroupSc" +
+      "oreDataEntry\022\013\n\003key\030\001 \001(\t\022(\n\005value\030\002 \001(\013" +
+      "2\031.PaijiuCardGroupScoreData:\0028\001\032:\n\rRoomD" +
+      "ataEntry\022\013\n\003key\030\001 \001(\t\022\030\n\005value\030\002 \001(\0132\t.R" +
+      "oomData:\0028\001\032:\n\rTestDataEntry\022\013\n\003key\030\001 \001(" +
+      "\005\022\030\n\005value\030\002 \001(\0132\t.TestData:\0028\001\"5\n\031Laoti" +
+      "ePaijiuCardGroupData\022\n\n\002id\030\001 \001(\t\022\014\n\004name" +
+      "\030\002 \001(\t\";\n\036LaotiePaijiuCardGroupScoreData" +
+      "\022\n\n\002id\030\001 \001(\t\022\r\n\005score\030\002 \001(\005\"*\n\016PaijiuCar",
+      "dData\022\n\n\002id\030\001 \001(\005\022\014\n\004card\030\002 \001(\005\"/\n\023Paiji" +
+      "uCardGroupData\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t" +
+      "\"5\n\030PaijiuCardGroupScoreData\022\n\n\002id\030\001 \001(\t" +
+      "\022\r\n\005score\030\002 \001(\005\"\201\002\n\010RoomData\022\n\n\002id\030\001 \001(\t" +
+      "\022#\n\005money\030\002 \003(\0132\024.RoomData.MoneyEntry\022\016\n" +
+      "\006maxBet\030\003 \001(\001\022+\n\teachMoney\030\004 \003(\0132\030.RoomD" +
+      "ata.EachMoneyEntry\022\021\n\tisAddGold\030\005 \001(\005\022\024\n" +
+      "\014instanceName\030\006 \001(\t\032,\n\nMoneyEntry\022\013\n\003key" +
+      "\030\001 \001(\005\022\r\n\005value\030\002 \001(\005:\0028\001\0320\n\016EachMoneyEn" +
+      "try\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\005:\0028\001\"\275\002\n\010",
+      "TestData\022\n\n\002id\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\022\013\n\003ag" +
+      "e\030\003 \001(\005\022\013\n\003exp\030\004 \003(\005\022%\n\006weapon\030\005 \003(\0132\025.T" +
+      "estData.WeaponEntry\022\020\n\010testLong\030\006 \001(\003\022\022\n" +
+      "\ntestDouble\030\007 \001(\001\022\026\n\016testListDouble\030\010 \003(" +
+      "\001\0223\n\rtestMapDouble\030\t \003(\0132\034.TestData.Test" +
+      "MapDoubleEntry\032-\n\013WeaponEntry\022\013\n\003key\030\001 \001" +
+      "(\005\022\r\n\005value\030\002 \001(\t:\0028\001\0324\n\022TestMapDoubleEn" +
+      "try\022\013\n\003key\030\001 \001(\003\022\r\n\005value\030\002 \001(\001:\0028\001B?\n\035c" +
+      "om.code.server.constant.dataB\017StaticData" +
+      "Proto\252\002\014com.bsl.datab\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -9345,7 +8486,7 @@ public final class StaticDataProto {
     internal_static_DataManager_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DataManager_descriptor,
-        new java.lang.String[] { "LaotiePaijiuCardGroupData", "LaotiePaijiuCardGroupScoreData", "PaijiuCardData", "PaijiuCardGroupData", "PaijiuCardGroupScoreData", "RoomData", "ShareData", "TestData", });
+        new java.lang.String[] { "LaotiePaijiuCardGroupData", "LaotiePaijiuCardGroupScoreData", "PaijiuCardData", "PaijiuCardGroupData", "PaijiuCardGroupScoreData", "RoomData", "TestData", });
     internal_static_DataManager_LaotiePaijiuCardGroupDataEntry_descriptor =
       internal_static_DataManager_descriptor.getNestedTypes().get(0);
     internal_static_DataManager_LaotiePaijiuCardGroupDataEntry_fieldAccessorTable = new
@@ -9382,14 +8523,8 @@ public final class StaticDataProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DataManager_RoomDataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
-    internal_static_DataManager_ShareDataEntry_descriptor =
-      internal_static_DataManager_descriptor.getNestedTypes().get(6);
-    internal_static_DataManager_ShareDataEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_DataManager_ShareDataEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
     internal_static_DataManager_TestDataEntry_descriptor =
-      internal_static_DataManager_descriptor.getNestedTypes().get(7);
+      internal_static_DataManager_descriptor.getNestedTypes().get(6);
     internal_static_DataManager_TestDataEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DataManager_TestDataEntry_descriptor,
@@ -9442,14 +8577,8 @@ public final class StaticDataProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_RoomData_EachMoneyEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
-    internal_static_ShareData_descriptor =
-      getDescriptor().getMessageTypes().get(7);
-    internal_static_ShareData_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ShareData_descriptor,
-        new java.lang.String[] { "Id", "Num", });
     internal_static_TestData_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_TestData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_TestData_descriptor,

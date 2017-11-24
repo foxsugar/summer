@@ -367,7 +367,10 @@ public class ListUtils {
             PokerItem item1 = PokerItem.createItem(cardCode.get(leaveCards.get(x)));
             for (int y = x + 1; y < leaveCards.size(); y++) {
                 PokerItem item2 = PokerItem.createItem(cardCode.get(leaveCards.get(y)));
-                for (int z = x + 2; z < leaveCards.size(); z++) {
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    if(cards.size()!=0){
+                        cards.clear();
+                    }
                     PokerItem item3 = PokerItem.createItem(cardCode.get(leaveCards.get(z)));
                     cards.add(item1);
                     cards.add(item2);
@@ -394,7 +397,10 @@ public class ListUtils {
             PokerItem item1 = PokerItem.createItem(cardCode.get(leaveCards.get(x)));
             for (int y = x + 1; y < leaveCards.size(); y++) {
                 PokerItem item2 = PokerItem.createItem(cardCode.get(leaveCards.get(y)));
-                for (int z = x + 2; z < leaveCards.size(); z++) {
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    if(cards.size()!=0){
+                        cards.clear();
+                    }
                     PokerItem item3 = PokerItem.createItem(cardCode.get(leaveCards.get(z)));
                     cards.add(item1);
                     cards.add(item2);
@@ -419,7 +425,10 @@ public class ListUtils {
             PokerItem item1 = PokerItem.createItem(cardCode.get(leaveCards.get(x)));
             for (int y = x + 1; y < leaveCards.size(); y++) {
                 PokerItem item2 = PokerItem.createItem(cardCode.get(leaveCards.get(y)));
-                for (int z = x + 2; z < leaveCards.size(); z++) {
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    if(cards.size()!=0){
+                        cards.clear();
+                    }
                     PokerItem item3 = PokerItem.createItem(cardCode.get(leaveCards.get(z)));
                     cards.add(item1);
                     cards.add(item2);
@@ -445,7 +454,10 @@ public class ListUtils {
             PokerItem item1 = PokerItem.createItem(cardCode.get(leaveCards.get(x)));
             for (int y = x + 1; y < leaveCards.size(); y++) {
                 PokerItem item2 = PokerItem.createItem(cardCode.get(leaveCards.get(y)));
-                for (int z = x + 2; z < leaveCards.size(); z++) {
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    if(cards.size()!=0){
+                        cards.clear();
+                    }
                     PokerItem item3 = PokerItem.createItem(cardCode.get(leaveCards.get(z)));
                     cards.add(item1);
                     cards.add(item2);
@@ -471,7 +483,10 @@ public class ListUtils {
             PokerItem item1 = PokerItem.createItem(cardCode.get(leaveCards.get(x)));
             for (int y = x + 1; y < leaveCards.size(); y++) {
                 PokerItem item2 = PokerItem.createItem(cardCode.get(leaveCards.get(y)));
-                for (int z = x + 2; z < leaveCards.size(); z++) {
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    if(cards.size()!=0){
+                        cards.clear();
+                    }
                     PokerItem item3 = PokerItem.createItem(cardCode.get(leaveCards.get(z)));
                     cards.add(item1);
                     cards.add(item2);
@@ -497,7 +512,10 @@ public class ListUtils {
             PokerItem item1 = PokerItem.createItem(cardCode.get(leaveCards.get(x)));
             for (int y = x + 1; y < leaveCards.size(); y++) {
                 PokerItem item2 = PokerItem.createItem(cardCode.get(leaveCards.get(y)));
-                for (int z = x + 2; z < leaveCards.size(); z++) {
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    if(cards.size()!=0){
+                        cards.clear();
+                    }
                     PokerItem item3 = PokerItem.createItem(cardCode.get(leaveCards.get(z)));
                     cards.add(item1);
                     cards.add(item2);
@@ -523,7 +541,10 @@ public class ListUtils {
             PokerItem item1 = PokerItem.createItem(cardCode.get(leaveCards.get(x)));
             for (int y = x + 1; y < leaveCards.size(); y++) {
                 PokerItem item2 = PokerItem.createItem(cardCode.get(leaveCards.get(y)));
-                for (int z = x + 2; z < leaveCards.size(); z++) {
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    if(cards.size()!=0){
+                        cards.clear();
+                    }
                     PokerItem item3 = PokerItem.createItem(cardCode.get(leaveCards.get(z)));
                     cards.add(item1);
                     cards.add(item2);
