@@ -7,4 +7,6 @@ public class PrepareRoomMj extends PrepareRoom {
     public String modeTotal;
     public String mode;
     public boolean yipaoduoxiang;
+    public boolean canChi;
+    public boolean haveTing;
 }
