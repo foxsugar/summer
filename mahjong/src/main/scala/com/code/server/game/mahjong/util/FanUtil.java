@@ -162,7 +162,7 @@ public class FanUtil implements HuType {
             fan += playerCardsInfo.getSpecialHuScore(hu_吊将);
         }
 
-        if (playerCardsInfo.isHasSpecialHu(hu_断幺) && duanyao(cards, huCardType)) {
+        if (playerCardsInfo.isHasSpecialHu(hu_断幺) && duanyao(playerCardsInfo.getCards(), huCardType)) {
             huCardType.specialHuList.add(hu_断幺);
             fan += playerCardsInfo.getSpecialHuScore(hu_断幺);
         }
