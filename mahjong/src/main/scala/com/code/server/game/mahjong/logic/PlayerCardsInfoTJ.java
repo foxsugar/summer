@@ -173,7 +173,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
     public void computeChan() {
         GameInfoTJ gameInfoTJ = (GameInfoTJ) this.gameInfo;
         int size = gameInfoTJ.getChanNum();
-        int score = size * 2;
+        int score = size * 1;
         computeAddScore(-score, this.gameInfo.getFirstTurn(), true);
     }
 
