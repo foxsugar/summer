@@ -361,12 +361,12 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
 
 //        String[] s = new String[]{"000", "004", "008", "017", "016",     "020", "024", "028", "032",  "036",    "040", "044", "052", "053"};
-        String[] s = new String[]{"036", "040", "044", "048", "052",     "056", "060", "064", "068",  "080",    "081", "082", "128", "129"};
+        String[] s = new String[]{"112", "113", "114",   "024",   "028", "032",  "088", "092", "096",  "097",    "132", "133", "124", "120"};
 
         List<Integer> hun = new ArrayList<>();
-        hun.add(10);
-        hun.add(11);
-        hun.add(12);
+        hun.add(31);
+        hun.add(32);
+        hun.add(33);
 
 
         RoomInfo roomInfo = new RoomInfo();
@@ -387,8 +387,8 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
         List<HuCardType> huList = HuUtil.isHu(playerCardsInfo,
                 playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
-                playerCardsInfo.getChiPengGangNum(), hun, 32);
-        boolean isCanHu = playerCardsInfo.isCanHu_zimo("128");
+                playerCardsInfo.getChiPengGangNum(), hun, 30);
+        boolean isCanHu = playerCardsInfo.isCanHu_zimo("120");
         System.out.println("是否可以胡: " + isCanHu);
         huList.forEach(h -> System.out.println(h.specialHuList));
 //        System.out.println(huList);

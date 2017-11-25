@@ -228,7 +228,7 @@ object HuWithHun {
       //一个混的将
       if (huCardType.jiangOneHun == lastCard) result = HuType.hu_混吊
     }
-    0
+    result
   }
 
   /**
