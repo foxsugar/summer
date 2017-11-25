@@ -16,7 +16,8 @@ import java.util.Map;
 public class GameInfoNZZ extends GameInfo {
 
     private List<String> playCards = new ArrayList<>();
-
+    private List<Long> noCanHuList = new ArrayList<>();//本轮不能胡的人
+    private Map<Long,List<Integer>>  noCanPengList = new HashMap<>();//本轮不能碰牌的人
     /**
      * 初始化方法
      *
@@ -74,7 +75,17 @@ public class GameInfoNZZ extends GameInfo {
     @Override
     public int guo(long userId) {
 
-        playerCardsInfos.get(userId).setLastOperate(PlayerCardsInfoNZZ.TYPE_GUO);
+        PlayerCardsInfoNZZ guoPlayerCardsInfo = (PlayerCardsInfoNZZ)playerCardsInfos.get(userId);
+        if(guoPlayerCardsInfo.isCanHu_dianpao(disCard)){//能胡点过的人，这一轮不能胡
+            noCanHuList.add(userId);
+        }
+        if(guoPlayerCardsInfo.isCanPengAddThisCard(disCard)){//能碰点过的人，这一轮不能碰同一张牌
+            List<Integer> pengCardList = new ArrayList<>();
+            int cardType = CardTypeUtil.cardType.get(disCard);
+            pengCardList.add(cardType);
+            noCanPengList.put(userId,pengCardList);
+        }
+
         if (isAlreadyHu) {
             return ErrorCode.CAN_NOT_GUO;
         }
@@ -170,12 +181,16 @@ public class GameInfoNZZ extends GameInfo {
                 boolean isCanPeng;
                 boolean isCanHu;
                 //如果上一次操作为过，这一轮不能再碰和胡
-                if(PlayerCardsInfoNZZ.TYPE_GUO!=playerCardsInfo.lastOperate){
-                    isCanPeng = playerCardsInfo.isCanPengAddThisCard(card);
+                if(!noCanHuList.contains(playerCardsInfo.getUserId())){
                     isCanHu = playerCardsInfo.isCanHu_dianpao(card);
                 }else{
-                    isCanPeng = false;
                     isCanHu = false;
+                }
+                //同一张牌只能碰一次
+                if(noCanPengList.keySet().contains(playerCardsInfo.getUserId()) && noCanPengList.get(playerCardsInfo.getUserId()).contains(CardTypeUtil.cardType.get(disCard))){
+                    isCanPeng = false;
+                }else{
+                    isCanPeng = playerCardsInfo.isCanPengAddThisCard(card);
                 }
 
                 boolean isNext = nextTurnId(chupaiPlayerCardsInfo.getUserId()) == playerCardsInfo.getUserId();
@@ -282,6 +297,10 @@ public class GameInfoNZZ extends GameInfo {
      * @param userId
      */
     protected void mopai(long userId, String... wz) {
+        //清楚胡牌和碰牌的限制
+        noCanHuList.remove(userId);
+        noCanPengList.remove(userId);
+
         System.err.println("摸牌===============================userId : " + userId);
 
         PlayerCardsInfoNZZ playerCardsInfo = (PlayerCardsInfoNZZ)playerCardsInfos.get(userId);

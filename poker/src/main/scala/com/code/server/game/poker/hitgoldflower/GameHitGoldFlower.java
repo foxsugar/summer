@@ -329,7 +329,6 @@ public class GameHitGoldFlower extends Game {
      */
     public int changeCard(long userId,String cardType) {
         Map<Long, Object> result = new HashMap<>();
-        //TODO 换牌算法
         List<Integer> changeCards = new ArrayList<>();
         if("baoZi".equals(cardType)){
             changeCards = ListUtils.getBaoZi(leaveCards);
