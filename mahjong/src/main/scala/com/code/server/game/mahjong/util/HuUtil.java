@@ -174,7 +174,7 @@ public class HuUtil implements HuType {
 
 
     public static List<HuCardType> isHu(PlayerCardsInfoMj playerCardsInfo, List<String> cards, int chiPengGangNum, List<Integer> hun, int lastCard) {
-        List<HuCardType> huList = HuWithHun.getHuCardType(analyse(convert(cards)), chiPengGangNum, hun, lastCard);
+        List<HuCardType> huList = HuWithHun.getHuCardType(playerCardsInfo, analyse(convert(cards)), chiPengGangNum, hun, lastCard);
 
         for (HuCardType huCardType : huList) {
             //设置胡的类型

@@ -354,15 +354,16 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         change();
 
 
+
         playerCardsInfo.isHasFengShun = true;
 
 
-        String[] s = new String[]{"000", "004", "008", "012", "016",     "020", "024", "028", "032",  "036",    "040", "044", "052", "053"};
+        String[] s = new String[]{"000", "004", "008", "017", "016",     "020", "024", "028", "032",  "036",    "040", "044", "052", "053"};
 
         List<Integer> hun = new ArrayList<>();
         hun.add(3);
         hun.add(4);
-        hun.add(5);
+        hun.add(2);
 
 
         RoomInfo roomInfo = new RoomInfo();
