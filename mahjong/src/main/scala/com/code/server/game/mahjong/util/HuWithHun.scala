@@ -246,7 +246,7 @@ object HuWithHun {
     //    if(huCardType.hun3.size() > 0) return 0
     //    if(huCardType.hun2.size() > 0) return 0
     if (huCardType.hunJiang) return 0
-    if (huCardType.shun.size() < 3) return 0
+    if (huCardType.shun.size() + huCardType.hun2.size + huCardType.hun3.size()< 3) return 0
     //是龙
     val longType = isLong(huCardType, hun, lastCard)
 
