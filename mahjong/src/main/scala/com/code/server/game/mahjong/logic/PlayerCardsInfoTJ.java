@@ -58,7 +58,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         specialHuScore.put(hu_混儿吊捉五龙, 14);
         specialHuScore.put(hu_混儿吊捉五本混龙, 50);
 
-        specialHuScore.put(hu_素, 4);
+        specialHuScore.put(hu_素, 2);
 
 
         if (this.roomInfo.isHasMode(GameInfoTJ.mode_素本混龙)) {
@@ -141,7 +141,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
             maxHuType.fan = isTiliu ? 1 : 2;
         }
 
-        if (isGangKai && isTiliu) maxHuType.fan = 3;
+        if (isGangKai && isTiliu) maxHuType.fan = 2;
 
         int score = maxHuType.fan;
 
@@ -210,6 +210,11 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
             //拉庄
             if ((playerCardsInfo.getUserId() == this.gameInfo.getFirstTurn() || isBankerWin) && this.roomInfo.laZhuang.get(playerCardsInfo.getUserId()) > 0) {
                 myScore *= 1 << this.roomInfo.laZhuang.get(playerCardsInfo.getUserId());
+            }
+
+            //庄家输 再输 赢得人的拉庄倍数
+            if(playerCardsInfo.getUserId() == this.gameInfo.getFirstTurn() && !isBankerWin){
+                myScore *= 1<< this.roomInfo.laZhuang.get(userId);
             }
 
             //房间倍数
