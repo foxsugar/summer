@@ -65,7 +65,7 @@ public class RpcManager {
     public static void main(String[] args) {
 //        testGame(1);
         try {
-//            for(int i=0;i<19;i++){
+//            for(int i=0;i<10001108;i++){
 
 //            charge("123.56.8.137", 10239, 1000);
 //            charge("192.168.1.132", 777, 1000);
@@ -74,7 +74,7 @@ public class RpcManager {
 //            charge("47.92.37.165", 3, 10000);
 
 //            changeInit("47.92.37.165", 10000);
-            charge("47.92.130.164", 1, -4576);
+            charge("localhost", 1, 1000);
 //            charge("192.168.1.132", 3, 1000);
 //            charge("192.168.1.132", 999, 1000);
 //            }

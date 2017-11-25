@@ -34,6 +34,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         zhuo5AndLong.add(hu_混儿吊捉五本混龙);
 
         zhuo5AndLong.add(hu_素本混龙);
+        zhuo5AndLong.add(hu_素本混捉五龙);
     }
 
 
@@ -63,6 +64,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
         if (this.roomInfo.isHasMode(GameInfoTJ.mode_素本混龙)) {
             specialHuScore.put(hu_素本混龙, 16);
+            specialHuScore.put(hu_素本混捉五龙, 28);
         }
 
 

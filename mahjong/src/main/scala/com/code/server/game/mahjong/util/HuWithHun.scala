@@ -250,8 +250,10 @@ object HuWithHun {
     //是龙
     val longType = isLong(huCardType, hun, lastCard)
 
-    if (longType == HuType.hu_本混龙 || longType == HuType.hu_本混捉五龙 || longType == HuType.hu_混儿吊本混龙 || longType == HuType.hu_混儿吊捉五本混龙) return HuType.hu_素本混龙
+//    if (longType == HuType.hu_本混龙 || longType == HuType.hu_本混捉五龙 || longType == HuType.hu_混儿吊本混龙 || longType == HuType.hu_混儿吊捉五本混龙) return HuType.hu_素本混龙
 
+    if(longType == HuType.hu_本混龙) return HuType.hu_素本混龙
+    if(longType == HuType.hu_本混捉五龙) return HuType.hu_素本混捉五龙
 
     0
   }
