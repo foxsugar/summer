@@ -51,6 +51,28 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 		}
 	}
 
+	/**
+	 * 是否可以胡这张牌
+	 *
+	 * @param card
+	 * @return
+	 */
+	public boolean isCanHu_dianpao(String card) {
+		if (roomInfo.mustZimo == 1) {
+			return false;
+		}
+		if ("11".equals(this.roomInfo.getMode()) || "12".equals(this.roomInfo.getMode()) || "13".equals(this.roomInfo.getMode()) || "14".equals(this.roomInfo.getMode())) {
+			if (!isTing) {
+				return false;
+			}
+		}
+		List<String> temp = getCardsAddThisCard(card);
+		List<String> noPengAndGang = getCardsNoChiPengGang(temp);
+		System.out.println("检测是否可胡点炮= " + noPengAndGang);
+		int cardType = CardTypeUtil.cardType.get(card);
+		return HuUtil.isHu(noPengAndGang, this, cardType, null).size() > 0;
+	}
+
 	@Override
 	public boolean isCanHu_zimo(String card) {
 		if("11".equals(this.roomInfo.getMode())||"12".equals(this.roomInfo.getMode())||"13".equals(this.roomInfo.getMode())||"14".equals(this.roomInfo.getMode())){

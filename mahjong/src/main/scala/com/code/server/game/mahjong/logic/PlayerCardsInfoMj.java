@@ -415,11 +415,6 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         if (roomInfo.mustZimo == 1) {
             return false;
         }
-        if ("11".equals(this.roomInfo.getMode()) || "12".equals(this.roomInfo.getMode()) || "13".equals(this.roomInfo.getMode()) || "14".equals(this.roomInfo.getMode())) {
-            if (!isTing) {
-                return false;
-            }
-        }
         List<String> temp = getCardsAddThisCard(card);
         List<String> noPengAndGang = getCardsNoChiPengGang(temp);
         System.out.println("检测是否可胡点炮= " + noPengAndGang);
