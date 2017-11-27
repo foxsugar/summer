@@ -23,6 +23,8 @@ public class RoomFactory {
                 return ((RoomInfo)new RoomInfo().setGameType(gameType)).setHasGangBlackList(false);
             case "TJ":
                 return ((RoomInfo)new RoomInfo().setGameType(gameType)).setHasGangBlackList(false);
+            case "NZZ":
+                return ((RoomInfo)new RoomInfo().setGameType(gameType)).setHasGangBlackList(false);
             default:
                 return (RoomInfo)new RoomInfo().setGameType(gameType);
         }
