@@ -762,6 +762,8 @@ public class RoomInfo extends Room {
         roomVo.hasNine = this.getHasNine();
         roomVo.isOpen = this.isOpen;
         roomVo.yipaoduoxiang = this.isYipaoduoxiang;
+        roomVo.canChi = this.canChi;
+        roomVo.haveTing = this.haveTing;
         roomVo.setMode(this.getMode());
         roomVo.setModeTotal(this.getModeTotal());
         roomVo.setEach(this.getEach());

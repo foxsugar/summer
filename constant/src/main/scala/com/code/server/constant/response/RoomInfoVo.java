@@ -9,6 +9,8 @@ public class RoomInfoVo extends RoomVo {
     public String mode;
     public String each;
     public boolean yipaoduoxiang;
+    public boolean canChi;
+    public boolean haveTing;
 
 
     public String getModeTotal() {
@@ -44,6 +46,24 @@ public class RoomInfoVo extends RoomVo {
 
     public RoomInfoVo setYipaoduoxiang(boolean yipaoduoxiang) {
         this.yipaoduoxiang = yipaoduoxiang;
+        return this;
+    }
+
+    public boolean isCanChi() {
+        return canChi;
+    }
+
+    public RoomInfoVo setCanChi(boolean canChi) {
+        this.canChi = canChi;
+        return this;
+    }
+
+    public boolean isHaveTing() {
+        return haveTing;
+    }
+
+    public RoomInfoVo setHaveTing(boolean haveTing) {
+        this.haveTing = haveTing;
         return this;
     }
 }
