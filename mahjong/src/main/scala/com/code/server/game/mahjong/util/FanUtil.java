@@ -466,17 +466,28 @@ public class FanUtil implements HuType {
      * @return
      */
     private static boolean isHunyise(List<String> cards, HuCardType huCardType) {
-        Set<Integer> huaSet = new HashSet<>();
-        Set<Integer> ziSet = new HashSet<>();
-        for (int group : getAllGroup(cards, huCardType)) {
-            if (group == CardTypeUtil.GROUP_TONG || group == CardTypeUtil.GROUP_TIAO || group == CardTypeUtil.GROUP_WAN) {
-                huaSet.add(group);
-            }else{
-                ziSet.add(group);
+        boolean result = false;
+        List<String> list = new ArrayList<>();
+        list.addAll(cards);
+        for (int i = 0; i < list.size(); i++) {
+            list.remove(i);
+            Set<Integer> huaSet = new HashSet<>();
+            Set<Integer> ziSet = new HashSet<>();
+            for (int group : getAllGroup(list, huCardType)) {
+                if (group == CardTypeUtil.GROUP_TONG || group == CardTypeUtil.GROUP_TIAO || group == CardTypeUtil.GROUP_WAN) {
+                    huaSet.add(group);
+                }else{
+                    ziSet.add(group);
+                }
             }
+            if(huaSet.size()==1 && ziSet.size()>0){
+                result = true;
+            }
+            list.clear();
+            list.addAll(cards);
         }
 
-        return huaSet.size()==1 && ziSet.size()>0;
+        return result;
     }
 
 
