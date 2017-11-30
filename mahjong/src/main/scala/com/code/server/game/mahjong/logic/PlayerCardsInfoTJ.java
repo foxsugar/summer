@@ -140,14 +140,14 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
         //是否是素胡
         if (maxHuType.fan == 0) {
-            maxHuType.fan = isTiliu ? 1 : 2;
+            maxHuType.fan = isTiliu ? 1 : 1;
         }
 
-        if (isGangKai && isTiliu) maxHuType.fan = 2;
+//        if (isGangKai && isTiliu) maxHuType.fan = 2;
 
         int score = maxHuType.fan;
 
-        if (isGangKai && !isTiliu) score *= 2;
+//        if (isGangKai && !isTiliu) score *= 2;
 
         if (isSuHu) score *= 2;
         if (isTianHu) score *= 4;
