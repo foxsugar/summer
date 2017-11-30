@@ -313,6 +313,9 @@ public class FanUtil implements HuType {
      * @return
      */
     private static boolean duanyao(List<String> cards, HuCardType huCardType) {
+        boolean results = true;
+        boolean resultc = false;
+
         List<Integer> tempList = new ArrayList<>();
         tempList.add(0);
         tempList.add(8);
@@ -328,13 +331,20 @@ public class FanUtil implements HuType {
         tempList.add(32);
         tempList.add(33);
 
-        boolean results = true;
-        a:for (String s:cards) {
-            if(dy.contains(CardTypeUtil.getTypeByCard(s))){
-                results = false;
-                break a;
+        List<String> list = new ArrayList<>();
+        list.addAll(cards);
+        a:for (int i = 0; i < list.size(); i++) {
+            list.remove(i);
+            for (String s:list) {
+                if(dy.contains(CardTypeUtil.getTypeByCard(s))){
+                    resultc = true;
+                    break a;
+                }
             }
+            list.clear();
+            list.addAll(cards);
         }
+
 
         b:for (Integer s:huCardType.mingGang) {
             if(tempList.contains(s)){
@@ -363,7 +373,7 @@ public class FanUtil implements HuType {
         if(dy.contains(huCardType)){
             results = false;
         }
-        return results;
+        return results && resultc;
     }
 
     public static void main(String[] args) {
@@ -466,17 +476,28 @@ public class FanUtil implements HuType {
      * @return
      */
     private static boolean isHunyise(List<String> cards, HuCardType huCardType) {
-        Set<Integer> huaSet = new HashSet<>();
-        Set<Integer> ziSet = new HashSet<>();
-        for (int group : getAllGroup(cards, huCardType)) {
-            if (group == CardTypeUtil.GROUP_TONG || group == CardTypeUtil.GROUP_TIAO || group == CardTypeUtil.GROUP_WAN) {
-                huaSet.add(group);
-            }else{
-                ziSet.add(group);
+        boolean result = false;
+        List<String> list = new ArrayList<>();
+        list.addAll(cards);
+        for (int i = 0; i < list.size(); i++) {
+            list.remove(i);
+            Set<Integer> huaSet = new HashSet<>();
+            Set<Integer> ziSet = new HashSet<>();
+            for (int group : getAllGroup(list, huCardType)) {
+                if (group == CardTypeUtil.GROUP_TONG || group == CardTypeUtil.GROUP_TIAO || group == CardTypeUtil.GROUP_WAN) {
+                    huaSet.add(group);
+                }else{
+                    ziSet.add(group);
+                }
             }
+            if(huaSet.size()==1 && ziSet.size()>0){
+                result = true;
+            }
+            list.clear();
+            list.addAll(cards);
         }
 
-        return huaSet.size()==1 && ziSet.size()>0;
+        return result;
     }
 
 
