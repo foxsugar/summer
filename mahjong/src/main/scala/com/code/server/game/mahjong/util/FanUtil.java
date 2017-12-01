@@ -335,11 +335,16 @@ public class FanUtil implements HuType {
         list.addAll(cards);
         a:for (int i = 0; i < list.size(); i++) {
             list.remove(i);
-            for (String s:list) {
+            boolean temp = true;
+            aa:for (String s:list) {
                 if(dy.contains(CardTypeUtil.getTypeByCard(s))){
-                    resultc = true;
-                    break a;
+                    temp = false;
+                    break aa;
                 }
+            }
+            if(temp){
+                resultc = true;
+                break a;
             }
             list.clear();
             list.addAll(cards);
