@@ -1,6 +1,8 @@
 package com.code.server.game.poker.doudizhu;
 
 
+import com.code.server.constant.data.DataManager;
+import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.game.CardStruct;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
@@ -156,6 +158,16 @@ public class GameDouDiZhu extends Game {
 
             //生成记录
             genRecord();
+
+            //下局是否是赢得人做地主
+            boolean isWinner2Dizhu = false;
+            StaticDataProto.RoomData roomData = DataManager.data.getRoomDataMap().get(this.room.getGameType());
+            if (roomData != null) {
+                isWinner2Dizhu = DataManager.data.getRoomDataMap().get(this.room.getGameType()).getIsWinner2Dizhu() == 1;
+            }
+            if (isWinner2Dizhu) {
+                this.room.setBankerId(userId);
+            }
 
             room.clearReadyStatus(true);
 
