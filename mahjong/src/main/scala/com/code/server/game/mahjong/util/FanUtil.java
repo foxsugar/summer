@@ -162,7 +162,7 @@ public class FanUtil implements HuType {
             fan += playerCardsInfo.getSpecialHuScore(hu_吊将);
         }
 
-        if (playerCardsInfo.isHasSpecialHu(hu_断幺) && duanyao(playerCardsInfo.getCards(), huCardType)) {
+        if (playerCardsInfo.isHasSpecialHu(hu_断幺) && duanyao(cards,tingCardType,huCardType)) {
             huCardType.specialHuList.add(hu_断幺);
             fan += playerCardsInfo.getSpecialHuScore(hu_断幺);
         }
@@ -312,9 +312,9 @@ public class FanUtil implements HuType {
      * @param huCardType
      * @return
      */
-    private static boolean duanyao(List<String> cards, HuCardType huCardType) {
+    private static boolean duanyao(List<String> cards,int tingCardType, HuCardType huCardType) {
         boolean results = true;
-        boolean resultc = false;
+        boolean resultc = true;
 
         List<Integer> tempList = new ArrayList<>();
         tempList.add(0);
@@ -333,18 +333,12 @@ public class FanUtil implements HuType {
 
         List<String> list = new ArrayList<>();
         list.addAll(cards);
-        a:for (int i = 0; i < list.size(); i++) {
-            list.remove(i);
-            for (String s:list) {
-                if(dy.contains(CardTypeUtil.getTypeByCard(s))){
-                    resultc = true;
-                    break a;
-                }
+        aa:for (String s:list) {
+            if(dy.contains(CardTypeUtil.getTypeByCard(s))){
+                resultc = false;
+                break aa;
             }
-            list.clear();
-            list.addAll(cards);
         }
-
 
         b:for (Integer s:huCardType.mingGang) {
             if(tempList.contains(s)){
@@ -365,28 +359,26 @@ public class FanUtil implements HuType {
             }
         }
         e:for (Integer s:huCardType.chi) {
-            if(tempList.contains(s)){
+            if(s==6||s==15||s==24||s==0||s==9||s==18){
                 results = false;
                 break e;
             }
         }
-        if(dy.contains(huCardType)){
-            results = false;
-        }
+
         return results && resultc;
     }
 
     public static void main(String[] args) {
         ArrayList<String> list = new ArrayList();
-        list.add("135");list.add("014");list.add("053");
-        list.add("081");list.add("133");list.add("080");
-        list.add("051");list.add("099");list.add("134");
-        list.add("056");list.add("098");list.add("021");
-        list.add("082");list.add("016");
+        list.add("044");list.add("045");list.add("046");
+        list.add("048");list.add("052");list.add("056");
+        list.add("084");list.add("085");list.add("096");
+        list.add("100");list.add("104");list.add("004");
+        list.add("008");list.add("012");list.add("106");
 
         HuCardType h = new HuCardType();
         h.specialHuList.add(hu_断幺);
-        System.out.print(duanyao(list,h));
+        System.out.print(duanyao(list,-1,h));
     }
 
 
