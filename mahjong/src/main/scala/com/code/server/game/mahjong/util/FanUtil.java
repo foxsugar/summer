@@ -359,7 +359,7 @@ public class FanUtil implements HuType {
             }
         }
         e:for (Integer s:huCardType.chi) {
-            if(tempList.contains(s)){
+            if(s==6||s==15||s==24||s==0||s==9||s==18){
                 results = false;
                 break e;
             }
