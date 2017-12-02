@@ -1,5 +1,6 @@
 package com.code.server.game.poker.paijiu
 
+import com.code.server.constant.data.{DataManager, StaticDataProto}
 import com.code.server.constant.response.PlayerCardInfoPaijiuVo
 import com.code.server.util.JsonUtil
 
@@ -102,6 +103,30 @@ object Test {
 //    val gamePaijiu = new GamePaijiu
 //    gamePaijiu.getGroupScore("15,30")
 //  }
+
+  def testIn(): Unit ={
+    DataManager.initData("E:\\summer\\data\\static_data.json")
+    DataManager.data.getLaotiePaijiuCardGroupScoreDataMap.get("zero").getScore
+    val d: StaticDataProto.DataManager = DataManager.data
+    val method = d.getClass.getDeclaredMethod("getLaotiePaijiuCardGroupScoreDataMap")
+    val m = method.invoke(d)
+//    print(m.asInstanceOf[java.util.Map[String,Object]])
+
+    val mp = m.asInstanceOf[java.util.Map[String,Object]]
+    val o = mp.get("zero")
+    val scoreMethod = o.getClass.getDeclaredMethod("getScore")
+    val score = scoreMethod.invoke(o)
+    print(score)
+
+//    print(mp)
+
+
+
+
+
+
+  }
+
   def main(args: Array[String]): Unit = {
 //    test1()
 //    testSame()
@@ -110,10 +135,11 @@ object Test {
 //    testMuList
 //    testList
 //    testShuffle
-    testSild
+//    testSild
 //    testMap1
 //    testPlayerVo
 //    testCardGroup()
 //    testslice
+    testIn
   }
 }

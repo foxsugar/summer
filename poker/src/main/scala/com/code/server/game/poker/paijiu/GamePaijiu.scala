@@ -4,7 +4,7 @@ package com.code.server.game.poker.paijiu
 import java.lang.Long
 import java.util
 
-import com.code.server.constant.data.DataManager
+import com.code.server.constant.data.{DataManager, StaticDataProto}
 import com.code.server.constant.response._
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
@@ -106,8 +106,8 @@ class GamePaijiu extends Game with PaijiuConstant {
     */
   protected def deal(): Unit = {
     //测试的发牌
-    if (this.roomPaijiu.isTest && this.roomPaijiu.getCurGameNumber % 2 == 0 && this.roomPaijiu.testUserId !=0) {
-      val (maxCards,newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(cards)
+    if (this.roomPaijiu.isTest && this.roomPaijiu.getCurGameNumber % 2 == 0 && this.roomPaijiu.testUserId != 0) {
+      val (maxCards, newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(cards)
       val testPlayer = playerCardInfos(this.roomPaijiu.testUserId)
       testPlayer.cards = maxCards
 
@@ -116,7 +116,7 @@ class GamePaijiu extends Game with PaijiuConstant {
       var count = 0
 
 
-      for(playerInfo <- playerCardInfos.values if playerInfo.userId != this.roomPaijiu.testUserId){
+      for (playerInfo <- playerCardInfos.values if playerInfo.userId != this.roomPaijiu.testUserId) {
         playerInfo.cards ++= slidList(count)
         count += 1
         //发牌通知
@@ -230,9 +230,10 @@ class GamePaijiu extends Game with PaijiuConstant {
 
   /**
     * 是否所有人都开牌
+    *
     * @return
     */
-  protected def isAllPlayerOpen():Boolean = {
+  protected def isAllPlayerOpen(): Boolean = {
     playerCardInfos.count { case (uid, playerInfo) => playerInfo.group1 == null && playerInfo.group2 == null } == 0
   }
 
@@ -378,9 +379,23 @@ class GamePaijiu extends Game with PaijiuConstant {
     * @return
     */
   def getGroupScore(group: String): Int = {
-    val name: String = DataManager.data.getPaijiuCardGroupDataMap.get(group).getName
-    logger.info("cardgroupName : " + name)
-    DataManager.data.getPaijiuCardGroupScoreDataMap.get(name).getScore
+
+    val d: StaticDataProto.DataManager = DataManager.data
+    val dataStr = DataManager.data.getRoomDataMap.get(this.roomPaijiu.getGameType).getPaijiuDataName
+    val dataMethodName = "get" + dataStr + "GroupDataMap"
+    val method = d.getClass.getDeclaredMethod(dataMethodName)
+    val m = method.invoke(d)
+    val mp = m.asInstanceOf[java.util.Map[String,Object]]
+    val o = mp.get(group)
+    val nameMethod = o.getClass.getDeclaredMethod("getName")
+    val name = nameMethod.invoke(o)
+//    name.asInstanceOf[String]
+    getGroupScoreByName(name.asInstanceOf[String])
+
+
+//    val name: String = DataManager.data.getPaijiuCardGroupDataMap.get(group).getName
+//    logger.info("cardgroupName : " + name)
+//    DataManager.data.getPaijiuCardGroupScoreDataMap.get(name).getScore
   }
 
 
@@ -424,8 +439,18 @@ class GamePaijiu extends Game with PaijiuConstant {
   }
 
   protected def getGroupScoreByName(name: String): Int = {
-    DataManager.data.getPaijiuCardGroupScoreDataMap.get(name).getScore
+    val d: StaticDataProto.DataManager = DataManager.data
+    val dataStr = DataManager.data.getRoomDataMap.get(this.roomPaijiu.getGameType).getPaijiuDataName
+    val dataMethodName = "get" + dataStr + "GroupScoreDataMap"
+    val method = d.getClass.getDeclaredMethod(dataMethodName)
+    val m = method.invoke(d)
+    val mp = m.asInstanceOf[java.util.Map[String,Object]]
+    val o = mp.get(name)
+    val scoreMethod = o.getClass.getDeclaredMethod("getScore")
+    val score = scoreMethod.invoke(o)
+    score.asInstanceOf[Int]
   }
+
 
   /**
     * 转换为下注状态
@@ -486,7 +511,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     * 掷骰子
     */
   def crap(userId: Long): Int = {
-    if(state != START_CRAP) return ErrorCode.CRAP_PARAM_ERROR
+    if (state != START_CRAP) return ErrorCode.CRAP_PARAM_ERROR
     if (userId != bankerId) return ErrorCode.NOT_BANKER
 
     val rand = new Random()

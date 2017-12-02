@@ -26,21 +26,21 @@ class RoomPaijiu extends Room {
   var bankerScore: Int = 0
   var bankerInitScore: Int = 0
 
-  var isTest:Boolean = true
+  var isTest: Boolean = true
 
-  var testUserId:Long = 0
+  var testUserId: Long = 0
 
 
-//  override protected def getGameInstance: Game = gameType match {
-//    case "11" => new GamePaijiuEndless
-//    case "12"=> new GamePaijiu2Cards
-//    case "13"=>new GamePaijiu2CardsEndless
-//    case _ => new GamePaijiu
-//  }
+  //  override protected def getGameInstance: Game = gameType match {
+  //    case "11" => new GamePaijiuEndless
+  //    case "12"=> new GamePaijiu2Cards
+  //    case "13"=>new GamePaijiu2CardsEndless
+  //    case _ => new GamePaijiu
+  //  }
 
   override def startGame(): Unit = {
     //do nothing
-    if(this.curGameNumber>1) {
+    if (this.curGameNumber > 1) {
       MsgSender.sendMsg2Player(new ResponseVo("gameService", "gamePaijiuBegin", "ok"), this.getUsers)
       //开始游戏
       val game = getGameInstance
@@ -144,7 +144,10 @@ class RoomPaijiu extends Room {
     val userOfResultList = getUserOfResult
 
     //代开房 并且游戏未开始
-    if (!isCreaterJoin && !this.isInGame && (this.curGameNumber ==1)) drawBack()
+    if (!isCreaterJoin && !this.isInGame && (this.curGameNumber == 1)) {
+      drawBack()
+      GameTimer.removeNode(this.prepareRoomTimerNode)
+    }
     this.isInGame = false
 
     // 存储返回
@@ -165,7 +168,6 @@ class RoomPaijiu extends Room {
 }
 
 
-
 object RoomPaijiu extends Room {
   def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int): Int = {
     val roomPaijiu = new RoomPaijiu
@@ -182,15 +184,17 @@ object RoomPaijiu extends Room {
 
     val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
     RoomManager.addRoom(roomPaijiu.getRoomId, "" + serverConfig.getServerId, roomPaijiu)
-    val idword = new IdWorker(serverConfig.getServerId,0)
+    val idword = new IdWorker(serverConfig.getServerId, 0)
     roomPaijiu.setUuid(idword.nextId())
 
     MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createPaijiuRoom", roomPaijiu.toVo(userId)), userId)
     0
   }
-  def createRoomNotInRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,isCreaterJoin:Boolean): Int = {
-    RoomPaijiuByNotInRoom.createRoomNotInRoom(userId,roomType,gameType,gameNumber,isCreaterJoin)
+
+  def createRoomNotInRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int, isCreaterJoin: Boolean): Int = {
+    RoomPaijiuByNotInRoom.createRoomNotInRoom(userId, roomType, gameType, gameNumber, isCreaterJoin)
   }
+
   /*def createRoomNotInRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,isCreaterJoin:Boolean): Int = {
     val roomPaijiu = new RoomPaijiu
     roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId()))

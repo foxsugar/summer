@@ -1,170 +1,297 @@
 {
-  "roomRecords": {
-    "1": [
+  "service": "GameLogicService",
+  "method": "result",
+  "params": {
+    "winnerId": 25,
+    "userInfos": [
       {
-        "id": 6311847072559529984,
-        "time": 1504863679290,
-        "type": "1",
-        "roomId": "150425",
-        "records": [
+        "userId": 56,
+        "cards": [
+          "055",
+          "108",
+          "103",
+          "010",
+          "038",
+          "062",
+          "054",
+          "082",
+          "111",
+          "109",
+          "041",
+          "066",
+          "110",
+          "058"
+        ],
+        "handCards": [
+          "055",
+          "103",
+          "010",
+          "038",
+          "062",
+          "054",
+          "082",
+          "041",
+          "066",
+          "058"
+        ],
+        "disCards": [
+          "113",
+          "116",
+          "131",
+          "119",
+          "132",
+          "115",
+          "129",
+          "074"
+        ],
+        "anGangType": [],
+        "pengType": [],
+        "mingGangType": [
           {
-            "name": "喜子",
-            "score": -21,
-            "roomId": null,
-            "userId": 10002940
-          },
-          {
-            "name": "呵呵",
-            "score": 4,
-            "roomId": null,
-            "userId": 10003597
-          },
-          {
-            "name": "aaa000",
-            "score": 71,
-            "roomId": null,
-            "userId": 10003461
-          },
-          {
-            "name": "^O^",
-            "score": -54,
-            "roomId": null,
-            "userId": 10003269
+            "type": 27,
+            "userId": -1
           }
-        ]
+        ],
+        "chiCards": [],
+        "xuanfengdan": {},
+        "firstfourLS": [],
+        "isTing": false,
+        "score": -250.0,
+        "lastOperate": 6,
+        "catchCard": "058",
+        "canBePeng": false,
+        "canBeGang": false,
+        "canBeHu": false,
+        "canBeTing": false,
+        "canBeChi": false,
+        "canBeChiTing": false,
+        "canBePengTing": false,
+        "canBeXuanfengDan": false,
+        "winType": [],
+        "fan": 0,
+        "allScore": -250.0,
+        "gangScore": 30.0,
+        "baoMingDan": [],
+        "baoAnDan": []
+      },
+      {
+        "userId": 25,
+        "cards": [
+          "000",
+          "078",
+          "102",
+          "087",
+          "090",
+          "095",
+          "081",
+          "006",
+          "072",
+          "011",
+          "097",
+          "073",
+          "005",
+          "008"
+        ],
+        "handCards": [
+          "000",
+          "078",
+          "102",
+          "087",
+          "090",
+          "095",
+          "081",
+          "006",
+          "072",
+          "011",
+          "097",
+          "073",
+          "005",
+          "008"
+        ],
+        "disCards": [
+          "122",
+          "126",
+          "117",
+          "037",
+          "070",
+          "032",
+          "021"
+        ],
+        "anGangType": [],
+        "pengType": [],
+        "mingGangType": [],
+        "chiCards": [],
+        "xuanfengdan": {},
+        "firstfourLS": [],
+        "isTing": false,
+        "score": 820.0,
+        "lastOperate": 4,
+        "catchCard": "008",
+        "canBePeng": false,
+        "canBeGang": false,
+        "canBeHu": true,
+        "canBeTing": false,
+        "canBeChi": false,
+        "canBeChiTing": false,
+        "canBePengTing": false,
+        "canBeXuanfengDan": false,
+        "huCard": "008",
+        "winType": [
+          110
+        ],
+        "fan": 0,
+        "allScore": 820.0,
+        "gangScore": -20.0,
+        "baoMingDan": [],
+        "baoAnDan": []
+      },
+      {
+        "userId": 122,
+        "cards": [
+          "018",
+          "014",
+          "088",
+          "083",
+          "020",
+          "040",
+          "093",
+          "094",
+          "086",
+          "045",
+          "050",
+          "089",
+          "092"
+        ],
+        "handCards": [
+          "018",
+          "014",
+          "088",
+          "083",
+          "020",
+          "040",
+          "086",
+          "045",
+          "050",
+          "089"
+        ],
+        "disCards": [
+          "027",
+          "029",
+          "069",
+          "061",
+          "057",
+          "107",
+          "105"
+        ],
+        "anGangType": [],
+        "pengType": [
+          {
+            "type": 23,
+            "userId": 25
+          }
+        ],
+        "mingGangType": [],
+        "chiCards": [],
+        "xuanfengdan": {},
+        "firstfourLS": [],
+        "isTing": false,
+        "score": -285.0,
+        "lastOperate": 6,
+        "catchCard": "105",
+        "canBePeng": false,
+        "canBeGang": false,
+        "canBeHu": false,
+        "canBeTing": false,
+        "canBeChi": false,
+        "canBeChiTing": false,
+        "canBePengTing": false,
+        "canBeXuanfengDan": false,
+        "winType": [],
+        "fan": 0,
+        "allScore": -285.0,
+        "gangScore": -5.0,
+        "baoMingDan": [],
+        "baoAnDan": []
+      },
+      {
+        "userId": 28,
+        "cards": [
+          "085",
+          "023",
+          "004",
+          "019",
+          "079",
+          "046",
+          "053",
+          "080",
+          "026",
+          "047",
+          "042",
+          "036",
+          "051"
+        ],
+        "handCards": [
+          "085",
+          "023",
+          "004",
+          "019",
+          "079",
+          "046",
+          "053",
+          "080",
+          "026",
+          "047",
+          "042",
+          "036",
+          "051"
+        ],
+        "disCards": [
+          "121",
+          "135",
+          "106",
+          "035",
+          "060",
+          "127",
+          "043"
+        ],
+        "anGangType": [],
+        "pengType": [],
+        "mingGangType": [],
+        "chiCards": [],
+        "xuanfengdan": {},
+        "firstfourLS": [],
+        "isTing": false,
+        "score": -285.0,
+        "lastOperate": 6,
+        "catchCard": "051",
+        "canBePeng": false,
+        "canBeGang": false,
+        "canBeHu": false,
+        "canBeTing": false,
+        "canBeChi": false,
+        "canBeChiTing": false,
+        "canBePengTing": false,
+        "canBeXuanfengDan": false,
+        "winType": [],
+        "fan": 0,
+        "allScore": -285.0,
+        "gangScore": -5.0,
+        "baoMingDan": [],
+        "baoAnDan": []
       }
     ],
-    "2": [
-      {
-        "id": 6311821605475586048,
-        "time": 1504856493590,
-        "type": "2",
-        "roomId": "069649",
-        "records": [
-          {
-            "name": "喜子",
-            "score": 0,
-            "roomId": null,
-            "userId": 10002940
-          },
-          {
-            "name": "p淘备用发单员",
-            "score": -9,
-            "roomId": null,
-            "userId": 10002913
-          },
-          {
-            "name": "^O^",
-            "score": 9,
-            "roomId": null,
-            "userId": 10003269
-          }
-        ]
-      },
-      {
-        "id": 6311825776702525440,
-        "time": 1504856880716,
-        "type": "2",
-        "roomId": "459274",
-        "records": [
-          {
-            "name": "喜子",
-            "score": -9,
-            "roomId": null,
-            "userId": 10002940
-          },
-          {
-            "name": "^O^",
-            "score": 18,
-            "roomId": null,
-            "userId": 10003269
-          },
-          {
-            "name": "aaa000",
-            "score": -9,
-            "roomId": null,
-            "userId": 10003461
-          }
-        ]
-      },
-      {
-        "id": 6311829313935249408,
-        "time": 1504857603852,
-        "type": "2",
-        "roomId": "461539",
-        "records": [
-          {
-            "name": "喜子",
-            "score": 0,
-            "roomId": null,
-            "userId": 10002940
-          },
-          {
-            "name": "^O^",
-            "score": 0,
-            "roomId": null,
-            "userId": 10003269
-          },
-          {
-            "name": "aaa000",
-            "score": 0,
-            "roomId": null,
-            "userId": 10003461
-          }
-        ]
-      },
-      {
-        "id": 6311837268755746816,
-        "time": 1504860498224,
-        "type": "2",
-        "roomId": "470155",
-        "records": [
-          {
-            "name": "喜子",
-            "score": -75,
-            "roomId": null,
-            "userId": 10002940
-          },
-          {
-            "name": "aaa000",
-            "score": 96,
-            "roomId": null,
-            "userId": 10003461
-          },
-          {
-            "name": "^O^",
-            "score": -21,
-            "roomId": null,
-            "userId": 10003269
-          }
-        ]
-      },
-      {
-        "id": 6311842550466613248,
-        "time": 1504861595401,
-        "type": "2",
-        "roomId": "422706",
-        "records": [
-          {
-            "name": "喜子",
-            "score": 0,
-            "roomId": null,
-            "userId": 10002940
-          },
-          {
-            "name": "aaa000",
-            "score": -18,
-            "roomId": null,
-            "userId": 10003461
-          },
-          {
-            "name": "^O^",
-            "score": 18,
-            "roomId": null,
-            "userId": 10003269
-          }
-        ]
-      }
-    ]
-  }
+    "laZhuang": {
+      "56": 0,
+      "25": 1,
+      "122": 0,
+      "28": 0
+    },
+    "laZhuangStatus": {
+      "56": false,
+      "25": true,
+      "122": false,
+      "28": false
+    }
+  },
+  "code": 0
 }

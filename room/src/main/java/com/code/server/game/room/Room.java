@@ -48,8 +48,8 @@ public class Room implements IfaceRoom {
     protected long bankerId;//庄家
     protected boolean isInGame;
     protected boolean isHasDissolutionRequest;
-    protected transient TimerNode timerNode;
-    public transient TimerNode prepareRoomTimerNode;
+    protected transient TimerNode timerNode;//同意解散的定时器
+    public transient TimerNode prepareRoomTimerNode;//代开房定时器
     protected Game game;
     protected int personNumber;
     protected boolean isOpen;
@@ -504,6 +504,7 @@ public class Room implements IfaceRoom {
         //代开房 并且游戏未开始
         if (!isCreaterJoin && !this.isInGame && this.curGameNumber == 1) {
             drawBack();
+            GameTimer.removeNode(this.prepareRoomTimerNode);
         }
         this.isInGame = false;
 
