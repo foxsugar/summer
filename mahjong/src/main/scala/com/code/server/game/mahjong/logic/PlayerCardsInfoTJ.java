@@ -147,7 +147,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
         int score = maxHuType.fan;
 
-//        if (isGangKai && !isTiliu) score *= 2;
+        if (isGangKai) score *= 2;
 
         if (isSuHu) score *= 2;
         if (isTianHu) score *= 4;
