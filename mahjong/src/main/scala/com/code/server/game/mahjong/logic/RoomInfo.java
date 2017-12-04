@@ -362,7 +362,15 @@ public class RoomInfo extends Room {
             } else if (12 == gameNumber) {
                 result = 45;
             }
-        }else if ("SY".equals(gameType)) {
+        }
+        else if ("SS".equals(gameType)) {
+            if (8 == gameNumber) {
+                result = 3;
+            } else if (12 == gameNumber) {
+                result = 4;
+            }
+        }
+        else if ("SY".equals(gameType)) {
             if (4 == gameNumber) {
                 result = 1;
             } else if (8 == gameNumber) {

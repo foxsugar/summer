@@ -497,6 +497,9 @@ public class Room implements IfaceRoom {
      * 解散房间
      */
     protected void dissolutionRoom() {
+        if(RoomManager.getRoom(this.roomId)==null){
+            return;
+        }
         RoomManager.removeRoom(this.roomId);
         // 结果类
         List<UserOfResult> userOfResultList = getUserOfResult();
