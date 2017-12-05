@@ -135,6 +135,9 @@ public class HuCardType implements HuType {
         huCardType.ke.addAll(this.ke);
         huCardType.hun2.addAll(this.hun2);
         huCardType.hun3.addAll(this.hun3);
+        huCardType.hunJiang = this.hunJiang;
+        huCardType.jiang = this.jiang;
+
 
         return huCardType;
     }
