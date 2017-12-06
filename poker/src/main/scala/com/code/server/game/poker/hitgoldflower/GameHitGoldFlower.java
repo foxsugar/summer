@@ -241,12 +241,17 @@ public class GameHitGoldFlower extends Game {
         if (!aliveUser.contains(askerId)||!aliveUser.contains(accepterId)) {
             return ErrorCode.NOT_KILL;
         }
-        //Todo 拒绝了，不能看
 
         Player asker = new Player(askerId, ListUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(0)), ListUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(1)), ListUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(2)));
         Player accepter = new Player(accepterId, ListUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(0)), ListUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(1)), ListUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(2)));
 
-        ArrayList<Player> winnerList = Player.findWinners(asker,accepter);
+        ArrayList<Player> winnerList = new ArrayList<>();
+        if("30".equals(this.room.getGameType())){
+            //TODO 逍遥123算最小
+            winnerList = Player.findWinners(asker,accepter);
+        }else {
+            winnerList = Player.findWinners(asker,accepter);
+        }
 
         Long winnerId = winnerList.size()==1?winnerList.get(0).getUid():winnerList.get(1).getUid();
         loseUser.add(winnerId==askerId?accepterId:askerId);
