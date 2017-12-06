@@ -247,10 +247,9 @@ public class GameHitGoldFlower extends Game {
 
         ArrayList<Player> winnerList = new ArrayList<>();
         if("30".equals(this.room.getGameType())){
-            //TODO 逍遥123算最小
-            winnerList = Player.findWinners(asker,accepter);
+            winnerList = Player.findWinners(Player.Rules.HuanLe,asker,accepter);
         }else {
-            winnerList = Player.findWinners(asker,accepter);
+            winnerList = Player.findWinners(Player.Rules.XiaoYao,asker,accepter);
         }
 
         Long winnerId = winnerList.size()==1?winnerList.get(0).getUid():winnerList.get(1).getUid();
