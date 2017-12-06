@@ -6,6 +6,10 @@ public class Player {
     public enum CardCategory{
     	BaoZi, ShunJin, JinHua, ShunZi, DuiZi, DanZi
     }
+
+	public enum Rules{
+		XiaoYao, HuanLe
+	}
     
     public Player() {
 	}
@@ -36,7 +40,8 @@ public class Player {
 		list.add(item3);
 		this.setPokers(list);
 	}
-    
+
+	static Rules rules_;
 	private CardCategory category;
 	public CardCategory getCategory() {
 		return category;
@@ -112,7 +117,9 @@ public class Player {
 		}
 		return value;
 	}
-	
+
+
+
 	public static ArrayList<Player> findWinners(Player...player){
 		
 		if(player.length > 1){
@@ -187,44 +194,145 @@ public class Player {
 		}
 		return list;
 	}
-	
+
+	public static ArrayList<Player> findWinners(Rules rules, Player...player){
+
+		rules_ = rules;
+		if(player.length > 1){
+			//如果有235 和豹子 还有其他 就不处理
+
+			//判断豹子
+			Player baozi = null;
+			for(int i = 0; i < player.length; i++){
+				Player p = player[i];
+				boolean ret = PokerItem.BaoZi(p.getPokers());
+				if(ret){
+					baozi = p;
+					break;
+				}
+			}
+
+			Player p235 = null;
+			for(int i = 0; i < player.length; i++){
+				Player p = player[i];
+				boolean ret = PokerItem.is235(p.getPokers());
+				if(ret){
+					p235 = p;
+					break;
+				}
+			}
+
+			Player pother = null;
+			for(int i = 0; i < player.length; i++){
+				Player p = player[i];
+				boolean ret1 = PokerItem.is235(p.getPokers());
+				boolean ret2 = PokerItem.BaoZi(p.getPokers());
+				if(ret1 == false && ret2 == false){
+					pother = p;
+					break;
+				}
+			}
+			if(p235 != null && pother!=null && baozi!=null){
+				if(p235 != pother){
+
+					ArrayList list = new ArrayList();
+					for(Player plr : player){
+						list.add(plr);
+					}
+					return list;
+				}
+			}
+		}else {
+			ArrayList<Player> list = new ArrayList<Player>();
+			list.add(player[0]);
+			return list;
+		}
+
+		for(int i = 0; i <  player.length - 1; i++){
+
+//			Player p1 = player[i];
+			for(int j = i + 1; j < player.length; j++){
+				//对数组进行排序
+//				Player p2 = player[j];
+
+//				if(p1.comparePlayer(p2) == 2){
+//					Player temp = player[i];
+//					player[i] = player[j];
+//					p1 = player[i];
+//					player[j] = temp;
+//				}
+
+				if (player[i].comparePlayer(player[j]) == 2){
+
+					Player temp = player[i];
+					player[i] = player[j];
+					player[j] = temp;
+				}
+
+			}
+		}
+		ArrayList<Player> list = new ArrayList<Player>();
+
+		Player player1 = player[0];
+		list.add(player1);
+		for(int i = 1; i < player.length; i++){
+			Player onePlayer = player[i];
+			if(player1.comparePlayer(onePlayer) == 0){
+				break;
+			}
+			list.add(onePlayer);
+		}
+		return list;
+	}
+
 	public static int comparePlayer(Player p1, Player p2){
 		// 先对一个235 和一个豹子进行判断
 		boolean ret1 = PokerItem.is235(p1.getPokers());
 		boolean ret2 = PokerItem.is235(p2.getPokers());
 		//如果p1是235
 		if((ret1 == true) && (ret2 != true)){
-			
+
 			//如果p2是豹子
 			if(PokerItem.BaoZi(p2.getPokers()) == true){
 				return 0;
 			}
-			
+
 		}else if(((ret1 != true) && (ret2 == true))){
-			
+
 			//如果p1是豹子
 			if(PokerItem.BaoZi(p1.getPokers()) == true){
 				return 2;
 			}
 		}
-		
+
 		int value1 = Player.catoryValue(p1.category);
 		int value2 = Player.catoryValue(p2.category);
-		
+
 		if(value1 > value2){
 			return 2;
 		}else if(value1 < value2){
 			return 0;
 		}else{
-			
+
 			if(value1 == 1){
 				return PokerItem.baoZiCompare(p1, p2);
 			}else if(value1 == 2){
-				return PokerItem.ShunJin(p1, p2);
+				if (rules_ == Rules.HuanLe){
+					return PokerItem.ShunJinCompare(p1, p2);
+				}else {
+					return PokerItem.ShunJin(p1, p2);
+				}
+
 			}else if(value1 == 3){
 				return PokerItem.JinHua(p1, p2);
 			}else if(value1 == 4){
-				return PokerItem.shunZi(p1, p2);
+
+				if (rules_ == Rules.HuanLe){
+					return PokerItem.shunZiCompare(p1, p2);
+				}else{
+					return PokerItem.shunZi(p1, p2);
+				}
+
 			}else if(value1 == 5){
 				return PokerItem.DuiZi(p1, p2);
 			}else{

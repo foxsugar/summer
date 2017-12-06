@@ -1,6 +1,5 @@
 package com.code.server.game.poker.paijiu
 
-import com.code.server.constant.data.DataManager
 import com.code.server.game.room.kafka.MsgSender
 
 import scala.collection.JavaConverters._
@@ -55,21 +54,9 @@ class GamePaijiu2Cards extends GamePaijiu {
   }
 
 
-  override protected def getGroupScoreByName(name: String): Int = {
-    DataManager.data.getLaotiePaijiuCardGroupScoreDataMap.get(name).getScore
-  }
 
-  /**
-    * 获得牌型分数
-    *
-    * @param group
-    * @return
-    */
-  override def getGroupScore(group: String): Int = {
-    val name: String = DataManager.data.getLaotiePaijiuCardGroupDataMap.get(group).getName
-    logger.info("cardgroupName : " + name)
-    DataManager.data.getLaotiePaijiuCardGroupScoreDataMap.get(name).getScore
-  }
+
+
 
   /**
     * 比较输赢并设置分数

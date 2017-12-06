@@ -652,76 +652,76 @@ public class HuUtil implements HuType {
 
         //如果种类相同
         if(last != 0){
-
+            return false;
             //因为进行了排序所以要把牌拆开
-
-            boolean isFind = false;
-            for(int i = 0; i < list2.size(); i++){
-
-                for(int j = i + 1; j < list2.size(); j++){
-
-                    for(int k = j + 1; k < list2.size(); k++){
-
-                        int item1 = list2.get(i);
-                        int item2 = list2.get(j);
-                        int item3 = list2.get(k);
-
-                        //判断花色
-
-//                        int yushu1 = item1 % 4;
-//                        int yushu2 = item2 % 4;
-//                        int yushu3 = item3 % 4;
-
-//                        //是不是一个颜色
-//                        if(!((yushu1 == yushu2) && (yushu1 == yushu3))){
-//                            continue;
-//                        }
-
-                        int ret = m147_258_369_158(item1 / 4, item2 / 4, item3 / 4);
-                        if(ret != 0){
-                            //现在找到了符和的一个序列
-                            //判断剩下的序列
-                            List<Integer> sList = new ArrayList<>();
-
-                            for(int w = 0; w < list2.size(); w++){
-                                if(!(w == i || w == j || w == k )){
-                                    sList.add(list2.get(w));
-                                }
-                            }
-
-//                            yushu1 = sList.get(0) % 4;
-//                            yushu2 = sList.get(1) % 4;
-//                            yushu3 = sList.get(2) % 4;
-
-//                            //是不是一个颜色
-//                            if(!((yushu1 == yushu2) && (yushu1 == yushu3))){
 //
-//                                continue;
+//            boolean isFind = false;
+//            for(int i = 0; i < list2.size(); i++){
+//
+//                for(int j = i + 1; j < list2.size(); j++){
+//
+//                    for(int k = j + 1; k < list2.size(); k++){
+//
+//                        int item1 = list2.get(i);
+//                        int item2 = list2.get(j);
+//                        int item3 = list2.get(k);
+//
+//                        //判断花色
+//
+////                        int yushu1 = item1 % 4;
+////                        int yushu2 = item2 % 4;
+////                        int yushu3 = item3 % 4;
+//
+////                        //是不是一个颜色
+////                        if(!((yushu1 == yushu2) && (yushu1 == yushu3))){
+////                            continue;
+////                        }
+//
+//                        int ret = m147_258_369_158(item1 / 4, item2 / 4, item3 / 4);
+//                        if(ret != 0){
+//                            //现在找到了符和的一个序列
+//                            //判断剩下的序列
+//                            List<Integer> sList = new ArrayList<>();
+//
+//                            for(int w = 0; w < list2.size(); w++){
+//                                if(!(w == i || w == j || w == k )){
+//                                    sList.add(list2.get(w));
+//                                }
 //                            }
-
-                            int ret2 = m147_258_369_158(sList.get(0) / 4, sList.get(1) / 4, sList.get(2) / 4);
-
-                            if((ret2 != 0 ) && (ret != ret2)){
-
-                                isFind = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (isFind == true){
-                        break;
-                    }
-                }
-
-                if (isFind == true){
-                    break;
-                }
-            }
-
-           if (!isFind){
-               return false;
-           }
+//
+////                            yushu1 = sList.get(0) % 4;
+////                            yushu2 = sList.get(1) % 4;
+////                            yushu3 = sList.get(2) % 4;
+//
+////                            //是不是一个颜色
+////                            if(!((yushu1 == yushu2) && (yushu1 == yushu3))){
+////
+////                                continue;
+////                            }
+//
+//                            int ret2 = m147_258_369_158(sList.get(0) / 4, sList.get(1) / 4, sList.get(2) / 4);
+//
+//                            if((ret2 != 0 ) && (ret != ret2)){
+//
+//                                isFind = true;
+//                                break;
+//                            }
+//                        }
+//                    }
+//
+//                    if (isFind == true){
+//                        break;
+//                    }
+//                }
+//
+//                if (isFind == true){
+//                    break;
+//                }
+//            }
+//
+//           if (!isFind){
+//               return false;
+//           }
 
 
         }else{
@@ -732,16 +732,16 @@ public class HuUtil implements HuType {
             if(result1 == 0 || result2 == 0){
                 return false;
             }
-
-            int type1 = result1 / 100;
-            int type2 = result2 / 100;
-
-            int cType1 = result1 % 10;
-            int cType2 = result2 % 10;
-
-            if(type1 == type2 && cType1 == cType2){
-                return false;
-            }
+//            //百位代表万筒条， 十位代表花色， 个位代表 那种牌型
+//            int type1 = result1 / 100;
+//            int type2 = result2 / 100;
+//
+//            int cType1 = result1 % 10;
+//            int cType2 = result2 % 10;
+//
+//            if(type1 == type2 && cType1 == cType2){
+//                return false;
+//            }
 
         }
 
