@@ -112,17 +112,32 @@ public class PokerItem {
 	}
 	//是否是顺子
 	public static boolean ShunZi(ArrayList<PokerItem> list){
-		
+
 		int size = list.size();
 		if(size != 3){
 			throw new RuntimeException("必须传入三张牌！！！");
 		}
-		
+
 		//首先对传过来的牌进行排序
 		sortPokers(list);
-		
+
 		PokerItem item = list.get(0);
 		int chushu = (item.index - 2) / 4;
+
+		if (chushu == 0){
+
+			PokerItem item1 = list.get(1);
+			PokerItem item2 = list.get(2);
+
+			int chushu1 = (item1.index - 2) / 4;
+			int chushu2 = (item2.index - 2) / 4;
+
+			if (chushu == 0 && chushu1 ==  11 && chushu2 == 12){
+				return true;
+			}
+
+		}
+
 		for(PokerItem aItem : list){
 			if(item == aItem){
 				continue;
@@ -223,22 +238,105 @@ public class PokerItem {
 			return 2;
 		}
 	}
-	
+
 	public static int ShunJin(Player p1, Player p2){
 		return shunZi(p1, p2);
 	}
-	
-	public static int shunZi(Player p1, Player p2){
-		
+
+	public static int ShunJinCompare(Player p1, Player p2){
+		return shunZiCompare(p1, p2);
+	}
+
+	public static int shunZiCompare(Player p1, Player p2){
+
 		ArrayList<PokerItem> list1 = p1.getPokers();
 		ArrayList<PokerItem> list2 = p2.getPokers();
 		PokerItem item1 = list1.get(0);
 		PokerItem item2 = list2.get(0);
 		int chushu1 = (item1.index - 2) / 4;
 		int chushu2 = (item2.index - 2) / 4;
-		
+
 		if(chushu1 == chushu2){
+
+			PokerItem itemA = list1.get(1);
+			PokerItem itemB = list2.get(1);
+
+			//如果第一张是A
+			if (chushu1 == 0){
+
+				if ((itemA.index - 2) / 4 == (itemB.index - 2) / 4){
+					return 1;
+				}else if((itemA.index - 2) / 4 > (itemB.index - 2) / 4){
+					return 2;
+				}else {
+					return 0;
+				}
+			}
+
 			return 1;
+
+
+		}else if(chushu1 > chushu2){
+			PokerItem itemA = list2.get(1);
+			PokerItem itemB = list2.get(2);
+
+			if ((chushu2 == 0) && (itemA.index / 4 == 11) && (itemB.index / 4 == 12)){
+				return 0;
+			}
+
+			return 2;
+		}else{
+
+			PokerItem itemA = list1.get(1);
+			PokerItem itemB = list1.get(2);
+			if (chushu1 == 0 && (itemA.index / 4 == 11) && (itemB.index / 4 == 12)){
+				return 2;
+			}
+			return 0;
+		}
+	}
+
+	public static int shunZi(Player p1, Player p2){
+
+		ArrayList<PokerItem> list1 = p1.getPokers();
+		ArrayList<PokerItem> list2 = p2.getPokers();
+		PokerItem item1 = list1.get(0);
+		PokerItem item2 = list2.get(0);
+		int chushu1 = (item1.index - 2) / 4;
+		int chushu2 = (item2.index - 2) / 4;
+
+		if(chushu1 == chushu2){
+
+			PokerItem itemA = list1.get(1);
+			PokerItem itemB = list2.get(1);
+
+			//如果第一张是A
+			if (chushu1 == 0){
+
+
+				if ((itemA.index - 2) / 4 == (itemB.index - 2) / 4){
+					//第二张相等
+					return 1;
+				}else if((itemA.index - 2) / 4 > (itemB.index - 2) / 4){
+					//第二张
+					if ((itemB.index - 2) / 4 == 1){
+						return 2;
+					}
+					return 0;
+
+				}else {
+
+					if ((itemA.index - 2) / 4 == 1){
+						return 0;
+					}
+
+					return 2;
+				}
+			}
+
+			return 1;
+
+
 		}else if(chushu1 > chushu2){
 			return 2;
 		}else{
