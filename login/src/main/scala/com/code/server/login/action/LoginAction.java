@@ -69,7 +69,7 @@ public class LoginAction {
         //查询数据库，没有新建玩家
         if (user == null) {
             //新建玩家
-            if (getConstant().getAppleCheck() == 1) {
+            if (getConstant().getAppleCheck() != 0) {
                 user = createUser(account, password);
                 userService.save(user);
             } else {
