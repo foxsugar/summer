@@ -257,8 +257,8 @@ public class Room implements IfaceRoom {
             //代开房 并且游戏未开始
             if (!isCreaterJoin && !this.isInGame && this.curGameNumber == 1) {
                 drawBack();
+                dissolutionRoom();
             }
-//            dissolutionRoom();
 
         }
 
