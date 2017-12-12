@@ -215,6 +215,7 @@ public class RoomInfo extends Room {
             case "DY"://大运
                 return new GameInfo().setHasJieGangHu(true);
             case "TJ":
+            case "DFH":
                 return new GameInfoTJ().setHasJieGangHu(false);
             case "DH":
                 return new GameInfoDonghu();
@@ -387,6 +388,15 @@ public class RoomInfo extends Room {
                 result = 2;
             } else if (16 == gameNumber) {
                 result = 4;
+            }
+        }
+        else if ("DFH".equals(gameType)) {//大富豪
+            if (1 == gameNumber) {
+                result = 3;
+            } else if (2 == gameNumber) {
+                result = 6;
+            } else if (4 == gameNumber) {
+                result = 12;
             }
         }else if("HL".equals(gameType)){
             result = 1;
@@ -729,6 +739,7 @@ public class RoomInfo extends Room {
     public boolean isYipaoduoxiang() {
         return isYipaoduoxiang;
     }
+
 
     public RoomInfo setYipaoduoxiang(boolean yipaoduoxiang) {
         isYipaoduoxiang = yipaoduoxiang;
