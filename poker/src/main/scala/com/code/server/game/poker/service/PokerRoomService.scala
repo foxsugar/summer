@@ -1,8 +1,11 @@
 package com.code.server.game.poker.service
 
+import com.code.server.constant.response.ErrorCode
 import com.code.server.game.poker.doudizhu.{RoomDouDiZhu, RoomDouDiZhuGold}
+import com.code.server.game.poker.guess.RoomGuessCar
 import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower
 import com.code.server.game.poker.paijiu.RoomPaijiu
+import com.code.server.game.room.service.RoomManager
 import com.fasterxml.jackson.databind.JsonNode
 
 /**
@@ -62,6 +65,20 @@ object PokerRoomService {
         val gameType = params.get("gameType").asText()
         return RoomDouDiZhuGold.joinGoldRoom(userId,goldRoomType,roomType,gameType);
 
+      case "createGuessRoom"=>
+        val roomType = params.path("roomType").asText()
+        val gameType = params.path("gameType").asText()
+        val chip = params.path("chip").asInt()
+        return RoomGuessCar.createRoom(userId,chip, gameType, roomType)
+
+      case "guessCar"=>
+        val roomId = params.get("roomId").asText()
+        val redOrGreen = params.get("redOrGreen").asInt()
+        val roomGuessCar = RoomManager.getRoom(roomId)
+        if(roomGuessCar == null) {
+          return -ErrorCode.CAN_NOT_NO_ROOM
+        }
+        roomGuessCar.asInstanceOf[RoomGuessCar].guessCar(userId,redOrGreen)
       case _ =>
         return -1
     }
