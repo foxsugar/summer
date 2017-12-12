@@ -27,7 +27,7 @@ public class ConvertSqlData {
 
     public Object getUsers() throws SQLException {
         Object[] params = new Object[]{};
-        return JdbcUtils.query("select id,account,password,username,money,openId,marquee,vip,sex from t_user where id>=10001082 ", params, new ResultSetHandler() {
+        return JdbcUtils.query("select id,account,password,username,money,openId,marquee,vip,sex from t_user where id>0 ", params, new ResultSetHandler() {
 
             public Object handle(ResultSet rs) throws SQLException {
                 List<User> result = new ArrayList<>();
@@ -35,14 +35,14 @@ public class ConvertSqlData {
                     User user = new User();
                     user.setId(rs.getLong("id"));
                     user.setMoney(rs.getDouble("money"));
-                    user.setGold(rs.getDouble("marquee"));
+//                    user.setGold(rs.getDouble("marquee"));
                     user.setAccount(rs.getString("account"));
                     user.setSex(rs.getInt("sex"));
                     user.setOpenId(rs.getString("openId"));
                     user.setPassword(rs.getString("password"));
                     String vip = rs.getString("vip");
                     vip = vip.trim();
-                    user.setReferee(Integer.valueOf(vip));
+//                    user.setReferee(Integer.valueOf(vip));
                     try {
                         String name = URLDecoder.decode(rs.getString("username"), "utf-8");
                         user.setUsername(name);
@@ -68,7 +68,7 @@ public class ConvertSqlData {
 
     public static void main(String[] args) {
         try {
-            String name = URLDecoder.decode("%F0%9F%8C%99%E9%A6%99%E8%8D%89%F0%9F%8C%BF%E9%A6%A8%E6%9C%88%F0%9F%8C%99","utf-8");
+            String name = URLDecoder.decode("\\xF0\\x9F\\x92\\xA4","utf-8");
             System.out.println(name);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

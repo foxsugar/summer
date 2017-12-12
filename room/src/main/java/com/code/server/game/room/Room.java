@@ -58,7 +58,7 @@ public class Room implements IfaceRoom {
     protected int hasNine;
     protected boolean isCanDissloution = false;
     protected long dissloutionUser = -1;//申请解散房间的人
-    protected Long dealFirstOfRoom;//第一个发牌的人
+//    protected Long dealFirstOfRoom;//第一个发牌的人
     protected boolean isAA;//是否共同付费
     protected boolean isCreaterJoin = true;//是否是代开房
     protected boolean isAddGold;
@@ -843,13 +843,13 @@ public class Room implements IfaceRoom {
         return gameType;
     }
 
-    public Long getDealFirstOfRoom() {
-        return dealFirstOfRoom;
-    }
-
-    public void setDealFirstOfRoom(Long dealFirstOfRoom) {
-        this.dealFirstOfRoom = dealFirstOfRoom;
-    }
+//    public Long getDealFirstOfRoom() {
+//        return dealFirstOfRoom;
+//    }
+//
+//    public void setDealFirstOfRoom(Long dealFirstOfRoom) {
+//        this.dealFirstOfRoom = dealFirstOfRoom;
+//    }
 
     public Room setGameType(String gameType) {
         this.gameType = gameType;

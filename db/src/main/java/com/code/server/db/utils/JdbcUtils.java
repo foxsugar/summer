@@ -1,13 +1,8 @@
 package com.code.server.db.utils;
 
-import com.code.server.db.model.User;
 import org.apache.commons.dbutils.ResultSetHandler;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by sunxianping on 2017/4/12.
@@ -15,9 +10,9 @@ import java.util.List;
 public class JdbcUtils {
 
     private static String driver = "com.mysql.jdbc.Driver";
-    private static String url = "jdbc:mysql://119.63.37.50:3306/test";
-    private static String username = "server";
-    private static String password = "Cloudkey(longqi)";
+    private static String url = "jdbc:mysql://localhost:3306/test1";
+    private static String username = "root";
+    private static String password = "root";
 
     static {
         try {
