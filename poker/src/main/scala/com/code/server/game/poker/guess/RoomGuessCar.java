@@ -53,7 +53,7 @@ public class RoomGuessCar extends Room {
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);
         roomGuessCar.setUuid(idWorker.nextId());
 
-        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createGuessCarRoom", roomGuessCar.toVo(userId)), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createGuessRoom", roomGuessCar.toVo(userId)), userId);
 
         return 0;
     }
