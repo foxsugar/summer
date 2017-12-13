@@ -8,10 +8,10 @@ import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
-import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
+import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
 import org.springframework.beans.BeanUtils;
 
@@ -84,7 +84,12 @@ public class RoomGuessCar extends Room {
         }
         this.state = STATE_BET;
 
-        TimerNode betEndTimerNode = new TimerNode(System.currentTimeMillis(), 2000, false, );
+        GameGuessCar gameGuessCar = new GameGuessCar();
+        gameGuessCar.startGame(users,this);
+
+
+        TimerNode betEndTimerNode = new TimerNode(System.currentTimeMillis(), 2000, false, gameGuessCar::sendResult);
+        GameTimer.addTimerNode(betEndTimerNode);
 
        return 0;
     }

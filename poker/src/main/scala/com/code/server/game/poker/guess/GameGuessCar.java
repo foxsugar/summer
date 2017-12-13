@@ -71,7 +71,7 @@ public class GameGuessCar extends Game{
         init(users);
         updateLastOperateTime();
         //通知其他人游戏已经开始
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameBegin", "ok"), this.getUsers());
+        MsgSender.sendMsg2Player(new ResponseVo("gameGuessService", "gameBegin", "ok"), this.getUsers());
     }
 
     /**
@@ -92,11 +92,11 @@ public class GameGuessCar extends Game{
         Map<String, Object> result = new HashMap<>();
         result.put("userId", userId);
         result.put("color", color);
-        ResponseVo vo = new ResponseVo("gameService", "setResultResponse", result);
+        ResponseVo vo = new ResponseVo("gameGuessService", "setResultResponse", result);
         MsgSender.sendMsg2Player(vo, users);
 
-        MsgSender.sendMsg2Player("gameService", "setResult", 0, userId);
-        MsgSender.sendMsg2Player("gameService", "canRaise", 0, users);//通知可以下注
+        MsgSender.sendMsg2Player("gameGuessService", "setResult", 0, userId);
+        MsgSender.sendMsg2Player("gameGuessService", "canRaise", 0, users);//通知可以下注
         updateLastOperateTime();
         beginTime = System.currentTimeMillis();
 
@@ -107,7 +107,7 @@ public class GameGuessCar extends Game{
                 try{
                     Thread.sleep(BET_TIME);
                     status = OVER_BET;
-                    MsgSender.sendMsg2Player("gameService", "betOver", 0, users);//通知可以下注
+                    MsgSender.sendMsg2Player("gameGuessService", "betOver", 0, users);//通知可以下注
                     sendResult();
                 }catch (Exception e){
                     e.printStackTrace();
@@ -152,7 +152,7 @@ public class GameGuessCar extends Game{
         Map<String, Object> allNotice = new HashMap<>();
         allNotice.put("redScore",redScore);
         allNotice.put("greenScore",greenScore);
-        ResponseVo allNoticeVo = new ResponseVo("gameService", "allBet", allNotice);
+        ResponseVo allNoticeVo = new ResponseVo("gameGuessService", "allBet", allNotice);
         MsgSender.sendMsg2Player(allNoticeVo, users);
 
         Map<String, Object> result = new HashMap<>();
@@ -160,10 +160,10 @@ public class GameGuessCar extends Game{
         result.put("redScore",playerCardInfos.get(userId).getRedScore());
         result.put("greenScore",playerCardInfos.get(userId).getGreenScore());
         result.put("color",color);
-        ResponseVo vo = new ResponseVo("gameService", "raiseResponse", result);
+        ResponseVo vo = new ResponseVo("gameGuessService", "raiseResponse", result);
         MsgSender.sendMsg2Player(vo, userId);
 
-        MsgSender.sendMsg2Player("gameService", "raise", 0, userId);
+        MsgSender.sendMsg2Player("gameGuessService", "raise", 0, userId);
         updateLastOperateTime();
 
         return 0;
@@ -196,16 +196,28 @@ public class GameGuessCar extends Game{
             for (Long l:playerCardInfos.keySet()) {
                 Map<String, Object> result = new HashMap<>();
                 result.put("color",this.color);
+<<<<<<< HEAD
                 result.put("playerScore",playerCardInfos.get(l).getFinalScore());
                 ResponseVo vo = new ResponseVo("gameService", "gamePlayerResult", result);
                 MsgSender.sendMsg2Player("gameService", "gamePlayerResult", vo, l);
+=======
+                result.put("finalScore",playerCardInfos.get(l).getFinalScore());
+                ResponseVo vo = new ResponseVo("gameGuessService", "gameResult", result);
+                MsgSender.sendMsg2Player("gameGuessService", "gameResult", vo, l);
+>>>>>>> 92afaa5bf20be67630e7a16e4f2ea1a7e2ec3b33
             }
         }
         //庄家
         Map<String, Object> result = new HashMap<>();
+<<<<<<< HEAD
         result.put("bankercore",bankerCardInfos.getScore());
         ResponseVo vo = new ResponseVo("gameService", "gameBankerResult", result);
         MsgSender.sendMsg2Player("gameService", "gameBankerResult", vo, bankerCardInfos.getUserId());
+=======
+        result.put("score",bankerCardInfos.getScore());
+        ResponseVo vo = new ResponseVo("gameGuessService", "gameResult", result);
+        MsgSender.sendMsg2Player("gameGuessService", "raise", vo, bankerCardInfos.getUserId());
+>>>>>>> 92afaa5bf20be67630e7a16e4f2ea1a7e2ec3b33
     }
 
 
