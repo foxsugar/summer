@@ -22,7 +22,12 @@ import java.util.List;
 public class RoomGuessCar extends Room {
 
     public static final int PERSONNUM = 7;
+
+    public static final int STATE_GUESS = 0;
+    public static final int STATE_BET = 1;
     public List<Integer> record = new ArrayList<>();
+    public int state = 0;
+    public double bankerScore = 0;
 
     public static int createRoom(long userId ,int chip,String gameType, String roomType)  {
         //身上的钱够不够
@@ -43,6 +48,7 @@ public class RoomGuessCar extends Room {
 
         //扣掉
         RedisManager.getUserRedisService().addUserMoney(userId, -chip);
+        roomGuessCar.bankerScore = chip;
 
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);
         roomGuessCar.setUuid(idWorker.nextId());
@@ -70,6 +76,8 @@ public class RoomGuessCar extends Room {
 
     public int guessCar(long userId,int redOrGreen){
 
+        this.state = STATE_BET;
+
        return 0;
     }
 
@@ -78,6 +86,7 @@ public class RoomGuessCar extends Room {
         RoomGuessCarVo roomVo = new RoomGuessCarVo();
         BeanUtils.copyProperties(this, roomVo);
 
+        roomVo.setState(this.state);
         return roomVo;
     }
 }

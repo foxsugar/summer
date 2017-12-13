@@ -76,7 +76,7 @@ object PokerRoomService {
         val redOrGreen = params.get("redOrGreen").asInt()
         val roomGuessCar = RoomManager.getRoom(roomId)
         if(roomGuessCar == null) {
-          return -ErrorCode.CAN_NOT_NO_ROOM
+          return ErrorCode.CAN_NOT_NO_ROOM
         }
         roomGuessCar.asInstanceOf[RoomGuessCar].guessCar(userId,redOrGreen)
       case _ =>
