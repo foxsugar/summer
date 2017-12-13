@@ -89,4 +89,12 @@ public class RoomGuessCar extends Room {
         roomVo.setState(this.state);
         return roomVo;
     }
+
+    public double getBankerScore() {
+        return bankerScore;
+    }
+
+    public void setBankerScore(double bankerScore) {
+        this.bankerScore = bankerScore;
+    }
 }
