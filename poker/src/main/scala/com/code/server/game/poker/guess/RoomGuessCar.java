@@ -8,9 +8,11 @@ import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
+import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
+import com.code.server.util.timer.TimerNode;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ public class RoomGuessCar extends Room {
     public List<Integer> record = new ArrayList<>();
     public int state = 0;
     public double bankerScore = 0;
+    public transient TimerNode betEndTimerNode;//结算定时器
 
     public static int createRoom(long userId ,int chip,String gameType, String roomType)  {
         //身上的钱够不够
@@ -76,7 +79,12 @@ public class RoomGuessCar extends Room {
 
     public int guessCar(long userId,int redOrGreen){
 
+        if(this.state == STATE_BET){
+            return ErrorCode.STATE_ERROR;
+        }
         this.state = STATE_BET;
+
+        TimerNode betEndTimerNode = new TimerNode(System.currentTimeMillis(), 2000, false, );
 
        return 0;
     }
@@ -87,6 +95,8 @@ public class RoomGuessCar extends Room {
         BeanUtils.copyProperties(this, roomVo);
 
         roomVo.setState(this.state);
+        roomVo.setRecord(this.record);
+        roomVo.setBankerScore(this.bankerScore);
         return roomVo;
     }
 }

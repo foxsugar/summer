@@ -104,6 +104,9 @@ public class ErrorCode {
 
 	public static final int NO_THIS_ROOM = 700001;
 
+	//猜汽车
+	public static final int STATE_ERROR = 800001;
+
 
 
 
