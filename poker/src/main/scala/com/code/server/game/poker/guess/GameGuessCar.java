@@ -6,6 +6,7 @@ import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.redis.service.RedisManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,11 +44,11 @@ public class GameGuessCar extends Game{
     protected Random rand = new Random();
     protected RoomGuessCar room;
     protected long lastOperateTime;
-    protected long beginTime;
+    //protected long beginTime;
     protected int color = -1;
     protected double redScore;//red 0 green 1
     protected double greenScore;
-    protected int status;//0未设置结果，1已设置，开局，2下注结束
+    //protected int status;//0未设置结果，1已设置，开局，2下注结束
 
 
     public void init(List<Long> users) {
@@ -56,17 +57,17 @@ public class GameGuessCar extends Game{
             PlayerCardInfoGuessCar playerCardInfo = getGameTypePlayerCardInfo();
             playerCardInfo.userId = uid;
             //TODO 暂时设置10000
-            playerCardInfo.setFinalScore(10000);
+            playerCardInfo.setFinalScore(RedisManager.getUserRedisService().getUserMoney(uid));
             playerCardInfos.put(uid, playerCardInfo);
         }
         bankerCardInfos.userId = room.getBankerId();
         this.users.addAll(users);
-        this.status=NOT_SET_RESULT;
         updateLastOperateTime();
     }
 
-    public void startGame(List<Long> users, Room room) {
+    public void startGame(List<Long> users, Room room,int redOrGreen) {
         this.room = (RoomGuessCar) room;
+        this.color = redOrGreen;
         init(users);
         updateLastOperateTime();
         //通知其他人游戏已经开始
@@ -78,9 +79,9 @@ public class GameGuessCar extends Game{
      * @return
      */
     public int setResult(long userId,int color) {
-        logger.info(userId + "  设置结果: " + color);
+        /*logger.info(userId + "  设置结果: " + color);
         if(-1!=color){
-            return ErrorCode.HAVE_SET_RESULT;
+            return ErrorCode.STATE_ERROR;
         }
         if (userId != bankerCardInfos.getUserId()) {//不是庄家
             return ErrorCode.NOT_BANKER;
@@ -112,7 +113,7 @@ public class GameGuessCar extends Game{
                     e.printStackTrace();
                 }
             }
-        }).start();
+        }).start();*/
 
         return 0;
     }
@@ -195,16 +196,16 @@ public class GameGuessCar extends Game{
             for (Long l:playerCardInfos.keySet()) {
                 Map<String, Object> result = new HashMap<>();
                 result.put("color",this.color);
-                result.put("finalScore",playerCardInfos.get(l).getFinalScore());
-                ResponseVo vo = new ResponseVo("gameService", "gameResult", result);
-                MsgSender.sendMsg2Player("gameService", "gameResult", vo, l);
+                result.put("playerScore",playerCardInfos.get(l).getFinalScore());
+                ResponseVo vo = new ResponseVo("gameService", "gamePlayerResult", result);
+                MsgSender.sendMsg2Player("gameService", "gamePlayerResult", vo, l);
             }
         }
         //庄家
         Map<String, Object> result = new HashMap<>();
-        result.put("score",bankerCardInfos.getScore());
-        ResponseVo vo = new ResponseVo("gameService", "gameResult", result);
-        MsgSender.sendMsg2Player("gameService", "raise", vo, bankerCardInfos.getUserId());
+        result.put("bankercore",bankerCardInfos.getScore());
+        ResponseVo vo = new ResponseVo("gameService", "gameBankerResult", result);
+        MsgSender.sendMsg2Player("gameService", "gameBankerResult", vo, bankerCardInfos.getUserId());
     }
 
 
@@ -292,14 +293,6 @@ public class GameGuessCar extends Game{
 
     public void setColor(int color) {
         this.color = color;
-    }
-
-    public long getBeginTime() {
-        return beginTime;
-    }
-
-    public void setBeginTime(long beginTime) {
-        this.beginTime = beginTime;
     }
 
     @Override

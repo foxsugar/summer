@@ -4,6 +4,7 @@ import com.code.server.constant.game.CardStruct
 import com.code.server.constant.response.ErrorCode
 import com.code.server.game.poker.doudizhu.{GameDouDiZhu, GameDouDiZhuGold}
 import com.code.server.game.poker.hitgoldflower.GameHitGoldFlower
+import com.code.server.game.poker.guess.GameGuessCar
 import com.code.server.game.poker.paijiu.GamePaijiu
 import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
@@ -22,6 +23,7 @@ object GameService {
       case x:GameDouDiZhuGold =>dispatchGameDDZGoldService(userId,method,game.asInstanceOf[GameDouDiZhuGold],params)
       case x:GamePaijiu =>dispatchGamePJService(userId,method,game.asInstanceOf[GamePaijiu],params)
       case x:GameHitGoldFlower =>dispatchGameHGFService(userId,method,game.asInstanceOf[GameHitGoldFlower],params)
+      case x:GameGuessCar =>dispatchGameGuessService(userId,method,game.asInstanceOf[GameGuessCar],params)
     }
 
   }
@@ -122,6 +124,15 @@ object GameService {
       ErrorCode.REQUEST_PARAM_ERROR
   }
 
+  private def dispatchGameGuessService(userId:Long,method: String, game: GameGuessCar, params: JsonNode):Int = method match {
+    case "raise" =>
+      val userId = params.path("userId").asLong(0)
+      val addChip = params.path("addChip").asDouble(0)
+      val color = params.path("color").asInt(0)
+      game.raise(userId,addChip,color);
+    case _ =>
+      ErrorCode.REQUEST_PARAM_ERROR
+  }
 
   def getGame(roomId : String):IfaceGame = {
     RoomManager.getRoom(roomId).getGame
