@@ -104,7 +104,8 @@ public class ErrorCode {
 
 	public static final int NO_THIS_ROOM = 700001;
 
-
+	//红绿车
+	public static final int HAVE_SET_RESULT = 800001;
 
 
 	static class ErrorCodeRepeatChecker {
