@@ -496,7 +496,8 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
             	}
         	}
     	}
-    	
+
+
     	if(!this.roomInfo.getGameType().equals("LQ") && !this.roomInfo.getGameType().equals("HT") && !this.roomInfo.getGameType().equals("JL") && !this.roomInfo.getGameType().equals("DS") && !this.roomInfo.getGameType().equals("HL") && !this.roomInfo.getGameType().equals("TC")){
     		if(this.anGangType.size()>0){
     			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
