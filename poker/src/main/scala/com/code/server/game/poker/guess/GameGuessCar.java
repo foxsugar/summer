@@ -196,28 +196,19 @@ public class GameGuessCar extends Game{
             for (Long l:playerCardInfos.keySet()) {
                 Map<String, Object> result = new HashMap<>();
                 result.put("color",this.color);
-<<<<<<< HEAD
-                result.put("playerScore",playerCardInfos.get(l).getFinalScore());
-                ResponseVo vo = new ResponseVo("gameService", "gamePlayerResult", result);
-                MsgSender.sendMsg2Player("gameService", "gamePlayerResult", vo, l);
-=======
+
                 result.put("finalScore",playerCardInfos.get(l).getFinalScore());
                 ResponseVo vo = new ResponseVo("gameGuessService", "gameResult", result);
                 MsgSender.sendMsg2Player("gameGuessService", "gameResult", vo, l);
->>>>>>> 92afaa5bf20be67630e7a16e4f2ea1a7e2ec3b33
+
             }
         }
         //庄家
         Map<String, Object> result = new HashMap<>();
-<<<<<<< HEAD
+
         result.put("bankercore",bankerCardInfos.getScore());
-        ResponseVo vo = new ResponseVo("gameService", "gameBankerResult", result);
+        ResponseVo vo = new ResponseVo("gameGuessService", "gameBankerResult", result);
         MsgSender.sendMsg2Player("gameService", "gameBankerResult", vo, bankerCardInfos.getUserId());
-=======
-        result.put("score",bankerCardInfos.getScore());
-        ResponseVo vo = new ResponseVo("gameGuessService", "gameResult", result);
-        MsgSender.sendMsg2Player("gameGuessService", "raise", vo, bankerCardInfos.getUserId());
->>>>>>> 92afaa5bf20be67630e7a16e4f2ea1a7e2ec3b33
     }
 
 
