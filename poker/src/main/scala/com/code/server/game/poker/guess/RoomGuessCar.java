@@ -45,6 +45,7 @@ public class RoomGuessCar extends Room {
         roomGuessCar.createUser = userId;
         roomGuessCar.gameType = gameType;
         roomGuessCar.roomType = roomType;
+        roomGuessCar.bankerId = userId;
 
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         RoomManager.addRoom(roomGuessCar.roomId, "" + serverConfig.getServerId(), roomGuessCar);
@@ -58,6 +59,7 @@ public class RoomGuessCar extends Room {
 
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createGuessRoom", roomGuessCar.toVo(userId)), userId);
 
+        roomGuessCar.joinRoom(userId, true);
         return 0;
     }
 
@@ -85,12 +87,13 @@ public class RoomGuessCar extends Room {
         this.state = STATE_BET;
 
         GameGuessCar gameGuessCar = new GameGuessCar();
-        gameGuessCar.startGame(users,this);
+        gameGuessCar.startGame(users,this,redOrGreen);
 
 
-        TimerNode betEndTimerNode = new TimerNode(System.currentTimeMillis(), 2000, false, gameGuessCar::sendResult);
+        TimerNode betEndTimerNode = new TimerNode(System.currentTimeMillis(), 20000, false, gameGuessCar::sendResult);
         GameTimer.addTimerNode(betEndTimerNode);
 
+        MsgSender.sendMsg2Player("pokerRoomService", "guessCar", 0, this.bankerId);
        return 0;
     }
 

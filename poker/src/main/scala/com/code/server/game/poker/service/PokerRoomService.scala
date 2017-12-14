@@ -78,7 +78,7 @@ object PokerRoomService {
         if(roomGuessCar == null) {
           return ErrorCode.CAN_NOT_NO_ROOM
         }
-        roomGuessCar.asInstanceOf[RoomGuessCar].guessCar(userId,redOrGreen)
+        return roomGuessCar.asInstanceOf[RoomGuessCar].guessCar(userId,redOrGreen)
       case _ =>
         return -1
     }
