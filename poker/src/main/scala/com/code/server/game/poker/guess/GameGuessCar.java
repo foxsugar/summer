@@ -198,6 +198,11 @@ public class GameGuessCar extends Game{
                 result.put("color",this.color);
 
                 result.put("finalScore",playerCardInfos.get(l).getFinalScore());
+                if(RED==this.color){
+                    result.put("score",playerCardInfos.get(l).getRedScore()*2-playerCardInfos.get(l).getGreenScore());
+                }else{
+                    result.put("score",playerCardInfos.get(l).getGreenScore()*2-playerCardInfos.get(l).getRedScore());
+                }
                 ResponseVo vo = new ResponseVo("gameGuessService", "gameResult", result);
                 MsgSender.sendMsg2Player(vo, l);
 
