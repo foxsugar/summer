@@ -64,6 +64,7 @@ public class Room implements IfaceRoom {
     protected boolean isAddGold;
     protected Map<Long, RoomStatistics> roomStatisticsMap = new HashMap<>();//统计
     public int mustZimo = 0;//1是0否
+    public boolean showChat;
 
 
 
@@ -958,5 +959,14 @@ public class Room implements IfaceRoom {
 
     public void setCanStartUserId(Long canStartUserId) {
         this.canStartUserId = canStartUserId;
+    }
+
+    public boolean isShowChat() {
+        return showChat;
+    }
+
+    public Room setShowChat(boolean showChat) {
+        this.showChat = showChat;
+        return this;
     }
 }

@@ -83,6 +83,12 @@ public class UserServiceMsgDispatch {
                 return gameUserService.getRecordsByRoom(msgKey,params.path("roomUid").asLong());
             case "getRoomInfo":
                 return gameUserService.getRoomInfo(msgKey, params, allParams);
+            case "guessCarUp2Agent":
+                return gameUserService.guessCarUp2Agent(msgKey);
+            case "guessCarBind":
+                int referrerId = params.get("referrerId").asInt();
+                return gameUserService.guessCarBindReferrer(msgKey,referrerId);
+
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

@@ -59,7 +59,7 @@ public class RoomDouDiZhu extends Room {
 
     }
 
-    public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType, boolean isAA, boolean isJoin) throws DataNotFoundException {
+    public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType, boolean isAA, boolean isJoin, boolean showChat) throws DataNotFoundException {
         RoomDouDiZhu room = getRoomInstance(roomType);
 
         room.personNumber = PERSONNUM;
@@ -70,6 +70,7 @@ public class RoomDouDiZhu extends Room {
         room.roomType = roomType;
         room.isAA = isAA;
         room.isCreaterJoin = isJoin;
+        room.showChat = showChat;
 
         room.init(gameNumber, multiple);
 

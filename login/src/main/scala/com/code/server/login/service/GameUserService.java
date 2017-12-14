@@ -432,6 +432,64 @@ public class GameUserService {
 
     }
 
+    /**
+     * 猜汽车
+     * @param msgKey
+     * @return
+     */
+    public int guessCarUp2Agent(KafkaMsgKey msgKey){
+
+        long userId = msgKey.getUserId();
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+
+        if (userBean.getVip() != 0) {
+            return ErrorCode.CAN_NOT_BING_REFERRER;
+        }
+        //减钻石
+        if (userBean.getMoney() < 100) {
+            return ErrorCode.NOT_HAVE_MORE_MONEY;
+        }
+        userBean.setVip(Integer.valueOf(""+userId));
+        RedisManager.getUserRedisService().updateUserBean(userId,userBean);
+        RedisManager.getUserRedisService().addUserMoney(userId, -100);
+
+        ResponseVo vo = new ResponseVo("userService", "guessCarUp2Agent", userId);
+        sendMsg(msgKey, vo);
+        return 0;
+    }
+
+    public int guessCarBindReferrer(KafkaMsgKey msgKey, int referrerId){
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(msgKey.getUserId());
+        if (userBean == null) {
+            return ErrorCode.YOU_HAVE_NOT_LOGIN;
+        }
+        if (referrerId <= 0 || userBean.getReferee() != 0) {
+            return ErrorCode.CAN_NOT_BING_REFERRER;
+        }
+//        boolean isExist = RpcManager.getInstance().referrerIsExist(referrerId);
+//        if (!isExist) {
+//            return ErrorCode.REFERRER_NOT_EXIST;
+//        }
+        UserBean referrUser = RedisManager.getUserRedisService().getUserBean(referrerId);
+        if (referrUser != null) {
+            if(referrUser.getVip() == 0){
+                return ErrorCode.REFERRER_NOT_EXIST;
+            }
+        }else{
+            User user = userService.getUserByUserId(referrerId);
+            if(user == null || user.getVip()== 0) return ErrorCode.REFERRER_NOT_EXIST;
+        }
+
+        userBean.setReferee(referrerId);
+        RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
+
+
+
+        ResponseVo vo = new ResponseVo("userService", "guessCarBindReferrer", 0);
+        sendMsg(msgKey, vo);
+        return 0;
+    }
+
     public int getRecordsByRoom(KafkaMsgKey msgKey, long roomUid) {
         List<com.code.server.db.model.GameRecord> list = gameRecordService.gameRecordDao.getGameRecordByUuid(roomUid);
 
