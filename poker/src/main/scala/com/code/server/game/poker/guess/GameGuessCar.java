@@ -206,7 +206,7 @@ public class GameGuessCar extends Game{
         //庄家
         Map<String, Object> result = new HashMap<>();
 
-        result.put("bankercore",bankerCardInfos.getScore());
+        result.put("bankerScore",bankerCardInfos.getScore());
         ResponseVo vo = new ResponseVo("gameGuessService", "gameBankerResult", result);
         MsgSender.sendMsg2Player("gameService", "gameBankerResult", vo, bankerCardInfos.getUserId());
     }
