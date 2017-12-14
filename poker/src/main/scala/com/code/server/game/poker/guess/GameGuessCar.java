@@ -199,7 +199,7 @@ public class GameGuessCar extends Game{
 
                 result.put("finalScore",playerCardInfos.get(l).getFinalScore());
                 ResponseVo vo = new ResponseVo("gameGuessService", "gameResult", result);
-                MsgSender.sendMsg2Player("gameGuessService", "gameResult", vo, l);
+                MsgSender.sendMsg2Player(vo, l);
 
             }
         }
@@ -208,7 +208,7 @@ public class GameGuessCar extends Game{
 
         result.put("bankerScore",bankerCardInfos.getScore());
         ResponseVo vo = new ResponseVo("gameGuessService", "gameBankerResult", result);
-        MsgSender.sendMsg2Player("gameService", "gameBankerResult", vo, bankerCardInfos.getUserId());
+        MsgSender.sendMsg2Player(vo, bankerCardInfos.getUserId());
     }
 
 
