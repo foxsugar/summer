@@ -105,6 +105,7 @@ public class RoomGuessCar extends Room {
     public IfaceRoomVo toVo(long userId) {
         RoomGuessCarVo roomVo = new RoomGuessCarVo();
         BeanUtils.copyProperties(this, roomVo);
+        RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
 
         roomVo.setState(this.state);
         roomVo.setRecord(this.record);
