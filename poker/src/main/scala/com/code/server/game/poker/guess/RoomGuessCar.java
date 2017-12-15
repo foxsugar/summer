@@ -31,6 +31,7 @@ public class RoomGuessCar extends Room {
     public int state = 0;
     public double bankerScore = 0;
     public transient TimerNode betEndTimerNode;//结算定时器
+    public int chip;
 
     public static int createRoom(long userId ,int chip,String gameType, String roomType)  {
         //身上的钱够不够
@@ -53,6 +54,7 @@ public class RoomGuessCar extends Room {
         //扣掉
         RedisManager.getUserRedisService().addUserMoney(userId, -chip);
         roomGuessCar.bankerScore = chip;
+        roomGuessCar.chip = chip;
 
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);
         roomGuessCar.setUuid(idWorker.nextId());
@@ -125,5 +127,14 @@ public class RoomGuessCar extends Room {
 
     public void setBankerScore(double bankerScore) {
         this.bankerScore = bankerScore;
+    }
+
+    public int getChip() {
+        return chip;
+    }
+
+    public RoomGuessCar setChip(int chip) {
+        this.chip = chip;
+        return this;
     }
 }

@@ -39,6 +39,7 @@ public class RoomVo implements IfaceRoomVo {
 
     public int mustZimo = 0;
     public boolean showChat;
+    public int chip;
 
 
 
@@ -269,6 +270,15 @@ public class RoomVo implements IfaceRoomVo {
 
     public RoomVo setShowChat(boolean showChat) {
         this.showChat = showChat;
+        return this;
+    }
+
+    public int getChip() {
+        return chip;
+    }
+
+    public RoomVo setChip(int chip) {
+        this.chip = chip;
         return this;
     }
 }
