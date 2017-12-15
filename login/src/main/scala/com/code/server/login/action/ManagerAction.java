@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static com.code.server.redis.config.IConstant.ROOM_USER;
 import static com.code.server.redis.config.IConstant.USER_GATE;
@@ -40,9 +41,26 @@ public class ManagerAction {
         Map<String, Object> result = new HashMap<>();
         String serverId = RedisManager.getRoomRedisService().getServerId(roomId);
         if(serverId == null){
+
             result.put("user", null);
         }else{
             result.put("user", RedisManager.getRoomRedisService().getUsers(roomId));
+        }
+        return result;
+
+    }
+
+
+
+    @RequestMapping("/getRoomUserInfo")
+    public Map<String, Object> getRoomUserInfo(String roomId) {
+        Map<String, Object> result = new HashMap<>();
+        String serverId = RedisManager.getRoomRedisService().getServerId(roomId);
+        if(serverId == null){
+            result.put("user", null);
+        }else{
+            Set<Long> users = RedisManager.getRoomRedisService().getUsers(roomId);
+            result.put("user",  RedisManager.getUserRedisService().getUserBeans(users));
         }
         return result;
 
