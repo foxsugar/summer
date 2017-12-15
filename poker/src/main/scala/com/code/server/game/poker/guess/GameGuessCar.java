@@ -213,6 +213,10 @@ public class GameGuessCar extends Game{
         result.put("bankerScore",bankerCardInfos.getScore());
         ResponseVo vo = new ResponseVo("gameGuessService", "gameBankerResult", result);
         MsgSender.sendMsg2Player(vo, bankerCardInfos.getUserId());
+
+        //改变状态
+        this.room.state = RoomGuessCar.STATE_GUESS;
+        MsgSender.sendMsg2Player("gameGuessService","stateChange",this.room.state,this.room.getUsers());
     }
 
 

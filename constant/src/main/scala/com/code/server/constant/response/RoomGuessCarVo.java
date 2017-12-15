@@ -11,6 +11,7 @@ public class RoomGuessCarVo extends RoomVo {
     public List<Integer> record = new ArrayList<>();
     public int state = 0;
     public double bankerScore = 0;
+    public long remainTime;
 
     public int getState() {
         return state;
@@ -36,6 +37,17 @@ public class RoomGuessCarVo extends RoomVo {
 
     public RoomGuessCarVo setBankerScore(double bankerScore) {
         this.bankerScore = bankerScore;
+        return this;
+    }
+
+    @Override
+    public long getRemainTime() {
+        return remainTime;
+    }
+
+    @Override
+    public RoomGuessCarVo setRemainTime(long remainTime) {
+        this.remainTime = remainTime;
         return this;
     }
 }

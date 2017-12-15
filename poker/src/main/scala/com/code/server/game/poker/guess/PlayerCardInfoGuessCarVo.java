@@ -17,10 +17,10 @@ import com.code.server.constant.response.IfacePlayerInfoVo;
 public class PlayerCardInfoGuessCarVo implements IfacePlayerInfoVo {
 
     public long userId;
-    protected int choose;
-    protected double redScore;
-    protected double greenScore;
-    protected double finalScore;
+    public int choose;
+    public double redScore;
+    public double greenScore;
+    public double finalScore;
 
     public PlayerCardInfoGuessCarVo() {
     }

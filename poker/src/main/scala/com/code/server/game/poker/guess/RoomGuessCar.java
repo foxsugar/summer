@@ -84,10 +84,14 @@ public class RoomGuessCar extends Room {
         if(this.state == STATE_BET){
             return ErrorCode.STATE_ERROR;
         }
+        if (redOrGreen != 0 && redOrGreen != 1) {
+            return ErrorCode.STATE_ERROR;
+        }
         this.state = STATE_BET;
 
         GameGuessCar gameGuessCar = new GameGuessCar();
         gameGuessCar.startGame(users,this,redOrGreen);
+        this.record.add(redOrGreen);
 
 
         TimerNode betEndTimerNode = new TimerNode(System.currentTimeMillis(), 20000, false, gameGuessCar::sendResult);
@@ -105,6 +109,12 @@ public class RoomGuessCar extends Room {
         roomVo.setState(this.state);
         roomVo.setRecord(this.record);
         roomVo.setBankerScore(this.bankerScore);
+        if (this.game != null) {
+            roomVo.setGame(this.game.toVo());
+        }
+        if (this.state == 1) {
+            roomVo.setRemainTime(this.betEndTimerNode.getNextTriggerTime() - System.currentTimeMillis());
+        }
         return roomVo;
     }
 
