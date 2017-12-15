@@ -1,4 +1,4 @@
-package com.code.server.game.poker.guess;
+package com.code.server.constant.response;
 
 import com.code.server.constant.response.GameVo;
 

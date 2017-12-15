@@ -1,6 +1,7 @@
 package com.code.server.game.poker.guess;
 
 import com.code.server.constant.response.IfacePlayerInfoVo;
+import com.code.server.constant.response.PlayerCardInfoGuessCarVo;
 import com.code.server.game.room.IfacePlayerInfo;
 
 /**
