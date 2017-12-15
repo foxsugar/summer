@@ -84,10 +84,14 @@ public class RoomGuessCar extends Room {
         if(this.state == STATE_BET){
             return ErrorCode.STATE_ERROR;
         }
+        if (redOrGreen != 0 && redOrGreen != 1) {
+            return ErrorCode.STATE_ERROR;
+        }
         this.state = STATE_BET;
 
         GameGuessCar gameGuessCar = new GameGuessCar();
         gameGuessCar.startGame(users,this,redOrGreen);
+        this.record.add(redOrGreen);
 
 
         TimerNode betEndTimerNode = new TimerNode(System.currentTimeMillis(), 20000, false, gameGuessCar::sendResult);
