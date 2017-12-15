@@ -1,5 +1,6 @@
 package com.code.server.login.action;
 
+import com.code.server.redis.service.RedisManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.data.redis.core.BoundHashOperations;
@@ -31,5 +32,14 @@ public class ManagerAction {
         result.put("userNum",user_gate.size());
         result.put("roomNum",room.size());
         return result;
+    }
+
+
+    @RequestMapping("/getRoomUser")
+    public Map<String, Object> getRoomUser(String roomId) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("user", RedisManager.getRoomRedisService().getUsers(roomId));
+        return result;
+
     }
 }
