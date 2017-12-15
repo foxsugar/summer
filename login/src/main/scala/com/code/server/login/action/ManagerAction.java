@@ -38,7 +38,12 @@ public class ManagerAction {
     @RequestMapping("/getRoomUser")
     public Map<String, Object> getRoomUser(String roomId) {
         Map<String, Object> result = new HashMap<>();
-        result.put("user", RedisManager.getRoomRedisService().getUsers(roomId));
+        String serverId = RedisManager.getRoomRedisService().getServerId(roomId);
+        if(serverId == null){
+            result.put("user", null);
+        }else{
+            result.put("user", RedisManager.getRoomRedisService().getUsers(roomId));
+        }
         return result;
 
     }
