@@ -105,6 +105,12 @@ public class RoomGuessCar extends Room {
         roomVo.setState(this.state);
         roomVo.setRecord(this.record);
         roomVo.setBankerScore(this.bankerScore);
+        if (this.game != null) {
+            roomVo.setGame(this.game.toVo());
+        }
+        if (this.state == 1) {
+            roomVo.setRemainTime(this.betEndTimerNode.getNextTriggerTime() - System.currentTimeMillis());
+        }
         return roomVo;
     }
 
