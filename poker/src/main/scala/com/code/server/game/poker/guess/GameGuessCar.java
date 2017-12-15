@@ -54,10 +54,12 @@ public class GameGuessCar extends Game{
     public void init(List<Long> users) {
         //初始化玩家
         for (Long uid : users) {
-            PlayerCardInfoGuessCar playerCardInfo = getGameTypePlayerCardInfo();
-            playerCardInfo.userId = uid;
-            playerCardInfo.setFinalScore(RedisManager.getUserRedisService().getUserMoney(uid));
-            playerCardInfos.put(uid, playerCardInfo);
+            if(uid!=room.getBankerId()){
+                PlayerCardInfoGuessCar playerCardInfo = getGameTypePlayerCardInfo();
+                playerCardInfo.userId = uid;
+                playerCardInfo.setFinalScore(RedisManager.getUserRedisService().getUserMoney(uid));
+                playerCardInfos.put(uid, playerCardInfo);
+            }
         }
         bankerCardInfos.userId = room.getBankerId();
         this.users.addAll(users);
