@@ -56,7 +56,6 @@ public class GameGuessCar extends Game{
         for (Long uid : users) {
             PlayerCardInfoGuessCar playerCardInfo = getGameTypePlayerCardInfo();
             playerCardInfo.userId = uid;
-            //TODO 暂时设置10000
             playerCardInfo.setFinalScore(RedisManager.getUserRedisService().getUserMoney(uid));
             playerCardInfos.put(uid, playerCardInfo);
         }
