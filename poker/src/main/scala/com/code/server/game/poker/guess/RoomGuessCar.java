@@ -93,6 +93,7 @@ public class RoomGuessCar extends Room {
 
         GameGuessCar gameGuessCar = new GameGuessCar();
         gameGuessCar.startGame(users,this,redOrGreen);
+        this.game = gameGuessCar;
         this.record.add(redOrGreen);
 
 
