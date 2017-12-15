@@ -198,7 +198,7 @@ public class GameGuessCar extends Game{
                 result.put("color",this.color);
 
                 result.put("finalScore",playerCardInfos.get(l).getFinalScore());
-                if(RED==this.color){
+                if(RED==this.color){//设置赢了多少
                     result.put("score",playerCardInfos.get(l).getRedScore()*2-playerCardInfos.get(l).getGreenScore());
                 }else{
                     result.put("score",playerCardInfos.get(l).getGreenScore()*2-playerCardInfos.get(l).getRedScore());
@@ -305,7 +305,13 @@ public class GameGuessCar extends Game{
 
     @Override
     public IfaceGameVo toVo(long userId) {
-        return null;
+        GameGuessCarVo vo = new GameGuessCarVo();
+        vo.bankerCardInfos = this.bankerCardInfos;
+        vo.color = this.color;
+        vo.playerCardInfos = this.playerCardInfos;
+        vo.greenScore = this.greenScore;
+        vo.redScore = this.redScore;
+        return vo;
     }
 
 }
