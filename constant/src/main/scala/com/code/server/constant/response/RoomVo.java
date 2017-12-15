@@ -38,6 +38,7 @@ public class RoomVo implements IfaceRoomVo {
     public boolean isOpen;
 
     public int mustZimo = 0;
+    public boolean showChat;
 
 
 
@@ -260,5 +261,14 @@ public class RoomVo implements IfaceRoomVo {
 
     public void setCanStartUserId(long canStartUserId) {
         this.canStartUserId = canStartUserId;
+    }
+
+    public boolean isShowChat() {
+        return showChat;
+    }
+
+    public RoomVo setShowChat(boolean showChat) {
+        this.showChat = showChat;
+        return this;
     }
 }
