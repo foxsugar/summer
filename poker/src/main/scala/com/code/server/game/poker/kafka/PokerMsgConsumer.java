@@ -28,6 +28,13 @@ public class PokerMsgConsumer {
         MsgDispatch.dispatch(record);
     }
 
+    @KafkaListener(id = "gameGuessService", topicPartitions = {
+            @TopicPartition(topic = "gameGuessService", partitions = "${serverConfig.serverId}")
+    })
+    public void listenGameGuess(ConsumerRecord<String, String> record ) {
+        MsgDispatch.dispatch(record);
+    }
+
     @KafkaListener(id = "reconn_topic", topicPartitions = {
             @TopicPartition(topic = "reconnService", partitions = "${serverConfig.serverId}")
     })

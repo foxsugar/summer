@@ -45,6 +45,8 @@ object MsgDispatch {
       GameService.dispatch(userId, method, roomId, params)
     case "pokerRoomService" =>
       PokerRoomService.dispatch(userId, method, params)
+    case "gameGuessService"=>
+      GameService.dispatch(userId, method, roomId, params)
     case "reconnService" =>
       ReconnService.dispatch(userId, method, roomId)
     case _ =>
