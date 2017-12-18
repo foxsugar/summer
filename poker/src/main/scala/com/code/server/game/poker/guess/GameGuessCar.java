@@ -133,7 +133,7 @@ public class GameGuessCar extends Game{
         }
 
         if(RED==color){
-            if(redScore>=greenScore+room.getBankerScore()){
+            if(redScore>=room.getBankerScore()){
                 return ErrorCode.BET_WRONG;
             }else if(addChip+redScore-greenScore<room.getBankerScore()){
                 redScore+=addChip;
@@ -144,7 +144,7 @@ public class GameGuessCar extends Game{
                 playerCardInfos.get(userId).setRedScore(playerCardInfos.get(userId).getRedScore()+temp);
             }
         }else{
-            if(greenScore>=redScore+room.getBankerScore()){
+            if(greenScore>=room.getBankerScore()){
                 return ErrorCode.BET_WRONG;
             }else if(addChip+greenScore-redScore<room.getBankerScore()){
                 greenScore+=addChip;
