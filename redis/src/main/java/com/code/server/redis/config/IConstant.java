@@ -24,6 +24,8 @@ public interface IConstant {
     String USER_GATE = "user_gate";
     //玩家货币
     String USER_MONEY = "user_money";
+    //玩家gold
+    String USER_GOLD = "user_gold";
     //玩家bean
     String USER_BEAN = "user_bean";
 

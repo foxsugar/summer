@@ -122,6 +122,31 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     }
 
     @Override
+    public double addUserGold(long userId, double gold) {
+        HashOperations<String,String,Double> user_money = redisTemplate.opsForHash();
+        // 把修改后的值放入userBean里
+        double m = user_money.increment(USER_GOLD,""+userId,gold);
+        UserBean userBean = getUserBean(userId);
+        if (userBean != null) {
+            userBean.setGold(m);
+            updateUserBean(userId,userBean);
+        }
+        return m;
+    }
+
+    @Override
+    public void setUserGold(long userId, double gold) {
+        HashOperations<String,String,String> user_gold = redisTemplate.opsForHash();
+        user_gold.put(USER_GOLD,""+userId,""+gold);
+    }
+
+    @Override
+    public double getUserGold(long userId) {
+        HashOperations<String,String,String> user_money = redisTemplate.opsForHash();
+        return Double.parseDouble(user_money.get(USER_GOLD, ""+userId));
+    }
+
+    @Override
     public UserBean getUserBean(long userId) {
 //        ValueOperations<String,UserBean> user_bean = redisTemplate.opsForValue();
         BoundHashOperations<String,String,String> user_bean = redisTemplate.boundHashOps(USER_BEAN);

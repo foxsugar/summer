@@ -60,7 +60,7 @@ public class LoginAction {
 
 
 
-    private String getToken(long userId) {
+    public static String getToken(long userId) {
         return MD5Util.MD5Encode("salt," + userId + System.currentTimeMillis(), "UTF-8");
     }
 
@@ -101,20 +101,21 @@ public class LoginAction {
     }
 
 
-    private void saveUser2Redis(User user, String token) {
+    public static void saveUser2Redis(User user, String token) {
         UserBean userBean = GameUserService.user2userBean(user);
 
 
-        userRedisService.setUserBean(userBean);//userId-userbean
-        userRedisService.setUserMoney(user.getId(), user.getMoney());//userId-money
+        RedisManager.getUserRedisService().setUserBean(userBean);//userId-userbean
+        RedisManager.getUserRedisService().setUserMoney(user.getId(), user.getMoney());//userId-money
+        RedisManager.getUserRedisService().setUserGold(user.getId(), user.getGold());
 
-        userRedisService.setToken(user.getId(), token);//userId-token
+        RedisManager.getUserRedisService().setToken(user.getId(), token);//userId-token
 
-        userRedisService.setAccountUserId(user.getAccount(), user.getId());//account-userId
-        userRedisService.setUserIdAccount(user.getId(), user.getAccount());//userId-account
+        RedisManager.getUserRedisService().setAccountUserId(user.getAccount(), user.getId());//account-userId
+        RedisManager.getUserRedisService().setUserIdAccount(user.getId(), user.getAccount());//userId-account
 
-        userRedisService.setOpenIdUserId(user.getOpenId(), user.getId());//openid-userId
-        userRedisService.setUserIdOpenId(user.getId(), user.getOpenId());//userId-openid
+        RedisManager.getUserRedisService().setOpenIdUserId(user.getOpenId(), user.getId());//openid-userId
+        RedisManager.getUserRedisService().setUserIdOpenId(user.getId(), user.getOpenId());//userId-openid
     }
 
     @RequestMapping("/login")

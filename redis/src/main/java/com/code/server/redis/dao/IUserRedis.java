@@ -14,8 +14,14 @@ public interface IUserRedis {
 
     double addUserMoney(long userId, double money);
 
+    double addUserGold(long userId, double gold);
+
     void setUserMoney(long userId, double money);
 
+
+    void setUserGold(long userId, double gold);
+
+    double getUserGold(long userId);
 
     UserBean getUserBean(long userId);
 

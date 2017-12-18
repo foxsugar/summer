@@ -2,14 +2,19 @@ package com.code.server.login.service;
 
 import com.code.server.constant.game.Record;
 import com.code.server.constant.game.RoomRecord;
+import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.IkafkaMsgId;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.db.Service.GameRecordService;
 import com.code.server.db.Service.ReplayService;
 import com.code.server.db.Service.UserRecordService;
+import com.code.server.db.Service.UserService;
 import com.code.server.db.model.GameRecord;
 import com.code.server.db.model.Replay;
+import com.code.server.db.model.User;
 import com.code.server.db.model.UserRecord;
+import com.code.server.login.action.LoginAction;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -32,6 +37,8 @@ public class CenterMsgService implements IkafkaMsgId {
 
     private static ReplayService replayService = SpringUtil.getBean(ReplayService.class);
 
+    private static UserService userService =  SpringUtil.getBean(UserService.class);
+
     public static void dispatch(KafkaMsgKey msgKey, String msg) {
         int msgId = msgKey.getMsgId();
         switch (msgId) {
@@ -46,6 +53,9 @@ public class CenterMsgService implements IkafkaMsgId {
                 break;
             case KAFKA_MSG_ID_ROOM_RECORD:
                 genRoomRecord(msg);
+                break;
+            case KAFKA_MSG_ID_GUESS_ADD_GOLD:
+                guessAddGold(msg);
                 break;
 
 
@@ -127,6 +137,23 @@ public class CenterMsgService implements IkafkaMsgId {
                 newRecord.setRecord(record);
                 userRecordService.save(newRecord);
             }
+        }
+    }
+
+
+    private static void guessAddGold(String msg) {
+        if (msg != null) {
+            JsonNode jsonNode = JsonUtil.readTree(msg);
+            long userId = jsonNode.path("userId").asLong();
+            double gold = jsonNode.path("gold").asDouble();
+            UserBean userBean1 = RedisManager.getUserRedisService().getUserBean(userId);
+            if (userBean1 == null) {
+                User user = userService.getUserByUserId(userId);
+                LoginAction.saveUser2Redis(user, LoginAction.getToken(userId));
+            }
+
+
+
         }
     }
 
