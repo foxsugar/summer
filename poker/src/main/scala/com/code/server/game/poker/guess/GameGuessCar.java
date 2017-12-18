@@ -181,6 +181,8 @@ public class GameGuessCar extends Game{
      * 发送战绩
      */
     protected void sendResult() {
+
+        double tempS = bankerCardInfos.getScore();
         //算分
         for (PlayerCardInfoGuessCar playerCardInfo : playerCardInfos.values()) {
             if(RED==this.color){
@@ -212,6 +214,7 @@ public class GameGuessCar extends Game{
         //庄家
         Map<String, Object> result = new HashMap<>();
 
+        result.put("score",bankerCardInfos.getScore()-tempS);
         result.put("bankerScore",bankerCardInfos.getScore());
         ResponseVo vo = new ResponseVo("gameGuessService", "gameBankerResult", result);
         MsgSender.sendMsg2Player(vo, bankerCardInfos.getUserId());
