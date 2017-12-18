@@ -150,6 +150,7 @@ public class CenterMsgService implements IkafkaMsgId {
             if (userBean1 == null) {
                 User user = userService.getUserByUserId(userId);
                 LoginAction.saveUser2Redis(user, LoginAction.getToken(userId));
+                userBean1 = RedisManager.getUserRedisService().getUserBean(userId);
             }
 
 

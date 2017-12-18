@@ -221,6 +221,7 @@ public class GameGuessCar extends Game{
         //庄家
         Map<String, Object> result = new HashMap<>();
 
+        this.room.bankerScore = bankerCardInfos.getScore();
         result.put("score",bankerCardInfos.getScore()-tempS);
         result.put("bankerScore",bankerCardInfos.getScore());
         result.put("color",this.color);
