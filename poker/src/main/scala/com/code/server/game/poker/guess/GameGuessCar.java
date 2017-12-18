@@ -54,11 +54,12 @@ public class GameGuessCar extends Game{
     public void init(List<Long> users) {
         //初始化玩家
         for (Long uid : users) {
-            PlayerCardInfoGuessCar playerCardInfo = getGameTypePlayerCardInfo();
-            playerCardInfo.userId = uid;
-            //TODO 暂时设置10000
-            playerCardInfo.setFinalScore(RedisManager.getUserRedisService().getUserMoney(uid));
-            playerCardInfos.put(uid, playerCardInfo);
+            if(uid!=room.getBankerId()){
+                PlayerCardInfoGuessCar playerCardInfo = getGameTypePlayerCardInfo();
+                playerCardInfo.userId = uid;
+                playerCardInfo.setFinalScore(RedisManager.getUserRedisService().getUserMoney(uid));
+                playerCardInfos.put(uid, playerCardInfo);
+            }
         }
         bankerCardInfos.userId = room.getBankerId();
         this.users.addAll(users);
@@ -180,6 +181,8 @@ public class GameGuessCar extends Game{
      * 发送战绩
      */
     protected void sendResult() {
+
+        double tempS = bankerCardInfos.getScore();
         //算分
         for (PlayerCardInfoGuessCar playerCardInfo : playerCardInfos.values()) {
             if(RED==this.color){
@@ -198,7 +201,7 @@ public class GameGuessCar extends Game{
                 result.put("color",this.color);
 
                 result.put("finalScore",playerCardInfos.get(l).getFinalScore());
-                if(RED==this.color){
+                if(RED==this.color){//设置赢了多少
                     result.put("score",playerCardInfos.get(l).getRedScore()*2-playerCardInfos.get(l).getGreenScore());
                 }else{
                     result.put("score",playerCardInfos.get(l).getGreenScore()*2-playerCardInfos.get(l).getRedScore());
@@ -211,6 +214,7 @@ public class GameGuessCar extends Game{
         //庄家
         Map<String, Object> result = new HashMap<>();
 
+        result.put("score",bankerCardInfos.getScore()-tempS);
         result.put("bankerScore",bankerCardInfos.getScore());
         ResponseVo vo = new ResponseVo("gameGuessService", "gameBankerResult", result);
         MsgSender.sendMsg2Player(vo, bankerCardInfos.getUserId());
@@ -309,7 +313,13 @@ public class GameGuessCar extends Game{
 
     @Override
     public IfaceGameVo toVo(long userId) {
-        return null;
+        GameGuessCarVo vo = new GameGuessCarVo();
+        vo.bankerCardInfos = this.bankerCardInfos;
+        vo.color = this.color;
+        vo.playerCardInfos = this.playerCardInfos;
+        vo.greenScore = this.greenScore;
+        vo.redScore = this.redScore;
+        return vo;
     }
 
 }

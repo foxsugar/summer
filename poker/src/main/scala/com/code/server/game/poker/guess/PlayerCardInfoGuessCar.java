@@ -20,7 +20,7 @@ public class PlayerCardInfoGuessCar implements IfacePlayerInfo {
     public long userId;
     protected double redScore;
     protected double greenScore;
-    protected double finalScore;
+    protected double finalScore;//玩家总分数
 
     @Override
     public IfacePlayerInfoVo toVo() {
