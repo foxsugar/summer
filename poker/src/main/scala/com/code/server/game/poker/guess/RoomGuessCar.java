@@ -66,6 +66,15 @@ public class RoomGuessCar extends Room {
     }
 
 
+    public int dissolution(long userId, boolean agreeOrNot, String methodName){
+
+        int rtn =  super.dissolution(userId, agreeOrNot, methodName);
+        if (rtn == 0 && userId == this.bankerId) {
+           //把钱返给庄家
+            RedisManager.getUserRedisService().addUserMoney(userId, bankerScore);
+        }
+        return rtn;
+    }
     public int joinRoom(long userId, boolean isJoin) {
         //要多于5个钻
         if(userId != this.createUser){
@@ -114,7 +123,7 @@ public class RoomGuessCar extends Room {
         roomVo.setRecord(this.record);
         roomVo.setBankerScore(this.bankerScore);
         if (this.game != null) {
-            roomVo.setGame(this.game.toVo());
+            roomVo.setGame(this.game.toVo(userId));
         }
         if (this.state == 1) {
             roomVo.setRemainTime(this.betEndTimerNode.getNextTriggerTime() - System.currentTimeMillis());

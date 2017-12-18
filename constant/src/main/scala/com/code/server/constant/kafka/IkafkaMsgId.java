@@ -10,4 +10,7 @@ public interface IkafkaMsgId {
     int KAFKA_MSG_ID_ROOM_RECORD = 1003;
 
     int KAFKA_MSG_ID_GATE_KICK_USER = 2000;
+
+    int KAFKA_MSG_ID_GUESS_ADD_GOLD = 3000;
+
 }
