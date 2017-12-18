@@ -97,7 +97,7 @@ public class RoomGuessCar extends Room {
         this.record.add(redOrGreen);
 
 
-        this.betEndTimerNode = new TimerNode(System.currentTimeMillis(), 200000, false, gameGuessCar::sendResult);
+        this.betEndTimerNode = new TimerNode(System.currentTimeMillis(), 20000, false, gameGuessCar::sendResult);
         GameTimer.addTimerNode(betEndTimerNode);
 
         MsgSender.sendMsg2Player("pokerRoomService", "guessCar", 0, this.bankerId);

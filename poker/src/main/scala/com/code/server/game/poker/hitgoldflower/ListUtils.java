@@ -433,7 +433,7 @@ public class ListUtils {
                     cards.add(item1);
                     cards.add(item2);
                     cards.add(item3);
-                    if (PokerItem.JinHua(cards)) {
+                    if (!PokerItem.ShunJin(cards) && PokerItem.JinHua(cards)) {
                         resultlist.add(leaveCards.get(x));
                         resultlist.add(leaveCards.get(y));
                         resultlist.add(leaveCards.get(z));
@@ -462,7 +462,7 @@ public class ListUtils {
                     cards.add(item1);
                     cards.add(item2);
                     cards.add(item3);
-                    if (PokerItem.ShunZi(cards)) {
+                    if (!PokerItem.ShunJin(cards) && PokerItem.ShunZi(cards)) {
                         resultlist.add(leaveCards.get(x));
                         resultlist.add(leaveCards.get(y));
                         resultlist.add(leaveCards.get(z));
@@ -491,7 +491,7 @@ public class ListUtils {
                     cards.add(item1);
                     cards.add(item2);
                     cards.add(item3);
-                    if (PokerItem.DuiZi(cards)) {
+                    if (!PokerItem.BaoZi(cards) && PokerItem.DuiZi(cards)) {
                         resultlist.add(leaveCards.get(x));
                         resultlist.add(leaveCards.get(y));
                         resultlist.add(leaveCards.get(z));
@@ -549,7 +549,7 @@ public class ListUtils {
                     cards.add(item1);
                     cards.add(item2);
                     cards.add(item3);
-                    if (!PokerItem.BaoZi(cards)&&!PokerItem.ShunJin(cards)&&!PokerItem.JinHua(cards)&&!PokerItem.ShunZi(cards)&&!PokerItem.is235(cards)) {
+                    if (!PokerItem.BaoZi(cards) && !PokerItem.ShunJin(cards) && !PokerItem.JinHua(cards) && !PokerItem.ShunZi(cards) && !PokerItem.DuiZi(cards) && !PokerItem.is235(cards)) {
                         resultlist.add(leaveCards.get(x));
                         resultlist.add(leaveCards.get(y));
                         resultlist.add(leaveCards.get(z));

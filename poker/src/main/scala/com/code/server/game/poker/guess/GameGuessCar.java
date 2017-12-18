@@ -62,6 +62,7 @@ public class GameGuessCar extends Game{
             }
         }
         bankerCardInfos.userId = room.getBankerId();
+        bankerCardInfos.setScore(RedisManager.getUserRedisService().getUserMoney(room.getBankerId()));
         this.users.addAll(users);
         updateLastOperateTime();
     }
@@ -126,6 +127,11 @@ public class GameGuessCar extends Game{
          */
     public int raise(long userId,double addChip,int color){
         logger.info(userId +"  下注: "+ addChip);
+
+        if(playerCardInfos.get(userId).getRedScore() + playerCardInfos.get(userId).getGreenScore() + addChip > playerCardInfos.get(userId).getFinalScore()){
+            return ErrorCode.NOT_HAVE_MORE_MONEY;
+        }
+
         if(RED==color){
             if(redScore>=greenScore+room.getBankerScore()){
                 return ErrorCode.BET_WRONG;
@@ -158,8 +164,8 @@ public class GameGuessCar extends Game{
 
         Map<String, Object> result = new HashMap<>();
         result.put("userId",userId);
-        result.put("redScore",playerCardInfos.get(userId).getRedScore());
-        result.put("greenScore",playerCardInfos.get(userId).getGreenScore());
+        result.put("redScore",color==0?addChip:0.0);
+        result.put("greenScore",color==1?addChip:0.0);
         result.put("color",color);
         ResponseVo vo = new ResponseVo("gameGuessService", "raiseResponse", result);
         MsgSender.sendMsg2Player(vo, userId);
@@ -187,10 +193,10 @@ public class GameGuessCar extends Game{
         for (PlayerCardInfoGuessCar playerCardInfo : playerCardInfos.values()) {
             if(RED==this.color){
                 playerCardInfo.setFinalScore(playerCardInfo.getFinalScore()+playerCardInfo.getRedScore()*2-playerCardInfo.getGreenScore());
-                bankerCardInfos.setScore(bankerCardInfos.getScore()+playerCardInfo.getGreenScore());
+                bankerCardInfos.setScore(bankerCardInfos.getScore()+playerCardInfo.getGreenScore()-playerCardInfo.getRedScore()*2);
             }else{
                 playerCardInfo.setFinalScore(playerCardInfo.getFinalScore()+playerCardInfo.getGreenScore()*2-playerCardInfo.getRedScore());
-                bankerCardInfos.setScore(bankerCardInfos.getScore()+playerCardInfo.getRedScore());
+                bankerCardInfos.setScore(bankerCardInfos.getScore()+playerCardInfo.getRedScore()-playerCardInfo.getGreenScore()*2);
             }
         }
 
@@ -201,6 +207,7 @@ public class GameGuessCar extends Game{
                 result.put("color",this.color);
 
                 result.put("finalScore",playerCardInfos.get(l).getFinalScore());
+                RedisManager.getUserRedisService().setUserMoney(playerCardInfos.get(l).getUserId(),playerCardInfos.get(l).getFinalScore());
                 if(RED==this.color){//设置赢了多少
                     result.put("score",playerCardInfos.get(l).getRedScore()*2-playerCardInfos.get(l).getGreenScore());
                 }else{
@@ -216,8 +223,12 @@ public class GameGuessCar extends Game{
 
         result.put("score",bankerCardInfos.getScore()-tempS);
         result.put("bankerScore",bankerCardInfos.getScore());
+        result.put("color",this.color);
         ResponseVo vo = new ResponseVo("gameGuessService", "gameBankerResult", result);
+        ResponseVo voBanker = new ResponseVo("gameGuessService", "gameResult", result);
         MsgSender.sendMsg2Player(vo, bankerCardInfos.getUserId());
+        MsgSender.sendMsg2Player(voBanker, bankerCardInfos.getUserId());
+        MsgSender.sendMsg2Player(vo, this.room.getUsers());
 
         //改变状态
         this.room.state = RoomGuessCar.STATE_GUESS;
