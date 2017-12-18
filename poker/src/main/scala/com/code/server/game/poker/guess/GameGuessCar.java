@@ -62,7 +62,7 @@ public class GameGuessCar extends Game{
             }
         }
         bankerCardInfos.userId = room.getBankerId();
-        bankerCardInfos.setScore(RedisManager.getUserRedisService().getUserMoney(room.getBankerId()));
+        bankerCardInfos.setScore(room.getBankerScore());
         this.users.addAll(users);
         updateLastOperateTime();
     }
@@ -218,6 +218,9 @@ public class GameGuessCar extends Game{
 
             }
         }
+
+        RedisManager.getUserRedisService().setUserMoney(bankerCardInfos.getUserId(),RedisManager.getUserRedisService().getUserMoney(bankerCardInfos.getUserId()) + (bankerCardInfos.getScore()-tempS));
+
         //庄家
         Map<String, Object> result = new HashMap<>();
 
