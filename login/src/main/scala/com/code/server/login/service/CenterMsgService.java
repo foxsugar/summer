@@ -37,7 +37,7 @@ public class CenterMsgService implements IkafkaMsgId {
 
     private static ReplayService replayService = SpringUtil.getBean(ReplayService.class);
 
-    private static UserService userService =  SpringUtil.getBean(UserService.class);
+    private static UserService userService = SpringUtil.getBean(UserService.class);
 
     public static void dispatch(KafkaMsgKey msgKey, String msg) {
         int msgId = msgKey.getMsgId();
@@ -96,15 +96,17 @@ public class CenterMsgService implements IkafkaMsgId {
         }
 
     }
-    private static void genGameRecord(String msg){
+
+    private static void genGameRecord(String msg) {
         if (msg != null) {
             System.out.println(msg);
             JsonNode jsonNode = JsonUtil.readTree(msg);
-            Map<String,Object> map = JsonUtil.readValue(msg, new TypeReference<HashMap<String,Object>>() {});
+            Map<String, Object> map = JsonUtil.readValue(msg, new TypeReference<HashMap<String, Object>>() {
+            });
 
-            long room_uuid = (Long)map.get("room_uuid");
-            long replay_id = (Long)map.get("replay_id");
-            int count = (int)map.get("count");
+            long room_uuid = (Long) map.get("room_uuid");
+            long replay_id = (Long) map.get("replay_id");
+            int count = (int) map.get("count");
             String recordStr = jsonNode.path("record").asText();
             System.out.println(recordStr);
             Gson gson = new Gson();
@@ -120,7 +122,7 @@ public class CenterMsgService implements IkafkaMsgId {
         }
     }
 
-    private static void genRoomRecord(String msg){
+    private static void genRoomRecord(String msg) {
         RoomRecord roomRecord = JsonUtil.readValue(msg, RoomRecord.class);
 
         List<com.code.server.constant.game.UserRecord> lists = roomRecord.getRecords();
@@ -146,16 +148,57 @@ public class CenterMsgService implements IkafkaMsgId {
             JsonNode jsonNode = JsonUtil.readTree(msg);
             long userId = jsonNode.path("userId").asLong();
             double gold = jsonNode.path("gold").asDouble();
-            UserBean userBean1 = RedisManager.getUserRedisService().getUserBean(userId);
-            if (userBean1 == null) {
-                User user = userService.getUserByUserId(userId);
-                LoginAction.saveUser2Redis(user, LoginAction.getToken(userId));
-                userBean1 = RedisManager.getUserRedisService().getUserBean(userId);
+            UserBean own = RedisManager.getUserRedisService().getUserBean(userId);
+            int bindUser1 = own.getReferee();
+            //第一级代理
+            if (bindUser1 != 0) {
+                UserBean userBean1 = loadUserBean(bindUser1);
+                if (userBean1.getId() == 1) {//是总代理
+                    RedisManager.getUserRedisService().addUserGold(bindUser1, gold * 3);
+                } else {
+                    RedisManager.getUserRedisService().addUserGold(bindUser1, gold);
+
+                    //第二级代理
+                    int bindUser2 = userBean1.getReferee();
+                    if (bindUser2 != 0) {
+                        UserBean userBean2 = loadUserBean(bindUser2);
+                        if (userBean2.getId() == 1) {//是总代理
+                            RedisManager.getUserRedisService().addUserGold(bindUser2, gold * 2);
+                        } else {
+                            RedisManager.getUserRedisService().addUserGold(bindUser2, gold);
+
+                            //第三级代理
+                            int bindUser3 = userBean2.getReferee();
+
+                            if (bindUser3 != 0) {
+                                UserBean userBean3 = loadUserBean(bindUser3);
+                                if (userBean3.getId() == 1) {//是总代理
+                                    RedisManager.getUserRedisService().addUserGold(bindUser3, gold * 1);
+                                } else {
+                                    RedisManager.getUserRedisService().addUserGold(bindUser3, gold);
+
+                                }
+                            }
+
+                        }
+                    }
+                }
+                //给总代理2份
+                RedisManager.getUserRedisService().addUserGold(1, gold * 2);
+
             }
-
-
-
         }
+    }
+
+    private static UserBean loadUserBean(long userId) {
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean == null) {
+            User user = userService.getUserByUserId(userId);
+            LoginAction.saveUser2Redis(user, LoginAction.getToken(userId));
+            userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        }
+        return userBean;
+
     }
 
 

@@ -485,7 +485,7 @@ public class GameUserService {
 
 
 
-        ResponseVo vo = new ResponseVo("userService", "guessCarBindReferrer", 0);
+        ResponseVo vo = new ResponseVo("userService", "guessCarBind", 0);
         sendMsg(msgKey, vo);
         return 0;
     }
