@@ -73,7 +73,7 @@ public class GameInfo extends Game {
     protected ReplayMj replay = new ReplayMj();
 
     protected List<String> chanCards = new ArrayList<>();//铲的牌
-
+    private Set<Long> noCanHuList = new HashSet<>();//本轮不能胡的人
 
     /**
      * 初始化方法
@@ -241,7 +241,7 @@ public class GameInfo extends Game {
     protected void mopai(long userId, String... wz) {
         System.err.println("摸牌===============================userId : " + userId);
 
-
+        noCanHuList.remove(userId);
         PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
 
         if (isHuangzhuang(playerCardsInfo)) {
@@ -377,7 +377,17 @@ public class GameInfo extends Game {
                 PlayerCardsInfoMj playerCardsInfo = entry.getValue();
                 boolean isCanGang = playerCardsInfo.isCanGangAddThisCard(card);
                 boolean isCanPeng = playerCardsInfo.isCanPengAddThisCard(card);
-                boolean isCanHu = playerCardsInfo.isCanHu_dianpao(card);
+                boolean isCanHu;
+                if("LQ".equals(this.room.getGameType())){
+                    //如果上一次操作为过，这一轮不能再碰和胡
+                    if(!noCanHuList.contains(playerCardsInfo.getUserId())){
+                        isCanHu = playerCardsInfo.isCanHu_dianpao(card);
+                    }else{
+                        isCanHu = false;
+                    }
+                }else{
+                    isCanHu = playerCardsInfo.isCanHu_dianpao(card);
+                }
                 boolean isCanChi = playerCardsInfo.isHasChi(card);
                 boolean isCanChiTing = playerCardsInfo.isCanChiTing(card);
                 boolean isCanPengTing = playerCardsInfo.isCanPengTing(card);
@@ -641,6 +651,10 @@ public class GameInfo extends Game {
 //        if (waitingforList.size() == 0) {
 //            return ErrorCode.CAN_NOT_GUO;
 //        }
+        PlayerCardsInfoTDH guoPlayerCardsInfo = (PlayerCardsInfoTDH)playerCardsInfos.get(userId);
+        if(guoPlayerCardsInfo.isCanHu_dianpao(disCard)){//能胡点过的人，这一轮不能胡
+            noCanHuList.add(userId);
+        }
 
         if (waitingforList.size() > 0) {
 

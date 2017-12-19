@@ -156,19 +156,15 @@ public class GameGuessCar extends Game{
             }
         }
 
-        Map<String, Object> allNotice = new HashMap<>();
-        allNotice.put("redScore",redScore);
-        allNotice.put("greenScore",greenScore);
-        ResponseVo allNoticeVo = new ResponseVo("gameGuessService", "allBet", allNotice);
-        MsgSender.sendMsg2Player(allNoticeVo, users);
-
         Map<String, Object> result = new HashMap<>();
+        result.put("redAllScore",redScore);
+        result.put("greenAllScore",greenScore);
         result.put("userId",userId);
         result.put("redScore",color==0?addChip:0.0);
         result.put("greenScore",color==1?addChip:0.0);
         result.put("color",color);
         ResponseVo vo = new ResponseVo("gameGuessService", "raiseResponse", result);
-        MsgSender.sendMsg2Player(vo, userId);
+        MsgSender.sendMsg2Player(vo, users);
 
         MsgSender.sendMsg2Player("gameGuessService", "raise", 0, userId);
         updateLastOperateTime();

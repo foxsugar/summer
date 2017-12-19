@@ -4,10 +4,7 @@ import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.mahjong.response.*;
 import com.code.server.game.room.kafka.MsgSender;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by T420 on 2016/11/30.
@@ -16,7 +13,7 @@ import java.util.Map;
 public class GameInfoNZZ extends GameInfo {
 
     private List<String> playCards = new ArrayList<>();
-    private List<Long> noCanHuList = new ArrayList<>();//本轮不能胡的人
+    private Set<Long> noCanHuList = new HashSet<>();//本轮不能胡的人
     private Map<Long,List<Integer>>  noCanPengList = new HashMap<>();//本轮不能碰牌的人
     /**
      * 初始化方法
