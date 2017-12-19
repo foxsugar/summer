@@ -241,7 +241,7 @@ public class GameGuessCar extends Game{
         result.put("color",this.color);
         ResponseVo vo = new ResponseVo("gameGuessService", "gameBankerResult", result);
         ResponseVo voBanker = new ResponseVo("gameGuessService", "gameResult", result);
-        MsgSender.sendMsg2Player(vo, bankerCardInfos.getUserId());
+        //MsgSender.sendMsg2Player(vo, bankerCardInfos.getUserId());
         MsgSender.sendMsg2Player(voBanker, bankerCardInfos.getUserId());
         MsgSender.sendMsg2Player(vo, this.room.getUsers());
 
