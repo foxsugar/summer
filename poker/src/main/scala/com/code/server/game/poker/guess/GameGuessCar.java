@@ -1,12 +1,16 @@
 package com.code.server.game.poker.guess;
 
+import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.IfaceGameVo;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -204,11 +208,22 @@ public class GameGuessCar extends Game{
 
                 result.put("finalScore",playerCardInfos.get(l).getFinalScore());
                 RedisManager.getUserRedisService().setUserMoney(playerCardInfos.get(l).getUserId(),playerCardInfos.get(l).getFinalScore());
+                double add = 0;
                 if(RED==this.color){//设置赢了多少
                     result.put("score",playerCardInfos.get(l).getRedScore()*2-playerCardInfos.get(l).getGreenScore());
+                    add = playerCardInfos.get(l).getRedScore();
                 }else{
                     result.put("score",playerCardInfos.get(l).getGreenScore()*2-playerCardInfos.get(l).getRedScore());
+                    add = playerCardInfos.get(l).getGreenScore();
                 }
+
+                Map<String, Object> addGold = new HashMap<>();
+                addGold.put("userId", l);
+                addGold.put("gold",add/100);
+                KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_REPLAY);
+                MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+                msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addGold);
+
                 ResponseVo vo = new ResponseVo("gameGuessService", "gameResult", result);
                 MsgSender.sendMsg2Player(vo, l);
 
