@@ -80,6 +80,8 @@ object PokerRoomService {
           return ErrorCode.CAN_NOT_NO_ROOM
         }
         return roomGuessCar.asInstanceOf[RoomGuessCar].guessCar(userId,redOrGreen)
+      case "getAllRoom"=>
+        return RoomGuessCar.getAllRoom(userId);
       case _ =>
         return -1
     }

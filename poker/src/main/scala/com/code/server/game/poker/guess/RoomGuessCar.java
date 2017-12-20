@@ -127,6 +127,14 @@ public class RoomGuessCar extends Room {
        return 0;
     }
 
+
+    public static int getAllRoom(long userId){
+        List<IfaceRoomVo> rooms = new ArrayList<>();
+        RoomManager.getInstance().getRooms().values().stream().forEach(r->rooms.add(r.toVo(userId)));
+        MsgSender.sendMsg2Player("pokerRoomService", "getAllRoom", rooms, userId);
+        return 0;
+    }
+
     @Override
     public IfaceRoomVo toVo(long userId) {
         RoomGuessCarVo roomVo = new RoomGuessCarVo();
