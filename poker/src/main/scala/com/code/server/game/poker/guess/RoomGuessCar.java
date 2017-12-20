@@ -16,7 +16,9 @@ import com.code.server.util.timer.TimerNode;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2017/12/8.
@@ -129,8 +131,15 @@ public class RoomGuessCar extends Room {
 
 
     public static int getAllRoom(long userId){
-        List<IfaceRoomVo> rooms = new ArrayList<>();
-        RoomManager.getInstance().getRooms().values().stream().forEach(r->rooms.add(r.toVo(userId)));
+        List<Map<String,Object>> rooms = new ArrayList<>();
+        RoomManager.getInstance().getRooms().values().forEach(r->{
+            Map<String, Object> result = new HashMap<>();
+            RoomGuessCar roomGuessCar = (RoomGuessCar) r;
+            result.put("roomId", roomGuessCar.getRoomId());
+            result.put("chip", roomGuessCar.getChip());
+            result.put("persionNum", roomGuessCar.getUsers().size());
+            rooms.add(result);
+        });
         MsgSender.sendMsg2Player("pokerRoomService", "getAllRoom", rooms, userId);
         return 0;
     }
