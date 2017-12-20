@@ -9,11 +9,20 @@ import com.code.server.util.ThreadPool;
 import com.code.server.util.timer.GameTimer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 @SpringBootApplication(scanBasePackages={"com.code.server.*"})
 @EnableConfigurationProperties({ServerConfig.class})
-public class LoginApplication {
+@ServletComponentScan
+public class LoginApplication extends SpringBootServletInitializer {
+
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+		return builder.sources(LoginApplication.class);
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(LoginApplication.class, args);
