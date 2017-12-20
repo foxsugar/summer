@@ -195,12 +195,14 @@ public class GameGuessCar extends Game{
                 playerCardInfo.setFinalScore(playerCardInfo.getFinalScore()+playerCardInfo.getRedScore()-playerCardInfo.getGreenScore());
                 bankerCardInfos.setScore(bankerCardInfos.getScore()+playerCardInfo.getGreenScore()-playerCardInfo.getRedScore());
                 RedisManager.getUserRedisService().addUserMoney(playerCardInfo.getUserId(),(playerCardInfo.getRedScore()-playerCardInfo.getGreenScore()));
-                RedisManager.getUserRedisService().addUserMoney(bankerCardInfos.getUserId(),(playerCardInfo.getGreenScore()-playerCardInfo.getRedScore()));
+                //RedisManager.getUserRedisService().addUserMoney(bankerCardInfos.getUserId(),(playerCardInfo.getGreenScore()-playerCardInfo.getRedScore()));
+                this.room.bankerScore +=(playerCardInfo.getGreenScore()-playerCardInfo.getRedScore());
             }else{
                 playerCardInfo.setFinalScore(playerCardInfo.getFinalScore()+playerCardInfo.getGreenScore()-playerCardInfo.getRedScore());
                 bankerCardInfos.setScore(bankerCardInfos.getScore()+playerCardInfo.getRedScore()-playerCardInfo.getGreenScore());
                 RedisManager.getUserRedisService().addUserMoney(playerCardInfo.getUserId(),(playerCardInfo.getGreenScore()-playerCardInfo.getRedScore()));
-                RedisManager.getUserRedisService().addUserMoney(bankerCardInfos.getUserId(),(playerCardInfo.getGreenScore()-playerCardInfo.getRedScore()));
+                //RedisManager.getUserRedisService().addUserMoney(bankerCardInfos.getUserId(),(playerCardInfo.getRedScore()-playerCardInfo.getGreenScore()));
+                this.room.bankerScore +=(playerCardInfo.getRedScore()-playerCardInfo.getGreenScore());
             }
         }
 
@@ -239,7 +241,7 @@ public class GameGuessCar extends Game{
         //庄家
         Map<String, Object> result = new HashMap<>();
 
-        this.room.bankerScore = bankerCardInfos.getScore();
+        //this.room.bankerScore = bankerCardInfos.getScore();
         result.put("score",bankerCardInfos.getScore()-tempS);
         result.put("bankerScore",bankerCardInfos.getScore());
         result.put("color",this.color);
