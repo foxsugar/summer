@@ -69,12 +69,17 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('com.google.code.gson:gson:2.6.2')
 
+
+
 	compile "org.scala-lang:scala-library:2.12.2"
 	compile "org.scala-lang:scala-compiler:2.12.2"
 	compile "org.scala-lang:scala-reflect:2.12.2"
 
 	compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.11'
 
+	runtime ("org.apache.tomcat.embed:tomcat-embed-jasper")
+	compile 'org.springframework.boot:spring-boot-starter-tomcat'
+	runtime 'jstl:jstl:1.2'
 //	compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '1.2.0.RELEASE'
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
