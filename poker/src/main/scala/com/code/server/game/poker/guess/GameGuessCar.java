@@ -254,6 +254,11 @@ public class GameGuessCar extends Game{
         //改变状态
         this.room.state = RoomGuessCar.STATE_GUESS;
         MsgSender.sendMsg2Player("gameGuessService","stateChange",this.room.state,this.room.getUsers());
+
+        if (this.room.bankerScore <= 50) {
+            MsgSender.sendMsg2Player("gameGuessService","gameOver","gameOver",this.room.getUsers());
+            this.room.quitRoom(this.room.getBankerId());
+        }
     }
 
 
