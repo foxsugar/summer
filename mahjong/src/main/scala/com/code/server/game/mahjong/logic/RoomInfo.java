@@ -103,7 +103,7 @@ public class RoomInfo extends Room {
                 if (each.equals("0") && money < 30) {
                     return false;
                 }
-            } else if ("NZZ".equals(gameType)) {
+            } else if ("NZZ".equals(gameType) || "HM".equals(gameType)) {
                 if (each.equals("0") && money < 20) {
                     return false;
                 }
@@ -142,7 +142,7 @@ public class RoomInfo extends Room {
                 if (each.equals("1") && money < 1) {
                     return false;
                 }
-            }else if ("NZZ".equals(gameType)) {
+            }else if ("NZZ".equals(gameType) || "HM".equals(gameType)) {
                 if (each.equals("1") && money < 5 && this.gameNumber == 4) {
                     return false;
                 }
@@ -221,6 +221,8 @@ public class RoomInfo extends Room {
                 return new GameInfoDonghu();
             case "NZZ":
                 return new GameInfoNZZ().setHasJieGangHu(true);
+            case "HM":
+                return new GameInfoHM().setHasJieGangHu(true);
             default:
                 return new GameInfo();
         }
@@ -355,7 +357,7 @@ public class RoomInfo extends Room {
             } else if (2 == gameNumber) {
                 result = 6;
             }
-        } else if ("NZZ".equals(gameType)) {
+        } else if ("NZZ".equals(gameType) || "HM".equals(gameType)) {
             if (4 == gameNumber) {
                 result = 20;
             } else if (8 == gameNumber) {
@@ -414,7 +416,7 @@ public class RoomInfo extends Room {
     }
 
     public boolean isAddGold() {
-        return "LQ".equals(gameType)||"NZZ".equals(gameType);
+        return "LQ".equals(gameType)||"NZZ".equals(gameType) ||"HM".equals(gameType);
     }
 
 
@@ -444,7 +446,7 @@ public class RoomInfo extends Room {
                     RedisManager.addGold(this.createUser, -money / 10);
                 }
             }
-        }else if("NZZ".equals(this.getGameType())){
+        }else if("NZZ".equals(this.getGameType()) || "HM".equals(this.getGameType())){
             for (long userId : users) {
                 int money = 5;
                 if (gameNumber == 8) {
@@ -494,7 +496,7 @@ public class RoomInfo extends Room {
                     RedisManager.addGold(this.createUser, money / 10);
                 }
             }
-        }else if("NZZ".equals(this.getGameType())){
+        }else if("NZZ".equals(this.getGameType()) || "HM".equals(this.getGameType())){
             for (long userId : users) {
                 int money = 5;
                 if (gameNumber == 8) {

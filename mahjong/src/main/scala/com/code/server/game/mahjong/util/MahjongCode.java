@@ -78,7 +78,7 @@ public class MahjongCode {
 	};
 	
 	//進城分数124
-		public static final Map<String, Integer> HUTOSCOREFORJC124 = new HashMap<String, Integer>() {
+		public static final Map<String, Integer> HUTOSCOREFORHM = new HashMap<String, Integer>() {
 			{
 				put("201", 1);
 				put("222", 3);
@@ -88,6 +88,18 @@ public class MahjongCode {
 				put("288", 4);
 			}
 		};
+
+	//侯马
+	public static final Map<String, Integer> HUTOSCOREFORJC124 = new HashMap<String, Integer>() {
+		{
+			put("201", 1);
+			put("222", 3);
+			put("235", 3);
+			put("244", 3);
+			put("253", 4);
+			put("288", 4);
+		}
+	};
 	
 	//盛世分数
 	public static final Map<String, Integer> HUTOSCOREFORSS = new HashMap<String, Integer>() {
