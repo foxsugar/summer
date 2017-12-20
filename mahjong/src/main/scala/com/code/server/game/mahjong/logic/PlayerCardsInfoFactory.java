@@ -65,6 +65,10 @@ public class PlayerCardsInfoFactory {
             case "31":
                 playerCardsInfo = new PlayerCardsInfoNZZ();
                 break;
+
+            case "32":
+                playerCardsInfo = new PlayerCardsInfoHM();
+                break;
             default:
                 logger.error("初始化 playercardsInfo 错误");
                 return null;
