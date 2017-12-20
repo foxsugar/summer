@@ -220,7 +220,7 @@ public class GameGuessCar extends Game{
                 Map<String, Object> addGold = new HashMap<>();
                 addGold.put("userId", l);
                 addGold.put("gold",add/100);
-                KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_REPLAY);
+                KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_GUESS_ADD_GOLD);
                 MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
                 msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addGold);
 

@@ -75,6 +75,15 @@ public class RoomGuessCar extends Room {
         }
         return rtn;
     }
+
+    public int quitRoom(long userId) {
+        int rtn =  super.quitRoom(userId);
+        if(rtn == 0 &&  userId == this.bankerId){
+            //把钱返给庄家
+            RedisManager.getUserRedisService().addUserMoney(userId, bankerScore);
+        }
+        return rtn;
+    }
     public int joinRoom(long userId, boolean isJoin) {
         //要多于5个钻
         if(userId != this.createUser){
