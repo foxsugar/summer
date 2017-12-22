@@ -58,7 +58,9 @@ public class GameRpcNewHandler implements GameRPCNew.AsyncIface {
                 user.setMoney(nowMoney);
                 userService.save(user);
             } else if (order.getType() == ChargeType.gold.getValue()) {
-                RedisManager.addGold(userId, order.getNum());
+                double nowGold = RedisManager.getUserRedisService().addUserMoney(userId, order.getNum());
+                user.setGold(nowGold);
+                userService.save(user);
             }
         }
         //充值记录
