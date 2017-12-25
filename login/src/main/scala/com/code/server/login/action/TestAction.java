@@ -74,6 +74,9 @@ public class TestAction {
             e.printStackTrace();
         }
 
+        logger.info("local sign：{}", md5sign);
+        logger.info("sign：{}", sign);
+
         if (sign.equals(md5sign)){
             if(returncode.equals("00")){
                 Charge charge = chargeService.getChargeByOrderid(orderid);
@@ -124,8 +127,8 @@ public class TestAction {
             e.printStackTrace();
         }
 
-        logger.info("本地签名：{}", md5sign);
-        logger.info("返回签名：{}", sign);
+        logger.info("-local sign：{}", md5sign);
+        logger.info("-sign：{}", sign);
         if (sign.equals(md5sign)){
             if(returncode.equals("00")){
                 Charge charge = chargeService.getChargeByOrderid(orderid);
