@@ -139,7 +139,7 @@ public class GameGuessCar extends Game{
         if(RED==color){
             if(redScore>=room.getBankerScore()){
                 return ErrorCode.BET_WRONG;
-            }else if(addChip+redScore-greenScore<room.getBankerScore()){
+            }else if(addChip+redScore-greenScore<=room.getBankerScore()){
                 redScore+=addChip;
                 playerCardInfos.get(userId).setRedScore(playerCardInfos.get(userId).getRedScore()+addChip);
             }else{
@@ -150,7 +150,7 @@ public class GameGuessCar extends Game{
         }else{
             if(greenScore>=room.getBankerScore()){
                 return ErrorCode.BET_WRONG;
-            }else if(addChip+greenScore-redScore<room.getBankerScore()){
+            }else if(addChip+greenScore-redScore<=room.getBankerScore()){
                 greenScore+=addChip;
                 playerCardInfos.get(userId).setGreenScore(playerCardInfos.get(userId).getGreenScore()+addChip);
             }else{
@@ -192,15 +192,15 @@ public class GameGuessCar extends Game{
         //算分
         for (PlayerCardInfoGuessCar playerCardInfo : playerCardInfos.values()) {
             if(RED==this.color){
-                playerCardInfo.setFinalScore(playerCardInfo.getFinalScore()+playerCardInfo.getRedScore()-playerCardInfo.getGreenScore());
+                playerCardInfo.setFinalScore(playerCardInfo.getFinalScore()+playerCardInfo.getRedScore()*0.95-playerCardInfo.getGreenScore());
                 bankerCardInfos.setScore(bankerCardInfos.getScore()+playerCardInfo.getGreenScore()-playerCardInfo.getRedScore());
-                RedisManager.getUserRedisService().addUserMoney(playerCardInfo.getUserId(),(playerCardInfo.getRedScore()-playerCardInfo.getGreenScore()));
+                RedisManager.getUserRedisService().addUserMoney(playerCardInfo.getUserId(),(playerCardInfo.getRedScore()*0.95-playerCardInfo.getGreenScore()));
                 //RedisManager.getUserRedisService().addUserMoney(bankerCardInfos.getUserId(),(playerCardInfo.getGreenScore()-playerCardInfo.getRedScore()));
                 this.room.bankerScore +=(playerCardInfo.getGreenScore()-playerCardInfo.getRedScore());
             }else{
-                playerCardInfo.setFinalScore(playerCardInfo.getFinalScore()+playerCardInfo.getGreenScore()-playerCardInfo.getRedScore());
+                playerCardInfo.setFinalScore(playerCardInfo.getFinalScore()+playerCardInfo.getGreenScore()*0.95-playerCardInfo.getRedScore());
                 bankerCardInfos.setScore(bankerCardInfos.getScore()+playerCardInfo.getRedScore()-playerCardInfo.getGreenScore());
-                RedisManager.getUserRedisService().addUserMoney(playerCardInfo.getUserId(),(playerCardInfo.getGreenScore()-playerCardInfo.getRedScore()));
+                RedisManager.getUserRedisService().addUserMoney(playerCardInfo.getUserId(),(playerCardInfo.getGreenScore()*0.95-playerCardInfo.getRedScore()));
                 //RedisManager.getUserRedisService().addUserMoney(bankerCardInfos.getUserId(),(playerCardInfo.getRedScore()-playerCardInfo.getGreenScore()));
                 this.room.bankerScore +=(playerCardInfo.getRedScore()-playerCardInfo.getGreenScore());
             }
@@ -215,10 +215,10 @@ public class GameGuessCar extends Game{
                 result.put("finalScore",playerCardInfos.get(l).getFinalScore());
                 double add = 0;
                 if(RED==this.color){//设置赢了多少
-                    result.put("score",playerCardInfos.get(l).getRedScore()*2);
+                    result.put("score",playerCardInfos.get(l).getRedScore()*2*0.975);
                     add = playerCardInfos.get(l).getRedScore();
                 }else{
-                    result.put("score",playerCardInfos.get(l).getGreenScore()*2);
+                    result.put("score",playerCardInfos.get(l).getGreenScore()*2*0.975);
                     add = playerCardInfos.get(l).getGreenScore();
                 }
 
