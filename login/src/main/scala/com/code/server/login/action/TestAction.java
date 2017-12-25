@@ -1,8 +1,6 @@
 package com.code.server.login.action;
-
 import com.code.server.db.Service.ChargeService;
 import com.code.server.db.model.Charge;
-import com.code.server.login.service.PayService;
 import com.code.server.login.util.PayUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.Map;
 
 /**
  * Created by sunxianping on 2017/12/20.
@@ -28,28 +24,14 @@ import java.util.Map;
 public class TestAction {
 
     @Autowired
-    private PayService payService;
-
-    @Autowired
     private ChargeService chargeService;
 
     protected static Logger logger= LoggerFactory.getLogger(TestAction.class);
-    @RequestMapping(path = "/testjsp")
-    public String  index() {
-//        view.setViewName("testjsp");
-//        return view;
-        return "testjsp";
-    }
 
-    @RequestMapping("/tt")
-    public String welcome(Map<String, Object> model) {
-        model.put("time", new Date());
-        model.put("message", "hh");
-        return "welcome";
-    }
+    private static final String keyValue = "xhzw2malfjk62p0g8m9by7ycx97fqahv" ;
 
     @RequestMapping("/index")
-    public String mindex(){
+    public String index(){
         return "index";
     }
 
@@ -65,7 +47,6 @@ public class TestAction {
         charge.setStatus(0);
         chargeService.save(charge);
         logger.info(charge.getOrderId());
-
         request.setAttribute("Moneys", money + "");
         request.setAttribute("orderId", orderId);
         request.getRequestDispatcher("/WEB-INF/jsp/pay.jsp").forward(request, resp);
@@ -84,7 +65,8 @@ public class TestAction {
         String reserved2=request.getParameter("reserved2");
         String sign=request.getParameter("sign");
         String keyValue="";
-        String SignTemp="amount="+amount+"+datetime="+datetime+"+memberid="+memberid+"+orderid="+orderid+"+returncode="+returncode+"+key="+keyValue+"";
+        String transaction_id = request.getParameter("transaction_id");
+        String SignTemp="amount="+amount+"+datetime="+datetime+ "+key="+keyValue + "+memberid="+memberid+"+orderid="+orderid+"+returncode="+returncode+"+transaction_id="+transaction_id+"";
         String md5sign= null;
         try {
             md5sign = md5(SignTemp);
@@ -94,7 +76,7 @@ public class TestAction {
 
         if (sign.equals(md5sign)){
             if(returncode.equals("00")){
-                Charge charge = chargeService.getChargeByOrderid(reserved1);
+                Charge charge = chargeService.getChargeByOrderid(orderid);
                 charge.setStatus(1);
                 chargeService.save(charge);
                 logger.info("支付成功！");
@@ -129,7 +111,10 @@ public class TestAction {
         String reserved1=request.getParameter("reserved1");
         String reserved2=request.getParameter("reserved2");
         String sign=request.getParameter("sign");
-        String SignTemp="amount="+amount+"+datetime="+datetime+"+memberid="+memberid+"+orderid="+orderid+"+returncode="+returncode+"+key="+"";
+
+        String transaction_id = request.getParameter("transaction_id");
+        logger.info("{}", transaction_id);
+        String SignTemp="amount="+amount+"+datetime="+datetime+ "+key="+keyValue + "+memberid="+memberid+"+orderid="+orderid+"+returncode="+returncode+"+transaction_id="+transaction_id+"";
         String md5sign= null;
         try {
             md5sign = md5(SignTemp);
@@ -139,7 +124,7 @@ public class TestAction {
 
         if (sign.equals(md5sign)){
             if(returncode.equals("00")){
-                Charge charge = chargeService.getChargeByOrderid(reserved1);
+                Charge charge = chargeService.getChargeByOrderid(orderid);
                 charge.setStatus(1);
                 chargeService.save(charge);
                 logger.info("支付成功！");
@@ -148,8 +133,9 @@ public class TestAction {
                 logger.info("支付失败");
             }
 
+
             logger.info("-------------------------------");
-            logger.info("memberid{}, orderid{}, amount{}, datetime{}, requestcode{}, returncode{}, reserved1{}, reserverd2{}, sign{}, tempSign{}",memberid,orderid, amount, datetime, returncode, reserved1, reserved2, sign, SignTemp);
+            logger.info("memberid{}, orderid{}, amount{}, datetime{}, requestcode{},  reserved1{}, reserverd2{}, sign{}, tempSign{}",memberid,orderid, amount, datetime, returncode, reserved1, reserved2, sign, SignTemp);
             logger.info("-------------------------------");
 
         }else{
