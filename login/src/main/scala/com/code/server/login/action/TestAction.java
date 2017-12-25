@@ -115,6 +115,8 @@ public class TestAction {
         String transaction_id = request.getParameter("transaction_id");
         logger.info("{}", transaction_id);
         String SignTemp="amount="+amount+"+datetime="+datetime+ "+key="+keyValue + "+memberid="+memberid+"+orderid="+orderid+"+returncode="+returncode+"+transaction_id="+transaction_id+"";
+
+
         String md5sign= null;
         try {
             md5sign = md5(SignTemp);
@@ -122,6 +124,8 @@ public class TestAction {
             e.printStackTrace();
         }
 
+        logger.info("本地签名：{}", md5sign);
+        logger.info("返回签名：{}", sign);
         if (sign.equals(md5sign)){
             if(returncode.equals("00")){
                 Charge charge = chargeService.getChargeByOrderid(orderid);
