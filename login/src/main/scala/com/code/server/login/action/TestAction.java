@@ -64,7 +64,6 @@ public class TestAction {
         String reserved1=request.getParameter("reserved1");
         String reserved2=request.getParameter("reserved2");
         String sign=request.getParameter("sign");
-        String keyValue="";
         String transaction_id = request.getParameter("transaction_id");
         String SignTemp="amount="+amount+"+datetime="+datetime+ "+key="+keyValue + "+memberid="+memberid+"+orderid="+orderid+"+returncode="+returncode+"+transaction_id="+transaction_id+"";
         String md5sign= null;
