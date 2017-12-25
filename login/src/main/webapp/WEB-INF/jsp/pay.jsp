@@ -26,7 +26,9 @@ margin-top:150px;text-align:center;display:block; border:3px solid #d9d9de; padd
 	String merchantId = "10201";
 	String keyValue = "xhzw2malfjk62p0g8m9by7ycx97fqahv" ;
 	String Channelid=request.getParameter("Bankco");
-	String  Moneys	= request.getParameter("Moneys");  //金额
+	String  Moneys	= (String) request.getAttribute("Moneys");
+	System.out.println("===");
+	System.out.println(Moneys);
 	String pay_tradetype=null;
 	String pay_tongdao=null;
 	String 	pay_bankcode=null;
@@ -67,7 +69,9 @@ margin-top:150px;text-align:center;display:block; border:3px solid #d9d9de; padd
 	System.out.println(pay_callbackurl);
 	System.out.println("===================================");
 		String	pay_amount=Moneys;
-		String	pay_reserved1="";
+		String	pay_reserved1= (String) request.getAttribute("orderId");
+
+	System.out.println("order id is " + pay_reserved1);
 		String	pay_reserved2="";
 		String	pay_reserved3="";
 		String	pay_productname="";
