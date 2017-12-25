@@ -99,7 +99,7 @@ public class TestAction {
         logger.info("memberid{}, orderid{}, amount{}, datetime{}, requestcode{}, returncode{}, reserved1{}, reserverd2{}, sign{}, tempSign{}",memberid,orderid, amount, datetime, returncode, reserved1, reserved2, sign, SignTemp);
         logger.info("-------------------------------");
 
-        return "ok";
+        return "notify";
     }
 
     @RequestMapping("/Pay/callback")
@@ -149,7 +149,7 @@ public class TestAction {
             logger.info("验证失败");
         }
 
-        return "ok";
+        return "callback";
     }
 
     public static String md5(String str) throws NoSuchAlgorithmException {
