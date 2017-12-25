@@ -19,6 +19,9 @@ import java.util.Date;
 public class Charge {
 
     @Id
+//    @GeneratedValue(generator = "system-uuid")
+//    @GenericGenerator(name="system-uuid", strategy = "uuid")
+//    @Column(name = "orderId", length = 32)
     private String orderId;
     private String transaction_id;
     private long userid;
