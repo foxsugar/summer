@@ -4,6 +4,7 @@ import com.code.server.db.dao.IChargeDao;
 import com.code.server.db.model.Charge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import scala.Char;
 
 /**
  * Created by win7 on 2017/3/13.
@@ -21,7 +22,6 @@ public class ChargeService {
     public Charge save(Charge charge){
         return chargeDao.save(charge);
     }
-
 
 
 }

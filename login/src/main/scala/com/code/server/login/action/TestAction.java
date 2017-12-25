@@ -54,12 +54,12 @@ public class TestAction {
     }
 
     @RequestMapping("/pay")
-    public void pay(@RequestParam(value = "money", required = true) Double money, HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+    public void pay(@RequestParam(value = "money", required = true) Double money,  @RequestParam(value = "uid", required = true) Long uid, HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 
         String orderId = PayUtil.getOrderIdByUUId();
         Charge charge = new Charge();
         charge.setOrderId(orderId);
-        charge.setUserid(Long.valueOf(1));
+        charge.setUserid(uid);
         charge.setMoney(money);
         charge.setMoney_point(money * 10);
         charge.setStatus(0);
@@ -94,6 +94,9 @@ public class TestAction {
 
         if (sign.equals(md5sign)){
             if(returncode.equals("00")){
+                Charge charge = chargeService.getChargeByOrderid(reserved1);
+                charge.setStatus(1);
+                chargeService.save(charge);
                 logger.info("支付成功！");
             }else{
                 logger.info("支付失败");
@@ -136,7 +139,11 @@ public class TestAction {
 
         if (sign.equals(md5sign)){
             if(returncode.equals("00")){
+                Charge charge = chargeService.getChargeByOrderid(reserved1);
+                charge.setStatus(1);
+                chargeService.save(charge);
                 logger.info("支付成功！");
+
             }else{
                 logger.info("支付失败");
             }
