@@ -71,6 +71,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     protected boolean isPlayHun = false;//是否打出混
 
+    private boolean isGuoHu;
 
     /**
      * 根据发的牌初始化
@@ -1210,6 +1211,14 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     @Override
     public IfacePlayerInfoVo toVo(long watchUser) {
         return null;
+    }
+
+    public boolean isGuoHu() {
+        return isGuoHu;
+    }
+
+    public void setGuoHu(boolean guoHu) {
+        isGuoHu = guoHu;
     }
 }
 

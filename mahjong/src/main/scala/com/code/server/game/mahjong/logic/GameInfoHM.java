@@ -159,7 +159,7 @@ public class GameInfoHM extends GameInfo {
                 boolean isCanGang = playerCardsInfo.isCanGangAddThisCard(card);
                 boolean isCanPeng = playerCardsInfo.isCanPengAddThisCard(card);
                 boolean isCanHu;
-                if("LQ".equals(this.room.getGameType())){
+                if("HM".equals(this.room.getGameType())){
                     //如果上一次操作为过，这一轮不能再碰和胡
                     if(!noCanHuList.contains(playerCardsInfo.getUserId())){
                         isCanHu = playerCardsInfo.isCanHu_dianpao(card);
@@ -206,6 +206,103 @@ public class GameInfoHM extends GameInfo {
             }
         }
         return 0;
+    }
+
+
+    /**
+     * 摸牌
+     *
+     * @param userId
+     */
+    protected void mopai(long userId, String... wz) {
+        System.err.println("摸牌===============================userId : " + userId);
+        noCanHuList.remove(userId);
+
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
+        playerCardsInfo.setGuoHu(false);
+        if (isHuangzhuang(playerCardsInfo)) {
+            handleHuangzhuang(userId);
+            return;
+        }
+
+
+        if (playerCardsInfo.isMoreOneCard()) {
+            if (wz.length > 0) {
+                logger.info("======1操作后的摸牌 : " + wz[0]);
+            }
+            logger.info("userId : " + userId + "　===1 more one card 抓牌时多一张牌");
+            logger.info("操作列表: " + playerCardsInfo.operateList.toString());
+            logger.info("所有操作: " + userOperateList.toString());
+
+        }
+
+        //拿出一张
+        String card = getMoPaiCard(playerCardsInfo);
+        //有换牌需求
+//        if (isTest && playerCardsInfo.nextNeedCard != -1) {
+//            String needCard = getCardByTypeFromRemainCards(playerCardsInfo.nextNeedCard);
+//            playerCardsInfo.nextNeedCard = -1;
+//            if (needCard != null) {
+//                card = needCard;
+//                remainCards.remove(needCard);
+//            } else {
+//                card = remainCards.remove(0);
+//            }
+//        } else {
+//            card = remainCards.remove(0);
+//        }
+
+        playerCardsInfo.mopai(card);
+        //
+        turnId = userId;
+        this.lastMoPaiUserId = userId;
+        lastOperateUserId = userId;
+        this.catchCard = card;
+
+        // 把摸到的牌 推给摸牌的玩家
+        int remainSize = remainCards.size();
+        for (long user : users) {
+            GetCardResp getCardResp = new GetCardResp();
+            getCardResp.setRemainNum(remainSize);
+            getCardResp.setUserId(userId);
+            if (user == userId) {
+                getCardResp.setCard(card);
+            }
+            ResponseVo responseVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_GET_CARD, getCardResp);
+            MsgSender.sendMsg2Player(responseVo, user);
+
+            //能做的操作全置成不能
+            PlayerCardsInfoMj other = playerCardsInfos.get(user);
+
+            resetCanBeOperate(other);
+        }
+
+
+        boolean isCanGang = playerCardsInfo.isHasGang();
+        boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);//多一张
+        boolean isCanHu = playerCardsInfo.isCanHu_zimo(catchCard);
+
+        //能做的操作
+        playerCardsInfo.setCanBeGang(isCanGang);
+        playerCardsInfo.setCanBePeng(false);
+        playerCardsInfo.setCanBeHu(isCanHu);
+        playerCardsInfo.setCanBeTing(isCanTing);
+
+        OperateResp resp = new OperateResp();
+        resp.setIsCanGang(isCanGang);
+        resp.setIsCanHu(isCanHu);
+        resp.setIsCanTing(isCanTing);
+
+        //回放 抓牌
+        OperateReqResp operateReqResp = new OperateReqResp();
+        operateReqResp.setCard(card);
+        operateReqResp.setUserId(userId);
+        operateReqResp.setOperateType(OperateReqResp.type_mopai);
+        replay.getOperate().add(operateReqResp);
+
+        //可能的操作
+        ResponseVo OperateResponseVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, resp);
+        MsgSender.sendMsg2Player(OperateResponseVo, userId);
 
     }
 }
