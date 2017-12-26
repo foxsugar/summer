@@ -65,7 +65,7 @@ public class TestAction {
         String reserved2=request.getParameter("reserved2");
         String sign=request.getParameter("sign");
         String transaction_id = request.getParameter("transaction_id");
-        String SignTemp="amount="+amount+"+datetime="+datetime+ "+key="+keyValue + "+memberid="+memberid+"+orderid="+orderid+"+returncode="+returncode+"+transaction_id="+transaction_id+"";
+        String SignTemp="amount="+amount+"+datetime="+datetime + "+memberid="+memberid+"+orderid="+orderid+"+returncode="+returncode+"+transaction_id="+transaction_id+"";
         String md5sign= null;
         try {
             md5sign = md5(SignTemp);
@@ -116,7 +116,7 @@ public class TestAction {
 
         String transaction_id = request.getParameter("transaction_id");
         logger.info("{}", transaction_id);
-        String SignTemp="amount="+amount+"+datetime="+datetime+ "+key="+keyValue + "+memberid="+memberid+"+orderid="+orderid+"+returncode="+returncode+"+transaction_id="+transaction_id+"";
+        String SignTemp="amount="+amount+"+datetime="+datetime + "+memberid="+memberid+"+orderid="+orderid+"+returncode="+returncode+"+transaction_id="+transaction_id+"";
 
 
         String md5sign= null;

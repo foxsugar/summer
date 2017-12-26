@@ -14,9 +14,6 @@
 	String amount=request.getParameter("amount");
 	String datetime=request.getParameter("datetime");
 	String returncode=request.getParameter("returncode");
-	String reserved1=request.getParameter("reserved1");
-	String reserved2=request.getParameter("reserved2");
-	String reserved2=request.getParameter("reserved2");
 	String sign=request.getParameter("sign");
 	String SignTemp="amount="+amount+"+datetime="+datetime+"+memberid="+memberid+"+orderid="+orderid+"+returncode="+returncode+"+key="+keyValue+"";
 	String md5sign=MD5(SignTemp,32,1);//MD5加密
