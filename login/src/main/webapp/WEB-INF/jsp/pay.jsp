@@ -18,7 +18,7 @@ margin-top:150px;text-align:center;display:block; border:3px solid #d9d9de; padd
 </head>
 <body onLoad="document.uncome.submit()">
 <div id="Content">
-  <div class="tabPages">我们正在为您连接银行，请稍等......</div>
+  <div class="tabPages">我们正在为您连接微信支付，请稍等......</div>
 </div>
 
 <%
@@ -44,43 +44,38 @@ margin-top:150px;text-align:center;display:block; border:3px solid #d9d9de; padd
 		 pay_tongdao="ZfbSm";    //'通道名称
 	}
 
-//	pay_bankcode="903";   //'银行编码
-//	pay_tradetype="900022";   //'通道类型
-//	pay_tongdao="ZfbSm";    //'通道名称
 	Channelid = "wx";
 	pay_bankcode="901";   //'银行编码
 	pay_tradetype="900021";   //'通道类型
 	pay_tongdao="WxSm";
 
 	String	pay_memberid=merchantId;//商户id
-		String	pay_orderid=generateOrderId();//20位订单号 时间戳+6位随机字符串组成
-		String	pay_applydate=generateTime();//yyyy-MM-dd HH:mm:ss
-
-
-//	http:///WEB-INF/jsp/pay.jsp/Pay/notify
-//	http:///WEB-INF/jsp/pay.jsp/Pay/callback
+	String	pay_orderid=(String) request.getAttribute("orderId");
+	System.out.println("===================================");
+	System.out.println("order id is " + pay_orderid);
+	System.out.println("===================================");
+	String	pay_applydate=generateTime();//yyyy-MM-dd HH:mm:ss
 
 	String baseUrl = "http://47.92.72.232:8085";
-		String	pay_notifyurl=baseUrl+"/Pay/notify";//通知地址
-		String	pay_callbackurl=baseUrl + "/Pay/callback";//回调地址
+	String	pay_notifyurl=baseUrl+"/Pay/notify";//通知地址
+	String	pay_callbackurl=baseUrl + "/Pay/callback";//回调地址
 
 	System.out.println("===================================");
 	System.out.println(pay_notifyurl);
 	System.out.println(pay_callbackurl);
 	System.out.println("===================================");
-		String	pay_amount=Moneys;
-		String	pay_reserved1= (String) request.getAttribute("orderId");
+	String	pay_amount=Moneys;
+	String	pay_reserved1= "";
 
-	System.out.println("order id is " + pay_reserved1);
-		String	pay_reserved2="";
-		String	pay_reserved3="";
-		String	pay_productname="";
-		String	pay_productnum="";
-		String	pay_productdesc="";
-		String	pay_producturl="";
-		String stringSignTemp="pay_amount="+pay_amount+"&pay_applydate="+pay_applydate+"&pay_bankcode="+pay_bankcode+"&pay_callbackurl="+pay_callbackurl+"&pay_memberid="+pay_memberid+"&pay_notifyurl="+pay_notifyurl+"&pay_orderid="+pay_orderid+"&key="+keyValue+"";
-		String pay_md5sign=md5(stringSignTemp);
+	String	pay_reserved2="";
+	String	pay_reserved3="";
+	String	pay_productname="";
+	String	pay_productnum="";
+	String	pay_productdesc="";
+	String	pay_producturl="";
 
+	String stringSignTemp="pay_amount="+pay_amount+"&pay_applydate="+pay_applydate+  "&pay_bankcode="+pay_bankcode+"&pay_callbackurl="+pay_callbackurl+"&pay_memberid="+pay_memberid+"&pay_notifyurl="+pay_notifyurl+"&pay_orderid="+pay_orderid+"&key="+keyValue+"";
+	String pay_md5sign=md5(stringSignTemp);
 
 %>
 <!-- 
