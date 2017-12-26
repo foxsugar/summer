@@ -103,10 +103,6 @@ public class RoomGuessCar extends Room {
 
     public int guessCar(long userId,int redOrGreen){
 
-        if(RedisManager.getUserRedisService().getUserMoney(userId) < 50){
-            return ErrorCode.NOT_HAVE_MORE_MONEY;
-        }
-
         if(this.state == STATE_BET){
             return ErrorCode.STATE_ERROR;
         }

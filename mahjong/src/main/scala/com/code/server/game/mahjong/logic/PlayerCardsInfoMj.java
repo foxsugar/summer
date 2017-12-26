@@ -774,6 +774,16 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
 
     /**
+     * 是否是杠开
+     *
+     * @return
+     */
+    protected boolean isGangKai() {
+        int size = this.operateList.size();
+        return size >= 2 && this.operateList.get(size - 2) == type_gang;
+    }
+
+    /**
      * 按类型删除card
      *
      * @param list

@@ -268,15 +268,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         return !isHasHun;
     }
 
-    /**
-     * 是否是杠开
-     *
-     * @return
-     */
-    protected boolean isGangKai() {
-        int size = this.operateList.size();
-        return size >= 2 && this.operateList.get(size - 2) == type_gang;
-    }
+
 
 
     @Override
@@ -360,13 +352,13 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         playerCardsInfo.isHasFengShun = true;
 
 
-        String[] s = new String[]{"000", "004", "008", "012","020", "024", "028",    "072",  "073",    "074", "096", "097", "100","101"};
+        String[] s = new String[]{"072", "076", "080", "092","093", "094", "096",    "100",  "104",    "004", "005", "016", "020","024"};
 //        String[] s = new String[]{"112", "113", "114",   "024",   "028", "032",  "088", "092", "096",  "097",    "132", "133", "124", "120"};
 
         List<Integer> hun = new ArrayList<>();
-        hun.add(24);
-        hun.add(25);
-        hun.add(26);
+        hun.add(0);
+        hun.add(1);
+        hun.add(8);
 
 
         RoomInfo roomInfo = new RoomInfo();
@@ -379,7 +371,7 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
         playerCardsInfo.init(playerCardsInfo.cards);
 
 
-        playerCardsInfo.pengType.put(18,0L);
+//        playerCardsInfo.pengType.put(18,0L);
 //        playerCardsInfo.pengType.put(30,0L);
 
         List<String> list = Arrays.asList(s);
@@ -387,8 +379,8 @@ public class PlayerCardsInfoTJ extends PlayerCardsInfoMj {
 
         List<HuCardType> huList = HuUtil.isHu(playerCardsInfo,
                 playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
-                playerCardsInfo.getChiPengGangNum(), hun, 25);
-        boolean isCanHu = playerCardsInfo.isCanHu_zimo("100");
+                playerCardsInfo.getChiPengGangNum(), hun, 23);
+        boolean isCanHu = playerCardsInfo.isCanHu_zimo("092");
         System.out.println("是否可以胡: " + isCanHu);
         huList.forEach(h -> System.out.println(h.specialHuList));
 //        System.out.println(huList);
