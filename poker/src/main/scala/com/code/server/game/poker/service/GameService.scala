@@ -130,6 +130,8 @@ object GameService {
       val addChip = params.path("addChip").asDouble(0)
       val color = params.path("color").asInt(0)
       game.raise(userId,addChip,color);
+    case "getRemainTime"=>
+      game.getRemainTime(userId)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

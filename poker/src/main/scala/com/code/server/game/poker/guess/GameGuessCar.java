@@ -177,6 +177,13 @@ public class GameGuessCar extends Game{
     }
 
 
+    public int getRemainTime(long userId){
+        Map<String, Object> result = new HashMap<>();
+        long time = this.room.betEndTimerNode.getNextTriggerTime() - System.currentTimeMillis();
+        result.put("remainTime", time);
+        MsgSender.sendMsg2Player("gameGuessService", "getRemainTime", result, userId);
+        return 0;
+    }
 
     //=====================================
     //==============结束操作================
