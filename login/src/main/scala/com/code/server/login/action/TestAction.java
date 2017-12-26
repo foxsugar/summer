@@ -67,7 +67,6 @@ public class TestAction {
     }
 
     @RequestMapping("/Pay/notify")
-    @ResponseBody
     public String noti(HttpServletRequest request){
 
         String memberid=request.getParameter("memberid");
@@ -151,7 +150,7 @@ public class TestAction {
 
         }else{
             logger.info("支付失败");
-            return "支付失败";
+            return "failed";
         }
 
         logger.info("-------------------------------");
@@ -163,11 +162,10 @@ public class TestAction {
         logger.info("memberid{}, orderid{}, amount{}, datetime{}, requestcode{}, returncode{}, reserved1{}, reserverd2{}, sign{}, tempSign{}",memberid,orderid, amount, datetime, returncode, reserved1, reserved2, sign, SignTemp);
         logger.info("-------------------------------");
 
-        return "支付成功";
+        return "success";
     }
 
     @RequestMapping("/Pay/callback")
-    @ResponseBody
     public String callback(HttpServletRequest request){
 
         String memberid=request.getParameter("memberid");
@@ -259,7 +257,7 @@ public class TestAction {
 
         }else{
             logger.info("支付失败");
-            return "支付失败";
+            return "failed";
         }
 
 
@@ -267,7 +265,7 @@ public class TestAction {
         logger.info("memberid{}, orderid{}, amount{}, datetime{}, requestcode{},  reserved1{}, reserverd2{}, sign{}, tempSign{}",memberid,orderid, amount, datetime, returncode, reserved1, reserved2, sign, SignTemp);
         logger.info("-------------------------------");
 
-        return "支付成功";
+        return "success";
     }
 
     public static String md5(String str) throws NoSuchAlgorithmException {
