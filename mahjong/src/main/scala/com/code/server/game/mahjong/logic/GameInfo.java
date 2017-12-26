@@ -243,7 +243,7 @@ public class GameInfo extends Game {
 
 //        noCanHuList.remove(userId);
         PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
-
+        playerCardsInfo.setGuoHu(false);
         if (isHuangzhuang(playerCardsInfo)) {
             handleHuangzhuang(userId);
             return;
@@ -378,6 +378,15 @@ public class GameInfo extends Game {
                 boolean isCanGang = playerCardsInfo.isCanGangAddThisCard(card);
                 boolean isCanPeng = playerCardsInfo.isCanPengAddThisCard(card);
                 boolean isCanHu;
+                if("LQ".equals(this.room.getGameType())&& "2".equals(this.room.getModeTotal())){
+                    if(playerCardsInfo.isGuoHu()){
+                        isCanHu = false;
+                    }else{
+                        isCanHu = playerCardsInfo.isCanHu_dianpao(card);
+                    }
+                }else{
+                    isCanHu = playerCardsInfo.isCanHu_dianpao(card);
+                }
 //                if("LQ".equals(this.room.getGameType())){
 //                    //如果上一次操作为过，这一轮不能再碰和胡
 //                    if(!noCanHuList.contains(playerCardsInfo.getUserId())){
@@ -386,7 +395,7 @@ public class GameInfo extends Game {
 //                        isCanHu = false;
 //                    }
 //                }else{
-                    isCanHu = playerCardsInfo.isCanHu_dianpao(card);
+//                    isCanHu = playerCardsInfo.isCanHu_dianpao(card);
 //                }
                 boolean isCanChi = playerCardsInfo.isHasChi(card);
                 boolean isCanChiTing = playerCardsInfo.isCanChiTing(card);
@@ -655,6 +664,10 @@ public class GameInfo extends Game {
 //        if(guoPlayerCardsInfo.isCanHu_dianpao(disCard)){//能胡点过的人，这一轮不能胡
 //            noCanHuList.add(userId);
 //        }
+
+        if(playerCardsInfos.get(userId).isCanHu_dianpao(disCard)){
+            playerCardsInfos.get(userId).setGuoHu(true);
+        }
 
         if (waitingforList.size() > 0) {
 

@@ -222,10 +222,10 @@ public class GameGuessCar extends Game{
                 result.put("finalScore",playerCardInfos.get(l).getFinalScore());
                 double add = 0;
                 if(RED==this.color){//设置赢了多少
-                    result.put("score",playerCardInfos.get(l).getRedScore()*2*0.975);
+                    result.put("score",playerCardInfos.get(l).getRedScore()*2*0.975-playerCardInfos.get(l).getGreenScore());
                     add = playerCardInfos.get(l).getRedScore();
                 }else{
-                    result.put("score",playerCardInfos.get(l).getGreenScore()*2*0.975);
+                    result.put("score",playerCardInfos.get(l).getGreenScore()*2*0.975-playerCardInfos.get(l).getRedScore());
                     add = playerCardInfos.get(l).getGreenScore();
                 }
 

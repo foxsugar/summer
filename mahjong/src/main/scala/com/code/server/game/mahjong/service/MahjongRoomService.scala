@@ -160,6 +160,9 @@ object MahjongRoomService {
     else if(modeTotal == "31"){
       return true
     }
+    else if(modeTotal == "100"){
+      return true
+    }
     else {
       return false
     }
