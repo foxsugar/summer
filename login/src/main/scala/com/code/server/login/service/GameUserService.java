@@ -439,6 +439,7 @@ public class GameUserService {
      */
     public int guessCarUp2Agent(KafkaMsgKey msgKey){
 
+        final int needMoney = 1000;
         long userId = msgKey.getUserId();
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
 
@@ -446,12 +447,12 @@ public class GameUserService {
             return ErrorCode.CAN_NOT_BING_REFERRER;
         }
         //减钻石
-        if (userBean.getMoney() < 100) {
+        if (userBean.getMoney() < needMoney) {
             return ErrorCode.NOT_HAVE_MORE_MONEY;
         }
         userBean.setVip(Integer.valueOf(""+userId));
         RedisManager.getUserRedisService().updateUserBean(userId,userBean);
-        RedisManager.getUserRedisService().addUserMoney(userId, -100);
+        RedisManager.getUserRedisService().addUserMoney(userId, -needMoney);
 
         ResponseVo vo = new ResponseVo("userService", "guessCarUp2Agent", userId);
         sendMsg(msgKey, vo);

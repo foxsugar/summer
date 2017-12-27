@@ -43,14 +43,15 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
         List<String> cs = getCardsNoChiPengGang(cards);
         List<HuCardType> huList = HuUtil.isHu(cs, this, CardTypeUtil.cardType.get(card), new HuLimit(1));
         int maxFan = 1;//基础番
-        for (HuCardType huCardType : huList) {
-            maxFan += huCardType.fan;
-            if(huCardType.specialHuList.contains(hu_缺一门)){
-                if (huCardType.specialHuList.contains(hu_混一色)||huCardType.specialHuList.contains(hu_清一色)||huCardType.specialHuList.contains(hu_字一色)){//三元一副 自摸加1番
-                    maxFan -= 1;
-                }
+        HuCardType huCardTypeMax = getMaxScoreHuCardType(huList);
+
+        maxFan += huCardTypeMax.fan;
+        if(huCardTypeMax.specialHuList.contains(hu_缺一门)){
+            if (huCardTypeMax.specialHuList.contains(hu_混一色)||huCardTypeMax.specialHuList.contains(hu_清一色)||huCardTypeMax.specialHuList.contains(hu_字一色)){//三元一副 自摸加1番
+                maxFan -= 1;
             }
         }
+
         System.out.println("牌型的番数 : "+maxFan);
 
         //设置胡牌类型
