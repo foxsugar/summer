@@ -6,8 +6,8 @@ import com.code.server.db.Service.UserService;
 import com.code.server.db.model.Charge;
 import com.code.server.db.model.User;
 import com.code.server.login.kafka.MsgSender;
+import com.code.server.login.util.MD5Util;
 import com.code.server.login.util.PayUtil;
-import com.code.server.login.util.WXMD5;
 import com.code.server.redis.service.UserRedisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -219,7 +219,7 @@ public class TestAction {
 //            return null;
 //        }
 
-        return WXMD5.MD5Encode(str);
+        return MD5Util.getMD5(str);
     }
 
 }
