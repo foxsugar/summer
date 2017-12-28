@@ -1,4 +1,5 @@
 package com.code.server.login.action;
+
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.ChargeService;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +24,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+
 
 /**
  * Created by sunxianping on 2017/12/20.
@@ -43,6 +44,7 @@ public class TestAction {
     protected static Logger logger= LoggerFactory.getLogger(TestAction.class);
 
     private static final String keyValue = "xhzw2malfjk62p0g8m9by7ycx97fqahv" ;
+    private UserBean userBeanRedis;
 
     @RequestMapping("/index")
     public String index(){
@@ -68,7 +70,6 @@ public class TestAction {
 
     @RequestMapping("/Pay/notify")
     public String noti(HttpServletRequest request){
-
         String memberid=request.getParameter("memberid");
         String orderid=request.getParameter("orderid");
         String amount=request.getParameter("amount");
@@ -78,7 +79,7 @@ public class TestAction {
         String reserved2=request.getParameter("reserved2");
         String sign=request.getParameter("sign");
         String transaction_id = request.getParameter("transaction_id");
-        String SignTemp="amount="+amount+"+datetime="+datetime + "+memberid="+memberid+"+orderid="+orderid+"+returncode="+returncode+"+transaction_id="+transaction_id+"";
+        String SignTemp="amount="+amount+"&datetime="+datetime + "&memberid="+memberid+"&orderid="+orderid+"&transaction_id="+transaction_id+"&returncode="+returncode+"&key=" + keyValue + "";
         String md5sign= null;
         try {
             md5sign = md5(SignTemp);
@@ -86,81 +87,43 @@ public class TestAction {
             e.printStackTrace();
         }
 
+        logger.info("-------------------------------");
+        logger.info("memberid{}, orderid{}, amount{}, datetime{}, requestcode{}, returncode{}, reserved1{}, reserverd2{}, sign{}, tempSign{}",memberid,orderid, amount, datetime, returncode, sign, SignTemp);
+        logger.info("-------------------------------");
+
         logger.info("local sign：{}", md5sign);
         logger.info("sign：{}", sign);
 
-//        if (sign.equals(md5sign)){
-//            if(returncode.equals("00")){
-//                Charge charge = chargeService.getChargeByOrderid(orderid);
-//                charge.setStatus(1);
-//                chargeService.save(charge);
-//                logger.info("支付成功！");
-//
-//                UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
-//
-//                double addMoney = charge.getMoney();
-//
-//                if (UserBeanRedis != null) {
-//                    userRedisService.addUserMoney(charge.getUserid(), addMoney);
-//                } else {
-//                    User user = userService.getUserByUserId(charge.getUserid());
-//                    System.out.println("修改玩家豆豆");
-//                    user.setMoney(user.getMoney() + addMoney);
-//                    userService.save(user);
-//                }
-//
-//                System.out.println("通知客户端刷新充值");
-//                Map<String, String> rs = new HashMap<>();
-//                MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
-//
-//            }else{
-//                logger.info("支付失败");
-//            }
-//
-//            logger.info("-------------------------------");
-//            logger.info("memberid{}, orderid{}, amount{}, datetime{}, requestcode{}, returncode{}, reserved1{}, reserverd2{}, sign{}, tempSign{}",memberid,orderid, amount, datetime, returncode, reserved1, reserved2, sign, SignTemp);
-//            logger.info("-------------------------------");
-//
-//        }else{
-//            logger.info("验证失败");
-//        }
+        if (true){
+            if(returncode.equals("00")){
+                Charge charge = chargeService.getChargeByOrderid(orderid);
+                charge.setStatus(1);
+                chargeService.save(charge);
+                logger.info("支付成功！");
 
-        if(returncode.equals("00")){
-            Charge charge = chargeService.getChargeByOrderid(orderid);
-            charge.setStatus(1);
-            chargeService.save(charge);
-            logger.info("支付成功！");
+                UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
+                double addMoney = charge.getMoney() * 10;
 
-            UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
+                if (UserBeanRedis != null) {
+                    userRedisService.addUserMoney(charge.getUserid(), addMoney);
+                } else {
+                    User user = userService.getUserByUserId(charge.getUserid());
+                    System.out.println("修改玩家豆豆");
+                    user.setMoney(user.getMoney() + addMoney);
+                    userService.save(user);
+                }
 
-            double addMoney = charge.getMoney();
-
-            if (UserBeanRedis != null) {
-                userRedisService.addUserMoney(charge.getUserid(), addMoney);
-            } else {
-                User user = userService.getUserByUserId(charge.getUserid());
-                System.out.println("修改玩家豆豆");
-                user.setMoney(user.getMoney() + addMoney);
-                userService.save(user);
+                System.out.println("通知客户端刷新充值");
+                Map<String, String> rs = new HashMap<>();
+                MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
+            }else{
+                logger.info("支付失败");
+                return "failed";
             }
-
-            System.out.println("通知客户端刷新充值");
-            Map<String, String> rs = new HashMap<>();
-            MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
-
         }else{
             logger.info("支付失败");
             return "failed";
         }
-
-        logger.info("-------------------------------");
-        logger.info("memberid{}, orderid{}, amount{}, datetime{}, requestcode{}, returncode{}, reserved1{}, reserverd2{}, sign{}, tempSign{}",memberid,orderid, amount, datetime, returncode, reserved1, reserved2, sign, SignTemp);
-        logger.info("-------------------------------");
-
-
-        logger.info("-------------------------------");
-        logger.info("memberid{}, orderid{}, amount{}, datetime{}, requestcode{}, returncode{}, reserved1{}, reserverd2{}, sign{}, tempSign{}",memberid,orderid, amount, datetime, returncode, reserved1, reserved2, sign, SignTemp);
-        logger.info("-------------------------------");
 
         return "success";
     }
@@ -173,13 +136,11 @@ public class TestAction {
         String amount=request.getParameter("amount");
         String datetime=request.getParameter("datetime");
         String returncode=request.getParameter("returncode");
-        String reserved1=request.getParameter("reserved1");
-        String reserved2=request.getParameter("reserved2");
         String sign=request.getParameter("sign");
 
         String transaction_id = request.getParameter("transaction_id");
         logger.info("{}", transaction_id);
-        String SignTemp="amount="+amount+"+datetime="+datetime + "+memberid="+memberid+"+orderid="+orderid+"+returncode="+returncode+"+transaction_id="+transaction_id+"";
+        String SignTemp="amount="+amount+"&datetime="+datetime + "&memberid="+memberid+"&orderid="+orderid+"&transaction_id="+transaction_id+"&returncode="+returncode+"&key=" + keyValue + "";
 
 
         String md5sign= null;
@@ -189,81 +150,42 @@ public class TestAction {
             e.printStackTrace();
         }
 
+        logger.info("-------------------------------");
+        logger.info("memberid{}, orderid{}, amount{}, datetime{}, requestcode{}, returncode{}, reserved1{}, reserverd2{}, sign{}, tempSign{}",memberid,orderid, amount, datetime, returncode, sign, SignTemp);
+        logger.info("-------------------------------");
+
         logger.info("-local sign：{}", md5sign);
         logger.info("-sign：{}", sign);
-//        if (sign.equals(md5sign)){
-//            if(returncode.equals("00")){
-//
-//                Charge charge = chargeService.getChargeByOrderid(orderid);
-//                charge.setStatus(1);
-//                chargeService.save(charge);
-//                logger.info("支付成功！");
-//
-//                UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
-//
-//                double addMoney = charge.getMoney();
-//
-//                if (UserBeanRedis != null) {
-//                    userRedisService.addUserMoney(charge.getUserid(), addMoney);
-//                } else {
-//                    User user = userService.getUserByUserId(charge.getUserid());
-//                    System.out.println("修改玩家豆豆");
-//                    user.setMoney(user.getMoney() + addMoney);
-//                    userService.save(user);
-//                }
-//
-//                System.out.println("通知客户端刷新充值");
-//                Map<String, String> rs = new HashMap<>();
-//                MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
-//
-//
-//            }else{
-//                logger.info("支付失败");
-//            }
-//
-//
-//            logger.info("-------------------------------");
-//            logger.info("memberid{}, orderid{}, amount{}, datetime{}, requestcode{},  reserved1{}, reserverd2{}, sign{}, tempSign{}",memberid,orderid, amount, datetime, returncode, reserved1, reserved2, sign, SignTemp);
-//            logger.info("-------------------------------");
-//
-//        }else{
-//            logger.info("验证失败");
-//        }
+        if (true){
+            if(returncode.equals("00")){
+                Charge charge = chargeService.getChargeByOrderid(orderid);
+                charge.setStatus(1);
+                chargeService.save(charge);
+                logger.info("支付成功！");
 
-        if(returncode.equals("00")){
+                UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
+                double addMoney = charge.getMoney();
 
-            Charge charge = chargeService.getChargeByOrderid(orderid);
-            charge.setStatus(1);
-            chargeService.save(charge);
-            logger.info("支付成功！");
+                if (UserBeanRedis != null) {
+                    userRedisService.addUserMoney(charge.getUserid(), addMoney);
+                } else {
+                    User user = userService.getUserByUserId(charge.getUserid());
+                    System.out.println("修改玩家豆豆");
+                    user.setMoney(user.getMoney() + addMoney);
+                    userService.save(user);
+                }
 
-            UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
-
-            double addMoney = charge.getMoney();
-
-            if (UserBeanRedis != null) {
-                userRedisService.addUserMoney(charge.getUserid(), addMoney);
-            } else {
-                User user = userService.getUserByUserId(charge.getUserid());
-                System.out.println("修改玩家豆豆");
-                user.setMoney(user.getMoney() + addMoney);
-                userService.save(user);
+                System.out.println("通知客户端刷新充值");
+                Map<String, String> rs = new HashMap<>();
+                MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
+            }else{
+                logger.info("支付失败");
+                return "failed";
             }
-
-            System.out.println("通知客户端刷新充值");
-            Map<String, String> rs = new HashMap<>();
-            MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
-
-
         }else{
             logger.info("支付失败");
             return "failed";
         }
-
-
-        logger.info("-------------------------------");
-        logger.info("memberid{}, orderid{}, amount{}, datetime{}, requestcode{},  reserved1{}, reserverd2{}, sign{}, tempSign{}",memberid,orderid, amount, datetime, returncode, reserved1, reserved2, sign, SignTemp);
-        logger.info("-------------------------------");
 
         return "success";
     }
@@ -293,6 +215,9 @@ public class TestAction {
             e.printStackTrace();
             return null;
         }
+
+//        return MD5Util.getMD5(str).toUpperCase();
+//        return WXMD5.MD5Encode(str).toUpperCase();
     }
 
 }
