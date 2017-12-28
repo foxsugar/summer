@@ -66,7 +66,6 @@ public class TestAction {
         request.setAttribute("Moneys", money + "");
         request.setAttribute("orderId", orderId);
         request.getRequestDispatcher("/WEB-INF/jsp/pay.jsp").forward(request, resp);
-
     }
 
     @RequestMapping("/Pay/notify")
@@ -95,8 +94,6 @@ public class TestAction {
         logger.info("local sign：{}", md5sign);
         logger.info("sign：{}", sign);
 
-
-
         if (true){
             if(returncode.equals("00")){
                 Charge charge = chargeService.getChargeByOrderid(orderid);
@@ -105,7 +102,7 @@ public class TestAction {
                 logger.info("支付成功！");
 
                 UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
-                double addMoney = charge.getMoney();
+                double addMoney = charge.getMoney() * 10;
 
                 if (UserBeanRedis != null) {
                     userRedisService.addUserMoney(charge.getUserid(), addMoney);
