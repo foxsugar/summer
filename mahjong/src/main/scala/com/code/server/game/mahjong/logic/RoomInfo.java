@@ -71,7 +71,7 @@ public class RoomInfo extends Room {
      * @Creater: Clark
      * @Description: 创建房间
      */
-    public void init(String roomId, long userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, long createUser, long bankerId,int mustZimo) {
+    public void init(String roomId, long userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, long createUser, long bankerId, int mustZimo) {
         this.roomId = roomId;
         this.modeTotal = modeTotal;
         this.mode = mode;
@@ -90,7 +90,7 @@ public class RoomInfo extends Room {
 
     @Override
     protected boolean isCanJoinCheckMoney(long userId) {
-        if(!isCreaterJoin){
+        if (!isCreaterJoin) {
             return true;
         }
         double money = RedisManager.getUserRedisService().getUserMoney(userId);
@@ -107,25 +107,25 @@ public class RoomInfo extends Room {
                 if (each.equals("0") && money < 20) {
                     return false;
                 }
-            }else if ("HL".equals(gameType)) {
+            } else if ("HL".equals(gameType)) {
                 if (each.equals("0") && money < 1) {
                     return false;
                 }
-            }else if ("TC".equals(gameType)) {
+            } else if ("TC".equals(gameType)) {
                 if (each.equals("0") && money < 4) {
                     return false;
                 }
                 if (each.equals("1") && money < 1) {
                     return false;
                 }
-            }else if("DH".equals(gameType)){
+            } else if ("DH".equals(gameType)) {
                 if (each.equals("0") && money < 1) {
                     return false;
                 }
                 if (each.equals("1") && money < 1) {
                     return false;
                 }
-            }else {
+            } else {
                 if (money < 3) {
                     return false;
                 }
@@ -138,11 +138,11 @@ public class RoomInfo extends Room {
                 if (each.equals("1") && money < 20 && this.gameNumber == 16) {
                     return false;
                 }
-            }else if ("TC".equals(gameType)) {
+            } else if ("TC".equals(gameType)) {
                 if (each.equals("1") && money < 1) {
                     return false;
                 }
-            }else if ("NZZ".equals(gameType) || "HM".equals(gameType)) {
+            } else if ("NZZ".equals(gameType) || "HM".equals(gameType)) {
                 if (each.equals("1") && money < 5 && this.gameNumber == 4) {
                     return false;
                 }
@@ -185,7 +185,7 @@ public class RoomInfo extends Room {
         this.bankerMap.put(curGameNumber, bankerId);
 
         //选择状态置成没选过
-        this.users.forEach(uid->{
+        this.users.forEach(uid -> {
             if (uid != bankerId) {
                 laZhuangStatus.put(uid, false);
             }
@@ -249,7 +249,7 @@ public class RoomInfo extends Room {
             spendMoney();
         }
         //游戏开始 代建房 去除定时解散
-        if(!isOpen && !this.isCreaterJoin()){
+        if (!isOpen && !this.isCreaterJoin()) {
             GameTimer.removeNode(prepareRoomTimerNode);
         }
 
@@ -279,7 +279,7 @@ public class RoomInfo extends Room {
         return result;
     }
 
-    public List<UserOfResult> getUserOfResult(){
+    public List<UserOfResult> getUserOfResult() {
         // 结果类
         ArrayList<UserOfResult> userOfResultList = new ArrayList<>();
 
@@ -313,6 +313,7 @@ public class RoomInfo extends Room {
         }
         return userOfResultList;
     }
+
     public void dissolutionRoom() {
 
         //算杠
@@ -332,7 +333,7 @@ public class RoomInfo extends Room {
             drawBack();
         }
 
-        if (isChange && gameInfo!=null) {
+        if (isChange && gameInfo != null) {
             gameInfo.genRecord();
         }
 
@@ -351,7 +352,7 @@ public class RoomInfo extends Room {
     }
 
 
-    public static int getCreateMoney(String gameType , int gameNumber){
+    public static int getCreateMoney(String gameType, int gameNumber) {
         int result = 0;
         if ("JC".equals(gameType)) {
             if (1 == gameNumber) {
@@ -367,15 +368,13 @@ public class RoomInfo extends Room {
             } else if (12 == gameNumber) {
                 result = 45;
             }
-        }
-        else if ("SS".equals(gameType)) {
+        } else if ("SS".equals(gameType)) {
             if (8 == gameNumber) {
                 result = 3;
             } else if (12 == gameNumber) {
                 result = 4;
             }
-        }
-        else if ("SY".equals(gameType)) {
+        } else if ("SY".equals(gameType)) {
             if (4 == gameNumber) {
                 result = 1;
             } else if (8 == gameNumber) {
@@ -387,14 +386,13 @@ public class RoomInfo extends Room {
             } else if (16 == gameNumber) {
                 result = 60;
             }
-        }else if ("YSF".equals(gameType)) {
+        } else if ("YSF".equals(gameType)) {
             if (8 == gameNumber) {
                 result = 2;
             } else if (16 == gameNumber) {
                 result = 4;
             }
-        }
-        else if ("DFH".equals(gameType)) {//大富豪
+        } else if ("DFH".equals(gameType)) {//大富豪
             if (1 == gameNumber) {
                 result = 3;
             } else if (2 == gameNumber) {
@@ -402,25 +400,31 @@ public class RoomInfo extends Room {
             } else if (4 == gameNumber) {
                 result = 12;
             }
-        }else if("HL".equals(gameType)){
+        } else if ("HL".equals(gameType)) {
             result = 1;
-        }else if("TC".equals(gameType)){
+        } else if ("TC".equals(gameType)) {
             result = 4;
-        }else if("DH".equals(gameType)){
+        } else if ("DH".equals(gameType)) {
             result = 1;
+        } else if ("BENGBU".equals(gameType)) {
+            if (8 == gameNumber) {
+                result = 3;
+            } else if (16 == gameNumber) {
+                result = 6;
+            }
         } else {
             result = 3;
         }
         return result;
     }
+
     protected int getCreateMoney() {
         return getCreateMoney(gameType, gameNumber);
     }
 
     public boolean isAddGold() {
-        return "LQ".equals(gameType)||"NZZ".equals(gameType) ||"HM".equals(gameType);
+        return "LQ".equals(gameType) || "NZZ".equals(gameType) || "HM".equals(gameType);
     }
-
 
 
     public void drawBack() {
@@ -437,7 +441,7 @@ public class RoomInfo extends Room {
     }
 
     public void drawBackEach() {
-        if("LQ".equals(this.getGameType())){
+        if ("LQ".equals(this.getGameType())) {
             for (long userId : users) {
                 int money = 10;
                 if (gameNumber == 16) {
@@ -448,12 +452,12 @@ public class RoomInfo extends Room {
                     RedisManager.addGold(this.createUser, -money / 10);
                 }
             }
-        }else if("NZZ".equals(this.getGameType()) || "HM".equals(this.getGameType())){
+        } else if ("NZZ".equals(this.getGameType()) || "HM".equals(this.getGameType())) {
             for (long userId : users) {
                 int money = 5;
                 if (gameNumber == 8) {
                     money = 10;
-                }else if(gameNumber == 12){
+                } else if (gameNumber == 12) {
                     money = 15;
                 }
                 RedisManager.getUserRedisService().addUserMoney(userId, money);
@@ -461,8 +465,7 @@ public class RoomInfo extends Room {
                     RedisManager.addGold(this.createUser, -money / 10);
                 }
             }
-        }
-        else if("TC".equals(this.getGameType())){
+        } else if ("TC".equals(this.getGameType())) {
             for (long userId : users) {
                 int money = 1;
                 RedisManager.getUserRedisService().addUserMoney(userId, money);
@@ -487,7 +490,7 @@ public class RoomInfo extends Room {
     }
 
     public void spendMoneyEach() {
-        if("LQ".equals(this.getGameType())){
+        if ("LQ".equals(this.getGameType())) {
             for (long userId : users) {
                 int money = 10;
                 if (gameNumber == 16) {
@@ -498,12 +501,12 @@ public class RoomInfo extends Room {
                     RedisManager.addGold(this.createUser, money / 10);
                 }
             }
-        }else if("NZZ".equals(this.getGameType()) || "HM".equals(this.getGameType())){
+        } else if ("NZZ".equals(this.getGameType()) || "HM".equals(this.getGameType())) {
             for (long userId : users) {
                 int money = 5;
                 if (gameNumber == 8) {
                     money = 10;
-                }else if(gameNumber == 12){
+                } else if (gameNumber == 12) {
                     money = 15;
                 }
                 RedisManager.getUserRedisService().addUserMoney(userId, -money);
@@ -511,12 +514,12 @@ public class RoomInfo extends Room {
                     RedisManager.addGold(this.createUser, money / 10);
                 }
             }
-        }else if("TC".equals(this.getGameType())){
+        } else if ("TC".equals(this.getGameType())) {
             for (long userId : users) {
                 int money = 1;
                 RedisManager.getUserRedisService().addUserMoney(userId, -money);
             }
-        }else{
+        } else {
             for (long userId : users) {
                 int money = 1;
                 RedisManager.getUserRedisService().addUserMoney(userId, -money);
@@ -568,7 +571,7 @@ public class RoomInfo extends Room {
         result.put("personNumber", this.personNumber);
         result.put("createUser", this.createUser);
         result.put("userList", RedisManager.getUserRedisService().getUserBeans(this.users));
-        result.put("mustZimo",this.mustZimo);
+        result.put("mustZimo", this.mustZimo);
         result.put("each", this.each);//1是4个分开付，0是user付
         result.put("yipaoduoxiang", this.isYipaoduoxiang);
         result.put("canChi", this.canChi);
