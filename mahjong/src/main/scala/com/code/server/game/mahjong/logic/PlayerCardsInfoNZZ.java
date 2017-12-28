@@ -192,7 +192,7 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
 
     @Override
     public boolean isCanHu_zimo(String card) {
-        if(1==roomInfo.getMustZimo() && roomInfo.isHaveTing()){
+        if(roomInfo.isHaveTing()){
             if (!isTing){
                 return false;
             }

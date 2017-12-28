@@ -11,6 +11,6 @@
     <title>支付结果</title>
 </head>
 <body>
-    <h1>支付成功</h1>
+    <h1>OK</h1>
 </body>
 </html>
