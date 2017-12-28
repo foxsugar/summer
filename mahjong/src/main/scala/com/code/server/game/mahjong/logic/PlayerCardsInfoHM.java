@@ -235,4 +235,24 @@ public class PlayerCardsInfoHM extends PlayerCardsInfoMj {
         int cardType = CardTypeUtil.cardType.get(card);
         return HuUtil.isHu(noPengAndGang, this, cardType, null).size() > 0;
     }
+
+    /**
+     * 是否可胡 自摸
+     *
+     * @param card
+     * @return
+     */
+    @Override
+    public boolean isCanHu_zimo(String card) {
+        if(roomInfo.isHaveTing()){
+            if (!isTing){
+                return false;
+            }
+        }
+        List<String> cs = getCardsNoChiPengGang(cards);
+        System.out.println("检测是否可胡自摸= " + cs);
+        int cardType = CardTypeUtil.cardType.get(card);
+        return HuUtil.isHu(cs, this, cardType, null).size() > 0;
+
+    }
 }
