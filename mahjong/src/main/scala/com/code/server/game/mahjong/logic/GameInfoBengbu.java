@@ -9,8 +9,17 @@ import com.code.server.game.mahjong.response.OperateReqResp;
 public class GameInfoBengbu extends GameInfo {
 
 
+    public boolean isQiangGanghu = false;
 
-
+    /**
+     * 是否荒庄
+     *
+     * @param playerCardsInfo
+     * @return
+     */
+    protected boolean isHuangzhuang(PlayerCardsInfoMj playerCardsInfo) {
+        return this.remainCards.size() <= 12;
+    }
 
 
     /**
@@ -70,6 +79,7 @@ public class GameInfoBengbu extends GameInfo {
             //截杠胡 算自摸
             if (jieGangHuCard != null) {
                 //todo 是否要摸一张
+                isQiangGanghu = true;
                 playerCardsInfo.mopai(jieGangHuCard);
                 playerCardsInfo.hu_zm(room, this, jieGangHuCard);
                 //回放
