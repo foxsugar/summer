@@ -467,6 +467,9 @@ public class GameUserService {
         if (referrerId <= 0 || userBean.getReferee() != 0) {
             return ErrorCode.CAN_NOT_BING_REFERRER;
         }
+        if (referrerId == msgKey.getUserId()) {
+            return ErrorCode.CAN_NOT_BING_REFERRER;
+        }
 //        boolean isExist = RpcManager.getInstance().referrerIsExist(referrerId);
 //        if (!isExist) {
 //            return ErrorCode.REFERRER_NOT_EXIST;
