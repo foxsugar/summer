@@ -21,6 +21,9 @@ public class PlayerCardsInfoBengbu extends PlayerCardsInfoMj {
         return false;
     }
 
+    public boolean isHasChi(String card) {
+        return false;
+    }
 
     @Override
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card) {
@@ -33,6 +36,8 @@ public class PlayerCardsInfoBengbu extends PlayerCardsInfoMj {
     @Override
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
 
+        GameInfoBengbu gameInfoBengbu = (GameInfoBengbu)gameInfo;
+        boolean isQiangGanghu = gameInfoBengbu.isQiangGanghu;
         //算杠
         int gangScore = (this.mingGangType.size() + this.anGangType.size() * 2) * this.roomInfo.getMultiple();
         int subGang = 0;
@@ -41,9 +46,12 @@ public class PlayerCardsInfoBengbu extends PlayerCardsInfoMj {
             for (PlayerCardsInfoMj playerCardInfo : this.gameInfo.playerCardsInfos.values()) {
                 if (playerCardInfo.getUserId() != this.userId) {
                     int gangScoreTemp = gangScore * this.roomInfo.getMultiple();
-                    playerCardInfo.addScore(-gangScoreTemp);
-                    playerCardInfo.addGangScore(-gangScoreTemp);
-                    this.roomInfo.addUserSocre(playerCardInfo.getUserId(), -gangScoreTemp);
+                    if(!isQiangGanghu){
+
+                        playerCardInfo.addScore(-gangScoreTemp);
+                        playerCardInfo.addGangScore(-gangScoreTemp);
+                        this.roomInfo.addUserSocre(playerCardInfo.getUserId(), -gangScoreTemp);
+                    }
                     subGang += gangScoreTemp;
                 }
             }
@@ -59,6 +67,14 @@ public class PlayerCardsInfoBengbu extends PlayerCardsInfoMj {
         this.addScore(subGang);
         this.roomInfo.addUserSocre(this.userId, subGang);
 
+        if (isQiangGanghu) {
+            PlayerCardsInfoMj qiangGangUser = this.gameInfo.playerCardsInfos.get(this.gameInfo.beJieGangUser);
+            qiangGangUser.addGangScore(-subGang);
+            qiangGangUser.addScore(-subGang);
+            qiangGangUser.roomInfo.addUserSocre(this.gameInfo.beJieGangUser, -subGang);
+
+        }
+
 
         List<String> cs = getCardsNoChiPengGang(cards);
         List<HuCardType> huList = HuUtil.isHu(cs, this, CardTypeUtil.cardType.get(card), new HuLimit(0));
@@ -69,6 +85,7 @@ public class PlayerCardsInfoBengbu extends PlayerCardsInfoMj {
         int subScore = 0;
         boolean isBanker = this.userId == gameInfo.getFirstTurn();
         if (isBanker) score += 1;
+        if (isZimo) score += 1;
 
         //杠后胡加倍
         boolean isGangKai = isGangKai();
@@ -79,20 +96,22 @@ public class PlayerCardsInfoBengbu extends PlayerCardsInfoMj {
                 if (playerCardsInfoMj.getUserId() != userId) {
                     int scoreTemp = score;
                     //如果是庄家多输一分
-//                    if (playerCardsInfoMj.getUserId() == this.gameInfo.getFirstTurn()) {
-//                        scoreTemp += 1;
-//                    }
+                    if (playerCardsInfoMj.getUserId() == this.gameInfo.getFirstTurn()) {
+                        scoreTemp += 1;
+                    }
                     scoreTemp = scoreTemp * this.roomInfo.getMultiple();
                     if(isGangKai) scoreTemp *= 2;
-                    playerCardsInfoMj.addScore(-scoreTemp);
+                    if(!isQiangGanghu){
+
+                        playerCardsInfoMj.addScore(-scoreTemp);
+                        this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -scoreTemp);
+                    }
                     subScore += scoreTemp;
-                    this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -scoreTemp);
                 }
             }
         } else {
             PlayerCardsInfoMj dianpao = this.gameInfo.playerCardsInfos.get(dianpaoUser);
-//            int tempScore = dianpao.getUserId() == this.gameInfo.getFirstTurn() ? score + 1 : score;
-            int tempScore =  score;
+            int tempScore = dianpao.getUserId() == this.gameInfo.getFirstTurn() ? score + 1 : score;
             if(isGangKai) tempScore *= 2;
             dianpao.addScore(-tempScore);
             this.roomInfo.addUserSocre(dianpao.getUserId(), -tempScore);
@@ -103,6 +122,13 @@ public class PlayerCardsInfoBengbu extends PlayerCardsInfoMj {
 
         this.addScore(subScore);
         this.roomInfo.addUserSocre(this.userId, subScore);
+
+        if (isQiangGanghu) {
+            PlayerCardsInfoMj qiangGangUser = this.gameInfo.playerCardsInfos.get(this.gameInfo.beJieGangUser);
+            qiangGangUser.addScore(-subScore);
+            qiangGangUser.roomInfo.addUserSocre(this.gameInfo.beJieGangUser, -subScore);
+
+        }
 
     }
 
