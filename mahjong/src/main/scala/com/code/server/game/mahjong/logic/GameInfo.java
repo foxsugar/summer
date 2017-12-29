@@ -913,8 +913,12 @@ public class GameInfo extends Game {
 
             room.setBankerId(winnerId);
         } else {
-            long nextId = nextTurnId(this.getFirstTurn());
-            room.setBankerId(nextId);
+            if("LQ".equals(this.room.getGameType())&&("11".equals(this.room.getMode())||"12".equals(this.room.getMode())||"13".equals(this.room.getMode())||"14".equals(this.room.getMode())||"1".equals(this.room.getMode())||"2".equals(this.room.getMode())||"3".equals(this.room.getMode())||"4".equals(this.room.getMode()))){
+                room.setBankerId(winnerId);
+            }else{
+                long nextId = nextTurnId(this.getFirstTurn());
+                room.setBankerId(nextId);
+            }
         }
     }
 
