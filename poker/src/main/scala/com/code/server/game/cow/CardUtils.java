@@ -124,6 +124,46 @@ public class CardUtils {
         return cardsDict.get(clientValue);
     }
 
+    public static String getNameWithGrade(Integer grade_){
+
+        if (grade_ > 18 || grade_ < 1){
+            throw new NullPointerException("grade_ invalid");
+        }
+        String str = "";
+        if (grade_ == 1){
+            str = "同花顺";
+        }else if(grade_ == 2){
+            str = "炸弹牛";
+        }else if(grade_ == 3){
+            str = "五花牛";
+        }else if (grade_ == 4){
+            str = "五小牛";
+        }else if (grade_ == 5){
+            str = "葫芦";
+        }else if (grade_ == 6){
+            str = "同花";
+        }else if (grade_ == 7){
+            str = "顺子";
+        }else if (grade_ == 8){
+            str = "牛牛";
+        }else if (grade_ == 18){
+            str = "无牛";
+        }else {
+            str = "牛" + (18 - grade_);
+        }
+        return "[" + str +"]";
+    }
+
+    public static Integer getTransformPaiXing(List<Integer> list) throws Exception {
+
+        List<Integer> aList = new ArrayList<Integer>();
+
+        for (Integer i = 0; i < list.size(); i++){
+            aList.add(cardsDict.get(list.get(i)));
+        }
+        return getPaiXing(aList);
+    }
+
     public static Integer getPaiXing(List<Integer> list) throws Exception {
 
         if (list.size() != 5){
@@ -340,23 +380,23 @@ public class CardUtils {
         return NIU_NIUI - sum % 10 + 10;
     }
 
-    public static NiuNiuPlayer findWinner(NiuNiuPlayer...player){
+    public static CowPlayer findWinner(CowPlayer...player){
 
-        List<NiuNiuPlayer> list = Arrays.asList(player);
+        List<CowPlayer> list = Arrays.asList(player);
 
         return findWinner(list);
     }
 
-    public static NiuNiuPlayer findWinner(List<NiuNiuPlayer> list){
+    public static CowPlayer findWinner(List<CowPlayer> list){
         //对数组进行排序
-        List<NiuNiuPlayer> aList = new ArrayList<NiuNiuPlayer>();
+        List<CowPlayer> aList = new ArrayList<CowPlayer>();
         aList.addAll(list);
         for (Integer i = 0; i < aList.size() - 1; i++){
 
             for (Integer j = i + 1; j < aList.size(); j++){
 
-                NiuNiuPlayer playerI = aList.get(i);
-                NiuNiuPlayer playerJ = aList.get(j);
+                CowPlayer playerI = aList.get(i);
+                CowPlayer playerJ = aList.get(j);
 
                 if (playerI.compareWithOtherPlayer(playerJ) == 1){
                     Collections.swap(aList, i, j);

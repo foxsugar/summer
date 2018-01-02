@@ -3,7 +3,7 @@ package com.code.server.game.cow;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NiuNiuPlayer {
+public class CowPlayer {
 
     public final static int TONG_HUA_SHUN = 1;
     public final static int ZHA_DAN_NIU = 2;
@@ -33,12 +33,12 @@ public class NiuNiuPlayer {
 
     private List<Integer> pokers = new ArrayList<Integer>();
 
-    public NiuNiuPlayer(Integer id, List<Integer> pokers) {
+    public CowPlayer(Integer id, List<Integer> pokers) {
         this.id = id;
         this.pokers = pokers;
     }
 
-    public NiuNiuPlayer() {
+    public CowPlayer() {
     }
 
     public List<Integer> getPokers() {
@@ -73,19 +73,32 @@ public class NiuNiuPlayer {
         this.times = times;
     }
 
-    public Integer compareWithOtherPlayer(NiuNiuPlayer player){
-             NiuNiuPlayer p =  compare(this, player);
+    public Integer compareWithOtherPlayer(CowPlayer player){
+             CowPlayer p =  compare(this, player);
              if (p == this){
                  return 0;
              }
              return 1;
     }
 
-    public NiuNiuPlayer(Integer id) {
+    public CowPlayer(Integer id) {
         this.id = id;
     }
 
-    public NiuNiuPlayer(Integer id, Integer card1, Integer card2, Integer card3, Integer card4, Integer card5, boolean localRule) throws Exception {
+    public CowPlayer(Integer id, Integer card1, Integer card2, Integer card3, Integer card4, Integer card5) throws Exception {
+
+        this.pokers.add(CardUtils.transformCardValue(card1));
+        this.pokers.add(CardUtils.transformCardValue(card2));
+        this.pokers.add(CardUtils.transformCardValue(card3));
+        this.pokers.add(CardUtils.transformCardValue(card4));
+        this.pokers.add(CardUtils.transformCardValue(card5));
+
+        Integer grade = CardUtils.getPaiXing(this.pokers);
+        this.grade = grade;
+        this.id = id;
+    }
+
+    public CowPlayer(Integer id, Integer card1, Integer card2, Integer card3, Integer card4, Integer card5, boolean localRule) throws Exception {
 
         if (localRule == false){
 
@@ -109,9 +122,7 @@ public class NiuNiuPlayer {
         this.id = id;
     }
 
-
-
-    public NiuNiuPlayer compare(NiuNiuPlayer player1, NiuNiuPlayer player2){
+    public CowPlayer compare(CowPlayer player1, CowPlayer player2){
 
         if (player1.grade < player2.grade) {
             return player1;
@@ -259,4 +270,55 @@ public class NiuNiuPlayer {
         }
     }
 
+    @Override
+    public String toString() {
+
+        String str = "";
+        for (Integer i = 0; i < pokers.size(); i++){
+            Integer yushu = pokers.get(i) % 4;
+            String huaSe = "";
+            if (yushu == 0){
+                huaSe = "{"  + "♠";
+            }else if(yushu == 1){
+                huaSe = "{"  + "♥";
+            }else if (yushu == 2){
+                huaSe = "{"  + "♣";
+            }else {
+                huaSe = "{"  + "♦";
+            }
+
+            String paihao = "";
+            Integer deshu = pokers.get(i) / 4;
+            if (deshu == 0){
+                paihao = "A";
+            }else if(deshu == 1){
+                paihao = "K";
+            }else if (deshu == 2){
+                paihao = "Q";
+            }else if (deshu == 3){
+                paihao = "J";
+            }else if(deshu == 4){
+                paihao = "10";
+            }else {
+                paihao = " " + (14 - deshu) ;
+            }
+            paihao += "}";
+            str  +=  huaSe + paihao;
+        }
+
+        str += " " + CardUtils.getNameWithGrade(this.grade);
+        return str;
+
+    }
+
+
+//    @Override
+//    public String toString() {
+//        return "CowPlayer{" +
+//                "id=" + id +
+//                ", grade=" + grade +
+//                ", times=" + times +
+//                ", pokers=" + pokers +
+//                '}';
+//    }
 }
