@@ -124,10 +124,19 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
                 	this.score = this.score + room.getPersonNumber() * room.getMultiple();
                 	room.setUserSocre(this.userId, room.getPersonNumber() * room.getMultiple());
         		}else{
-        			gameInfo.getPlayerCardsInfos().get(diangangUser).setScore(gameInfo.getPlayerCardsInfos().get(diangangUser).getScore() -  (room.getPersonNumber()-1) * room.getMultiple());
-            		this.score = this.score +  (room.getPersonNumber()-1) * room.getMultiple();
-            		room.setUserSocre(diangangUser, -  (room.getPersonNumber()-1) * room.getMultiple());
-            		room.setUserSocre(this.userId, (room.getPersonNumber()-1) * room.getMultiple());
+        			if(gameInfo.getPlayerCardsInfos().get(diangangUser).isTing){
+						for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
+							gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple());
+							room.setUserSocre(i, - room.getMultiple());
+						}
+						this.score = this.score + room.getPersonNumber() * room.getMultiple();
+						room.setUserSocre(this.userId, room.getPersonNumber() * room.getMultiple());
+					}else{
+						gameInfo.getPlayerCardsInfos().get(diangangUser).setScore(gameInfo.getPlayerCardsInfos().get(diangangUser).getScore() -  (room.getPersonNumber()-1) * room.getMultiple());
+						this.score = this.score +  (room.getPersonNumber()-1) * room.getMultiple();
+						room.setUserSocre(diangangUser, -  (room.getPersonNumber()-1) * room.getMultiple());
+						room.setUserSocre(this.userId, (room.getPersonNumber()-1) * room.getMultiple());
+					}
         		}
         	}
         	room.pushScoreChange();
