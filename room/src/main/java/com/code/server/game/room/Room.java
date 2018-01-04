@@ -37,13 +37,13 @@ public class Room implements IfaceRoom {
     protected String gameType;//项目名称
     protected int createNeedMoney;
     protected static Random random = new Random();
-    protected Map<Long, Integer> userStatus = new HashMap<>();//用户状态
-    protected List<Long> users = new ArrayList<>();//用户列表
-    protected Map<Long, Double> userScores = new HashMap<>();
+    public Map<Long, Integer> userStatus = new HashMap<>();//用户状态
+    public List<Long> users = new ArrayList<>();//用户列表
+    public Map<Long, Double> userScores = new HashMap<>();
     protected int multiple;//倍数
     protected int maxZhaCount;//最大炸的个数
     protected int gameNumber;
-    protected int curGameNumber = 1;
+    public int curGameNumber = 1;
     protected long createUser;
     protected long bankerId;//庄家
     protected boolean isInGame;
@@ -52,7 +52,7 @@ public class Room implements IfaceRoom {
     public transient TimerNode prepareRoomTimerNode;//代开房定时器
     protected Game game;
     protected int personNumber;
-    protected boolean isOpen;
+    public boolean isOpen;
     private boolean isLastDraw = false;//是否平局
     private int drawForLeaveChip = 0;//平局留下筹码
     protected int hasNine;

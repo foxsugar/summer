@@ -805,6 +805,7 @@ public class RoomInfo extends Room {
     public PrepareRoom getPrepareRoomVo() {
         PrepareRoomMj prepareRoom = new PrepareRoomMj();
         prepareRoom.createTime = System.currentTimeMillis();
+        prepareRoom.personNumber = this.personNumber;
         prepareRoom.gameType = this.getGameType();
         prepareRoom.roomType = this.getRoomType();
         prepareRoom.roomId = this.roomId;

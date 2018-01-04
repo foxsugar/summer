@@ -1,6 +1,7 @@
 package com.code.server.game.poker.service
 
 import com.code.server.constant.response.ErrorCode
+import com.code.server.game.cow.RoomCow
 import com.code.server.game.poker.doudizhu.{RoomDouDiZhu, RoomDouDiZhuGold}
 import com.code.server.game.poker.guess.RoomGuessCar
 import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower
@@ -45,6 +46,22 @@ object PokerRoomService {
       case "startGameByClient" =>
         val roomId = params.get("roomId").asText()
         return RoomHitGoldFlower.startGameByClient(userId,roomId);
+
+      //牛牛
+      case "createCowRoom" =>
+        val roomType = params.get("roomType").asText()
+        val gameNumber = params.get("gameNumber").asInt()
+        val personNumber = params.get("personNumber").asInt()
+        val multiple = params.get("multiple").asInt()
+        val gameType = params.path("gameType").asText("0")
+        val isAA = params.path("isAA").asBoolean(false)
+        val isJoin = params.path("isJoin").asBoolean(true)
+
+        return RoomCow.createCowRoom(userId, gameNumber,personNumber,multiple,gameType, roomType,isAA,isJoin);
+
+      case "startCowGameByClient" =>
+        val roomId = params.get("roomId").asText()
+        return RoomCow.startGameByClient(userId,roomId);
 
 
 

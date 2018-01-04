@@ -25,7 +25,7 @@ public class CowPlayer {
     public final static int WU_NIU = 18;
 
     //用户ID
-    private Integer id;
+    private Long id;
     //级别
     private Integer grade;
     //倍数
@@ -33,7 +33,7 @@ public class CowPlayer {
 
     private List<Integer> pokers = new ArrayList<Integer>();
 
-    public CowPlayer(Integer id, List<Integer> pokers) {
+    public CowPlayer(Long id, List<Integer> pokers) {
         this.id = id;
         this.pokers = pokers;
     }
@@ -49,11 +49,11 @@ public class CowPlayer {
         this.pokers = pokers;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -81,11 +81,11 @@ public class CowPlayer {
              return 1;
     }
 
-    public CowPlayer(Integer id) {
+    public CowPlayer(Long id) {
         this.id = id;
     }
 
-    public CowPlayer(Integer id, Integer card1, Integer card2, Integer card3, Integer card4, Integer card5) throws Exception {
+    public CowPlayer(Long id, Integer card1, Integer card2, Integer card3, Integer card4, Integer card5) throws Exception {
 
         this.pokers.add(CardUtils.transformCardValue(card1));
         this.pokers.add(CardUtils.transformCardValue(card2));
@@ -98,7 +98,7 @@ public class CowPlayer {
         this.id = id;
     }
 
-    public CowPlayer(Integer id, Integer card1, Integer card2, Integer card3, Integer card4, Integer card5, boolean localRule) throws Exception {
+    public CowPlayer(Long id, Integer card1, Integer card2, Integer card3, Integer card4, Integer card5, boolean localRule) throws Exception {
 
         if (localRule == false){
 

@@ -2,6 +2,7 @@ package com.code.server.game.poker.service
 
 import com.code.server.constant.game.CardStruct
 import com.code.server.constant.response.ErrorCode
+import com.code.server.game.cow.GameCow
 import com.code.server.game.poker.doudizhu.{GameDouDiZhu, GameDouDiZhuGold}
 import com.code.server.game.poker.hitgoldflower.GameHitGoldFlower
 import com.code.server.game.poker.guess.GameGuessCar
@@ -24,6 +25,7 @@ object GameService {
       case x:GamePaijiu =>dispatchGamePJService(userId,method,game.asInstanceOf[GamePaijiu],params)
       case x:GameHitGoldFlower =>dispatchGameHGFService(userId,method,game.asInstanceOf[GameHitGoldFlower],params)
       case x:GameGuessCar =>dispatchGameGuessService(userId,method,game.asInstanceOf[GameGuessCar],params)
+      case x:GameCow =>dispatchGameCowService(userId,method,game.asInstanceOf[GameCow],params)
     }
 
   }
@@ -120,6 +122,16 @@ object GameService {
       val userId = params.path("userId").asLong(0)
       val cardType = params.path("type").asText()
       game.changeCard(userId,cardType);
+    case _ =>
+      ErrorCode.REQUEST_PARAM_ERROR
+  }
+
+  private def dispatchGameCowService(userId:Long,method: String, game: GameCow, params: JsonNode):Int = method match {
+    case "raise" =>
+      val addChip = params.path("addChip").asLong(0)
+      game.raise(userId,addChip);
+    case "compare"=>
+      game.compare(userId);
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }
