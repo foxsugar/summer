@@ -47,6 +47,9 @@ public class GameInfoHM extends GameInfo {
         room.clearReadyStatus();
     }
 
+    protected boolean isRoomOver() {
+        return room.getCurCircle() > room.maxCircle;
+    }
 
     /**
      * 荒庄的处理
