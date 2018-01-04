@@ -33,6 +33,19 @@ public class GameInfoHM extends GameInfo {
         fapai();
     }
 
+    protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
+        isAlreadyHu = true;
+        sendResult(true, playerCardsInfo.userId, null);
+        //圈
+        if (this.getFirstTurn() != playerCardsInfo.getUserId()) {
+            //换庄
+            room.addOneToCircleNumber();
+            long nextId = nextTurnId(this.getFirstTurn());
+            room.setBankerId(nextId);
+        }
+        noticeDissolutionResult();
+        room.clearReadyStatus();
+    }
 
 
     /**
@@ -54,7 +67,10 @@ public class GameInfoHM extends GameInfo {
             }
         }
         if(b){
-            room.setBankerId(nextTurnId(room.getBankerId()));
+            //换庄
+            room.addOneToCircleNumber();
+            long nextId = nextTurnId(this.getFirstTurn());
+            room.setBankerId(nextId);
         }
 
         computeAllGang();
