@@ -232,7 +232,7 @@ public class CardUtils {
     protected static boolean isWuHuaNiu(List<Integer> list){
 
         for (Integer i = 0; i < list.size(); i++){
-            if (list.get(i) < 4 || list.get(i) > 14){
+            if (list.get(i) < 4 || list.get(i) > 15){
                 return false;
             }
         }
