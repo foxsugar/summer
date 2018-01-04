@@ -47,7 +47,7 @@ public class PlayerCardsInfoHM extends PlayerCardsInfoMj {
         this.fan = maxFan;
 
         if(isZimo){
-            computeALLGang();
+            computeALLGang(dianpaoUser);
             if(this.userId==gameInfo.getFirstTurn()){//庄赢
                 for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
                     gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 4 * maxFan * room.getMultiple());
@@ -72,7 +72,7 @@ public class PlayerCardsInfoHM extends PlayerCardsInfoMj {
             }
         }else {
             if (gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing) {
-                computeALLGang();
+                computeALLGang(dianpaoUser);
                 if(this.userId==gameInfo.getFirstTurn()){//庄赢
                     for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
                         gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * maxFan * room.getMultiple());
@@ -126,7 +126,7 @@ public class PlayerCardsInfoHM extends PlayerCardsInfoMj {
     }
 
     //不包杠算分
-    public void computeALLGang(){
+    public void computeALLGang(long dianpaoUser){
 
         Map<Long,Integer> scores = new HashMap<>();//分数计算key:use,value:score
         for (long i : gameInfo.users) {
@@ -134,17 +134,31 @@ public class PlayerCardsInfoHM extends PlayerCardsInfoMj {
         }
 
         for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
-            //暗杠计算
-            for (long i : scores.keySet()) {
-                scores.put(i, scores.get(i) - playerCardsInfo.getAnGangType().size()*2);
-            }
-            scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId())+playerCardsInfo.getAnGangType().size()*2*4);
-            //明杠计算
-            for (Integer ii : playerCardsInfo.getMingGangType().keySet()) {
+            if(this.userId == playerCardsInfo.userId){
+                //暗杠计算
                 for (long i : scores.keySet()) {
-                    scores.put(i, scores.get(i) - 1);
+                    scores.put(i, scores.get(i) - playerCardsInfo.getAnGangType().size()*2);
                 }
-                scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId()) + 4);
+                scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId())+playerCardsInfo.getAnGangType().size()*2*4);
+                //明杠计算
+                for (Integer ii : playerCardsInfo.getMingGangType().keySet()) {
+                    if(0==dianpaoUser){
+                        for (long i : scores.keySet()) {
+                            scores.put(i, scores.get(i) - 1);
+                        }
+                        scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId()) + 4);
+                    }else{
+                        if(gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing){
+                            for (long i : scores.keySet()) {
+                                scores.put(i, scores.get(i) - 1);
+                            }
+                            scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId()) + 4);
+                        }else{
+                            scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId()) + 4);
+                            scores.put(dianpaoUser, scores.get(dianpaoUser) - 4);
+                        }
+                    }
+                }
             }
         }
         for (long i : scores.keySet()) {

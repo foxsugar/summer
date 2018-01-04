@@ -16,7 +16,7 @@ object HuWithHun {
   var count_hun = 0
 
 
-  def getHuCardType(playerCardsInfo: PlayerCardsInfoMj,a: Array[Int], chiPengGangNum: Int, hun: util.List[Integer], lastCard: Int): util.List[HuCardType] = {
+  def getHuCardType(playerCardsInfo: PlayerCardsInfoMj, a: Array[Int], chiPengGangNum: Int, hun: util.List[Integer], lastCard: Int): util.List[HuCardType] = {
 
 
     val (noHunCards, hunNum) = getNoHunCardsAndHunNum(a, hun)
@@ -139,7 +139,7 @@ object HuWithHun {
   }
 
 
-  def getHuType(playerCardsInfoMj: PlayerCardsInfoMj,cards: Array[Int], huCardType: HuCardType, hun: util.List[Integer], lastCard: Int, hunNum: Int): Int = {
+  def getHuType(playerCardsInfoMj: PlayerCardsInfoMj, cards: Array[Int], huCardType: HuCardType, hun: util.List[Integer], lastCard: Int, hunNum: Int): Int = {
     //    if(huCardType.hun3.size() ==1) {
     //      print("----")
     //    }
@@ -150,8 +150,8 @@ object HuWithHun {
     huList.add(isSuBenhunLong(cards, huCardType, hun, lastCard, hunNum))
     huList.add(isHunDiao(huCardType, hun, lastCard))
     huList.add(isLong(huCardType, hun, lastCard))
-    var l = huList.stream().filter(i=>playerCardsInfoMj.isHasSpecialHu(i)).collect(Collectors.toList())
-    var t = getMaxHuType(l)
+    var l = huList.stream().filter(i => playerCardsInfoMj.isHasSpecialHu(i)).collect(Collectors.toList())
+    var t = getMaxHuType(l,playerCardsInfoMj)
     huCardType.specialHuList.add(t)
     println("最大牌型: " + t)
     t
@@ -246,14 +246,14 @@ object HuWithHun {
     //    if(huCardType.hun3.size() > 0) return 0
     //    if(huCardType.hun2.size() > 0) return 0
     if (huCardType.hunJiang) return 0
-    if (huCardType.shun.size() + huCardType.hun2.size + huCardType.hun3.size()< 3) return 0
+    if (huCardType.shun.size() + huCardType.hun2.size + huCardType.hun3.size() < 3) return 0
     //是龙
     val longType = isLong(huCardType, hun, lastCard)
 
-//    if (longType == HuType.hu_本混龙 || longType == HuType.hu_本混捉五龙 || longType == HuType.hu_混儿吊本混龙 || longType == HuType.hu_混儿吊捉五本混龙) return HuType.hu_素本混龙
+    //    if (longType == HuType.hu_本混龙 || longType == HuType.hu_本混捉五龙 || longType == HuType.hu_混儿吊本混龙 || longType == HuType.hu_混儿吊捉五本混龙) return HuType.hu_素本混龙
 
-    if(longType == HuType.hu_本混龙) return HuType.hu_素本混龙
-    if(longType == HuType.hu_本混捉五龙) return HuType.hu_素本混捉五龙
+    if (longType == HuType.hu_本混龙) return HuType.hu_素本混龙
+    if (longType == HuType.hu_本混捉五龙) return HuType.hu_素本混捉五龙
 
     0
   }
@@ -296,6 +296,7 @@ object HuWithHun {
     * @return
     */
   def getLongType(huCardType: HuCardType, targetLong: util.List[Integer], hun: util.List[Integer], lastCard: Int): Int = {
+    var huCardTypeHun = huCardType.copy()
     var needShunList = new util.ArrayList(targetLong)
     //顺有的牌
     var removeList = new util.ArrayList[Integer]()
@@ -315,7 +316,7 @@ object HuWithHun {
 
     //三个顺已经凑成了龙
     if (needShunList.size() == 0) {
-      longTypeSet.addAll(analyseLongType(huCardType, lastCardIsHun, lastCard, isWan))
+      longTypeSet.addAll(analyseLongType(huCardType, huCardTypeHun, lastCardIsHun, lastCard, isWan))
     } else {
       //三个顺 没有凑成龙
 
@@ -328,7 +329,7 @@ object HuWithHun {
           //龙需要的牌
           if (nearNode == needCard && !needRemoveList.contains(needCard) && !hun2RemoveList.contains(hunIndex)) {
             needRemoveList.add(needCard)
-            hun2RemoveList.add(hunIndex)
+            hun2RemoveList.add(huCardType.hun2.get(hunIndex))
           }
         }
       }
@@ -339,22 +340,22 @@ object HuWithHun {
       //      if(hun2RemoveList.size() == 1) {
       //        println("--")
       //      }
-      //      for (index <- hun2RemoveList.asScala) {
-      //
-      //        huCardType.hun2.remove(index.asInstanceOf[Integer])
-      //      }
+      for (index <- hun2RemoveList.asScala) {
+
+        huCardTypeHun.hun2.remove(index.asInstanceOf[Integer])
+      }
 
       //组成龙了
       if (needShunList.size() == 0) {
-        longTypeSet.addAll(analyseLongType(huCardType, lastCardIsHun, lastCard, isWan))
+        longTypeSet.addAll(analyseLongType(huCardType, huCardTypeHun, lastCardIsHun, lastCard, isWan))
       } else {
         //三个混 组成龙的部分
         if (needShunList.size() <= huCardType.hun3.size()) {
           //去掉三个混
-          //          for (i <- 0 until needShunList.size()) {
-          //            huCardType.hun3.remove(0)
-          //          }
-          longTypeSet.addAll(analyseLongType(huCardType, lastCardIsHun, lastCard, isWan))
+          for (i <- 0 until needShunList.size()) {
+            huCardTypeHun.hun3.remove(0)
+          }
+          longTypeSet.addAll(analyseLongType(huCardType, huCardTypeHun, lastCardIsHun, lastCard, isWan))
         }
       }
     }
@@ -365,6 +366,32 @@ object HuWithHun {
     if (isBenhun && result != 0) result += 1
     result
 
+  }
+
+
+  /**
+    * 获得最大的胡类型
+    *
+    * @param list
+    * @return
+    */
+  private def getMaxHuType(list: util.List[Int],playerCardsInfoMj: PlayerCardsInfoMj): Int = {
+    //    println("list size = " + list.size)
+    var result = 0
+    var score = 0
+    for (i <- list.asScala) {
+
+      var isHas = playerCardsInfoMj.getSpecialHuScore.get(i)
+      var tempScore:Int = if(isHas!=null)  isHas else 0
+
+
+      if (tempScore >= score) {
+        score = tempScore
+        result = i
+      }
+    }
+    //    println("result = "+result)
+    result
   }
 
   /**
@@ -394,12 +421,12 @@ object HuWithHun {
     * @param isWan
     * @return
     */
-  def analyseLongType(huCardType: HuCardType, lastCardIsHun: Boolean, lastCard: Int, isWan: Boolean): util.HashSet[Int] = {
+  def analyseLongType(huCardType: HuCardType, huCardTypeHun: HuCardType, lastCardIsHun: Boolean, lastCard: Int, isWan: Boolean): util.HashSet[Int] = {
     var longTypeSet = new util.HashSet[Int]()
     //最后抓的是混
     if (lastCardIsHun) {
       //三个混 或者 有四五六万的顺子
-      if (huCardType.hun3.size() > 0) longTypeSet.add(HuType.hu_混儿吊捉五龙)
+      if (huCardTypeHun.hun3.size() > 0) longTypeSet.add(HuType.hu_混儿吊捉五龙)
 
       //一个混
       for (shunHaveHun <- huCardType.shunHaveHuns.asScala) {
@@ -411,21 +438,21 @@ object HuWithHun {
       }
 
       //两个混
-      for (hun2Card <- huCardType.hun2.asScala) {
+      for (hun2Card <- huCardTypeHun.hun2.asScala) {
         if (hun2Card == 3 || hun2Card == 5) longTypeSet.add(HuType.hu_捉五龙)
       }
 
       //      if (huCardType.hun3.size() > 0 || huCardType.shun.contains(3)) longTypeSet.add(HuType.hu_混儿吊捉五龙)
       //两个混的将
-      if (huCardType.hunJiang) longTypeSet.add(HuType.hu_混儿吊龙)
+      if (huCardTypeHun.hunJiang) longTypeSet.add(HuType.hu_混儿吊龙)
     } else {
       //如果最后抓的不是混  并且在hun2里
-      if (huCardType.hun2.size() > 0 && huCardType.hun2.contains(lastCard)) {
+      if (huCardTypeHun.hun2.size() > 0 && huCardTypeHun.hun2.contains(lastCard)) {
         //抓的五万 是捉5
         if (lastCard == 4) longTypeSet.add(HuType.hu_混儿吊捉五龙) else longTypeSet.add(HuType.hu_混儿吊龙)
       }
       //抓来的牌是将
-      if (huCardType.jiangOneHun == lastCard) longTypeSet.add(HuType.hu_混儿吊龙)
+      if (huCardTypeHun.jiangOneHun == lastCard) longTypeSet.add(HuType.hu_混儿吊龙)
 
       //有四五六万不在龙里
       if (lastCard == 4 && huCardType.shun.contains(3)) longTypeSet.add(HuType.hu_捉五龙)
@@ -972,7 +999,7 @@ object HuWithHun {
     var lastCard = 4
 
     //    println(getHuCardType(a,0,hun,lastCard))
-//    getHuCardType(a, 0, hun, lastCard).forEach(hucardType => println(hucardType))
+    //    getHuCardType(a, 0, hun, lastCard).forEach(hucardType => println(hucardType))
     //    var list: util.List[Int] = new util.ArrayList[Int]()
     //    list.add(3)
     //    list.add(1)
