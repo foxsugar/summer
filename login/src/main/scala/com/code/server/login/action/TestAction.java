@@ -97,6 +97,10 @@ public class TestAction {
         if (true){
             if(returncode.equals("00")){
                 Charge charge = chargeService.getChargeByOrderid(orderid);
+                if (charge.getStatus() == 1){
+                    return "success";
+                }
+
                 charge.setStatus(1);
                 chargeService.save(charge);
                 logger.info("支付成功！");
@@ -159,6 +163,9 @@ public class TestAction {
         if (true){
             if(returncode.equals("00")){
                 Charge charge = chargeService.getChargeByOrderid(orderid);
+                if (charge.getStatus() == 1){
+                    return "success";
+                }
                 charge.setStatus(1);
                 chargeService.save(charge);
                 logger.info("支付成功！");
