@@ -1,4 +1,4 @@
-package com.code.server.game.cow;
+package com.code.server.game.poker.cow;
 
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.IGameConstant;

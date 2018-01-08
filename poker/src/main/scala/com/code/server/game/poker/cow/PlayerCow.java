@@ -1,6 +1,7 @@
-package com.code.server.game.cow;
+package com.code.server.game.poker.cow;
 
 import com.code.server.constant.response.IfacePlayerInfoVo;
+import com.code.server.game.room.IfacePlayerInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,8 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class PlayerCowVo implements IfacePlayerInfoVo {
+public class PlayerCow  implements IfacePlayerInfo {
+
     public long userId;
     public List<Integer> handcards = new ArrayList<>();//手上的牌
     public double score;
@@ -28,8 +30,23 @@ public class PlayerCowVo implements IfacePlayerInfoVo {
     protected int raise;//加注
     protected int kill;//比牌
 
-    public PlayerCowVo(){
+    @Override
+    public IfacePlayerInfoVo toVo() {
+        PlayerCowVo vo = new PlayerCowVo();
+        vo.userId = this.userId;
+        vo.handcards = this.handcards;
+        vo.score = this.score;
+        vo.finalScore = this.finalScore;
+        vo.raise = this.getRaise();
+        vo.kill = this.getKill();
+        return vo;
+    }
 
+    @Override
+    public IfacePlayerInfoVo toVo(long watchUser) {
+        PlayerCowVo vo = new PlayerCowVo();
+
+        return vo;
     }
 
     public long getUserId() {
@@ -56,22 +73,6 @@ public class PlayerCowVo implements IfacePlayerInfoVo {
         this.score = score;
     }
 
-    public double getFinalScore() {
-        return finalScore;
-    }
-
-    public void setFinalScore(double finalScore) {
-        this.finalScore = finalScore;
-    }
-
-    public CowPlayer getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(CowPlayer player) {
-        this.player = player;
-    }
-
     public int getRaise() {
         return raise;
     }
@@ -86,5 +87,21 @@ public class PlayerCowVo implements IfacePlayerInfoVo {
 
     public void setKill(int kill) {
         this.kill = kill;
+    }
+
+    public CowPlayer getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(CowPlayer player) {
+        this.player = player;
+    }
+
+    public double getFinalScore() {
+        return finalScore;
+    }
+
+    public void setFinalScore(double finalScore) {
+        this.finalScore = finalScore;
     }
 }

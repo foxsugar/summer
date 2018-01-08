@@ -1,4 +1,4 @@
-package com.code.server.game.cow;
+package com.code.server.game.poker.cow;
 
 import java.util.*;
 
