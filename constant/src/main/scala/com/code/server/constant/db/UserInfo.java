@@ -9,6 +9,7 @@ public class UserInfo {
     private int playGameTime = 0;
     private int shareWXCount = 0;
     private long lastShareTime = 0;
+    private boolean isInputAccessCode = false;
 
     public int getTotalPlayGameNumber() {
         return totalPlayGameNumber;
@@ -43,6 +44,15 @@ public class UserInfo {
 
     public UserInfo setLastShareTime(long lastShareTime) {
         this.lastShareTime = lastShareTime;
+        return this;
+    }
+
+    public boolean isInputAccessCode() {
+        return isInputAccessCode;
+    }
+
+    public UserInfo setInputAccessCode(boolean inputAccessCode) {
+        isInputAccessCode = inputAccessCode;
         return this;
     }
 }
