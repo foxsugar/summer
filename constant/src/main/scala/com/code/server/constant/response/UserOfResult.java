@@ -29,6 +29,13 @@ public class UserOfResult {
     private int duiziNum;
     private int sanpaiNum;
 
+    //cow
+    private int allWinNum;
+    private int allLoseNum;
+    private int cowCowNum;
+    private int nullCowNum;
+    private int winNum;
+
     private RoomStatistics roomStatistics;
 
     public long getUserId() {
@@ -194,5 +201,45 @@ public class UserOfResult {
 
     public void setSanpaiNum(int sanpaiNum) {
         this.sanpaiNum = sanpaiNum;
+    }
+
+    public int getAllWinNum() {
+        return allWinNum;
+    }
+
+    public void setAllWinNum(int allWinNum) {
+        this.allWinNum = allWinNum;
+    }
+
+    public int getAllLoseNum() {
+        return allLoseNum;
+    }
+
+    public void setAllLoseNum(int allLoseNum) {
+        this.allLoseNum = allLoseNum;
+    }
+
+    public int getCowCowNum() {
+        return cowCowNum;
+    }
+
+    public void setCowCowNum(int cowCowNum) {
+        this.cowCowNum = cowCowNum;
+    }
+
+    public int getNullCowNum() {
+        return nullCowNum;
+    }
+
+    public void setNullCowNum(int nullCowNum) {
+        this.nullCowNum = nullCowNum;
+    }
+
+    public int getWinNum() {
+        return winNum;
+    }
+
+    public void setWinNum(int winNum) {
+        this.winNum = winNum;
     }
 }
