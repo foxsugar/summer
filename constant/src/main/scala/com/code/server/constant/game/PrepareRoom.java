@@ -11,6 +11,7 @@ public class PrepareRoom {
     public int multiple;
     public int gameNumber;
     public int mustZimo;
+    public int personNumber;
 
     public double caiFen;
     public int menPai;

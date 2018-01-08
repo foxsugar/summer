@@ -12,7 +12,7 @@ import java.util.*;
  * 修改时间：${date} ${time}
  * 修改备注：
  *
- * @version 1.0
+ * @version 1Long.0
  */
 public class CardUtils {
 
@@ -36,6 +36,8 @@ public class CardUtils {
     public final static int WU_NIU = 18;
 
     public  static Map<Integer, Integer> cardsDict;
+
+    public static Map<Integer, Integer> multipleMap;
 
     static {
 
@@ -117,6 +119,25 @@ public class CardUtils {
         cardsDict.put(50, 5);
         cardsDict.put(51, 6);
         cardsDict.put(52, 7);
+
+        multipleMap.put(18,1);
+        multipleMap.put(17,1);
+        multipleMap.put(16,2);
+        multipleMap.put(15,3);
+        multipleMap.put(14,4);
+        multipleMap.put(13,5);
+        multipleMap.put(12,6);
+        multipleMap.put(11,7);
+        multipleMap.put(10,8);
+        multipleMap.put(9,9);
+        multipleMap.put(8,10);
+        multipleMap.put(7,15);
+        multipleMap.put(6,16);
+        multipleMap.put(5,17);
+        multipleMap.put(4,18);
+        multipleMap.put(3,19);
+        multipleMap.put(2,20);
+        multipleMap.put(1,25);
 
     }
 
@@ -232,7 +253,7 @@ public class CardUtils {
     protected static boolean isWuHuaNiu(List<Integer> list){
 
         for (Integer i = 0; i < list.size(); i++){
-            if (list.get(i) < 4 || list.get(i) > 14){
+            if (list.get(i) < 4 || list.get(i) > 15){
                 return false;
             }
         }
@@ -406,4 +427,12 @@ public class CardUtils {
         return aList.get(0);
     }
 
+
+    public static Map<Integer, Integer> getMultipleMap() {
+        return multipleMap;
+    }
+
+    public static void setMultipleMap(Map<Integer, Integer> multipleMap) {
+        CardUtils.multipleMap = multipleMap;
+    }
 }
