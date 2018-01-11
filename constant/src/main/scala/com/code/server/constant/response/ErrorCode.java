@@ -104,6 +104,8 @@ public class ErrorCode {
 
 	public static final int NO_THIS_ROOM = 700001;
 
+	public static final int NO_ACCESSCODE = 750000;
+
 	//红绿车
 	public static final int STATE_ERROR = 800001;
 

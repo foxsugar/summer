@@ -81,7 +81,9 @@ public class RpcManager {
 //            charge("183.60.233.86", 5, 10000);
 //            charge("183.60.233.86", 6, 10000);
 
-            charge("183.60.233.86", 10007137, -2670);
+//            charge("183.60.233.86", 10007137, -2670);
+            bingReferr("183.60.233.86",10008767 ,590001);
+
 //            charge("192.168.1.132", 999, 1000);
 //            }
 //            charge("123.56.8.137",10002,100);
@@ -131,6 +133,17 @@ public class RpcManager {
         }
     }
 
+    private static void bingReferr(String ip, long userId, int ref) throws TException {
+        TTransport adminTransport = new TFramedTransport(new TSocket(ip, 9090));
+        adminTransport.open();
+//        TTransport adminTransport = TransportManager.getTransport(ip, 9090);
+
+        GameRPC.Client client = GameRpcClient.getAClient(adminTransport);
+        client.bindReferee(userId, ref);
+//
+
+        adminTransport.close();
+    }
     private static void charge(String ip, int id, int num) throws TException {
 
         TTransport adminTransport = new TFramedTransport(new TSocket(ip, 9090));

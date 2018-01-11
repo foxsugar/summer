@@ -27,6 +27,7 @@ public class Constant extends BaseEntity {
     private String versionOfIos;//IOS版本
     private int appleCheck;
     private int shareMoney;//分享获得的钱
+    private String AccessCode;
 
     @Type(type = "json")
     @Lob
@@ -143,6 +144,15 @@ public class Constant extends BaseEntity {
         return this;
     }
 
+    public String getAccessCode() {
+        return AccessCode;
+    }
+
+    public Constant setAccessCode(String accessCode) {
+        AccessCode = accessCode;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Constant{" +
@@ -157,6 +167,8 @@ public class Constant extends BaseEntity {
                 ", versionOfIos='" + versionOfIos + '\'' +
                 ", appleCheck=" + appleCheck +
                 ", shareMoney=" + shareMoney +
+                ", AccessCode='" + AccessCode + '\'' +
+                ", blackList=" + blackList +
                 '}';
     }
 }

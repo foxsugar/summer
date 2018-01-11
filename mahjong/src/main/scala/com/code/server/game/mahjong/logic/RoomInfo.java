@@ -440,6 +440,14 @@ public class RoomInfo extends Room {
             } else if (4 == gameNumber) {
                 result = 12;
             }
+        }else if ("TJ".equals(gameType)) {//tiantianhu
+            if (1 == gameNumber) {
+                result = 2;
+            } else if (2 == gameNumber) {
+                result = 4;
+            } else if (4 == gameNumber) {
+                result = 8;
+            }
         } else if ("HL".equals(gameType)) {
             result = 1;
         } else if ("TC".equals(gameType)) {
