@@ -35,9 +35,9 @@ public class CowPlayerTest {
     @Test
     public void findWinner() throws Exception {
 
-        CowPlayer p1 = new CowPlayer(1L, 0,1,2,3,4, true);
-        CowPlayer p2 = new CowPlayer(2L, 5,6,7,8,9, true);
-        CowPlayer p = CardUtils.findWinner(p1, p2);
+        CowPlayer p1 = new CowPlayer(1L, 0,1,2,3,4);
+        CowPlayer p2 = new CowPlayer(2L, 5,6,7,8,9);
+        CowPlayer p = CowCardUtils.findWinner(p1, p2);
         Assert.assertTrue(p == p1);
 
     }
@@ -47,7 +47,7 @@ public class CowPlayerTest {
 
         CowPlayer p1 = new CowPlayer(1L, 1,2,3,4,5, false);
         CowPlayer p2 = new CowPlayer(2L, 10,6,7,8,9, false);
-        CowPlayer p = CardUtils.findWinner(p1, p2);
+        CowPlayer p = CowCardUtils.findWinner(p1, p2);
         Assert.assertTrue(p == p1);
 
     }
@@ -57,7 +57,7 @@ public class CowPlayerTest {
 
         CowPlayer p1 = new CowPlayer(0L, 0,36,40,44,48, true);
         CowPlayer p2 = new CowPlayer(2L, 1,37,41,45,49, true);
-        CowPlayer p = CardUtils.findWinner(p1, p2);
+        CowPlayer p = CowCardUtils.findWinner(p1, p2);
         Assert.assertTrue(p == p1);
 
     }
@@ -67,7 +67,7 @@ public class CowPlayerTest {
 
         CowPlayer p1 = new CowPlayer(0L, 0,36,40,44,48, true);
         CowPlayer p2 = new CowPlayer(2L, 1,37,41,45,50, true);
-        CowPlayer p = CardUtils.findWinner(p1, p2);
+        CowPlayer p = CowCardUtils.findWinner(p1, p2);
         Assert.assertTrue(p == p1);
 
     }
@@ -78,7 +78,7 @@ public class CowPlayerTest {
 
         CowPlayer p1 = new CowPlayer(0L, 0,1,2,3,4, true);
         CowPlayer p2 = new CowPlayer(1L, 8,9,10,11,12, true);
-        CowPlayer p = CardUtils.findWinner(p1, p2);
+        CowPlayer p = CowCardUtils.findWinner(p1, p2);
         Assert.assertTrue(p == p1);
 
     }
@@ -89,7 +89,7 @@ public class CowPlayerTest {
 
         CowPlayer p1 = new CowPlayer(0L, 4,5,8,9,12, true);
         CowPlayer p2 = new CowPlayer(1L, 6,7,10,11,13, true);
-        CowPlayer p = CardUtils.findWinner(p1, p2);
+        CowPlayer p = CowCardUtils.findWinner(p1, p2);
         Assert.assertTrue(p == p1);
 
     }
@@ -100,7 +100,7 @@ public class CowPlayerTest {
 
         CowPlayer p1 = new CowPlayer(0L, 0,1,2,8,9, true);
         CowPlayer p2 = new CowPlayer(1L, 4,5,6,10,11, true);
-        CowPlayer p = CardUtils.findWinner(p1, p2);
+        CowPlayer p = CowCardUtils.findWinner(p1, p2);
         Assert.assertTrue(p == p1);
 
     }
@@ -111,7 +111,7 @@ public class CowPlayerTest {
 
         CowPlayer p1 = new CowPlayer(0L, 0,4,12,28,32, true);
         CowPlayer p2 = new CowPlayer(1L, 1,5,9,13,25, true);
-        CowPlayer p = CardUtils.findWinner(p1, p2);
+        CowPlayer p = CowCardUtils.findWinner(p1, p2);
         Assert.assertTrue(p == p1);
 
     }
@@ -122,7 +122,7 @@ public class CowPlayerTest {
 
         CowPlayer p1 = new CowPlayer(0L, 0,4,8,12,17, true);
         CowPlayer p2 = new CowPlayer(1L, 1,5,9,13,19, true);
-        CowPlayer p = CardUtils.findWinner(p1, p2);
+        CowPlayer p = CowCardUtils.findWinner(p1, p2);
         Assert.assertTrue(p == p1);
 
     }
@@ -133,7 +133,7 @@ public class CowPlayerTest {
 
         CowPlayer p1 = new CowPlayer(0L, 0,4,8,12,17, true);
         CowPlayer p2 = new CowPlayer(1L, 1,5,9,13,19, true);
-        CowPlayer p = CardUtils.findWinner(p1, p2);
+        CowPlayer p = CowCardUtils.findWinner(p1, p2);
         Assert.assertTrue(p == p1);
 
     }

@@ -112,12 +112,22 @@ public class RoomInfo extends Room {
                     return false;
                 }
             } else if ("TC".equals(gameType)) {
-                if (each.equals("0") && money < 4) {
-                    return false;
+                if(this.gameNumber == 8){
+                    if (each.equals("0") && money < 4) {
+                        return false;
+                    }
+                    if (each.equals("1") && money < 1) {
+                        return false;
+                    }
+                }else if(this.gameNumber == 16){
+                    if (each.equals("0") && money < 8) {
+                        return false;
+                    }
+                    if (each.equals("1") && money < 2) {
+                        return false;
+                    }
                 }
-                if (each.equals("1") && money < 1) {
-                    return false;
-                }
+
             } else if ("DH".equals(gameType)) {
                 if (each.equals("0") && money < 1) {
                     return false;
@@ -139,8 +149,20 @@ public class RoomInfo extends Room {
                     return false;
                 }
             } else if ("TC".equals(gameType)) {
-                if (each.equals("1") && money < 1) {
-                    return false;
+                if(this.gameNumber == 8){
+                    if (each.equals("0") && money < 4) {
+                        return false;
+                    }
+                    if (each.equals("1") && money < 1) {
+                        return false;
+                    }
+                }else if(this.gameNumber == 16){
+                    if (each.equals("0") && money < 8) {
+                        return false;
+                    }
+                    if (each.equals("1") && money < 2) {
+                        return false;
+                    }
                 }
             } else if ("NZZ".equals(gameType)) {
                 if (each.equals("1") && money < 5 && this.gameNumber == 4) {
@@ -421,7 +443,11 @@ public class RoomInfo extends Room {
         } else if ("HL".equals(gameType)) {
             result = 1;
         } else if ("TC".equals(gameType)) {
-            result = 4;
+            if (8 == gameNumber) {
+                result = 4;
+            } else if (16 == gameNumber) {
+                result = 8;
+            }
         } else if ("DH".equals(gameType)) {
             result = 1;
         } else if ("BENGBU".equals(gameType)) {
@@ -499,6 +525,9 @@ public class RoomInfo extends Room {
         } else if ("TC".equals(this.getGameType())) {
             for (long userId : users) {
                 int money = 1;
+                if(this.gameNumber==16){
+                    money=2;
+                }
                 RedisManager.getUserRedisService().addUserMoney(userId, money);
             }
         }
@@ -563,6 +592,9 @@ public class RoomInfo extends Room {
         else if ("TC".equals(this.getGameType())) {
             for (long userId : users) {
                 int money = 1;
+                if (gameNumber == 16) {
+                    money = 2;
+                }
                 RedisManager.getUserRedisService().addUserMoney(userId, -money);
             }
         } else {

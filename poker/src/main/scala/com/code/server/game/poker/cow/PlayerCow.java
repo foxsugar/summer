@@ -39,6 +39,7 @@ public class PlayerCow  implements IfacePlayerInfo {
         vo.finalScore = this.finalScore;
         vo.raise = this.getRaise();
         vo.kill = this.getKill();
+        vo.player = this.player;
         return vo;
     }
 

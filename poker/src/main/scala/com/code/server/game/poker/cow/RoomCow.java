@@ -45,7 +45,7 @@ public class RoomCow  extends Room {
 
     public static RoomCow getRoomInstance(String roomType){
         switch (roomType) {
-            case "1":
+            case "5":
                 return new RoomCow();
             default:
                 return new RoomCow();
