@@ -185,6 +185,27 @@ public class GameGuessCar extends Game{
         return 0;
     }
 
+
+    public int look(long userId){
+        Map<String, Object> result = new HashMap<>();
+        result.put("color", this.color);
+        MsgSender.sendMsg2Player("gameGuessService", "look", result, userId);
+        return 0;
+    }
+
+    public int change(long userId,int color){
+        Map<String, Object> result = new HashMap<>();
+        this.color = color;
+        result.put("color", this.color);
+        RoomGuessCar roomGuessCar = (RoomGuessCar)this.room;
+        if(roomGuessCar.record!= null && roomGuessCar.record.size()>0){
+            roomGuessCar.record.remove(roomGuessCar.record.size() - 1);
+            roomGuessCar.record.add(color);
+        }
+        MsgSender.sendMsg2Player("gameGuessService", "change", result, userId);
+        return 0;
+    }
+
     //=====================================
     //==============结束操作================
     //=====================================

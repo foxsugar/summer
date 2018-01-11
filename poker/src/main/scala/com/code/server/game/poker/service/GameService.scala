@@ -144,6 +144,11 @@ object GameService {
       game.raise(userId,addChip,color);
     case "getRemainTime"=>
       game.getRemainTime(userId)
+    case "look"=>
+      game.look(userId)
+    case "change"=>
+      val color = params.path("color").asInt()
+      game.change(userId,color)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

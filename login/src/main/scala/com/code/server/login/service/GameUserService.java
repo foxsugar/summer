@@ -494,6 +494,24 @@ public class GameUserService {
         return 0;
     }
 
+
+    public int accessCode(KafkaMsgKey msgKey, String accessCode){
+        if(accessCode == null || "".equals(accessCode)){
+            return ErrorCode.NO_ACCESSCODE;
+        }
+        String ac = ServerManager.constant.getAccessCode();
+        if(ac == null || !accessCode.equals(ac)){
+            return ErrorCode.NO_ACCESSCODE;
+        }
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(msgKey.getUserId());
+        userBean.getUserInfo().setInputAccessCode(true);
+//        RedisManager.getUserRedisService().setUserBean(userBean);
+        RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
+        ResponseVo vo = new ResponseVo("userService", "accessCode", 0);
+        sendMsg(msgKey, vo);
+        return 0;
+    }
+
     public int getRecordsByRoom(KafkaMsgKey msgKey, long roomUid) {
         List<com.code.server.db.model.GameRecord> list = gameRecordService.gameRecordDao.getGameRecordByUuid(roomUid);
 
