@@ -395,7 +395,7 @@ public class CardUtils {
             sum += calculateDianShu(aList.get(i));
         }
 
-        if (sum / 10 == 0){
+        if (sum % 10 == 0){
             return NIU_NIUI;
         }
         return NIU_NIUI - sum % 10 + 10;
