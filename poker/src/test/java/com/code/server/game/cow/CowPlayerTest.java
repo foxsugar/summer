@@ -131,8 +131,8 @@ public class CowPlayerTest {
     @Test
     public void findWinner10() throws Exception {
 
-        CowPlayer p1 = new CowPlayer(0L, 0,4,8,12,17, true);
-        CowPlayer p2 = new CowPlayer(1L, 1,5,9,13,19, true);
+        CowPlayer p1 = new CowPlayer(0L, 0,20,4,5,6, true);
+        CowPlayer p2 = new CowPlayer(1L, 24,48,8,9,10, true);
         CowPlayer p = CardUtils.findWinner(p1, p2);
         Assert.assertTrue(p == p1);
 

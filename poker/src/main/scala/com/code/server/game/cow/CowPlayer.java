@@ -184,13 +184,14 @@ public class CowPlayer {
 
             if (player1.grade == WU_XIAO_NIU){
 
-                Integer a = player1.getPokers().get(0);
-                Integer b = player2.getPokers().get(0);
-
-                if (a < b){
-                    return player1;
-                }
-                return player2;
+//                Integer a = player1.getPokers().get(0);
+//                Integer b = player2.getPokers().get(0);
+//
+//                if (a < b){
+//                    return player1;
+//                }
+//                return player2;
+                return standardCompare(player1, player2);
 
             }
 
@@ -248,26 +249,65 @@ public class CowPlayer {
 
             if (player1.grade == NIU_NIUI){
 
-                Integer a = player1.getPokers().get(0);
-                Integer b = player2.getPokers().get(0);
-                //取出对子
-                if (a < b){
-                    return player1;
-                }
+//                Integer a = player1.getPokers().get(0);
+//                Integer b = player2.getPokers().get(0);
+//
+//                if (a == 0){
+//                    a = player1.getPokers().get(1);
+//                }
+//
+//                if (b == 0){
+//                    b = player2.getPokers().get(1);
+//                }
+//
+//                if (a < b){
+//                    return player1;
+//                }
+//
+//                return player2;
 
-                return player2;
+                return standardCompare(player1, player2);
             }
 
             //剩下的都是 牛 - X
-            Integer a = player1.getPokers().get(0);
-            Integer b = player2.getPokers().get(0);
-
-            if (a < b){
-                return player1;
-            }
-
-            return player2;
+//            Integer a = player1.getPokers().get(0);
+//            Integer b = player2.getPokers().get(0);
+//
+//            if (a == 0){
+//                a = player1.getPokers().get(1);
+//            }
+//
+//            if (b == 0){
+//                b = player2.getPokers().get(1);
+//            }
+//
+//            if (a < b){
+//                return player1;
+//            }
+//
+//            return player2;
+            return standardCompare(player1, player2);
         }
+    }
+
+    //不加扎金花算法的标准比较
+    public CowPlayer standardCompare(CowPlayer player1, CowPlayer player2){
+        Integer a = player1.getPokers().get(0);
+        Integer b = player2.getPokers().get(0);
+
+        if (a == 0){
+            a = player1.getPokers().get(1);
+        }
+
+        if (b == 0){
+            b = player2.getPokers().get(1);
+        }
+
+        if (a < b){
+            return player1;
+        }
+
+        return player2;
     }
 
     @Override
