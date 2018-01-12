@@ -330,6 +330,12 @@ public class GameInfo extends Game {
 
     }
 
+    public boolean isHasGuoHu() {
+        String gameType = this.room.getGameType();
+        String modeTotal = this.room.getModeTotal();
+        return "LQ".equals(gameType) && "2".equals(modeTotal) ||
+                "HL".equals(gameType) && "2".equals(modeTotal);
+    }
 
     /**
      * 出牌
@@ -378,25 +384,12 @@ public class GameInfo extends Game {
                 boolean isCanGang = playerCardsInfo.isCanGangAddThisCard(card);
                 boolean isCanPeng = playerCardsInfo.isCanPengAddThisCard(card);
                 boolean isCanHu;
-                if("LQ".equals(this.room.getGameType())&& "2".equals(this.room.getModeTotal())){
-                    if(playerCardsInfo.isGuoHu()){
-                        isCanHu = false;
-                    }else{
-                        isCanHu = playerCardsInfo.isCanHu_dianpao(card);
-                    }
-                }else{
+                if (isHasGuoHu() && playerCardsInfo.isGuoHu()) {
+                    isCanHu = false;
+                } else {
                     isCanHu = playerCardsInfo.isCanHu_dianpao(card);
                 }
-//                if("LQ".equals(this.room.getGameType())){
-//                    //如果上一次操作为过，这一轮不能再碰和胡
-//                    if(!noCanHuList.contains(playerCardsInfo.getUserId())){
-//                        isCanHu = playerCardsInfo.isCanHu_dianpao(card);
-//                    }else{
-//                        isCanHu = false;
-//                    }
-//                }else{
-//                    isCanHu = playerCardsInfo.isCanHu_dianpao(card);
-//                }
+
                 boolean isCanChi = playerCardsInfo.isHasChi(card);
                 boolean isCanChiTing = playerCardsInfo.isCanChiTing(card);
                 boolean isCanPengTing = playerCardsInfo.isCanPengTing(card);
@@ -426,7 +419,7 @@ public class GameInfo extends Game {
             mopai(nextId, "userId : " + userId + " 出牌");
         } else {
             //todo 一炮多响
-            if (this.room.isYipaoduoxiang &&waitingforList.stream().filter(waitDetail -> waitDetail.isHu).count() >= 2) {
+            if (this.room.isYipaoduoxiang && waitingforList.stream().filter(waitDetail -> waitDetail.isHu).count() >= 2) {
                 handleYiPaoDuoXiang();
             } else {
                 //比较
@@ -657,15 +650,10 @@ public class GameInfo extends Game {
      * @param userId
      */
     public int guo(long userId) {
-//        if (waitingforList.size() == 0) {
-//            return ErrorCode.CAN_NOT_GUO;
-//        }
-//        PlayerCardsInfoTDH guoPlayerCardsInfo = (PlayerCardsInfoTDH)playerCardsInfos.get(userId);
-//        if(guoPlayerCardsInfo.isCanHu_dianpao(disCard)){//能胡点过的人，这一轮不能胡
-//            noCanHuList.add(userId);
-//        }
 
-        if(playerCardsInfos.get(userId).isCanHu_dianpao(disCard)){
+
+        //过胡逻辑
+        if (playerCardsInfos.get(userId).isCanHu_dianpao(disCard)) {
             playerCardsInfos.get(userId).setGuoHu(true);
         }
 
@@ -913,9 +901,9 @@ public class GameInfo extends Game {
 
             room.setBankerId(winnerId);
         } else {
-            if("LQ".equals(this.room.getGameType())&&("11".equals(this.room.getMode())||"12".equals(this.room.getMode())||"13".equals(this.room.getMode())||"14".equals(this.room.getMode())||"1".equals(this.room.getMode())||"2".equals(this.room.getMode())||"3".equals(this.room.getMode())||"4".equals(this.room.getMode()))){
+            if ("LQ".equals(this.room.getGameType()) && ("11".equals(this.room.getMode()) || "12".equals(this.room.getMode()) || "13".equals(this.room.getMode()) || "14".equals(this.room.getMode()) || "1".equals(this.room.getMode()) || "2".equals(this.room.getMode()) || "3".equals(this.room.getMode()) || "4".equals(this.room.getMode()))) {
                 room.setBankerId(winnerId);
-            }else{
+            } else {
                 long nextId = nextTurnId(this.getFirstTurn());
                 room.setBankerId(nextId);
             }
@@ -1049,7 +1037,8 @@ public class GameInfo extends Game {
 
     /**
      * 发送结果
-     *  @param isHasWinner
+     *
+     * @param isHasWinner
      * @param winnerId
      * @param yipaoduoxiang
      */
@@ -1060,7 +1049,7 @@ public class GameInfo extends Game {
         if (isHasWinner) {
             if (yipaoduoxiang == null) {
                 result.setWinnerId(winnerId);
-            }else{
+            } else {
                 result.setYipaoduoxiang(yipaoduoxiang);
             }
             result.setBaoCard(baoCard);
@@ -1447,6 +1436,13 @@ public class GameInfo extends Game {
 
     }
 
+    public int getAllGangNum() {
+        int result = 0;
+        for (PlayerCardsInfoMj playerCardsInfoMj : this.playerCardsInfos.values()) {
+            result += playerCardsInfoMj.getGangNum();
+        }
+        return result;
+    }
 
     protected void doChiTing(PlayerCardsInfoMj playerCardsInfo, long userId, String one, String two) {
     }
