@@ -204,11 +204,11 @@ public class GameCow extends Game {
         tempList.addAll(playerCardInfos.values());
         tempList.remove(0);
         for (PlayerCow p :tempList){
-            CowPlayer c = CowCardUtils.findWinner(playerCardInfos.get(room.getBankerId()).getPlayer(), p.getPlayer());
+            CowPlayer c = CardUtils.findWinner(playerCardInfos.get(room.getBankerId()).getPlayer(), p.getPlayer());
             if(room.getBankerId()!=c.getId()){//庄输
-                playerCardInfos.get(p.getUserId()).setFinalScore(playerCardInfos.get(p.getUserId()).getScore()* CowCardUtils.multipleMap.get(playerCardInfos.get(p.getUserId()).getPlayer().getGrade()));
+                playerCardInfos.get(p.getUserId()).setFinalScore(playerCardInfos.get(p.getUserId()).getScore()* CardUtils.multipleMap.get(playerCardInfos.get(p.getUserId()).getPlayer().getGrade()));
             }else{//庄赢
-                playerCardInfos.get(p.getUserId()).setFinalScore(-playerCardInfos.get(room.getBankerId()).getScore()* CowCardUtils.multipleMap.get(playerCardInfos.get(room.getBankerId()).getPlayer().getGrade()));
+                playerCardInfos.get(p.getUserId()).setFinalScore(-playerCardInfos.get(room.getBankerId()).getScore()* CardUtils.multipleMap.get(playerCardInfos.get(room.getBankerId()).getPlayer().getGrade()));
             }
         }
 

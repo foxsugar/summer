@@ -14,7 +14,7 @@ import java.util.*;
  *
  * @version 1Long.0
  */
-public class CowCardUtils {
+public class CardUtils {
 
     public final static int TONG_HUA_SHUN = 1;
     public final static int ZHA_DAN_NIU = 2;
@@ -435,6 +435,6 @@ public class CowCardUtils {
     }
 
     public static void setMultipleMap(Map<Integer, Integer> multipleMap) {
-        CowCardUtils.multipleMap = multipleMap;
+        CardUtils.multipleMap = multipleMap;
     }
 }
