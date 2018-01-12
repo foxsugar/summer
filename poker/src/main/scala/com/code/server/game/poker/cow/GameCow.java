@@ -1,5 +1,6 @@
 package com.code.server.game.poker.cow;
 
+import com.code.server.constant.response.IfaceGameVo;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
@@ -206,9 +207,13 @@ public class GameCow extends Game {
         for (PlayerCow p :tempList){
             CowPlayer c = CowCardUtils.findWinner(playerCardInfos.get(room.getBankerId()).getPlayer(), p.getPlayer());
             if(room.getBankerId()!=c.getId()){//庄输
-                playerCardInfos.get(p.getUserId()).setFinalScore(playerCardInfos.get(p.getUserId()).getScore()* CowCardUtils.multipleMap.get(playerCardInfos.get(p.getUserId()).getPlayer().getGrade()));
+               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CowCardUtils.multipleMap.get(playerCardInfos.get(p.getUserId()).getPlayer().getGrade());
+               playerCardInfos.get(p.getUserId()).setFinalScore(tempScore);
+               playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()-tempScore);
             }else{//庄赢
-                playerCardInfos.get(p.getUserId()).setFinalScore(-playerCardInfos.get(room.getBankerId()).getScore()* CowCardUtils.multipleMap.get(playerCardInfos.get(room.getBankerId()).getPlayer().getGrade()));
+               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CowCardUtils.multipleMap.get(playerCardInfos.get(p.getUserId()).getPlayer().getGrade());
+               playerCardInfos.get(p.getUserId()).setFinalScore(-tempScore);
+               playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()+tempScore);
             }
         }
 
@@ -228,9 +233,9 @@ public class GameCow extends Game {
             if(playerCardInfo.getFinalScore()>0){
                 tempWin = false;
             }
-            if(playerCardInfo.userId!=room.getBankerId()){
+            /*if(playerCardInfo.userId!=room.getBankerId()){
                 playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()-playerCardInfo.getFinalScore());
-            }
+            }*/
         }
         if(tempWin){
             this.room.addAllWinNum(room.getBankerId());
@@ -336,5 +341,14 @@ public class GameCow extends Game {
 
     public void setLastOperateTime(long lastOperateTime) {
         this.lastOperateTime = lastOperateTime;
+    }
+
+    @Override
+    public IfaceGameVo toVo(long watchUser) {
+        GameCowVo vo = new GameCowVo();
+        for (Long l:playerCardInfos.keySet()) {
+            vo.playerCardInfos.put(l,(PlayerCowVo) playerCardInfos.get(l).toVo());
+        }
+        return vo;
     }
 }
