@@ -485,6 +485,9 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     }
 
 
+    public int getGangNum(){
+        return this.mingGangType.size() + this.anGangType.size();
+    }
     /**
      * 是否有旋风蛋
      *

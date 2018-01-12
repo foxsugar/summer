@@ -235,6 +235,9 @@ public class RoomInfo extends Room {
                 return new GameInfoHM().setHasJieGangHu(true);
             case "BENGBU":
                 return new GameInfoBengbu().setHasJieGangHu(true);
+            case "NIUYEZI":
+                this.setChangeBankerAfterHuangZhuang(true);
+                return new GameInfoNiuyezi();
             default:
                 return new GameInfo();
         }
@@ -449,7 +452,7 @@ public class RoomInfo extends Room {
     }
 
     public boolean isAddGold() {
-        return "LQ".equals(gameType) || "NZZ".equals(gameType) || "HM".equals(gameType);
+        return "LQ".equals(gameType) || "NZZ".equals(gameType) || "HM".equals(gameType)||"NIUYEZI".equals(gameType);
     }
 
 
