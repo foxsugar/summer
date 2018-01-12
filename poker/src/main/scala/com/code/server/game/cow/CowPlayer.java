@@ -295,11 +295,11 @@ public class CowPlayer {
         Integer a = player1.getPokers().get(0);
         Integer b = player2.getPokers().get(0);
 
-        if (a == 0){
+        if (a / 4 == 0){
             a = player1.getPokers().get(1);
         }
 
-        if (b == 0){
+        if (b / 4 == 0){
             b = player2.getPokers().get(1);
         }
 
