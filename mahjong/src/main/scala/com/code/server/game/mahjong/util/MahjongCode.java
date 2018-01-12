@@ -50,7 +50,21 @@ public class MahjongCode {
 	        put("288", 81);
 	    }
 	};
-	
+
+	//分数 龙七2018-01-11
+	public static final Map<String, Integer> HUTOSCOREFORLQ2 = new HashMap<String, Integer>() {
+		//private static final long serialVersionUID = 1L;
+		{
+			put("201", 6);
+			put("222", 27);
+			put("235", 27);
+			put("244", 27);
+			put("253", 54);
+			put("266", 81);
+			put("288", 81);
+		}
+	};
+
 	//分数
 	public static final Map<String, Integer> HUTOSCOREFORJD = new HashMap<String, Integer>() {
 		//private static final long serialVersionUID = 1L;
