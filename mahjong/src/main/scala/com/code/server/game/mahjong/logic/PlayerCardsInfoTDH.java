@@ -491,12 +491,14 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 //        			this.winType.add(HuType.hu_普通胡);
 				}else if(room.getModeTotal().equals("2") && (room.getMode().equals("2")||room.getMode().equals("4")||room.getMode().equals("12")||room.getMode().equals("14"))){//大胡
 					for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
-						gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple() * MahjongCode.HUTOSCORE.get(""+CardUtil.huForScores(cards,huCardType))/3);
-						room.setUserSocre(i,  - 2 * room.getMultiple() * MahjongCode.HUTOSCORE.get(""+CardUtil.huForScores(cards,huCardType))/3);
+						gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple() * MahjongCode.HUTOSCOREFORLQ2.get(""+CardUtil.huForScores(cards,huCardType))/3);
+						room.setUserSocre(i,  - room.getMultiple() * MahjongCode.HUTOSCOREFORLQ2.get(""+CardUtil.huForScores(cards,huCardType))/3);
+						int a =MahjongCode.HUTOSCOREFORLQ2.get(""+CardUtil.huForScores(cards,huCardType))/3;
+						int b =CardUtil.huForScores(cards,huCardType);
 					}
-					this.score = this.score + 2 * room.getPersonNumber() * room.getMultiple() * MahjongCode.HUTOSCORE.get(""+CardUtil.huForScores(cards,huCardType)+"")/3;
-					room.setUserSocre(this.userId, 2 * room.getPersonNumber() * room.getMultiple() * MahjongCode.HUTOSCORE.get(""+CardUtil.huForScores(cards,huCardType)+"")/3);
-					this.fan = 2 * MahjongCode.HUTOSCORE.get(""+CardUtil.huForScores(cards,huCardType)+"");
+					this.score = this.score + room.getPersonNumber() * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ2.get(""+CardUtil.huForScores(cards,huCardType)+"")/3;
+					room.setUserSocre(this.userId, room.getPersonNumber() * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ2.get(""+CardUtil.huForScores(cards,huCardType)+"")/3);
+					this.fan = MahjongCode.HUTOSCOREFORLQ2.get(""+CardUtil.huForScores(cards,huCardType)+"");
 //            		this.winType = CardUtil.huForWinType(cards);
 				}
 			}else{

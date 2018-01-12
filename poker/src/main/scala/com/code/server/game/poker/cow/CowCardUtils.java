@@ -1,4 +1,4 @@
-package com.code.server.game.cow;
+package com.code.server.game.poker.cow;
 
 import java.util.*;
 
@@ -14,7 +14,7 @@ import java.util.*;
  *
  * @version 1Long.0
  */
-public class CardUtils {
+public class CowCardUtils {
 
     public final static int TONG_HUA_SHUN = 1;
     public final static int ZHA_DAN_NIU = 2;
@@ -120,6 +120,8 @@ public class CardUtils {
         cardsDict.put(51, 6);
         cardsDict.put(52, 7);
 
+        multipleMap = new HashMap<>();
+
         multipleMap.put(18,1);
         multipleMap.put(17,1);
         multipleMap.put(16,2);
@@ -185,11 +187,11 @@ public class CardUtils {
         return getPaiXing(aList);
     }
 
-    public static Integer getPaiXing(List<Integer> list) throws Exception {
+    public static Integer getPaiXing(List<Integer> list) {
 
-        if (list.size() != 5){
+        /*if (list.size() != 5){
             throw new Exception("牌数必须是5张！");
-        }
+        }*/
 
         Collections.sort(list);
 
@@ -395,7 +397,7 @@ public class CardUtils {
             sum += calculateDianShu(aList.get(i));
         }
 
-        if (sum / 10 == 0){
+        if (sum % 10 == 0){
             return NIU_NIUI;
         }
         return NIU_NIUI - sum % 10 + 10;
@@ -433,6 +435,6 @@ public class CardUtils {
     }
 
     public static void setMultipleMap(Map<Integer, Integer> multipleMap) {
-        CardUtils.multipleMap = multipleMap;
+        CowCardUtils.multipleMap = multipleMap;
     }
 }

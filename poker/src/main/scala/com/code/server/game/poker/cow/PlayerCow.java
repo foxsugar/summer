@@ -1,4 +1,4 @@
-package com.code.server.game.cow;
+package com.code.server.game.poker.cow;
 
 import com.code.server.constant.response.IfacePlayerInfoVo;
 import com.code.server.game.room.IfacePlayerInfo;
@@ -39,13 +39,20 @@ public class PlayerCow  implements IfacePlayerInfo {
         vo.finalScore = this.finalScore;
         vo.raise = this.getRaise();
         vo.kill = this.getKill();
+        vo.player = this.player;
         return vo;
     }
 
     @Override
     public IfacePlayerInfoVo toVo(long watchUser) {
         PlayerCowVo vo = new PlayerCowVo();
-
+        vo.userId = this.userId;
+        vo.handcards = this.handcards;
+        vo.score = this.score;
+        vo.finalScore = this.finalScore;
+        vo.raise = this.getRaise();
+        vo.kill = this.getKill();
+        vo.player = this.player;
         return vo;
     }
 

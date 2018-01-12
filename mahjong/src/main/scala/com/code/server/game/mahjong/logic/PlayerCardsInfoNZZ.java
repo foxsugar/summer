@@ -187,7 +187,7 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
         System.out.println("检测是否可胡点炮= " + noPengAndGang);
         yiZhangyingSet = getYiZhangYingSet(getCardsNoChiPengGang(cards), null);
         int cardType = CardTypeUtil.cardType.get(card);
-        return HuUtil.isHu(noPengAndGang, this, cardType, new HuLimit(1)).size() > 0;
+        return HuUtil.isHu(noPengAndGang, this, cardType, new HuLimit(Integer.parseInt(roomInfo.getMode())-1)).size() > 0;
     }
 
     @Override
@@ -201,7 +201,7 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
         System.out.println("检测是否可胡自摸= " + cs);
         yiZhangyingSet = getYiZhangYingSet(getCardsNoChiPengGang(cards), null);
         int cardType = CardTypeUtil.cardType.get(card);
-        return HuUtil.isHu(cs, this,cardType , new HuLimit(1)).size()>0;
+        return HuUtil.isHu(cs, this,cardType , new HuLimit(Integer.parseInt(roomInfo.getMode())-1)).size()>0;
     }
 
 
@@ -220,7 +220,7 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
 
             List<String> tempCards = getCardsNoChiPengGang(cards);
 
-            int needFan = 1;
+            int needFan = Integer.parseInt(roomInfo.getMode())-1;
             List<HuCardType> list = getTingHuCardType(tempCards,null);
             Set<Integer> yzyTingSet = getYiZhangYingSet(tempCards, null);
             System.out.println("=================一张赢的所有类型 : "+yzyTingSet);

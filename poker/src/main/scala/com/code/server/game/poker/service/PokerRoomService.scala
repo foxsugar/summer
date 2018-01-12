@@ -1,7 +1,7 @@
 package com.code.server.game.poker.service
 
 import com.code.server.constant.response.ErrorCode
-import com.code.server.game.cow.RoomCow
+import com.code.server.game.poker.cow.RoomCow
 import com.code.server.game.poker.doudizhu.{RoomDouDiZhu, RoomDouDiZhuGold}
 import com.code.server.game.poker.guess.RoomGuessCar
 import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower

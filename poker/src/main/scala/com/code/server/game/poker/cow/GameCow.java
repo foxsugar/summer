@@ -1,5 +1,6 @@
-package com.code.server.game.cow;
+package com.code.server.game.poker.cow;
 
+import com.code.server.constant.response.IfaceGameVo;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
@@ -43,7 +44,7 @@ public class GameCow extends Game {
             playerCardInfos.put(uid, playerCardInfo);
         }
         this.users.addAll(users);
-        this.room.setBankerId(playerCardInfos.get(0).userId);
+        this.room.setBankerId(users.get(0));
         shuffle();//洗牌
         deal();//发牌
         noticePlayerBet();
@@ -81,16 +82,26 @@ public class GameCow extends Game {
         }
     }
 
+
+
     /**
      * 发第五张牌
      */
-    protected void dealFiveCard() {
+    protected void dealFiveCard(){
         for (PlayerCow playerCardInfo : playerCardInfos.values()) {
             playerCardInfo.handcards.add(cards.remove(0));
-            playerCardInfo.setPlayer(new CowPlayer(playerCardInfo.getUserId(),playerCardInfo.handcards));
+            CowPlayer c =  new CowPlayer(playerCardInfo.getUserId(),playerCardInfo.handcards.get(0),playerCardInfo.handcards.get(1),playerCardInfo.handcards.get(2),playerCardInfo.handcards.get(3),playerCardInfo.handcards.get(4));
+            playerCardInfo.setPlayer(c);
             //通知发牌
-            MsgSender.sendMsg2Player(new ResponseVo("gameService", "dealFiveCard", playerCardInfo.handcards.get(4)), playerCardInfo.userId);
+            Map<String, Object> result = new HashMap<>();
+            result.put("userId",playerCardInfo.getUserId());
+            result.put("fiveCard",playerCardInfo.handcards.get(4));
+            result.put("grade",playerCardInfo.getPlayer().getGrade());
+            ResponseVo vo = new ResponseVo("gameService", "dealFiveCard", result);
+            MsgSender.sendMsg2Player(vo, playerCardInfo.userId);
         }
+
+
         noticePlayerCompare();
     }
 
@@ -118,7 +129,7 @@ public class GameCow extends Game {
      * 加注
      * @return
      */
-    public int raise(long userId,double addChip){
+    public int raise(long userId,double addChip) throws Exception{
         logger.info(userId +"  下注: "+ addChip);
 
         Map<String, Object> result = new HashMap<>();
@@ -134,11 +145,12 @@ public class GameCow extends Game {
 
         boolean b = true;
         for (PlayerCow p:playerCardInfos.values()) {
-            if(0==p.getRaise()){
+            if(room.getBankerId()!=p.userId && 0==p.getRaise()){
                 b=false;
             }
         }
         if(b){
+            dealFiveCard();
             noticePlayerCompare();
         }
 
@@ -165,7 +177,7 @@ public class GameCow extends Game {
 
         boolean b = true;
         for (PlayerCow p:playerCardInfos.values()) {
-            if(0==p.getKill()){
+            if(room.getBankerId()!=p.userId && 0==p.getKill()){
                 b=false;
             }
         }
@@ -193,11 +205,15 @@ public class GameCow extends Game {
         tempList.addAll(playerCardInfos.values());
         tempList.remove(0);
         for (PlayerCow p :tempList){
-            CowPlayer c = CardUtils.findWinner(playerCardInfos.get(room.getBankerId()).getPlayer(), p.getPlayer());
+            CowPlayer c = CowCardUtils.findWinner(playerCardInfos.get(room.getBankerId()).getPlayer(), p.getPlayer());
             if(room.getBankerId()!=c.getId()){//庄输
-                playerCardInfos.get(p.getUserId()).setFinalScore(playerCardInfos.get(p.getUserId()).getScore()* CardUtils.multipleMap.get(playerCardInfos.get(p.getUserId()).getPlayer().getGrade()));
+               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CowCardUtils.multipleMap.get(playerCardInfos.get(p.getUserId()).getPlayer().getGrade());
+               playerCardInfos.get(p.getUserId()).setFinalScore(tempScore);
+               playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()-tempScore);
             }else{//庄赢
-                playerCardInfos.get(p.getUserId()).setFinalScore(-playerCardInfos.get(room.getBankerId()).getScore()* CardUtils.multipleMap.get(playerCardInfos.get(room.getBankerId()).getPlayer().getGrade()));
+               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CowCardUtils.multipleMap.get(playerCardInfos.get(p.getUserId()).getPlayer().getGrade());
+               playerCardInfos.get(p.getUserId()).setFinalScore(-tempScore);
+               playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()+tempScore);
             }
         }
 
@@ -217,7 +233,9 @@ public class GameCow extends Game {
             if(playerCardInfo.getFinalScore()>0){
                 tempWin = false;
             }
-            playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()-playerCardInfo.getFinalScore());
+            /*if(playerCardInfo.userId!=room.getBankerId()){
+                playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()-playerCardInfo.getFinalScore());
+            }*/
         }
         if(tempWin){
             this.room.addAllWinNum(room.getBankerId());
@@ -264,7 +282,7 @@ public class GameCow extends Game {
 
     public PlayerCow getGameTypePlayerCardInfo() {
         switch (room.getGameType()) {
-            case "1":
+            case "38":
                 return new PlayerCow();
             default:
                 return new PlayerCow();
@@ -323,5 +341,14 @@ public class GameCow extends Game {
 
     public void setLastOperateTime(long lastOperateTime) {
         this.lastOperateTime = lastOperateTime;
+    }
+
+    @Override
+    public IfaceGameVo toVo(long watchUser) {
+        GameCowVo vo = new GameCowVo();
+        for (Long l:playerCardInfos.keySet()) {
+            vo.playerCardInfos.put(l,(PlayerCowVo) playerCardInfos.get(l).toVo());
+        }
+        return vo;
     }
 }
