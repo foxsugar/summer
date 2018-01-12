@@ -1,10 +1,13 @@
 package com.code.server.game.poker.cow;
 
+import com.code.server.constant.response.GameOfResult;
 import com.code.server.constant.response.IfaceGameVo;
 import com.code.server.constant.response.ResponseVo;
+import com.code.server.constant.response.UserOfResult;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.game.room.service.RoomManager;
 import com.code.server.util.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -185,6 +188,7 @@ public class GameCow extends Game {
             compute();
             sendResult();
             genRecord();
+            sendFinalResult();
         }
 
         updateLastOperateTime();
@@ -211,7 +215,7 @@ public class GameCow extends Game {
                playerCardInfos.get(p.getUserId()).setFinalScore(tempScore);
                playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()-tempScore);
             }else{//庄赢
-               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CowCardUtils.multipleMap.get(playerCardInfos.get(p.getUserId()).getPlayer().getGrade());
+               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CowCardUtils.multipleMap.get(playerCardInfos.get(room.getBankerId()).getPlayer().getGrade());
                playerCardInfos.get(p.getUserId()).setFinalScore(-tempScore);
                playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()+tempScore);
             }
@@ -350,5 +354,25 @@ public class GameCow extends Game {
             vo.playerCardInfos.put(l,(PlayerCowVo) playerCardInfos.get(l).toVo());
         }
         return vo;
+    }
+
+    /**
+     * 最后结算
+     */
+    protected void sendFinalResult() {
+        //所有牌局都结束
+        if (room.getCurGameNumber() > room.getGameNumber()) {
+            List<UserOfResult> userOfResultList = this.room.getUserOfResult();
+            // 存储返回
+            GameOfResult gameOfResult = new GameOfResult();
+            gameOfResult.setUserList(userOfResultList);
+            MsgSender.sendMsg2Player("gameService", "gameFinalResult", gameOfResult, users);
+
+            RoomManager.removeRoom(room.getRoomId());
+
+            //战绩
+            this.room.genRoomRecord();
+
+        }
     }
 }

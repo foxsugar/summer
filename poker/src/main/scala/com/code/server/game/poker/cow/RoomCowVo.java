@@ -21,11 +21,21 @@ public class RoomCowVo extends RoomVo {
 
     public List<PlayerCowVo> playerList = new ArrayList<>();//用户列表
 
+    public Long bankerId;
+
     public List<PlayerCowVo> getPlayerList() {
         return playerList;
     }
 
     public void setPlayerList(List<PlayerCowVo> playerList) {
         this.playerList = playerList;
+    }
+
+    public Long getBankerId() {
+        return bankerId;
+    }
+
+    public void setBankerId(Long bankerId) {
+        this.bankerId = bankerId;
     }
 }
