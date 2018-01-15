@@ -122,10 +122,7 @@ public class GameCow extends Game {
      * 通知闲家可以开牌
      */
     protected void noticePlayerCompare() {
-        List<Long> list = new ArrayList<>();
-        list.addAll(this.getUsers());
-        list.remove(room.getBankerId());
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "noticePlayerCompare", "canCompare"),list);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "noticePlayerCompare", "canCompare"),users);
     }
 
     /**
@@ -180,7 +177,7 @@ public class GameCow extends Game {
 
         boolean b = true;
         for (PlayerCow p:playerCardInfos.values()) {
-            if(room.getBankerId()!=p.userId && 0==p.getKill()){
+            if(0==p.getKill()){
                 b=false;
             }
         }
@@ -188,6 +185,7 @@ public class GameCow extends Game {
             compute();
             sendResult();
             genRecord();
+            room.clearReadyStatus(true);
             sendFinalResult();
         }
 
@@ -211,11 +209,13 @@ public class GameCow extends Game {
         for (PlayerCow p :tempList){
             CowPlayer c = CowCardUtils.findWinner(playerCardInfos.get(room.getBankerId()).getPlayer(), p.getPlayer());
             if(room.getBankerId()!=c.getId()){//庄输
-               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CowCardUtils.multipleMap.get(playerCardInfos.get(p.getUserId()).getPlayer().getGrade());
+               int tempGrade = playerCardInfos.get(p.getUserId()).getPlayer().getGrade();
+               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CowCardUtils.multipleMap.get(tempGrade);
                playerCardInfos.get(p.getUserId()).setFinalScore(tempScore);
                playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()-tempScore);
             }else{//庄赢
-               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CowCardUtils.multipleMap.get(playerCardInfos.get(room.getBankerId()).getPlayer().getGrade());
+               int tempGrade = playerCardInfos.get(room.getBankerId()).getPlayer().getGrade();
+               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CowCardUtils.multipleMap.get(tempGrade);
                playerCardInfos.get(p.getUserId()).setFinalScore(-tempScore);
                playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()+tempScore);
             }

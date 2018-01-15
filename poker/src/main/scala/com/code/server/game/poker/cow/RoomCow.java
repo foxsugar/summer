@@ -146,7 +146,7 @@ public class RoomCow  extends Room {
 
         //通知其他人游戏已经开始
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameCowBegin", "ok"), room.users);
-        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "startGameByClient", 0), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "startCowGameByClient", 0), userId);
 
 
         //开始游戏
