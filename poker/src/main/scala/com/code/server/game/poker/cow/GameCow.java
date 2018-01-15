@@ -225,21 +225,20 @@ public class GameCow extends Game {
         boolean tempWin = true;
         boolean tempLost = true;
         for (PlayerCow playerCardInfo : playerCardInfos.values()) {
+            if(room.getBankerId()!=playerCardInfo.userId){
+                if(playerCardInfo.getFinalScore()>0){
+                    tempWin = false;
+                    this.room.addWinNum(playerCardInfo.getUserId());
+                }
+                if(playerCardInfo.getFinalScore()<0){
+                    tempLost = false;
+                }
+            }
             if(8==playerCardInfo.getPlayer().getGrade()){//牛牛
                 this.room.addCowCowNum(playerCardInfo.getUserId());
             }else if(18==playerCardInfo.getPlayer().getGrade()){//无牛
                 this.room.addNullCowNum(playerCardInfo.getUserId());
             }
-            if(playerCardInfo.getFinalScore()<0){
-                tempLost = false;
-                this.room.addWinNum(playerCardInfo.getUserId());
-            }
-            if(playerCardInfo.getFinalScore()>0){
-                tempWin = false;
-            }
-            /*if(playerCardInfo.userId!=room.getBankerId()){
-                playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()-playerCardInfo.getFinalScore());
-            }*/
         }
         if(tempWin){
             this.room.addAllWinNum(room.getBankerId());
