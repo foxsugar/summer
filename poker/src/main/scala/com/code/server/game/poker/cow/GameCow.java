@@ -205,7 +205,7 @@ public class GameCow extends Game {
         //算分
         List<PlayerCow> tempList = new ArrayList<>();
         tempList.addAll(playerCardInfos.values());
-        tempList.remove(0);
+        tempList.remove(playerCardInfos.get(room.getBankerId()));
         for (PlayerCow p :tempList){
             CowPlayer c = CowCardUtils.findWinner(playerCardInfos.get(room.getBankerId()).getPlayer(), p.getPlayer());
             if(room.getBankerId()!=c.getId()){//庄输
