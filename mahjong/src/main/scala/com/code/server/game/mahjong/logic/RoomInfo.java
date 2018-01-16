@@ -150,16 +150,10 @@ public class RoomInfo extends Room {
                 }
             } else if ("TC".equals(gameType)) {
                 if(this.gameNumber == 8){
-                    if (each.equals("0") && money < 4) {
-                        return false;
-                    }
                     if (each.equals("1") && money < 1) {
                         return false;
                     }
                 }else if(this.gameNumber == 16){
-                    if (each.equals("0") && money < 8) {
-                        return false;
-                    }
                     if (each.equals("1") && money < 2) {
                         return false;
                     }
