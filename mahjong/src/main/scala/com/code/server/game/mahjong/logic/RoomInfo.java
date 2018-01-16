@@ -128,7 +128,18 @@ public class RoomInfo extends Room {
                     }
                 }
 
-            } else if ("DH".equals(gameType)) {
+            } else if ("QUANMIN".equals(gameType)) {
+                if(this.gameNumber == 4){
+                    if (each.equals("0") && money < 2) {
+                        return false;
+                    }
+                }else if(this.gameNumber == 8){
+                    if (each.equals("0") && money < 3) {
+                        return false;
+                    }
+                }
+
+            }else if ("DH".equals(gameType)) {
                 if (each.equals("0") && money < 1) {
                     return false;
                 }
@@ -453,7 +464,13 @@ public class RoomInfo extends Room {
             } else if (16 == gameNumber) {
                 result = 8;
             }
-        } else if ("DH".equals(gameType)) {
+        } else if ("QUANMIN".equals(gameType)) {
+            if (4 == gameNumber) {
+                result = 2;
+            } else if (8 == gameNumber) {
+                result = 3;
+            }
+        }else if ("DH".equals(gameType)) {
             result = 1;
         } else if ("BENGBU".equals(gameType)) {
             if (8 == gameNumber) {
