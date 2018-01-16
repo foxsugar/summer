@@ -423,8 +423,8 @@ public class GameHitGoldFlower extends Game {
                 playerCardInfo.setFinalScore(playerCardInfo.getScore()-room.getMultiple()*playerCardInfo.getAllScore()+playerCardInfo.getCaifen());
             }else{
                 room.addUserSocre(playerCardInfo.getUserId(),-room.getMultiple()*playerCardInfo.getAllScore());
-                room.addUserSocre(playerCardInfo.getUserId(),-playerCardInfo.getCaifen());
-                playerCardInfo.setFinalScore(-room.getMultiple()*playerCardInfo.getAllScore()-playerCardInfo.getCaifen());
+                room.addUserSocre(playerCardInfo.getUserId(),playerCardInfo.getCaifen());
+                playerCardInfo.setFinalScore(-room.getMultiple()*playerCardInfo.getAllScore()+playerCardInfo.getCaifen());
             }
         }
     }

@@ -36,6 +36,7 @@ public class PlayerCardInfoHitGoldFlower implements IfacePlayerInfo {
         vo.caifen = this.caifen;
         vo.cardType = this.cardType;
         vo.allScore = this.allScore;
+        vo.finalScore = this.finalScore;
 
         vo.call = this.getCall();//跟注
         vo.raise = this.getRaise();//加注
@@ -55,6 +56,7 @@ public class PlayerCardInfoHitGoldFlower implements IfacePlayerInfo {
         vo.caifen = this.caifen;
         vo.cardType = this.cardType;
         vo.allScore = this.allScore;
+        vo.finalScore = this.finalScore;
 
         vo.call = this.getCall();//跟注
         vo.raise = this.getRaise();//加注
@@ -71,6 +73,7 @@ public class PlayerCardInfoHitGoldFlower implements IfacePlayerInfo {
         vo.score = this.score;
         vo.caifen = this.caifen;
         vo.cardType = this.cardType;
+        vo.finalScore = this.finalScore;
 
         vo.call = this.getCall();//跟注
         vo.raise = this.getRaise();//加注
