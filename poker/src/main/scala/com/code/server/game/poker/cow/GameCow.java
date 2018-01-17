@@ -1,5 +1,6 @@
 package com.code.server.game.poker.cow;
 
+import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.response.GameOfResult;
 import com.code.server.constant.response.IfaceGameVo;
 import com.code.server.constant.response.ResponseVo;
@@ -37,7 +38,7 @@ public class GameCow extends Game {
     protected List<Long> loseUser = new ArrayList<>();//输牌的人
     protected RoomCow room;
     protected long lastOperateTime;
-
+    protected int step;//步骤
 
     public void init(List<Long> users) {
         //初始化玩家
@@ -51,6 +52,7 @@ public class GameCow extends Game {
         shuffle();//洗牌
         deal();//发牌
         noticePlayerBet();
+        this.step = IGameConstant.STEP_RAISE;
         updateLastOperateTime();
     }
 
@@ -152,9 +154,9 @@ public class GameCow extends Game {
         if(b){
             dealFiveCard();
             noticePlayerCompare();
+            this.step = IGameConstant.STEP_COMPARE;
+            updateLastOperateTime();
         }
-
-        updateLastOperateTime();
 
         return 0;
     }
@@ -182,14 +184,14 @@ public class GameCow extends Game {
             }
         }
         if(b){
+            this.step = 0;//自动结束
             compute();
             sendResult();
             genRecord();
             room.clearReadyStatus(true);
             sendFinalResult();
+            updateLastOperateTime();
         }
-
-        updateLastOperateTime();
 
         return 0;
     }
@@ -344,6 +346,15 @@ public class GameCow extends Game {
 
     public void setLastOperateTime(long lastOperateTime) {
         this.lastOperateTime = lastOperateTime;
+    }
+
+
+    public int getStep() {
+        return step;
+    }
+
+    public void setStep(int step) {
+        this.step = step;
     }
 
     @Override

@@ -107,7 +107,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 	@Override
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card){
 		super.gangCompute(room,gameInfo,isMing,diangangUser,card);
-    	if(this.roomInfo.getGameType().equals("HT") || this.roomInfo.getGameType().equals("JL") ||this.roomInfo.getGameType().equals("DS") ||this.roomInfo.getGameType().equals("LQ") || this.roomInfo.getGameType().equals("HL")|| this.roomInfo.getGameType().equals("TC")){
+    	if(this.roomInfo.getGameType().equals("HT") || this.roomInfo.getGameType().equals("JL") ||this.roomInfo.getGameType().equals("DS") ||this.roomInfo.getGameType().equals("LQ") ||this.roomInfo.getGameType().equals("QUANMIN")|| this.roomInfo.getGameType().equals("HL")|| this.roomInfo.getGameType().equals("TC")){
     		if(!isMing){//暗杠
             	for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
             		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
@@ -478,7 +478,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 			}
 		}
 
-		else if(this.roomInfo.getGameType().equals("LQ")){
+		else if(this.roomInfo.getGameType().equals("LQ") || this.roomInfo.getGameType().equals("QUANMIN")){
 			if(isZimo){
 				if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3")||room.getMode().equals("11")||room.getMode().equals("13"))){//平胡
 					for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
@@ -582,7 +582,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
     	}
 
 
-    	if(!this.roomInfo.getGameType().equals("LQ") && !this.roomInfo.getGameType().equals("HT") && !this.roomInfo.getGameType().equals("JL") && !this.roomInfo.getGameType().equals("DS") && !this.roomInfo.getGameType().equals("HL") && !this.roomInfo.getGameType().equals("TC")){
+    	if(!this.roomInfo.getGameType().equals("LQ") && !this.roomInfo.getGameType().equals("QUANMIN") && !this.roomInfo.getGameType().equals("HT") && !this.roomInfo.getGameType().equals("JL") && !this.roomInfo.getGameType().equals("DS") && !this.roomInfo.getGameType().equals("HL") && !this.roomInfo.getGameType().equals("TC")){
     		if(this.anGangType.size()>0){
     			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
             		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * this.anGangType.size() * room.getMultiple());
