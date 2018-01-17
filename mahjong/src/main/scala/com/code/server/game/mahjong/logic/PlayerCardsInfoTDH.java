@@ -478,7 +478,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 			}
 		}
 
-		else if(this.roomInfo.getGameType().equals("LQ") || this.roomInfo.getGameType().equals("QUANMIN")){
+		else if(this.roomInfo.getGameType().equals("LQ")){
 			if(isZimo){
 				if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3")||room.getMode().equals("11")||room.getMode().equals("13"))){//平胡
 					for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
@@ -532,6 +532,67 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 						this.score = this.score + room.getMultiple() * MahjongCode.HUTOSCORE.get(""+CardUtil.huForScores(cards,huCardType));
 						room.setUserSocre(dianpaoUser, - room.getMultiple() * MahjongCode.HUTOSCORE.get(""+CardUtil.huForScores(cards,huCardType)));
 						room.setUserSocre(this.userId, room.getMultiple() * MahjongCode.HUTOSCORE.get(""+CardUtil.huForScores(cards,huCardType)));
+					}
+					this.fan = MahjongCode.HUTOSCORE.get(""+CardUtil.huForScores(cards,huCardType)+"");
+				}
+
+
+			}
+		}
+		else if(this.roomInfo.getGameType().equals("QUANMIN")){
+			if(isZimo){
+				if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3")||room.getMode().equals("11")||room.getMode().equals("13"))){//平胡
+					for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
+						gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
+						room.setUserSocre(i, - 2 * room.getMultiple());
+					}
+					this.score = this.score + 2 * room.getPersonNumber() * room.getMultiple();
+					room.setUserSocre(this.userId, 2 * room.getPersonNumber() * room.getMultiple());
+					this.fan = 2;
+//        			this.winType.add(HuType.hu_普通胡);
+				}else if(room.getModeTotal().equals("2") && (room.getMode().equals("2")||room.getMode().equals("4")||room.getMode().equals("12")||room.getMode().equals("14"))){//大胡
+					for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
+						gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple() * MahjongCode.HUTOSCOREFORLQ2.get(""+CardUtil.huForScores(cards,huCardType))/3);
+						room.setUserSocre(i,  - room.getMultiple() * MahjongCode.HUTOSCOREFORLQ2.get(""+CardUtil.huForScores(cards,huCardType))/3);
+						int a =MahjongCode.HUTOSCOREFORLQ2.get(""+CardUtil.huForScores(cards,huCardType))/3;
+						int b =CardUtil.huForScores(cards,huCardType);
+					}
+					this.score = this.score + room.getPersonNumber() * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ2.get(""+CardUtil.huForScores(cards,huCardType)+"")/3;
+					room.setUserSocre(this.userId, room.getPersonNumber() * room.getMultiple() * MahjongCode.HUTOSCOREFORLQ2.get(""+CardUtil.huForScores(cards,huCardType)+"")/3);
+					this.fan = MahjongCode.HUTOSCOREFORLQ2.get(""+CardUtil.huForScores(cards,huCardType)+"");
+//            		this.winType = CardUtil.huForWinType(cards);
+				}
+			}else{
+				if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3")||room.getMode().equals("11")||room.getMode().equals("13"))){//平胡
+					if(gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing){
+						for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
+							gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 1 * room.getMultiple());
+							room.setUserSocre(i, - 1 * room.getMultiple());
+						}
+						this.score = this.score + 4 *  room.getMultiple();
+						room.setUserSocre(this.userId, 4  * room.getMultiple());
+						this.fan = 3;
+					}else{
+						gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 3 * room.getMultiple());
+						this.score = this.score + 3 * room.getMultiple();
+						room.setUserSocre(dianpaoUser, - 3 * room.getMultiple());
+						room.setUserSocre(this.userId, 3 * room.getMultiple());
+						this.fan = 3;
+					}
+
+				}else if(room.getModeTotal().equals("2") && (room.getMode().equals("2")||room.getMode().equals("4")||room.getMode().equals("12")||room.getMode().equals("14"))){//大胡
+					if(gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing){
+						for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
+							gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple() * MahjongCode.HUTOSCORE4QUANMIN.get(""+CardUtil.huForScores(cards,huCardType))/9);
+							room.setUserSocre(i, - room.getMultiple() * MahjongCode.HUTOSCORE4QUANMIN.get(""+CardUtil.huForScores(cards,huCardType))/9);
+						}
+						this.score = this.score + 4 * room.getMultiple() * MahjongCode.HUTOSCORE4QUANMIN.get(""+CardUtil.huForScores(cards,huCardType))/9;
+						room.setUserSocre(this.userId, 4  * room.getMultiple() * MahjongCode.HUTOSCORE4QUANMIN.get(""+CardUtil.huForScores(cards,huCardType))/9);
+					}else{
+						gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - room.getMultiple() * MahjongCode.HUTOSCORE4QUANMIN.get(""+CardUtil.huForScores(cards,huCardType))/3);
+						this.score = this.score + room.getMultiple() * MahjongCode.HUTOSCORE4QUANMIN.get(""+CardUtil.huForScores(cards,huCardType))/3;
+						room.setUserSocre(dianpaoUser, - room.getMultiple() * MahjongCode.HUTOSCORE4QUANMIN.get(""+CardUtil.huForScores(cards,huCardType))/3);
+						room.setUserSocre(this.userId, room.getMultiple() * MahjongCode.HUTOSCORE4QUANMIN.get(""+CardUtil.huForScores(cards,huCardType))/3);
 					}
 					this.fan = MahjongCode.HUTOSCORE.get(""+CardUtil.huForScores(cards,huCardType)+"");
 				}
