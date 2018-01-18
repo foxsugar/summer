@@ -33,14 +33,23 @@ public class CowRobot implements ICowRobot,IGameConstant {
     }
 
     public void doExecute(Room room) {
-        if (room == null || room.getGame() == null) {
+        if (room == null && room.getGame() == null) {
             return;
+        }
+        if(room != null && room.getGame() == null){
+            if(room instanceof RoomCow){
+                RoomCow roomCow = (RoomCow)room;
+                long now = System.currentTimeMillis();
+                if(now > roomCow.getRoomLastTime() + SECOND * 10){
+                    getReady(roomCow);
+                }
+            }
         }
         if (room.getGame() instanceof GameCow) {
             GameCow game = (GameCow) room.getGame();
             long now = System.currentTimeMillis();
             //执行
-            if(now > game.lastOperateTime + SECOND * 20){
+            if(now > game.lastOperateTime + SECOND * 10){
                 switch (game.step) {
                     case STEP_RAISE:
                         raise(game);
@@ -96,5 +105,29 @@ public class CowRobot implements ICowRobot,IGameConstant {
 
         ResponseRobotVo result = new ResponseRobotVo("gameService", "compare",put);
         SpringUtil.getBean(MsgProducer.class).send2Partition("gameService",partition, msgKey, result);
+    }
+
+
+    @Override
+    public void getReady(RoomCow roomCow) {
+
+        String roomId = roomCow.getRoomId();
+        int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
+        KafkaMsgKey msgKey = new KafkaMsgKey();
+
+        msgKey.setRoomId(roomId);
+        msgKey.setPartition(partition);
+        for (Long l:roomCow.getUserStatus().keySet()) {
+            if(0==roomCow.getUserStatus().get(l)){
+                msgKey.setUserId(l);
+            }
+        }
+
+        Map<String, Object> put = new HashMap();
+
+
+        ResponseRobotVo result = new ResponseRobotVo("roomService", "getReady",put);
+        SpringUtil.getBean(MsgProducer.class).send2Partition("roomService",partition, msgKey, result);
+
     }
 }

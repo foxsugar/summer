@@ -191,6 +191,7 @@ public class GameCow extends Game {
             room.clearReadyStatus(true);
             sendFinalResult();
             updateLastOperateTime();
+            updateRoomLastTime();
         }
 
         return 0;
@@ -299,6 +300,10 @@ public class GameCow extends Game {
         this.lastOperateTime = System.currentTimeMillis();
     }
 
+    //更新操作时间
+    protected void updateRoomLastTime() {
+        room.setRoomLastTime(System.currentTimeMillis());
+    }
 
     public List<Integer> getCards() {
         return cards;
