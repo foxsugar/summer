@@ -102,6 +102,17 @@ public class GameCow extends Game {
             result.put("userId",playerCardInfo.getUserId());
             result.put("fiveCard",playerCardInfo.handcards.get(4));
             result.put("grade",playerCardInfo.getPlayer().getGrade());
+            try{
+                if(playerCardInfo.getPlayer().getGrade()<18 && playerCardInfo.getPlayer().getGrade()>7 ){
+                    result.put("sanzhangshi",CardUtils.separateNiuX(c.getPokers()));
+                }
+                else{
+                    result.put("sanzhangshi",null);
+                }
+            }catch (Exception e){
+                result.put("sanzhangshi",null);
+            }
+
             ResponseVo vo = new ResponseVo("gameService", "dealFiveCard", result);
             MsgSender.sendMsg2Player(vo, playerCardInfo.userId);
         }
@@ -189,9 +200,9 @@ public class GameCow extends Game {
             sendResult();
             genRecord();
             room.clearReadyStatus(true);
-            sendFinalResult();
             updateLastOperateTime();
             updateRoomLastTime();
+            sendFinalResult();
         }
 
         return 0;
@@ -384,10 +395,20 @@ public class GameCow extends Game {
             MsgSender.sendMsg2Player("gameService", "gameFinalResult", gameOfResult, users);
 
             RoomManager.removeRoom(room.getRoomId());
-
             //战绩
             this.room.genRoomRecord();
-
+            RoomManager.getRobotRoom().remove(room);
         }
+    }
+
+
+    protected long nextTurnId(long curId) {
+        int index = users.indexOf(curId);
+
+        int nextId = index + 1;
+        if (nextId >= users.size()) {
+            nextId = 0;
+        }
+        return users.get(nextId);
     }
 }
