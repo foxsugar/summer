@@ -46,7 +46,13 @@ public class PlayerCow  implements IfacePlayerInfo {
     @Override
     public IfacePlayerInfoVo toVo(long watchUser) {
         PlayerCowVo vo = new PlayerCowVo();
-
+        vo.userId = this.userId;
+        vo.handcards = this.handcards;
+        vo.score = this.score;
+        vo.finalScore = this.finalScore;
+        vo.raise = this.getRaise();
+        vo.kill = this.getKill();
+        vo.player = this.player;
         return vo;
     }
 

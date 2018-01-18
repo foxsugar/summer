@@ -1,9 +1,14 @@
 package com.code.server.game.poker.cow;
 
+import com.code.server.constant.game.IGameConstant;
+import com.code.server.constant.response.GameOfResult;
+import com.code.server.constant.response.IfaceGameVo;
 import com.code.server.constant.response.ResponseVo;
+import com.code.server.constant.response.UserOfResult;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.game.room.service.RoomManager;
 import com.code.server.util.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +38,7 @@ public class GameCow extends Game {
     protected List<Long> loseUser = new ArrayList<>();//输牌的人
     protected RoomCow room;
     protected long lastOperateTime;
-
+    protected int step;//步骤
 
     public void init(List<Long> users) {
         //初始化玩家
@@ -47,6 +52,7 @@ public class GameCow extends Game {
         shuffle();//洗牌
         deal();//发牌
         noticePlayerBet();
+        this.step = IGameConstant.STEP_RAISE;
         updateLastOperateTime();
     }
 
@@ -118,10 +124,7 @@ public class GameCow extends Game {
      * 通知闲家可以开牌
      */
     protected void noticePlayerCompare() {
-        List<Long> list = new ArrayList<>();
-        list.addAll(this.getUsers());
-        list.remove(room.getBankerId());
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "noticePlayerCompare", "canCompare"),list);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "noticePlayerCompare", "canCompare"),users);
     }
 
     /**
@@ -151,9 +154,9 @@ public class GameCow extends Game {
         if(b){
             dealFiveCard();
             noticePlayerCompare();
+            this.step = IGameConstant.STEP_COMPARE;
+            updateLastOperateTime();
         }
-
-        updateLastOperateTime();
 
         return 0;
     }
@@ -176,17 +179,19 @@ public class GameCow extends Game {
 
         boolean b = true;
         for (PlayerCow p:playerCardInfos.values()) {
-            if(room.getBankerId()!=p.userId && 0==p.getKill()){
+            if(0==p.getKill()){
                 b=false;
             }
         }
         if(b){
+            this.step = 0;//自动结束
             compute();
             sendResult();
             genRecord();
+            room.clearReadyStatus(true);
+            sendFinalResult();
+            updateLastOperateTime();
         }
-
-        updateLastOperateTime();
 
         return 0;
     }
@@ -202,13 +207,19 @@ public class GameCow extends Game {
         //算分
         List<PlayerCow> tempList = new ArrayList<>();
         tempList.addAll(playerCardInfos.values());
-        tempList.remove(0);
+        tempList.remove(playerCardInfos.get(room.getBankerId()));
         for (PlayerCow p :tempList){
-            CowPlayer c = CardUtils.findWinner(playerCardInfos.get(room.getBankerId()).getPlayer(), p.getPlayer());
+            CowPlayer c = CowCardUtils.findWinner(playerCardInfos.get(room.getBankerId()).getPlayer(), p.getPlayer());
             if(room.getBankerId()!=c.getId()){//庄输
-                playerCardInfos.get(p.getUserId()).setFinalScore(playerCardInfos.get(p.getUserId()).getScore()* CardUtils.multipleMap.get(playerCardInfos.get(p.getUserId()).getPlayer().getGrade()));
+               int tempGrade = playerCardInfos.get(p.getUserId()).getPlayer().getGrade();
+               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CowCardUtils.multipleMap.get(tempGrade);
+               playerCardInfos.get(p.getUserId()).setFinalScore(tempScore);
+               playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()-tempScore);
             }else{//庄赢
-                playerCardInfos.get(p.getUserId()).setFinalScore(-playerCardInfos.get(room.getBankerId()).getScore()* CardUtils.multipleMap.get(playerCardInfos.get(room.getBankerId()).getPlayer().getGrade()));
+               int tempGrade = playerCardInfos.get(room.getBankerId()).getPlayer().getGrade();
+               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CowCardUtils.multipleMap.get(tempGrade);
+               playerCardInfos.get(p.getUserId()).setFinalScore(-tempScore);
+               playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()+tempScore);
             }
         }
 
@@ -216,20 +227,19 @@ public class GameCow extends Game {
         boolean tempWin = true;
         boolean tempLost = true;
         for (PlayerCow playerCardInfo : playerCardInfos.values()) {
+            if(room.getBankerId()!=playerCardInfo.userId){
+                if(playerCardInfo.getFinalScore()>0){
+                    tempWin = false;
+                    this.room.addWinNum(playerCardInfo.getUserId());
+                }
+                if(playerCardInfo.getFinalScore()<0){
+                    tempLost = false;
+                }
+            }
             if(8==playerCardInfo.getPlayer().getGrade()){//牛牛
                 this.room.addCowCowNum(playerCardInfo.getUserId());
             }else if(18==playerCardInfo.getPlayer().getGrade()){//无牛
                 this.room.addNullCowNum(playerCardInfo.getUserId());
-            }
-            if(playerCardInfo.getFinalScore()<0){
-                tempLost = false;
-                this.room.addWinNum(playerCardInfo.getUserId());
-            }
-            if(playerCardInfo.getFinalScore()>0){
-                tempWin = false;
-            }
-            if(playerCardInfo.userId!=room.getBankerId()){
-                playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()-playerCardInfo.getFinalScore());
             }
         }
         if(tempWin){
@@ -336,5 +346,43 @@ public class GameCow extends Game {
 
     public void setLastOperateTime(long lastOperateTime) {
         this.lastOperateTime = lastOperateTime;
+    }
+
+
+    public int getStep() {
+        return step;
+    }
+
+    public void setStep(int step) {
+        this.step = step;
+    }
+
+    @Override
+    public IfaceGameVo toVo(long watchUser) {
+        GameCowVo vo = new GameCowVo();
+        for (Long l:playerCardInfos.keySet()) {
+            vo.playerCardInfos.put(l,(PlayerCowVo) playerCardInfos.get(l).toVo());
+        }
+        return vo;
+    }
+
+    /**
+     * 最后结算
+     */
+    protected void sendFinalResult() {
+        //所有牌局都结束
+        if (room.getCurGameNumber() > room.getGameNumber()) {
+            List<UserOfResult> userOfResultList = this.room.getUserOfResult();
+            // 存储返回
+            GameOfResult gameOfResult = new GameOfResult();
+            gameOfResult.setUserList(userOfResultList);
+            MsgSender.sendMsg2Player("gameService", "gameFinalResult", gameOfResult, users);
+
+            RoomManager.removeRoom(room.getRoomId());
+
+            //战绩
+            this.room.genRoomRecord();
+
+        }
     }
 }

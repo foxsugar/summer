@@ -128,7 +128,18 @@ public class RoomInfo extends Room {
                     }
                 }
 
-            } else if ("DH".equals(gameType)) {
+            } else if ("QUANMIN".equals(gameType)) {
+                if(this.gameNumber == 4){
+                    if (each.equals("0") && money < 2) {
+                        return false;
+                    }
+                }else if(this.gameNumber == 8){
+                    if (each.equals("0") && money < 3) {
+                        return false;
+                    }
+                }
+
+            }else if ("DH".equals(gameType)) {
                 if (each.equals("0") && money < 1) {
                     return false;
                 }
@@ -150,16 +161,10 @@ public class RoomInfo extends Room {
                 }
             } else if ("TC".equals(gameType)) {
                 if(this.gameNumber == 8){
-                    if (each.equals("0") && money < 4) {
-                        return false;
-                    }
                     if (each.equals("1") && money < 1) {
                         return false;
                     }
                 }else if(this.gameNumber == 16){
-                    if (each.equals("0") && money < 8) {
-                        return false;
-                    }
                     if (each.equals("1") && money < 2) {
                         return false;
                     }
@@ -257,6 +262,9 @@ public class RoomInfo extends Room {
                 return new GameInfoHM().setHasJieGangHu(true);
             case "BENGBU":
                 return new GameInfoBengbu().setHasJieGangHu(true);
+            case "NIUYEZI":
+                this.setChangeBankerAfterHuangZhuang(true);
+                return new GameInfoNiuyezi();
             default:
                 return new GameInfo();
         }
@@ -456,7 +464,13 @@ public class RoomInfo extends Room {
             } else if (16 == gameNumber) {
                 result = 8;
             }
-        } else if ("DH".equals(gameType)) {
+        } else if ("QUANMIN".equals(gameType)) {
+            if (4 == gameNumber) {
+                result = 2;
+            } else if (8 == gameNumber) {
+                result = 3;
+            }
+        }else if ("DH".equals(gameType)) {
             result = 1;
         } else if ("BENGBU".equals(gameType)) {
             if (8 == gameNumber) {
@@ -475,7 +489,7 @@ public class RoomInfo extends Room {
     }
 
     public boolean isAddGold() {
-        return "LQ".equals(gameType) || "NZZ".equals(gameType) || "HM".equals(gameType);
+        return "LQ".equals(gameType) || "NZZ".equals(gameType) || "HM".equals(gameType)||"NIUYEZI".equals(gameType);
     }
 
 

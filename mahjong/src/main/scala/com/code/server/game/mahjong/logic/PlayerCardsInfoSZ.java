@@ -337,7 +337,7 @@ public class PlayerCardsInfoSZ extends PlayerCardsInfoMj {
         return map.containsKey(cardType) && map.get(cardType)==4;
     }
 
-    protected Map<Integer,Integer> getNumByGroup(List<String> cards){
+    protected static Map<Integer,Integer> getNumByGroup(List<String> cards){
         Map<Integer, Integer> result = new HashMap<>();
         result.put(CardTypeUtil.GROUP_WAN, 0);
         result.put(CardTypeUtil.GROUP_TIAO, 0);

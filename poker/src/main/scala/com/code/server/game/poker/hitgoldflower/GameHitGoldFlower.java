@@ -247,7 +247,7 @@ public class GameHitGoldFlower extends Game {
 
         ArrayList<Player> winnerList = new ArrayList<>();
         if("30".equals(this.room.getGameType())){
-            winnerList = Player.findWinners(Player.Rules.HuanLe,asker,accepter);
+            winnerList = Player.findWinners(Player.Rules.XiaoYao,asker,accepter);
         }else {
             winnerList = Player.findWinners(Player.Rules.XiaoYao,asker,accepter);
         }
@@ -423,8 +423,8 @@ public class GameHitGoldFlower extends Game {
                 playerCardInfo.setFinalScore(playerCardInfo.getScore()-room.getMultiple()*playerCardInfo.getAllScore()+playerCardInfo.getCaifen());
             }else{
                 room.addUserSocre(playerCardInfo.getUserId(),-room.getMultiple()*playerCardInfo.getAllScore());
-                room.addUserSocre(playerCardInfo.getUserId(),-playerCardInfo.getCaifen());
-                playerCardInfo.setFinalScore(-room.getMultiple()*playerCardInfo.getAllScore()-playerCardInfo.getCaifen());
+                room.addUserSocre(playerCardInfo.getUserId(),playerCardInfo.getCaifen());
+                playerCardInfo.setFinalScore(-room.getMultiple()*playerCardInfo.getAllScore()+playerCardInfo.getCaifen());
             }
         }
     }

@@ -146,7 +146,7 @@ public class RoomCow  extends Room {
 
         //通知其他人游戏已经开始
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameCowBegin", "ok"), room.users);
-        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "startGameByClient", 0), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "startCowGameByClient", 0), userId);
 
 
         //开始游戏
@@ -336,6 +336,7 @@ public class RoomCow  extends Room {
 
     public IfaceRoomVo toVo(long userId) {
         RoomCowVo roomVo = new RoomCowVo();
+        roomVo.setBankerId(this.bankerId);
         BeanUtils.copyProperties(this, roomVo);
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.game != null) {

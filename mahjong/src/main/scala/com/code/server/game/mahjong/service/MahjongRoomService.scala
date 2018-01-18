@@ -167,7 +167,7 @@ object MahjongRoomService {
       return true
     }
     else {
-      return false
+      return true
     }
     return true
   }
