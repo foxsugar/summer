@@ -18,4 +18,6 @@ public interface ICowRobot extends IRobot {
 
     void raise(GameCow gameCow);
     void compare(GameCow gameCow);
+
+    void getReady(RoomCow roomCow);
 }
