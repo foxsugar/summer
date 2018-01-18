@@ -35,5 +35,11 @@ public interface IGameConstant extends IkafkaMsgId{
     int STEP_QIANG_DIZHU = 2;//步骤 抢地主
     int STEP_PLAY = 3;//步骤 打牌
 
+    //牛牛
+    int STEP_RAISE = 4;//步骤 抢地主
+    int STEP_COMPARE = 5;//步骤 打牌
+
     long SECOND = 1000L;//秒
+
+
 }

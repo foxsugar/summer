@@ -51,6 +51,20 @@ public class MahjongCode {
 	    }
 	};
 
+	//全民算分
+	public static final Map<String, Integer> HUTOSCORE4QUANMIN = new HashMap<String, Integer>() {
+		//private static final long serialVersionUID = 1L;
+		{
+			put("201", 9);
+			put("222", 27);
+			put("235", 27);
+			put("244", 27);
+			put("253", 54);
+			put("266", 81);
+			put("288", 81);
+		}
+	};
+
 	//分数 龙七2018-01-11
 	public static final Map<String, Integer> HUTOSCOREFORLQ2 = new HashMap<String, Integer>() {
 		//private static final long serialVersionUID = 1L;

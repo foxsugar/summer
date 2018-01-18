@@ -18,7 +18,7 @@ public class CardUtilsTest {
         list.add(13);
         list.add(14);
 
-        Integer value = CowCardUtils.getPaiXing(list);
+        Integer value = CardUtils.getPaiXing(list);
         System.out.println(value);
     }
 
@@ -37,8 +37,8 @@ public class CardUtilsTest {
         list.add(12);
         list.add(16);
 
-        Integer value = CowCardUtils.getPaiXing(list);
-        Assert.assertEquals(value.intValue(), CowCardUtils.TONG_HUA_SHUN);
+        Integer value = CardUtils.getPaiXing(list);
+        Assert.assertEquals(value.intValue(), CardUtils.TONG_HUA_SHUN);
 
     }
 
@@ -53,8 +53,8 @@ public class CardUtilsTest {
         list.add(7);
         list.add(3);
 
-        Integer value = CowCardUtils.getPaiXing(list);
-        Assert.assertEquals(value.intValue(), CowCardUtils.ZHA_DAN_NIU);
+        Integer value = CardUtils.getPaiXing(list);
+        Assert.assertEquals(value.intValue(), CardUtils.ZHA_DAN_NIU);
     }
 
     @Test
@@ -70,8 +70,8 @@ public class CardUtilsTest {
         list.add(6);
 
 
-        Integer value = CowCardUtils.getPaiXing(list);
-        Assert.assertEquals(value.intValue(), CowCardUtils.WU_HUA_NIU);
+        Integer value = CardUtils.getPaiXing(list);
+        Assert.assertEquals(value.intValue(), CardUtils.WU_HUA_NIU);
     }
 
     @Test
@@ -86,8 +86,8 @@ public class CardUtilsTest {
         list.add(48);
         list.add(44);
 
-        Integer value = CowCardUtils.getPaiXing(list);
-        Assert.assertEquals(CowCardUtils.WU_XIAO_NIU, value.intValue());
+        Integer value = CardUtils.getPaiXing(list);
+        Assert.assertEquals(CardUtils.WU_XIAO_NIU, value.intValue());
     }
 
     @Test
@@ -100,7 +100,7 @@ public class CardUtilsTest {
         list.add(13);
         list.add(14);
 
-        Integer value = CowCardUtils.getPaiXing(list);
+        Integer value = CardUtils.getPaiXing(list);
         System.out.println(value);
 
     }
@@ -115,7 +115,7 @@ public class CardUtilsTest {
         list.add(12);
         list.add(20);
 
-        Integer value = CowCardUtils.getPaiXing(list);
+        Integer value = CardUtils.getPaiXing(list);
         System.out.println(value);
 
     }
@@ -130,8 +130,8 @@ public class CardUtilsTest {
         list.add(12);
         list.add(16);
 
-        Integer value = CowCardUtils.getPaiXing(list);
-        Assert.assertEquals(CowCardUtils.SHUN_ZI, value.intValue());
+        Integer value = CardUtils.getPaiXing(list);
+        Assert.assertEquals(CardUtils.SHUN_ZI, value.intValue());
 
     }
 
@@ -146,7 +146,7 @@ public class CardUtilsTest {
         list.add(31);
         list.add(23);
 
-        Integer value = CowCardUtils.getPaiXing(list);
+        Integer value = CardUtils.getPaiXing(list);
 
         System.out.println(value);
     }

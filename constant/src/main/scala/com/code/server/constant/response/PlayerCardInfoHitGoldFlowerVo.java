@@ -13,6 +13,7 @@ public class PlayerCardInfoHitGoldFlowerVo implements IfacePlayerInfoVo {
     public double score;
     public double caifen;
     public String cardType;
+    public double finalScore;
 
     public String call;//跟注
     public String raise;//加注
@@ -120,5 +121,13 @@ public class PlayerCardInfoHitGoldFlowerVo implements IfacePlayerInfoVo {
 
     public void setCurRoundNumber(int curRoundNumber) {
         this.curRoundNumber = curRoundNumber;
+    }
+
+    public double getFinalScore() {
+        return finalScore;
+    }
+
+    public void setFinalScore(double finalScore) {
+        this.finalScore = finalScore;
     }
 }

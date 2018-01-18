@@ -36,7 +36,7 @@ public class CowPlayer {
     public CowPlayer(Long id, List<Integer> pokers) throws Exception{
         this.id = id;
         this.pokers = pokers;
-        Integer grade = CowCardUtils.getPaiXing(this.pokers);
+        Integer grade = CardUtils.getPaiXing(this.pokers);
         this.grade = grade;
     }
 
@@ -89,13 +89,13 @@ public class CowPlayer {
 
     public CowPlayer(Long id, Integer card1, Integer card2, Integer card3, Integer card4, Integer card5) {
 
-        this.pokers.add(CowCardUtils.transformCardValue(card1));
-        this.pokers.add(CowCardUtils.transformCardValue(card2));
-        this.pokers.add(CowCardUtils.transformCardValue(card3));
-        this.pokers.add(CowCardUtils.transformCardValue(card4));
-        this.pokers.add(CowCardUtils.transformCardValue(card5));
+        this.pokers.add(CardUtils.transformCardValue(card1));
+        this.pokers.add(CardUtils.transformCardValue(card2));
+        this.pokers.add(CardUtils.transformCardValue(card3));
+        this.pokers.add(CardUtils.transformCardValue(card4));
+        this.pokers.add(CardUtils.transformCardValue(card5));
 
-        Integer grade = CowCardUtils.getPaiXing(this.pokers);
+        Integer grade = CardUtils.getPaiXing(this.pokers);
         this.grade = grade;
         this.id = id;
     }
@@ -104,11 +104,11 @@ public class CowPlayer {
 
         if (localRule == false){
 
-            this.pokers.add(CowCardUtils.transformCardValue(card1));
-            this.pokers.add(CowCardUtils.transformCardValue(card2));
-            this.pokers.add(CowCardUtils.transformCardValue(card3));
-            this.pokers.add(CowCardUtils.transformCardValue(card4));
-            this.pokers.add(CowCardUtils.transformCardValue(card5));
+            this.pokers.add(CardUtils.transformCardValue(card1));
+            this.pokers.add(CardUtils.transformCardValue(card2));
+            this.pokers.add(CardUtils.transformCardValue(card3));
+            this.pokers.add(CardUtils.transformCardValue(card4));
+            this.pokers.add(CardUtils.transformCardValue(card5));
 
         }else {
 
@@ -119,7 +119,7 @@ public class CowPlayer {
             this.pokers.add(card5);
         }
 
-        Integer grade = CowCardUtils.getPaiXing(this.pokers);
+        Integer grade = CardUtils.getPaiXing(this.pokers);
         this.grade = grade;
         this.id = id;
     }
@@ -138,8 +138,8 @@ public class CowPlayer {
                 Integer a = player1.getPokers().get(0);
                 Integer b = player2.getPokers().get(0);
 
-                boolean ret1 = CowCardUtils.isA2345(player1.getPokers());
-                boolean ret2 = CowCardUtils.isA2345(player2.getPokers());
+                boolean ret1 = CardUtils.isA2345(player1.getPokers());
+                boolean ret2 = CardUtils.isA2345(player2.getPokers());
 
                 if (ret1 == true && ret2 == false){
                     return player2;
@@ -227,8 +227,8 @@ public class CowPlayer {
                 Integer a = player1.getPokers().get(0);
                 Integer b = player2.getPokers().get(0);
 
-                boolean ret1 = CowCardUtils.isA2345(player1.getPokers());
-                boolean ret2 = CowCardUtils.isA2345(player2.getPokers());
+                boolean ret1 = CardUtils.isA2345(player1.getPokers());
+                boolean ret2 = CardUtils.isA2345(player2.getPokers());
 
                 if (ret1 == true && ret2 == false){
                     return player2;
@@ -297,11 +297,11 @@ public class CowPlayer {
         Integer a = player1.getPokers().get(0);
         Integer b = player2.getPokers().get(0);
 
-        if (a == 0){
+        if (a / 4 == 0){
             a = player1.getPokers().get(1);
         }
 
-        if (b == 0){
+        if (b / 4 == 0){
             b = player2.getPokers().get(1);
         }
 
@@ -312,7 +312,7 @@ public class CowPlayer {
         return player2;
     }
 
-    /*@Override
+    @Override
     public String toString() {
 
         String str = "";
@@ -348,10 +348,10 @@ public class CowPlayer {
             str  +=  huaSe + paihao;
         }
 
-        str += " " + CowCardUtils.getNameWithGrade(this.grade);
+        str += " " + CardUtils.getNameWithGrade(this.grade);
         return str;
 
-    }*/
+    }
 
 
 //    @Override
