@@ -209,15 +209,15 @@ public class GameCow extends Game {
         tempList.addAll(playerCardInfos.values());
         tempList.remove(playerCardInfos.get(room.getBankerId()));
         for (PlayerCow p :tempList){
-            CowPlayer c = CowCardUtils.findWinner(playerCardInfos.get(room.getBankerId()).getPlayer(), p.getPlayer());
+            CowPlayer c = CardUtils.findWinner(playerCardInfos.get(room.getBankerId()).getPlayer(), p.getPlayer());
             if(room.getBankerId()!=c.getId()){//庄输
                int tempGrade = playerCardInfos.get(p.getUserId()).getPlayer().getGrade();
-               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CowCardUtils.multipleMap.get(tempGrade);
+               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CardUtils.multipleMap.get(tempGrade);
                playerCardInfos.get(p.getUserId()).setFinalScore(tempScore);
                playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()-tempScore);
             }else{//庄赢
                int tempGrade = playerCardInfos.get(room.getBankerId()).getPlayer().getGrade();
-               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CowCardUtils.multipleMap.get(tempGrade);
+               double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CardUtils.multipleMap.get(tempGrade);
                playerCardInfos.get(p.getUserId()).setFinalScore(-tempScore);
                playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()+tempScore);
             }
