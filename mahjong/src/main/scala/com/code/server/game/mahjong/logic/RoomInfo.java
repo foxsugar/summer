@@ -263,7 +263,7 @@ public class RoomInfo extends Room {
             case "BENGBU":
                 return new GameInfoBengbu().setHasJieGangHu(true);
             case "NIUYEZI":
-                this.setChangeBankerAfterHuangZhuang(true);
+                this.setChangeBankerAfterHuangZhuang(false);
                 return new GameInfoNiuyezi();
             default:
                 return new GameInfo();
