@@ -405,9 +405,6 @@ public class CardUtils {
 
     public static List<Integer> separateNiuX(List<Integer> list) throws Exception {
 
-        List<Integer> aList = new ArrayList<Integer>();
-        aList.addAll(list);
-
         List<Integer> bList = new ArrayList<Integer>();
 
         boolean isFind = false;
@@ -422,9 +419,6 @@ public class CardUtils {
                     Integer sum = calculateDianShu(list.get(i)) + calculateDianShu(list.get(j)) + calculateDianShu(list.get(k));
                     if (sum % 10 == 0){
                         isFind = true;
-                        aList.remove(list.get(i));
-                        aList.remove(list.get(j));
-                        aList.remove(list.get(k));
 
                         bList.add(list.get(i));
                         bList.add(list.get(j));
@@ -439,7 +433,20 @@ public class CardUtils {
             throw new Exception("传入数组不正确");
         }
 
-        return bList;
+        List<Integer> aList = new ArrayList<Integer>();
+
+        for (Integer card : bList){
+
+            for (Map.Entry<Integer, Integer> entry : cardsDict.entrySet()){
+                Integer serviceValue = entry.getValue();
+                if (serviceValue == card){
+                    Integer clientValue = entry.getKey();
+                    aList.add(clientValue);
+                    break;
+                }
+            }
+        }
+        return aList;
     }
 
     public static CowPlayer findWinner(CowPlayer...player){
