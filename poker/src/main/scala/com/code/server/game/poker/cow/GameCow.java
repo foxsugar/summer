@@ -105,12 +105,15 @@ public class GameCow extends Game {
             try{
                 if(playerCardInfo.getPlayer().getGrade()<18 && playerCardInfo.getPlayer().getGrade()>7 ){
                     result.put("sanzhangshi",CardUtils.separateNiuX(c.getPokers()));
+                    playerCardInfo.setSanzhangshi(CardUtils.separateNiuX(c.getPokers()));
                 }
                 else{
                     result.put("sanzhangshi",null);
+                    playerCardInfo.setSanzhangshi(null);
                 }
             }catch (Exception e){
                 result.put("sanzhangshi",null);
+                playerCardInfo.setSanzhangshi(null);
             }
 
             ResponseVo vo = new ResponseVo("gameService", "dealFiveCard", result);
@@ -287,6 +290,7 @@ public class GameCow extends Game {
         gameResultCow.setWinnerList(winnerList);
         MsgSender.sendMsg2Player("gameService", "gameResult", gameResultCow, users);
     }
+
 
     /**
      * 战绩
