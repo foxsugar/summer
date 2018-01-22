@@ -23,6 +23,8 @@ public class RoomCowVo extends RoomVo {
 
     public Long bankerId;
 
+    public long countDown;
+
     public List<PlayerCowVo> getPlayerList() {
         return playerList;
     }
@@ -37,5 +39,13 @@ public class RoomCowVo extends RoomVo {
 
     public void setBankerId(Long bankerId) {
         this.bankerId = bankerId;
+    }
+
+    public long getCountDown() {
+        return countDown;
+    }
+
+    public void setCountDown(long countDown) {
+        this.countDown = countDown;
     }
 }

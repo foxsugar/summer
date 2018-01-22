@@ -41,6 +41,7 @@ public class GameCow extends Game {
     protected int step;//步骤
 
     public void init(List<Long> users) {
+
         //初始化玩家
         for (Long uid : users) {
             PlayerCow playerCardInfo = getGameTypePlayerCardInfo();
@@ -48,7 +49,8 @@ public class GameCow extends Game {
             playerCardInfos.put(uid, playerCardInfo);
         }
         this.users.addAll(users);
-        this.room.setBankerId(users.get(0));
+        //通知游戏开始
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameCowBegin", "ok"), room.users);
         shuffle();//洗牌
         deal();//发牌
         noticePlayerBet();
@@ -61,7 +63,6 @@ public class GameCow extends Game {
         init(users);
         updateLastOperateTime();
         //通知其他人游戏已经开始
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameBegin", "ok"), this.getUsers());
     }
 
     /**
