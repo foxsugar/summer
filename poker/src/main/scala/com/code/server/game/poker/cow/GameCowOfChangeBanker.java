@@ -38,7 +38,7 @@ public class GameCowOfChangeBanker extends GameCow {
         gameResultCow.setWinnerList(winnerList);
 
         //庄家无牛下庄
-        if(18==playerCardInfos.get(0).getPlayer().getGrade()){
+        if(18==playerCardInfos.get(room.getBankerId()).getPlayer().getGrade()){
             room.setBankerId(nextTurnId(room.getBankerId()));
         }
         gameResultCow.setBankerId(room.getBankerId());

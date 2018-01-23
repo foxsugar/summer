@@ -33,7 +33,7 @@ public class CowRobot implements ICowRobot,IGameConstant {
     }
 
     public void doExecute(Room room) {
-        if (room == null && room.getGame() == null) {
+        if (room == null && room.getGame()==null) {
             return;
         }
         if(room != null && room.getGame() == null){
