@@ -3,6 +3,7 @@ package com.code.server.login.kafka;
 
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.login.service.CenterMsgService;
+import com.code.server.login.service.ClubServiceMsgDispatch;
 import com.code.server.login.service.UserServiceMsgDispatch;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
@@ -44,6 +45,21 @@ public class UserServiceMsgConsumer {
             KafkaMsgKey msgKey = JsonUtil.readValue(key, KafkaMsgKey.class);
             CenterMsgService.dispatch(msgKey, value);
         });
+
+
+    }
+
+
+    @KafkaListener(id = "clubService", topicPattern = "clubService")
+    public void listen3(ConsumerRecord<String, String> record) {
+
+        String key = record.key();
+        String value = record.value();
+        KafkaMsgKey msgKey = JsonUtil.readValue(key, KafkaMsgKey.class);
+        JsonNode msgValue = JsonUtil.readTree(value);
+        ClubServiceMsgDispatch clubServiceMsgDispatch = SpringUtil.getBean(ClubServiceMsgDispatch.class);
+        clubServiceMsgDispatch.dispatchMsg(msgKey, msgValue);
+
 
 
     }

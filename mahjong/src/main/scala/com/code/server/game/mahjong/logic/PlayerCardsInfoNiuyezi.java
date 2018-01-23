@@ -12,9 +12,9 @@ import java.util.Map;
  */
 public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
 
-    protected static final int MODE_BANKER_1 = 1;
-    protected static final int MODE_BANKER_2 = 2;
-    protected static final int MODE_BANKER_4 = 3;
+    protected static final int MODE_BANKER_1 = 0;
+    protected static final int MODE_BANKER_2 = 1;
+    protected static final int MODE_BANKER_4 = 2;
 
     /**
      * 是否荒庄
@@ -27,13 +27,16 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
         int remainSize = 12;
         int gangSize = this.gameInfo.getAllGangNum();
         remainSize += gangSize * 2;
-        remainSize = remainSize>=18?18:remainSize;
+        remainSize = remainSize >= 18 ? 18 : remainSize;
         return gameInfo.getRemainCards().size() <= remainSize;
     }
 
 
     @Override
     public boolean isCanTing(List<String> cards) {
+        if (isTing) {
+            return false;
+        }
 
         List<String> temp = getCardsNoChiPengGang(cards);
         List<HuCardType> list = getTingHuCardType(temp, null);
@@ -49,12 +52,12 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
 
 
     @Override
-    protected boolean isCanTingAfterGang(List<String> cards,int cardType,boolean isDianGang){
+    protected boolean isCanTingAfterGang(List<String> cards, int cardType, boolean isDianGang) {
         //先删除这次杠的
-        removeCardByType(cards,cardType,4);
+        removeCardByType(cards, cardType, 4);
         boolean isMing = false;
         //去除碰
-        for(int pt : pengType.keySet()){//如果杠的是之前碰过的牌
+        for (int pt : pengType.keySet()) {//如果杠的是之前碰过的牌
             if (pt != cardType) {
                 removeCardByType(cards, pt, 3);
             } else {
@@ -65,7 +68,7 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
         cards = getCardsNoGang(cards);
 
         //胡牌类型加上杠
-        List<HuCardType> list = getTingHuCardType(cards,null);
+        List<HuCardType> list = getTingHuCardType(cards, null);
 
 
         for (HuCardType huCardType : list) {
@@ -81,7 +84,7 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
 
     @Override
     public boolean isCanHu_dianpao(String card) {
-        if(this.isGuoHu()){
+        if (this.isGuoHu()) {
             return false;
         }
         if (roomInfo.mustZimo == 1) {
@@ -95,7 +98,7 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
         System.out.println("检测是否可胡点炮= " + noPengAndGang);
         int cardType = CardTypeUtil.cardType.get(card);
 
-        List<HuCardType> huList =  HuUtil.isHu(noPengAndGang, this, cardType, null);
+        List<HuCardType> huList = HuUtil.isHu(noPengAndGang, this, cardType, null);
         return huList.stream().filter(this::isCanHu).count() > 0;
 
     }
@@ -108,8 +111,8 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
      */
     @Override
     public boolean isCanHu_zimo(String card) {
-        if(roomInfo.isHaveTing()){
-            if (!isTing){
+        if (roomInfo.isHaveTing()) {
+            if (!isTing) {
                 return false;
             }
         }
@@ -122,12 +125,12 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
     }
 
     @Override
-    public void computeALLGang(long dianpaoUser) {
+    public void computeALLGang() {
         int gangFan = 0;
         gangFan += this.anGangType.size() * 2;
         int score = gangFan * roomInfo.getMultiple();
         int sub = 0;
-        for(PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()){
+        for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
             if (playerCardsInfo.getUserId() != this.userId) {
                 playerCardsInfo.addScore(-score);
                 playerCardsInfo.addGangScore(-score);
@@ -154,30 +157,37 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
 
 
         //算胡
-        int score = bankerAddScore();
+
         //数页
-        score += getShuyeFan(this.cards);
+        int score = getShuyeFan(this.cards);
+
+        if (dianpaoUser == gameInfo.getFirstTurn()) {
+            score += bankerAddScore();
+        }
+
 
         //dianpao
-        if(!isZimo){
+        if (!isZimo) {
             PlayerCardsInfoMj dianPaoPlayer = this.gameInfo.playerCardsInfos.get(dianpaoUser);
             boolean isBao_ting_hou = false;
             if (dianPaoPlayer.operateList.size() > 0) {
                 isBao_ting_hou = dianPaoPlayer.operateList.get(dianPaoPlayer.operateList.size() - 1) == PlayerCardsInfoMj.type_ting;
             }
-            boolean isBaoAll =  !dianPaoPlayer.isTing && isBao_ting_hou;
-
+            boolean isBaoAll = !dianPaoPlayer.isTing || isBao_ting_hou;
 
 
             int subScore = 0;
-            for(PlayerCardsInfoMj playerCardsInfo : this.gameInfo.playerCardsInfos.values()){
+            for (PlayerCardsInfoMj playerCardsInfo : this.gameInfo.playerCardsInfos.values()) {
                 if (playerCardsInfo.getUserId() != this.userId) {
-                    if(!isBaoAll){
-
-                        playerCardsInfo.addScore(-score);
-                        this.roomInfo.addUserSocre(playerCardsInfo.getUserId(), -score);
-                        subScore += score;
+                    int scoreTemp = score;
+                    if (playerCardsInfo.getUserId() == gameInfo.getFirstTurn()) {
+                        scoreTemp += bankerAddScore();
                     }
+                    if (!isBaoAll) {
+                        playerCardsInfo.addScore(-scoreTemp);
+                        this.roomInfo.addUserSocre(playerCardsInfo.getUserId(), -scoreTemp);
+                    }
+                    subScore += scoreTemp;
                 }
             }
 
@@ -185,18 +195,22 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
                 dianPaoPlayer.addScore(-subScore);
                 this.roomInfo.addUserSocre(dianPaoPlayer.getUserId(), -subScore);
 
-                this.addScore(subScore);
-                this.roomInfo.addUserSocre(this.getUserId(), subScore);
             }
+            this.addScore(subScore);
+            this.roomInfo.addUserSocre(this.getUserId(), subScore);
 
-        }else{//自摸
+        } else {//自摸
 
             int subScore = 0;
-            for(PlayerCardsInfoMj playerCardsInfo : this.gameInfo.playerCardsInfos.values()){
+            for (PlayerCardsInfoMj playerCardsInfo : this.gameInfo.playerCardsInfos.values()) {
                 if (playerCardsInfo.getUserId() != this.userId) {
-                        playerCardsInfo.addScore(-score);
-                        this.roomInfo.addUserSocre(playerCardsInfo.getUserId(), -score);
-                        subScore += score;
+                    int scoreTemp = score;
+                    if (playerCardsInfo.getUserId() == gameInfo.getFirstTurn()) {
+                        scoreTemp += bankerAddScore();
+                    }
+                    playerCardsInfo.addScore(-scoreTemp);
+                    this.roomInfo.addUserSocre(playerCardsInfo.getUserId(), -scoreTemp);
+                    subScore += scoreTemp;
 
                 }
             }
@@ -221,19 +235,19 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
         this.gameInfo.addUserOperate(this.userId, type_ting);
     }
 
-    private int bankerAddScore(){
-        int one = isHasMode(this.roomInfo.mode, MODE_BANKER_1)?1:0;
-        int two = isHasMode(this.roomInfo.mode, MODE_BANKER_2)?2:0;
-        int four = isHasMode(this.roomInfo.mode, MODE_BANKER_4)?4:0;
+    private int bankerAddScore() {
+        int one = isHasMode(this.roomInfo.mode, MODE_BANKER_1) ? 1 : 0;
+        int two = isHasMode(this.roomInfo.mode, MODE_BANKER_2) ? 2 : 0;
+        int four = isHasMode(this.roomInfo.mode, MODE_BANKER_4) ? 4 : 0;
         return one + two + four;
     }
 
 
-    protected int getShuyeFan(List<String> cards){
+    protected int getShuyeFan(List<String> cards) {
         Map<Integer, Integer> shuye = PlayerCardsInfoSZ.getNumByGroup(cards);
         int result = 0;
-        for(Integer num : shuye.values()){
-            if(num > 7){
+        for (Integer num : shuye.values()) {
+            if (num > 7) {
                 result += num - 7;
             }
         }
@@ -242,6 +256,7 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
 
     /**
      * 是否能胡
+     *
      * @param huCardType
      * @return
      */
@@ -253,6 +268,7 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
 
     /**
      * 是否有风
+     *
      * @param huCardType
      * @return
      */
@@ -290,6 +306,7 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
 
     /**
      * 一种类型的牌的数量
+     *
      * @param huCardType
      * @return
      */
@@ -312,7 +329,7 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
         for (Integer ke : huCardType.ke) {
             mapAddCard(groupSize, ke, 3);
         }
-        for (Integer shun : huCardType.ke) {
+        for (Integer shun : huCardType.shun) {
             mapAddCard(groupSize, shun, 3);
         }
 
@@ -328,9 +345,9 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
     private static void mapAddCard(Map<Integer, Integer> map, int cardType, int size) {
         int group = CardTypeUtil.getCardGroupByCardType(cardType);
         if (map.containsKey(group)) {
-            map.put(group, map.get(group) + 1);
+            map.put(group, map.get(group) + size);
         } else {
-            map.put(group, 1);
+            map.put(group, size);
         }
     }
 

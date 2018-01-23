@@ -3,6 +3,7 @@ package com.code.server.login;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.rpc.RpcManager;
 import com.code.server.login.service.CenterService;
+import com.code.server.login.service.ClubManager;
 import com.code.server.login.service.ServerManager;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.ThreadPool;
@@ -43,6 +44,10 @@ public class LoginApplication extends SpringBootServletInitializer {
 			RpcManager.getInstance().checkGameRpcServerWork();
 		}
 
+
+		//俱乐部 逻辑
+
+		ClubManager.getInstance().loadAll();
 //		MsgConsumer.startAConsumer("userService",0,new UserServiceConsumer());
 //		MsgConsumer.startAConsumer("userService",1,new UserServiceConsumer());
 //		MsgConsumer.startAConsumer("userService",2,new UserServiceConsumer());

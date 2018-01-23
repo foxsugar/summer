@@ -8,8 +8,8 @@ import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
 import com.code.server.redis.service.RedisManager
-import com.code.server.util.{IdWorker, SpringUtil}
 import com.code.server.util.timer.{GameTimer, ITimeHandler, TimerNode}
+import com.code.server.util.{IdWorker, SpringUtil}
 import com.fasterxml.jackson.databind.JsonNode
 
 /**
@@ -176,8 +176,9 @@ object MahjongRoomService {
     val roomInfo: RoomInfo = RoomFactory.getRoomInstance(gameType)
     val roomId: String = Room.getRoomIdStr(Room.genRoomId)
     roomInfo.setRoomType(roomType)
-    roomInfo.init(roomId, userId, modeTotal, mode, multiple, gameNumber, personNumber, userId, 0,mustZimo)
+    roomInfo.setAA("1".equals(each))
     roomInfo.setEach(each)
+    roomInfo.init(roomId, userId, modeTotal, mode, multiple, gameNumber, personNumber, userId, 0,mustZimo)
     roomInfo.setCreaterJoin(isJoin)
     roomInfo.setYipaoduoxiang(yipaoduoxiang)
     roomInfo.setCanChi(canChi)
@@ -196,6 +197,22 @@ object MahjongRoomService {
     return (code, roomInfo)
   }
 
+  /**
+    * 四人建房
+    * @param userId
+    * @param modeTotal
+    * @param mode
+    * @param multiple
+    * @param gameNumber
+    * @param personNumber
+    * @param gameType
+    * @param roomType
+    * @param mustZimo
+    * @param yipaoduoxiang
+    * @param canChi
+    * @param haveTing
+    * @return
+    */
   def createRoomByEachUser(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int, gameType: String,roomType:String,mustZimo: Int, yipaoduoxiang:Boolean,canChi :Boolean,haveTing :Boolean): Int = {
     if (!isCanCreate(modeTotal, mode, "" + multiple)) {
       return ErrorCode.CANNOT_CREATE_ROOM_PARAMETER_IS_ERROR
@@ -212,6 +229,23 @@ object MahjongRoomService {
     return 0
   }
 
+
+  /**
+    * 普通房
+    * @param userId
+    * @param modeTotal
+    * @param mode
+    * @param multiple
+    * @param gameNumber
+    * @param personNumber
+    * @param gameType
+    * @param roomType
+    * @param mustZimo
+    * @param yipaoduoxiang
+    * @param canChi
+    * @param haveTing
+    * @return
+    */
   def createRoomByUser(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int, gameType: String,roomType:String,mustZimo: Int, yipaoduoxiang:Boolean,canChi :Boolean,haveTing :Boolean): Int = {
     if (!isCanCreate(modeTotal, mode, "" + multiple)) {
       return ErrorCode.CANNOT_CREATE_ROOM_PARAMETER_IS_ERROR
@@ -224,38 +258,62 @@ object MahjongRoomService {
     return 0
   }
 
+  /**
+    * 代建房
+    * @param userId
+    * @param modeTotal
+    * @param mode
+    * @param multiple
+    * @param gameNumber
+    * @param personNumber
+    * @param gameType
+    * @param roomType
+    * @param mustZimo
+    * @param yipaoduoxiang
+    * @param canChi
+    * @param haveTing
+    * @return
+    */
   def createRoomButNotInRoom(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int, gameType: String,roomType:String,mustZimo:Int, yipaoduoxiang:Boolean,canChi:Boolean,haveTing:Boolean): Int = {
     if (!isCanCreate(modeTotal, mode, "" + multiple)) {
       return ErrorCode.CANNOT_CREATE_ROOM_PARAMETER_IS_ERROR
     }
-    val money: Double = RedisManager.getUserRedisService.getUserMoney(userId)
-    val need = RoomInfo.getCreateMoney(gameType, gameNumber)
-    if(money < need) {
-      return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY
-    }
-    RedisManager.getUserRedisService.addUserMoney(userId, -need)
-    if ("LQ" == gameType) {
-      RedisManager.addGold(userId, need/10)
-    }
+//    val money: Double = RedisManager.getUserRedisService.getUserMoney(userId)
+//    val need = RoomInfo.getCreateMoney(gameType, gameNumber)
+//    if(money < need) {
+//      return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY
+//    }
+//    RedisManager.getUserRedisService.addUserMoney(userId, -need)
+//    if ("LQ" == gameType) {
+//      RedisManager.addGold(userId, need/10)
+//    }
     val (code, roomInfo) = createRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType, "2", false,roomType,mustZimo,yipaoduoxiang,canChi,haveTing)
     if (code != 0) {
       return code
     }
 
-    val roomId: String = roomInfo.getRoomId
+
+    if (RedisManager.getUserRedisService.getUserMoney(userId) < roomInfo.getCreateNeedMoney) return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY
+    //给代建房 开房者 扣钱
+    roomInfo.spendMoney()
+
+
+
+    val roomId = roomInfo.getRoomId
     val start: Long = System.currentTimeMillis
     val node: TimerNode = new TimerNode(start, IGameConstant.ONE_HOUR, false, new ITimeHandler() {
       def fire() {
         try {
           val roomInfo: RoomInfo = RoomManager.getRoom(roomId).asInstanceOf[RoomInfo]
-          if (roomInfo != null && !roomInfo.isInGame && roomInfo.getCurGameNumber == 1) {
-            val need = RoomInfo.getCreateMoney(gameType, gameNumber)
-            RedisManager.getUserRedisService.addUserMoney(userId, need)
-            if ("LQ" == roomInfo.getGameType) {
-              RedisManager.addGold(userId, -need / 10)
-            }
-            RoomManager.removeRoom(roomInfo.getRoomId)
-          }
+          roomInfo.dissolutionRoom()
+//          if (roomInfo != null && !roomInfo.isInGame && roomInfo.getCurGameNumber == 1) {
+//            val need = RoomInfo.getCreateMoney(gameType, gameNumber)
+//            RedisManager.getUserRedisService.addUserMoney(userId, need)
+//            if ("LQ" == roomInfo.getGameType) {
+//              RedisManager.addGold(userId, -need / 10)
+//            }
+//            RoomManager.removeRoom(roomInfo.getRoomId)
+//          }
         }
         catch {
           case e: Exception => {
