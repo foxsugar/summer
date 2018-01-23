@@ -47,7 +47,8 @@ object NettyMsgDispatch {
       service match {
         case "gateService" => gateService_dispatch(method, params, jsonObject, ctx)
         //直接发到kafka
-        case "userService" =>
+        case "userService"|"clubService" =>
+//        case "clubService"=>
           //gateId 做key
           val partition = SpringUtil.getBean(classOf[ServerConfig]).getServerId
           val kafkaKey = new KafkaMsgKey

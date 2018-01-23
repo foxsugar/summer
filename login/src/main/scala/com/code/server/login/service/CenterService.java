@@ -46,6 +46,9 @@ public class CenterService {
             }
 
         }
+
+        //俱乐部 保存
+        ClubManager.getInstance().saveAll();
     }
 
 

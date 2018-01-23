@@ -1,6 +1,8 @@
 package com.code.server.game.mahjong.logic;
 
 
+import com.code.server.constant.data.DataManager;
+import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.game.PrepareRoomMj;
 import com.code.server.constant.game.UserBean;
@@ -85,6 +87,14 @@ public class RoomInfo extends Room {
         this.maxCircle = gameNumber;
         this.circleNumber.put(1, 1);
         this.mustZimo = mustZimo;
+
+        try {
+            this.createNeedMoney = this.getNeedMoney();
+        } catch (DataNotFoundException e) {
+            this.createNeedMoney = 3;
+            e.printStackTrace();
+        }
+        this.isAddGold = DataManager.data.getRoomDataMap().get(this.gameType).getIsAddGold() == 1;
     }
 
 
@@ -284,10 +294,14 @@ public class RoomInfo extends Room {
             this.gameType = "JCSS";
         }
         GameInfo gameInfo = getGameInfoInstance();
-        //扣钱
-        if (curGameNumber == 1) {
+
+        if (!isOpen && isCreaterJoin) {
             spendMoney();
         }
+//        //扣钱
+//        if (curGameNumber == 1) {
+//            spendMoney();
+//        }
         //游戏开始 代建房 去除定时解散
         if (!isOpen && !this.isCreaterJoin()) {
             GameTimer.removeNode(prepareRoomTimerNode);
@@ -493,18 +507,18 @@ public class RoomInfo extends Room {
     }
 
 
-    public void drawBack() {
-
-        if ("1".equals(each)) {
-            drawBackEach();
-        } else {
-            int money = getCreateMoney();
-            RedisManager.getUserRedisService().addUserMoney(this.createUser, money);
-            if (isAddGold()) {
-                RedisManager.addGold(this.createUser, -money / 10);
-            }
-        }
-    }
+//    public void drawBack() {
+//
+//        if ("1".equals(each)) {
+//            drawBackEach();
+//        } else {
+//            int money = getCreateMoney();
+//            RedisManager.getUserRedisService().addUserMoney(this.createUser, money);
+//            if (isAddGold()) {
+//                RedisManager.addGold(this.createUser, -money / 10);
+//            }
+//        }
+//    }
 
     public void drawBackEach() {
         if ("LQ".equals(this.getGameType())) {
@@ -555,21 +569,21 @@ public class RoomInfo extends Room {
         }
     }
 
-    public void spendMoney() {
-
-        if ("1".equals(each)) {
-            spendMoneyEach();
-        } else if ("2".equals(each)) {
-            return;
-        } else {
-            int money = -getCreateMoney();
-            RedisManager.getUserRedisService().addUserMoney(this.createUser, money);
-            if (isAddGold()) {
-
-                RedisManager.addGold(this.createUser, -money / 10);
-            }
-        }
-    }
+//    public void spendMoney() {
+//
+//        if ("1".equals(each)) {
+//            spendMoneyEach();
+//        } else if ("2".equals(each)) {
+//            return;
+//        } else {
+//            int money = -getCreateMoney();
+//            RedisManager.getUserRedisService().addUserMoney(this.createUser, money);
+//            if (isAddGold()) {
+//
+//                RedisManager.addGold(this.createUser, -money / 10);
+//            }
+//        }
+//    }
 
     public void spendMoneyEach() {
         if ("LQ".equals(this.getGameType())) {

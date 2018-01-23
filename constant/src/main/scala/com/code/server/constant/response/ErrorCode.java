@@ -27,6 +27,8 @@ public class ErrorCode {
 	public static final int CANNOT_SHARE = 1000018;
 	public static final int BLACK_LIST = 1000019;
 
+
+
 	//userId获取不到Role
 	public static final int USERID_ERROR = 110001;
 	
@@ -52,6 +54,15 @@ public class ErrorCode {
 	public static final int MJ_SEND_MESSAGE_OPERATE_IS_ERROR = 150002;
 	//当前人没有操作权限
 	public static final int MJ_CURRENTUSER_IS_NOT_THE_USER = 150003;
+
+	public static final int CLUB_CANNOT_MONEY = 1500000;
+	public static final int CLUB_CANNOT_NUM = 1500001;
+	public static final int CLUB_NO_THIS = 1500002;
+	public static final int CLUB_CANNOT_JOIN = 1500003;
+	public static final int CLUB_CANNOT_QUIT = 1500004;
+	public static final int CLUB_CANNOT_NO_PRESIDENT = 1500005;
+	public static final int CLUB_NOT_PRESIDENT = 1500006;
+	public static final int CLUB_NOT_MODEL_LIMIT = 1500007;
 
 
 	public static final int REQUEST_PARAM_ERROR = 190000;
