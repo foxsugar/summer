@@ -79,6 +79,20 @@ public class MahjongCode {
 		}
 	};
 
+	//龙七点炮3分
+	public static final Map<String, Integer> HUTOSCORE4LQ2 = new HashMap<String, Integer>() {
+		//private static final long serialVersionUID = 1L;
+		{
+			put("201", 3);
+			put("222", 9);
+			put("235", 9);
+			put("244", 9);
+			put("253", 18);
+			put("266", 27);
+			put("288", 27);
+		}
+	};
+
 	//分数
 	public static final Map<String, Integer> HUTOSCOREFORJD = new HashMap<String, Integer>() {
 		//private static final long serialVersionUID = 1L;
