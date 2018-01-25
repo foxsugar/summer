@@ -3,9 +3,7 @@ package com.code.server.game.mahjong.logic;
 import com.code.server.game.mahjong.util.HuCardType;
 import com.code.server.game.mahjong.util.HuUtil;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by sunxianping on 2018/1/10.
@@ -14,7 +12,8 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
 
     protected static final int MODE_BANKER_1 = 0;
     protected static final int MODE_BANKER_2 = 1;
-    protected static final int MODE_BANKER_4 = 2;
+    protected static final int MODE_BANKER_3 = 2;
+    protected static final int MODE_BANKER_4 = 3;
 
     /**
      * 是否荒庄
@@ -29,6 +28,60 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
         remainSize += gangSize * 2;
         remainSize = remainSize >= 18 ? 18 : remainSize;
         return gameInfo.getRemainCards().size() <= remainSize;
+    }
+
+    @Override
+    public boolean isCanPengAddThisCard(String card) {
+        if (isFeng(card)) {
+            return false;
+        }
+        return super.isCanPengAddThisCard(card);
+    }
+
+    @Override
+    public boolean isCanGangAddThisCard(String card) {
+        if (isFeng(card)) {
+            return false;
+        }
+        return super.isCanGangAddThisCard(card);
+    }
+
+    @Override
+    public boolean isCanGangThisCard(String card) {
+        if (isFeng(card)) {
+            return false;
+        }
+        return super.isCanGangThisCard(card);
+    }
+
+    @Override
+    public boolean isHasGang() {
+        List<String> temp = new ArrayList<>();
+        temp.addAll(cards);
+        Set set = getHasGangList(temp);
+
+        if (set.size() == 0) {
+            return false;
+        }
+        for (Object card : set) {
+            int type = (Integer)card;
+            if (!isFeng(type)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private boolean isFeng(int type){
+        int group = CardTypeUtil.getCardGroupByCardType(type);
+        return group == CardTypeUtil.GROUP_ZI || group == CardTypeUtil.GROUP_FENG;
+
+    }
+
+    private boolean isFeng(String card){
+        int type = CardTypeUtil.getTypeByCard(card);
+        return isFeng(type);
     }
 
 
@@ -161,7 +214,7 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
         //数页
         int score = getShuyeFan(this.cards);
 
-        if (dianpaoUser == gameInfo.getFirstTurn()) {
+        if (this.userId == gameInfo.getFirstTurn()) {
             score += bankerAddScore();
         }
 
@@ -208,6 +261,7 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
                     if (playerCardsInfo.getUserId() == gameInfo.getFirstTurn()) {
                         scoreTemp += bankerAddScore();
                     }
+                    scoreTemp *= 2;
                     playerCardsInfo.addScore(-scoreTemp);
                     this.roomInfo.addUserSocre(playerCardsInfo.getUserId(), -scoreTemp);
                     subScore += scoreTemp;
@@ -238,8 +292,9 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
     private int bankerAddScore() {
         int one = isHasMode(this.roomInfo.mode, MODE_BANKER_1) ? 1 : 0;
         int two = isHasMode(this.roomInfo.mode, MODE_BANKER_2) ? 2 : 0;
+        int three = isHasMode(this.roomInfo.mode, MODE_BANKER_3) ? 3 : 0;
         int four = isHasMode(this.roomInfo.mode, MODE_BANKER_4) ? 4 : 0;
-        return one + two + four;
+        return one + two + three + four;
     }
 
 

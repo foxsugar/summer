@@ -82,8 +82,23 @@ public class ClubServiceMsgDispatch {
                 String gameType = params.get("gameType").asText();
                 int gameNumber = params.get("gameNumber").asInt();
                 String desc1 = params.get("desc").asText();
-                return gameClubService.createRoomModel(msgKey, createCommand, userId, clubId, gameType, gameNumber, desc1);
+                return gameClubService.createRoomModel(msgKey,  userId, clubId, createCommand,gameType, gameNumber, desc1);
 
+            case "removeRoomModel":
+                String roomModelId = params.get("roomModelId").asText();
+                return gameClubService.removeRoomModel(msgKey, userId, clubId, roomModelId);
+            case "setRoomModel":
+                String createCommand_set = params.get("createCommand").asText();
+                String gameType_set = params.get("gameType").asText();
+                int gameNumber_set = params.get("gameNumber").asInt();
+                String desc1_set = params.get("desc").asText();
+                String roomModelId_set = params.get("roomModelId").asText();
+                return gameClubService.setRoomModel(msgKey,  userId, clubId,roomModelId_set,createCommand_set, gameType_set, gameNumber_set, desc1_set);
+            case "clubRoomSetId":
+
+                String clubModelId = params.get("clubModelId").asText();
+                String roomId = params.get("roomId").asText();
+                return gameClubService.clubRoomSetId(clubId,clubModelId,roomId);
         }
         return 0;
     }

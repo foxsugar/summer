@@ -10,6 +10,7 @@ public class RoomModel {
     private String name;
     private String desc;
     private long time;
+    private String serviceName;
 
 
     public String getId() {
@@ -63,6 +64,15 @@ public class RoomModel {
 
     public RoomModel setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public RoomModel setServiceName(String serviceName) {
+        this.serviceName = serviceName;
         return this;
     }
 }

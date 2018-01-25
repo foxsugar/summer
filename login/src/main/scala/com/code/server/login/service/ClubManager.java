@@ -49,7 +49,12 @@ public class ClubManager {
 
     public void loadAll() {
         ClubService clubService = SpringUtil.getBean(ClubService.class);
-        clubService.getClubDao().findAll().forEach(club->clubMap.put(club.getId(), club));
+        clubService.getClubDao().findAll().forEach(club-> {
+            clubMap.put(club.getId(), club);
+            //
+          //  GameClubService.initRoomInstance(club);
+
+        });
     }
 
 

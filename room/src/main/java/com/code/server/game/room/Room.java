@@ -12,6 +12,7 @@ import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
@@ -66,6 +67,9 @@ public class Room implements IfaceRoom {
     public int mustZimo = 0;//1是0否
     public boolean showChat;
 
+    private String clubId;
+    private String clubRoomModel;
+
 
 
     public Long canStartUserId = 0L;
@@ -103,6 +107,11 @@ public class Room implements IfaceRoom {
         if (roomData == null) {
             throw new DataNotFoundException("roomdata not found : " + gameType);
         }
+        //俱乐部 加入不要钱
+        if (isClubRoom()) {
+            return 0;
+        }
+
         if (isAA) {
             return roomData.getEachMoneyMap().get(gameNumber);
         } else {
@@ -119,8 +128,25 @@ public class Room implements IfaceRoom {
         this.maxZhaCount = multiple;
         this.createNeedMoney = this.getNeedMoney();
         this.isAddGold = DataManager.data.getRoomDataMap().get(this.gameType).getIsAddGold() == 1;
+
+        clubRoomSetId();
     }
 
+    public void clubRoomSetId(){
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        KafkaMsgKey kafkaKey = new KafkaMsgKey();
+        kafkaKey.setUserId(0);
+
+        String keyJson = JsonUtil.toJson(kafkaKey);
+        Map<String, String> msg = new HashMap<>();
+
+        msg.put("clubId", this.clubId);
+        msg.put("clubModelId", this.clubRoomModel);
+        msg.put("roomId", this.roomId);
+        ResponseVo responseVo = new ResponseVo("clubService","clubRoomSetId",msg);
+        msgProducer.send("clubService",kafkaKey, responseVo);
+
+    }
 
     public int joinRoom(long userId, boolean isJoin) {
 
@@ -371,6 +397,10 @@ public class Room implements IfaceRoom {
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userScores), this.getUsers());
     }
 
+    private void send(){
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send();
+    }
 
     public int dissolution(long userId, boolean agreeOrNot, String methodName) {
         if (!this.users.contains(userId)) {
@@ -647,6 +677,10 @@ public class Room implements IfaceRoom {
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
         msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord);
 
+    }
+
+    public boolean isClubRoom(){
+        return clubId != null && !"".equals(clubId) && !"0".equals(clubId);
     }
 
     public String getRoomId() {
@@ -967,6 +1001,24 @@ public class Room implements IfaceRoom {
 
     public Room setShowChat(boolean showChat) {
         this.showChat = showChat;
+        return this;
+    }
+
+    public String getClubId() {
+        return clubId;
+    }
+
+    public Room setClubId(String clubId) {
+        this.clubId = clubId;
+        return this;
+    }
+
+    public String getClubRoomModel() {
+        return clubRoomModel;
+    }
+
+    public Room setClubRoomModel(String clubRoomModel) {
+        this.clubRoomModel = clubRoomModel;
         return this;
     }
 }

@@ -9,10 +9,7 @@ import com.code.server.db.Service.GameRecordService;
 import com.code.server.db.Service.ReplayService;
 import com.code.server.db.Service.UserRecordService;
 import com.code.server.db.Service.UserService;
-import com.code.server.db.model.GameRecord;
-import com.code.server.db.model.Replay;
-import com.code.server.db.model.User;
-import com.code.server.db.model.UserRecord;
+import com.code.server.db.model.*;
 import com.code.server.login.action.LoginAction;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.JsonUtil;
@@ -57,8 +54,23 @@ public class CenterMsgService implements IkafkaMsgId {
             case KAFKA_MSG_ID_GUESS_ADD_GOLD:
                 guessAddGold(msg);
                 break;
+            case KAFKA_MSG_ID_REFRESH_ROOM_INSTANCE:
+                refreshRoomInstance(msg);
+                break;
 
 
+        }
+    }
+
+    private static void refreshRoomInstance(String msg){
+
+        JsonNode jsonNode = JsonUtil.readTree(msg);
+        String clubId = jsonNode.path("clubId").asText();
+        String roomModelId = jsonNode.path("roomModelId").asText();
+        String roomId = jsonNode.path("roomId").asText();
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club != null) {
+            GameClubService.initRoomInstance(club);
         }
     }
 
