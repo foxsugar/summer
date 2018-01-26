@@ -47,7 +47,7 @@ public class RoomDouDiZhu extends Room {
 //    }
 
 
-    public static RoomDouDiZhu getRoomInstance(String roomType){
+    public static RoomDouDiZhu getRoomInstance(String roomType) {
         switch (roomType) {
             case "1":
                 return new RoomDouDiZhu();
@@ -59,7 +59,7 @@ public class RoomDouDiZhu extends Room {
 
     }
 
-    public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType, boolean isAA, boolean isJoin, boolean showChat,String clubId,String clubRoomModel) throws DataNotFoundException {
+    public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType, boolean isAA, boolean isJoin, boolean showChat, String clubId, String clubRoomModel) throws DataNotFoundException {
         RoomDouDiZhu room = getRoomInstance(roomType);
 
         room.personNumber = PERSONNUM;

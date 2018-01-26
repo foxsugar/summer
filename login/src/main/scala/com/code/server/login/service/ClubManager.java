@@ -52,7 +52,7 @@ public class ClubManager {
         clubService.getClubDao().findAll().forEach(club-> {
             clubMap.put(club.getId(), club);
             //
-          //  GameClubService.initRoomInstance(club);
+//            GameClubService.initRoomInstance(club);
 
         });
     }

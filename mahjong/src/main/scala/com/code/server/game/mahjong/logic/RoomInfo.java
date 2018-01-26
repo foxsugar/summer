@@ -95,6 +95,7 @@ public class RoomInfo extends Room {
             e.printStackTrace();
         }
         this.isAddGold = DataManager.data.getRoomDataMap().get(this.gameType).getIsAddGold() == 1;
+        clubRoomSetId();
     }
 
 
@@ -317,6 +318,8 @@ public class RoomInfo extends Room {
 
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameBegin", toJSONObjectOfGameBegin()), this.getUsers());
         pushScoreChange();
+        notifyCludGameStart();
+        this.isOpen = true;
     }
 
 

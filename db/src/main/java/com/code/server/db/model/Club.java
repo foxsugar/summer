@@ -46,6 +46,8 @@ public class Club extends BaseEntity {
     @Column(columnDefinition = "json")
     private ClubInfo ClubInfo = new ClubInfo();
 
+    public transient final Object lock = new Object();
+
 
     public String getId() {
         return id;

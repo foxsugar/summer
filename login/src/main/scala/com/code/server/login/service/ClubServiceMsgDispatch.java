@@ -99,6 +99,11 @@ public class ClubServiceMsgDispatch {
                 String clubModelId = params.get("clubModelId").asText();
                 String roomId = params.get("roomId").asText();
                 return gameClubService.clubRoomSetId(clubId,clubModelId,roomId);
+
+            case "clubGameStart":
+                String clubModelId1 = params.get("clubModelId").asText();
+//                String roomId = params.get("roomId").asText();
+                return gameClubService.cludGameStart(clubId, clubModelId1);
         }
         return 0;
     }
