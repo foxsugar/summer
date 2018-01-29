@@ -7,6 +7,7 @@ import com.code.server.game.poker.doudizhu.{GameDouDiZhu, GameDouDiZhuGold}
 import com.code.server.game.poker.hitgoldflower.GameHitGoldFlower
 import com.code.server.game.poker.guess.GameGuessCar
 import com.code.server.game.poker.paijiu.GamePaijiu
+import com.code.server.game.poker.tuitongzi.GameTuiTongZi
 import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
 import com.code.server.util.JsonUtil
@@ -26,6 +27,7 @@ object GameService {
       case x:GameHitGoldFlower =>dispatchGameHGFService(userId,method,game.asInstanceOf[GameHitGoldFlower],params)
       case x:GameGuessCar =>dispatchGameGuessService(userId,method,game.asInstanceOf[GameGuessCar],params)
       case x:GameCow =>dispatchGameCowService(userId,method,game.asInstanceOf[GameCow],params)
+      case x:GameTuiTongZi =>dispatchGameTTZService(userId,method,game.asInstanceOf[GameTuiTongZi],params)
     }
 
   }
@@ -68,6 +70,36 @@ object GameService {
       game.play(userId, cardStruct)
     case "pass" =>
       game.pass(userId)
+    case _ =>
+      ErrorCode.REQUEST_PARAM_ERROR
+  }
+
+  private def dispatchGameTTZService(userId:Long,method: String, game: GameTuiTongZi, params: JsonNode) = method match {
+    case "bet" =>
+      val zhu = params.path("zhu").asInt(0)
+      game.bet(userId, zhu);
+    case "crap"=>
+      game.crap(userId)
+    case "open"=>
+      val firstId = params.path("firstId").asLong()
+//      game.open(userId, firstId);
+      game.open(userId, firstId);
+    case "fightForBanker" =>
+      val flag = params.path("flag").asBoolean()
+      game.fightForBanker(userId, flag)
+    case "bankerSetScore" =>
+      val score = params.path("score").asInt()
+      game.bankerSetScore(userId, score)
+
+    case "bankerBreak" =>
+      val flag = params.path("flag").asBoolean()
+      game.bankerBreak(userId, flag)
+
+
+    case "exchange" =>
+      game.exchange(userId)
+    case "setTestUser" =>
+      game.setTestUser(userId)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

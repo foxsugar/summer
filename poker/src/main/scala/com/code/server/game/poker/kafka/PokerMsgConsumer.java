@@ -50,5 +50,12 @@ public class PokerMsgConsumer {
         MsgDispatch.dispatch(record);
     }
 
+    @KafkaListener(id = "gameTuiTongZiService", topicPartitions = {
+            @TopicPartition(topic = "gameTuiTongZiService", partitions = "${serverConfig.serverId}")
+    })
+    public void listen_ttzroom(ConsumerRecord<String, String> record ) {
+        MsgDispatch.dispatch(record);
+    }
+
 
 }

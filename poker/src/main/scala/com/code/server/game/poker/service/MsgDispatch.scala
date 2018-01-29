@@ -37,7 +37,6 @@ object MsgDispatch {
         logger.error("poker 消息异常 ", e)
     }
   }
-
   private def dispatchAllMsg(userId: Long, roomId: String, service: String, method: String, params: JsonNode) = service match {
     case "gameService" =>
       GameService.dispatch(userId, method, roomId, params)
@@ -49,6 +48,8 @@ object MsgDispatch {
       GameService.dispatch(userId, method, roomId, params)
     case "reconnService" =>
       ReconnService.dispatch(userId, method, roomId)
+    case "gameTuiTongZiService" =>
+      GameService.dispatch(userId, method, roomId, params)
     case _ =>
       -1
   }
