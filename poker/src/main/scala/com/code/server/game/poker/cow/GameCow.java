@@ -41,6 +41,7 @@ public class GameCow extends Game {
     protected int step;//步骤
 
     public void init(List<Long> users) {
+
         //初始化玩家
         for (Long uid : users) {
             PlayerCow playerCardInfo = getGameTypePlayerCardInfo();
@@ -48,7 +49,8 @@ public class GameCow extends Game {
             playerCardInfos.put(uid, playerCardInfo);
         }
         this.users.addAll(users);
-        this.room.setBankerId(users.get(0));
+        //通知游戏开始
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameCowBegin", "ok"), room.users);
         shuffle();//洗牌
         deal();//发牌
         noticePlayerBet();
@@ -61,7 +63,6 @@ public class GameCow extends Game {
         init(users);
         updateLastOperateTime();
         //通知其他人游戏已经开始
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameBegin", "ok"), this.getUsers());
     }
 
     /**
@@ -102,6 +103,20 @@ public class GameCow extends Game {
             result.put("userId",playerCardInfo.getUserId());
             result.put("fiveCard",playerCardInfo.handcards.get(4));
             result.put("grade",playerCardInfo.getPlayer().getGrade());
+            try{
+                if(playerCardInfo.getPlayer().getGrade()<18 && playerCardInfo.getPlayer().getGrade()>7 ){
+                    result.put("sanzhangshi",CardUtils.separateNiuX(c.getPokers()));
+                    playerCardInfo.setSanzhangshi(CardUtils.separateNiuX(c.getPokers()));
+                }
+                else{
+                    result.put("sanzhangshi",null);
+                    playerCardInfo.setSanzhangshi(null);
+                }
+            }catch (Exception e){
+                result.put("sanzhangshi",null);
+                playerCardInfo.setSanzhangshi(null);
+            }
+
             ResponseVo vo = new ResponseVo("gameService", "dealFiveCard", result);
             MsgSender.sendMsg2Player(vo, playerCardInfo.userId);
         }
@@ -189,9 +204,9 @@ public class GameCow extends Game {
             sendResult();
             genRecord();
             room.clearReadyStatus(true);
-            sendFinalResult();
             updateLastOperateTime();
             updateRoomLastTime();
+            sendFinalResult();
         }
 
         return 0;
@@ -276,6 +291,7 @@ public class GameCow extends Game {
         gameResultCow.setWinnerList(winnerList);
         MsgSender.sendMsg2Player("gameService", "gameResult", gameResultCow, users);
     }
+
 
     /**
      * 战绩
@@ -384,10 +400,20 @@ public class GameCow extends Game {
             MsgSender.sendMsg2Player("gameService", "gameFinalResult", gameOfResult, users);
 
             RoomManager.removeRoom(room.getRoomId());
-
             //战绩
             this.room.genRoomRecord();
-
+            RoomManager.getRobotRoom().remove(room);
         }
+    }
+
+
+    protected long nextTurnId(long curId) {
+        int index = users.indexOf(curId);
+
+        int nextId = index + 1;
+        if (nextId >= users.size()) {
+            nextId = 0;
+        }
+        return users.get(nextId);
     }
 }

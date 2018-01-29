@@ -26,6 +26,8 @@ public class PlayerCow  implements IfacePlayerInfo {
     public double finalScore;
     public CowPlayer player;
 
+    public List<Integer> sanzhangshi = new ArrayList<>();//手上的牌
+
     //1表示显示
     protected int raise;//加注
     protected int kill;//比牌
@@ -40,6 +42,7 @@ public class PlayerCow  implements IfacePlayerInfo {
         vo.raise = this.getRaise();
         vo.kill = this.getKill();
         vo.player = this.player;
+        vo.sanzhangshi = this.sanzhangshi;
         return vo;
     }
 
@@ -50,6 +53,7 @@ public class PlayerCow  implements IfacePlayerInfo {
         vo.handcards = this.handcards;
         vo.score = this.score;
         vo.finalScore = this.finalScore;
+        vo.sanzhangshi = this.sanzhangshi;
         vo.raise = this.getRaise();
         vo.kill = this.getKill();
         vo.player = this.player;
@@ -110,5 +114,13 @@ public class PlayerCow  implements IfacePlayerInfo {
 
     public void setFinalScore(double finalScore) {
         this.finalScore = finalScore;
+    }
+
+    public List<Integer> getSanzhangshi() {
+        return sanzhangshi;
+    }
+
+    public void setSanzhangshi(List<Integer> sanzhangshi) {
+        this.sanzhangshi = sanzhangshi;
     }
 }

@@ -243,7 +243,9 @@ public class GameInfo extends Game {
 
 //        noCanHuList.remove(userId);
         PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
-        playerCardsInfo.setGuoHu(false);
+        if (isHasGuoHu()) {
+            playerCardsInfo.setGuoHu(false);
+        }
         if (isHuangzhuang(playerCardsInfo)) {
             handleHuangzhuang(userId);
             return;

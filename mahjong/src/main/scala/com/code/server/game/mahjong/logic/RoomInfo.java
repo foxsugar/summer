@@ -1,6 +1,8 @@
 package com.code.server.game.mahjong.logic;
 
 
+import com.code.server.constant.data.DataManager;
+import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.game.PrepareRoomMj;
 import com.code.server.constant.game.UserBean;
@@ -85,114 +87,123 @@ public class RoomInfo extends Room {
         this.maxCircle = gameNumber;
         this.circleNumber.put(1, 1);
         this.mustZimo = mustZimo;
+
+        try {
+            this.createNeedMoney = this.getNeedMoney();
+        } catch (DataNotFoundException e) {
+            this.createNeedMoney = 3;
+            e.printStackTrace();
+        }
+        this.isAddGold = DataManager.data.getRoomDataMap().get(this.gameType).getIsAddGold() == 1;
+        clubRoomSetId();
     }
 
 
-    @Override
-    protected boolean isCanJoinCheckMoney(long userId) {
-        if (!isCreaterJoin) {
-            return true;
-        }
-        double money = RedisManager.getUserRedisService().getUserMoney(userId);
-        if (userId == createUser) {
-            if ("SY".equals(gameType)) {
-                if (money < 1) {
-                    return false;
-                }
-            } else if ("LQ".equals(gameType)) {
-                if (each.equals("0") && money < 30) {
-                    return false;
-                }
-            } else if ("NZZ".equals(gameType) || "HM".equals(gameType)) {
-                if (each.equals("0") && money < 20) {
-                    return false;
-                }
-            } else if ("HL".equals(gameType)) {
-                if (each.equals("0") && money < 1) {
-                    return false;
-                }
-            } else if ("TC".equals(gameType)) {
-                if(this.gameNumber == 8){
-                    if (each.equals("0") && money < 4) {
-                        return false;
-                    }
-                    if (each.equals("1") && money < 1) {
-                        return false;
-                    }
-                }else if(this.gameNumber == 16){
-                    if (each.equals("0") && money < 8) {
-                        return false;
-                    }
-                    if (each.equals("1") && money < 2) {
-                        return false;
-                    }
-                }
-
-            } else if ("QUANMIN".equals(gameType)) {
-                if(this.gameNumber == 4){
-                    if (each.equals("0") && money < 2) {
-                        return false;
-                    }
-                }else if(this.gameNumber == 8){
-                    if (each.equals("0") && money < 3) {
-                        return false;
-                    }
-                }
-
-            }else if ("DH".equals(gameType)) {
-                if (each.equals("0") && money < 1) {
-                    return false;
-                }
-                if (each.equals("1") && money < 1) {
-                    return false;
-                }
-            } else {
-                if (money < 3) {
-                    return false;
-                }
-            }
-        } else {
-            if ("LQ".equals(gameType)) {
-                if (each.equals("1") && money < 10 && this.gameNumber == 8) {
-                    return false;
-                }
-                if (each.equals("1") && money < 20 && this.gameNumber == 16) {
-                    return false;
-                }
-            } else if ("TC".equals(gameType)) {
-                if(this.gameNumber == 8){
-                    if (each.equals("1") && money < 1) {
-                        return false;
-                    }
-                }else if(this.gameNumber == 16){
-                    if (each.equals("1") && money < 2) {
-                        return false;
-                    }
-                }
-            } else if ("NZZ".equals(gameType)) {
-                if (each.equals("1") && money < 5 && this.gameNumber == 4) {
-                    return false;
-                }
-                if (each.equals("1") && money < 10 && this.gameNumber == 8) {
-                    return false;
-                }
-                if (each.equals("1") && money < 15 && this.gameNumber == 12) {
-                    return false;
-                }
-            } else if ("HM".equals(gameType)) {
-                if (each.equals("1") && money < 5 && this.gameNumber == 1) {
-                    return false;
-                }
-                if (each.equals("1") && money < 10 && this.gameNumber == 2) {
-                    return false;
-                }
-                if (each.equals("1") && money < 15 && this.gameNumber == 3) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+//    @Override
+//    protected boolean isCanJoinCheckMoney(long userId) {
+//        if (!isCreaterJoin) {
+//            return true;
+//        }
+//        double money = RedisManager.getUserRedisService().getUserMoney(userId);
+//        if (userId == createUser) {
+//            if ("SY".equals(gameType)) {
+//                if (money < 1) {
+//                    return false;
+//                }
+//            } else if ("LQ".equals(gameType)) {
+//                if (each.equals("0") && money < 30) {
+//                    return false;
+//                }
+//            } else if ("NZZ".equals(gameType) || "HM".equals(gameType)) {
+//                if (each.equals("0") && money < 20) {
+//                    return false;
+//                }
+//            } else if ("HL".equals(gameType)) {
+//                if (each.equals("0") && money < 1) {
+//                    return false;
+//                }
+//            } else if ("TC".equals(gameType)) {
+//                if(this.gameNumber == 8){
+//                    if (each.equals("0") && money < 4) {
+//                        return false;
+//                    }
+//                    if (each.equals("1") && money < 1) {
+//                        return false;
+//                    }
+//                }else if(this.gameNumber == 16){
+//                    if (each.equals("0") && money < 8) {
+//                        return false;
+//                    }
+//                    if (each.equals("1") && money < 2) {
+//                        return false;
+//                    }
+//                }
+//
+//            } else if ("QUANMIN".equals(gameType)) {
+//                if(this.gameNumber == 4){
+//                    if (each.equals("0") && money < 2) {
+//                        return false;
+//                    }
+//                }else if(this.gameNumber == 8){
+//                    if (each.equals("0") && money < 3) {
+//                        return false;
+//                    }
+//                }
+//
+//            }else if ("DH".equals(gameType)) {
+//                if (each.equals("0") && money < 1) {
+//                    return false;
+//                }
+//                if (each.equals("1") && money < 1) {
+//                    return false;
+//                }
+//            } else {
+//                if (money < 3) {
+//                    return false;
+//                }
+//            }
+//        } else {
+//            if ("LQ".equals(gameType)) {
+//                if (each.equals("1") && money < 10 && this.gameNumber == 8) {
+//                    return false;
+//                }
+//                if (each.equals("1") && money < 20 && this.gameNumber == 16) {
+//                    return false;
+//                }
+//            } else if ("TC".equals(gameType)) {
+//                if(this.gameNumber == 8){
+//                    if (each.equals("1") && money < 1) {
+//                        return false;
+//                    }
+//                }else if(this.gameNumber == 16){
+//                    if (each.equals("1") && money < 2) {
+//                        return false;
+//                    }
+//                }
+//            } else if ("NZZ".equals(gameType)) {
+//                if (each.equals("1") && money < 5 && this.gameNumber == 4) {
+//                    return false;
+//                }
+//                if (each.equals("1") && money < 10 && this.gameNumber == 8) {
+//                    return false;
+//                }
+//                if (each.equals("1") && money < 15 && this.gameNumber == 12) {
+//                    return false;
+//                }
+//            } else if ("HM".equals(gameType)) {
+//                if (each.equals("1") && money < 5 && this.gameNumber == 1) {
+//                    return false;
+//                }
+//                if (each.equals("1") && money < 10 && this.gameNumber == 2) {
+//                    return false;
+//                }
+//                if (each.equals("1") && money < 15 && this.gameNumber == 3) {
+//                    return false;
+//                }
+//            }
+//        }
+//        return true;
+//    }
 
 
     protected boolean isHasMode(int type) {
@@ -284,10 +295,14 @@ public class RoomInfo extends Room {
             this.gameType = "JCSS";
         }
         GameInfo gameInfo = getGameInfoInstance();
-        //扣钱
-        if (curGameNumber == 1) {
+
+        if (!isOpen && isCreaterJoin) {
             spendMoney();
         }
+//        //扣钱
+//        if (curGameNumber == 1) {
+//            spendMoney();
+//        }
         //游戏开始 代建房 去除定时解散
         if (!isOpen && !this.isCreaterJoin()) {
             GameTimer.removeNode(prepareRoomTimerNode);
@@ -303,6 +318,8 @@ public class RoomInfo extends Room {
 
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameBegin", toJSONObjectOfGameBegin()), this.getUsers());
         pushScoreChange();
+        notifyCludGameStart();
+        this.isOpen = true;
     }
 
 
@@ -493,18 +510,18 @@ public class RoomInfo extends Room {
     }
 
 
-    public void drawBack() {
-
-        if ("1".equals(each)) {
-            drawBackEach();
-        } else {
-            int money = getCreateMoney();
-            RedisManager.getUserRedisService().addUserMoney(this.createUser, money);
-            if (isAddGold()) {
-                RedisManager.addGold(this.createUser, -money / 10);
-            }
-        }
-    }
+//    public void drawBack() {
+//
+//        if ("1".equals(each)) {
+//            drawBackEach();
+//        } else {
+//            int money = getCreateMoney();
+//            RedisManager.getUserRedisService().addUserMoney(this.createUser, money);
+//            if (isAddGold()) {
+//                RedisManager.addGold(this.createUser, -money / 10);
+//            }
+//        }
+//    }
 
     public void drawBackEach() {
         if ("LQ".equals(this.getGameType())) {
@@ -555,21 +572,21 @@ public class RoomInfo extends Room {
         }
     }
 
-    public void spendMoney() {
-
-        if ("1".equals(each)) {
-            spendMoneyEach();
-        } else if ("2".equals(each)) {
-            return;
-        } else {
-            int money = -getCreateMoney();
-            RedisManager.getUserRedisService().addUserMoney(this.createUser, money);
-            if (isAddGold()) {
-
-                RedisManager.addGold(this.createUser, -money / 10);
-            }
-        }
-    }
+//    public void spendMoney() {
+//
+//        if ("1".equals(each)) {
+//            spendMoneyEach();
+//        } else if ("2".equals(each)) {
+//            return;
+//        } else {
+//            int money = -getCreateMoney();
+//            RedisManager.getUserRedisService().addUserMoney(this.createUser, money);
+//            if (isAddGold()) {
+//
+//                RedisManager.addGold(this.createUser, -money / 10);
+//            }
+//        }
+//    }
 
     public void spendMoneyEach() {
         if ("LQ".equals(this.getGameType())) {

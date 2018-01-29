@@ -22,7 +22,10 @@ public class ErrorCode {
 	public static final int CANNOT_JOIN_ROOM_NO_MONEY = 1000013;
 	public static final int CANNOT_JOIN_ROOM_IS_IN_GAME = 1000014;
 	public static final int CANNOT_QUIT_ROOM_IS_IN_GAME = 1000015;
-	
+
+
+
+
 	public static final int USERNAME_NOT_COMPLIE = 200001;
 	public static final int ACCOUNT_NOT_COMPLIE = 200002;
 	public static final int PASSWORD_NOT_COMPLIE = 200003;

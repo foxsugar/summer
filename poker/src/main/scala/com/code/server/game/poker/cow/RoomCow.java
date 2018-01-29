@@ -337,8 +337,14 @@ public class RoomCow  extends Room {
     }
 
     public IfaceRoomVo toVo(long userId) {
+        GameCow gameCow = (GameCow)this.getGame();
+
         RoomCowVo roomVo = new RoomCowVo();
         roomVo.setBankerId(this.bankerId);
+        if(gameCow!=null){
+            long l = System.currentTimeMillis()-gameCow.getLastOperateTime();
+            roomVo.setCountDown(10-(l)/1000);
+        }
         BeanUtils.copyProperties(this, roomVo);
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.game != null) {

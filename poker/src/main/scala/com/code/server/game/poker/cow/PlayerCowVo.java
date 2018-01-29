@@ -24,6 +24,8 @@ public class PlayerCowVo implements IfacePlayerInfoVo {
     public double finalScore;
     public CowPlayer player;
 
+    public List<Integer> sanzhangshi = new ArrayList<>();//手上的牌
+
     //1表示显示
     protected int raise;//加注
     protected int kill;//比牌
@@ -86,5 +88,13 @@ public class PlayerCowVo implements IfacePlayerInfoVo {
 
     public void setKill(int kill) {
         this.kill = kill;
+    }
+
+    public List<Integer> getSanzhangshi() {
+        return sanzhangshi;
+    }
+
+    public void setSanzhangshi(List<Integer> sanzhangshi) {
+        this.sanzhangshi = sanzhangshi;
     }
 }
