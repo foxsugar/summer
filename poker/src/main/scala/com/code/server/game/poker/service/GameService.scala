@@ -132,6 +132,12 @@ object GameService {
       game.raise(userId,addChip);
     case "compare"=>
       game.compare(userId);
+    case "perspective" =>
+      game.perspective(userId);
+    case "changeCard" =>
+      val userId = params.path("userId").asLong(0)
+      val cardType = params.path("type").asInt()
+      game.changeCard(userId,cardType);
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

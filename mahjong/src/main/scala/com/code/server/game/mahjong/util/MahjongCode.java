@@ -35,6 +35,7 @@ public class MahjongCode {
 	public static final String QINGYISE="235";			//9*3
 	public static final String YITIAOLONG="244";		//9*3
 	public static final String HAOHUAQIXIAODUI="253";	//18*3
+	public static final String SHUANGHAOHUAQIXIAODUI="254";	//18*3
 	public static final String SHISANYAO="266";			//27*3
 	public static final String QINGLONG="288";			//拐三角点炮胡专用
 	//分数
@@ -115,6 +116,7 @@ public class MahjongCode {
 			put("235", 9);
 			put("244", 9);
 			put("253", 18);
+			put("254", 18);
 			put("288", 18);
 		}
 	};
@@ -151,6 +153,7 @@ public class MahjongCode {
 				put("235", 9);
 				put("244", 9);
 				put("253", 18);
+				put("254", 18);
 				put("266", 27);
 			}
 	};

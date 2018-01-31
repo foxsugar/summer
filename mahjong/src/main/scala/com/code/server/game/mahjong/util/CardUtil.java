@@ -1851,6 +1851,10 @@ public class CardUtil {
 			result += MahjongCode.SHISANYAO;
 			result += ",";
 		}
+		if (huCardType.specialHuList.contains(HuType.hu_双豪七小对_山西)) {
+			result += MahjongCode.SHUANGHAOHUAQIXIAODUI;
+			result += ",";
+		}
 		if (huCardType.specialHuList.contains(HuType.hu_豪华七小对)) {
 			result += MahjongCode.HAOHUAQIXIAODUI;
 			result += ",";
