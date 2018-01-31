@@ -1,7 +1,6 @@
 package com.code.server.constant.response;
 
 import com.code.server.constant.club.ClubMember;
-import com.code.server.constant.club.RoomInstance;
 import com.code.server.constant.club.RoomModel;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class ClubVo {
     private List<RoomModel> roomModels = new ArrayList<>();//房间信息
 
 
-    private List<RoomInstance> roomInstance = new ArrayList<>();//房间实例
+    private List<RoomInstanceVo> roomInstance = new ArrayList<>();//房间实例
 
 
 
@@ -105,11 +104,11 @@ public class ClubVo {
         return this;
     }
 
-    public List<RoomInstance> getRoomInstance() {
+    public List<RoomInstanceVo> getRoomInstance() {
         return roomInstance;
     }
 
-    public ClubVo setRoomInstance(List<RoomInstance> roomInstance) {
+    public ClubVo setRoomInstance(List<RoomInstanceVo> roomInstance) {
         this.roomInstance = roomInstance;
         return this;
     }

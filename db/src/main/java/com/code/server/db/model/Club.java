@@ -47,6 +47,10 @@ public class Club extends BaseEntity {
     private ClubInfo ClubInfo = new ClubInfo();
 
 
+
+    public transient final Object lock = new Object();
+
+
     public String getId() {
         return id;
     }

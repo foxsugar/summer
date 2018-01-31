@@ -31,7 +31,9 @@ object MahjongRoomService {
         val isHasYipaoduoxiang = paramsjSONObject.path("yipaoduoxiang").asBoolean(false)
         val canChi = paramsjSONObject.path("canChi").asBoolean(false)
         val haveTing = paramsjSONObject.path("haveTing").asBoolean(false)
-        code = createRoomByUser(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType,roomType,mustZimo,isHasYipaoduoxiang,canChi,haveTing)
+        val clubId = paramsjSONObject.path("clubId").asText
+        val clubRoomModel = paramsjSONObject.path("clubRoomModel").asText
+        code = createRoomByUser(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType,roomType,mustZimo,isHasYipaoduoxiang,canChi,haveTing,clubId,clubRoomModel)
 
       }
       case "createRoomByEachUser" => {
@@ -46,7 +48,9 @@ object MahjongRoomService {
         val isHasYipaoduoxiang = paramsjSONObject.path("yipaoduoxiang").asBoolean(false)
         val canChi = paramsjSONObject.path("canChi").asBoolean(false)
         val haveTing = paramsjSONObject.path("haveTing").asBoolean(false)
-        code = createRoomByEachUser(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType,roomType,mustZimo,isHasYipaoduoxiang,canChi,haveTing)
+        val clubId = paramsjSONObject.path("clubId").asText
+        val clubRoomModel = paramsjSONObject.path("clubRoomModel").asText
+        code = createRoomByEachUser(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType,roomType,mustZimo,isHasYipaoduoxiang,canChi,haveTing,clubId,clubRoomModel)
 
       }
       case "createRoomButNotInRoom" => {
@@ -61,7 +65,9 @@ object MahjongRoomService {
         val isHasYipaoduoxiang = paramsjSONObject.path("yipaoduoxiang").asBoolean(false)
         val canChi = paramsjSONObject.path("canChi").asBoolean(false)
         val haveTing = paramsjSONObject.path("haveTing").asBoolean(false)
-        code = createRoomButNotInRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType,roomType,mustZimo,isHasYipaoduoxiang,canChi,haveTing)
+        val clubId = paramsjSONObject.path("clubId").asText
+        val clubRoomModel = paramsjSONObject.path("clubRoomModel").asText
+        code = createRoomButNotInRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType,roomType,mustZimo,isHasYipaoduoxiang,canChi,haveTing,clubId,clubRoomModel)
 
       }
     }
@@ -172,12 +178,14 @@ object MahjongRoomService {
     return true
   }
 
-  def createRoom(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int, gameType: String, each: String, isJoin: Boolean,roomType:String, mustZimo:Int, yipaoduoxiang:Boolean,canChi:Boolean,haveTing:Boolean): (Int, RoomInfo) = {
+  def createRoom(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int, gameType: String, each: String, isJoin: Boolean,roomType:String, mustZimo:Int, yipaoduoxiang:Boolean,canChi:Boolean,haveTing:Boolean,clubId:String,clubRoomModel:String): (Int, RoomInfo) = {
     val roomInfo: RoomInfo = RoomFactory.getRoomInstance(gameType)
     val roomId: String = Room.getRoomIdStr(Room.genRoomId)
     roomInfo.setRoomType(roomType)
     roomInfo.setAA("1".equals(each))
     roomInfo.setEach(each)
+    roomInfo.setClubId(clubId)
+    roomInfo.setClubRoomModel(clubRoomModel)
     roomInfo.init(roomId, userId, modeTotal, mode, multiple, gameNumber, personNumber, userId, 0,mustZimo)
     roomInfo.setCreaterJoin(isJoin)
     roomInfo.setYipaoduoxiang(yipaoduoxiang)
@@ -213,11 +221,11 @@ object MahjongRoomService {
     * @param haveTing
     * @return
     */
-  def createRoomByEachUser(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int, gameType: String,roomType:String,mustZimo: Int, yipaoduoxiang:Boolean,canChi :Boolean,haveTing :Boolean): Int = {
+  def createRoomByEachUser(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int, gameType: String,roomType:String,mustZimo: Int, yipaoduoxiang:Boolean,canChi :Boolean,haveTing :Boolean,clubId:String,clubRoomModel:String): Int = {
     if (!isCanCreate(modeTotal, mode, "" + multiple)) {
       return ErrorCode.CANNOT_CREATE_ROOM_PARAMETER_IS_ERROR
     }
-    val (code, roomInfo) = createRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType, "1", true,roomType,mustZimo,yipaoduoxiang,canChi,haveTing)
+    val (code, roomInfo) = createRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType, "1", true,roomType,mustZimo,yipaoduoxiang,canChi,haveTing,clubId,clubRoomModel)
     if (code != 0) {
       return code
     }
@@ -246,11 +254,11 @@ object MahjongRoomService {
     * @param haveTing
     * @return
     */
-  def createRoomByUser(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int, gameType: String,roomType:String,mustZimo: Int, yipaoduoxiang:Boolean,canChi :Boolean,haveTing :Boolean): Int = {
+  def createRoomByUser(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int, gameType: String,roomType:String,mustZimo: Int, yipaoduoxiang:Boolean,canChi :Boolean,haveTing :Boolean,clubId:String,clubRoomModel:String): Int = {
     if (!isCanCreate(modeTotal, mode, "" + multiple)) {
       return ErrorCode.CANNOT_CREATE_ROOM_PARAMETER_IS_ERROR
     }
-    val (code, roomInfo) = createRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType, "0", true,roomType,mustZimo,yipaoduoxiang,canChi,haveTing)
+    val (code, roomInfo) = createRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType, "0", true,roomType,mustZimo,yipaoduoxiang,canChi,haveTing,clubId,clubRoomModel)
     if (code != 0) {
       return code
     }
@@ -274,7 +282,7 @@ object MahjongRoomService {
     * @param haveTing
     * @return
     */
-  def createRoomButNotInRoom(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int, gameType: String,roomType:String,mustZimo:Int, yipaoduoxiang:Boolean,canChi:Boolean,haveTing:Boolean): Int = {
+  def createRoomButNotInRoom(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int, gameType: String,roomType:String,mustZimo:Int, yipaoduoxiang:Boolean,canChi:Boolean,haveTing:Boolean,clubId:String,clubRoomModel:String): Int = {
     if (!isCanCreate(modeTotal, mode, "" + multiple)) {
       return ErrorCode.CANNOT_CREATE_ROOM_PARAMETER_IS_ERROR
     }
@@ -287,7 +295,7 @@ object MahjongRoomService {
 //    if ("LQ" == gameType) {
 //      RedisManager.addGold(userId, need/10)
 //    }
-    val (code, roomInfo) = createRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType, "2", false,roomType,mustZimo,yipaoduoxiang,canChi,haveTing)
+    val (code, roomInfo) = createRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType, "2", false,roomType,mustZimo,yipaoduoxiang,canChi,haveTing,clubId,clubRoomModel)
     if (code != 0) {
       return code
     }

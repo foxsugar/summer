@@ -66,6 +66,9 @@ public class Room implements IfaceRoom {
     public int mustZimo = 0;//1是0否
     public boolean showChat;
 
+    private String clubId;
+    private String clubRoomModel;
+
 
 
     public Long canStartUserId = 0L;
@@ -103,6 +106,11 @@ public class Room implements IfaceRoom {
         if (roomData == null) {
             throw new DataNotFoundException("roomdata not found : " + gameType);
         }
+        //俱乐部 加入不要钱
+        if (isClubRoom()) {
+            return 0;
+        }
+
         if (isAA) {
             return roomData.getEachMoneyMap().get(gameNumber);
         } else {
@@ -119,11 +127,55 @@ public class Room implements IfaceRoom {
         this.maxZhaCount = multiple;
         this.createNeedMoney = this.getNeedMoney();
         this.isAddGold = DataManager.data.getRoomDataMap().get(this.gameType).getIsAddGold() == 1;
+
+        clubRoomSetId();
     }
 
+    /**
+     * 俱乐部 设置id
+     */
+    public void clubRoomSetId(){
+        if (isClubRoom()) {
+            MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+            KafkaMsgKey kafkaKey = new KafkaMsgKey();
+            kafkaKey.setUserId(0);
+
+            Map<String, String> msg = new HashMap<>();
+
+            msg.put("clubId", this.clubId);
+            msg.put("clubModelId", this.clubRoomModel);
+            msg.put("roomId", this.roomId);
+            ResponseVo responseVo = new ResponseVo("clubService","clubRoomSetId",msg);
+            msgProducer.send("clubService",kafkaKey, responseVo);
+        }
+
+    }
+
+    /**
+     * 通知 俱乐部游戏开始
+     */
+    public void notifyCludGameStart(){
+        if (!isOpen && isClubRoom()) {
+
+            MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+            KafkaMsgKey kafkaKey = new KafkaMsgKey();
+            kafkaKey.setUserId(0);
+
+            Map<String, String> msg = new HashMap<>();
+
+            msg.put("clubId", this.clubId);
+            msg.put("clubModelId", this.clubRoomModel);
+            msg.put("roomId", this.roomId);
+            ResponseVo responseVo = new ResponseVo("clubService","clubGameStart",msg);
+            msgProducer.send("clubService",kafkaKey, responseVo);
+        }
+    }
 
     public int joinRoom(long userId, boolean isJoin) {
 
+        if (isClubRoom() && userId == 0) {
+            return 0;
+        }
         if (userId == 0) {
             return ErrorCode.JOIN_ROOM_USERID_IS_0;
         }
@@ -198,6 +250,8 @@ public class Room implements IfaceRoom {
 
         userOfRoom.setInRoomNumber(users.size());
         userOfRoom.setReadyNumber(readyNumber);
+        userOfRoom.setClubId(clubId);
+        userOfRoom.setClubRoomModel(clubRoomModel);
 
         userOfRoom.setCanStartUserId(users.get(0));
 
@@ -363,6 +417,7 @@ public class Room implements IfaceRoom {
             GameTimer.removeNode(prepareRoomTimerNode);
         }
         game.startGame(users, this);
+        notifyCludGameStart();
         this.isOpen = true;
         pushScoreChange();
     }
@@ -370,6 +425,7 @@ public class Room implements IfaceRoom {
     public void pushScoreChange() {
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userScores), this.getUsers());
     }
+
 
 
     public int dissolution(long userId, boolean agreeOrNot, String methodName) {
@@ -632,6 +688,9 @@ public class Room implements IfaceRoom {
         roomRecord.setId(this.getUuid());
         roomRecord.setType(this.roomType);
         roomRecord.setTime(System.currentTimeMillis());
+        roomRecord.setClubId(clubId);
+        roomRecord.setClubRoomModel(clubRoomModel);
+
         this.userScores.forEach((key, value) -> {
             UserRecord userRecord = new UserRecord();
             userRecord.setScore(value);
@@ -647,6 +706,10 @@ public class Room implements IfaceRoom {
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
         msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord);
 
+    }
+
+    public boolean isClubRoom(){
+        return clubId != null && !"".equals(clubId) && !"0".equals(clubId);
     }
 
     public String getRoomId() {
@@ -967,6 +1030,24 @@ public class Room implements IfaceRoom {
 
     public Room setShowChat(boolean showChat) {
         this.showChat = showChat;
+        return this;
+    }
+
+    public String getClubId() {
+        return clubId;
+    }
+
+    public Room setClubId(String clubId) {
+        this.clubId = clubId;
+        return this;
+    }
+
+    public String getClubRoomModel() {
+        return clubRoomModel;
+    }
+
+    public Room setClubRoomModel(String clubRoomModel) {
+        this.clubRoomModel = clubRoomModel;
         return this;
     }
 }

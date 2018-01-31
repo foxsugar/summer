@@ -26,6 +26,7 @@ public class ServerConfig {
     private  String key;//API秘钥
 
     private  String notifyUrl;
+    private String dataFile;
 
 
     public String getServerType() {
@@ -129,6 +130,15 @@ public class ServerConfig {
 
     public ServerConfig setStartNewGameRpc(int startNewGameRpc) {
         this.startNewGameRpc = startNewGameRpc;
+        return this;
+    }
+
+    public String getDataFile() {
+        return dataFile;
+    }
+
+    public ServerConfig setDataFile(String dataFile) {
+        this.dataFile = dataFile;
         return this;
     }
 }

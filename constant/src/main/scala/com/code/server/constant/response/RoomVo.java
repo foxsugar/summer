@@ -40,6 +40,8 @@ public class RoomVo implements IfaceRoomVo {
     public int mustZimo = 0;
     public boolean showChat;
     public int chip;
+    public String clubId;
+    public String clubRoomModel;
 
 
 
@@ -279,6 +281,24 @@ public class RoomVo implements IfaceRoomVo {
 
     public RoomVo setChip(int chip) {
         this.chip = chip;
+        return this;
+    }
+
+    public String getClubId() {
+        return clubId;
+    }
+
+    public RoomVo setClubId(String clubId) {
+        this.clubId = clubId;
+        return this;
+    }
+
+    public String getClubRoomModel() {
+        return clubRoomModel;
+    }
+
+    public RoomVo setClubRoomModel(String clubRoomModel) {
+        this.clubRoomModel = clubRoomModel;
         return this;
     }
 }

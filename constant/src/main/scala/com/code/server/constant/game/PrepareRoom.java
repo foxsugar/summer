@@ -16,5 +16,7 @@ public class PrepareRoom {
     public double caiFen;
     public int menPai;
     public int cricleNumber;//轮数
+    public String clubId;
+    public String clubRoomModel;
 
 }

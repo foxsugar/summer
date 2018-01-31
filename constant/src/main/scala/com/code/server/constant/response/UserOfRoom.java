@@ -18,6 +18,9 @@ public class UserOfRoom {
 
 	protected Long canStartUserId;
 
+	private String clubId;
+	private String clubRoomModel;
+
     public int getInRoomNumber() {
 		return inRoomNumber;
 	}
@@ -57,5 +60,23 @@ public class UserOfRoom {
 
 	public void setCanStartUserId(Long canStartUserId) {
 		this.canStartUserId = canStartUserId;
+	}
+
+	public String getClubId() {
+		return clubId;
+	}
+
+	public UserOfRoom setClubId(String clubId) {
+		this.clubId = clubId;
+		return this;
+	}
+
+	public String getClubRoomModel() {
+		return clubRoomModel;
+	}
+
+	public UserOfRoom setClubRoomModel(String clubRoomModel) {
+		this.clubRoomModel = clubRoomModel;
+		return this;
 	}
 }
