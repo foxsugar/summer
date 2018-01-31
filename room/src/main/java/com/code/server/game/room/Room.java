@@ -250,6 +250,8 @@ public class Room implements IfaceRoom {
 
         userOfRoom.setInRoomNumber(users.size());
         userOfRoom.setReadyNumber(readyNumber);
+        userOfRoom.setClubId(clubId);
+        userOfRoom.setClubRoomModel(clubRoomModel);
 
         userOfRoom.setCanStartUserId(users.get(0));
 
@@ -686,6 +688,9 @@ public class Room implements IfaceRoom {
         roomRecord.setId(this.getUuid());
         roomRecord.setType(this.roomType);
         roomRecord.setTime(System.currentTimeMillis());
+        roomRecord.setClubId(clubId);
+        roomRecord.setClubRoomModel(clubRoomModel);
+
         this.userScores.forEach((key, value) -> {
             UserRecord userRecord = new UserRecord();
             userRecord.setScore(value);

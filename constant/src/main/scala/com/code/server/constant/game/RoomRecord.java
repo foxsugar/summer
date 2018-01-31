@@ -12,6 +12,9 @@ public class RoomRecord {
     long id;
     String roomId;
     List<UserRecord> records = new ArrayList<>();
+    String clubId;
+    String clubRoomModel;
+    String name;
 
     public void addRecord(UserRecord userRecord) {
         records.add(userRecord);
@@ -59,6 +62,33 @@ public class RoomRecord {
 
     public RoomRecord setRoomId(String roomId) {
         this.roomId = roomId;
+        return this;
+    }
+
+    public String getClubId() {
+        return clubId;
+    }
+
+    public RoomRecord setClubId(String clubId) {
+        this.clubId = clubId;
+        return this;
+    }
+
+    public String getClubRoomModel() {
+        return clubRoomModel;
+    }
+
+    public RoomRecord setClubRoomModel(String clubRoomModel) {
+        this.clubRoomModel = clubRoomModel;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public RoomRecord setName(String name) {
+        this.name = name;
         return this;
     }
 }
