@@ -87,8 +87,6 @@ public class GameCow extends Game {
             //通知发牌
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "deal", playerCardInfo.handcards), playerCardInfo.userId);
         }
-        //底牌
-        leaveCards.addAll(cards);
     }
 
 
@@ -123,7 +121,8 @@ public class GameCow extends Game {
             ResponseVo vo = new ResponseVo("gameService", "dealFiveCard", result);
             MsgSender.sendMsg2Player(vo, playerCardInfo.userId);
         }
-
+        //底牌
+        leaveCards.addAll(cards);
 
         noticePlayerCompare();
     }
