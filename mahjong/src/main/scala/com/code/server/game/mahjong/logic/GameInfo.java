@@ -335,8 +335,9 @@ public class GameInfo extends Game {
     public boolean isHasGuoHu() {
         String gameType = this.room.getGameType();
         String modeTotal = this.room.getModeTotal();
-        return "LQ".equals(gameType) && "2".equals(modeTotal) ||
-                "HL".equals(gameType) && "2".equals(modeTotal);
+        return ("LQ".equals(gameType) && "2".equals(modeTotal)) ||
+                ("HL".equals(gameType) && "2".equals(modeTotal))||
+                ("SS".equals(gameType));
     }
 
     /**
