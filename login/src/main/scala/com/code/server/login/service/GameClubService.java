@@ -875,6 +875,7 @@ public class GameClubService {
         clubVo.setMoney(club.getMoney());
         clubVo.setArea(club.getArea());
         clubVo.setPresidentWx(club.getPresidentWx());
+        clubVo.setApplyNum(club.getClubInfo().getApplyList().size());
 
         return clubVo;
     }

@@ -1,6 +1,7 @@
 package com.code.server.db.model;
 
 import com.code.server.constant.club.ClubInfo;
+import com.code.server.constant.club.Statistics;
 import com.code.server.db.utils.BaseEntity;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
@@ -45,6 +46,11 @@ public class Club extends BaseEntity {
     @Lob
     @Column(columnDefinition = "json")
     private ClubInfo ClubInfo = new ClubInfo();
+
+    @Type(type = "json")
+    @Lob
+    @Column(columnDefinition = "json")
+    private Statistics statistics = new Statistics();
 
 
 
@@ -138,6 +144,15 @@ public class Club extends BaseEntity {
 
     public Club setClubInfo(com.code.server.constant.club.ClubInfo clubInfo) {
         ClubInfo = clubInfo;
+        return this;
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
+    }
+
+    public Club setStatistics(Statistics statistics) {
+        this.statistics = statistics;
         return this;
     }
 }
