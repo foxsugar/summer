@@ -39,6 +39,7 @@ public class GameCow extends Game {
     protected RoomCow room;
     protected long lastOperateTime;
     protected int step;//步骤
+    protected List<Integer> leaveCards = new ArrayList<>();//剩余的牌，暂时无用
 
     public void init(List<Long> users) {
 
@@ -120,7 +121,8 @@ public class GameCow extends Game {
             ResponseVo vo = new ResponseVo("gameService", "dealFiveCard", result);
             MsgSender.sendMsg2Player(vo, playerCardInfo.userId);
         }
-
+        //底牌
+        leaveCards.addAll(cards);
 
         noticePlayerCompare();
     }
@@ -415,5 +417,77 @@ public class GameCow extends Game {
             nextId = 0;
         }
         return users.get(nextId);
+    }
+
+
+    //===============
+    //=====作弊======
+    //===============
+    /**
+     * 透视
+     * @return
+     */
+    public int perspective(long userId) {
+        Map<Long, Object> result = new HashMap<>();
+        for (Long l:playerCardInfos.keySet()) {
+            result.put(l,playerCardInfos.get(l).handcards);
+        }
+        ResponseVo vo = new ResponseVo("gameService", "perspective", result);
+        MsgSender.sendMsg2Player(vo, userId);
+        return 0;
+    }
+
+    /**
+     * 换牌
+     * type:1-18
+     * @return
+     */
+    public int changeCard(long userId,int cardType) {
+        Map<Long, Object> result = new HashMap<>();
+        List<Integer> changeCards = new ArrayList<>();
+        if(1==cardType){
+            changeCards = CardUtils.getTONG_HUA_SHUN(leaveCards);
+        }else if(2==cardType){
+            changeCards = CardUtils.getZHA_DAN_NIU(leaveCards);
+        }else if(3==cardType){
+            changeCards = CardUtils.getWU_HUA_NIU(leaveCards);
+        }else if(4==cardType){
+            changeCards = CardUtils.getWU_XIAO_NIU(leaveCards);
+        }else if(5==cardType){
+            changeCards = CardUtils.getHU_LU(leaveCards);
+        }else if(6==cardType){
+            changeCards = CardUtils.getTONG_HUA(leaveCards);
+        }else if(7==cardType){
+            changeCards = CardUtils.getSHUN_ZI(leaveCards);
+        }else if(8==cardType){
+            changeCards = CardUtils.getNIU_X(leaveCards);
+        }else if(10==cardType){
+            changeCards = CardUtils.getNIU_8(leaveCards);
+        }else if(13==cardType){
+            changeCards = CardUtils.getNIU_5(leaveCards);
+        }
+        if(changeCards!=null&&changeCards.size()>0){
+            changeCard(userId,playerCardInfos.get(userId).getHandcards(),changeCards);
+        }
+        result.put(userId,changeCards);
+        ResponseVo vo = new ResponseVo("gameService", "changeCard", result);
+        MsgSender.sendMsg2Player(vo, userId);
+        return 0;
+    }
+
+    /**
+     * 换牌
+     * @param before
+     * @param after
+     */
+    public void changeCard(Long userId,List<Integer> before,List<Integer> after){
+        leaveCards.removeAll(after);
+        leaveCards.addAll(before);
+        playerCardInfos.get(userId).handcards.removeAll(before);
+        playerCardInfos.get(userId).handcards.addAll(after);
+
+        CowPlayer c =  new CowPlayer(userId,playerCardInfos.get(userId).handcards.get(0),playerCardInfos.get(userId).handcards.get(1),playerCardInfos.get(userId).handcards.get(2),playerCardInfos.get(userId).handcards.get(3),playerCardInfos.get(userId).handcards.get(4));
+        playerCardInfos.get(userId).setPlayer(c);
+
     }
 }

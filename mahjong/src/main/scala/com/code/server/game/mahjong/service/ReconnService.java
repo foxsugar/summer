@@ -46,6 +46,9 @@ public class ReconnService {
         result.put("yipaoduoxiang", roomInfo.isYipaoduoxiang());
         result.put("canChi", roomInfo.isCanChi());
         result.put("haveTing", roomInfo.isHaveTing());
+        result.put("clubId", roomInfo.getClubId());
+        result.put("clubRoomModel", roomInfo.getClubRoomModel());
+
 
         return result;
     }

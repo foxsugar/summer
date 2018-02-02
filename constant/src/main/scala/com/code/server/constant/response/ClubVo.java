@@ -18,6 +18,7 @@ public class ClubVo {
     private int money;
     private String area;
     private String presidentWx;
+    private int applyNum;
 
     private List<ClubMember> member = new ArrayList<>();//成员
 
@@ -137,6 +138,15 @@ public class ClubVo {
 
     public ClubVo setPresidentWx(String presidentWx) {
         this.presidentWx = presidentWx;
+        return this;
+    }
+
+    public int getApplyNum() {
+        return applyNum;
+    }
+
+    public ClubVo setApplyNum(int applyNum) {
+        this.applyNum = applyNum;
         return this;
     }
 }

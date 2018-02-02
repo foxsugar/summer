@@ -63,4 +63,6 @@ public interface IfaceRoom extends IGameConstant {
     List<Long> getUsers();
 
     PrepareRoom getPrepareRoomVo();
+
+    int getRoomClubByUser(long userId);
 }

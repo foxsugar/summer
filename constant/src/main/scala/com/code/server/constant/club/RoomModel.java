@@ -1,5 +1,8 @@
 package com.code.server.constant.club;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by sunxianping on 2018/1/15.
  */
@@ -11,6 +14,7 @@ public class RoomModel {
     private String desc;
     private long time;
     private String serviceName;
+    private Map<String, ClubStatistics> statisticsMap = new HashMap<>();
 
 
     public String getId() {
@@ -73,6 +77,15 @@ public class RoomModel {
 
     public RoomModel setServiceName(String serviceName) {
         this.serviceName = serviceName;
+        return this;
+    }
+
+    public Map<String, ClubStatistics> getStatisticsMap() {
+        return statisticsMap;
+    }
+
+    public RoomModel setStatisticsMap(Map<String, ClubStatistics> statisticsMap) {
+        this.statisticsMap = statisticsMap;
         return this;
     }
 }

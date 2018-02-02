@@ -693,6 +693,9 @@ public class RoomInfo extends Room {
         result.put("yipaoduoxiang", this.isYipaoduoxiang);
         result.put("canChi", this.canChi);
         result.put("haveTing", this.haveTing);
+        result.put("clubId", this.getClubId());
+        result.put("clubRoomModel", this.getClubRoomModel());
+
 
         return result;
     }
@@ -907,6 +910,8 @@ public class RoomInfo extends Room {
         roomVo.yipaoduoxiang = this.isYipaoduoxiang;
         roomVo.canChi = this.canChi;
         roomVo.haveTing = this.haveTing;
+        roomVo.setClubId(this.getClubId());
+        roomVo.setClubRoomModel(this.getClubRoomModel());
         roomVo.setMode(this.getMode());
         roomVo.setModeTotal(this.getModeTotal());
         roomVo.setEach(this.getEach());
@@ -934,6 +939,8 @@ public class RoomInfo extends Room {
         prepareRoom.yipaoduoxiang = this.isYipaoduoxiang;
         prepareRoom.canChi = this.canChi;
         prepareRoom.haveTing = this.haveTing;
+        prepareRoom.clubId = this.getClubId();
+        prepareRoom.clubRoomModel = this.getClubRoomModel();
         return prepareRoom;
     }
 

@@ -104,6 +104,17 @@ public class ClubServiceMsgDispatch {
                 String clubModelId1 = params.get("clubModelId").asText();
 //                String roomId = params.get("roomId").asText();
                 return gameClubService.cludGameStart(clubId, clubModelId1);
+            case "getFreeUser":
+                return gameClubService.getFreeUser(msgKey,clubId);
+            case "invite":
+                String inviteUser = params.get("inviteUser").asText();
+                String roomId1 = params.get("roomId").asText();
+                String roomModel = params.get("roomModel").asText();
+                String name = params.get("name").asText();
+                return gameClubService.invite(msgKey,clubId, roomId1,inviteUser,roomModel,name);
+            case "getClubRecord":
+                return gameClubService.getClubRecord(msgKey, userId,clubId);
+
         }
         return 0;
     }

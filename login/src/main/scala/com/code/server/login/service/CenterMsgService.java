@@ -1,14 +1,13 @@
 package com.code.server.login.service;
 
+import com.code.server.constant.club.RoomModel;
 import com.code.server.constant.game.Record;
 import com.code.server.constant.game.RoomRecord;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.IkafkaMsgId;
 import com.code.server.constant.kafka.KafkaMsgKey;
-import com.code.server.db.Service.GameRecordService;
-import com.code.server.db.Service.ReplayService;
-import com.code.server.db.Service.UserRecordService;
-import com.code.server.db.Service.UserService;
+import com.code.server.constant.response.ResponseVo;
+import com.code.server.db.Service.*;
 import com.code.server.db.model.*;
 import com.code.server.login.action.LoginAction;
 import com.code.server.redis.service.RedisManager;
@@ -31,10 +30,12 @@ public class CenterMsgService implements IkafkaMsgId {
 
     private static UserRecordService userRecordService = SpringUtil.getBean(UserRecordService.class);
     private static GameRecordService gameRecordService = SpringUtil.getBean(GameRecordService.class);
+    private static ClubRecordService clubRecordService = SpringUtil.getBean(ClubRecordService.class);
 
     private static ReplayService replayService = SpringUtil.getBean(ReplayService.class);
 
     private static UserService userService = SpringUtil.getBean(UserService.class);
+
 
     public static void dispatch(KafkaMsgKey msgKey, String msg) {
         int msgId = msgKey.getMsgId();
@@ -57,6 +58,8 @@ public class CenterMsgService implements IkafkaMsgId {
             case KAFKA_MSG_ID_REFRESH_ROOM_INSTANCE:
                 refreshRoomInstance(msg);
                 break;
+            case KAFKA_MSG_ID_ROOM_CLUB_USER:
+                getRoomClubByUser(msg);
 
 
         }
@@ -72,6 +75,20 @@ public class CenterMsgService implements IkafkaMsgId {
         if (club != null) {
             GameClubService.initRoomInstance(club);
         }
+    }
+
+    private static void getRoomClubByUser(String msg) {
+        JsonNode jsonNode = JsonUtil.readTree(msg);
+
+        Map<String, Object> map = JsonUtil.readValue(msg, new TypeReference<HashMap<String, Object>>() {});
+
+        Map<String, Object> result = JsonUtil.readValue(msg, Map.class);
+        Long userId = jsonNode.path("userId").asLong();
+        List<String> clubs = ClubManager.getInstance().getUserClubs(userId);
+        map.put("clubs", clubs);
+
+        GameClubService.sendMsg2Player(new ResponseVo("roomService","getRoomClubByUser",map),userId);
+
     }
 
     private static void genRecord(String msg) {
@@ -111,7 +128,6 @@ public class CenterMsgService implements IkafkaMsgId {
 
     private static void genGameRecord(String msg) {
         if (msg != null) {
-            System.out.println(msg);
             JsonNode jsonNode = JsonUtil.readTree(msg);
             Map<String, Object> map = JsonUtil.readValue(msg, new TypeReference<HashMap<String, Object>>() {
             });
@@ -151,6 +167,18 @@ public class CenterMsgService implements IkafkaMsgId {
                 newRecord.setRecord(record);
                 userRecordService.save(newRecord);
             }
+        }
+
+        //俱乐部战绩
+        String clubId = roomRecord.getClubId();
+        if (clubId != null && !"".equals(clubId)) {
+            Club club = ClubManager.getInstance().getClubById(clubId);
+            if (club != null) {
+                String roomModel = roomRecord.getClubRoomModel();
+                RoomModel rm = GameClubService.getRoomModel(club, roomModel);
+                roomRecord.setName(rm.getDesc());
+            }
+            clubRecordService.addRecord(clubId, roomRecord);
         }
     }
 

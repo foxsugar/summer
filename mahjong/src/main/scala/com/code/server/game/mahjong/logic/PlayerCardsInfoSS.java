@@ -22,6 +22,7 @@ public class PlayerCardsInfoSS extends PlayerCardsInfoMj {
 		specialHuScore.put(hu_一条龙, 9);
 		specialHuScore.put(hu_七小对, 9);
 		specialHuScore.put(hu_豪华七小对, 18);
+		specialHuScore.put(hu_双豪七小对_山西, 18);
 		specialHuScore.put(hu_十三幺, 27);
 
 		if (GameInfoShengShi.SS_Ping_HAVEFENG_CANTING.equals(roomInfo.getMode())

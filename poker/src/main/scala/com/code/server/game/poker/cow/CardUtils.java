@@ -231,7 +231,6 @@ public class CardUtils {
     }
 
     protected static boolean isTongHuaShun(List<Integer> list){
-
         return isShunZi(list) && isTongHua(list);
     }
 
@@ -482,5 +481,392 @@ public class CardUtils {
 
     public static void setMultipleMap(Map<Integer, Integer> multipleMap) {
         CardUtils.multipleMap = multipleMap;
+    }
+
+
+    //===============
+    //=====作弊======
+    //===============
+    public static List<Integer> getTONG_HUA_SHUN(List<Integer> leaveCards){
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<Integer> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            int item1 = cardsDict.get(leaveCards.get(x));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                int item2 = cardsDict.get(leaveCards.get(y));
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    int item3 = cardsDict.get(leaveCards.get(z));
+                    for (int m = z + 1; m < leaveCards.size(); m++) {
+                        int item4 = cardsDict.get(leaveCards.get(m));
+                        for (int n = m + 1; n < leaveCards.size(); n++) {
+                            int item5 = cardsDict.get(leaveCards.get(n));
+                            if(cards.size()!=0){
+                                cards.clear();
+                            }
+                            cards.add(item1);
+                            cards.add(item2);
+                            cards.add(item3);
+                            cards.add(item4);
+                            cards.add(item5);
+                            if (CardUtils.isTongHuaShun(cards)) {
+                                resultlist.add(leaveCards.get(x));
+                                resultlist.add(leaveCards.get(y));
+                                resultlist.add(leaveCards.get(z));
+                                resultlist.add(leaveCards.get(m));
+                                resultlist.add(leaveCards.get(n));
+                                break a;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return resultlist;
+    }
+
+
+    public static List<Integer> getZHA_DAN_NIU(List<Integer> leaveCards){
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<Integer> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            int item1 = cardsDict.get(leaveCards.get(x));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                int item2 = cardsDict.get(leaveCards.get(y));
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    int item3 = cardsDict.get(leaveCards.get(z));
+                    for (int m = z + 1; m < leaveCards.size(); m++) {
+                        int item4 = cardsDict.get(leaveCards.get(m));
+                        for (int n = m + 1; n < leaveCards.size(); n++) {
+                            int item5 = cardsDict.get(leaveCards.get(n));
+                            if(cards.size()!=0){
+                                cards.clear();
+                            }
+                            cards.add(item1);
+                            cards.add(item2);
+                            cards.add(item3);
+                            cards.add(item4);
+                            cards.add(item5);
+                            if (CardUtils.isZhaDanNiu(cards)) {
+                                resultlist.add(leaveCards.get(x));
+                                resultlist.add(leaveCards.get(y));
+                                resultlist.add(leaveCards.get(z));
+                                resultlist.add(leaveCards.get(m));
+                                resultlist.add(leaveCards.get(n));
+                                break a;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return resultlist;
+    }
+
+    public static List<Integer> getWU_HUA_NIU(List<Integer> leaveCards){
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<Integer> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            int item1 = cardsDict.get(leaveCards.get(x));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                int item2 = cardsDict.get(leaveCards.get(y));
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    int item3 = cardsDict.get(leaveCards.get(z));
+                    for (int m = z + 1; m < leaveCards.size(); m++) {
+                        int item4 = cardsDict.get(leaveCards.get(m));
+                        for (int n = m + 1; n < leaveCards.size(); n++) {
+                            int item5 = cardsDict.get(leaveCards.get(n));
+                            if(cards.size()!=0){
+                                cards.clear();
+                            }
+                            cards.add(item1);
+                            cards.add(item2);
+                            cards.add(item3);
+                            cards.add(item4);
+                            cards.add(item5);
+                            if (CardUtils.isWuHuaNiu(cards)) {
+                                resultlist.add(leaveCards.get(x));
+                                resultlist.add(leaveCards.get(y));
+                                resultlist.add(leaveCards.get(z));
+                                resultlist.add(leaveCards.get(m));
+                                resultlist.add(leaveCards.get(n));
+                                break a;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return resultlist;
+    }
+
+    public static List<Integer> getWU_XIAO_NIU(List<Integer> leaveCards){
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<Integer> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            int item1 = cardsDict.get(leaveCards.get(x));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                int item2 = cardsDict.get(leaveCards.get(y));
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    int item3 = cardsDict.get(leaveCards.get(z));
+                    for (int m = z + 1; m < leaveCards.size(); m++) {
+                        int item4 = cardsDict.get(leaveCards.get(m));
+                        for (int n = m + 1; n < leaveCards.size(); n++) {
+                            int item5 = cardsDict.get(leaveCards.get(n));
+                            if(cards.size()!=0){
+                                cards.clear();
+                            }
+                            cards.add(item1);
+                            cards.add(item2);
+                            cards.add(item3);
+                            cards.add(item4);
+                            cards.add(item5);
+                            if (CardUtils.isWuXiaoNiu(cards)) {
+                                resultlist.add(leaveCards.get(x));
+                                resultlist.add(leaveCards.get(y));
+                                resultlist.add(leaveCards.get(z));
+                                resultlist.add(leaveCards.get(m));
+                                resultlist.add(leaveCards.get(n));
+                                break a;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return resultlist;
+    }
+
+    public static List<Integer> getHU_LU(List<Integer> leaveCards){
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<Integer> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            int item1 = cardsDict.get(leaveCards.get(x));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                int item2 = cardsDict.get(leaveCards.get(y));
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    int item3 = cardsDict.get(leaveCards.get(z));
+                    for (int m = z + 1; m < leaveCards.size(); m++) {
+                        int item4 = cardsDict.get(leaveCards.get(m));
+                        for (int n = m + 1; n < leaveCards.size(); n++) {
+                            int item5 = cardsDict.get(leaveCards.get(n));
+                            if(cards.size()!=0){
+                                cards.clear();
+                            }
+                            cards.add(item1);
+                            cards.add(item2);
+                            cards.add(item3);
+                            cards.add(item4);
+                            cards.add(item5);
+                            if (CardUtils.isHuLu(cards)) {
+                                resultlist.add(leaveCards.get(x));
+                                resultlist.add(leaveCards.get(y));
+                                resultlist.add(leaveCards.get(z));
+                                resultlist.add(leaveCards.get(m));
+                                resultlist.add(leaveCards.get(n));
+                                break a;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return resultlist;
+    }
+
+    public static List<Integer> getTONG_HUA(List<Integer> leaveCards){
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<Integer> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            int item1 = cardsDict.get(leaveCards.get(x));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                int item2 = cardsDict.get(leaveCards.get(y));
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    int item3 = cardsDict.get(leaveCards.get(z));
+                    for (int m = z + 1; m < leaveCards.size(); m++) {
+                        int item4 = cardsDict.get(leaveCards.get(m));
+                        for (int n = m + 1; n < leaveCards.size(); n++) {
+                            int item5 = cardsDict.get(leaveCards.get(n));
+                            if(cards.size()!=0){
+                                cards.clear();
+                            }
+                            cards.add(item1);
+                            cards.add(item2);
+                            cards.add(item3);
+                            cards.add(item4);
+                            cards.add(item5);
+                            if (CardUtils.isTongHua(cards)) {
+                                resultlist.add(leaveCards.get(x));
+                                resultlist.add(leaveCards.get(y));
+                                resultlist.add(leaveCards.get(z));
+                                resultlist.add(leaveCards.get(m));
+                                resultlist.add(leaveCards.get(n));
+                                break a;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return resultlist;
+    }
+
+
+    public static List<Integer> getSHUN_ZI(List<Integer> leaveCards){
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<Integer> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            int item1 = cardsDict.get(leaveCards.get(x));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                int item2 = cardsDict.get(leaveCards.get(y));
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    int item3 = cardsDict.get(leaveCards.get(z));
+                    for (int m = z + 1; m < leaveCards.size(); m++) {
+                        int item4 = cardsDict.get(leaveCards.get(m));
+                        for (int n = m + 1; n < leaveCards.size(); n++) {
+                            int item5 = cardsDict.get(leaveCards.get(n));
+                            if(cards.size()!=0){
+                                cards.clear();
+                            }
+                            cards.add(item1);
+                            cards.add(item2);
+                            cards.add(item3);
+                            cards.add(item4);
+                            cards.add(item5);
+                            if (CardUtils.isShunZi(cards)) {
+                                resultlist.add(leaveCards.get(x));
+                                resultlist.add(leaveCards.get(y));
+                                resultlist.add(leaveCards.get(z));
+                                resultlist.add(leaveCards.get(m));
+                                resultlist.add(leaveCards.get(n));
+                                break a;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return resultlist;
+    }
+
+    public static List<Integer> getNIU_X(List<Integer> leaveCards){
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<Integer> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            int item1 = cardsDict.get(leaveCards.get(x));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                int item2 = cardsDict.get(leaveCards.get(y));
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    int item3 = cardsDict.get(leaveCards.get(z));
+                    for (int m = z + 1; m < leaveCards.size(); m++) {
+                        int item4 = cardsDict.get(leaveCards.get(m));
+                        for (int n = m + 1; n < leaveCards.size(); n++) {
+                            int item5 = cardsDict.get(leaveCards.get(n));
+                            if(cards.size()!=0){
+                                cards.clear();
+                            }
+                            cards.add(item1);
+                            cards.add(item2);
+                            cards.add(item3);
+                            cards.add(item4);
+                            cards.add(item5);
+                            if (8==CardUtils.niu_x(cards)) {
+                                resultlist.add(leaveCards.get(x));
+                                resultlist.add(leaveCards.get(y));
+                                resultlist.add(leaveCards.get(z));
+                                resultlist.add(leaveCards.get(m));
+                                resultlist.add(leaveCards.get(n));
+                                break a;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return resultlist;
+    }
+
+
+    public static List<Integer> getNIU_8(List<Integer> leaveCards){
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<Integer> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            int item1 = cardsDict.get(leaveCards.get(x));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                int item2 = cardsDict.get(leaveCards.get(y));
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    int item3 = cardsDict.get(leaveCards.get(z));
+                    for (int m = z + 1; m < leaveCards.size(); m++) {
+                        int item4 = cardsDict.get(leaveCards.get(m));
+                        for (int n = m + 1; n < leaveCards.size(); n++) {
+                            int item5 = cardsDict.get(leaveCards.get(n));
+                            if(cards.size()!=0){
+                                cards.clear();
+                            }
+                            cards.add(item1);
+                            cards.add(item2);
+                            cards.add(item3);
+                            cards.add(item4);
+                            cards.add(item5);
+                            if (10==CardUtils.niu_x(cards)) {
+                                resultlist.add(leaveCards.get(x));
+                                resultlist.add(leaveCards.get(y));
+                                resultlist.add(leaveCards.get(z));
+                                resultlist.add(leaveCards.get(m));
+                                resultlist.add(leaveCards.get(n));
+                                break a;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return resultlist;
+    }
+
+    public static List<Integer> getNIU_5(List<Integer> leaveCards){
+        List<Integer> resultlist = new ArrayList<>();
+
+        ArrayList<Integer> cards = new ArrayList<>();
+        a:for (int x = 0; x < leaveCards.size(); x++) {
+            int item1 = cardsDict.get(leaveCards.get(x));
+            for (int y = x + 1; y < leaveCards.size(); y++) {
+                int item2 = cardsDict.get(leaveCards.get(y));
+                for (int z = y + 1; z < leaveCards.size(); z++) {
+                    int item3 = cardsDict.get(leaveCards.get(z));
+                    for (int m = z + 1; m < leaveCards.size(); m++) {
+                        int item4 = cardsDict.get(leaveCards.get(m));
+                        for (int n = m + 1; n < leaveCards.size(); n++) {
+                            int item5 = cardsDict.get(leaveCards.get(n));
+                            if(cards.size()!=0){
+                                cards.clear();
+                            }
+                            cards.add(item1);
+                            cards.add(item2);
+                            cards.add(item3);
+                            cards.add(item4);
+                            cards.add(item5);
+                            if (13==CardUtils.niu_x(cards)) {
+                                resultlist.add(leaveCards.get(x));
+                                resultlist.add(leaveCards.get(y));
+                                resultlist.add(leaveCards.get(z));
+                                resultlist.add(leaveCards.get(m));
+                                resultlist.add(leaveCards.get(n));
+                                break a;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return resultlist;
     }
 }
