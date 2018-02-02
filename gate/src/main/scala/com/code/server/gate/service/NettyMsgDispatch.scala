@@ -180,7 +180,7 @@ object NettyMsgDispatch {
     msgKey.setUserId(userId)
     method match {
       //加入房间有roomId
-      case "joinRoom"=>
+      case "joinRoom"|"getRoomClubByUser"=>
         val roomId = params.path("roomId").asText()
         val partition = getPartitionByRoomId(roomId)
         if (partition == null) {

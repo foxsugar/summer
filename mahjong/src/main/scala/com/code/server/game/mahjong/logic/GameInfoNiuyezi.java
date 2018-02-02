@@ -109,6 +109,7 @@ public class GameInfoNiuyezi extends GameInfo {
         OperateReqResp operateReqResp = new OperateReqResp();
         operateReqResp.setOperateType(OperateReqResp.type_ting);
         operateReqResp.setUserId(userId);
+        operateReqResp.setCard(card);
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
 
 

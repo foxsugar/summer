@@ -708,6 +708,24 @@ public class Room implements IfaceRoom {
 
     }
 
+    @Override
+    public int getRoomClubByUser(long userId) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("userId", userId);
+        if (this.clubId == null) {
+            result.put("clubId", 0);
+            MsgSender.sendMsg2Player(new ResponseVo("roomService", "getRoomClubByUser", result), userId);
+        }else{
+
+            result.put("clubId", this.clubId);
+            KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ROOM_CLUB_USER);
+            MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+            msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, result);
+
+        }
+        return 0;
+    }
+
     public boolean isClubRoom(){
         return clubId != null && !"".equals(clubId) && !"0".equals(clubId);
     }

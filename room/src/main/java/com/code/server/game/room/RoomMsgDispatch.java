@@ -123,8 +123,13 @@ public class RoomMsgDispatch {
             }
             case "getPrepareRoom":{
                 IfaceRoom room = RoomManager.getRoom(roomId);
-                room.getPrepareRoom(userId);
+                return room.getPrepareRoom(userId);
             }
+            case "getRoomClubByUser":{
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                return room.getRoomClubByUser(userId);
+            }
+
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }
