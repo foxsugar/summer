@@ -67,17 +67,22 @@ public class GameTuiTongZi extends Game{
                 //设置锅底分数
                 ((RoomTuiTongZi) room).setPotBottom(20);
                 room.setBankerId(users.get(0));
+                this.state = TuiTongZiConstant.STATE_SELECT;
+
                 bankerBreakStart();
+
 
             }else{
                 //强制下装
                 if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() > 5)){
                     //退出游戏
                 }
-            }
-            this.state = TuiTongZiConstant.STATE_SELECT;
 
-            bankerBreakStart();
+                this.state = TuiTongZiConstant.STATE_SELECT;
+
+                bankerBreakStart();
+
+            }
 
         }else {
 
@@ -135,6 +140,11 @@ public class GameTuiTongZi extends Game{
 
         PlayerTuiTongZi playerTuiTongZi = playerCardInfos.get(userId);
         playerTuiTongZi.setGrab(flag ? 1 : 2);
+
+        Map<String , Object> map = new HashMap<>();
+        map.put("flag", flag);
+        map.put("userId", userId);
+        MsgSender.sendMsg2Player("gameTTZService", "fightForBankerResult", map, users);
         MsgSender.sendMsg2Player("gameTTZService", "fightForBanker", "0", userId);
 
         int count = 0;
@@ -155,7 +165,8 @@ public class GameTuiTongZi extends Game{
                 }
             }
 
-            PlayerTuiTongZi randomPlayer = aList.get(new Random().nextInt() % aList.size());
+            int bound = aList.size();
+            PlayerTuiTongZi randomPlayer = aList.get(new Random().nextInt(bound));
             room.setBankerId(randomPlayer.getUserId());
             ((RoomTuiTongZi) room).setPotBottom(20);
             this.bankerId = room.getBankerId();
@@ -225,6 +236,7 @@ public class GameTuiTongZi extends Game{
      * */
     public void createNewCards(){
         room.cards.clear();
+        room.cardsCount++;
         for (int i = 0; i < 36; i++){
             room.cards.add(i);
         }
@@ -236,6 +248,7 @@ public class GameTuiTongZi extends Game{
         // 如果打完4局还剩4张牌
         if (room.cards.size() <= 4){
             room.cards.clear();
+            room.cardsCount++;
             for (int i = 0; i < 36; i++){
                 room.cards.add(i);
             }
@@ -451,7 +464,13 @@ public class GameTuiTongZi extends Game{
             this.room.clearReadyStatus(true);
 
             if (this.room.getGameType().equals("201")){
-                sendFightFinalResult();
+                //强制下装
+                if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() > 5)){
+                    //退出游戏
+                    sendFightFinalResult();
+                }else if(room.cardsCount == 8 && (this.room.cards.size() == 4)){
+                    sendFightFinalResult();
+                }
             }else {
                 sendFinalResult();
             }
@@ -472,6 +491,10 @@ public class GameTuiTongZi extends Game{
     }
 
     public void sendFightFinalResult(){
+
+
+
+
         room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom());
         List<UserOfResult>  userOfResult =  this.room.getUserOfResult();
         GameOfResult gameOfResult = new GameOfResult();

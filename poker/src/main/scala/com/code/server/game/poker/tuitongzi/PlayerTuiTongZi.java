@@ -144,6 +144,7 @@ public class PlayerTuiTongZi implements IfacePlayerInfo {
         vo.setWinner(isWinner);
         vo.setOpen(this.isOpen());
         vo.setPotBottom(this.potBottom);
+        vo.setGrab(this.grab);
         if (bet == null){
             vo.setZhu(0);
         }else {

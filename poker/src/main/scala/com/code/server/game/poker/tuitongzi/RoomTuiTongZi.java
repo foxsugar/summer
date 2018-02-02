@@ -32,7 +32,14 @@ public class RoomTuiTongZi extends Room{
 
     protected long firstBanerCount = 0;
 
+    protected long cardsCount;
+
+
     protected List<Integer> cards = new ArrayList<Integer>();
+
+    public void setCardsCount(long cardsCount) {
+        this.cardsCount = cardsCount;
+    }
 
     public List<Integer> getCards() {
         return cards;

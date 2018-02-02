@@ -14,6 +14,15 @@ public class PlayerTuiTongZiVo implements IfacePlayerInfoVo {
     private boolean open;
     private long zhu;
     private long potBottom;
+    private long grab;
+
+    public long getGrab() {
+        return grab;
+    }
+
+    public void setGrab(long grab) {
+        this.grab = grab;
+    }
 
     public long getPotBottom() {
         return potBottom;
