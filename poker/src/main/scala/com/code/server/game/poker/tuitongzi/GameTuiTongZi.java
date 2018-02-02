@@ -79,8 +79,8 @@ public class GameTuiTongZi extends Game{
                 }
 
                 this.state = TuiTongZiConstant.STATE_SELECT;
-
-                bankerBreakStart();
+                betStart();
+//                bankerBreakStart();
 
             }
 
