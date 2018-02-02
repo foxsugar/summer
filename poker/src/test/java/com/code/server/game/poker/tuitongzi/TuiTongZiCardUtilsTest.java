@@ -40,4 +40,22 @@ public class TuiTongZiCardUtilsTest {
         Boolean ret = TuiTongZiCardUtils.zhuangIsBiggerThanXian(pB, pA);
         Assert.assertEquals(true, ret);
     }
+
+    @Test
+    public void test5() throws Exception {
+
+        PlayerTuiTongZi pA = new PlayerTuiTongZi(0, 27, 26);
+        PlayerTuiTongZi pB = new PlayerTuiTongZi(2, 8, 12);
+        Boolean ret = TuiTongZiCardUtils.zhuangIsBiggerThanXian(pB, pA);
+        Assert.assertEquals(true, ret);
+    }
+
+    @Test
+    public void zhuangIsBiggerThanXian() throws Exception {
+
+        PlayerTuiTongZi pA = new PlayerTuiTongZi(0, 15, 34);
+        PlayerTuiTongZi pB = new PlayerTuiTongZi(2, 14, 21);
+        Boolean ret = TuiTongZiCardUtils.zhuangIsBiggerThanXian(pA, pB);
+        Assert.assertEquals(true, ret);
+    }
 }

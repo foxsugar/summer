@@ -7,6 +7,7 @@ import com.code.server.game.poker.guess.RoomGuessCar
 import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower
 import com.code.server.game.poker.paijiu.RoomPaijiu
 import com.code.server.game.poker.tuitongzi.RoomTuiTongZi
+import com.code.server.game.room.IfaceRoom
 import com.code.server.game.room.service.RoomManager
 import com.fasterxml.jackson.databind.JsonNode
 
@@ -70,7 +71,12 @@ object PokerRoomService {
         val roomId = params.get("roomId").asText()
         return RoomCow.startGameByClient(userId,roomId);
 
-
+      case "startTTZGameByClient" =>
+        System.out.println("++++++++++---------------PokerRoomService+startTTZGameByClient")
+        val roomId = params.get("roomId").asText()
+        val room = RoomManager.getRoom(roomId)
+        if (room == null) return ErrorCode.CAN_NOT_NO_ROOM
+        return room.startGameByClient(userId)
 
       case "createPaijiuRoom"=>
         val roomType = params.path("roomType").asText()

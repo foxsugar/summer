@@ -1,22 +1,22 @@
 package com.code.server.game.poker.tuitongzi;
-import com.code.server.constant.response.ErrorCode;
-import com.code.server.constant.response.ResponseVo;
+import com.code.server.constant.response.*;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.game.room.service.RoomManager;
+import com.code.server.util.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.*;
 
 public class GameTuiTongZi extends Game{
 
     protected static final Logger logger = LoggerFactory.getLogger(GameTuiTongZi.class);
 
-    protected static final String serviceName = "gameTuiTongZiService";
+    protected static final String serviceName = "gameTTZService";
 
-    protected List<Integer> cards = new ArrayList<Integer>();
-
-    public Map<Long, PlayerTuiTongZi> playerCardInfos = new HashMap<>();
+    public Map<Long, PlayerTuiTongZi> playerCardInfos = new HashMap<Long, PlayerTuiTongZi>();
 
     protected RoomTuiTongZi room;
 
@@ -24,39 +24,224 @@ public class GameTuiTongZi extends Game{
 
     protected Integer state = TuiTongZiConstant.STATE_START;
 
+    protected long firstBankerId = -1;
+
+    protected long firstBanerCount = 0;
+
+    //第几局开始提示是否继续坐庄
+    public static final int REQUIRE_COUNT = 4;
+
+    public IfaceGameVo toVo(long watchUser) {
+
+        GameTuiTongZiVo vo = new GameTuiTongZiVo();
+        vo.bankerId = this.bankerId;
+        vo.state = this.state;
+        vo.potBottom = room.getPotBottom();
+        for (Long l:playerCardInfos.keySet()) {
+            vo.playerCardInfos.put(l, playerCardInfos.get(l).toVo());
+        }
+        vo.cards.clear();
+        vo.cards.addAll(this.room.cards);
+        return vo;
+    }
+
     public void startGame(List<Long> users, Room room){
         this.room = (RoomTuiTongZi) room;
         this.users = users;
+
+        this.firstBankerId = ((RoomTuiTongZi) room).firstBankerId;
+        this.firstBanerCount = ((RoomTuiTongZi) room).firstBanerCount;
+
         initPlayer();
         initCards();
-        //暂时把庄写死
-        this.bankerId = users.get(0);
+        this.bankerId = this.room.getBankerId();
 
-        PlayerTuiTongZi playerTuiTongZi = playerCardInfos.get(this.bankerId);
-        playerTuiTongZi.setScore(playerTuiTongZi.getScore() - 20);
-        /*
-        庄家分数
-        * */
-        playerTuiTongZi.setBankerScore(20);
-        //开始下注
+
+        //霸王庄
+        if (this.room.getGameType().equals("201")){
+
+            //第一次的时候设置锅底分数
+            if (room.getCurGameNumber() == 1){
+                this.bankerId = users.get(0);
+                PlayerTuiTongZi playerTuiTongZi = playerCardInfos.get(this.bankerId);
+                //设置锅底分数
+                ((RoomTuiTongZi) room).setPotBottom(20);
+                room.setBankerId(users.get(0));
+                bankerBreakStart();
+
+            }else{
+                //强制下装
+                if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() > 5)){
+                    //退出游戏
+                }
+            }
+            this.state = TuiTongZiConstant.STATE_SELECT;
+
+            bankerBreakStart();
+
+        }else {
+
+            //连续坐庄的次数
+            this.room.setZhuangCount(this.room.getZhuangCount() + 1);
+            //如果现在是第一局
+            if (room.getCurGameNumber() == 1){
+                this.bankerId = users.get(0);
+                PlayerTuiTongZi playerTuiTongZi = playerCardInfos.get(this.bankerId);
+                //设置锅底分数
+                ((RoomTuiTongZi) room).setPotBottom(20);
+                room.setBankerId(users.get(0));
+            }
+            //强制下庄
+            if (this.room.getZhuangCount() == 9){
+                long nextBanker = nextTurnId(room.getBankerId());
+                room.setBankerId(nextBanker);
+                ((RoomTuiTongZi) room).setPotBottom(20);
+                this.bankerId = room.getBankerId();
+                createNewCards();
+                this.room.setZhuangCount(1);
+            }else if(room.getCurGameNumber() != 1){
+                //强制下装
+                if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() > 5)){
+                    long nextBanker = nextTurnId(room.getBankerId());
+                    room.setBankerId(nextBanker);
+                    ((RoomTuiTongZi) room).setPotBottom(20);
+                    this.bankerId = room.getBankerId();
+                    createNewCards();
+                    this.room.setZhuangCount(1);
+                }
+            }
+
+            System.out.println("==============zhuangCount" + this.room.getZhuangCount());
+            //是否继续坐庄
+            if (this.room.getZhuangCount() == REQUIRE_COUNT){
+                continueBankerStart();
+            }else {
+                this.state = TuiTongZiConstant.STATE_SELECT;
+                conti();
+            }
+        }
+    }
+
+    /**
+     * 抢庄状态
+     */
+    public int bankerBreakStart(){
+        state = TuiTongZiConstant.STATE_FIGHT_FOR_BANKER;
+        MsgSender.sendMsg2Player("gameTTZService", "fightForBankerStart", this.bankerId, users);
+        return 0;
+    }
+
+    public int fightForBanker(Long userId, Boolean flag){
+
+        PlayerTuiTongZi playerTuiTongZi = playerCardInfos.get(userId);
+        playerTuiTongZi.setGrab(flag ? 1 : 2);
+        MsgSender.sendMsg2Player("gameTTZService", "fightForBanker", "0", userId);
+
+        int count = 0;
+        for (PlayerTuiTongZi playerTuiTongZi1 : playerCardInfos.values()){
+            if (playerTuiTongZi1.getGrab() != 0){
+                count++;
+            }
+
+        }
+
+        //产生随机数随机给一个庄
+        if (count == users.size()){
+
+            List<PlayerTuiTongZi> aList = new ArrayList<>();
+            for (PlayerTuiTongZi playerTuiTongZi1 : playerCardInfos.values()){
+                if (playerTuiTongZi.getGrab() == 1){
+                    aList.add(playerTuiTongZi1);
+                }
+            }
+
+            PlayerTuiTongZi randomPlayer = aList.get(new Random().nextInt() % aList.size());
+            room.setBankerId(randomPlayer.getUserId());
+            ((RoomTuiTongZi) room).setPotBottom(20);
+            this.bankerId = room.getBankerId();
+            MsgSender.sendMsg2Player("gameTTZService", "endFightForBanker", this.bankerId, users);
+
+            betStart();
+        }
+
+        return 0;
+
+    }
+
+    public void conti(){
+        if (firstBankerId < 0){
+            firstBankerId = bankerId;
+        }
+
+        long id = nextTurnId(bankerId);
+        if (id == firstBankerId){
+            firstBanerCount++;
+        }
+
         betStart();
+    }
+    //询问是否继续坐庄
+    public void continueBankerStart(){
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("bankerId", this.bankerId);
+        this.state = TuiTongZiConstant.STATE_WILL_SELECT;
+        //推送开始下注
+        MsgSender.sendMsg2Player(serviceName, "continueBankerStart", param, users);
+
+    }
+    //是否继续坐庄
+    public int continueBanker(boolean isZhuang, long userId){
+        if (isZhuang == false){
+            this.room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom() - 20);
+            this.room.setZhuangCount(1);
+            long nextBanker = nextTurnId(room.getBankerId());
+            room.setBankerId(nextBanker);
+            ((RoomTuiTongZi) room).setPotBottom(20);
+            this.bankerId = room.getBankerId();
+            createNewCards();
+            this.state = TuiTongZiConstant.STATE_SELECT;
+            MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
+            conti();
+        }else {
+            this.state = TuiTongZiConstant.STATE_SELECT;
+            MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
+            conti();
+        }
+        return 0;
     }
 
     public void initPlayer(){
 
+        playerCardInfos.clear();
         for (Long uid : users){
             PlayerTuiTongZi playerTuiTongZi = getGameTypePlayerCardInfo();
             playerTuiTongZi.setUserId(uid);
             playerCardInfos.put(uid, playerTuiTongZi);
         }
     }
-
-    public void initCards(){
+    /**
+     * 重拿一副新牌
+     * */
+    public void createNewCards(){
+        room.cards.clear();
         for (int i = 0; i < 36; i++){
-            cards.add(i);
+            room.cards.add(i);
         }
         //洗牌
-        shuffle(cards);
+        shuffle(room.cards);
+    }
+
+    public void initCards(){
+        // 如果打完4局还剩4张牌
+        if (room.cards.size() <= 4){
+            room.cards.clear();
+            for (int i = 0; i < 36; i++){
+                room.cards.add(i);
+            }
+        }
+        //洗牌
+        shuffle(room.cards);
     }
      /*
      转为下注状态
@@ -71,10 +256,11 @@ public class GameTuiTongZi extends Game{
 
         param.put("curGameNumber", this.room.getGameNumber());
 
+        param.put("panBottom", this.room.getPotBottom());
+
         //推送开始下注
         MsgSender.sendMsg2Player(serviceName, "betStart", param, users);
     }
-
     /*
     *  发牌
     * */
@@ -82,7 +268,7 @@ public class GameTuiTongZi extends Game{
 
         for (PlayerTuiTongZi player : playerCardInfos.values()) {
             for (int i = 0; i < 2; i++) {
-                player.getPlayerCards().add(cards.remove(0));
+                player.getPlayerCards().add(room.cards.remove(0));
             }
             //发完牌之后，确定牌型
             int ret = -1;
@@ -95,6 +281,17 @@ public class GameTuiTongZi extends Game{
             //通知发牌
             MsgSender.sendMsg2Player(new ResponseVo(serviceName, "deal", player.getPlayerCards()), player.getUserId());
         }
+
+        //丢弃一些牌
+        if (playerCardInfos.size() < 4){
+            int ret = 4 - playerCardInfos.size();
+            while (ret > 0){
+                room.cards.remove(0);
+                room.cards.remove(0);
+                ret--;
+            }
+        }
+
     }
     /*
     * 洗牌
@@ -107,7 +304,7 @@ public class GameTuiTongZi extends Game{
         state = TuiTongZiConstant.STATE_OPEN;
         deal();
         //推送开始下注
-        MsgSender.sendMsg2Player("gamePaijiuService", "openStart", this.bankerId, users);
+        MsgSender.sendMsg2Player(serviceName, "openStart", this.bankerId, users);
     }
 
     public PlayerTuiTongZi getGameTypePlayerCardInfo() {
@@ -131,7 +328,7 @@ public class GameTuiTongZi extends Game{
      */
     public int crap(Long userId){
 
-        if (state == TuiTongZiConstant.START_CRAP) return ErrorCode.CRAP_PARAM_ERROR;
+        if (state != TuiTongZiConstant.START_CRAP) return ErrorCode.CRAP_PARAM_ERROR;
         if (userId != bankerId) return ErrorCode.NOT_BANKER;
 
         Random random = new Random();
@@ -145,7 +342,6 @@ public class GameTuiTongZi extends Game{
         openStart();
         return 0;
     }
-
     /*
     * 下注
     * */
@@ -162,9 +358,28 @@ public class GameTuiTongZi extends Game{
 
         Map result = new HashMap();
         result.put("userId", userId);
-        result.put("bet", bet);
+//        result.put("bet", bet);
 
-        MsgSender.sendMsg2Player(serviceName, "betResult", result, users);
+        long ret = 0;
+        if (zhu == Bet.Wu){
+            ret = 5;
+        }else if(zhu == Bet.SHI){
+            ret = 10;
+        }else if(zhu == Bet.SHI_WU){
+            ret = 15;
+        }else if(zhu == Bet.ER_SHI){
+            ret = 20;
+        }else if(zhu == Bet.GUO_BAN){
+            ret = room.getPotBottom() / 2;
+        }else if(zhu == Bet.MAN_ZHU){
+            ret = room.getPotBottom();
+        }
+
+        Map<String, Long> res = new HashMap<>();
+        res.put("userId", userId);
+        res.put("ret", ret);
+
+        MsgSender.sendMsg2Player(serviceName, "betResult", res, users);
         MsgSender.sendMsg2Player(serviceName, "bet", "0" , userId);
 
         int count = 0;
@@ -193,10 +408,20 @@ public class GameTuiTongZi extends Game{
 
         Map<String, Long> result = new HashMap<>();
         result.put("userId", userId);
-        /**
-         * 告知服务器牌型
-         * */
+
         result.put("cardsPatterns", playerTuiTongZi.getPattern());
+
+        String lastMax = room.getRoomStatisticsMap().get(userId).maxCardGroup;
+        if (lastMax == null){
+            lastMax = "0";
+        }
+        String current = playerTuiTongZi.getPattern() + "";
+
+        if (playerTuiTongZi.getPattern() > Integer.parseInt(lastMax)){
+            lastMax = current;
+        }
+        room.getRoomStatisticsMap().get(userId).maxCardGroup = lastMax;
+
         MsgSender.sendMsg2Player(serviceName, "openResult", result, users);
         MsgSender.sendMsg2Player(serviceName, "open", "0", userId);
 
@@ -222,8 +447,52 @@ public class GameTuiTongZi extends Game{
         try {
             compute(firstId);
             sendResult();
+            genRecord();
+            this.room.clearReadyStatus(true);
+
+            if (this.room.getGameType().equals("201")){
+                sendFightFinalResult();
+            }else {
+                sendFinalResult();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    //生成战绩
+    public void genRecord(){
+        long id = IdWorker.getDefaultInstance().nextId();
+        Map<Long, Double> map = new HashMap<>();
+        for (Map.Entry<Long, PlayerTuiTongZi> entry : playerCardInfos.entrySet()){
+            PlayerTuiTongZi p = entry.getValue();
+            map.put(p.getUserId(), p.getScore() + 0.0);
+        }
+        genRecord(map, this.room, id);
+    }
+
+    public void sendFightFinalResult(){
+        room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom());
+        List<UserOfResult>  userOfResult =  this.room.getUserOfResult();
+        GameOfResult gameOfResult = new GameOfResult();
+        gameOfResult.setUserList(userOfResult);
+        MsgSender.sendMsg2Player("gameService", "gameTTZFinalResult", gameOfResult, users);
+        RoomManager.removeRoom(room.getRoomId());
+        this.room.genRoomRecord();
+    }
+
+    public void sendFinalResult(){
+
+        //因为是两圈，所以
+        if (firstBanerCount == 2){
+            room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom());
+            List<UserOfResult>  userOfResult =  this.room.getUserOfResult();
+            GameOfResult gameOfResult = new GameOfResult();
+            gameOfResult.setUserList(userOfResult);
+            MsgSender.sendMsg2Player("gameService", "gameTTZFinalResult", gameOfResult, users);
+            RoomManager.removeRoom(room.getRoomId());
+
+            this.room.genRoomRecord();
         }
     }
 
@@ -234,29 +503,51 @@ public class GameTuiTongZi extends Game{
 
         List<PlayerTuiTongZi> winnerList = new ArrayList<>();
         List<PlayerTuiTongZi> loserList = new ArrayList<>();
-
+        List<PlayerTuiTongZi> players = new ArrayList<>();
         Integer k = users.indexOf(firstId);
+
         //所有赢的玩家按照发牌顺序排序用来计算得分
         for (int j = 0; j < users.size(); j++){
             PlayerTuiTongZi player = playerCardInfos.get(users.get(j));
             if (player.getUserId() != bankerId){
-                if (TuiTongZiCardUtils.zhuangIsBiggerThanXian(playerZhuang, player)){
-                    //如果庄家比较大
-                    if (j < k){
-                        winnerList.add(player);
-                    }else if(j == k){
-                        winnerList.set(0, player);
-                    }else {
-                        winnerList.set(1, player);
-                    }
-                }else {
-                    loserList.add(player);
+                if (!TuiTongZiCardUtils.zhuangIsBiggerThanXian(playerZhuang, player)){
+                    player.setWinner(true);
+                }
+            }
+
+            if (j == k){
+                player.setPxId(0);
+            }else if(j > k){
+                player.setPxId(j - k);
+            }else {
+                player.setPxId(j + k);
+            }
+
+            players.add(player);
+        }
+        //按照座位顺序进行对赢家进行排序
+        for (int j = 0; j < players.size() - 1; j++){
+            PlayerTuiTongZi pJ = players.get(j);
+            for (int w = j + 1; w < players.size(); w++){
+                PlayerTuiTongZi pW = players.get(w);
+                if (pJ.getPxId() > pW.getPxId()){
+                    Collections.swap(players, j, w);
                 }
             }
         }
 
-        long lastGuoDi = this.room.getBankerScore();
+        for (int j = 0; j < players.size(); j++){
+            if (players.get(j).getUserId() != bankerId){
+                if (players.get(j).isWinner()){
+                    winnerList.add(players.get(j));
+                }else {
+                    loserList.add(players.get(j));
+                }
+            }
+        }
 
+        long lastGuoDi = this.room.getPotBottom();
+        long currentGuoDi = lastGuoDi;
         for (PlayerTuiTongZi loser : loserList){
             long delta = 0;
             if (loser.getBet().getZhu() == Bet.Wu){
@@ -272,13 +563,21 @@ public class GameTuiTongZi extends Game{
             }else if(loser.getBet().getZhu() == Bet.MAN_ZHU){
                 delta = lastGuoDi;
             }
-            playerZhuang.setScore(playerZhuang.getScore() + delta);
             loser.setScore(loser.getScore() - delta);
+            currentGuoDi += delta;
+            // 把分数加到room里
+            room.addUserSocre(loser.getUserId(), loser.getScore());
         }
 
-        //先把losers的分数放在锅里
-        long currentGuoDi = lastGuoDi + playerZhuang.getScore();
+
         for (PlayerTuiTongZi winner : winnerList){
+
+            if (currentGuoDi == 0){
+                winner.setScore(0);
+                room.addUserSocre(winner.getUserId(), winner.getScore());
+                continue;
+            }
+
             long delta = 0;
             if (winner.getBet().getZhu() == Bet.Wu){
                 delta = 5;
@@ -303,17 +602,18 @@ public class GameTuiTongZi extends Game{
                 delta = currentGuoDi;
             }
             currentGuoDi = currentGuoDi - delta;
-            playerZhuang.setScore(playerZhuang.getScore() + delta);
+//            playerZhuang.setScore(playerZhuang.getScore() + delta);
             winner.setScore(winner.getScore() + delta);
+            room.addUserSocre(winner.getUserId(), winner.getScore());
             //假如锅里没钱就跳出别的玩家喝水
-            if (currentGuoDi == 0){
-                break;
-            }
         }
-        this.room.setBankerScore(currentGuoDi);
-        if (currentGuoDi <= 5 || currentGuoDi >= 400){
-            System.out.println("庄家下装|庄家结束游戏");
+        this.room.setPotBottom(currentGuoDi);
+        playerZhuang.setScore(currentGuoDi - lastGuoDi);
+
+        for (PlayerTuiTongZi p : playerCardInfos.values()){
+            p.setPotBottom(currentGuoDi);
         }
+
     }
     /**
      * 牌局结果
@@ -325,35 +625,64 @@ public class GameTuiTongZi extends Game{
             aList.add(playerCardInfos.get(id));
         }
 
-        MsgSender.sendMsg2Player("gamePaijiuService", "gameResult", aList, this.users);
+        MsgSender.sendMsg2Player(serviceName, "gameResult", aList, this.users);
+
+        if (this.room.getGameType().equals("201")){
+
+            boolean updateZhuang = false;
+            //强制下装
+            if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() > 5)){
+                updateZhuang = true;
+            }
+
+            if (updateZhuang){
+                this.room.addUserSocre(this.bankerId, - 20 + this.room.getPotBottom());
+                this.room.setPotBottom(0);
+                this.room.setZhuangCount(0);
+                //强制下装
+
+
+            }
+
+        }else {
+            //发送
+            //  假如需要下装
+            //一轮有几次
+
+            boolean updateZhuang = false;
+            //强制下装
+            if (this.room.getZhuangCount() == 8){
+                updateZhuang = true;
+            }
+
+            if(this.room.getZhuangCount() != 8){
+                //强制下装
+                if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() > 5)){
+                    updateZhuang = true;
+                }
+            }
+
+            if (updateZhuang){
+                this.room.addUserSocre(this.bankerId, - 20 + this.room.getPotBottom());
+                this.room.setPotBottom(0);
+                this.room.setZhuangCount(0);
+            }
+        }
+
+        this.room.pushScoreChange();
     }
+    /*
+     * 轮庄
+     * */
+    protected long nextTurnId(long curId) {
+        int index = users.indexOf(curId);
 
-
-//    protected def sendResult(): Unit = {
-//        var gameResult = new GameResultPaijiu
-//        this.playerCardInfos.values.foreach(playerInfo => gameResult.getPlayerCardInfos.add(playerInfo.toVo))
-//        MsgSender.sendMsg2Player("gamePaijiuService", "gameResult", gameResult, this.users)
-//    }
-
-//    /**
-//     * 结算
-//     */
-//    protected def compute(): Unit = {
-//        val banker = playerCardInfos(bankerId)
-//        var resultSet: Set[Int] = Set()
-//        playerCardInfos.foreach { case (uid, playerInfo) =>
-//            if (uid != bankerId) {
-//                val winResult: Int = compareAndSetScore(banker, playerInfo)
-//                resultSet = resultSet.+(winResult)
-//            }
-//        }
-//        //全赢或全输
-//        if (resultSet.size == 1) {
-//            val bankerStatiseics = this.roomPaijiu.getRoomStatisticsMap.get(bankerId)
-//            if (resultSet.contains(WIN)) bankerStatiseics.winAllTime += 1
-//            if (resultSet.contains(LOSE)) bankerStatiseics.loseAllTime += 1
-//        }
-//    }
+        int nextId = index + 1;
+        if (nextId >= users.size()) {
+            nextId = 0;
+        }
+        return users.get(nextId);
+    }
 
     public int exchange(Long userId){
         return 1;
@@ -363,15 +692,7 @@ public class GameTuiTongZi extends Game{
         return 1;
     }
 
-    public int bankerBreakStart(){
-        return 1;
-    }
-
     public int bankerBreak(Long userId, Long flag){
-        return 1;
-    }
-
-    public int fightForBanker(Long userId, Boolean flag){
         return 1;
     }
 

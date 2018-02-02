@@ -36,7 +36,7 @@ public class TuiTongZiCardUtils {
 
         if (isDuiZi(list)){
             int ret = list.get(0) / 4 + 1;
-            return ret + 11;
+            return ret + 10;
         }
 
         int pointA = ((list.get(0) / 4 + 1) + (list.get(1) / 4 + 1))  % 10;

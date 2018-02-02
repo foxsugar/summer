@@ -10,6 +10,54 @@ public class PlayerTuiTongZiVo implements IfacePlayerInfoVo {
     private List<Integer> playerCards;
     private long score;
 
+    private boolean isWinner;
+    private boolean open;
+    private long zhu;
+    private long potBottom;
+
+    public long getPotBottom() {
+        return potBottom;
+    }
+
+    public void setPotBottom(long potBottom) {
+        this.potBottom = potBottom;
+    }
+
+    public long getZhu() {
+        return zhu;
+    }
+
+    public void setZhu(long zhu) {
+        this.zhu = zhu;
+    }
+
+    //牌型
+    private long pattern;
+
+    public boolean isWinner() {
+        return isWinner;
+    }
+
+    public void setWinner(boolean winner) {
+        isWinner = winner;
+    }
+
+    public long getPattern() {
+        return pattern;
+    }
+
+    public void setPattern(long pattern) {
+        this.pattern = pattern;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
+    }
+
     public long getUserId() {
         return userId;
     }

@@ -75,6 +75,9 @@ object GameService {
   }
 
   private def dispatchGameTTZService(userId:Long,method: String, game: GameTuiTongZi, params: JsonNode) = method match {
+    case "continueBanker" =>
+      val zhuang = params.path("isZhuang").asBoolean();
+      game.continueBanker(zhuang, userId);
     case "bet" =>
       val zhu = params.path("zhu").asInt(0)
       game.bet(userId, zhu);

@@ -9,14 +9,36 @@ import java.util.List;
 public class PlayerTuiTongZi implements IfacePlayerInfo {
 
     private long userId;
-    private List<Integer> playerCards;
+    private List<Integer> playerCards = new ArrayList<>();
     private Bet bet;
     private long score;
     private int bankerScore;
     private boolean open;
+    private boolean isWinner;
     //牌型
     private long pattern;
+    private long pxId;
+    private long potBottom;
+    private long zhuangCount;
+    private long grab;
+
     public PlayerTuiTongZi() {
+    }
+
+    public long getZhuangCount() {
+        return zhuangCount;
+    }
+
+    public void setZhuangCount(long zhuangCount) {
+        this.zhuangCount = zhuangCount;
+    }
+
+    public long getPotBottom() {
+        return potBottom;
+    }
+
+    public void setPotBottom(long potBottom) {
+        this.potBottom = potBottom;
     }
 
     public PlayerTuiTongZi(long userId, Integer card1, Integer card2) {
@@ -24,6 +46,35 @@ public class PlayerTuiTongZi implements IfacePlayerInfo {
         this.playerCards = new ArrayList<Integer>();
         this.playerCards.add(card1);
         this.playerCards.add(card2);
+        try {
+            this.pattern = TuiTongZiCardUtils.cardsPatterns(this.playerCards);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public long getGrab() {
+        return grab;
+    }
+
+    public void setGrab(long grab) {
+        this.grab = grab;
+    }
+
+    public boolean isWinner() {
+        return isWinner;
+    }
+
+    public long getPxId() {
+        return pxId;
+    }
+
+    public void setPxId(long pxId) {
+        this.pxId = pxId;
+    }
+
+    public void setWinner(boolean winner) {
+        isWinner = winner;
     }
 
     public long getPattern() {
@@ -89,6 +140,30 @@ public class PlayerTuiTongZi implements IfacePlayerInfo {
         vo.setUserId(this.userId);
         vo.setPlayerCards(this.playerCards);
         vo.setScore(this.score);
+        vo.setPattern(pattern);
+        vo.setWinner(isWinner);
+        vo.setOpen(this.isOpen());
+        vo.setPotBottom(this.potBottom);
+        if (bet == null){
+            vo.setZhu(0);
+        }else {
+            int ret = this.bet.getZhu();
+            long score = 0;
+            if (ret == 1){
+                score = 5;
+            }else if(ret == 2){
+                score = 10;
+            }else if(ret == 3){
+                score = 15;
+            }else if(ret == 4){
+                score = 20;
+            }else if(ret == 5){
+               score = this.getPotBottom() / 2;
+            }else if(ret == 6){
+                score = this.getPotBottom();
+            }
+            vo.setZhu(score);
+        }
         return vo;
     }
 
@@ -99,6 +174,10 @@ public class PlayerTuiTongZi implements IfacePlayerInfo {
         vo.setUserId(this.userId);
         vo.setPlayerCards(this.playerCards);
         vo.setScore(this.score);
+        vo.setPattern(pattern);
+        vo.setWinner(isWinner);
+        vo.setOpen(this.isOpen());
+        vo.setZhu(this.bet.getZhu());
         return vo;
     }
 }

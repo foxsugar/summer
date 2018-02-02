@@ -48,7 +48,7 @@ object MsgDispatch {
       GameService.dispatch(userId, method, roomId, params)
     case "reconnService" =>
       ReconnService.dispatch(userId, method, roomId)
-    case "gameTuiTongZiService" =>
+    case "gameTTZService" =>
       GameService.dispatch(userId, method, roomId, params)
     case _ =>
       -1
