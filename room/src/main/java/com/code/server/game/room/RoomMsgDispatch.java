@@ -121,6 +121,17 @@ public class RoomMsgDispatch {
                 return room.startGameByClient(userId);
 
             }
+
+            case "startTTZGameByClient":{
+                System.out.println("++++++++++---------------RoomMsgDispatch+startTTZGameByClient");
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                if (room == null) {
+                    return ErrorCode.CAN_NOT_NO_ROOM;
+                }
+                return room.startGameByClient(userId);
+
+            }
+
             case "getPrepareRoom":{
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 return room.getPrepareRoom(userId);

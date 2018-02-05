@@ -145,4 +145,16 @@ public class CowPlayerTest {
         Assert.assertTrue(p == p1);
 
     }
+
+    //牛8测试
+    @Test
+    public void findWinner11() throws Exception {
+
+        CowPlayer p1 = new CowPlayer(0L, 4,8,13,17, 24, true);
+        CowPlayer p2 = new CowPlayer(1L, 10,11,12,18,25, true);
+
+        CowPlayer p = CardUtils.findWinner(p1, p2);
+        Assert.assertTrue(p == p1);
+
+    }
 }
