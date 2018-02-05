@@ -236,8 +236,8 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
                     if (playerCardsInfo.getUserId() == gameInfo.getFirstTurn()) {
                         scoreTemp += bankerAddScore();
                     }
+                    scoreTemp = scoreTemp * room.getMultiple();
                     if (!isBaoAll) {
-                        scoreTemp = scoreTemp * room.getMultiple();
                         playerCardsInfo.addScore(-scoreTemp );
                         this.roomInfo.addUserSocre(playerCardsInfo.getUserId(), -scoreTemp );
                     }
