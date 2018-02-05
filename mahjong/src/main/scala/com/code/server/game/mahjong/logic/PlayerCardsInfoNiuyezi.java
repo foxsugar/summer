@@ -237,8 +237,9 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
                         scoreTemp += bankerAddScore();
                     }
                     if (!isBaoAll) {
-                        playerCardsInfo.addScore(-scoreTemp);
-                        this.roomInfo.addUserSocre(playerCardsInfo.getUserId(), -scoreTemp);
+                        scoreTemp = scoreTemp * room.getMultiple();
+                        playerCardsInfo.addScore(-scoreTemp );
+                        this.roomInfo.addUserSocre(playerCardsInfo.getUserId(), -scoreTemp );
                     }
                     subScore += scoreTemp;
                 }
@@ -262,6 +263,7 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
                         scoreTemp += bankerAddScore();
                     }
                     scoreTemp *= 2;
+                    scoreTemp *= room.getMultiple();
                     playerCardsInfo.addScore(-scoreTemp);
                     this.roomInfo.addUserSocre(playerCardsInfo.getUserId(), -scoreTemp);
                     subScore += scoreTemp;
