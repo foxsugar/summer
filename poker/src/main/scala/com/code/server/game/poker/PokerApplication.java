@@ -6,6 +6,7 @@ import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.cow.CowRobot;
 import com.code.server.game.poker.doudizhu.DouDiZhuGoldRobot;
 import com.code.server.game.poker.robot.RobotManager;
+import com.code.server.game.poker.tuitongzi.TTZRobot;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
@@ -39,6 +40,7 @@ public class PokerApplication {
 		//添加斗地主的机器人
 		robotManager.addRobot(new DouDiZhuGoldRobot());
 		robotManager.addRobot(new CowRobot());
+		robotManager.addRobot(new TTZRobot());
 		ThreadPool.getInstance().executor.execute(robotManager);
 
 //		MsgConsumer.startAConsumer("gameService", serverConfig.getServerId(), MsgDispatch::dispatch);
