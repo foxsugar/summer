@@ -47,7 +47,7 @@ public class GameClubService {
     @Autowired
     private ClubRecordService clubRecordService;
 
-    private static final int NEED_MONEY = 500;
+    private static final int NEED_MONEY = 5000;
     private static final int JOIN_LIMIT = 5;
     private static final int ROOM_LIMIT = 3;
 
