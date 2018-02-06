@@ -29,11 +29,15 @@ public class GameTuiTongZi extends Game{
     protected long firstBanerCount = 0;
 
     //第几局开始提示是否继续坐庄
-    public static final int REQUIRE_COUNT = 4;
+    public static final int REQUIRE_COUNT_1 = 4;
+    public static final int REQUIRE_COUNT_2 = 5;
+    public static final int REQUIRE_COUNT_3 = 8;
 
     public IfaceGameVo toVo(long watchUser) {
 
         GameTuiTongZiVo vo = new GameTuiTongZiVo();
+        vo.zhuangCount = this.room.getZhuangCount();
+        vo.firstBanerCount = this.firstBanerCount;
         vo.bankerId = this.bankerId;
         vo.state = this.state;
         vo.potBottom = room.getPotBottom();
@@ -118,7 +122,7 @@ public class GameTuiTongZi extends Game{
 
             System.out.println("==============zhuangCount" + this.room.getZhuangCount());
             //是否继续坐庄
-            if (this.room.getZhuangCount() == REQUIRE_COUNT){
+            if (this.room.getZhuangCount() == REQUIRE_COUNT_1 || this.room.getZhuangCount() == REQUIRE_COUNT_2 || this.room.getZhuangCount() == REQUIRE_COUNT_3){
                 continueBankerStart();
             }else {
                 this.state = TuiTongZiConstant.STATE_SELECT;
@@ -187,6 +191,7 @@ public class GameTuiTongZi extends Game{
         long id = nextTurnId(bankerId);
         if (id == firstBankerId){
             firstBanerCount++;
+            this.room.firstBanerCount = firstBanerCount;
         }
 
         betStart();
@@ -270,6 +275,10 @@ public class GameTuiTongZi extends Game{
         param.put("curGameNumber", this.room.getGameNumber());
 
         param.put("panBottom", this.room.getPotBottom());
+
+        param.put("firstBanerCount", this.firstBanerCount);
+
+        param.put("zhuangCount", this.room.getZhuangCount());
 
         //推送开始下注
         MsgSender.sendMsg2Player(serviceName, "betStart", param, users);
@@ -491,9 +500,6 @@ public class GameTuiTongZi extends Game{
     }
 
     public void sendFightFinalResult(){
-
-
-
 
         room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom());
         List<UserOfResult>  userOfResult =  this.room.getUserOfResult();
