@@ -173,7 +173,14 @@ public class GameTuiTongZi extends Game{
             }
 
             int bound = aList.size();
-            PlayerTuiTongZi randomPlayer = aList.get(new Random().nextInt(bound));
+
+            PlayerTuiTongZi randomPlayer = null;
+            if (bound != 0){
+                randomPlayer = aList.get(new Random().nextInt(bound));
+            }else {
+                randomPlayer = playerCardInfos.get(this.bankerId);
+            }
+
             room.setBankerId(randomPlayer.getUserId());
             ((RoomTuiTongZi) room).setPotBottom(20);
             this.bankerId = room.getBankerId();
