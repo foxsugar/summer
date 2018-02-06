@@ -474,6 +474,8 @@ public class GameTuiTongZi extends Game{
             compute(firstId);
             sendResult();
             genRecord();
+            updateLastOperateTime();
+            updateRoomLastTime();
             this.room.clearReadyStatus(true);
 
             if (this.room.getGameType().equals("201")){
@@ -774,4 +776,6 @@ public class GameTuiTongZi extends Game{
     public void setPlayerCardInfos(Map<Long, PlayerTuiTongZi> playerCardInfos) {
         this.playerCardInfos = playerCardInfos;
     }
+
+
 }
