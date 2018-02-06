@@ -77,10 +77,7 @@ public class GameTuiTongZi extends Game{
 
 
             }else{
-                //强制下装
-                if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() > 5)){
-                    //退出游戏
-                }
+
 
                 this.state = TuiTongZiConstant.STATE_SELECT;
                 betStart();
