@@ -31,6 +31,8 @@ public class GameTuiTongZi extends Game{
     //第几局开始提示是否继续坐庄
     public static final int REQUIRE_COUNT = 4;
 
+    protected long lastOperateTime;
+
     public IfaceGameVo toVo(long watchUser) {
 
         GameTuiTongZiVo vo = new GameTuiTongZiVo();
@@ -125,6 +127,7 @@ public class GameTuiTongZi extends Game{
                 conti();
             }
         }
+        updateLastOperateTime();
     }
 
     /**
@@ -353,6 +356,7 @@ public class GameTuiTongZi extends Game{
         MsgSender.sendMsg2Player(serviceName, "randSZ", result, users);
         MsgSender.sendMsg2Player(serviceName, "crap", "0", userId);
         openStart();
+        updateLastOperateTime();
         return 0;
     }
     /*
@@ -408,7 +412,7 @@ public class GameTuiTongZi extends Game{
         if (count == (users.size() - 1)){
             crapStart();
         }
-
+        updateLastOperateTime();
         return 0;
     }
 
@@ -449,7 +453,7 @@ public class GameTuiTongZi extends Game{
         if (isFind == true){
             gameOver(firstId);
         }
-
+        updateLastOperateTime();
         return 0;
     }
     /*
@@ -731,4 +735,37 @@ public class GameTuiTongZi extends Game{
         return 1;
     }
 
+    public RoomTuiTongZi getRoom() {
+        return room;
+    }
+
+    public void setRoom(RoomTuiTongZi room) {
+        this.room = room;
+    }
+
+    //更新操作时间
+    protected void updateLastOperateTime() {
+        this.lastOperateTime = System.currentTimeMillis();
+    }
+
+    //更新操作时间
+    protected void updateRoomLastTime() {
+        room.setRoomLastTime(System.currentTimeMillis());
+    }
+
+    public long getLastOperateTime() {
+        return lastOperateTime;
+    }
+
+    public void setLastOperateTime(long lastOperateTime) {
+        this.lastOperateTime = lastOperateTime;
+    }
+
+    public Map<Long, PlayerTuiTongZi> getPlayerCardInfos() {
+        return playerCardInfos;
+    }
+
+    public void setPlayerCardInfos(Map<Long, PlayerTuiTongZi> playerCardInfos) {
+        this.playerCardInfos = playerCardInfos;
+    }
 }

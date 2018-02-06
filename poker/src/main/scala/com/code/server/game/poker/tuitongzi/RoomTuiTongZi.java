@@ -34,6 +34,7 @@ public class RoomTuiTongZi extends Room{
 
     protected long cardsCount;
 
+    protected long roomLastTime;
 
     protected List<Integer> cards = new ArrayList<Integer>();
 
@@ -211,5 +212,13 @@ public class RoomTuiTongZi extends Room{
     protected void dissolutionRoom() {
         this.addUserSocre(this.getBankerId(), this.getPotBottom() - 20);
         super.dissolutionRoom();
+    }
+
+    public long getRoomLastTime() {
+        return roomLastTime;
+    }
+
+    public void setRoomLastTime(long roomLastTime) {
+        this.roomLastTime = roomLastTime;
     }
 }
