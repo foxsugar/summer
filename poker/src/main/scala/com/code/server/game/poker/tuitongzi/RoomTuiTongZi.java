@@ -3,6 +3,7 @@ package com.code.server.game.poker.tuitongzi;
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.response.ErrorCode;
+import com.code.server.constant.response.IfaceRoomVo;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
@@ -14,6 +15,7 @@ import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +35,6 @@ public class RoomTuiTongZi extends Room{
     protected long firstBanerCount = 0;
 
     protected long cardsCount;
-
 
     protected List<Integer> cards = new ArrayList<Integer>();
 
@@ -205,6 +206,16 @@ public class RoomTuiTongZi extends Room{
         this.isOpen = true;
         pushScoreChange();
         return 0;
+    }
+
+    public IfaceRoomVo toVo(long userId) {
+
+        RoomTuiTongZiVo roomVo = new RoomTuiTongZiVo();
+        roomVo.bankerId = this.bankerId;
+        roomVo.potBottom = this.potBottom;
+        roomVo.firstBanerCount = this.firstBanerCount;
+        roomVo.zhuangCount = this.zhuangCount;
+        return roomVo;
     }
 
     @Override
