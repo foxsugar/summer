@@ -107,6 +107,11 @@ public class RoomTuiTongZi extends Room{
         }
     }
 
+
+//    public IfaceRoomVo toVo(long user){
+//
+//    }
+
     public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple) throws DataNotFoundException {
         RoomTuiTongZi room = getRoomInstance(roomType);
 

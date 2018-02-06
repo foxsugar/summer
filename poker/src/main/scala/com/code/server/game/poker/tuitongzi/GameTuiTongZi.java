@@ -66,6 +66,7 @@ public class GameTuiTongZi extends Game{
         //霸王庄
         if (this.room.getGameType().equals("201")){
 
+            this.room.setZhuangCount(this.room.getZhuangCount() + 1);
             //第一次的时候设置锅底分数
             if (room.getCurGameNumber() == 1){
                 this.bankerId = users.get(0);
@@ -80,10 +81,13 @@ public class GameTuiTongZi extends Game{
 
             }else{
 
-
-                this.state = TuiTongZiConstant.STATE_SELECT;
-                betStart();
-//                bankerBreakStart();
+                //是否继续坐庄
+                if (this.room.getZhuangCount() == REQUIRE_COUNT_1 || this.room.getZhuangCount() == REQUIRE_COUNT_2 || this.room.getZhuangCount() == REQUIRE_COUNT_3){
+                    continueBankerStart();
+                }else {
+                    this.state = TuiTongZiConstant.STATE_SELECT;
+                    betStart();
+                }
 
             }
 
@@ -215,22 +219,37 @@ public class GameTuiTongZi extends Game{
     }
     //是否继续坐庄
     public int continueBanker(boolean isZhuang, long userId){
-        if (isZhuang == false){
-            this.room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom() - 20);
-            this.room.setZhuangCount(1);
-            long nextBanker = nextTurnId(room.getBankerId());
-            room.setBankerId(nextBanker);
-            ((RoomTuiTongZi) room).setPotBottom(20);
-            this.bankerId = room.getBankerId();
-            createNewCards();
-            this.state = TuiTongZiConstant.STATE_SELECT;
-            MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
-            conti();
+
+        if (room.getGameType().equals("201")){
+
+            if (isZhuang == false){
+
+            }else {
+                this.state = TuiTongZiConstant.STATE_SELECT;
+                MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
+                conti();
+            }
+
         }else {
-            this.state = TuiTongZiConstant.STATE_SELECT;
-            MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
-            conti();
+
+            if (isZhuang == false){
+                this.room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom() - 20);
+                this.room.setZhuangCount(1);
+                long nextBanker = nextTurnId(room.getBankerId());
+                room.setBankerId(nextBanker);
+                ((RoomTuiTongZi) room).setPotBottom(20);
+                this.bankerId = room.getBankerId();
+                createNewCards();
+                this.state = TuiTongZiConstant.STATE_SELECT;
+                MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
+                conti();
+            }else {
+                this.state = TuiTongZiConstant.STATE_SELECT;
+                MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
+                conti();
+            }
         }
+
         return 0;
     }
 
@@ -714,6 +733,12 @@ public class GameTuiTongZi extends Game{
      * 轮庄
      * */
     protected long nextTurnId(long curId) {
+
+        //如果是霸王庄 不换庄
+        if (room.getGameType().equals("201")){
+            return curId;
+        }
+
         int index = users.indexOf(curId);
 
         int nextId = index + 1;
