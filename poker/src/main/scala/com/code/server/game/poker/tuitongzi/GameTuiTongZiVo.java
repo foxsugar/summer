@@ -28,6 +28,8 @@ public class GameTuiTongZiVo implements IfaceGameVo{
     protected  Long bankerId ;
     protected Integer state = TuiTongZiConstant.STATE_START;
     protected long potBottom;
+    protected long firstBanerCount;
+    protected long zhuangCount;
     protected List<Integer> cards = new ArrayList<>();
 
 

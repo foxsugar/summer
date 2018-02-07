@@ -86,7 +86,7 @@ public class DataManager implements IGameConstant {
     }
 
     public static void main(String[] args) throws IOException {
-        initData("E:\\datagenPython3\\out\\static_data.json");
+        initData("D:\\GitOfSummer\\summer\\data\\static_data.json");
 //        initData("E:\\datagen\\out\\static_data.data");
 
 //        System.out.println(data.getPaijiuCardGroupDataCount());

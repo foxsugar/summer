@@ -29,11 +29,17 @@ public class GameTuiTongZi extends Game{
     protected long firstBanerCount = 0;
 
     //第几局开始提示是否继续坐庄
-    public static final int REQUIRE_COUNT = 4;
+    public static final int REQUIRE_COUNT_1 = 4;
+    public static final int REQUIRE_COUNT_2 = 5;
+    public static final int REQUIRE_COUNT_3 = 8;
+
+    protected long lastOperateTime;
 
     public IfaceGameVo toVo(long watchUser) {
 
         GameTuiTongZiVo vo = new GameTuiTongZiVo();
+        vo.zhuangCount = this.room.getZhuangCount();
+        vo.firstBanerCount = this.firstBanerCount;
         vo.bankerId = this.bankerId;
         vo.state = this.state;
         vo.potBottom = room.getPotBottom();
@@ -118,13 +124,14 @@ public class GameTuiTongZi extends Game{
 
             System.out.println("==============zhuangCount" + this.room.getZhuangCount());
             //是否继续坐庄
-            if (this.room.getZhuangCount() == REQUIRE_COUNT){
+            if (this.room.getZhuangCount() == REQUIRE_COUNT_1 || this.room.getZhuangCount() == REQUIRE_COUNT_2 || this.room.getZhuangCount() == REQUIRE_COUNT_3){
                 continueBankerStart();
             }else {
                 this.state = TuiTongZiConstant.STATE_SELECT;
                 conti();
             }
         }
+        updateLastOperateTime();
     }
 
     /**
@@ -166,7 +173,14 @@ public class GameTuiTongZi extends Game{
             }
 
             int bound = aList.size();
-            PlayerTuiTongZi randomPlayer = aList.get(new Random().nextInt(bound));
+
+            PlayerTuiTongZi randomPlayer = null;
+            if (bound != 0){
+                randomPlayer = aList.get(new Random().nextInt(bound));
+            }else {
+                randomPlayer = playerCardInfos.get(this.bankerId);
+            }
+
             room.setBankerId(randomPlayer.getUserId());
             ((RoomTuiTongZi) room).setPotBottom(20);
             this.bankerId = room.getBankerId();
@@ -187,6 +201,7 @@ public class GameTuiTongZi extends Game{
         long id = nextTurnId(bankerId);
         if (id == firstBankerId){
             firstBanerCount++;
+            this.room.firstBanerCount = firstBanerCount;
         }
 
         betStart();
@@ -271,6 +286,10 @@ public class GameTuiTongZi extends Game{
 
         param.put("panBottom", this.room.getPotBottom());
 
+        param.put("firstBanerCount", this.firstBanerCount);
+
+        param.put("zhuangCount", this.room.getZhuangCount());
+
         //推送开始下注
         MsgSender.sendMsg2Player(serviceName, "betStart", param, users);
     }
@@ -353,6 +372,7 @@ public class GameTuiTongZi extends Game{
         MsgSender.sendMsg2Player(serviceName, "randSZ", result, users);
         MsgSender.sendMsg2Player(serviceName, "crap", "0", userId);
         openStart();
+        updateLastOperateTime();
         return 0;
     }
     /*
@@ -408,7 +428,7 @@ public class GameTuiTongZi extends Game{
         if (count == (users.size() - 1)){
             crapStart();
         }
-
+        updateLastOperateTime();
         return 0;
     }
 
@@ -449,7 +469,7 @@ public class GameTuiTongZi extends Game{
         if (isFind == true){
             gameOver(firstId);
         }
-
+        updateLastOperateTime();
         return 0;
     }
     /*
@@ -461,6 +481,8 @@ public class GameTuiTongZi extends Game{
             compute(firstId);
             sendResult();
             genRecord();
+            updateLastOperateTime();
+            updateRoomLastTime();
             this.room.clearReadyStatus(true);
 
             if (this.room.getGameType().equals("201")){
@@ -491,9 +513,6 @@ public class GameTuiTongZi extends Game{
     }
 
     public void sendFightFinalResult(){
-
-
-
 
         room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom());
         List<UserOfResult>  userOfResult =  this.room.getUserOfResult();
@@ -730,5 +749,40 @@ public class GameTuiTongZi extends Game{
     public int bankerSetScore(Long userId, int score){
         return 1;
     }
+
+    public RoomTuiTongZi getRoom() {
+        return room;
+    }
+
+    public void setRoom(RoomTuiTongZi room) {
+        this.room = room;
+    }
+
+    //更新操作时间
+    protected void updateLastOperateTime() {
+        this.lastOperateTime = System.currentTimeMillis();
+    }
+
+    //更新操作时间
+    protected void updateRoomLastTime() {
+        room.setRoomLastTime(System.currentTimeMillis());
+    }
+
+    public long getLastOperateTime() {
+        return lastOperateTime;
+    }
+
+    public void setLastOperateTime(long lastOperateTime) {
+        this.lastOperateTime = lastOperateTime;
+    }
+
+    public Map<Long, PlayerTuiTongZi> getPlayerCardInfos() {
+        return playerCardInfos;
+    }
+
+    public void setPlayerCardInfos(Map<Long, PlayerTuiTongZi> playerCardInfos) {
+        this.playerCardInfos = playerCardInfos;
+    }
+
 
 }
