@@ -567,9 +567,6 @@ public class GameClubService {
         if (club.getPresident() != userId) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
-        if (club.getClubInfo().getRoomModels().size() >= ROOM_LIMIT) {
-            return ErrorCode.CLUB_NOT_MODEL_LIMIT;
-        }
 
 
         //初始化 房间数据
@@ -586,6 +583,9 @@ public class GameClubService {
         //设置创建命令
 
         RoomModel roomModel = getRoomModel(club, roomModelId);
+        if (roomModel == null) {
+            return ErrorCode.REQUEST_PARAM_ERROR;
+        }
         createCommand = setRoomModelCommand(createCommand, clubId, roomModel.getId());
         roomModel.setCreateCommand(createCommand);
         roomModel.setDesc(desc);
