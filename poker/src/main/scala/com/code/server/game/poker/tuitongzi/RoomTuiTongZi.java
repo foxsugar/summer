@@ -3,6 +3,7 @@ package com.code.server.game.poker.tuitongzi;
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.response.ErrorCode;
+import com.code.server.constant.response.IfaceRoomVo;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
@@ -14,6 +15,8 @@ import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
+import org.springframework.beans.BeanUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -107,10 +110,27 @@ public class RoomTuiTongZi extends Room{
         }
     }
 
+    public IfaceRoomVo toVo(long user){
 
-//    public IfaceRoomVo toVo(long user){
-//
-//    }
+        GameTuiTongZi gameTuiTongZi = (GameTuiTongZi) this.getGame();
+
+        RoomTuiTongZiVo roomVo = new RoomTuiTongZiVo();
+        BeanUtils.copyProperties(this, roomVo);
+        RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
+        if (this.game != null) {
+            roomVo.game = this.game.toVo(user);
+        }
+        if (this.getTimerNode() != null) {
+            long time = this.getTimerNode().getStart() + this.getTimerNode().getInterval() - System.currentTimeMillis();
+            roomVo.setRemainTime(time);
+        }
+
+        roomVo.zhuangCount = this.zhuangCount;
+        roomVo.bankerId = this.bankerId;
+        roomVo.potBottom = this.potBottom;
+        roomVo.firstBanerCount = this.firstBanerCount;
+        return roomVo;
+    }
 
     public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple) throws DataNotFoundException {
         RoomTuiTongZi room = getRoomInstance(roomType);

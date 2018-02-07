@@ -223,11 +223,11 @@ public class GameTuiTongZi extends Game{
         if (room.getGameType().equals("201")){
 
             if (isZhuang == false){
-
+                sendFightFinalResult();
             }else {
                 this.state = TuiTongZiConstant.STATE_SELECT;
                 MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
-                conti();
+                betStart();
             }
 
         }else {
@@ -503,10 +503,8 @@ public class GameTuiTongZi extends Game{
 
             if (this.room.getGameType().equals("201")){
                 //强制下装
-                if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() > 5)){
+                if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() > 5) || room.getZhuangCount() == 8){
                     //退出游戏
-                    sendFightFinalResult();
-                }else if(room.cardsCount == 8 && (this.room.cards.size() == 4)){
                     sendFightFinalResult();
                 }
             }else {
@@ -698,8 +696,6 @@ public class GameTuiTongZi extends Game{
                 this.room.setPotBottom(0);
                 this.room.setZhuangCount(0);
                 //强制下装
-
-
             }
 
         }else {
@@ -733,11 +729,6 @@ public class GameTuiTongZi extends Game{
      * 轮庄
      * */
     protected long nextTurnId(long curId) {
-
-        //如果是霸王庄 不换庄
-        if (room.getGameType().equals("201")){
-            return curId;
-        }
 
         int index = users.indexOf(curId);
 
