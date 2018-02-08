@@ -130,6 +130,7 @@ public class RoomManager {
 //                }
             }
         }
+        robotRoom.remove(room);
     }
 
     public static void addRoom(String roomId,String serverId, Room room) {
