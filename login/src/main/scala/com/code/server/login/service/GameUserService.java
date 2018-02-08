@@ -381,6 +381,8 @@ public class GameUserService {
                 return 2;
             case IProjectName.TONGCHENG:
                 return 1;
+            case IProjectName.BAIXING:
+                return 1;
             default:
                 return 0;
         }
