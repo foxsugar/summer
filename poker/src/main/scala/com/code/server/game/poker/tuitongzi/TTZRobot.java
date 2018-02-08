@@ -44,7 +44,7 @@ public class TTZRobot implements IGameConstant,ITTZRobot {
                 }
             }
         }
-        if (room.getGame() instanceof GameTuiTongZi) {
+        if (room.getGame() != null && room.getGame() instanceof GameTuiTongZi) {
             GameTuiTongZi game = (GameTuiTongZi) room.getGame();
             long now = System.currentTimeMillis();
             //执行
@@ -96,7 +96,7 @@ public class TTZRobot implements IGameConstant,ITTZRobot {
         msgKey.setPartition(partition);
 
         Map<String, Object> put = new HashMap();
-        put.put("zhu",5);
+        put.put("zhu",1);
 
         for (PlayerTuiTongZi p : game.getPlayerCardInfos().values()) {
             if(p.getUserId()!=game.room.getBankerId() && p.getBet()==null){
@@ -135,6 +135,9 @@ public class TTZRobot implements IGameConstant,ITTZRobot {
     @Override
     public void getReady(RoomTuiTongZi room) {
         String roomId = room.getRoomId();
+
+
+
         int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
         KafkaMsgKey msgKey = new KafkaMsgKey();
 

@@ -110,6 +110,17 @@ public class RoomTuiTongZi extends Room{
         }
     }
 
+    protected long nextTurnId(long curId) {
+
+        int index = users.indexOf(curId);
+
+        int nextId = index + 1;
+        if (nextId >= users.size()) {
+            nextId = 0;
+        }
+        return users.get(nextId);
+    }
+
     public IfaceRoomVo toVo(long user){
 
         GameTuiTongZi gameTuiTongZi = (GameTuiTongZi) this.getGame();
@@ -128,7 +139,12 @@ public class RoomTuiTongZi extends Room{
         roomVo.zhuangCount = this.zhuangCount;
         roomVo.bankerId = this.bankerId;
         roomVo.potBottom = this.potBottom;
-        roomVo.firstBanerCount = this.firstBanerCount;
+
+        if (nextTurnId(this.bankerId) == firstBankerId){
+            roomVo.firstBanerCount = this.firstBanerCount - 1;
+        }else {
+            roomVo.firstBanerCount = this.firstBanerCount;
+        }
         return roomVo;
     }
 
