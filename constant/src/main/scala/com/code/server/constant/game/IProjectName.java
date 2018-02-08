@@ -9,4 +9,5 @@ public interface IProjectName {
     String LAOTIE = "LAOTIE";
     String TONGCHENG = "TONGCHENG";
     String BAIXING = "BAIXING";
+    String CHUANQI = "CHUANQI";
 }
