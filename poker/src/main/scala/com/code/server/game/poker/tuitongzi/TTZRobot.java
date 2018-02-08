@@ -96,7 +96,7 @@ public class TTZRobot implements IGameConstant,ITTZRobot {
         msgKey.setPartition(partition);
 
         Map<String, Object> put = new HashMap();
-        put.put("zhu",5);
+        put.put("zhu",1);
 
         for (PlayerTuiTongZi p : game.getPlayerCardInfos().values()) {
             if(p.getUserId()!=game.room.getBankerId() && p.getBet()==null){
