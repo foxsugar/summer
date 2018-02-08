@@ -381,6 +381,10 @@ public class GameUserService {
                 return 2;
             case IProjectName.TONGCHENG:
                 return 1;
+            case IProjectName.BAIXING:
+                return 1;
+            case IProjectName.CHUANQI:
+                return 3;
             default:
                 return 0;
         }

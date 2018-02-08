@@ -39,7 +39,11 @@ public class GameTuiTongZi extends Game{
 
         GameTuiTongZiVo vo = new GameTuiTongZiVo();
         vo.zhuangCount = this.room.getZhuangCount();
-        vo.firstBanerCount = this.firstBanerCount;
+        if (nextTurnId(this.bankerId) == firstBankerId){
+            vo.firstBanerCount = this.firstBanerCount - 1;
+        }else {
+            vo.firstBanerCount = this.firstBanerCount;
+        }
         vo.bankerId = this.bankerId;
         vo.state = this.state;
         vo.potBottom = room.getPotBottom();
@@ -66,6 +70,7 @@ public class GameTuiTongZi extends Game{
         //霸王庄
         if (this.room.getGameType().equals("201")){
 
+            this.room.setZhuangCount(this.room.getZhuangCount() + 1);
             //第一次的时候设置锅底分数
             if (room.getCurGameNumber() == 1){
                 this.bankerId = users.get(0);
@@ -79,14 +84,14 @@ public class GameTuiTongZi extends Game{
 
 
             }else{
-                //强制下装
-                if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() > 5)){
-                    //退出游戏
-                }
 
-                this.state = TuiTongZiConstant.STATE_SELECT;
-                betStart();
-//                bankerBreakStart();
+                //是否继续坐庄
+                if (this.room.getZhuangCount() == REQUIRE_COUNT_1 || this.room.getZhuangCount() == REQUIRE_COUNT_2 || this.room.getZhuangCount() == REQUIRE_COUNT_3){
+                    continueBankerStart();
+                }else {
+                    this.state = TuiTongZiConstant.STATE_SELECT;
+                    betStart();
+                }
 
             }
 
@@ -112,7 +117,7 @@ public class GameTuiTongZi extends Game{
                 this.room.setZhuangCount(1);
             }else if(room.getCurGameNumber() != 1){
                 //强制下装
-                if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() > 5)){
+                if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() >= 5)){
                     long nextBanker = nextTurnId(room.getBankerId());
                     room.setBankerId(nextBanker);
                     ((RoomTuiTongZi) room).setPotBottom(20);
@@ -196,10 +201,11 @@ public class GameTuiTongZi extends Game{
     public void conti(){
         if (firstBankerId < 0){
             firstBankerId = bankerId;
+            this.room.firstBankerId = firstBankerId;
         }
 
         long id = nextTurnId(bankerId);
-        if (id == firstBankerId){
+        if (id == firstBankerId && this.room.getZhuangCount() == 1){
             firstBanerCount++;
             this.room.firstBanerCount = firstBanerCount;
         }
@@ -218,22 +224,44 @@ public class GameTuiTongZi extends Game{
     }
     //是否继续坐庄
     public int continueBanker(boolean isZhuang, long userId){
-        if (isZhuang == false){
-            this.room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom() - 20);
-            this.room.setZhuangCount(1);
-            long nextBanker = nextTurnId(room.getBankerId());
-            room.setBankerId(nextBanker);
-            ((RoomTuiTongZi) room).setPotBottom(20);
-            this.bankerId = room.getBankerId();
-            createNewCards();
-            this.state = TuiTongZiConstant.STATE_SELECT;
-            MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
-            conti();
+        if (room.getGameType().equals("201")){
+
+            if (isZhuang == false){
+                sendFightFinalResult();
+            }else {
+                this.state = TuiTongZiConstant.STATE_SELECT;
+                MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
+                betStart();
+            }
+
         }else {
-            this.state = TuiTongZiConstant.STATE_SELECT;
-            MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
-            conti();
+
+            if (isZhuang == false){
+                if (this.room.firstBanerCount == 2){
+                    this.room.setZhuangCount(0);
+                    sendFinalResult();
+                    return 0;
+                }
+
+                this.room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom() - 20);
+
+                this.room.setZhuangCount(1);
+                long nextBanker = nextTurnId(room.getBankerId());
+                room.setBankerId(nextBanker);
+                ((RoomTuiTongZi) room).setPotBottom(20);
+                this.bankerId = room.getBankerId();
+                createNewCards();
+                this.state = TuiTongZiConstant.STATE_SELECT;
+                MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
+                conti();
+            }else {
+                this.state = TuiTongZiConstant.STATE_SELECT;
+                MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
+                conti();
+            }
         }
+
+        updateLastOperateTime();
         return 0;
     }
 
@@ -286,10 +314,15 @@ public class GameTuiTongZi extends Game{
 
         param.put("panBottom", this.room.getPotBottom());
 
-        param.put("firstBanerCount", this.firstBanerCount);
+        if (firstBankerId == nextTurnId(this.bankerId)){
+            param.put("firstBanerCount", this.firstBanerCount - 1);
+        }else {
+            param.put("firstBanerCount", this.firstBanerCount);
+        }
 
         param.put("zhuangCount", this.room.getZhuangCount());
 
+        this.room.pushScoreChange();
         //推送开始下注
         MsgSender.sendMsg2Player(serviceName, "betStart", param, users);
     }
@@ -487,10 +520,8 @@ public class GameTuiTongZi extends Game{
 
             if (this.room.getGameType().equals("201")){
                 //强制下装
-                if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() > 5)){
+                if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() >= 5) || room.getZhuangCount() == 8){
                     //退出游戏
-                    sendFightFinalResult();
-                }else if(room.cardsCount == 8 && (this.room.cards.size() == 4)){
                     sendFightFinalResult();
                 }
             }else {
@@ -514,7 +545,10 @@ public class GameTuiTongZi extends Game{
 
     public void sendFightFinalResult(){
 
-        room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom());
+        if (this.room.getPotBottom() != 0){
+            room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom() - 20);
+        }
+
         List<UserOfResult>  userOfResult =  this.room.getUserOfResult();
         GameOfResult gameOfResult = new GameOfResult();
         gameOfResult.setUserList(userOfResult);
@@ -525,9 +559,13 @@ public class GameTuiTongZi extends Game{
 
     public void sendFinalResult(){
 
-        //因为是两圈，所以
-        if (firstBanerCount == 2){
-            room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom());
+        //因为是两圈，并且要求换zhu
+        if (firstBanerCount == 2 && this.room.getZhuangCount() == 0){
+
+            if (this.room.getPotBottom() != 0){
+                room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom() - 20);
+            }
+
             List<UserOfResult>  userOfResult =  this.room.getUserOfResult();
             GameOfResult gameOfResult = new GameOfResult();
             gameOfResult.setUserList(userOfResult);
@@ -673,7 +711,7 @@ public class GameTuiTongZi extends Game{
 
             boolean updateZhuang = false;
             //强制下装
-            if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() > 5)){
+            if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() >= 5)){
                 updateZhuang = true;
             }
 
@@ -682,8 +720,6 @@ public class GameTuiTongZi extends Game{
                 this.room.setPotBottom(0);
                 this.room.setZhuangCount(0);
                 //强制下装
-
-
             }
 
         }else {
@@ -699,7 +735,7 @@ public class GameTuiTongZi extends Game{
 
             if(this.room.getZhuangCount() != 8){
                 //强制下装
-                if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() > 5)){
+                if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() >= 5)){
                     updateZhuang = true;
                 }
             }
@@ -717,6 +753,7 @@ public class GameTuiTongZi extends Game{
      * 轮庄
      * */
     protected long nextTurnId(long curId) {
+
         int index = users.indexOf(curId);
 
         int nextId = index + 1;
