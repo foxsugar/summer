@@ -371,7 +371,7 @@ public class GameUserService {
      */
     private static double getShareMoney(String projectName) {
         //todo 从constant里读取
-        ServerManager.constant.getShareMoney();
+//        ServerManager.constant.getShareMoney();
         switch (projectName) {
             case IProjectName.JINGNAN:
                 return 2;
@@ -380,6 +380,10 @@ public class GameUserService {
             case IProjectName.LAOTIE:
                 return 2;
             case IProjectName.TONGCHENG:
+                return 1;
+            case IProjectName.BAIXING:
+                return 1;
+            case IProjectName.CHUANQI:
                 return 1;
             default:
                 return 0;

@@ -261,6 +261,7 @@ public class RoomInfo extends Room {
             case "DS":
 //            case "HT":
             case "DY"://大运
+            case "BAIXING":
                 return new GameInfo().setHasJieGangHu(true);
             case "TJ":
             case "DFH":
@@ -293,6 +294,10 @@ public class RoomInfo extends Room {
             this.gameType = "124";
         } else if (this.gameType.equals("JC") && this.modeTotal.equals("13")) {
             this.gameType = "JCSS";
+        } else if (this.gameType.equals("BAIXING")) {
+            this.gameType = "LQ";
+        }else if(this.gameType.equals("CHUANQI")){
+            this.gameType = "HL";
         }
         GameInfo gameInfo = getGameInfoInstance();
 

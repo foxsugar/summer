@@ -720,6 +720,22 @@ public class GameClubService {
     }
 
 
+    /**
+     * 俱乐部房间退钱
+     * @param clubId
+     * @param money
+     */
+    public int clubDrawBack(String clubId, int money) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club != null) {
+            synchronized (club.lock) {
+                club.setMoney(club.getMoney() + money);
+            }
+        }
+        return 0;
+    }
+
+
     public static void sendMsg2Player(Object msg, long userId) {
         String gateId = RedisManager.getUserRedisService().getGateId(userId);
         if (gateId != null) {
