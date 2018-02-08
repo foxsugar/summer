@@ -322,10 +322,25 @@ public class GameTuiTongZi extends Game{
 
         param.put("zhuangCount", this.room.getZhuangCount());
 
-        this.room.pushScoreChange();
+        this.pushScoreChange();
         //推送开始下注
         MsgSender.sendMsg2Player(serviceName, "betStart", param, users);
     }
+
+    public void pushScoreChange() {
+
+//        public Map<Long, Double> userScores = new HashMap<>();
+
+        Map<Long, Double> userScores = new HashMap<>();
+        userScores.putAll(this.room.userScores);
+
+        Double zhuangScore = this.room.userScores.get(this.bankerId);
+        zhuangScore -= 20;
+        userScores.put(this.bankerId, zhuangScore);
+
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChangeTTZ", userScores), this.getUsers());
+    }
+
     /*
     *  发牌
     * */
@@ -747,7 +762,7 @@ public class GameTuiTongZi extends Game{
             }
         }
 
-        this.room.pushScoreChange();
+        this.pushScoreChange();
     }
     /*
      * 轮庄
