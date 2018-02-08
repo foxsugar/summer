@@ -115,6 +115,9 @@ public class ClubServiceMsgDispatch {
             case "getClubRecord":
                 return gameClubService.getClubRecord(msgKey, userId,clubId);
 
+            case "clubDrawBack":
+                int money1 = params.get("money").asInt();
+                return gameClubService.clubDrawBack(clubId,money1);
         }
         return 0;
     }
