@@ -723,13 +723,17 @@ public class GameClubService {
     /**
      * 俱乐部房间退钱
      * @param clubId
-     * @param money
+     * @param clubModelId
      */
-    public int clubDrawBack(String clubId, int money) {
+    public int clubDrawBack(String clubId, String clubModelId) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club != null) {
-            synchronized (club.lock) {
-                club.setMoney(club.getMoney() + money);
+            RoomModel roomModel = getRoomModel(club, clubModelId);
+            if (roomModel != null) {
+                int money = roomModel.getMoney();
+                synchronized (club.lock) {
+                    club.setMoney(club.getMoney() + money);
+                }
             }
         }
         return 0;
