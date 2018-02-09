@@ -140,11 +140,16 @@ public class RoomTuiTongZi extends Room{
         roomVo.bankerId = this.bankerId;
         roomVo.potBottom = this.potBottom;
 
-        if (nextTurnId(this.bankerId) == firstBankerId){
-            roomVo.firstBanerCount = this.firstBanerCount - 1;
+        if (users.size() > 0){
+            if (nextTurnId(this.bankerId) == firstBankerId){
+                roomVo.firstBanerCount = this.firstBanerCount - 1;
+            }else {
+                roomVo.firstBanerCount = this.firstBanerCount;
+            }
         }else {
-            roomVo.firstBanerCount = this.firstBanerCount;
+            roomVo.firstBanerCount = 0;
         }
+
         return roomVo;
     }
 
