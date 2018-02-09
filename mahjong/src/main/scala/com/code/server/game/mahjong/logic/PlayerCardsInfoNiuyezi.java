@@ -15,20 +15,20 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
     protected static final int MODE_BANKER_3 = 2;
     protected static final int MODE_BANKER_4 = 3;
 
-    /**
-     * 是否荒庄
-     *
-     * @param gameInfo
-     * @return
-     */
-    public boolean isHuangzhuang(GameInfo gameInfo) {
-
-        int remainSize = 12;
-        int gangSize = this.gameInfo.getAllGangNum();
-        remainSize += gangSize * 2;
-        remainSize = remainSize >= 18 ? 18 : remainSize;
-        return gameInfo.getRemainCards().size() <= remainSize;
-    }
+//    /**
+//     * 是否荒庄
+//     *
+//     * @param gameInfo
+//     * @return
+//     */
+//    public boolean isHuangzhuang(GameInfo gameInfo) {
+//
+//        int remainSize = 12;
+//        int gangSize = this.gameInfo.getAllGangNum();
+//        remainSize += gangSize * 2;
+//        remainSize = remainSize >= 18 ? 18 : remainSize;
+//        return gameInfo.getRemainCards().size() <= remainSize;
+//    }
 
     @Override
     public boolean isCanPengAddThisCard(String card) {
