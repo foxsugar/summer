@@ -245,7 +245,7 @@ public class RoomTuiTongZi extends Room{
         if (!isOpen && isCreaterJoin) spendMoney();
         this.isInGame = true;
         this.isOpen = true;
-        pushScoreChange();
+//        pushScoreChange();
         return 0;
     }
 
