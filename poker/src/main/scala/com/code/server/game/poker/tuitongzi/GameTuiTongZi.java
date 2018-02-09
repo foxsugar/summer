@@ -620,13 +620,19 @@ public class GameTuiTongZi extends Game{
 
             players.add(player);
         }
-        //按照座位顺序进行对赢家进行排序
+
         for (int j = 0; j < players.size() - 1; j++){
-            PlayerTuiTongZi pJ = players.get(j);
+
             for (int w = j + 1; w < players.size(); w++){
-                PlayerTuiTongZi pW = players.get(w);
-                if (pJ.getPxId() > pW.getPxId()){
+
+                if (TuiTongZiCardUtils.mAIsBiggerThanB(players.get(j), players.get(w)) == 2){
+
                     Collections.swap(players, j, w);
+                }else if(TuiTongZiCardUtils.mAIsBiggerThanB(players.get(j), players.get(w)) == 1){
+
+                    if (players.get(j).getPxId() > players.get(w).getPxId()){
+                        Collections.swap(players, j, w);
+                    }
                 }
             }
         }
