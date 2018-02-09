@@ -117,7 +117,8 @@ public class ClubServiceMsgDispatch {
 
             case "clubDrawBack":
                 int money1 = params.get("money").asInt();
-                return gameClubService.clubDrawBack(clubId,money1);
+                String clubModelId2 = params.get("clubModelId").asText();
+                return gameClubService.clubDrawBack(clubId,clubModelId2);
         }
         return 0;
     }

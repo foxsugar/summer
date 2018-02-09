@@ -120,6 +120,8 @@ public class GameInfoNiuyezi extends GameInfo {
         boolean isCan = playerCardsInfo.isCanTing(temp);//不多一张
         if (isCan) {
             this.disCard = card;
+            this.lastPlayUserId = userId;//上个出牌的人
+            lastOperateUserId = userId;//上个操作的人
             //听
             playerCardsInfo.ting(card);
             //通知其他玩家听
