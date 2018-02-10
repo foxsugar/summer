@@ -295,7 +295,7 @@ public class RoomInfo extends Room {
         } else if (this.gameType.equals("JC") && this.modeTotal.equals("13")) {
             this.gameType = "JCSS";
         } else if(this.gameType.equals("CHUANQI")){
-            this.gameType = "HL";
+            this.gameType = "LQ";
         }
         GameInfo gameInfo = getGameInfoInstance();
 
