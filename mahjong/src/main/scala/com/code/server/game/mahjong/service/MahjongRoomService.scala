@@ -8,7 +8,7 @@ import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
 import com.code.server.redis.service.RedisManager
-import com.code.server.util.timer.{GameTimer, ITimeHandler, TimerNode}
+import com.code.server.util.timer.{GameTimer, TimerNode}
 import com.code.server.util.{IdWorker, SpringUtil}
 import com.fasterxml.jackson.databind.JsonNode
 
@@ -309,32 +309,13 @@ object MahjongRoomService {
 
     val roomId = roomInfo.getRoomId
     val start: Long = System.currentTimeMillis
-    val node: TimerNode = new TimerNode(start, IGameConstant.ONE_HOUR, false, new ITimeHandler() {
-      def fire() {
-        try {
-          val roomInfo: RoomInfo = RoomManager.getRoom(roomId).asInstanceOf[RoomInfo]
-          roomInfo.dissolutionRoom()
-//          if (roomInfo != null && !roomInfo.isInGame && roomInfo.getCurGameNumber == 1) {
-//            val need = RoomInfo.getCreateMoney(gameType, gameNumber)
-//            RedisManager.getUserRedisService.addUserMoney(userId, need)
-//            if ("LQ" == roomInfo.getGameType) {
-//              RedisManager.addGold(userId, -need / 10)
-//            }
-//            RoomManager.removeRoom(roomInfo.getRoomId)
-//          }
-        }
-        catch {
-          case e: Exception => {
-            e.printStackTrace()
-          }
-        }
-      }
-    })
+    val node: TimerNode = new TimerNode(start, IGameConstant.ONE_HOUR, false, () => roomInfo.dissolutionRoom())
     roomInfo.setPrepareRoomTimerNode(node)
     GameTimer.addTimerNode(node)
     MsgSender.sendMsg2Player(new ResponseVo("mahjongRoomService", "createRoomButNotInRoom", roomInfo.toJSONObject), userId)
     return 0
   }
+
 
   //    public void onlinemethod(GamePlayer gamePlayer) {
   //
