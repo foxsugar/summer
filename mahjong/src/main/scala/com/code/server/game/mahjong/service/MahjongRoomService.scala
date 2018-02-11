@@ -301,7 +301,10 @@ object MahjongRoomService {
     }
 
 
-    if (RedisManager.getUserRedisService.getUserMoney(userId) < roomInfo.getCreateNeedMoney) return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY
+    if (RedisManager.getUserRedisService.getUserMoney(userId) < roomInfo.getCreateNeedMoney) {
+      RoomManager.removeRoom(roomInfo.getRoomId)
+      return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY
+    }
     //给代建房 开房者 扣钱
     roomInfo.spendMoney()
 
