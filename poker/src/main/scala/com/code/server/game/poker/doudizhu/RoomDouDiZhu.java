@@ -86,6 +86,8 @@ public class RoomDouDiZhu extends Room {
         //代建房 定时解散
         if (!isJoin) {
             if (RedisManager.getUserRedisService().getUserMoney(userId) < room.createNeedMoney) {
+                RoomManager.removeRoom(room.getRoomId());
+                //todo 删除房间
                 return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
             }
             //给代建房 开房者 扣钱
