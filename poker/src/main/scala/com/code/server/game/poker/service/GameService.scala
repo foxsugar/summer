@@ -7,6 +7,7 @@ import com.code.server.game.poker.doudizhu.{GameDouDiZhu, GameDouDiZhuGold}
 import com.code.server.game.poker.hitgoldflower.GameHitGoldFlower
 import com.code.server.game.poker.guess.GameGuessCar
 import com.code.server.game.poker.paijiu.GamePaijiu
+import com.code.server.game.poker.pullmice.GamePullMice
 import com.code.server.game.poker.tuitongzi.GameTuiTongZi
 import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
@@ -70,6 +71,14 @@ object GameService {
       game.play(userId, cardStruct)
     case "pass" =>
       game.pass(userId)
+    case _ =>
+      ErrorCode.REQUEST_PARAM_ERROR
+  }
+
+  private def dispatchGamePullMiceService(userId:Long, method: String, game: GamePullMice, params: JsonNode) = method match {
+    case "bet" =>
+      val zhu = params.path("zhu").asInt(0)
+      game.bet(userId, zhu);
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }
