@@ -21,6 +21,8 @@ public class GamePullMice extends Game{
 
     protected List<PlayerPullMice> pxList;
 
+    protected List<Long> pxUsers = new ArrayList<>();
+
     @Override
     public IfaceGameVo toVo(long watchUser) {
         GamePullMiceVo vo = new GamePullMiceVo();
@@ -37,7 +39,7 @@ public class GamePullMice extends Game{
         initPlayer();
         //先推送一下分数
         this.pushScoreChange();
-        deal();
+        firstDeal();
     }
 
     public void initPlayer(){
@@ -71,10 +73,18 @@ public class GamePullMice extends Game{
         result.put("result", aList);
         result.put("state", this.state);
         //此时pxId为1的先下注
-        MsgSender.sendMsg2Player(serviceName, "betStart", result, pxList.get(0).getUserId());
+        MsgSender.sendMsg2Player(serviceName, "betStart", result, pxUsers.get(0));
     }
 
-    public int bet(Long userId, Integer zhu){
+    public int fiveStepClose(Long userId, Integer zhu){
+
+        return 1;
+    }
+
+    /*
+    *  这个方法不处理五不封
+    * */
+    public int bet(Long userId, Integer zhu, int times){
 
         PlayerPullMice playerPullMice = playerCardInfos.get(userId);
         if (playerPullMice == null) return ErrorCode.NO_USER;
@@ -85,15 +95,16 @@ public class GamePullMice extends Game{
 
         //第一个发牌的人
         PlayerPullMice playerOne = null;
-        for (PlayerPullMice p : playerCardInfos.values()){
-            if (p.getPxId() == 1){
+
+        int escapeCount = 0;
+        for (int i = 0; i < this.pxList.size(); i++){
+            PlayerPullMice p = this.pxList.get(i);
+            if (p.isEscape() == false){
                 playerOne = p;
-                break;
+            }else {
+                escapeCount++;
             }
         }
-
-        //跟注
-        if (playerPullMice == playerOne) return ErrorCode.BET_PARAM_ERROR;
 
         Bet bet = new Bet();
         bet.setZhu(zhu);
@@ -119,8 +130,7 @@ public class GamePullMice extends Game{
             ret = 5;
         }else if(zhu == Bet.ESCAPE){
             playerPullMice.setEscape(true);
-        } else if(zhu == Bet.FENG){
-            ret = 10;
+            escapeCount++;
         }
 
         playerPullMice.setScore(playerPullMice.getScore() - ret);
@@ -129,45 +139,65 @@ public class GamePullMice extends Game{
         Map<String, Long> res = new HashMap<>();
         res.put("userId", userId);
         res.put("ret", ret);
+        res.put("currentScore", playerPullMice.getScore());
         res.put("potBottom", this.room.potBottom);
-        MsgSender.sendMsg2Player(serviceName, "betResult", res, users);
-        MsgSender.sendMsg2Player(serviceName, "bet", "0", userId);
+
+        if (times == 1){
+            MsgSender.sendMsg2Player(serviceName, "betResult1", res, this.pxUsers);
+            MsgSender.sendMsg2Player(serviceName, "bet1", "0", userId);
+        }else if(times == 2){
+            MsgSender.sendMsg2Player(serviceName, "betResult2", res, this.pxUsers);
+            MsgSender.sendMsg2Player(serviceName, "bet2", "0", userId);
+        }else if(times == 3){
+            MsgSender.sendMsg2Player(serviceName, "betResult3", res, this.pxUsers);
+            MsgSender.sendMsg2Player(serviceName, "bet3", "0", userId);
+        }else if(times == 4){
+            MsgSender.sendMsg2Player(serviceName, "betResult4", res, this.pxUsers);
+            MsgSender.sendMsg2Player(serviceName, "bet4", "0", userId);
+        }
 
         boolean isDeal = true;
-        for (PlayerPullMice player : playerCardInfos.values()){
 
-            if (player.isEscape()){
-                continue;
-            }
+        if (escapeCount == this.users.size() - 1){
 
-            //第一次下注
-            if (state == PullMiceConstant.STATE_BET){
-                if (player.getBetList().size() != 1){
-                    isDeal = false;
-                    break;
+            state = PullMiceConstant.STATE_OPEN;
+
+            this.gameOver();
+
+            return 1;
+
+        }else {
+
+            for (PlayerPullMice player : playerCardInfos.values()){
+
+                if (player.isEscape()){
+                    continue;
                 }
 
-            } else if (state == PullMiceConstant.BET_FIRST){
-                if (player.getBetList().size() != 2){
-                    isDeal = false;
-                    break;
-                }
-            }else if(state == PullMiceConstant.BET_SECOND){
-                if (player.getBetList().size() != 3){
-                    isDeal = false;
-                    break;
-                }
-            }else if(state == PullMiceConstant.BET_THIRD){
-                //发第五张牌之后，第一个人如果没有选封
-                if (player.getPxId() == 1 && zhu != Bet.FENG){
-                    if (player.getBetList().size() != 4){
+                //第一次下注
+                if (state == PullMiceConstant.STATE_BET){
+                    if (player.getBetList().size() != 1){
                         isDeal = false;
                         break;
                     }
-                }else {
-                    if (player.getPxId() == 1 && player.isAlreadyFeng() != true){
+
+                } else if (state == PullMiceConstant.BET_FIRST){
+                    if (player.getBetList().size() != 2){
                         isDeal = false;
                         break;
+                    }
+                }else if(state == PullMiceConstant.BET_SECOND){
+                    if (player.getBetList().size() != 3){
+                        isDeal = false;
+                        break;
+                    }
+                }else if(state == PullMiceConstant.BET_THIRD){
+                    //发第五张牌之后，第一个人如果没有选封
+                    if (player.getPxId() == 1 && zhu != Bet.FENG){
+                        if (player.getBetList().size() != 4){
+                            isDeal = false;
+                            break;
+                        }
                     }
                 }
             }
@@ -185,21 +215,25 @@ public class GamePullMice extends Game{
             }else {
 
                 state++;
+
+                if (state == PullMiceConstant.BET_FIRST){
+                    System.out.println("++++++++:" + "第1次下注结束" + "[" + state + "]");
+                }else if(state == PullMiceConstant.BET_SECOND){
+                    System.out.println("++++++++:" + "第2次下注结束" + "[" + state + "]");
+                }else if(state == PullMiceConstant.BET_THIRD){
+                    System.out.println("++++++++:" + "第3次下注结束" + "[" + state + "]");
+                }
+
                 //继续发牌
                 List<PlayerPullMice> list = new ArrayList<>();
                 list.addAll(playerCardInfos.values());
                 //确定发牌顺序
                 CardUtils.calListPxId(list, users);
                 this.pxList = list;
+                updatePxUsers();
 
-                //发一张牌
-                for (int i = 0; i < list.size(); i++){
-                    PlayerPullMice player = playerCardInfos.get(users.get(i));
-                    //一张一张的发牌
-                    isNoticeClientShuffle();
-                    player.getCards().add(room.cards.remove(0));
-                    MsgSender.sendMsg2Player(new ResponseVo(serviceName, "deal", player.getCards()), player.getUserId());
-                }
+                //再发一张牌
+                deal(this.pxList);
 
                 Map<Object, Object> result = new HashMap<>();
                 List<PlayerPullMiceVo> aList = new ArrayList<>();
@@ -211,8 +245,8 @@ public class GamePullMice extends Game{
                 result.put("state", this.state);
                 //此时pxId为1的先下注
                 MsgSender.sendMsg2Player(serviceName, "betStart", result, pxList.get(0).getUserId());
-
             }
+
         }else {
 
             PlayerPullMice playerCurrent = playerCardInfos.get(userId);
@@ -268,7 +302,7 @@ public class GamePullMice extends Game{
         for (PlayerPullMice p : playerCardInfos.values()){
             list.add((PlayerPullMiceVo) p.toVo());
         }
-        MsgSender.sendMsg2Player(serviceName, "gameResult", list, this.users);
+        MsgSender.sendMsg2Player(serviceName, "gameResult", list, this.pxUsers);
 
         //推送一下分数
         this.pushScoreChange();
@@ -300,7 +334,7 @@ public class GamePullMice extends Game{
         List<UserOfResult>  userOfResult =  this.room.getUserOfResult();
         GameOfResult gameOfResult = new GameOfResult();
         gameOfResult.setUserList(userOfResult);
-        MsgSender.sendMsg2Player("gameService", "gamePullMiceFinalResult", gameOfResult, users);
+        MsgSender.sendMsg2Player("gameService", "gamePullMiceFinalResult", gameOfResult, this.pxUsers);
         RoomManager.removeRoom(room.getRoomId());
 
         this.room.genRoomRecord();
@@ -310,37 +344,50 @@ public class GamePullMice extends Game{
     public void isNoticeClientShuffle(){
         if (room.cards.size() == 0){
             initCards();
-            MsgSender.sendMsg2Player(new ResponseVo(serviceName, "shuffle", this.room.cards.size()), users);
+            MsgSender.sendMsg2Player(new ResponseVo(serviceName, "shuffle", this.room.cards.size()), this.pxUsers);
         }
     }
 
-    //第一次发牌
-    public void deal(){
+    public void firstDeal(){
+
         List<PlayerPullMice> list = new ArrayList<>();
         list.addAll(playerCardInfos.values());
         //确定发牌顺序
         CardUtils.calListPxId(list, users);
         //获取下注顺序的数组
         this.pxList = list;
+        updatePxUsers();
+
         //发第一张牌
-        for (int i = 0; i < list.size(); i++){
-            PlayerPullMice player = playerCardInfos.get(users.get(i));
-            //一张一张的发牌
-            //如果没牌了，重新洗牌洗牌
-            isNoticeClientShuffle();
-            player.getCards().add(room.cards.remove(0));
-            MsgSender.sendMsg2Player(new ResponseVo(serviceName, "deal", player.getCards()), player.getUserId());
-        }
+        deal(this.pxList);
         //发第二张明牌
-        for (int i = 0; i < list.size(); i++){
-            PlayerPullMice player = playerCardInfos.get(users.get(i));
-            //一张一张的发牌
-            isNoticeClientShuffle();
-            player.getCards().add(room.cards.remove(0));
-            MsgSender.sendMsg2Player(new ResponseVo(serviceName, "deal", player.getCards()), player.getUserId());
-        }
+        deal(this.pxList);
+
         //推送下注
         betStart();
+    }
+
+    public void deal(List<PlayerPullMice> list){
+
+        for (int i = 0; i < list.size(); i++){
+            PlayerPullMice player = playerCardInfos.get(users.get(i));
+            //一张一张的发牌
+            isNoticeClientShuffle();
+            player.getCards().add(room.cards.remove(0));
+
+            Map<Object, Object> res = new HashMap<>();
+            res.put("userId", player.getUserId());
+            res.put("cards", player.getCards());
+            MsgSender.sendMsg2Player(serviceName, "deal", res, this.pxUsers);
+        }
+    }
+
+    //更新排序后对应的id数组
+    public void updatePxUsers(){
+
+        for (PlayerPullMice p : this.pxList){
+            pxUsers.add(p.getUserId());
+        }
     }
 
     /*
