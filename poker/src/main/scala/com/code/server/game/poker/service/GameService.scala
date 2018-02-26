@@ -7,6 +7,7 @@ import com.code.server.game.poker.doudizhu.{GameDouDiZhu, GameDouDiZhuGold}
 import com.code.server.game.poker.hitgoldflower.GameHitGoldFlower
 import com.code.server.game.poker.guess.GameGuessCar
 import com.code.server.game.poker.paijiu.GamePaijiu
+import com.code.server.game.poker.pullmice.GamePullMice
 import com.code.server.game.poker.tuitongzi.GameTuiTongZi
 import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
@@ -28,6 +29,7 @@ object GameService {
       case x:GameGuessCar =>dispatchGameGuessService(userId,method,game.asInstanceOf[GameGuessCar],params)
       case x:GameCow =>dispatchGameCowService(userId,method,game.asInstanceOf[GameCow],params)
       case x:GameTuiTongZi =>dispatchGameTTZService(userId,method,game.asInstanceOf[GameTuiTongZi],params)
+      case x:GamePullMice =>dispatchGamePullMiceService(userId,method,game.asInstanceOf[GamePullMice],params)
     }
 
   }
@@ -70,6 +72,23 @@ object GameService {
       game.play(userId, cardStruct)
     case "pass" =>
       game.pass(userId)
+    case _ =>
+      ErrorCode.REQUEST_PARAM_ERROR
+  }
+
+  private def dispatchGamePullMiceService(userId:Long, method: String, game: GamePullMice, params: JsonNode) = method match {
+    case "bet1" =>
+      val zhu = params.path("zhu").asInt(0)
+      game.bet(userId, zhu, 1);
+    case "bet2" =>
+      val zhu = params.path("zhu").asInt(0)
+      game.bet(userId, zhu, 2);
+    case "bet3" =>
+      val zhu = params.path("zhu").asInt(0)
+      game.bet(userId, zhu, 3);
+    case "bet4" =>
+      val zhu = params.path("zhu").asInt(0)
+      game.bet(userId, zhu, 4);
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

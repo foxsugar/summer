@@ -1,4 +1,4 @@
-package com.code.server.game.poker.tuitongzi;
+package com.code.server.game.poker.pullmice;
 
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.IGameConstant;
@@ -21,29 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class RoomTuiTongZi extends Room{
+public class RoomPullMice extends Room {
 
-    private long bankerScore;
+    protected List<Integer> cards = new ArrayList<>();
 
-    private long bankerInitScore;
+    protected long potBottom;
 
-    private long potBottom;
-
-    private long zhuangCount;
-
-    protected long firstBankerId = -1;
-
-    protected long firstBanerCount = 0;
-
-    protected long cardsCount;
-
-    protected long roomLastTime;
-
-    protected List<Integer> cards = new ArrayList<Integer>();
-
-    public void setCardsCount(long cardsCount) {
-        this.cardsCount = cardsCount;
-    }
+    protected long maxGameCount;
 
     public List<Integer> getCards() {
         return cards;
@@ -53,109 +37,17 @@ public class RoomTuiTongZi extends Room{
         this.cards = cards;
     }
 
-    public long getFirstBankerId() {
-        return firstBankerId;
-    }
+    @Override
+    public IfaceRoomVo toVo(long userId) {
 
-    public void setFirstBankerId(long firstBankerId) {
-        this.firstBankerId = firstBankerId;
-    }
-
-    public long getFirstBanerCount() {
-        return firstBanerCount;
-    }
-
-    public void setFirstBanerCount(long firstBanerCount) {
-        this.firstBanerCount = firstBanerCount;
-    }
-
-    public long getPotBottom() {
-        return potBottom;
-    }
-
-    public long getBankerScore() {
-        return bankerScore;
-    }
-
-    public long getZhuangCount() {
-        return zhuangCount;
-    }
-
-    public void setZhuangCount(long zhuangCount) {
-        this.zhuangCount = zhuangCount;
-    }
-
-    public void setBankerScore(long bankerScore) {
-        this.bankerScore = bankerScore;
-    }
-
-    public void setPotBottom(long potBottom) {
-        this.potBottom = potBottom;
-    }
-
-    public long getBankerInitScore() {
-        return bankerInitScore;
-    }
-
-    public void setBankerInitScore(long bankerInitScore) {
-        this.bankerInitScore = bankerInitScore;
-    }
-
-    public static RoomTuiTongZi getRoomInstance(String roomType){
-        switch (roomType) {
-            case "5":
-                return new RoomTuiTongZi();
-            default:
-                return new RoomTuiTongZi();
-        }
-    }
-
-    protected long nextTurnId(long curId) {
-
-        int index = users.indexOf(curId);
-
-        int nextId = index + 1;
-        if (nextId >= users.size()) {
-            nextId = 0;
-        }
-        return users.get(nextId);
-    }
-
-    public IfaceRoomVo toVo(long user){
-
-        GameTuiTongZi gameTuiTongZi = (GameTuiTongZi) this.getGame();
-
-        RoomTuiTongZiVo roomVo = new RoomTuiTongZiVo();
+        RoomPullMiceVo roomVo = new RoomPullMiceVo();
         BeanUtils.copyProperties(this, roomVo);
-        RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
-        if (this.game != null) {
-            roomVo.game = this.game.toVo(user);
-        }
-        if (this.getTimerNode() != null) {
-            long time = this.getTimerNode().getStart() + this.getTimerNode().getInterval() - System.currentTimeMillis();
-            roomVo.setRemainTime(time);
-        }
-
-        roomVo.zhuangCount = this.zhuangCount;
-        roomVo.bankerId = this.bankerId;
-        roomVo.potBottom = this.potBottom;
-
-        if (users.size() > 0){
-            if (nextTurnId(this.bankerId) == firstBankerId){
-                roomVo.firstBanerCount = this.firstBanerCount - 1;
-            }else {
-                roomVo.firstBanerCount = this.firstBanerCount;
-            }
-        }else {
-            roomVo.firstBanerCount = 0;
-        }
-
-        return roomVo;
+        return super.toVo(userId);
     }
 
     public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple) throws DataNotFoundException {
-        RoomTuiTongZi room = getRoomInstance(roomType);
 
+        RoomPullMice room = new RoomPullMice();
         room.personNumber = personNumber;
         room.roomId = getRoomIdStr(genRoomId());
         room.createUser = userId;
@@ -164,8 +56,10 @@ public class RoomTuiTongZi extends Room{
         room.multiple = multiple;
         room.bankerId = userId;
         room.roomType = roomType;
-
         room.init(gameNumber, multiple);
+
+        //假设最大局数是8局
+        room.maxGameCount = gameNumber;
 
         int code = room.joinRoom(userId, isJoin);
         if (code != 0) {
@@ -176,7 +70,6 @@ public class RoomTuiTongZi extends Room{
         if (!isJoin) {
             //给代建房 开房者 扣钱
             if(RedisManager.getUserRedisService().getUserMoney(userId) < room.createNeedMoney){
-                RoomManager.removeRoom(room.getRoomId());
                 return ErrorCode.CANNOT_CREATE_ROOM_MONEY;
             }
             room.spendMoney();
@@ -202,8 +95,6 @@ public class RoomTuiTongZi extends Room{
         if (this.users.get(0) != userId){
             return ErrorCode.ROOM_START_NOT_CREATEUSER;
         }
-
-//        if (this.curGameNumber != 6) return ErrorCode.ROOM_START_CAN_NOT;
 
         //第一局
         if (this.curGameNumber != 1) return ErrorCode.ROOM_START_CAN_NOT;
@@ -235,13 +126,12 @@ public class RoomTuiTongZi extends Room{
             roomRemoveUser(removeId);
         }
 
-//        super.startGame();
         //通知其他人游戏已经开始
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameTTZBegin", "ok"), this.getUsers());
-        MsgSender.sendMsg2Player(new ResponseVo("roomService", "startTTZGameByClient", 0), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gamePullMiceBegin", "ok"), this.getUsers());
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "startPullMiceGameByClient", 0), userId);
 
-        GameTuiTongZi gameTuiTongZi = (GameTuiTongZi) getGameInstance();
-        this.game = gameTuiTongZi;
+        GamePullMice game = (GamePullMice) getGameInstance();
+        this.game = game;
         game.startGame(users, this);
 
         //游戏开始 代建房 去除定时解散
@@ -251,21 +141,11 @@ public class RoomTuiTongZi extends Room{
         if (!isOpen && isCreaterJoin) spendMoney();
         this.isInGame = true;
         this.isOpen = true;
-//        pushScoreChange();
         return 0;
     }
 
     @Override
-    protected void dissolutionRoom() {
-        this.addUserSocre(this.getBankerId(), this.getPotBottom() - 20);
+    protected  void dissolutionRoom() {
         super.dissolutionRoom();
-    }
-
-    public long getRoomLastTime() {
-        return roomLastTime;
-    }
-
-    public void setRoomLastTime(long roomLastTime) {
-        this.roomLastTime = roomLastTime;
     }
 }

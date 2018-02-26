@@ -389,7 +389,7 @@ public class RoomInfo extends Room {
 
 
         boolean isChange = scoreIsChange();
-        if (this.isInGame && this.curGameNumber == 1 && !isChange) {
+        if ((this.isInGame||!isCreaterJoin) && this.curGameNumber == 1 && !isChange) {
             drawBack();
         }
 

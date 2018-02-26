@@ -44,6 +44,7 @@ public class RoomPaijiuByNotInRoom extends Room {
         if (!isCreaterJoin) {
             //给代建房 开房者 扣钱
             if (RedisManager.getUserRedisService().getUserMoney(userId) < roomPaijiu.getCreateNeedMoney()) {
+                RoomManager.removeRoom(roomPaijiu.getRoomId());
                 return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
             }
 
