@@ -219,7 +219,7 @@ public class GamePullMice extends Game{
     }
 
     /*
-    *  这个方法不处理五不封
+    *  这个方法不处理 五不封
     * */
     public int bet(Long userId, Integer zhu, int times){
 

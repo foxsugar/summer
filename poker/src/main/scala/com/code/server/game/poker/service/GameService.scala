@@ -89,6 +89,9 @@ object GameService {
     case "bet4" =>
       val zhu = params.path("zhu").asInt(0)
       game.bet(userId, zhu, 4);
+    case "fiveStepClose" =>
+      val zhu = params.path("zhu").asInt(0)
+      game.fiveStepClose(userId, zhu);
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }
