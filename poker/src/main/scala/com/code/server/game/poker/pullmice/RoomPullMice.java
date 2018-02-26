@@ -59,9 +59,7 @@ public class RoomPullMice extends Room {
         room.init(gameNumber, multiple);
 
         //假设最大局数是8局
-        if (true){
-            room.maxGameCount = 8;
-        }
+        room.maxGameCount = gameNumber;
 
         int code = room.joinRoom(userId, isJoin);
         if (code != 0) {
@@ -129,8 +127,8 @@ public class RoomPullMice extends Room {
         }
 
         //通知其他人游戏已经开始
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameTTZBegin", "ok"), this.getUsers());
-        MsgSender.sendMsg2Player(new ResponseVo("roomService", "startTTZGameByClient", 0), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gamePullMiceBegin", "ok"), this.getUsers());
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "startPullMiceGameByClient", 0), userId);
 
         GamePullMice game = (GamePullMice) getGameInstance();
         this.game = game;

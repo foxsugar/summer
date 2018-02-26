@@ -76,7 +76,10 @@ public class GamePullMice extends Game{
         MsgSender.sendMsg2Player(serviceName, "betStart", result, pxUsers.get(0));
     }
 
-    public int fiveStepClose(Long userId, Integer zhu){
+    public int fiveStepClose(Long userId){
+
+        PlayerPullMice playerPullMice = playerCardInfos.get(userId);
+
 
         return 1;
     }
@@ -384,7 +387,7 @@ public class GamePullMice extends Game{
 
     //更新排序后对应的id数组
     public void updatePxUsers(){
-
+        pxUsers.clear();
         for (PlayerPullMice p : this.pxList){
             pxUsers.add(p.getUserId());
         }
