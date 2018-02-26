@@ -35,7 +35,7 @@ public class TTZRobot implements IGameConstant,ITTZRobot {
         if (room == null && room.getGame()==null) {
             return;
         }
-        if(room != null && room.getGame() == null){
+        /*if(room != null && room.getGame() == null){
             if(room instanceof RoomTuiTongZi){
                 RoomTuiTongZi roomTTZ = (RoomTuiTongZi)room;
                 long now = System.currentTimeMillis();
@@ -43,7 +43,7 @@ public class TTZRobot implements IGameConstant,ITTZRobot {
                     getReady(roomTTZ);
                 }
             }
-        }
+        }*/
         if (room.getGame() != null && room.getGame() instanceof GameTuiTongZi) {
             GameTuiTongZi game = (GameTuiTongZi) room.getGame();
             long now = System.currentTimeMillis();
@@ -52,9 +52,6 @@ public class TTZRobot implements IGameConstant,ITTZRobot {
                 switch (game.state) {
                     case 4:
                         crap(game);
-                        break;
-                    case 3:
-                        bet(game);
                         break;
                     case 5:
                         open(game);
