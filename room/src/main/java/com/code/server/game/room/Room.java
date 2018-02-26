@@ -289,6 +289,11 @@ public class Room implements IfaceRoom {
                 }
             }
         }
+        if("JBPJ".equals(gameType)){//金币扎金花
+            if(RedisManager.getUserRedisService().getUserMoney(userId) <100){
+                return false;
+            }
+        }
         return true;
     }
 
