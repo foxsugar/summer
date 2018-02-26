@@ -76,10 +76,144 @@ public class GamePullMice extends Game{
         MsgSender.sendMsg2Player(serviceName, "betStart", result, pxUsers.get(0));
     }
 
-    public int fiveStepClose(Long userId){
+    public int fiveStepClose(Long userId, Integer zhu){
+        state = Bet.WU_BU_FENG;
 
-        PlayerPullMice playerPullMice = playerCardInfos.get(userId);
+        List<PlayerPullMice> list = new ArrayList<>();
+        list.addAll(playerCardInfos.values());
+        //确定发牌顺序
+        CardUtils.calListPxId(list, users);
+        //获取下注顺序的数组
+        this.pxList = list;
+        updatePxUsers();
 
+        Bet bet = new Bet();
+        bet.setZhu(zhu);
+        if (zhu == Bet.WU_BU_FENG){
+            PlayerPullMice playerPullMice = this.pxList.get(0);
+            playerPullMice.setScore(playerPullMice.getScore() - 5);
+            this.room.potBottom += 5;
+
+            playerPullMice.getBetList().add(bet);
+        }else if(zhu == Bet.FENG){
+            PlayerPullMice playerPullMice = this.playerCardInfos.get(userId);
+            playerPullMice.setScore(playerPullMice.getScore() - 10);
+            this.room.potBottom += 10;
+
+            playerPullMice.getBetList().add(bet);
+        }else if(zhu == Bet.FOLLOW){
+            PlayerPullMice playerPullMice = this.playerCardInfos.get(userId);
+            playerPullMice.setScore(playerPullMice.getScore() - 5);
+            this.room.potBottom += 5;
+
+            playerPullMice.getBetList().add(bet);
+        }else if(zhu == Bet.ESCAPE){
+            PlayerPullMice playerPullMice = this.playerCardInfos.get(userId);
+            playerPullMice.setEscape(true);
+        }
+
+        //解决封的问题
+
+        //圈数
+        int count = 0;
+        PlayerPullMice pp = pxList.get(0);
+        count = pp.getBetList().size() - 3;
+
+        boolean isOver = false;
+
+        int escapeCount = 0;
+        for (int i = 0; i < this.pxList.size(); i++){
+            if (pxList.get(i).isEscape()){
+                escapeCount++;
+            }
+        }
+
+        if (escapeCount == this.pxList.size() - 1){
+            isOver = true;
+        }else{
+
+            //判断如果第五轮所有人下注结束
+            if (count == 5){
+
+                isOver = true;
+                for (int i = 1; i < this.pxList.size(); i++){
+                    PlayerPullMice p = this.pxList.get(i);
+
+                    if (p.isEscape() == true) continue;
+
+                    if ( p.getBetList().size() != count - 3){
+                        isOver = false;
+                    }
+                }
+            }
+
+            //就判断封
+            if (isOver == false){
+
+                boolean isFinal = true;
+                for (int i = 0; i < this.pxList.size(); i++){
+                    PlayerPullMice p = this.pxList.get(i);
+
+                    if (p.isEscape() == true){
+                        continue;
+                    }
+
+                    Bet b = p.getBetList().get(p.getBetList().size() - 1);
+                    if (b.getZhu() != Bet.FENG && b.getZhu() != Bet.WU_BU_FENG){
+                        isFinal = false;
+                    }
+                }
+
+                if (isFinal){
+
+                    //如果所有人都封了，
+                    PlayerPullMice p = this.pxList.get(0);
+                    Bet b = p.getBetList().get(3);
+                    if (b.getZhu() == Bet.WU_BU_FENG){
+                        p.setScore(p.getScore() - 5);
+                        this.room.potBottom += 5;
+                    }
+
+                    isOver = true;
+                }
+
+
+            }
+        }
+
+        if (isOver){
+            //推送一下分数
+            this.pushScoreChange();
+            state = PullMiceConstant.STATE_OPEN;
+            this.gameOver();
+        }else {
+
+            PlayerPullMice playerCurrent = playerCardInfos.get(userId);
+            PlayerPullMice playerNext = null;
+
+            for (PlayerPullMice p : pxList){
+                if (p.getPxId() == playerCurrent.getPxId() + 1 && p.isEscape() == false){
+                    playerNext = p;
+                    break;
+                }
+            }
+
+            if (playerNext == null){
+                playerNext = pxList.get(0);
+            }
+
+            List<PlayerPullMiceVo> aList = new ArrayList<>();
+            for (PlayerPullMice playerPullMice_ : this.pxList){
+                aList.add((PlayerPullMiceVo) playerPullMice_.toVo());
+            }
+
+            Map<Object, Object> result = new HashMap<>();
+            result.put("result", aList);
+            result.put("state", this.state);
+            result.put("count", count);
+            MsgSender.sendMsg2Player(serviceName, "betStart", result, playerNext.getUserId());
+
+        }
 
         return 1;
     }
