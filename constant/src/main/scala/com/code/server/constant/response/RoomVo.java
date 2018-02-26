@@ -43,7 +43,9 @@ public class RoomVo implements IfaceRoomVo {
     public String clubId;
     public String clubRoomModel;
 
-
+    //牌九金币
+    public int isGold;
+    public int goldType;
 
     public long canStartUserId;//代建房专用，告诉谁可以手动开始
 
@@ -300,5 +302,21 @@ public class RoomVo implements IfaceRoomVo {
     public RoomVo setClubRoomModel(String clubRoomModel) {
         this.clubRoomModel = clubRoomModel;
         return this;
+    }
+
+    public int getIsGold() {
+        return isGold;
+    }
+
+    public void setIsGold(int isGold) {
+        this.isGold = isGold;
+    }
+
+    public int getGoldType() {
+        return goldType;
+    }
+
+    public void setGoldType(int goldType) {
+        this.goldType = goldType;
     }
 }
