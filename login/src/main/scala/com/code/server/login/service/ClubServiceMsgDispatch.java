@@ -118,6 +118,12 @@ public class ClubServiceMsgDispatch {
             case "clubDrawBack":
                 String clubModelId2 = params.get("clubModelId").asText();
                 return gameClubService.clubDrawBack(clubId,clubModelId2);
+            case "kickUser":
+                long kickUser = params.get("kickUserId").asLong();
+                return gameClubService.kickUser(msgKey, userId, clubId, kickUser);
+
+            case "getChargeRecord":
+                return gameClubService.getChargeRecord(msgKey, userId, clubId);
         }
         return 0;
     }
