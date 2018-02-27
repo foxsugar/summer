@@ -5,9 +5,7 @@ import com.code.server.game.mahjong.util.HuCardType;
 import com.code.server.game.mahjong.util.HuLimit;
 import com.code.server.game.mahjong.util.HuUtil;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 粘粽子
@@ -184,6 +182,23 @@ public class PlayerCardsInfoHM extends PlayerCardsInfoMj {
         } else{
             return getTingCardType(getCardsNoChiPengGang(cards),null).size()>0;
         }
+    }
+
+    @Override
+    public boolean isHasGang() {
+        System.out.println("是否能杠: "+" isTing = "+isTing +"  cards = "+cards);
+        if (isTing) {
+            Set<Integer> canGangType = getHasGangList(cards);
+            for (int gt : canGangType) {
+                List<String> temp = new ArrayList<>();
+                temp.addAll(cards);
+                if (isCanTingAfterGang(temp, gt,false)) {
+                    return true;
+                }
+            }
+            return false;
+
+        }else return super.isHasGang();
     }
 
     @Override

@@ -8,11 +8,15 @@ public class Bet {
     public static final int SI = 4;
     public static final int WU = 5;
     //封
-    public static final int FENG = 6;
+
+    public static final int WU_BU_FENG = 6;
+    public static final int FENG = 7;
+    public static final int FOLLOW_FENG = 8;
+
     //跑
-    public static final int ESCAPE = 7;
+    public static final int ESCAPE = 9;
     //跟注
-    public static final int FOLLOW = 8;
+    public static final int FOLLOW = 10;
 
     private int zhu;
 

@@ -50,6 +50,8 @@ object MsgDispatch {
       ReconnService.dispatch(userId, method, roomId)
     case "gameTTZService" =>
       GameService.dispatch(userId, method, roomId, params)
+    case "gamePullMiceService" =>
+      GameService.dispatch(userId, method, roomId, params)
     case _ =>
       -1
   }

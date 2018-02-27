@@ -57,5 +57,10 @@ public class PokerMsgConsumer {
         MsgDispatch.dispatch(record);
     }
 
-
+    @KafkaListener(id = "gamePullMiceService", topicPartitions = {
+            @TopicPartition(topic = "gamePullMiceService", partitions = "${serverConfig.serverId}")
+    })
+    public void listen_pull_mice_room(ConsumerRecord<String, String> record ) {
+        MsgDispatch.dispatch(record);
+    }
 }

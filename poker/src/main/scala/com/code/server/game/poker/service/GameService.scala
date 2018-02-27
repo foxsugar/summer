@@ -29,6 +29,7 @@ object GameService {
       case x:GameGuessCar =>dispatchGameGuessService(userId,method,game.asInstanceOf[GameGuessCar],params)
       case x:GameCow =>dispatchGameCowService(userId,method,game.asInstanceOf[GameCow],params)
       case x:GameTuiTongZi =>dispatchGameTTZService(userId,method,game.asInstanceOf[GameTuiTongZi],params)
+      case x:GamePullMice =>dispatchGamePullMiceService(userId,method,game.asInstanceOf[GamePullMice],params)
     }
 
   }
@@ -76,9 +77,18 @@ object GameService {
   }
 
   private def dispatchGamePullMiceService(userId:Long, method: String, game: GamePullMice, params: JsonNode) = method match {
-    case "bet" =>
+    case "bet1" =>
       val zhu = params.path("zhu").asInt(0)
-      game.bet(userId, zhu);
+      game.bet(userId, zhu, 1);
+    case "bet2" =>
+      val zhu = params.path("zhu").asInt(0)
+      game.bet(userId, zhu, 2);
+    case "bet3" =>
+      val zhu = params.path("zhu").asInt(0)
+      game.bet(userId, zhu, 3);
+    case "bet4" =>
+      val zhu = params.path("zhu").asInt(0)
+      game.bet(userId, zhu, 4);
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }
