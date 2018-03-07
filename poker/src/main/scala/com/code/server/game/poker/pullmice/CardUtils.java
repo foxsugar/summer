@@ -1,10 +1,44 @@
 package com.code.server.game.poker.pullmice;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class CardUtils {
+
+    public static Map<Integer, Integer> cardDict = new HashMap<>();
+
+    static {
+
+        for (int i = 0; i < 54; i++){
+            if (i == 0 || i == 1){
+
+                Integer key = i;
+                Integer value = i + 53;
+                cardDict.put(key, value);
+            }else {
+
+                Integer key = i;
+                Integer value = i + 1;
+                cardDict.put(key, value);
+            }
+        }
+
+    }
+
+    public static Integer transformSingleCard2ClientCard(Integer card){
+        return cardDict.get(card);
+    }
+
+    public static List<Integer> transformLocalCards2ClientCards(List<Integer> aList){
+
+        List<Integer> list = new ArrayList<>();
+
+        for (Integer card : aList){
+
+            Integer value = cardDict.get(card);
+            list.add(value);
+        }
+        return list;
+    }
 
     //发牌之前先计算排序id
     public static void calListPxId(List<PlayerPullMice> list,  List<Long> users_){
@@ -19,6 +53,15 @@ public class CardUtils {
                     }
                 }
             }
+
+            for (int i = 0; i < list.size() - 1; i++){
+                for (int j = i + 1; j < list.size(); j++){
+                    if (list.get(i).getPxId() > list.get(j).getPxId()){
+                        Collections.swap(list, i, j);
+                    }
+                }
+            }
+
         }else if (player.getCards().size() == 1){
             for (int i = 0; i < users_.size(); i++){
                 for (PlayerPullMice playerPullMice : list){
@@ -28,6 +71,15 @@ public class CardUtils {
                     }
                 }
             }
+
+            for (int i = 0; i < list.size() - 1; i++){
+                for (int j = i + 1; j < list.size(); j++){
+                    if (list.get(i).getPxId() > list.get(j).getPxId()){
+                        Collections.swap(list, i, j);
+                    }
+                }
+            }
+
         }else {
             for (int i = 0; i < list.size() - 1; i++){
                 for (int j = i + 1; j < list.size(); j++){

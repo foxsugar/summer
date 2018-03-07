@@ -1,15 +1,19 @@
 package com.code.server.game.poker.pullmice;
 
 import com.code.server.constant.response.RoomVo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RoomPullMiceVo extends RoomVo {
 
+    @JsonIgnore
     protected List<Integer> cards = new ArrayList<>();
 
     protected long potBottom;
+
+    protected long cardsTotal;
 
     protected long maxGameCount;
 
@@ -19,6 +23,15 @@ public class RoomPullMiceVo extends RoomVo {
 
     public void setCards(List<Integer> cards) {
         this.cards = cards;
+    }
+
+
+    public long getCardsTotal() {
+        return cardsTotal;
+    }
+
+    public void setCardsTotal(long cardsTotal) {
+        this.cardsTotal = cardsTotal;
     }
 
     public long getPotBottom() {
