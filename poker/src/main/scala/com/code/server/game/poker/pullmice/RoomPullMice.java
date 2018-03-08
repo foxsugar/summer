@@ -68,6 +68,7 @@ public class RoomPullMice extends Room {
 
         RoomPullMiceVo roomVo = new RoomPullMiceVo();
         BeanUtils.copyProperties(this, roomVo);
+        roomVo.cardsTotal = this.cards.size();
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.game != null) {
             roomVo.game = this.game.toVo(userId);
