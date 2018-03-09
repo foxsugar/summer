@@ -152,7 +152,6 @@ public class CardUtils {
                         continue;
                     }
 
-
                     int vA = (pA.getCards().get(pA.getCards().size() -1) - 2) / 4;
                     int vB = (pB.getCards().get(pB.getCards().size() -1) - 2) / 4;
 
@@ -160,8 +159,7 @@ public class CardUtils {
                         vA = (pA.getCards().get(pA.getCards().size() -2) - 2) / 4;
                         vB = (pB.getCards().get(pB.getCards().size() -2) - 2) / 4;
                     }
-//                    int vA = calculatePoint((pA.getCards().get(list.size() -1) - 2));
-//                    int vB = calculatePoint((pB.getCards().get(list.size() -1) - 2));
+
                     if (vA > vB){
                         Collections.swap(list, i, j);
                     }else if(vA == vB){
@@ -308,7 +306,34 @@ public class CardUtils {
                 if (compareRet == 2){
                     Collections.swap( list, i, j);
                 }else if(compareRet == 1){
-                    if (list.get(i).getPxId() < list.get(j).getPxId()){
+
+                    //如果点数相等，并且是无不封，再处理平手的情况
+                    boolean isWuBuFeng = false;
+                    for (int k = 0; k < list.size(); k++){
+                        PlayerPullMice p = list.get(k);
+                        if (p.getBetList().get(3).getZhu() == Bet.WU_BU_FENG){
+                            isWuBuFeng = true;
+                            break;
+                        }
+                    }
+
+                    if (isWuBuFeng){
+
+                        PlayerPullMice pI = list.get(i);
+                        PlayerPullMice pJ = list.get(j);
+
+                        if (pI.isEscape() && pJ.isEscape()){
+                            if (list.get(i).getPxId() < list.get(j).getPxId()){
+                                Collections.swap( list, i, j);
+                            }
+                        }else{
+
+                            if (pJ.isAlreadyFeng() == true){
+                                Collections.swap( list, i, j);
+                            }
+                        }
+
+                    }else if (list.get(i).getPxId() < list.get(j).getPxId()){
                         Collections.swap( list, i, j);
                     }
                 }

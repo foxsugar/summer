@@ -27,6 +27,10 @@ public class GamePullMice extends Game{
 
     protected Long playerCurrentId;
 
+    protected boolean allFeng;
+
+    protected long diZhu;
+
     @Override
     public IfaceGameVo toVo(long watchUser) {
         GamePullMiceVo vo = new GamePullMiceVo();
@@ -34,7 +38,8 @@ public class GamePullMice extends Game{
         vo.pxList = this.pxList;
         vo.state = this.state;
         vo.playerCardInfos = new HashMap<>();
-
+        vo.allFeng = this.allFeng;
+        vo.diZhu = diZhu;
         for (Map.Entry<Long, PlayerPullMice> entry : playerCardInfos.entrySet()){
             PlayerPullMice playerPullMice = entry.getValue();
 
@@ -45,7 +50,6 @@ public class GamePullMice extends Game{
             player.setCards(list);
             vo.playerCardInfos.put(entry.getKey(), player);
         }
-
         return vo;
     }
 
@@ -53,10 +57,17 @@ public class GamePullMice extends Game{
         this.room = (RoomPullMice) room;
         this.users = users;
 
-        MsgSender.sendMsg2Player(new ResponseVo(serviceName, "gamePullMiceBegin_", "ok"), users);
-
+        Map res = new HashMap();
+        this.diZhu = 1;
+        res.put("diZhu", diZhu);
+        MsgSender.sendMsg2Player(serviceName, "gamePullMiceBegin_", res, users);
         isNoticeClientShuffle();
         initPlayer();
+        for (PlayerPullMice p : playerCardInfos.values()){
+            p.setScore(-diZhu);
+            this.room.potBottom += diZhu;
+        }
+
         //先推送一下分数
         this.pushScoreChange();
         firstDeal();
@@ -140,8 +151,23 @@ public class GamePullMice extends Game{
             playerPullMice.setScore(playerPullMice.getScore() - 10);
             this.room.potBottom += 10;
             ret = 10;
-
             playerPullMice.getBetList().add(bet);
+
+            //判断谁是第一个封的人
+
+            boolean findIt = false;
+            for (int i = 0; i < pxList.size(); i++){
+                PlayerPullMice p = pxList.get(i);
+                if (p.isAlreadyFeng()){
+                    findIt = true;
+                    break;
+                }
+            }
+
+            if (findIt == false){
+                playerPullMice.setAlreadyFeng(true);
+            }
+
         }else if(zhu == Bet.FOLLOW){
             playerPullMice = this.playerCardInfos.get(userId);
             playerPullMice.setScore(playerPullMice.getScore() - 5);
@@ -220,11 +246,22 @@ public class GamePullMice extends Game{
                 if (isFinal){
 
                     //如果所有人都封了，
-                    PlayerPullMice p = this.pxList.get(0);
-                    Bet b = p.getBetList().get(3);
-                    if (b.getZhu() == Bet.WU_BU_FENG){
-                        p.setScore(p.getScore() - 5);
-                        this.room.potBottom += 5;
+                    PlayerPullMice p = null;
+
+                    for (int k = 0; k < this.pxList.size(); k++){
+                        PlayerPullMice pullMice = this.pxList.get(k);
+                        if (pullMice.getBetList().get(3).getZhu() == Bet.WU_BU_FENG){
+                            p = pullMice;
+                            break;
+                        }
+                    }
+
+                    if (!p.isEscape()){
+                        Bet b = p.getBetList().get(3);
+                        if (b.getZhu() == Bet.WU_BU_FENG){
+                            p.setScore(p.getScore() - 5);
+                            this.room.potBottom += 5;
+                        }
                     }
 
                     isOver = true;
@@ -267,6 +304,26 @@ public class GamePullMice extends Game{
 
             Map<Object,Object> userInfo = new HashMap<>();
             userInfo.put("count", count);
+            boolean allFeng = true;
+            if (count == 4 ){
+
+                for (PlayerPullMice p: this.pxList){
+
+                    if (p.isEscape()){
+                        continue;
+                    }
+
+                    if (p.getBetList().size() - 3 != 4){
+                        allFeng = false;
+                        break;
+                    }
+                }
+            }else if(count < 4){
+                allFeng = false;
+            }
+
+            this.allFeng = allFeng;
+            userInfo.put("allFeng", allFeng);
 
             betStartSender(playerNext.getUserId(),aList, userInfo);
 
@@ -491,6 +548,7 @@ public class GamePullMice extends Game{
         this.room.potBottom = 0;
 
         for (PlayerPullMice p : list){
+            //一开始算过地注
             room.addUserSocre(p.getUserId(), p.getScore());
         }
     }
@@ -584,7 +642,8 @@ public class GamePullMice extends Game{
             //一张一张的发牌
             isNoticeClientShuffle();
             player.getCards().add(room.cards.remove(0));
-            CardUtils.calculateTotalPoint(player.getCards());
+            long point = CardUtils.calculateTotalPoint(player.getCards());
+            player.setPoint(point);
             Map<Object, Object> res = new HashMap<>();
             res.put("userId", player.getUserId());
             res.put("cards", CardUtils.transformLocalCards2ClientCards(player.getCards()));
