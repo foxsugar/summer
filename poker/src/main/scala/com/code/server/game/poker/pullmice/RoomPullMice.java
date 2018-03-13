@@ -29,6 +29,32 @@ public class RoomPullMice extends Room {
 
     protected long maxGameCount;
 
+    protected long cardsTotal;
+
+    public long getPotBottom() {
+        return potBottom;
+    }
+
+    public void setPotBottom(long potBottom) {
+        this.potBottom = potBottom;
+    }
+
+    public long getMaxGameCount() {
+        return maxGameCount;
+    }
+
+    public void setMaxGameCount(long maxGameCount) {
+        this.maxGameCount = maxGameCount;
+    }
+
+    public long getCardsTotal() {
+        return cardsTotal;
+    }
+
+    public void setCardsTotal(long cardsTotal) {
+        this.cardsTotal = cardsTotal;
+    }
+
     public List<Integer> getCards() {
         return cards;
     }
@@ -42,7 +68,17 @@ public class RoomPullMice extends Room {
 
         RoomPullMiceVo roomVo = new RoomPullMiceVo();
         BeanUtils.copyProperties(this, roomVo);
-        return super.toVo(userId);
+        roomVo.cardsTotal = this.cards.size();
+        RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
+        if (this.game != null) {
+            roomVo.game = this.game.toVo(userId);
+        }
+        if (this.getTimerNode() != null) {
+            long time = this.getTimerNode().getStart() + this.getTimerNode().getInterval() - System.currentTimeMillis();
+            roomVo.setRemainTime(time);
+        }
+
+        return roomVo;
     }
 
     public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple) throws DataNotFoundException {
@@ -84,7 +120,7 @@ public class RoomPullMice extends Room {
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);
         room.setUuid(idWorker.nextId());
 
-        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createTTZRoom", room.toVo(userId)), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createPullMiceRoom", room.toVo(userId)), userId);
 
         return 0;
     }
@@ -128,7 +164,7 @@ public class RoomPullMice extends Room {
 
         //通知其他人游戏已经开始
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "gamePullMiceBegin", "ok"), this.getUsers());
-        MsgSender.sendMsg2Player(new ResponseVo("roomService", "startPullMiceGameByClient", 0), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "startPullMiceGameByClient", 0), userId);
 
         GamePullMice game = (GamePullMice) getGameInstance();
         this.game = game;

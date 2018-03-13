@@ -1,10 +1,97 @@
 package com.code.server.game.poker.pullmice;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class CardUtils {
+
+    public static Map<Integer, Integer> cardDict = new HashMap<>();
+
+    static {
+
+        cardDict.put(0, 54);
+        cardDict.put(1, 53);
+
+        cardDict.put(2, 1);
+        cardDict.put(3, 2);
+        cardDict.put(4, 3);
+        cardDict.put(5, 4);
+
+        cardDict.put(6, 49);
+        cardDict.put(7, 50);
+        cardDict.put(8, 51);
+        cardDict.put(9, 52);
+
+        cardDict.put(10, 45);
+        cardDict.put(11, 46);
+        cardDict.put(12, 47);
+        cardDict.put(13, 48);
+
+        cardDict.put(14, 41);
+        cardDict.put(15, 42);
+        cardDict.put(16, 43);
+        cardDict.put(17, 44);
+
+        cardDict.put(18, 37);
+        cardDict.put(19, 38);
+        cardDict.put(20, 39);
+        cardDict.put(21, 40);
+
+        cardDict.put(22, 33);
+        cardDict.put(23, 34);
+        cardDict.put(24, 35);
+        cardDict.put(25, 36);
+
+        cardDict.put(26, 29);
+        cardDict.put(27, 30);
+        cardDict.put(28, 31);
+        cardDict.put(29, 32);
+
+        cardDict.put(30, 25);
+        cardDict.put(31, 26);
+        cardDict.put(32, 27);
+        cardDict.put(33, 28);
+
+        cardDict.put(34, 21);
+        cardDict.put(35, 22);
+        cardDict.put(36, 23);
+        cardDict.put(37, 24);
+
+        cardDict.put(38, 17);
+        cardDict.put(39, 18);
+        cardDict.put(40, 19);
+        cardDict.put(41, 20);
+
+        cardDict.put(42, 13);
+        cardDict.put(43, 14);
+        cardDict.put(44, 15);
+        cardDict.put(45, 16);
+
+        cardDict.put(46, 9);
+        cardDict.put(47, 10);
+        cardDict.put(48, 11);
+        cardDict.put(49, 12);
+
+        cardDict.put(50, 5);
+        cardDict.put(51, 6);
+        cardDict.put(52, 7);
+        cardDict.put(53, 8);
+    }
+
+    public static Integer transformSingleCard2ClientCard(Integer card){
+        return cardDict.get(card);
+    }
+
+    public static List<Integer> transformLocalCards2ClientCards(List<Integer> aList){
+
+        List<Integer> list = new ArrayList<>();
+
+        for (Integer card : aList){
+
+            Integer value = cardDict.get(card);
+            list.add(value);
+        }
+        return list;
+    }
 
     //发牌之前先计算排序id
     public static void calListPxId(List<PlayerPullMice> list,  List<Long> users_){
@@ -19,6 +106,15 @@ public class CardUtils {
                     }
                 }
             }
+
+            for (int i = 0; i < list.size() - 1; i++){
+                for (int j = i + 1; j < list.size(); j++){
+                    if (list.get(i).getPxId() > list.get(j).getPxId()){
+                        Collections.swap(list, i, j);
+                    }
+                }
+            }
+
         }else if (player.getCards().size() == 1){
             for (int i = 0; i < users_.size(); i++){
                 for (PlayerPullMice playerPullMice : list){
@@ -28,6 +124,15 @@ public class CardUtils {
                     }
                 }
             }
+
+            for (int i = 0; i < list.size() - 1; i++){
+                for (int j = i + 1; j < list.size(); j++){
+                    if (list.get(i).getPxId() > list.get(j).getPxId()){
+                        Collections.swap(list, i, j);
+                    }
+                }
+            }
+
         }else {
             for (int i = 0; i < list.size() - 1; i++){
                 for (int j = i + 1; j < list.size(); j++){
@@ -47,8 +152,14 @@ public class CardUtils {
                         continue;
                     }
 
-                    int vA = (pA.getCards().get(list.size() -1) - 2) / 4;
-                    int vB = (pB.getCards().get(list.size() -1) - 2) / 4;
+                    int vA = (pA.getCards().get(pA.getCards().size() -1) - 2) / 4;
+                    int vB = (pB.getCards().get(pB.getCards().size() -1) - 2) / 4;
+
+                    if (pA.getCards().size() == 5){
+                        vA = (pA.getCards().get(pA.getCards().size() -2) - 2) / 4;
+                        vB = (pB.getCards().get(pB.getCards().size() -2) - 2) / 4;
+                    }
+
                     if (vA > vB){
                         Collections.swap(list, i, j);
                     }else if(vA == vB){
@@ -77,12 +188,12 @@ public class CardUtils {
             return 20;
         }else if(card == 1){
             return 17;
-        }else if((card - 2) / 4 == 1){
+        }else if((card - 2) / 4 == 0){
             return 15;
-        }else if((card - 2) / 4 == 2){
+        }else if((card - 2) / 4 == 1){
             return 13;
         }else {
-            return 15 - ((card - 2) / 4);
+            return 14 - ((card - 2) / 4);
         }
     }
 
@@ -195,7 +306,34 @@ public class CardUtils {
                 if (compareRet == 2){
                     Collections.swap( list, i, j);
                 }else if(compareRet == 1){
-                    if (list.get(i).getPxId() < list.get(j).getPxId()){
+
+                    //如果点数相等，并且是无不封，再处理平手的情况
+                    boolean isWuBuFeng = false;
+                    for (int k = 0; k < list.size(); k++){
+                        PlayerPullMice p = list.get(k);
+                        if (p.getBetList().get(3).getZhu() == Bet.WU_BU_FENG){
+                            isWuBuFeng = true;
+                            break;
+                        }
+                    }
+
+                    if (isWuBuFeng){
+
+                        PlayerPullMice pI = list.get(i);
+                        PlayerPullMice pJ = list.get(j);
+
+                        if (pI.isEscape() && pJ.isEscape()){
+                            if (list.get(i).getPxId() < list.get(j).getPxId()){
+                                Collections.swap( list, i, j);
+                            }
+                        }else{
+
+                            if (pJ.isAlreadyFeng() == true){
+                                Collections.swap( list, i, j);
+                            }
+                        }
+
+                    }else if (list.get(i).getPxId() < list.get(j).getPxId()){
                         Collections.swap( list, i, j);
                     }
                 }

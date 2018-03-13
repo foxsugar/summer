@@ -111,6 +111,7 @@ public class PlayerPullMiceVo implements IfacePlayerInfoVo {
         this.pxId = pxId;
     }
 
+
     @Override
     public String toString() {
         return "PlayerPullMiceVo{" +
@@ -119,6 +120,11 @@ public class PlayerPullMiceVo implements IfacePlayerInfoVo {
                 ", point=" + point +
                 ", seat=" + seat +
                 ", pxId=" + pxId +
+                ", isEscape=" + isEscape +
+                ", score=" + score +
+                ", isWinner=" + isWinner +
+                ", betList=" + betList +
+                ", alreadyFeng=" + alreadyFeng +
                 '}';
     }
 }

@@ -12,4 +12,9 @@ public class GamePullMiceVo implements IfaceGameVo {
 
     protected List<PlayerPullMice> pxList;
 
+    protected Long playerCurrentId;
+
+    protected boolean allFeng;
+
+    protected long diZhu;
 }
