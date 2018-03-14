@@ -31,6 +31,8 @@ public class RoomPullMice extends Room {
 
     protected long cardsTotal;
 
+    protected boolean canWuBuFeng;
+
     public long getPotBottom() {
         return potBottom;
     }
@@ -63,6 +65,14 @@ public class RoomPullMice extends Room {
         this.cards = cards;
     }
 
+    public boolean isCanWuBuFeng() {
+        return canWuBuFeng;
+    }
+
+    public void setCanWuBuFeng(boolean canWuBuFeng) {
+        this.canWuBuFeng = canWuBuFeng;
+    }
+
     @Override
     public IfaceRoomVo toVo(long userId) {
 
@@ -81,7 +91,7 @@ public class RoomPullMice extends Room {
         return roomVo;
     }
 
-    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple) throws DataNotFoundException {
+    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, boolean hasWubuFeng) throws DataNotFoundException {
 
         RoomPullMice room = new RoomPullMice();
         room.personNumber = personNumber;
@@ -92,7 +102,9 @@ public class RoomPullMice extends Room {
         room.multiple = multiple;
         room.bankerId = userId;
         room.roomType = roomType;
+        room.setCanWuBuFeng(hasWubuFeng);
         room.init(gameNumber, multiple);
+
 
         //假设最大局数是8局
         room.maxGameCount = gameNumber;

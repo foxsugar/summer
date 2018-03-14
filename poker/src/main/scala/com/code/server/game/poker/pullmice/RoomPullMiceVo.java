@@ -17,6 +17,16 @@ public class RoomPullMiceVo extends RoomVo {
 
     protected long maxGameCount;
 
+    protected boolean canWuBuFeng;
+
+    public boolean isCanWuBuFeng() {
+        return canWuBuFeng;
+    }
+
+    public void setCanWuBuFeng(boolean canWuBuFeng) {
+        this.canWuBuFeng = canWuBuFeng;
+    }
+
     public List<Integer> getCards() {
         return cards;
     }

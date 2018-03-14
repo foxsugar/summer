@@ -122,6 +122,22 @@ public class PlayerPullMice implements IfacePlayerInfo {
     }
 
     @Override
+    public String toString() {
+        return "PlayerPullMice{" +
+                "userId=" + userId +
+                ", cards=" + cards +
+                ", point=" + point +
+                ", seat=" + seat +
+                ", pxId=" + pxId +
+                ", isEscape=" + isEscape +
+                ", score=" + score +
+                ", isWinner=" + isWinner +
+                ", betList=" + betList +
+                ", alreadyFeng=" + alreadyFeng +
+                '}';
+    }
+
+    @Override
     public IfacePlayerInfoVo toVo(long watchUser) {
         return null;
     }
