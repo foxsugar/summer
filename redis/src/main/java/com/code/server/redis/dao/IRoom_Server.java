@@ -11,4 +11,6 @@ public interface IRoom_Server {
     void removeServer(Object... roomId);
 
     boolean isExist(String roomId);
+
+    int getRoomNum();
 }

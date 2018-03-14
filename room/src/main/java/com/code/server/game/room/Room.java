@@ -1088,4 +1088,13 @@ public class Room implements IfaceRoom {
         this.clubRoomModel = clubRoomModel;
         return this;
     }
+
+    public int getMaxZhaCount() {
+        return maxZhaCount;
+    }
+
+    public Room setMaxZhaCount(int maxZhaCount) {
+        this.maxZhaCount = maxZhaCount;
+        return this;
+    }
 }

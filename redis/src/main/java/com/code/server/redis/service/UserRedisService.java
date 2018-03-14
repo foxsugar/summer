@@ -278,4 +278,10 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     private String getUserPerpareRoomKey(long userId){
         return USER_PREPAARE_ROOM + userId;
     }
+
+    @Override
+    public int getOnlineUserNum() {
+        BoundHashOperations<String,String,String> user_gate = redisTemplate.boundHashOps(USER_GATE);
+        return user_gate.size().intValue();
+    }
 }
