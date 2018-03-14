@@ -250,7 +250,7 @@ public class GamePullMice extends Game{
 
                     if (!p.isEscape()){
                         Bet b = p.getBetList().get(3);
-                        if (b.getZhu() == Bet.WU_BU_FENG){
+                        if (b.getZhu() == Bet.WU_BU_FENG && p.isAlreadyFeng() == false){
                             p.setScore(p.getScore() + 5);
                             this.room.potBottom -= 5;
                             ret = 5;
