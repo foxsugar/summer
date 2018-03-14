@@ -126,6 +126,7 @@ public class GamePullMice extends Game{
         result.put("userId", userId);
         result.put("result", aList);
         result.put("state", this.state);
+        result.put("canWuBuFeng", this.room.canWuBuFeng);
         //此时pxId为1的先下注
         MsgSender.sendMsg2Player(serviceName, "betStart", result, userId);
     }
@@ -181,15 +182,6 @@ public class GamePullMice extends Game{
             ret = 0;
         }
 
-        Map<String, Long> res = new HashMap<>();
-        res.put("userId", userId);
-        res.put("ret", ret);
-        res.put("currentScore", playerPullMice.getScore());
-        res.put("potBottom", this.room.potBottom);
-
-        MsgSender.sendMsg2Player(serviceName, "fiveStepCloseResult", res, this.pxUsers);
-        MsgSender.sendMsg2Player(serviceName, "fiveStepClose", "0", userId);
-
         //解决封的问题
 
         //圈数
@@ -214,7 +206,7 @@ public class GamePullMice extends Game{
             if (count == 5){
 
                 isOver = true;
-                for (int i = 1; i < this.pxList.size(); i++){
+                for (int i = 0; i < this.pxList.size(); i++){
                     PlayerPullMice p = this.pxList.get(i);
 
                     if (p.isEscape() == true) continue;
@@ -259,8 +251,9 @@ public class GamePullMice extends Game{
                     if (!p.isEscape()){
                         Bet b = p.getBetList().get(3);
                         if (b.getZhu() == Bet.WU_BU_FENG){
-                            p.setScore(p.getScore() - 5);
-                            this.room.potBottom += 5;
+                            p.setScore(p.getScore() + 5);
+                            this.room.potBottom -= 5;
+                            ret = 5;
                         }
                     }
 
@@ -270,6 +263,15 @@ public class GamePullMice extends Game{
 
             }
         }
+
+        Map<String, Long> res = new HashMap<>();
+        res.put("userId", userId);
+        res.put("ret", ret);
+        res.put("currentScore", playerPullMice.getScore());
+        res.put("potBottom", this.room.potBottom);
+
+        MsgSender.sendMsg2Player(serviceName, "fiveStepCloseResult", res, this.pxUsers);
+        MsgSender.sendMsg2Player(serviceName, "fiveStepClose", "0", userId);
 
         if (isOver){
             //推送一下分数
@@ -390,7 +392,7 @@ public class GamePullMice extends Game{
         playerPullMice.setScore(playerPullMice.getScore() - ret);
         this.room.potBottom += ret;
 
-        Map<String, Long> res = new HashMap<>();
+        Map<String, Object> res = new HashMap<>();
         res.put("userId", userId);
         res.put("ret", ret);
         res.put("currentScore", playerPullMice.getScore());
@@ -406,6 +408,7 @@ public class GamePullMice extends Game{
             MsgSender.sendMsg2Player(serviceName, "betResult3", res, this.pxUsers);
             MsgSender.sendMsg2Player(serviceName, "bet3", "0", userId);
         }else if(times == 4){
+
             MsgSender.sendMsg2Player(serviceName, "betResult4", res, this.pxUsers);
             MsgSender.sendMsg2Player(serviceName, "bet4", "0", userId);
         }
@@ -508,10 +511,15 @@ public class GamePullMice extends Game{
 
             PlayerPullMice playerNext = null;
 
-            for (PlayerPullMice p : pxList){
-                if (p.getPxId() == playerCurrent.getPxId() + 1){
-                    playerNext = p;
-                    break;
+            if (playerOne.isEscape()){
+                this.updatePxList();
+                playerNext = this.pxList.get(0);
+            }else {
+                for (PlayerPullMice p : pxList){
+                    if (p.getPxId() == playerCurrent.getPxId() + 1){
+                        playerNext = p;
+                        break;
+                    }
                 }
             }
 
@@ -634,8 +642,11 @@ public class GamePullMice extends Game{
 
     public void deal(List<PlayerPullMice> list){
 
+        System.out.println(list);
+
         for (int i = 0; i < list.size(); i++){
-            PlayerPullMice player = playerCardInfos.get(users.get(i));
+//            PlayerPullMice player = playerCardInfos.get(users.get(i));
+            PlayerPullMice player = list.get(i);
             if (player.isEscape() == true){
                 continue;
             }

@@ -134,6 +134,91 @@ public class CardUtils {
             }
 
         }else {
+
+            //拥有最大点数的人
+            int vMin = 10000;
+            int index = 0;
+
+            for (int i = 0; i < list.size(); i++){
+                PlayerPullMice pA = list.get(i);
+                if (pA.isEscape()){
+                    continue;
+                }
+                int vA = 0;
+                int cardValue = pA.getCards().get(pA.getCards().size() -1);
+                if (pA.getCards().size() == 5){
+                    cardValue = pA.getCards().get(pA.getCards().size() -2);
+                }
+                if (cardValue == 0 ){
+                    vA = -2;
+                }else if(cardValue == 1){
+                    vA = -1;
+                }else {
+                    vA = (cardValue - 2) / 4;
+                }
+
+                if (vMin > vA){
+                    vMin = vA;
+                }
+            }
+
+            //如果点数相同，那么就按照上一轮的发牌顺序找到first
+          List<PlayerPullMice> aList = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++){
+                PlayerPullMice pA = list.get(i);
+                if (pA.isEscape()){
+                    continue;
+                }
+                int vA = 0;
+                int cardValue = pA.getCards().get(pA.getCards().size() -1);
+                if (pA.getCards().size() == 5){
+                    cardValue = pA.getCards().get(pA.getCards().size() -2);
+                }
+                if (cardValue == 0 ){
+                    vA = -2;
+                }else if(cardValue == 1){
+                    vA = -1;
+                }else {
+                    vA = (cardValue - 2) / 4;
+                }
+                if (vA == vMin){
+                    aList.add(pA);
+                }
+            }
+            PlayerPullMice pIndex = aList.get(0);
+
+            for (int i = 1; i < aList.size(); i++){
+                PlayerPullMice pCurrent = aList.get(i);
+                if (pIndex.getPxId() > pCurrent.getPxId()){
+                    pIndex = pCurrent;
+                }
+            }
+
+            pIndex.setPxId(1);
+
+            long currentUid = pIndex.getUserId();
+
+            while (true){
+
+                long nextId = nextUserId(users_, currentUid);
+                if (nextId == pIndex.getUserId()){
+                    break;
+                }
+
+                PlayerPullMice pCurrent = null;
+                PlayerPullMice pNext = null;
+                for (PlayerPullMice pp : list){
+                    if (pp.getUserId() == nextId){
+                        pNext = pp;
+                    }else if(pp.getUserId() == currentUid){
+                        pCurrent = pp;
+                    }
+                }
+                pNext.setPxId(pCurrent.getPxId() + 1);
+                currentUid = nextId;
+
+            }
+
             for (int i = 0; i < list.size() - 1; i++){
                 for (int j = i + 1; j < list.size(); j++){
                     PlayerPullMice pA = list.get(i);
@@ -152,30 +237,18 @@ public class CardUtils {
                         continue;
                     }
 
-                    int vA = (pA.getCards().get(pA.getCards().size() -1) - 2) / 4;
-                    int vB = (pB.getCards().get(pB.getCards().size() -1) - 2) / 4;
-
-                    if (pA.getCards().size() == 5){
-                        vA = (pA.getCards().get(pA.getCards().size() -2) - 2) / 4;
-                        vB = (pB.getCards().get(pB.getCards().size() -2) - 2) / 4;
-                    }
-
-                    if (vA > vB){
+                    if (pA.getPxId() > pB.getPxId()){
                         Collections.swap(list, i, j);
-                    }else if(vA == vB){
-                        //看座位号码
-                        int seatIdxA = users_.indexOf(pA.getUserId());
-                        int seatInxB = users_.indexOf(pB.getUserId());
-                        if (seatIdxA > seatInxB){
-                            Collections.swap(list, i, j);
-                        }
                     }
                 }
             }
+
+            //重新设置pxId
             for (int i = 0; i < list.size(); i++){
                 PlayerPullMice playerPullMice = list.get(i);
                 playerPullMice.setPxId(i + 1);
             }
+
         }
     }
 
@@ -311,10 +384,14 @@ public class CardUtils {
                     boolean isWuBuFeng = false;
                     for (int k = 0; k < list.size(); k++){
                         PlayerPullMice p = list.get(k);
-                        if (p.getBetList().get(3).getZhu() == Bet.WU_BU_FENG){
-                            isWuBuFeng = true;
-                            break;
+
+                        if (p.getBetList().size() >= 4){
+                            if (p.getBetList().get(3).getZhu() == Bet.WU_BU_FENG){
+                                isWuBuFeng = true;
+                                break;
+                            }
                         }
+
                     }
 
                     if (isWuBuFeng){
@@ -340,6 +417,15 @@ public class CardUtils {
             }
         }
         return list.get(0);
+    }
+
+    public static long nextUserId(List<Long> users,Long currentId){
+        int index = users.indexOf(currentId);
+        int next = index + 1;
+        if (next >= users.size()){
+            next = 0;
+        }
+        return users.get(next);
     }
 
 }
