@@ -642,9 +642,7 @@ public class GamePullMice extends Game{
 
     public void deal(List<PlayerPullMice> list){
 
-        System.out.println("sdsd=====================");
         System.out.println(list);
-        System.out.println("sdsd======================");
 
         for (int i = 0; i < list.size(); i++){
 //            PlayerPullMice player = playerCardInfos.get(users.get(i));
