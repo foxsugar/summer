@@ -43,6 +43,9 @@ public class GameDouDiZhuJixian extends GameDouDiZhu{
 
     protected void compute(boolean isDizhuWin) {
 
+        if (isSpring) {
+            this.zhaCount += 1;
+        }
         double subScore = 0;
         int s = isDizhuWin ? -1 : 1;
         multiple *= tableScore;
@@ -58,7 +61,7 @@ public class GameDouDiZhuJixian extends GameDouDiZhu{
 //                if (playerCardInfo.isQiang()) {
 //                    score *= 2;
 //                }
-                double score = computeScore(playerCardInfo) * s;
+                double score = computeScore(playerCardInfo) * s * tableScore;
                 subScore += score;
                 playerCardInfo.setScore(score);
                 room.addUserSocre(playerCardInfo.getUserId(), score);

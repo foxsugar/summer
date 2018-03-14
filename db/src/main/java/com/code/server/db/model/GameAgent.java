@@ -22,8 +22,9 @@ public class GameAgent extends BaseEntity {
 
     private double rebate;
 
+    private int partner;
 
-    private long fatherId;
+    private long parentId;
 
     @Type(type = "json")
     @Lob
@@ -48,12 +49,12 @@ public class GameAgent extends BaseEntity {
         return this;
     }
 
-    public long getFatherId() {
-        return fatherId;
+    public long getParentId() {
+        return parentId;
     }
 
-    public GameAgent setFatherId(long fatherId) {
-        this.fatherId = fatherId;
+    public GameAgent setParentId(long parentId) {
+        this.parentId = parentId;
         return this;
     }
 
@@ -63,6 +64,15 @@ public class GameAgent extends BaseEntity {
 
     public GameAgent setChildList(List<Long> childList) {
         this.childList = childList;
+        return this;
+    }
+
+    public int getPartner() {
+        return partner;
+    }
+
+    public GameAgent setPartner(int partner) {
+        this.partner = partner;
         return this;
     }
 }
