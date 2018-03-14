@@ -119,7 +119,8 @@ object PokerRoomService {
         val personNumber = params.path("personNumber").asInt()
         val isJoin = params.path("isJoin").asBoolean(false)
         val multiple = params.path("multiple").asInt()
-        return RoomPullMice.createRoom(userId,roomType, gameType,gameNumber, personNumber, isJoin, multiple)
+        val hasWubuFeng = params.path("hasWubuFeng").asBoolean(false)
+        return RoomPullMice.createRoom(userId,roomType, gameType,gameNumber, personNumber, isJoin, multiple, hasWubuFeng)
 
       case "createPaijiuRoomNotInRoom"=>
         val roomType = params.path("roomType").asText()

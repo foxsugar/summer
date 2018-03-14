@@ -126,6 +126,7 @@ public class GamePullMice extends Game{
         result.put("userId", userId);
         result.put("result", aList);
         result.put("state", this.state);
+        result.put("canWuBuFeng", this.room.canWuBuFeng);
         //此时pxId为1的先下注
         MsgSender.sendMsg2Player(serviceName, "betStart", result, userId);
     }
@@ -407,7 +408,7 @@ public class GamePullMice extends Game{
             MsgSender.sendMsg2Player(serviceName, "betResult3", res, this.pxUsers);
             MsgSender.sendMsg2Player(serviceName, "bet3", "0", userId);
         }else if(times == 4){
-            res.put("canWuBuFeng", this.room.canWuBuFeng);
+
             MsgSender.sendMsg2Player(serviceName, "betResult4", res, this.pxUsers);
             MsgSender.sendMsg2Player(serviceName, "bet4", "0", userId);
         }
