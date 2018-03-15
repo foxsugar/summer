@@ -134,6 +134,7 @@ public class GamePullMice extends Game{
     public int fiveStepClose(Long userId, Integer zhu){
         state = PullMiceConstant.BET_WU_BU_FENG;
 
+        Integer zhu_ = zhu;
         updatePxList();
         Bet bet = new Bet();
         bet.setZhu(zhu);
@@ -264,11 +265,12 @@ public class GamePullMice extends Game{
             }
         }
 
-        Map<String, Long> res = new HashMap<>();
+        Map<String, Object> res = new HashMap<>();
         res.put("userId", userId);
         res.put("ret", ret);
         res.put("currentScore", playerPullMice.getScore());
         res.put("potBottom", this.room.potBottom);
+        res.put("zhu",zhu_);
 
         MsgSender.sendMsg2Player(serviceName, "fiveStepCloseResult", res, this.pxUsers);
         MsgSender.sendMsg2Player(serviceName, "fiveStepClose", "0", userId);
@@ -340,6 +342,7 @@ public class GamePullMice extends Game{
     * */
     public int bet(Long userId, Integer zhu, int times){
 
+        Integer zhu_ = zhu;
         PlayerPullMice playerPullMice = playerCardInfos.get(userId);
         if (playerPullMice == null) return ErrorCode.NO_USER;
 
@@ -397,6 +400,7 @@ public class GamePullMice extends Game{
         res.put("ret", ret);
         res.put("currentScore", playerPullMice.getScore());
         res.put("potBottom", this.room.potBottom);
+        res.put("zhu",zhu_);
 
         if (times == 1){
             MsgSender.sendMsg2Player(serviceName, "betResult1", res, this.pxUsers);
@@ -591,10 +595,13 @@ public class GamePullMice extends Game{
         compute();
         sendResult();
         genRecord();
-        this.room.clearReadyStatus(true);
+
         if (this.room.curGameNumber == this.room.maxGameCount){
             sendFinalResult();
+        }else {
+            this.room.clearReadyStatus(true);
         }
+
     }
 
     public void sendFinalResult(){
