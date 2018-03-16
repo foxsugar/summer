@@ -14,6 +14,9 @@ public class CardUtilsTest {
         aList.add(1);
         aList.add(1);
 
+        Integer a = 1;
+        aList.remove(a);
         System.out.println(aList);
+
     }
 }
