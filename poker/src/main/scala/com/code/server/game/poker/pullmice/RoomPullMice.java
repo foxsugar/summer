@@ -118,6 +118,7 @@ public class RoomPullMice extends Room {
         if (!isJoin) {
             //给代建房 开房者 扣钱
             if(RedisManager.getUserRedisService().getUserMoney(userId) < room.createNeedMoney){
+                RoomManager.removeRoom(room.getRoomId());
                 return ErrorCode.CANNOT_CREATE_ROOM_MONEY;
             }
             room.spendMoney();
