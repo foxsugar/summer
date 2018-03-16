@@ -619,6 +619,11 @@ public class GamePullMice extends Game{
     public void isNoticeClientShuffle(){
         if (room.cards.size() == 0){
             initCards();
+            for (PlayerPullMice p : playerCardInfos.values()){
+                for (Integer card : p.getCards()){
+                    room.cards.remove(card);
+                }
+            }
             MsgSender.sendMsg2Player(new ResponseVo(serviceName, "shuffle", this.room.cards.size()), this.pxUsers);
         }
     }

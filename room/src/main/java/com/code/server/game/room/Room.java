@@ -324,12 +324,19 @@ public class Room implements IfaceRoom {
             //删除房间
 //            GameManager.getInstance().rooms.remove(roomId);
 
-            RoomManager.removeRoom(this.roomId);
+//            RoomManager.removeRoom(this.roomId);
             //代开房 并且游戏未开始
             if (!isCreaterJoin && !this.isInGame && this.curGameNumber == 1) {
               //  drawBack();
                 dissolutionRoom();
             }
+
+            Room room_ = (Room) RoomManager.getRoom(this.roomId);
+            if (room_ != null){
+                RoomManager.removeRoom(this.roomId);
+            }
+
+
 
         }
 
