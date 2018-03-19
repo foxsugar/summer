@@ -140,7 +140,7 @@ public class GameDouDiZhuJixian extends GameDouDiZhu{
         if(room.getMultiple() == -1 ){
             if (tempZha > 5) {
                 int more = tempZha - 5;
-                result = 1<<5 + more * 5;
+                result = (1<<5) + more * 5;
             }
         }else {
             if(tempZha > this.room.getMaxZhaCount()){
