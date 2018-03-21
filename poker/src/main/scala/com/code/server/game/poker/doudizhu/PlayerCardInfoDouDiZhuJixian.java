@@ -47,8 +47,8 @@ public class PlayerCardInfoDouDiZhuJixian extends PlayerCardInfoDouDiZhuLinfen {
         int lastType = lastcardStruct.type;//获取当前出牌类型
 
 
-        int firstCard = CardUtil.getTypeByCard(cards.get(0));
-        int cardSize = cards.size();
+        int firstCard = CardUtil.getTypeByCard(currentCardStruct.cards.get(0));
+        int cardSize = currentCardStruct.cards.size();
 
         //四个三可以管火箭
         if(currenttype == CardStruct.type_炸 && cardSize == 4 && firstCard == 0){
@@ -95,7 +95,7 @@ public class PlayerCardInfoDouDiZhuJixian extends PlayerCardInfoDouDiZhuLinfen {
         List<Integer> cards = cardStruct.getCards();
         int firstCard = CardUtil.getTypeByCard(cards.get(0));
         int cardSize = cards.size();
-        if (firstCard == 14 || firstCard == 13) {//火箭
+        if (firstCard == 14 || firstCard == 13|| firstCard==15) {//火箭
             return 22;
         }
         if (cardSize == 2 && firstCard == 12) {//两个二
