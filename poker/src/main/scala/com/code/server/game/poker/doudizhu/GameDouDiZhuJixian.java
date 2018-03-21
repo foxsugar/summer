@@ -72,7 +72,8 @@ public class GameDouDiZhuJixian extends GameDouDiZhu{
                 //曾经有人叫过
                 if (dizhu != -1) {
                     //推送选定地主
-                    qiangStepStart();
+                    chooseDizhu();
+                    startPlay(dizhu);
                 } else {
                     handleLiuju();
                 }
