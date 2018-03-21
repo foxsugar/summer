@@ -145,7 +145,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     * @param two
     * @return
     */
-  def bet(userId: Long, one: Int, two: Int): Int = {
+  def bet(userId: Long, one: Int, two: Int,three : Int): Int = {
     val playerInfo_option = playerCardInfos.get(userId)
     //玩家不存在
     if (playerInfo_option.isEmpty) return ErrorCode.NO_USER
@@ -154,7 +154,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     if (playerCardInfoPaijiu.bet != null) return ErrorCode.ALREADY_BET
     //下注不合法
 
-    val bet = new Bet(one, two)
+    val bet = new Bet(one, two,three)
     if (!checkBet(bet)) return ErrorCode.BET_PARAM_ERROR
 
     playerCardInfoPaijiu.bet = bet
@@ -438,6 +438,10 @@ class GamePaijiu extends Game with PaijiuConstant {
     0
   }
 
+  def setBankerId(userId: Long): Unit = {
+    this.bankerId = userId
+  }
+
   protected def getGroupScoreByName(name: String): Int = {
     val d: StaticDataProto.DataManager = DataManager.data
     val dataStr = DataManager.data.getRoomDataMap.get(this.roomPaijiu.getGameType).getPaijiuDataName
@@ -480,7 +484,7 @@ class GamePaijiu extends Game with PaijiuConstant {
   /**
     * 庄家设置分数状态
     */
-  protected def bankerSetScoreStart(): Unit = {
+  def bankerSetScoreStart(): Unit = {
     state = STATE_BANKER_SET_SCORE
     //推送开始下注
     MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScoreStart", this.bankerId, users)
@@ -546,7 +550,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     MsgSender.sendMsg2Player("gamePaijiuService", "fightForBanker", 0, userId)
 
     //选定庄家
-    chooseBankerAfterFight()
+    if(bankerId != -1L) chooseBankerAfterFight()
 
     0
   }

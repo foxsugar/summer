@@ -1,6 +1,7 @@
 package com.code.server.game.poker.paijiu;
 
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
@@ -10,7 +11,9 @@ import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,16 +55,35 @@ public class RoomGoldPaijiu extends RoomPaijiu {
         IdWorker idword = new IdWorker(serverConfig.getServerId(), 0);
         roomGoldPaijiu.setUuid(idword.nextId());
 
-        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createPaijiuRoom", roomGoldPaijiu.toVo(userId)), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createPaijiuGoldRoom", roomGoldPaijiu.toVo(userId)), userId);
         return 0;
     }
 
-    public void pushScoreChange() {
-        Map<Long, Double> userMoneys = new HashMap<>();
-        for (Long l: users) {
-            userMoneys.put(l, RedisManager.getUserRedisService().getUserMoney(l));
-        }
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userMoneys), this.getUsers());
+    @Override
+    public void roomAddUser(long userId) {
+
+        this.users.add(userId);
+        this.userStatus.put(userId, 0);
+        this.userScores.put(userId, RedisManager.getUserRedisService().getUserMoney(userId));
+        this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
+        this.canStartUserId = users.get(0);
+        addUser2RoomRedis(userId);
+    }
+
+    //房间列表
+    public static int getAllRoom(long userId){
+        List<Map<String,Object>> rooms = new ArrayList<>();
+        RoomManager.getInstance().getRooms().values().forEach(r->{
+            Map<String, Object> result = new HashMap<>();
+            RoomGoldPaijiu roomGoldPaijiu = (RoomGoldPaijiu) r;
+            result.put("roomId", roomGoldPaijiu.getRoomId());
+            result.put("nickName",RedisManager.getUserRedisService().getUserBean(userId).getUsername());
+            result.put("persionNum", roomGoldPaijiu.getUsers().size());
+            result.put("goldType", roomGoldPaijiu.getGoldType());
+            rooms.add(result);
+        });
+        MsgSender.sendMsg2Player("pokerRoomService", "getAllGoldPaijiuRoom", rooms, userId);
+        return 0;
     }
 
 
