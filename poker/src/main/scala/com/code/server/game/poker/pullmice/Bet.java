@@ -11,12 +11,10 @@ public class Bet {
 
     public static final int WU_BU_FENG = 6;
     public static final int FENG = 7;
-    public static final int FOLLOW_FENG = 8;
-
     //跑
-    public static final int ESCAPE = 9;
+    public static final int ESCAPE = 8;
     //跟注
-    public static final int FOLLOW = 10;
+    public static final int FOLLOW = 9;
 
     private int zhu;
 

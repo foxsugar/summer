@@ -275,7 +275,7 @@ public class RoomInfo extends Room {
             case "BENGBU":
                 return new GameInfoBengbu().setHasJieGangHu(true);
             case "NIUYEZI":
-                this.setChangeBankerAfterHuangZhuang(false);
+                this.setChangeBankerAfterHuangZhuang(true);
                 return new GameInfoNiuyezi();
             default:
                 return new GameInfo();
@@ -295,6 +295,8 @@ public class RoomInfo extends Room {
         } else if (this.gameType.equals("JC") && this.modeTotal.equals("13")) {
             this.gameType = "JCSS";
         } else if(this.gameType.equals("CHUANQI")){
+            this.gameType = "LQ";
+        } else if(this.gameType.equals("HELE")){
             this.gameType = "LQ";
         }
         GameInfo gameInfo = getGameInfoInstance();

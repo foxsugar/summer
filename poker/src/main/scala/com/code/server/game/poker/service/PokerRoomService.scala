@@ -6,6 +6,7 @@ import com.code.server.game.poker.doudizhu.{RoomDouDiZhu, RoomDouDiZhuGold}
 import com.code.server.game.poker.guess.RoomGuessCar
 import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower
 import com.code.server.game.poker.paijiu.{RoomGoldPaijiu, RoomPaijiu}
+import com.code.server.game.poker.pullmice.RoomPullMice
 import com.code.server.game.poker.tuitongzi.RoomTuiTongZi
 import com.code.server.game.room.IfaceRoom
 import com.code.server.game.room.service.RoomManager
@@ -78,6 +79,12 @@ object PokerRoomService {
         if (room == null) return ErrorCode.CAN_NOT_NO_ROOM
         return room.startGameByClient(userId)
 
+      case "startPullMiceGameByClient" =>
+        val roomId = params.get("roomId").asText()
+        val room = RoomManager.getRoom(roomId)
+        if (room == null) return ErrorCode.CAN_NOT_NO_ROOM
+        return room.startGameByClient(userId)
+
       case "createPaijiuRoom"=>
         val roomType = params.path("roomType").asText()
         val gameType = params.path("gameType").asText()
@@ -104,6 +111,16 @@ object PokerRoomService {
         val isJoin = params.path("isJoin").asBoolean(false)
         val multiple = params.path("multiple").asInt()
         return RoomTuiTongZi.createRoom(userId,roomType, gameType,gameNumber, personNumber, isJoin, multiple)
+
+      case "createPullMiceRoom"=>
+        val roomType = params.path("roomType").asText()
+        val gameType = params.path("gameType").asText()
+        val gameNumber = params.path("gameNumber").asInt()
+        val personNumber = params.path("personNumber").asInt()
+        val isJoin = params.path("isJoin").asBoolean(false)
+        val multiple = params.path("multiple").asInt()
+        val hasWubuFeng = params.path("hasWubuFeng").asBoolean(false)
+        return RoomPullMice.createRoom(userId,roomType, gameType,gameNumber, personNumber, isJoin, multiple, hasWubuFeng)
 
       case "createPaijiuRoomNotInRoom"=>
         val roomType = params.path("roomType").asText()

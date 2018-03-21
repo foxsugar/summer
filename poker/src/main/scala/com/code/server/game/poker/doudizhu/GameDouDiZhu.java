@@ -96,6 +96,10 @@ public class GameDouDiZhu extends Game {
             case Room.GAMETYPE_QIANAN:
             case Room.GAMETYPE_LONGQI:
                 return new PlayerCardInfoDouDiZhu();
+            case Room.GAMETYPE_LONGQI_JIXIAN:
+                return new PlayerCardInfoDouDiZhuJixian();
+            case Room.GAMETYPE_LONGQI_JIXIAN_NO_QIANG:
+                return new PlayerCardInfoDouDiZhuJixian();
             default:
                 return new PlayerCardInfoDouDiZhu();
         }

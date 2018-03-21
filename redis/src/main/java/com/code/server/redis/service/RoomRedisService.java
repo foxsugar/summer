@@ -99,4 +99,10 @@ public class RoomRedisService implements IRoom_Server ,IConstant,IRoom_Users{
     private String getRoom_user_key(String roomId){
         return room_user+roomId;
     }
+
+    @Override
+    public int getRoomNum() {
+        BoundHashOperations<String,String,String> room = redisTemplate.boundHashOps(ROOM_USER);
+        return room.size().intValue();
+    }
 }

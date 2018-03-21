@@ -49,6 +49,7 @@ public interface IUserRedis {
     void updateUserBean(long userId, UserBean userBean);
 
 
+    int getOnlineUserNum();
 
 
 

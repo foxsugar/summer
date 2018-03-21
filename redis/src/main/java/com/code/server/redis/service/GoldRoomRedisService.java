@@ -144,4 +144,8 @@ public class GoldRoomRedisService implements IRoom_Server,IConstant,IRoom_Users 
         return goldRoom_user + roomId;
     }
 
+    @Override
+    public int getRoomNum() {
+        return 0;
+    }
 }

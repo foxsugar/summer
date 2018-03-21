@@ -1,20 +1,31 @@
 package com.code.server.login.service;
 
+import com.code.server.constant.db.OnlineInfo;
 import com.code.server.constant.game.UserBean;
+import com.code.server.db.Service.OnlineRecordService;
 import com.code.server.db.Service.UserService;
+import com.code.server.db.model.OnlineRecord;
 import com.code.server.db.model.User;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
+import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by sunxianping on 2017/6/16.
  */
+@Service
 public class CenterService {
+
+
+
+
     public static void work(){
 
 
@@ -24,6 +35,10 @@ public class CenterService {
 
         //保存玩家
         GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(),1000L*60*5,true, CenterService::saveUser));
+
+        //在线记录
+        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(),1000L*60*10,true, CenterService::onlineRecord));
+
 
     }
 
@@ -52,5 +67,36 @@ public class CenterService {
     }
 
 
+    private static void onlineRecord(){
+        String date = LocalDate.now().toString();
+        int hour = LocalTime.now().getHour();
+
+        OnlineRecordService onlineRecordService = SpringUtil.getBean(OnlineRecordService.class);
+        OnlineRecord onlineRecord = onlineRecordService.getOnlineRecordDao().findOne(date);
+        if (onlineRecord == null) {
+            onlineRecord = new OnlineRecord();
+            onlineRecord.setId(date);
+        }
+
+        OnlineInfo onlineInfo = onlineRecord.getOnlineData().getInfo().get(""+hour);
+        if (onlineInfo == null) {
+            onlineInfo = new OnlineInfo();
+        }
+        int userNum = RedisManager.getRoomRedisService().getRoomNum();
+        int roomNum = RedisManager.getUserRedisService().getOnlineUserNum();
+        if (userNum > onlineInfo.getUser()) {
+            onlineInfo.setUser(userNum);
+        }
+        if (roomNum > onlineInfo.getRoom()) {
+            onlineInfo.setRoom(roomNum);
+        }
+        onlineRecord.getOnlineData().getInfo().put(""+hour,onlineInfo);
+
+        onlineRecordService.getOnlineRecordDao().save(onlineRecord);
+    }
+
+    public static void main(String[] args) {
+        onlineRecord();
+    }
 
 }

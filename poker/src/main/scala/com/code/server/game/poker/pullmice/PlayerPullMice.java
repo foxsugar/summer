@@ -117,7 +117,24 @@ public class PlayerPullMice implements IfacePlayerInfo {
     public IfacePlayerInfoVo toVo() {
         PlayerPullMiceVo vo = new PlayerPullMiceVo();
         BeanUtils.copyProperties(this, vo);
+        vo.setCards(CardUtils.transformLocalCards2ClientCards(vo.getCards()));
         return vo;
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerPullMice{" +
+                "userId=" + userId +
+                ", cards=" + cards +
+                ", point=" + point +
+                ", seat=" + seat +
+                ", pxId=" + pxId +
+                ", isEscape=" + isEscape +
+                ", score=" + score +
+                ", isWinner=" + isWinner +
+                ", betList=" + betList +
+                ", alreadyFeng=" + alreadyFeng +
+                '}';
     }
 
     @Override

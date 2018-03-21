@@ -14,4 +14,5 @@ public class PlayerPullMiceTest {
         PlayerPullMiceVo vo = (PlayerPullMiceVo) playerPullMice.toVo();
         System.out.println(vo);
     }
+
 }
