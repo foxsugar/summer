@@ -63,6 +63,7 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
     if (this.bet != null) {
       playerCardInfoPaijiuVo.bet1 = this.bet.one
       playerCardInfoPaijiuVo.bet2 = this.bet.two
+      playerCardInfoPaijiuVo.bet3 = this.bet.three
     }
     if(this.group1!=null) playerCardInfoPaijiuVo.isOpenCard = true
 
@@ -89,6 +90,7 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
     if (this.bet != null) {
       playerCardInfoPaijiuVo.bet1 = this.bet.one
       playerCardInfoPaijiuVo.bet2 = this.bet.two
+      playerCardInfoPaijiuVo.bet3 = this.bet.three
     }
     if(this.group1!=null) playerCardInfoPaijiuVo.isOpenCard = true
 
@@ -100,12 +102,21 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
 
     playerCardInfoPaijiuVo
   }
+
+  def setWinState(winOrLost:Int): Unit ={
+    winState = winOrLost
+  }
+
+  def getScore(): Double ={
+     score
+  }
+
 }
 
 
-class Bet(o: Int, t: Int) {
+class Bet(o: Int, t: Int ,th :Int) {
   val one: Int = o
   val two: Int = t
-
+  val three : Int = th
 
 }
