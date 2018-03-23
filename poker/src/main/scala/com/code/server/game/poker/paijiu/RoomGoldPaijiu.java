@@ -2,7 +2,9 @@ package com.code.server.game.poker.paijiu;
 
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.RoomStatistics;
+import com.code.server.constant.response.GameOfResult;
 import com.code.server.constant.response.ResponseVo;
+import com.code.server.constant.response.UserOfResult;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
@@ -10,7 +12,9 @@ import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
+import com.code.server.util.timer.GameTimer;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +72,41 @@ public class RoomGoldPaijiu extends RoomPaijiu {
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         this.canStartUserId = users.get(0);
         addUser2RoomRedis(userId);
+    }
+
+    /**
+     * 解散房间
+     */
+    @Override
+    public void dissolutionRoom() {
+        //庄家初始分 再减掉
+        RoomManager.removeRoom(this.roomId);
+        // 结果类
+        List<UserOfResult> userOfResultList = getUserOfResult();
+
+        //代开房 并且游戏未开始
+        if (!isCreaterJoin && !this.isInGame && (this.curGameNumber == 1)) {
+            drawBack();
+            GameTimer.removeNode(this.prepareRoomTimerNode);
+        }
+        this.isInGame = false;
+
+        // 存储返回
+        GameOfResult gameOfResult = new GameOfResult();
+        for (UserOfResult u:userOfResultList) {
+            double d = Double.parseDouble(u.getScores());
+            u.setScores(d-RedisManager.getUserRedisService().getUserMoney(u.getUserId())+"");
+            RedisManager.getUserRedisService().setUserMoney(u.getUserId(), d);//userId-money
+        }
+        gameOfResult.setUserList(userOfResultList);
+        gameOfResult.setEndTime(LocalDateTime.now().toString());
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), users);
+
+        //庄家初始分 再减掉
+        this.addUserSocre(this.getBankerId(), -this.bankerInitScore());
+
+        //战绩
+        genRoomRecord();
     }
 
     //房间列表
