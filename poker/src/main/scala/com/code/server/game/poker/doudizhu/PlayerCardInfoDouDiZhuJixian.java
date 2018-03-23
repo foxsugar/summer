@@ -102,8 +102,8 @@ public class PlayerCardInfoDouDiZhuJixian extends PlayerCardInfoDouDiZhuLinfen {
             return 21;
         }
 
-        if (cardSize == 2 && firstCard == 0) {//两个三
-            return 1;
+        if (firstCard == 0) {//两个三
+            return 0;
         }
         return firstCard;
     }

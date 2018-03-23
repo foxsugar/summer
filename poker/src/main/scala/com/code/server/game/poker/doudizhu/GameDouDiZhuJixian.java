@@ -240,7 +240,7 @@ public class GameDouDiZhuJixian extends GameDouDiZhu{
     protected void computeBomb(CardStruct cardStruct){
         if(cardStruct.getType()==CardStruct.type_炸){
             List<Integer> cards = cardStruct.getCards();
-            if(cards.size()==4 && CardUtil.getTypeByCard(cards.get(0)) == 0 && CardUtil.getTypeByCard(cards.get(cards.size()-1))==0){ //3333
+            if(cards.size()==4 && CardUtil.getTypeByCard(cards.get(0)) == 0){ //3333
                 zhaCount += 3;//记录炸的数量
                 multiple *= 8;//记录倍数
             }else{ //除4个三的炸
