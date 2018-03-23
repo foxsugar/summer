@@ -123,7 +123,7 @@ public class RoomGoldPaijiu extends RoomPaijiu {
             Map<String, Object> result = new HashMap<>();
             RoomGoldPaijiu roomGoldPaijiu = (RoomGoldPaijiu) r;
             result.put("roomId", roomGoldPaijiu.getRoomId());
-            result.put("nickName",RedisManager.getUserRedisService().getUserBean(userId).getUsername());
+            result.put("nickName",RedisManager.getUserRedisService().getUserBean(((RoomGoldPaijiu) r).getCreateUser()).getUsername());
             result.put("persionNum", roomGoldPaijiu.getUsers().size());
             result.put("goldType", roomGoldPaijiu.getGoldType());
             rooms.add(result);
