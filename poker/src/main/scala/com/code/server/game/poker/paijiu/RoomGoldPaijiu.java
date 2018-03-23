@@ -95,8 +95,15 @@ public class RoomGoldPaijiu extends RoomPaijiu {
         GameOfResult gameOfResult = new GameOfResult();
         for (UserOfResult u:userOfResultList) {
             double d = Double.parseDouble(u.getScores());
-            u.setScores(d-RedisManager.getUserRedisService().getUserMoney(u.getUserId())+"");
-            RedisManager.getUserRedisService().setUserMoney(u.getUserId(), d);//userId-money
+            if(u.getUserId()== this.getBankerId()){
+                u.setScores(d+"");
+                RedisManager.getUserRedisService().addUserMoney(u.getUserId(), d - this.bankerInitScore());//userId-money
+            }else{
+                u.setScores(d-RedisManager.getUserRedisService().getUserMoney(u.getUserId())+"");
+                RedisManager.getUserRedisService().addUserMoney(u.getUserId(), d - RedisManager.getUserRedisService().getUserMoney(u.getUserId()));//userId-money
+            }
+            MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", 0), u.getUserId());
+
         }
         gameOfResult.setUserList(userOfResultList);
         gameOfResult.setEndTime(LocalDateTime.now().toString());
@@ -140,5 +147,47 @@ public class RoomGoldPaijiu extends RoomPaijiu {
 
     public void setGoldType(int goldType) {
         this.goldType = goldType;
+    }
+
+    protected boolean isCanJoinCheckMoney(long userId) {
+        //代建房
+        if (!isCreaterJoin) {
+            return true;
+        }
+        if (isAA) {
+            if (RedisManager.getUserRedisService().getUserMoney(userId) < createNeedMoney) {
+                return false;
+            }
+        } else {
+            if (userId == createUser) {
+                if (RedisManager.getUserRedisService().getUserMoney(userId) < createNeedMoney) {
+                    return false;
+                }
+            }
+        }
+        if("JBPJ".equals(gameType)){//金币扎金花
+            if(RedisManager.getUserRedisService().getUserMoney(userId) <100){
+                return false;
+            }
+        }else if("203".equals(gameType)){
+            if(RedisManager.getUserRedisService().getUserMoney(userId) < this.goldType){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void pushScoreChange() {
+        Map<Long, Double> temp = new HashMap<>();
+        for (Long l:userScores.keySet()) {
+            if(this.bankerId!=l){
+                temp.put(l,userScores.get(l));
+            }else{
+                temp.put(l,RedisManager.getUserRedisService().getUserMoney(l)+userScores.get(l)-this.bankerInitScore());
+            }
+        }
+
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", temp), this.getUsers());
     }
 }
