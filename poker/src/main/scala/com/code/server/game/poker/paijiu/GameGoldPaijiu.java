@@ -1,6 +1,7 @@
 package com.code.server.game.poker.paijiu;
 
 import com.code.server.constant.response.GameOfResult;
+import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserOfResult;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
@@ -21,6 +22,8 @@ import java.util.List;
  * @version 1.0
  */
 public class GameGoldPaijiu extends GamePaijiuEndless{
+
+
 
     /**
      * 比较输赢并设置分数
@@ -114,23 +117,35 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
      */
     public void sendFinalResult(){
 
-        for (Long l:this.roomPaijiu().userScores.keySet()) {
+
+        List<UserOfResult> userOfResultList = this.roomPaijiu().getUserOfResult();
+        for (UserOfResult u:userOfResultList) {
+            double d = Double.parseDouble(u.getScores());
+            if(u.getUserId()== roomPaijiu().getBankerId()){
+                u.setScores(d+"");
+                RedisManager.getUserRedisService().addUserMoney(u.getUserId(), d - this.roomPaijiu().bankerInitScore());//userId-money
+            }else{
+                u.setScores(d-RedisManager.getUserRedisService().getUserMoney(u.getUserId())+"");
+                RedisManager.getUserRedisService().addUserMoney(u.getUserId(), d - RedisManager.getUserRedisService().getUserMoney(u.getUserId()));//userId-money
+            }
+            MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", 0), u.getUserId());
+
+        }
+        // 存储返回
+        GameOfResult gameOfResult = new GameOfResult();
+        gameOfResult.setUserList(userOfResultList);
+        MsgSender.sendMsg2Player("gameService", "gamePaijiuFinalResult", gameOfResult, users);
+        RoomManager.removeRoom(this.roomPaijiu().getRoomId());
+
+        //庄家初始分 再减掉
+        this.roomPaijiu().addUserSocre(this.roomPaijiu().getBankerId(), -this.roomPaijiu().bankerInitScore());
+
+        //战绩
+        this.roomPaijiu().genRoomRecord();
+
+        /*for (Long l:this.roomPaijiu().userScores.keySet()) {
             RedisManager.getUserRedisService().setUserMoney(l, roomPaijiu().userScores.get(l));//userId-money
-        }
-        if (this.roomPaijiu().getCurGameNumber() > this.roomPaijiu().getGameNumber()) {
-            List<UserOfResult> userOfResultList = this.roomPaijiu().getUserOfResult();
-            // 存储返回
-            GameOfResult gameOfResult = new GameOfResult();
-            gameOfResult.setUserList(userOfResultList);
-            MsgSender.sendMsg2Player("gameService", "gamePaijiuFinalResult", gameOfResult, users);
-            RoomManager.removeRoom(this.roomPaijiu().getRoomId());
-
-            //庄家初始分 再减掉
-            this.roomPaijiu().addUserSocre(this.roomPaijiu().getBankerId(), -this.roomPaijiu().bankerInitScore());
-
-            //战绩
-            this.roomPaijiu().genRoomRecord();
-        }
+        }*/
     }
 
 
