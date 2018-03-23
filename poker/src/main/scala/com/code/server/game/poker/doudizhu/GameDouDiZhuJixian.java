@@ -45,6 +45,15 @@ public class GameDouDiZhuJixian extends GameDouDiZhu{
         resetJiaodizhuUser();
     }
 
+
+    /**
+     * 叫地主的人重置为这把叫地主的人(再叫一次)
+     */
+    protected void resetJiaodizhuUser() {
+        long user = nextTurnId(room.getBankerId());
+        room.setBankerId(user);
+    }
+
     /**
      * 叫地主
      *
