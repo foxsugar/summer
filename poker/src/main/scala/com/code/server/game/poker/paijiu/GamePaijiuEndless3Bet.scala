@@ -14,6 +14,25 @@ package com.code.server.game.poker.paijiu
   */
 class GamePaijiuEndless3Bet extends GamePaijiuEndless{
 
+
+
+
+  /**
+    * 牌局结束
+    */
+  override def gameOver(): Unit = {
+    compute()
+    sendResult()
+    genRecord()
+    this.roomPaijiu.clearReadyStatus(true)
+    val banker = playerCardInfos(bankerId)
+    //    if (banker.score <= 0 || banker.score >= roomPaijiu.bankerInitScore * roomPaijiu.getUsers.size()) {
+    if (banker.score <= 0 || banker.score >= 1000) {
+      sendFinalResult()
+    }
+  }
+
+
   /**
     * 比较输赢并设置分数
     *
