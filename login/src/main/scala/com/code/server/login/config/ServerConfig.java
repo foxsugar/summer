@@ -28,6 +28,8 @@ public class ServerConfig {
     private  String notifyUrl;
     private String dataFile;
 
+    private int clubCreateMoney = 5000;
+
 
     public String getServerType() {
         return serverType;
@@ -139,6 +141,15 @@ public class ServerConfig {
 
     public ServerConfig setDataFile(String dataFile) {
         this.dataFile = dataFile;
+        return this;
+    }
+
+    public int getClubCreateMoney() {
+        return clubCreateMoney;
+    }
+
+    public ServerConfig setClubCreateMoney(int clubCreateMoney) {
+        this.clubCreateMoney = clubCreateMoney;
         return this;
     }
 }
