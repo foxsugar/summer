@@ -275,7 +275,7 @@ public class GameInfoNZZ extends GameInfo {
             //通知其他玩家出牌信息
 //            PlayCardResp playCardResp = new PlayCardResp();
 //            playCardResp.setUserId(userId);
-//            playCardResp.setCard(card);
+//            playCardResp.setCard(null);
 //
 //            ResponseVo chupaiVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_PLAY_CARD, playCardResp);
 //            MsgSender.sendMsg2Player(chupaiVo, users);
@@ -415,13 +415,13 @@ public class GameInfoNZZ extends GameInfo {
         lastOperateUserId = userId;//上个操作的人
         //出的牌
         this.disCard = card;
-        chupaiPlayerCardsInfo.chupai(card);
+        //chupaiPlayerCardsInfo.chupai(card);
 
 
         //通知其他玩家出牌信息
         PlayCardResp playCardResp = new PlayCardResp();
         playCardResp.setUserId(userId);
-        playCardResp.setCard(this.disCard);
+        playCardResp.setCard(null);
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_PLAY_CARD, playCardResp);
         MsgSender.sendMsg2Player(vo, users);
 

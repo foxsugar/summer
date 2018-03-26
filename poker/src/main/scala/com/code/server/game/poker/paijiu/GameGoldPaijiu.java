@@ -105,7 +105,7 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
         }
 
         for (Long l:this.roomPaijiu().userScores.keySet()) {
-            if(this.roomPaijiu().userScores.get(l)<10){
+            if(this.roomPaijiu().userScores.get(l)<10 && l!=this.bankerId()){
                 sendFinalResult();
             }
         }
