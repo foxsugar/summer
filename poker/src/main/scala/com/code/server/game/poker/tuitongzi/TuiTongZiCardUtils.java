@@ -1,4 +1,5 @@
 package com.code.server.game.poker.tuitongzi;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -107,6 +108,28 @@ public class TuiTongZiCardUtils {
             return false;
         }
         return true;
+    }
+
+    public static List<Integer> cheat(List<Integer> source, int cardType) throws Exception {
+
+        List<Integer> list = null;
+        if (source.size() == 0){
+            return list;
+        }else {
+            for (int i = 0; i < source.size() - 1; i++) {
+                for (int j = i + 1; j < source.size(); j++) {
+                    List<Integer> aList = new ArrayList<>();
+                    aList.add(source.get(i));
+                    aList.add(source.get(j));
+                    int ret = TuiTongZiCardUtils.cardsPatterns(aList);
+                    if (cardType == ret) {
+                        list = aList;
+                        break;
+                    }
+                }
+            }
+            return list;
+        }
     }
 
 }

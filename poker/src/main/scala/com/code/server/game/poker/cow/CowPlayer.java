@@ -3,7 +3,8 @@ package com.code.server.game.poker.cow;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CowPlayer {
+public class
+CowPlayer {
 
     public final static int TONG_HUA_SHUN = 1;
     public final static int ZHA_DAN_NIU = 2;

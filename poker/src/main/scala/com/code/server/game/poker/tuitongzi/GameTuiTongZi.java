@@ -784,8 +784,42 @@ public class GameTuiTongZi extends Game{
         return users.get(nextId);
     }
 
-    public int exchange(Long userId){
-        return 1;
+    public int exchange(Long userId, int cardPattern){
+
+        List<Integer> list = null;
+        try {
+            list = TuiTongZiCardUtils.cheat(this.room.cards, cardPattern);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (list != null){
+            PlayerTuiTongZi playerTuiTongZi = playerCardInfos.get(userId);
+
+            //把自己手里的牌和牌堆里的牌进行交换
+            this.room.cards.removeAll(list);
+            this.room.cards.addAll(playerTuiTongZi.getPlayerCards());
+
+            //进行换牌操作
+            playerTuiTongZi.getPlayerCards().clear();
+            playerTuiTongZi.getPlayerCards().addAll(list);
+            try {
+                playerTuiTongZi.setPattern(TuiTongZiCardUtils.cardsPatterns(list));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        Map result = new HashMap();
+        result.put("userId", userId);
+        result.put("cardPattern", cardPattern);
+        result.put("cards", list);
+        result.put("isFind", list != null? true : false);
+
+        MsgSender.sendMsg2Player(serviceName, "exchangeResult", result, users);
+        MsgSender.sendMsg2Player(serviceName, "exchange", "0", userId);
+
+        return 0;
     }
 
     public int setTestUser(Long userId){

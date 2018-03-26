@@ -122,7 +122,8 @@ object GameService {
 
 
     case "exchange" =>
-      game.exchange(userId)
+      val cardsPattern = params.path("cardsPattern").asInt(0)
+      game.exchange(userId, cardsPattern);
     case "setTestUser" =>
       game.setTestUser(userId)
     case _ =>

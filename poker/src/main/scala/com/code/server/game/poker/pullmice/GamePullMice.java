@@ -84,13 +84,25 @@ public class GamePullMice extends Game{
 
     public void initCards(){
         room.cards.clear();
-        for (int i = 0; i < 54; i++){
-            room.cards.add(i);
-        }
-        for (int i = 0; i < 54; i++){
-            room.cards.add(i);
-        }
-        Collections.shuffle(room.cards);
+//        for (int i = 0; i < 54; i++){
+//            room.cards.add(i);
+//        }
+//        for (int i = 0; i < 54; i++){
+//            room.cards.add(i);
+//        }
+//        Collections.shuffle(room.cards);
+
+        //测试顺子
+        room.cards.add(2);
+        room.cards.add(34);
+        room.cards.add(6);
+        room.cards.add(35);
+        room.cards.add(10);
+        room.cards.add(36);
+        room.cards.add(14);
+        room.cards.add(37);
+        room.cards.add(18);
+        room.cards.add(20);
     }
 
     //第一次下注
