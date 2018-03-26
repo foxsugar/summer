@@ -6,7 +6,7 @@ import com.code.server.game.poker.cow.GameCow
 import com.code.server.game.poker.doudizhu.{GameDouDiZhu, GameDouDiZhuGold}
 import com.code.server.game.poker.hitgoldflower.GameHitGoldFlower
 import com.code.server.game.poker.guess.GameGuessCar
-import com.code.server.game.poker.paijiu.GamePaijiu
+import com.code.server.game.poker.paijiu.{GameGoldPaijiu, GamePaijiu}
 import com.code.server.game.poker.pullmice.GamePullMice
 import com.code.server.game.poker.tuitongzi.GameTuiTongZi
 import com.code.server.game.room.IfaceGame
@@ -134,7 +134,8 @@ object GameService {
     case "bet" =>
       val one = params.path("one").asInt(0)
       val two = params.path("two").asInt(0)
-      game.bet(userId,one,two)
+      val three = params.path("three").asInt(0)
+      game.bet(userId,one,two,three)
     case "crap"=>
       game.crap(userId)
     case "open"=>
@@ -155,6 +156,8 @@ object GameService {
 
     case "exchange" =>
       game.exchange(userId)
+    case "catchBanker" =>
+      game.asInstanceOf[GameGoldPaijiu].catchBanker(userId);
     case "setTestUser" =>
       game.setTestUser(userId)
     case _ =>

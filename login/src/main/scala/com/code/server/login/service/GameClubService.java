@@ -156,6 +156,10 @@ public class GameClubService {
         return vo;
     }
 
+    private int getCreateMoney(){
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        return serverConfig.getClubCreateMoney();
+    }
     /**
      * 创建俱乐部
      *
@@ -171,7 +175,7 @@ public class GameClubService {
 
         //钱是否够
         double money = RedisManager.getUserRedisService().getUserMoney(userId);
-        if (money < NEED_MONEY) {
+        if (money < getCreateMoney()) {
             return ErrorCode.CLUB_CANNOT_MONEY;
         }
         //多于5个俱乐部 不可以创建
@@ -181,7 +185,7 @@ public class GameClubService {
         }
 
         //人减钱
-        RedisManager.getUserRedisService().addUserMoney(userId, -NEED_MONEY);
+        RedisManager.getUserRedisService().addUserMoney(userId, -getCreateMoney());
 
         Club club = new Club();
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
@@ -192,7 +196,7 @@ public class GameClubService {
         club.setPresidentName(userBean.getUsername());
         club.setPresidentWx(wx);
         club.setArea(area);
-        club.setMoney(NEED_MONEY);
+        club.setMoney(getCreateMoney());
         club.setClubDesc(desc);
 
         clubAddMember(club, userBean);

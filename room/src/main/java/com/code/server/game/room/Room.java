@@ -265,6 +265,7 @@ public class Room implements IfaceRoom {
         userOfRoom.setClubRoomModel(clubRoomModel);
 
         userOfRoom.setCanStartUserId(users.get(0));
+        userOfRoom.setUserScores(this.userScores);
 
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "joinRoom", this.toVo(userId)), userId);
 

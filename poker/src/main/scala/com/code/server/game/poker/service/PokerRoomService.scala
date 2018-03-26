@@ -152,6 +152,10 @@ object PokerRoomService {
         return roomGuessCar.asInstanceOf[RoomGuessCar].guessCar(userId,redOrGreen)
       case "getAllRoom"=>
         return RoomGuessCar.getAllRoom(userId);
+
+      case "getAllGoldPaijiuRoom"=>
+        return RoomGoldPaijiu.getAllRoom(userId);
+
       case _ =>
         return -1
     }

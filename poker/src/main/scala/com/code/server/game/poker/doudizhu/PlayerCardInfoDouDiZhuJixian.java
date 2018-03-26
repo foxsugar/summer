@@ -46,6 +46,16 @@ public class PlayerCardInfoDouDiZhuJixian extends PlayerCardInfoDouDiZhuLinfen {
         int currenttype = currentCardStruct.type;//获取当前出牌类型
         int lastType = lastcardStruct.type;//获取当前出牌类型
 
+
+        int firstCard = CardUtil.getTypeByCard(currentCardStruct.cards.get(0));
+        int cardSize = currentCardStruct.cards.size();
+
+        //四个三可以管火箭
+        if(currenttype == CardStruct.type_炸 && cardSize == 4 && firstCard == 0){
+            if(lastType == CardStruct.type_火箭){
+                return true;
+            }
+        }
         if(currenttype == CardStruct.type_炸 || currenttype == CardStruct.type_火箭){
             if(lastType == CardStruct.type_炸 || lastType == CardStruct.type_火箭){
                 return getZhaType(currentCardStruct) > getZhaType(lastcardStruct);
@@ -85,18 +95,15 @@ public class PlayerCardInfoDouDiZhuJixian extends PlayerCardInfoDouDiZhuLinfen {
         List<Integer> cards = cardStruct.getCards();
         int firstCard = CardUtil.getTypeByCard(cards.get(0));
         int cardSize = cards.size();
-        if (cardSize == 4 && firstCard == 0) {//四个三
-            return 23;
-        }
-        if (firstCard == 14 || firstCard == 13) {//火箭
+        if (firstCard == 14 || firstCard == 13|| firstCard==15) {//火箭
             return 22;
         }
         if (cardSize == 2 && firstCard == 12) {//两个二
             return 21;
         }
 
-        if (cardSize == 2 && firstCard == 0) {//两个三
-            return 1;
+        if (firstCard == 0) {//两个三
+            return 0;
         }
         return firstCard;
     }
