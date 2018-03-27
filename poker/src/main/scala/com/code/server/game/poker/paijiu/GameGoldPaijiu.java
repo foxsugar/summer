@@ -182,4 +182,6 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
         double s = this.roomPaijiu().userScoresForGold.get(userId);
         this.roomPaijiu().userScoresForGold.put(userId, s + score);
     }
+
+
 }
