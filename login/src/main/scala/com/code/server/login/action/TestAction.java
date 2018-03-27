@@ -46,10 +46,10 @@ public class TestAction {
     private static final String keyValue = "xhzw2malfjk62p0g8m9by7ycx97fqahv" ;
     private UserBean userBeanRedis;
 
-    @RequestMapping("/index")
-    public String index(){
-        return "index";
-    }
+//    @RequestMapping("/index")
+//    public String index(){
+//        return "index";
+//    }
 
     @RequestMapping("/pay")
     public void pay(@RequestParam(value = "money", required = true) Double money,  @RequestParam(value = "uid", required = true) Long uid, HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
