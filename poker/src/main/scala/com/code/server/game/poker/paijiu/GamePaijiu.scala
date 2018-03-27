@@ -286,6 +286,28 @@ class GamePaijiu extends Game with PaijiuConstant {
     //    genRecord(playerCardInfos.values.toMap((playerInfo)=>))
   }
 
+
+  /**
+    * 生成战绩
+    */
+  protected def genRecordForGold(): Unit = {
+
+    import com.code.server.util.IdWorker
+    val id = IdWorker.getDefaultInstance.nextId
+    val map = new util.HashMap[Long, java.lang.Double]()
+    var temp = 0.0;
+    for (playerInfo <- playerCardInfos) {
+      if(playerInfo._2.userId!=bankerId){
+        map.put(playerInfo._2.userId,playerInfo._2.score);
+        temp+= playerInfo._2.score;
+      }
+    }
+    map.put(bankerId,-temp);
+    genRecord(map, this.roomPaijiu, id)
+    //    genRecord(playerCardInfos.values.toMap((playerInfo)=>))
+  }
+
+
   /**
     * 结算
     */
