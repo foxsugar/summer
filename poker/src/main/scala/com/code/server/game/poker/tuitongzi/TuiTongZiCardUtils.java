@@ -44,10 +44,7 @@ public class TuiTongZiCardUtils {
         return pointA;
     }
 
-    public static int mAIsBiggerThanB(PlayerTuiTongZi pA, PlayerTuiTongZi pB) throws Exception {
-
-        List<Integer> listA = pA.getPlayerCards();
-        List<Integer> listB = pB.getPlayerCards();
+    public static int mAIsBiggerThanB(List<Integer> listA, List<Integer> listB) throws Exception {
         boolean aIsDuiZi = isDuiZi(listA);
         boolean bIsDuiZi = isDuiZi(listB);
         if (aIsDuiZi == true && bIsDuiZi == false){
@@ -77,6 +74,13 @@ public class TuiTongZiCardUtils {
                 return 2;
             }
         }
+    }
+
+    public static int mAIsBiggerThanB(PlayerTuiTongZi pA, PlayerTuiTongZi pB) throws Exception {
+
+        List<Integer> listA = pA.getPlayerCards();
+        List<Integer> listB = pB.getPlayerCards();
+        return mAIsBiggerThanB(listA, listB);
     }
 
     /**
