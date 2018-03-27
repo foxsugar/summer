@@ -24,7 +24,6 @@ import java.util.List;
  */
 public class GameGoldPaijiu extends GamePaijiuEndless{
 
-    RoomGoldPaijiu roomGoldPaijiu;
 
     /**
      * 比较输赢并设置分数
@@ -178,16 +177,9 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
     return 0;
     }
 
-    public RoomGoldPaijiu getRoomGoldPaijiu() {
-        return roomGoldPaijiu;
-    }
-
-    public void setRoomGoldPaijiu(RoomGoldPaijiu roomGoldPaijiu) {
-        this.roomGoldPaijiu = roomGoldPaijiu;
-    }
 
     public void addUserSocreForGold(long userId, double score) {
-        double s = this.roomGoldPaijiu.userScoresForGold.get(userId);
-        this.roomGoldPaijiu.userScoresForGold.put(userId, s + score);
+        double s = this.roomPaijiu().userScoresForGold.get(userId);
+        this.roomPaijiu().userScoresForGold.put(userId, s + score);
     }
 }

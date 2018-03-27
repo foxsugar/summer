@@ -90,6 +90,8 @@ class GamePaijiuEndless extends GamePaijiu {
           roomPaijiu.bankerScore += changeScore
           roomPaijiu.addUserSocre(banker.userId, changeScore)
           roomPaijiu.addUserSocre(other.userId, -changeScore)
+          addUserSocreForGold(banker.userId, changeScore)
+          addUserSocreForGold(other.userId, -changeScore)
           other.winState = LOSE
 
           logger.info("庄家赢得钱: " + changeScore)
@@ -166,4 +168,9 @@ class GamePaijiuEndless extends GamePaijiu {
     }
   }
 
+
+  def addUserSocreForGold(userId: Long, score: Double) {
+    val s = this.roomPaijiu.userScoresForGold.get(userId)
+    this.roomPaijiu.userScoresForGold.put(userId, s + score)
+  }
 }

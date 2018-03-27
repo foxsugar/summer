@@ -69,7 +69,7 @@ public class Room implements IfaceRoom {
     private String clubId;
     private String clubRoomModel;
 
-
+    public Map<Long, Double> userScoresForGold = new HashMap<>();
 
     public Long canStartUserId = 0L;
 
@@ -231,6 +231,7 @@ public class Room implements IfaceRoom {
         this.userScores.put(userId, 0D);
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         this.canStartUserId = users.get(0);
+
         addUser2RoomRedis(userId);
     }
 
@@ -1104,5 +1105,13 @@ public class Room implements IfaceRoom {
     public Room setMaxZhaCount(int maxZhaCount) {
         this.maxZhaCount = maxZhaCount;
         return this;
+    }
+
+    public Map<Long, Double> getUserScoresForGold() {
+        return userScoresForGold;
+    }
+
+    public void setUserScoresForGold(Map<Long, Double> userScoresForGold) {
+        this.userScoresForGold = userScoresForGold;
     }
 }

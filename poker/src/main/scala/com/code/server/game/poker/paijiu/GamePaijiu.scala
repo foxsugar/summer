@@ -363,7 +363,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     * @param banker
     * @param other
     */
-  protected def compareAndSetScore(banker: PlayerCardInfoPaijiu, other: PlayerCardInfoPaijiu): Int = {
+   def compareAndSetScore(banker: PlayerCardInfoPaijiu, other: PlayerCardInfoPaijiu): Int = {
     val mix8Score = getGroupScoreByName(MIX_8)
     val bankerScore1 = getGroupScore(banker.group1)
     val bankerScore2 = getGroupScore(banker.group2)

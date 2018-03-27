@@ -43,9 +43,6 @@ public class RoomGoldPaijiu extends RoomPaijiu {
     protected int isGold;
     protected int goldType;
 
-    public Map<Long, Double> userScoresForGold = new HashMap<>();
-
-
     public static int createGoldRoom(Long userId,String roomType,String gameType,int gameNumber,int isGold,int goldType) throws DataNotFoundException {
         RoomGoldPaijiu roomGoldPaijiu = new RoomGoldPaijiu();
         roomGoldPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId()));
@@ -230,13 +227,5 @@ public class RoomGoldPaijiu extends RoomPaijiu {
         }
 
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", temp), this.getUsers());
-    }
-
-    public Map<Long, Double> getUserScoresForGold() {
-        return userScoresForGold;
-    }
-
-    public void setUserScoresForGold(Map<Long, Double> userScoresForGold) {
-        this.userScoresForGold = userScoresForGold;
     }
 }
