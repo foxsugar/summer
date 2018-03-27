@@ -68,6 +68,9 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('com.google.code.gson:gson:2.6.2')
+//	compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.9.RELEASE'
+//	compile group: 'net.sourceforge.nekohtml', name: 'nekohtml', version: '1.9.22'
+
 
 
 
@@ -83,6 +86,8 @@ dependencies {
 //	compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '1.2.0.RELEASE'
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+
+	compile group: 'com.github.binarywang', name: 'weixin-java-cp', version: '2.9.0'
 
 //	compile ('org.quartz-scheduler:quartz:2.2.1'){
 //		//排除c3p0的依赖
