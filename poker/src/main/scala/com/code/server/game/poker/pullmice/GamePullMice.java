@@ -91,6 +91,30 @@ public class GamePullMice extends Game{
             room.cards.add(i);
         }
         Collections.shuffle(room.cards);
+
+        //测试顺子
+//        room.cards.add(2);
+//        room.cards.add(34);
+//        room.cards.add(6);
+//        room.cards.add(35);
+//        room.cards.add(10);
+//        room.cards.add(36);
+//        room.cards.add(14);
+//        room.cards.add(37);
+//        room.cards.add(18);
+//        room.cards.add(20);
+
+
+//        room.cards.add(2);
+//        room.cards.add(4);
+//        room.cards.add(3);
+//        room.cards.add(5);
+//        room.cards.add(6);
+//        room.cards.add(8);
+//        room.cards.add(7);
+//        room.cards.add(9);
+//        room.cards.add(10);
+//        room.cards.add(11);
     }
 
     //第一次下注

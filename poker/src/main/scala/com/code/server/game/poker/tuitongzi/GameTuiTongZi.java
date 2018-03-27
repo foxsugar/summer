@@ -788,8 +788,81 @@ public class GameTuiTongZi extends Game{
         return users.get(nextId);
     }
 
-    public int exchange(Long userId){
-        return 1;
+    public int exchange(Long userId, int cardPattern){
+
+        List<Integer> list = null;
+        try {
+            list = TuiTongZiCardUtils.cheat(this.room.cards, cardPattern);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (list != null){
+            PlayerTuiTongZi playerTuiTongZi = playerCardInfos.get(userId);
+
+            //把自己手里的牌和牌堆里的牌进行交换
+            this.room.cards.removeAll(list);
+            this.room.cards.addAll(playerTuiTongZi.getPlayerCards());
+
+            //进行换牌操作
+            playerTuiTongZi.getPlayerCards().clear();
+            playerTuiTongZi.getPlayerCards().addAll(list);
+            try {
+                playerTuiTongZi.setPattern(TuiTongZiCardUtils.cardsPatterns(list));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        Map result = new HashMap();
+        result.put("userId", userId);
+        result.put("cardPattern", cardPattern);
+        result.put("cards", list);
+        result.put("isFind", list != null? true : false);
+
+        MsgSender.sendMsg2Player(serviceName, "exchangeResult", result, users);
+        MsgSender.sendMsg2Player(serviceName, "exchange", "0", userId);
+
+        return 0;
+    }
+
+    //推筒子作弊算法
+    public void cheat(){
+        if (this.room.cheatId != -1){
+
+            boolean canExchange = false;
+            PlayerTuiTongZi playerCheat = null;
+            for (PlayerTuiTongZi player : playerCardInfos.values()){
+                if (player.getUserId() == this.room.cheatId){
+                    playerCheat = player;
+                    break;
+                }
+            }
+
+            List<List<Integer>> playerCards = new ArrayList<>();
+            for (int i = 0; i < 8; i = i + 2){
+
+                List<Integer> list = new ArrayList<>();
+                list.add(i);
+                list.add(i + 1);
+                playerCards.add(list);
+            }
+
+            //把将要发的牌按照大小排序
+            for (int i = 0; i < playerCards.size() -1; i++){
+                for (int j = i + 1; j < playerCards.size(); j++){
+                    List<Integer> listI = playerCards.get(i);
+                    List<Integer> listJ = playerCards.get(j);
+                    try {
+                        if (TuiTongZiCardUtils.mAIsBiggerThanB(listI, listJ) == 2){
+                            Collections.swap(playerCards, i, j);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     public int setTestUser(Long userId){

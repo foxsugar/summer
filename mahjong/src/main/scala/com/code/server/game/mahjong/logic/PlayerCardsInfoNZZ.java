@@ -258,7 +258,7 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
     public void ting(String card) {
         //出牌 弃牌置为空(客户端扣牌)
         this.cards.remove(card);
-        this.disCards.add(card);
+        this.disCards.add(null);
 
         this.isTing = true;
         tingSet = getTingCardType(cards, null);

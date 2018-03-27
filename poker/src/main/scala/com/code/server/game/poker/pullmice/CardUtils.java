@@ -301,7 +301,7 @@ public class CardUtils {
         Integer last = aList.get(0);
         for (int i = 1; i < aList.size(); i++){
             Integer current = aList.get(i);
-            if ( ( current - 2) / 4 - (last - 2) / 4 != 0){
+            if ( ( current - 2) / 4 - (last - 2) / 4 != 1){
                 return false;
             }
             last = current;
@@ -359,7 +359,7 @@ public class CardUtils {
         playerPullMice1.setPoint(calculateTotalPoint(playerPullMice1.getCards()));
         playerPullMice2.setPoint(calculateTotalPoint(playerPullMice2.getCards()));
 
-        if (!(isShunZi(playerPullMice1.getCards())) && isShunZi(playerPullMice2.getCards())){
+        if ((!(isShunZi(playerPullMice1.getCards()))) && isShunZi(playerPullMice2.getCards())){
             return 2;
         }else if(isShunZi(playerPullMice1.getCards()) && (!isShunZi(playerPullMice2.getCards()))){
             return 0;

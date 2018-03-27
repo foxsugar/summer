@@ -39,6 +39,9 @@ public class RoomTuiTongZi extends Room{
 
     protected long roomLastTime;
 
+    //作弊的那个人的id
+    protected long cheatId = -1;
+
     protected List<Integer> cards = new ArrayList<Integer>();
 
     public void setCardsCount(long cardsCount) {
