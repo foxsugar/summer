@@ -16,14 +16,14 @@ public class PlayerCardsInfoHM extends PlayerCardsInfoMj {
     public void init(List<String> cards) {
         super.init(cards);
         specialHuScore.put(hu_七小对,2);
-        specialHuScore.put(hu_一条龙,2);
+        //specialHuScore.put(hu_一条龙,2);
         specialHuScore.put(hu_清一色,2);
 
-        specialHuScore.put(hu_清龙,4);
+        //specialHuScore.put(hu_清龙,4);
         specialHuScore.put(hu_清七对,4);
         specialHuScore.put(hu_豪华七小对,4);
 
-        specialHuScore.put(hu_十三幺,8);
+        //specialHuScore.put(hu_十三幺,8);
     }
 
 
