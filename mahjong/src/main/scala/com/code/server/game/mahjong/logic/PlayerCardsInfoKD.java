@@ -266,33 +266,7 @@ public class PlayerCardsInfoKD extends PlayerCardsInfoMj {
 					System.out.println("======点炮（未听）：" +  3 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length()-1),card,huCardType) * room.getMultiple());
 				}
 			}
-//		}else if(room.getMode().equals("5")){
-//			if(isZimo){
-//				for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
-//					gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * CardUtil.KDForScores(sb.toString().substring(0, sb.length() - 1), card) * room.getMultiple());
-//					room.setUserSocre(i, - 2 * CardUtil.KDForScores(sb.toString().substring(0, sb.length() - 1), card) * room.getMultiple());
-//				}
-//				this.score = this.score +  8 * CardUtil.KDForScores(sb.toString().substring(0, sb.length()-1),card) * room.getMultiple();
-//				room.setUserSocre(this.userId, 8 * CardUtil.KDForScores(sb.toString().substring(0, sb.length()-1),card) * room.getMultiple());
-//				this.fan = 2 * CardUtil.KDForScores(sb.toString().substring(0, sb.length()-1),card);
-//			}else{
-//				if(gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing){
-//					for (Integer i : gameInfo.getPlayerCardsInfos().keySet()){
-//						gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - CardUtil.KDForScores(sb.toString().substring(0, sb.length() - 1), card) * room.getMultiple());
-//						room.setUserSocre(i, - CardUtil.KDForScores(sb.toString().substring(0, sb.length() - 1), card) * room.getMultiple());
-//					}
-//					this.score = this.score + 4 * CardUtil.KDForScores(sb.toString().substring(0, sb.length() - 1), card) * room.getMultiple();
-//					room.setUserSocre(this.userId, 4 * CardUtil.KDForScores(sb.toString().substring(0, sb.length() - 1), card) * room.getMultiple());
-//					this.fan = CardUtil.KDForScores(sb.toString().substring(0, sb.length()-1),card);
-//				}else{
-//					gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 3 * CardUtil.KDForScores(sb.toString().substring(0, sb.length() - 1), card) * room.getMultiple());
-//					this.score = this.score + 3 * CardUtil.KDForScores(sb.toString().substring(0, sb.length()-1),card) * room.getMultiple();
-//					room.setUserSocre(dianpaoUser,- 3 * CardUtil.KDForScores(sb.toString().substring(0, sb.length() - 1), card) * room.getMultiple());
-//					room.setUserSocre(this.userId, 3 * CardUtil.KDForScores(sb.toString().substring(0, sb.length()-1),card) * room.getMultiple());
-//					this.fan = CardUtil.KDForScores(sb.toString().substring(0, sb.length()-1),card);
-//				}
-//			}
-//		}
+
 
     }
 

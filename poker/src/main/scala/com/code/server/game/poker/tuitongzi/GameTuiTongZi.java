@@ -55,6 +55,10 @@ public class GameTuiTongZi extends Game{
         return vo;
     }
 
+
+    protected boolean isBaWangZhuang(){
+        return false;
+    }
     public void startGame(List<Long> users, Room room){
         this.room = (RoomTuiTongZi) room;
         this.users = users;
@@ -68,7 +72,7 @@ public class GameTuiTongZi extends Game{
 
 
         //霸王庄
-        if (this.room.getGameType().equals("201")){
+        if (isBaWangZhuang()){
 
             this.room.setZhuangCount(this.room.getZhuangCount() + 1);
             //第一次的时候设置锅底分数
@@ -224,7 +228,7 @@ public class GameTuiTongZi extends Game{
     }
     //是否继续坐庄
     public int continueBanker(boolean isZhuang, long userId){
-        if (room.getGameType().equals("201")){
+        if (isBaWangZhuang()){
 
             if (isZhuang == false){
                 sendFightFinalResult();
@@ -533,7 +537,7 @@ public class GameTuiTongZi extends Game{
             updateRoomLastTime();
             this.room.clearReadyStatus(true);
 
-            if (this.room.getGameType().equals("201")){
+            if (isBaWangZhuang()){
                 //强制下装
                 if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() >= 5) || room.getZhuangCount() == 8){
                     //退出游戏
@@ -728,7 +732,7 @@ public class GameTuiTongZi extends Game{
 
         MsgSender.sendMsg2Player(serviceName, "gameResult", aList, this.users);
 
-        if (this.room.getGameType().equals("201")){
+        if (isBaWangZhuang()){
 
             boolean updateZhuang = false;
             //强制下装
