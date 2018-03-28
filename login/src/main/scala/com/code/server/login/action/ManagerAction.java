@@ -20,7 +20,7 @@ import static com.code.server.redis.config.IConstant.USER_GATE;
  */
 @RestController
 @EnableAutoConfiguration
-public class ManagerAction {
+public class ManagerAction extends Cors{
 
     @Autowired
     private RedisTemplate redisTemplate;

@@ -9,6 +9,7 @@ import com.code.server.redis.service.RedisManager;
 
 import java.util.List;
 
+
 /**
  * 项目名称：${project_name}
  * 类名称：${type_name}
@@ -24,12 +25,13 @@ import java.util.List;
 public class GameGoldPaijiu extends GamePaijiuEndless{
 
 
-
     /**
      * 比较输赢并设置分数
      */
     @Override
     public int compareAndSetScore(PlayerCardInfoPaijiu banker,PlayerCardInfoPaijiu other) {
+        System.out.print("========compareAndSetScore=============");
+
         int mix8Score = getGroupScoreByName("mixeight");
         int bankerScore1 = getGroupScore(banker.group1());
         int bankerScore2 = getGroupScore(banker.group2());
@@ -45,6 +47,8 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
                 other.addScore(this.roomPaijiu(), changeScore);
                 this.roomPaijiu().addUserSocre(banker.userId(), -changeScore);
                 this.roomPaijiu().addUserSocre(other.userId(), changeScore);
+                addUserSocreForGold(banker.userId(), -changeScore);
+                addUserSocreForGold(other.userId(), changeScore);
                 other.setWinState(-1);
             }else if((bankerScore1 < otherScore1 && bankerScore2 == otherScore2)
                     ||(bankerScore1 == otherScore1 && bankerScore2 < otherScore2)){//赢一半
@@ -53,6 +57,8 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
                 other.addScore(this.roomPaijiu(), changeScore/2);
                 this.roomPaijiu().addUserSocre(banker.userId(), -changeScore/2);
                 this.roomPaijiu().addUserSocre(other.userId(), changeScore/2);
+                addUserSocreForGold(banker.userId(), -changeScore/2);
+                addUserSocreForGold(other.userId(), changeScore/2);
                 other.setWinState(-1);
             }else{//庄赢
                 int changeScore = other.getBetScore(bankerScore2 >= mix8Score);
@@ -60,6 +66,9 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
                 other.addScore(this.roomPaijiu(), -changeScore);
                 this.roomPaijiu().addUserSocre(banker.userId(), changeScore);
                 this.roomPaijiu().addUserSocre(other.userId(), -changeScore);
+                addUserSocreForGold(banker.userId(), changeScore);
+                addUserSocreForGold(other.userId(), -changeScore);
+
                 other.setWinState(1);
             }
         }else{//原始算法
@@ -74,6 +83,8 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
                 other.addScore(this.roomPaijiu(), -changeScore);
                 this.roomPaijiu().addUserSocre(banker.userId(), changeScore);
                 this.roomPaijiu().addUserSocre(other.userId(), -changeScore);
+                addUserSocreForGold(banker.userId(), changeScore);
+                addUserSocreForGold(other.userId(), -changeScore);
                 other.setWinState(1);
             } else if (result < 0) {
                 //闲家赢
@@ -82,11 +93,15 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
                 other.addScore(this.roomPaijiu(), changeScore);
                 this.roomPaijiu().addUserSocre(banker.userId(), -changeScore);
                 this.roomPaijiu().addUserSocre(other.userId(), changeScore);
+                addUserSocreForGold(banker.userId(), changeScore);
+                addUserSocreForGold(other.userId(), -changeScore);
                 other.setWinState(-1);
             }
         }
         return result;
     }
+
+
 
     /**
      * 牌局结束,判断条件修改
@@ -94,23 +109,26 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
      */
     @Override
     public void gameOver(){
-        compute();
+        computeForGold();
         sendResult();
-        genRecord();
+        genRecordForGold();
         this.roomPaijiu().clearReadyStatus(true);
 
         PlayerCardInfoPaijiu playerCardInfoPaijiu = playerCardInfos().get(bankerId()).get();
         if (playerCardInfoPaijiu.getScore() <= 0 || playerCardInfoPaijiu.getScore() >= this.roomPaijiu().bankerInitScore()*10) {
             sendFinalResult();
+            return;
         }
 
         for (Long l:this.roomPaijiu().userScores.keySet()) {
             if(this.roomPaijiu().userScores.get(l)<10 && l!=this.bankerId()){
                 sendFinalResult();
+                return;
             }
         }
 
     }
+
 
     /**
      * 最终结算版
@@ -161,5 +179,12 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
 
     return 0;
     }
+
+
+    public void addUserSocreForGold(long userId, double score) {
+        double s = this.roomPaijiu().userScoresForGold.get(userId);
+        this.roomPaijiu().userScoresForGold.put(userId, s + score);
+    }
+
 
 }

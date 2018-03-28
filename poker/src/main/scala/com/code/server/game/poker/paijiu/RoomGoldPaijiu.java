@@ -1,7 +1,12 @@
 package com.code.server.game.poker.paijiu;
 
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.game.RoomRecord;
 import com.code.server.constant.game.RoomStatistics;
+import com.code.server.constant.game.UserBean;
+import com.code.server.constant.game.UserRecord;
+import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.GameOfResult;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserOfResult;
@@ -9,6 +14,7 @@ import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
+import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
@@ -71,6 +77,7 @@ public class RoomGoldPaijiu extends RoomPaijiu {
         this.userScores.put(userId, RedisManager.getUserRedisService().getUserMoney(userId));
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         this.canStartUserId = users.get(0);
+        this.userScoresForGold.put(userId, 0.0);
         addUser2RoomRedis(userId);
     }
 
@@ -114,6 +121,37 @@ public class RoomGoldPaijiu extends RoomPaijiu {
 
         //战绩
         genRoomRecord();
+    }
+
+    /**
+     * 生成房间战绩
+     */
+    @Override
+    public void genRoomRecord() {
+        RoomRecord roomRecord = new RoomRecord();
+        roomRecord.setRoomId(this.roomId);
+        roomRecord.setId(this.getUuid());
+        roomRecord.setType(this.roomType);
+        roomRecord.setTime(System.currentTimeMillis());
+        roomRecord.setClubId(this.getClubId());
+        roomRecord.setClubRoomModel(this.getClubRoomModel());
+
+        for(Long l :userScoresForGold.keySet()){
+            UserRecord userRecord = new UserRecord();
+            userRecord.setScore(userScoresForGold.get(l));
+            userRecord.setUserId(l);
+            UserBean userBean = RedisManager.getUserRedisService().getUserBean(l);
+            if (userBean != null) {
+                userRecord.setName(userBean.getUsername());
+            }
+            roomRecord.getRecords().add(userRecord);
+        }
+
+
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ROOM_RECORD);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord);
+
     }
 
     //房间列表

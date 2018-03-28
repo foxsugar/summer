@@ -427,7 +427,7 @@ public class GameInfoNZZ extends GameInfo {
 
 
         //其他人能做的操作
-        for (Map.Entry<Long, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
+        /*for (Map.Entry<Long, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
             OperateResp operateResp = new OperateResp();
 
             //其他玩家的处理 碰杠等 如果有加入等待列表(要等待这些玩家"过")
@@ -457,7 +457,21 @@ public class GameInfoNZZ extends GameInfo {
             //可能的操作
             ResponseVo OperateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
             MsgSender.sendMsg2Player(OperateVo, entry.getKey());
+        }*/
+
+        //其他人的操作 全是false 听牌后什么都不能操作
+        for (Map.Entry<Long, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
+            PlayerCardsInfoMj pci = entry.getValue();
+            pci.setCanBeGang(false);
+            pci.setCanBePeng(false);
+            pci.setCanBeHu(false);
+            pci.setCanBeTing(false);
+
+            OperateResp operateResp = new OperateResp();
+            ResponseVo OperateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
+            MsgSender.sendMsg2Player(OperateVo, entry.getKey());
         }
+
 
         resetCanBeOperate(chupaiPlayerCardsInfo);
 
