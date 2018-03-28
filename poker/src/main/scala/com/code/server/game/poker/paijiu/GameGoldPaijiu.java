@@ -24,7 +24,6 @@ import java.util.List;
  */
 public class GameGoldPaijiu extends GamePaijiuEndless{
 
-    RoomGoldPaijiu roomGoldPaijiu;
 
     /**
      * 比较输赢并设置分数
@@ -102,13 +101,15 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
         return result;
     }
 
+
+
     /**
      * 牌局结束,判断条件修改
      * 当庄家锅里值为0或者大于等于锅底10倍，有任意闲家金币小于10时游戏结束
      */
     @Override
     public void gameOver(){
-        compute();
+        computeForGold();
         sendResult();
         genRecordForGold();
         this.roomPaijiu().clearReadyStatus(true);
@@ -127,6 +128,7 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
         }
 
     }
+
 
     /**
      * 最终结算版
@@ -178,16 +180,11 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
     return 0;
     }
 
-    public RoomGoldPaijiu getRoomGoldPaijiu() {
-        return roomGoldPaijiu;
-    }
-
-    public void setRoomGoldPaijiu(RoomGoldPaijiu roomGoldPaijiu) {
-        this.roomGoldPaijiu = roomGoldPaijiu;
-    }
 
     public void addUserSocreForGold(long userId, double score) {
-        double s = this.roomGoldPaijiu.userScoresForGold.get(userId);
-        this.roomGoldPaijiu.userScoresForGold.put(userId, s + score);
+        double s = this.roomPaijiu().userScoresForGold.get(userId);
+        this.roomPaijiu().userScoresForGold.put(userId, s + score);
     }
+
+
 }
