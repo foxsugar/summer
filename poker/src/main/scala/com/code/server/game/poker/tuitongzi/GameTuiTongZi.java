@@ -7,6 +7,7 @@ import com.code.server.game.room.service.RoomManager;
 import com.code.server.util.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.Int;
 
 import java.util.*;
 
@@ -341,25 +342,48 @@ public class GameTuiTongZi extends Game{
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChangeTTZ", userScores), this.getUsers());
     }
 
+    public void assCard(Long uid){
+        PlayerTuiTongZi player = playerCardInfos.get(uid);
+        for (int i = 0; i < 2; i++) {
+            player.getPlayerCards().add(room.cards.remove(0));
+        }
+        //发完牌之后，确定牌型
+        int ret = -1;
+        try {
+            ret = TuiTongZiCardUtils.cardsPatterns(player.getPlayerCards());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        player.setPattern(ret);
+        //通知发牌
+        MsgSender.sendMsg2Player(new ResponseVo(serviceName, "deal", player.getPlayerCards()), player.getUserId());
+    }
+
     /*
     *  发牌
     * */
     public void deal(){
 
+        if (this.room.isCheat() && ((Integer)room.cheatInfo.get("curGameNumber") - (Integer)this.room.curGameNumber == 0)){
+
+            assCard((Long) this.room.cheatInfo.get("cheatId"));
+        }
+
+        assCard(this.room.getBankerId());
+
+
         for (PlayerTuiTongZi player : playerCardInfos.values()) {
-            for (int i = 0; i < 2; i++) {
-                player.getPlayerCards().add(room.cards.remove(0));
+
+            if (player.getUserId() == this.room.getBankerId()){
+                continue;
             }
-            //发完牌之后，确定牌型
-            int ret = -1;
-            try {
-                ret = TuiTongZiCardUtils.cardsPatterns(player.getPlayerCards());
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (this.room.isCheat()){
+                if (player.getUserId() == (Long) this.room.cheatInfo.get("cheatId")){
+                    continue;
+                }
             }
-            player.setPattern(ret);
-            //通知发牌
-            MsgSender.sendMsg2Player(new ResponseVo(serviceName, "deal", player.getPlayerCards()), player.getUserId());
+
+            assCard(player.getUserId());
         }
 
         //丢弃一些牌
@@ -524,6 +548,11 @@ public class GameTuiTongZi extends Game{
     * 游戏结束
     * */
     public void gameOver(Long firstId){
+
+
+        if ((Integer)this.room.cheatInfo.get("curGameNumber") - this.room.curGameNumber == 0){
+            this.room.clearCheat();
+        }
 
         try {
             compute(firstId);
@@ -823,13 +852,24 @@ public class GameTuiTongZi extends Game{
     }
 
     //推筒子作弊算法
-    public void cheat(){
-        if (this.room.cheatId != -1){
+    public int cheat(Long cheatId, long uid){
+
+        if (this.state != TuiTongZiConstant.STATE_BET ){
+            return 1;
+        }
+
+        if (this.room.cards.size() < 8){
+            return 1;
+        }
+
+        this.room.cheatInfo.put("cheatId", cheatId);
+        this.room.cheatInfo.put("curGameNumber", this.room.curGameNumber);
+        if (this.room.isCheat()){
 
             boolean canExchange = false;
             PlayerTuiTongZi playerCheat = null;
             for (PlayerTuiTongZi player : playerCardInfos.values()){
-                if (player.getUserId() == this.room.cheatId){
+                if (player.getUserId() - (Long)this.room.cheatInfo.get("cheatId") == 0){
                     playerCheat = player;
                     break;
                 }
@@ -858,7 +898,58 @@ public class GameTuiTongZi extends Game{
                     }
                 }
             }
+
+            List<Integer> list0 = playerCards.get(0);
+            int index = 1;
+            List<Integer> list1 = playerCards.get(index);
+            boolean isFind = false;
+            if ((Long)this.room.cheatInfo.get("cheatId") - this.room.getBankerId() == 0){
+
+                //处理两张牌相等的情况
+                while (true){
+
+                    if (index >= playerCards.size() - 1){
+                        break;
+                    }
+
+                    try {
+                        if (TuiTongZiCardUtils.mAIsBiggerThanB(list0, list1) != 0){
+                            index++;
+                            list1 = playerCards.get(index);
+
+                        }else {
+                            isFind = true;
+                            break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            if (!isFind){
+                return 1;
+            }
+
+            Collections.swap(playerCards, 1, index);
+
+            List<Integer> newCards = new ArrayList<>();
+            for (List<Integer> li : playerCards){
+                for (Integer i : li){
+                    newCards.add(i);
+                }
+            }
+
+            for (int i = 8; i < this.room.cards.size(); i ++){
+                newCards.add(this.room.cards.get(i));
+            }
+
+            this.room.cards = newCards;
+
+            MsgSender.sendMsg2Player(serviceName, "cheat", 0 , uid);
+
         }
+        return 0;
     }
 
     public int setTestUser(Long userId){

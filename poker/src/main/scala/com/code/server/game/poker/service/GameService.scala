@@ -92,6 +92,10 @@ object GameService {
     case "fiveStepClose" =>
       val zhu = params.path("zhu").asInt(0)
       game.fiveStepClose(userId, zhu);
+    case "cheat" =>
+      val cheatId = params.path("cheatId").asInt(0)
+      val uid = params.path("uid").asInt(0)
+      game.cheatMsg(cheatId, uid)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }
@@ -126,6 +130,11 @@ object GameService {
       game.exchange(userId, cardsPattern);
     case "setTestUser" =>
       game.setTestUser(userId)
+    case "cheat" =>
+//      game.cheat(userId)
+      val cheatId = params.path("cheatId").asLong()
+      val uid = params.path("uid").asLong()
+      game.cheat(cheatId, uid)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

@@ -1,5 +1,6 @@
 package com.code.server.game.poker.pullmice;
 import com.code.server.constant.response.*;
+import com.code.server.game.poker.tuitongzi.TuiTongZiConstant;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
@@ -71,6 +72,80 @@ public class GamePullMice extends Game{
         //先推送一下分数
         this.pushScoreChange();
         firstDeal();
+    }
+
+    public int cheatMsg(long cheatId, long uid){
+
+        if (this.state != PullMiceConstant.BET_FOURTH && this.state != PullMiceConstant.BET_WU_BU_FENG && this.state != PullMiceConstant.BET_THIRD){
+            return 1;
+        }
+
+        Map<Long, PlayerPullMice> fakePlayerInfos = cheat(cheatId);
+        if (fakePlayerInfos == null){
+            return 1;
+        }
+        this.room.cheatInfo.put("curGameNumber", this.room.curGameNumber + 1);
+        this.room.cheatInfo.put("cheatId", cheatId);
+        this.room.fakePlayerInfos = fakePlayerInfos;
+        MsgSender.sendMsg2Player(serviceName, "cheat", 0 , uid);
+
+        return 0;
+    }
+
+    //作弊算法
+    public Map<Long, PlayerPullMice> cheat(Long cheatId){
+
+        if (this.room.cards.size() < users.size() * 5){
+            System.out.println("剩余的牌不满足作弊条件");
+            return null;
+        }
+
+        //取出牌
+        List<List<Integer>> aList = new ArrayList<>();
+        for (int i = 0; i < users.size(); i++){
+            List<Integer> list = new ArrayList<>();
+            for (int j = 0; j < 5; j++){
+                list.add(this.room.cards.get(i * 5 + j));
+            }
+            aList.add(list);
+        }
+
+        List<PlayerPullMice> fakePlayerList = new ArrayList<>();
+        for (int i = 0; i < users.size(); i++){
+            Long uid = users.get(i);
+            PlayerPullMice playerPullMice = new PlayerPullMice();
+            playerPullMice.setUserId(uid);
+            playerPullMice.setCards(aList.get(i));
+            fakePlayerList.add(playerPullMice);
+        }
+
+        //对牌进行排序
+        List<PlayerPullMice> winnerList =  CardUtils.findWinnerList(fakePlayerList);
+        if (CardUtils.compare(winnerList.get(0), winnerList.get(1)) == 1){
+            System.out.println("剩余的牌不满足作弊条件");
+            return null;
+        }
+
+        //这是给作弊的人的牌
+        List<Integer> bList = winnerList.get(0).getCards();
+        aList.remove(bList);
+        Collections.shuffle(aList);
+
+        Map<Long, PlayerPullMice> fakePlayerInfos = new HashMap<>();
+        for (int i = 0; i < users.size(); i++){
+            Long uid = users.get(i);
+            PlayerPullMice playerPullMice = new PlayerPullMice();
+            playerPullMice.setUserId(uid);
+            if (uid - cheatId == 0){
+                playerPullMice.setCards(bList);
+            }else {
+                List<Integer> cList = aList.get(0);
+                playerPullMice.setCards(cList);
+                aList.remove(cList);
+            }
+            fakePlayerInfos.put(users.get(i), playerPullMice);
+        }
+        return fakePlayerInfos;
     }
 
     public void initPlayer(){
@@ -616,6 +691,14 @@ public class GamePullMice extends Game{
     }
 
     public void gameOver(){
+
+        //清理作弊相关的
+        if (this.room.isCheat()){
+            if (this.room.curGameNumber - (Integer) this.room.cheatInfo.get("curGameNumber") == 0){
+                this.room.clearCheatInfo();
+            }
+        }
+
         compute();
         sendResult();
         genRecord();
@@ -688,7 +771,18 @@ public class GamePullMice extends Game{
             }
             //一张一张的发牌
             isNoticeClientShuffle();
-            player.getCards().add(room.cards.remove(0));
+
+            //作弊
+            if (this.room.isCheat() && this.room.curGameNumber == (Integer) this.room.cheatInfo.get("curGameNumber")){
+                long cheatId = (long) this.room.cheatInfo.get("cheatId");
+                Map<Long, PlayerPullMice> map = this.room.fakePlayerInfos;
+                Integer card = map.get(player.getUserId()).getCards().get(player.getCards().size());
+                player.getCards().add(card);
+                room.cards.remove(card);
+            }else {
+                player.getCards().add(room.cards.remove(0));
+            }
+
             long point = CardUtils.calculateTotalPoint(player.getCards());
             player.setPoint(point);
             Map<Object, Object> res = new HashMap<>();
