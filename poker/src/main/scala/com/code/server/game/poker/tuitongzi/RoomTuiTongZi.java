@@ -17,9 +17,7 @@ import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
 import org.springframework.beans.BeanUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RoomTuiTongZi extends Room{
 
@@ -39,8 +37,8 @@ public class RoomTuiTongZi extends Room{
 
     protected long roomLastTime;
 
-    //作弊的那个人的id
-    protected long cheatId = -1;
+    //作弊的那个人info
+    protected Map<String, Object> cheatInfo = new HashMap<>();
 
     protected List<Integer> cards = new ArrayList<Integer>();
 
@@ -256,6 +254,18 @@ public class RoomTuiTongZi extends Room{
         this.isOpen = true;
 //        pushScoreChange();
         return 0;
+    }
+
+
+    public boolean isCheat(){
+        if (this.cheatInfo.size() == 0){
+            return false;
+        }
+        return true;
+    }
+
+    public void clearCheat(){
+        this.cheatInfo.clear();
     }
 
     @Override

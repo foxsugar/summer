@@ -371,7 +371,7 @@ public class CardUtils {
         return ret;
     }
 
-    public static PlayerPullMice findWinner(List<PlayerPullMice> list){
+    public static List<PlayerPullMice> findWinnerList(List<PlayerPullMice> list){
 
         for (int i = 0; i < list.size() - 1; i ++){
             for (int j = i + 1; j < list.size(); j++){
@@ -416,7 +416,11 @@ public class CardUtils {
                 }
             }
         }
-        return list.get(0);
+        return list;
+    }
+
+    public static PlayerPullMice findWinner(List<PlayerPullMice> list){
+        return findWinnerList(list).get(0);
     }
 
     public static long nextUserId(List<Long> users,Long currentId){

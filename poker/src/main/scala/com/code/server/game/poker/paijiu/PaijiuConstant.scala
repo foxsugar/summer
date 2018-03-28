@@ -17,6 +17,7 @@ trait PaijiuConstant {
 
   //杂8的名字  大于等于杂8输两道
   val MIX_8 = "mixeight"
+  val SKY_8 = "skyeight"
 
   val WIN:Int = 1
   val LOSE: Int = -1

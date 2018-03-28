@@ -18,6 +18,7 @@ import com.code.server.util.timer.TimerNode;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,9 @@ public class RoomPullMice extends Room {
     protected long cardsTotal;
 
     protected boolean canWuBuFeng;
+
+    protected Map<String, Object> cheatInfo = new HashMap<>();
+    Map<Long, PlayerPullMice> fakePlayerInfos = new HashMap<>();
 
     public long getPotBottom() {
         return potBottom;
@@ -191,6 +195,17 @@ public class RoomPullMice extends Room {
         this.isInGame = true;
         this.isOpen = true;
         return 0;
+    }
+
+    //是否可以作弊
+    protected boolean isCheat(){
+        return this.fakePlayerInfos.size() == 0 ? false : true;
+    }
+
+    //清除作弊信息
+    protected void clearCheatInfo(){
+        this.fakePlayerInfos.clear();
+        this.cheatInfo.clear();
     }
 
     @Override
