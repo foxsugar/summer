@@ -101,13 +101,15 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
         return result;
     }
 
+
+
     /**
      * 牌局结束,判断条件修改
      * 当庄家锅里值为0或者大于等于锅底10倍，有任意闲家金币小于10时游戏结束
      */
     @Override
     public void gameOver(){
-        compute();
+        computeForGold();
         sendResult();
         genRecordForGold();
         this.roomPaijiu().clearReadyStatus(true);
@@ -126,6 +128,7 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
         }
 
     }
+
 
     /**
      * 最终结算版
