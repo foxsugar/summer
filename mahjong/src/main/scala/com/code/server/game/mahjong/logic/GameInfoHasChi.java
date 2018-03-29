@@ -18,12 +18,6 @@ public class GameInfoHasChi extends GameInfo {
     private List<String> playCards = new ArrayList<>();
 
 
-
-
-
-
-
-
     /**
      * 荒庄的处理
      *
@@ -40,9 +34,6 @@ public class GameInfoHasChi extends GameInfo {
         room.clearReadyStatus();
 
     }
-
-
-
 
 
     private int chuPai_ting(long userId, String card) {
