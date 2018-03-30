@@ -25,6 +25,7 @@ import java.util.List;
 public class GameGoldPaijiu extends GamePaijiuEndless{
 
 
+
     /**
      * 比较输赢并设置分数
      */
@@ -171,6 +172,7 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
     public int catchBanker(Long userId) {
         this.roomPaijiu().setBankerId(userId);
         this.setBankerId(userId);
+        this.setCatchBankerTrue();
 
         //通知玩家
         MsgSender.sendMsg2Player("gamePaijiuService", "catchBanker", userId, userId);
