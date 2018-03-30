@@ -172,12 +172,14 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
         this.roomPaijiu().setBankerId(userId);
         this.setBankerId(userId);
 
-    //通知玩家
-    MsgSender.sendMsg2Player("gamePaijiuService", "chooseBanker", userId, users);
-    //庄家选分
-    bankerSetScoreStart();
+        //通知玩家
+        MsgSender.sendMsg2Player("gamePaijiuService", "catchBanker", userId, userId);
 
-    return 0;
+        /*//通知玩家
+        MsgSender.sendMsg2Player("gamePaijiuService", "chooseBanker", userId, users);
+        //庄家选分
+        bankerSetScoreStart();*/
+        return 0;
     }
 
 
@@ -186,5 +188,9 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
         this.roomPaijiu().userScoresForGold.put(userId, s + score);
     }
 
+    @Override
+    public void chooseBankerAfterFight() {
+        chooseBankerAfterFightForGold();
+    }
 
 }

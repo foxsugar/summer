@@ -112,7 +112,11 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 
 
 	public boolean isHasChi(String card){
-		return false;
+		if(!this.roomInfo.isCanChi()){
+			return false;
+		}
+		return super.isHasChi(card);
+//		return false;
 	}
 	//杠牌分数计算
 	@Override
