@@ -74,6 +74,9 @@ public class PlayerCardsInfoFactory {
             case "100":
                 playerCardsInfo = new PlayerCardsInfoHM();
                 break;
+            case "101":
+                playerCardsInfo = new PlayerCardsInfoKD_XZ();
+                break;
 
 
 
