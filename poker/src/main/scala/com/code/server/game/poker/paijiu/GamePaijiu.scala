@@ -577,6 +577,8 @@ class GamePaijiu extends Game with PaijiuConstant {
     0
   }
 
+
+
   /**
     * 庄家设置分
     *
@@ -637,6 +639,22 @@ class GamePaijiu extends Game with PaijiuConstant {
         this.bankerId = bid
       }
 
+      //通知玩家
+      val map = Map("userId" -> this.bankerId)
+      MsgSender.sendMsg2Player("gamePaijiuService", "chooseBanker", map.asJava, users)
+
+      //庄家选分
+      bankerSetScoreStart()
+    }
+  }
+
+  /**
+    * 抢庄后选定庄家
+    */
+  protected def chooseBankerAfterFightForGold(): Unit = {
+    //全选之后决定地主
+    val isAllChoose = playerCardInfos.count { case (uid, playerInfo) => !playerInfo.isHasFightForBanker } == 0
+    if (isAllChoose) {
       //通知玩家
       val map = Map("userId" -> this.bankerId)
       MsgSender.sendMsg2Player("gamePaijiuService", "chooseBanker", map.asJava, users)
