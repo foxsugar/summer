@@ -13,6 +13,9 @@ public class PlayerCardInfoDouDiZhuJixian extends PlayerCardInfoDouDiZhuLinfen {
 
     //检测出牌是否合法
     public boolean checkPlayCard(CardStruct lastcardStruct, CardStruct currentCardStruct, int lasttype) {
+        if(!cards.containsAll(currentCardStruct.cards)){
+            return false;
+        }
         //花牌不能单出
         if (currentCardStruct.getCards().size() == 1 && currentCardStruct.getCards().get(0) == 55) {
             return false;

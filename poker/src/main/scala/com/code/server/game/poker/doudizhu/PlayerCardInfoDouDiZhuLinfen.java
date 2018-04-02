@@ -47,6 +47,9 @@ public class PlayerCardInfoDouDiZhuLinfen extends PlayerCardInfoDouDiZhu {
 
     //检测出牌是否合法
     public boolean checkPlayCard(CardStruct lastcardStruct, CardStruct currentCardStruct, int lasttype) {
+        if(!cards.containsAll(currentCardStruct.cards)){
+            return false;
+        }
         if (lastcardStruct == null || lastcardStruct.getUserId() == 0) {
             return true;
         }
