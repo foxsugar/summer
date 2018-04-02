@@ -22,9 +22,9 @@ public class GameAgent extends BaseEntity {
 
     private double rebate;
 
-    private int partner;
+    private int partner;//合伙人id
 
-    private long parentId;
+    private long parentId;//上级
 
     @Type(type = "json")
     @Lob

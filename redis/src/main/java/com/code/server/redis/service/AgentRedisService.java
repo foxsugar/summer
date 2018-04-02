@@ -69,8 +69,24 @@ public class AgentRedisService implements IAgentRedis, IConstant {
     }
 
 
+
     private String getAgentBeanKey(long agentId) {
         return String.valueOf(agentId);
     }
+
+    public void setAgent2Redis(AgentBean agentBean){
+        //bean
+        BoundHashOperations<String, String, String> agent_bean = redisTemplate.boundHashOps(AGENTBEAN);
+        agent_bean.put(String.valueOf(agentBean.getId()), JsonUtil.toJson(agentBean));
+
+        //rebate
+        BoundHashOperations<String,String,Double> agent_rebate = redisTemplate.boundHashOps(AGENTBEAN);
+        agent_rebate.put(""+agentBean.getId(), agentBean.getRebate());
+    }
+    public long getAgentNum(){
+        BoundHashOperations<String,String,Double> agent_rebate = redisTemplate.boundHashOps(AGENTBEAN);
+        return agent_rebate.size();
+    }
+
 
 }

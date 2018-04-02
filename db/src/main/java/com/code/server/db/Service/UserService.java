@@ -74,4 +74,14 @@ public class UserService {
             }
         }
     }
+
+
+    public IUserDao getUserDao() {
+        return userDao;
+    }
+
+    public UserService setUserDao(IUserDao userDao) {
+        this.userDao = userDao;
+        return this;
+    }
 }
