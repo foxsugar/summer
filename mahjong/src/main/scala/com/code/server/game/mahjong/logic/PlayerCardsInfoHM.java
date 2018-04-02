@@ -17,7 +17,7 @@ public class PlayerCardsInfoHM extends PlayerCardsInfoMj {
         super.init(cards);
         specialHuScore.put(hu_七小对,2);
         //specialHuScore.put(hu_一条龙,2);
-        specialHuScore.put(hu_清一色,2);
+        //specialHuScore.put(hu_清一色,2);
 
         //specialHuScore.put(hu_清龙,4);
         specialHuScore.put(hu_清七对,4);

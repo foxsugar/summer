@@ -270,6 +270,8 @@ public class RoomInfo extends Room {
                 return new GameInfoDonghu();
             case "NZZ":
                 return new GameInfoNZZ().setHasJieGangHu(true);
+            case "HELE":
+                return new GameInfoHasChi().setHasJieGangHu(true);
             case "HM":
                 return new GameInfoHM().setHasJieGangHu(true);
             case "BENGBU":
@@ -296,10 +298,12 @@ public class RoomInfo extends Room {
             this.gameType = "JCSS";
         } else if(this.gameType.equals("CHUANQI")){
             this.gameType = "LQ";
-        } else if(this.gameType.equals("HELE")){
-            this.gameType = "LQ";
         }
         GameInfo gameInfo = getGameInfoInstance();
+
+        if(this.gameType.equals("HELE")){
+            this.gameType = "LQ";
+        }
 
         if (!isOpen && isCreaterJoin) {
             spendMoney();

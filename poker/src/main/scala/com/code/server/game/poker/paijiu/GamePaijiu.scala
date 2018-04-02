@@ -34,8 +34,12 @@ class GamePaijiu extends Game with PaijiuConstant {
   //状态
   var state: Int = STATE_START
 
-  //  var room: RoomPaijiu = _
+  var catchBanker : Boolean = false;
 
+  //  var room: RoomPaijiu = _
+  def setCatchBankerTrue(): Unit ={
+    catchBanker = true;
+  }
 
   /**
     * 开始游戏
@@ -337,6 +341,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     MsgSender.sendMsg2Player("gamePaijiuService", "gameResult", gameResult, this.users)
   }
 
+
   /**
     * 最终结算版
     */
@@ -577,6 +582,8 @@ class GamePaijiu extends Game with PaijiuConstant {
     0
   }
 
+
+
   /**
     * 庄家设置分
     *
@@ -646,6 +653,35 @@ class GamePaijiu extends Game with PaijiuConstant {
     }
   }
 
+  /**
+    * 抢庄后选定庄家
+    */
+  protected def chooseBankerAfterFightForGold(): Unit = {
+    //全选之后决定地主
+    val isAllChoose = playerCardInfos.count { case (uid, playerInfo) => !playerInfo.isHasFightForBanker } == 0
+    if (isAllChoose) {
+      val wantTobeBankerList = playerCardInfos.filter { case (uid, playerInfo) => playerInfo.isFightForBanker }.toList
+      //没人选择当庄家 则 创建者当庄家
+      if (wantTobeBankerList.isEmpty) {
+        roomPaijiu.setBankerId(roomPaijiu.getCreateUser)
+        this.bankerId = roomPaijiu.getCreateUser
+      } else {
+        //随机选庄家
+        if(!catchBanker){
+          val bid = new Random().shuffle(wantTobeBankerList).head._1
+          roomPaijiu.setBankerId(bid)
+          this.bankerId = bid
+        }
+      }
+      //通知玩家
+      val map = Map("userId" -> this.bankerId)
+      MsgSender.sendMsg2Player("gamePaijiuService", "chooseBanker", map.asJava, users)
+
+      //庄家选分
+      bankerSetScoreStart()
+    }
+  }
+
 
   override def toVo(watchUser: scala.Long): IfaceGameVo = {
     val gamePaijiuVo = new GamePaijiuVo
@@ -662,6 +698,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     gamePaijiuVo
 
   }
+
 
 }
 
