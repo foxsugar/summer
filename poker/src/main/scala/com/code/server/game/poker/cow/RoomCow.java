@@ -215,6 +215,7 @@ public class RoomCow  extends Room {
         }
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         this.canStartUserId = users.get(0);
+        this.bankerId =  users.get(0);
         addUser2RoomRedis(userId);
     }
 
