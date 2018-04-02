@@ -56,7 +56,10 @@ public class GamePullMice extends Game{
 
     public void startGame(List<Long> users, Room room){
         this.room = (RoomPullMice) room;
-        this.users = users;
+
+//        this.users = users;
+        this.users.clear();
+        this.users.addAll(users);
 
         Map res = new HashMap();
         this.diZhu = 1;
@@ -95,7 +98,7 @@ public class GamePullMice extends Game{
     //作弊算法
     public Map<Long, PlayerPullMice> cheat(Long cheatId){
 
-        if (this.room.cards.size() < users.size() * 5){
+        if (this.room.cards.size() < 5 * 5){
             System.out.println("剩余的牌不满足作弊条件");
             return null;
         }
@@ -673,10 +676,28 @@ public class GamePullMice extends Game{
         for (PlayerPullMice p : playerCardInfos.values()){
             list.add((PlayerPullMiceVo) p.toVo());
         }
-        MsgSender.sendMsg2Player(serviceName, "gameResult", list, this.pxUsers);
+
+        //观战者的id
+        List<Long> witnessUsers = new ArrayList<>();
+        for (int i = 0; i < this.room.users.size(); i++){
+
+            Long uid = this.room.users.get(i);
+            if (!this.users.contains(uid)){
+                witnessUsers.add(uid);
+            }
+        }
+
+
+        List<Long> aList = new ArrayList<>();
+        aList.addAll(this.pxUsers);
+        aList.addAll(witnessUsers);
+
+
+        MsgSender.sendMsg2Player(serviceName, "gameResult", list, aList);
 
         //推送一下分数
         this.pushScoreChange();
+
     }
 
     //生成战绩
@@ -706,6 +727,7 @@ public class GamePullMice extends Game{
         if (this.room.curGameNumber == this.room.maxGameCount){
             sendFinalResult();
         }else {
+            room.setPersonNumber(this.room.users.size());
             this.room.clearReadyStatus(true);
         }
 
