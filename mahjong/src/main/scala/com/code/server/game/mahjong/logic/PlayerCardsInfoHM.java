@@ -22,6 +22,7 @@ public class PlayerCardsInfoHM extends PlayerCardsInfoMj {
         //specialHuScore.put(hu_清龙,4);
         specialHuScore.put(hu_清七对,4);
         specialHuScore.put(hu_豪华七小对,4);
+        specialHuScore.put(hu_双豪七小对,8);
 
         //specialHuScore.put(hu_十三幺,8);
     }
