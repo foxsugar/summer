@@ -182,6 +182,33 @@ public class GamePullMice extends Game{
 //        room.cards.add(18);
 //        room.cards.add(20);
 
+//        //大王
+//        room.cards.add(0);
+//        //A
+//        room.cards.add(2);
+//
+//        room.cards.add(6);
+//
+//        //A
+//        room.cards.add(50);
+//
+//        room.cards.add(7);
+//
+////A
+//        room.cards.add(46);
+//
+//        room.cards.add(8);
+//
+//        //A
+//        room.cards.add(42);
+//
+//
+//        room.cards.add(9);
+//
+//        //A
+//        room.cards.add(38);
+
+
 
 //        room.cards.add(2);
 //        room.cards.add(4);
