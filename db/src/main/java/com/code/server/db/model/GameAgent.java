@@ -22,9 +22,11 @@ public class GameAgent extends BaseEntity {
 
     private double rebate;
 
-    private int partner;//合伙人id
+    private long partnerId;//合伙人id
 
     private long parentId;//上级
+
+    private int isPartner;
 
     @Type(type = "json")
     @Lob
@@ -67,12 +69,21 @@ public class GameAgent extends BaseEntity {
         return this;
     }
 
-    public int getPartner() {
-        return partner;
+    public long getPartnerId() {
+        return partnerId;
     }
 
-    public GameAgent setPartner(int partner) {
-        this.partner = partner;
+    public GameAgent setPartnerId(long partnerId) {
+        this.partnerId = partnerId;
+        return this;
+    }
+
+    public int getIsPartner() {
+        return isPartner;
+    }
+
+    public GameAgent setIsPartner(int isPartner) {
+        this.isPartner = isPartner;
         return this;
     }
 }

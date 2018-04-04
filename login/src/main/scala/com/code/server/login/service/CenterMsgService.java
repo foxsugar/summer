@@ -31,6 +31,7 @@ public class CenterMsgService implements IkafkaMsgId {
     private static UserRecordService userRecordService = SpringUtil.getBean(UserRecordService.class);
     private static GameRecordService gameRecordService = SpringUtil.getBean(GameRecordService.class);
     private static ClubRecordService clubRecordService = SpringUtil.getBean(ClubRecordService.class);
+    private static AgentUserService agentUserService = SpringUtil.getBean(AgentUserService.class);
 
     private static ReplayService replayService = SpringUtil.getBean(ReplayService.class);
 
@@ -186,47 +187,60 @@ public class CenterMsgService implements IkafkaMsgId {
     private static void guessAddGold(String msg) {
         if (msg != null) {
             JsonNode jsonNode = JsonUtil.readTree(msg);
-            long userId = jsonNode.path("userId").asLong();
+            int userId = jsonNode.path("userId").asInt();
             double gold = jsonNode.path("gold").asDouble();
-            UserBean own = RedisManager.getUserRedisService().getUserBean(userId);
-            int bindUser1 = own.getReferee();
-            //第一级代理
-            if (bindUser1 != 0) {
-                UserBean userBean1 = loadUserBean(bindUser1);
-                if (userBean1.getId() == 1) {//是总代理
-                    RedisManager.getUserRedisService().addUserGold(bindUser1, gold * 3);
-                } else {
-                    RedisManager.getUserRedisService().addUserGold(bindUser1, gold);
+//            UserBean own = RedisManager.getUserRedisService().getUserBean(userId);
+//            int bindUser1 = own.getReferee();
 
-                    //第二级代理
-                    int bindUser2 = userBean1.getReferee();
-                    if (bindUser2 != 0) {
-                        UserBean userBean2 = loadUserBean(bindUser2);
-                        if (userBean2.getId() == 1) {//是总代理
-                            RedisManager.getUserRedisService().addUserGold(bindUser2, gold * 2);
-                        } else {
-                            RedisManager.getUserRedisService().addUserGold(bindUser2, gold);
 
-                            //第三级代理
-                            int bindUser3 = userBean2.getReferee();
+            double addGold = gold * 4;
 
-                            if (bindUser3 != 0) {
-                                UserBean userBean3 = loadUserBean(bindUser3);
-                                if (userBean3.getId() == 1) {//是总代理
-                                    RedisManager.getUserRedisService().addUserGold(bindUser3, gold * 1);
-                                } else {
-                                    RedisManager.getUserRedisService().addUserGold(bindUser3, gold);
-
-                                }
-                            }
-
-                        }
-                    }
-                }
-                //给总代理2份
-                RedisManager.getUserRedisService().addUserGold(1, gold * 2);
-
+            AgentUser agentUser = agentUserService.getAgentUserDao().findOne(userId);
+            if (agentUser != null) {
+                agentUser.setGold(agentUser.getGold() + addGold);
+                agentUserService.getAgentUserDao().save(agentUser);
             }
+
+
+
+
+//            //第一级代理
+//            if (bindUser1 != 0) {
+//                UserBean userBean1 = loadUserBean(bindUser1);
+//                if (userBean1.getId() == 1) {//是总代理
+//                    RedisManager.getUserRedisService().addUserGold(bindUser1, gold * 3);
+//                } else {
+//                    RedisManager.getUserRedisService().addUserGold(bindUser1, gold);
+//
+//                    //第二级代理
+//                    int bindUser2 = userBean1.getReferee();
+//                    if (bindUser2 != 0) {
+//                        UserBean userBean2 = loadUserBean(bindUser2);
+//                        if (userBean2.getId() == 1) {//是总代理
+//                            RedisManager.getUserRedisService().addUserGold(bindUser2, gold * 2);
+//                        } else {
+//                            RedisManager.getUserRedisService().addUserGold(bindUser2, gold);
+//
+//                            //第三级代理
+//                            int bindUser3 = userBean2.getReferee();
+//
+//                            if (bindUser3 != 0) {
+//                                UserBean userBean3 = loadUserBean(bindUser3);
+//                                if (userBean3.getId() == 1) {//是总代理
+//                                    RedisManager.getUserRedisService().addUserGold(bindUser3, gold * 1);
+//                                } else {
+//                                    RedisManager.getUserRedisService().addUserGold(bindUser3, gold);
+//
+//                                }
+//                            }
+//
+//                        }
+//                    }
+//                }
+//                //给总代理2份
+//                RedisManager.getUserRedisService().addUserGold(1, gold * 2);
+//
+//            }
         }
     }
 

@@ -9,6 +9,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * Created by sunxianping on 2018/3/14.
  */
@@ -24,16 +27,7 @@ public class AgentService {
     @Autowired
     private GameAgentService gameAgentService;
 
-    public void userUp2Agent(long userId){
 
-        AgentBean agentBean = agentRedisService.getAgentBean(userId);
-        //不是代理
-        if(agentBean == null){
-
-        }
-
-
-    }
 
     public void user2Partner(long userId){
 
@@ -55,10 +49,28 @@ public class AgentService {
         }
     }
 
-    private AgentBean gameAgent2AgnetBean(GameAgent gameAgent) {
+    public static AgentBean gameAgent2AgnetBean(GameAgent gameAgent) {
         AgentBean agentBean = new AgentBean();
         BeanUtils.copyProperties(gameAgent, agentBean);
         return agentBean;
+    }
+
+    /**
+     * 找到所有下级代理
+     * @param agentBean
+     * @param agents
+     */
+    public void findAllClildAgent(AgentBean agentBean,Set<AgentBean> agents){
+        List<Long> ids = agentBean.getChildList();
+        if (ids.size() > 0) {
+            ids.forEach(id->{
+                AgentBean clild = agentRedisService.getAgentBean(id);
+                agents.add(clild);
+                if (clild.getChildList().size() > 0) {
+                    findAllClildAgent(clild, agents);
+                }
+            });
+        }
     }
 
 }
