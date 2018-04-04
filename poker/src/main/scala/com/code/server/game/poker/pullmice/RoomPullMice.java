@@ -4,6 +4,7 @@ import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.IfaceRoomVo;
+import com.code.server.constant.response.NoticeReady;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
@@ -33,6 +34,11 @@ public class RoomPullMice extends Room {
     protected long cardsTotal;
 
     protected boolean canWuBuFeng;
+
+    private static final int PERSONNUM  = 5;
+
+    //上一局房间内人数
+    protected long lastPersonNum;
 
     protected Map<String, Object> cheatInfo = new HashMap<>();
     Map<Long, PlayerPullMice> fakePlayerInfos = new HashMap<>();
@@ -98,7 +104,7 @@ public class RoomPullMice extends Room {
     public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, boolean hasWubuFeng) throws DataNotFoundException {
 
         RoomPullMice room = new RoomPullMice();
-        room.personNumber = personNumber;
+        room.personNumber = PERSONNUM;
         room.roomId = getRoomIdStr(genRoomId());
         room.createUser = userId;
         room.gameType = gameType;
@@ -162,8 +168,9 @@ public class RoomPullMice extends Room {
         }
 
         if (readyCount < 2) return ErrorCode.READY_NUM_ERROR;
-
+        lastPersonNum = userScores.size();
         this.setPersonNumber(userScores.size());
+//        this.setPersonNumber(PERSONNUM);
         //没准备的人
         ArrayList<Long> removeList = new ArrayList<>();
 
@@ -206,6 +213,83 @@ public class RoomPullMice extends Room {
     protected void clearCheatInfo(){
         this.fakePlayerInfos.clear();
         this.cheatInfo.clear();
+    }
+
+    @Override
+    public int joinRoom(long userId, boolean isJoin) {
+
+
+        if (isClubRoom() && userId == 0) {
+            return 0;
+        }
+        if (userId == 0) {
+            return ErrorCode.JOIN_ROOM_USERID_IS_0;
+        }
+        if (this.users.contains(userId)) {
+            return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;
+        }
+        if (this.users.size() >= PERSONNUM) {
+            return ErrorCode.CANNOT_JOIN_ROOM_IS_FULL;
+
+        }
+        if (RedisManager.getUserRedisService().getRoomId(userId) != null) {
+            return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;
+        }
+        if (!isCanJoinCheckMoney(userId)) {
+            return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
+        }
+
+        //最后一局不能加入房间
+        if (this.gameNumber == this.curGameNumber){
+            return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
+        }
+
+        if (isJoin) {
+            roomAddUser(userId);
+            //加进玩家-房间映射表
+            noticeJoinRoom(userId);
+        }
+
+        return 0;
+    }
+
+    public int getReady(long userId) {
+        if (!this.users.contains(userId)) {
+            return ErrorCode.CANNOT_FIND_THIS_USER;
+        }
+        if (isInGame) {
+            return ErrorCode.CANNOT_FIND_THIS_USER;
+        }
+
+        this.userStatus.put(userId, STATUS_READY);
+
+        int readyNum = 0;
+        for (Map.Entry<Long, Integer> entry : this.userStatus.entrySet()) {
+            if (entry.getValue() == STATUS_READY) {
+                readyNum += 1;
+            }
+        }
+
+        //通知客户端谁是否准备
+        Map<String, Integer> userStatus = new HashMap<>();
+        for (Long i : this.userStatus.keySet()) {
+            userStatus.put(i + "", this.userStatus.get(i));
+        }
+        NoticeReady noticeReady = new NoticeReady();
+        noticeReady.setUserStatus(userStatus);
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "noticeReady", noticeReady), this.users);
+
+        //开始游戏
+
+        if (this.curGameNumber == 1){
+            if (readyNum >= PERSONNUM) {
+                startGame();
+            }
+        }else if (readyNum >= personNumber) {
+            startGame();
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "getReady", 0), userId);
+        return 0;
     }
 
     @Override

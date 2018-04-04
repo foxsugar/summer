@@ -369,21 +369,25 @@ public class GameTuiTongZi extends Game{
     public void deal(){
 
         if (this.room.isCheat() && ((Integer)room.cheatInfo.get("curGameNumber") - (Integer)this.room.curGameNumber == 0)){
-
             assCard((Long) this.room.cheatInfo.get("cheatId"));
         }
 
-        assCard(this.room.getBankerId());
-
+        if (this.room.isCheat()){
+            if ((long)this.room.cheatInfo.get("cheatId") - this.room.getBankerId() != 0){
+                assCard(this.room.getBankerId());
+            }
+        }
 
         for (PlayerTuiTongZi player : playerCardInfos.values()) {
 
-            if (player.getUserId() == this.room.getBankerId()){
-                continue;
-            }
             if (this.room.isCheat()){
-                if (player.getUserId() == (Long) this.room.cheatInfo.get("cheatId")){
+                if (player.getUserId() == this.room.getBankerId()){
                     continue;
+                }
+                if (this.room.isCheat()){
+                    if (player.getUserId() - (Long) this.room.cheatInfo.get("cheatId") == 0){
+                        continue;
+                    }
                 }
             }
 
@@ -554,9 +558,16 @@ public class GameTuiTongZi extends Game{
     public void gameOver(Long firstId){
 
 
-        if ((Integer)this.room.cheatInfo.get("curGameNumber") - this.room.curGameNumber == 0){
-            this.room.clearCheat();
+        if (this.room.isCheat()){
+            if ((Integer)this.room.cheatInfo.get("curGameNumber") - this.room.curGameNumber == 0){
+                this.room.clearCheat();
+
+                logger.info("释放 作弊 {}", this.room.cheatInfo);
+            }else {
+                logger.info("下一把 作弊 {}", this.room.cheatInfo);
+            }
         }
+
 
         try {
             compute(firstId);
@@ -858,7 +869,20 @@ public class GameTuiTongZi extends Game{
     //推筒子作弊算法
     public int cheat(Long cheatId, long uid){
 
-        if (this.state != TuiTongZiConstant.STATE_BET ){
+        if (this.state != TuiTongZiConstant.STATE_OPEN ){
+            return 1;
+        }
+
+        boolean find = true;
+
+        for (PlayerTuiTongZi p : this.playerCardInfos.values()){
+            if (p.getPlayerCards().size() != 2){
+                find = false;
+                break;
+            }
+        }
+
+        if (find == false){
             return 1;
         }
 
@@ -867,7 +891,7 @@ public class GameTuiTongZi extends Game{
         }
 
         this.room.cheatInfo.put("cheatId", cheatId);
-        this.room.cheatInfo.put("curGameNumber", this.room.curGameNumber);
+        this.room.cheatInfo.put("curGameNumber", this.room.curGameNumber + 1);
         if (this.room.isCheat()){
 
             boolean canExchange = false;
@@ -938,6 +962,18 @@ public class GameTuiTongZi extends Game{
             Collections.swap(playerCards, 1, index);
 
             List<Integer> newCards = new ArrayList<>();
+
+            list0 = playerCards.get(0);
+            list1 = playerCards.get(1);
+
+            playerCards.remove(list0);
+            playerCards.remove(list1);
+
+            newCards.addAll(list0);
+            newCards.addAll(list1);
+
+            Collections.shuffle(playerCards);
+
             for (List<Integer> li : playerCards){
                 for (Integer i : li){
                     newCards.add(i);

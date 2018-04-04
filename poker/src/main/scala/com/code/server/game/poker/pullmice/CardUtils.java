@@ -287,6 +287,25 @@ public class CardUtils {
         return count > 2;
     }
 
+    public static boolean is12345(List<Integer> list){
+        List<Integer> aList = new ArrayList<>();
+        aList.addAll(list);
+        Collections.sort(aList);
+        boolean is12345 = true;
+        if ((aList.get(0) - 2) / 4 == 0){
+            Integer last = aList.get(1);
+            for (int i = 2; i < aList.size(); i++){
+                Integer current = aList.get(i);
+                if ( ( current - 2) / 4 - (last - 2) / 4 != 1){
+                    is12345 = false;
+                    break;
+                }
+                last = current;
+            }
+        }
+        return is12345;
+    }
+
     //是不是顺子
     public static boolean isShunZi(List<Integer> list){
 
@@ -296,6 +315,10 @@ public class CardUtils {
 
         if (aList.get(0) == 0 || aList.get(0) == 1 || aList.get(1) == 0 || aList.get(1) == 1){
             return false;
+        }
+
+        if (is12345(aList)){
+            return true;
         }
 
         Integer last = aList.get(0);
@@ -320,6 +343,17 @@ public class CardUtils {
 
         Collections.sort(aList);
         Collections.sort(bList);
+
+        boolean ret1 = is12345(aList);
+        boolean ret2 = is12345(bList);
+
+        if (ret1 == true && ret2 == false){
+            return 2;
+        }else if(ret1 == false && ret2 == true){
+            return 0;
+        }else if(ret1 && ret2){
+            return 1;
+        }
 
         if ((aList.get(0) - 2) / 4 > (bList.get(0) - 2) / 4){
             return 0;
@@ -359,11 +393,22 @@ public class CardUtils {
         playerPullMice1.setPoint(calculateTotalPoint(playerPullMice1.getCards()));
         playerPullMice2.setPoint(calculateTotalPoint(playerPullMice2.getCards()));
 
-        if ((!(isShunZi(playerPullMice1.getCards()))) && isShunZi(playerPullMice2.getCards())){
+        boolean ret1 = isShunZi(playerPullMice1.getCards());
+        boolean ret2 = isShunZi(playerPullMice2.getCards());
+
+//        if ((ret1 == false && ret2 == true){
+//            return 2;
+//        }else if(isShunZi(playerPullMice1.getCards()) && (!isShunZi(playerPullMice2.getCards()))){
+//            return 0;
+//        }else if ((isShunZi(playerPullMice1.getCards())) && isShunZi(playerPullMice2.getCards())){
+//            return shunAisBiggerTanShunB(playerPullMice1, playerPullMice2);
+//        }
+
+        if (ret1 == false && ret2 == true){
             return 2;
-        }else if(isShunZi(playerPullMice1.getCards()) && (!isShunZi(playerPullMice2.getCards()))){
+        }else if(ret1 == true && ret2 == false){
             return 0;
-        }else if ((isShunZi(playerPullMice1.getCards())) && isShunZi(playerPullMice2.getCards())){
+        }else if(ret1 && ret2){
             return shunAisBiggerTanShunB(playerPullMice1, playerPullMice2);
         }
 
@@ -400,7 +445,7 @@ public class CardUtils {
                         PlayerPullMice pJ = list.get(j);
 
                         if (pI.isEscape() && pJ.isEscape()){
-                            if (list.get(i).getPxId() < list.get(j).getPxId()){
+                            if (list.get(i).getPxId() > list.get(j).getPxId()){
                                 Collections.swap( list, i, j);
                             }
                         }else{
@@ -410,7 +455,7 @@ public class CardUtils {
                             }
                         }
 
-                    }else if (list.get(i).getPxId() < list.get(j).getPxId()){
+                    }else if (list.get(i).getPxId() > list.get(j).getPxId()){
                         Collections.swap( list, i, j);
                     }
                 }

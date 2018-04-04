@@ -72,7 +72,7 @@ public class AgentAction {
 
 
     @RequestMapping("/test")
-    public AgentResponse test(String roomId) {
+    public AgentResponse testAction(String roomId) {
         List<Long> users = new ArrayList<>();
 //        users.add(1L);
         users.add(2L);
@@ -141,8 +141,9 @@ public class AgentAction {
         return agentResponse;
     }
 
-
-
+    public void errorCallback(int err){
+        System.out.println("错误，失败原因是..." + err);
+    }
 
 
 }
