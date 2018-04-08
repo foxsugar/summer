@@ -282,6 +282,11 @@ public class CardUtils extends BaseCardUtils{
         Integer center = aList.get(2);
         int count = 0;
         for (int i = 0; i < aList.size(); i++){
+
+            if (aList.get(i) - 2  < 0){
+                continue;
+            }
+
             if ((center - 2) / 4 == (aList.get(i) - 2) / 4){
                 count++;
             }
