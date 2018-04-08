@@ -1,9 +1,12 @@
 package com.code.server.login.service;
 
 import com.code.server.constant.db.OnlineInfo;
+import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.UserBean;
+import com.code.server.db.Service.GameAgentService;
 import com.code.server.db.Service.OnlineRecordService;
 import com.code.server.db.Service.UserService;
+import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.OnlineRecord;
 import com.code.server.db.model.User;
 import com.code.server.redis.service.RedisManager;
@@ -36,6 +39,8 @@ public class CenterService {
         //保存玩家
         GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(),1000L*60*5,true, CenterService::saveUser));
 
+        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(),1000L*60*5,true, CenterService::saveAgent));
+
         //在线记录
         GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(),1000L*60*10,true, CenterService::onlineRecord));
 
@@ -66,6 +71,26 @@ public class CenterService {
         ClubManager.getInstance().saveAll();
     }
 
+
+    private static void saveAgent() {
+        Set<String> agents = RedisManager.getAgentRedisService().getSaveAgents();
+        if (agents != null) {
+            GameAgentService gameAgentService = SpringUtil.getBean(GameAgentService.class);
+            Set<String> removeList = new HashSet<>();
+            agents.forEach(agent->{
+                long agentId = Long.valueOf(agent);
+                AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+                GameAgent gameAgent = AgentService.agentBean2GameAgent(agentBean);
+                gameAgentService.getGameAgentDao().save(gameAgent);
+                removeList.add(agent);
+
+            });
+
+            if (removeList.size() > 0) {
+                RedisManager.getAgentRedisService().removeSaveAgent(removeList);
+            }
+        }
+    }
 
     private static void onlineRecord(){
         String date = LocalDate.now().toString();

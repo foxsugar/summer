@@ -133,7 +133,7 @@ public class AgentAction {
 
             //保存到数据库
             gameAgentService.getGameAgentDao().save(gameAgent);
-            agentBean = AgentService.gameAgent2AgnetBean(gameAgent);
+            agentBean = AgentService.gameAgent2AgentBean(gameAgent);
             //保存的reids
             agentRedisService.setAgent2Redis(agentBean);
 

@@ -44,12 +44,19 @@ public class AgentService {
         userService.getUserDao().count();
         if (agentRedisService.getAgentNum() != 0) {
             gameAgentService.getGameAgentDao().findAll().forEach(gameAgent -> {
-                agentRedisService.setAgentBean(gameAgent2AgnetBean(gameAgent));
+                agentRedisService.setAgentBean(gameAgent2AgentBean(gameAgent));
             });
         }
     }
 
-    public static AgentBean gameAgent2AgnetBean(GameAgent gameAgent) {
+
+    public static GameAgent agentBean2GameAgent(AgentBean agentBean) {
+        GameAgent gameAgent = new GameAgent();
+        BeanUtils.copyProperties(agentBean, gameAgent);
+        return gameAgent;
+    }
+
+    public static AgentBean gameAgent2AgentBean(GameAgent gameAgent) {
         AgentBean agentBean = new AgentBean();
         BeanUtils.copyProperties(gameAgent, agentBean);
         return agentBean;

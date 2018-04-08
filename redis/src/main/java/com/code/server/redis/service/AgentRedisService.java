@@ -11,6 +11,8 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 /**
  * Created by sunxianping on 2018/3/13.
  */
@@ -68,6 +70,15 @@ public class AgentRedisService implements IAgentRedis, IConstant {
     }
 
 
+    public void removeSaveAgent(Object... agentId) {
+        BoundSetOperations<String,String> save_users = redisTemplate.boundSetOps(SAVE_AGENT);
+        save_users.remove(agentId);
+    }
+
+
+    public Set<String> getSaveAgents() {
+        return redisTemplate.boundSetOps(SAVE_AGENT).members();
+    }
 
     private String getAgentBeanKey(long agentId) {
         return String.valueOf(agentId);
