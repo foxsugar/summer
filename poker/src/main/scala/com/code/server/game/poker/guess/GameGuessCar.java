@@ -61,7 +61,7 @@ public class GameGuessCar extends Game{
             if(uid!=room.getBankerId()){
                 PlayerCardInfoGuessCar playerCardInfo = getGameTypePlayerCardInfo();
                 playerCardInfo.userId = uid;
-                playerCardInfo.setFinalScore(RedisManager.getUserRedisService().getUserMoney(uid));
+                playerCardInfo.setFinalScore(RedisManager.getUserRedisService().getUserGold(uid));
                 playerCardInfos.put(uid, playerCardInfo);
             }
         }
@@ -222,13 +222,13 @@ public class GameGuessCar extends Game{
             if(RED==this.color){
                 playerCardInfo.setFinalScore(playerCardInfo.getFinalScore()+playerCardInfo.getRedScore()*0.95-playerCardInfo.getGreenScore());
                 bankerCardInfos.setScore(bankerCardInfos.getScore()+playerCardInfo.getGreenScore()-playerCardInfo.getRedScore());
-                RedisManager.getUserRedisService().addUserMoney(playerCardInfo.getUserId(),(playerCardInfo.getRedScore()*0.95-playerCardInfo.getGreenScore()));
+                RedisManager.getUserRedisService().addUserGold(playerCardInfo.getUserId(),(playerCardInfo.getRedScore()*0.95-playerCardInfo.getGreenScore()));
                 //RedisManager.getUserRedisService().addUserMoney(bankerCardInfos.getUserId(),(playerCardInfo.getGreenScore()-playerCardInfo.getRedScore()));
                 this.room.bankerScore +=(playerCardInfo.getGreenScore()-playerCardInfo.getRedScore());
             }else{
                 playerCardInfo.setFinalScore(playerCardInfo.getFinalScore()+playerCardInfo.getGreenScore()*0.95-playerCardInfo.getRedScore());
                 bankerCardInfos.setScore(bankerCardInfos.getScore()+playerCardInfo.getRedScore()-playerCardInfo.getGreenScore());
-                RedisManager.getUserRedisService().addUserMoney(playerCardInfo.getUserId(),(playerCardInfo.getGreenScore()*0.95-playerCardInfo.getRedScore()));
+                RedisManager.getUserRedisService().addUserGold(playerCardInfo.getUserId(),(playerCardInfo.getGreenScore()*0.95-playerCardInfo.getRedScore()));
                 //RedisManager.getUserRedisService().addUserMoney(bankerCardInfos.getUserId(),(playerCardInfo.getRedScore()-playerCardInfo.getGreenScore()));
                 this.room.bankerScore +=(playerCardInfo.getRedScore()-playerCardInfo.getGreenScore());
             }

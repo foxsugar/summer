@@ -53,6 +53,8 @@ public interface IConstant {
 
     String SAVE_USERS = "save_users";
 
+    //agent
+    String AGENT_TOKEN = "agent_token:";
     String AGENT_REBATE = "agent_rebate";
 
     String AGENT_BEAN = "agent_bean";

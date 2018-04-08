@@ -6,6 +6,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 /**
  * Created by sunxianping on 2017/9/18.
  */
-public interface IAgentUserDao extends PagingAndSortingRepository<AgentUser, Long> {
+public interface IAgentUserDao extends PagingAndSortingRepository<AgentUser, Integer> {
 
 }

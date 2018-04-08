@@ -2,6 +2,7 @@ package com.code.server.db.dao;
 
 
 import com.code.server.db.model.User;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
@@ -15,6 +16,8 @@ public interface IUserDao extends PagingAndSortingRepository<User, Long> {
 
     User getUserById(long userId);
 
+    @Query(value = "select open_id from users where id=?1", nativeQuery = true)
+    String getOpenIdById(long userId);
 
 
 

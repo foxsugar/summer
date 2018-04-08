@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class AgentRedisService implements IAgentRedis, IConstant {
 
-    private static final String AGENTBEAN = "agentBean|";
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -39,7 +38,7 @@ public class AgentRedisService implements IAgentRedis, IConstant {
     @Override
     public AgentBean getAgentBean(long agentId) {
 
-        BoundHashOperations<String, String, String> agent_bean = redisTemplate.boundHashOps(AGENTBEAN);
+        BoundHashOperations<String, String, String> agent_bean = redisTemplate.boundHashOps(AGENT_BEAN);
         String json = agent_bean.get(String.valueOf(agentId));
         if (json != null) {
             return JsonUtil.readValue(json, AgentBean.class);
@@ -49,14 +48,14 @@ public class AgentRedisService implements IAgentRedis, IConstant {
 
     @Override
     public void setAgentBean(AgentBean agentBean) {
-        BoundHashOperations<String, String, String> agent_bean = redisTemplate.boundHashOps(AGENTBEAN);
+        BoundHashOperations<String, String, String> agent_bean = redisTemplate.boundHashOps(AGENT_BEAN);
         agent_bean.put(String.valueOf(agentBean.getId()), JsonUtil.toJson(agentBean));
     }
 
     @Override
     public void updateAgentBean(AgentBean agentBean) {
 
-        BoundHashOperations<String, String, String> agent_bean = redisTemplate.boundHashOps(AGENTBEAN);
+        BoundHashOperations<String, String, String> agent_bean = redisTemplate.boundHashOps(AGENT_BEAN);
         agent_bean.put(String.valueOf(agentBean.getId()), JsonUtil.toJson(agentBean));
         //加入保存列表
         addSaveAgent(agentBean.getId());
@@ -76,15 +75,15 @@ public class AgentRedisService implements IAgentRedis, IConstant {
 
     public void setAgent2Redis(AgentBean agentBean){
         //bean
-        BoundHashOperations<String, String, String> agent_bean = redisTemplate.boundHashOps(AGENTBEAN);
+        BoundHashOperations<String, String, String> agent_bean = redisTemplate.boundHashOps(AGENT_BEAN);
         agent_bean.put(String.valueOf(agentBean.getId()), JsonUtil.toJson(agentBean));
 
         //rebate
-        BoundHashOperations<String,String,Double> agent_rebate = redisTemplate.boundHashOps(AGENTBEAN);
-        agent_rebate.put(""+agentBean.getId(), agentBean.getRebate());
+        BoundHashOperations<String,String,String> agent_rebate = redisTemplate.boundHashOps(AGENT_REBATE);
+        agent_rebate.put(""+agentBean.getId(), ""+agentBean.getRebate());
     }
     public long getAgentNum(){
-        BoundHashOperations<String,String,Double> agent_rebate = redisTemplate.boundHashOps(AGENTBEAN);
+        BoundHashOperations<String,String,Double> agent_rebate = redisTemplate.boundHashOps(AGENT_REBATE);
         return agent_rebate.size();
     }
 
