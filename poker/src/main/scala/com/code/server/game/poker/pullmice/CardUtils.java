@@ -2,83 +2,86 @@ package com.code.server.game.poker.pullmice;
 
 import java.util.*;
 
-public class CardUtils {
+public class CardUtils extends BaseCardUtils{
 
-    public static Map<Integer, Integer> cardDict = new HashMap<>();
+    private static Map<Integer, Integer> cardDict = new HashMap<>();
 
-    static {
+    public static Map<Integer, Integer> getCardDict() {
+        if (cardDict.size() == 0){
+            cardDict.put(0, 54);
+            cardDict.put(1, 53);
 
-        cardDict.put(0, 54);
-        cardDict.put(1, 53);
+            cardDict.put(2, 1);
+            cardDict.put(3, 2);
+            cardDict.put(4, 3);
+            cardDict.put(5, 4);
 
-        cardDict.put(2, 1);
-        cardDict.put(3, 2);
-        cardDict.put(4, 3);
-        cardDict.put(5, 4);
+            cardDict.put(6, 49);
+            cardDict.put(7, 50);
+            cardDict.put(8, 51);
+            cardDict.put(9, 52);
 
-        cardDict.put(6, 49);
-        cardDict.put(7, 50);
-        cardDict.put(8, 51);
-        cardDict.put(9, 52);
+            cardDict.put(10, 45);
+            cardDict.put(11, 46);
+            cardDict.put(12, 47);
+            cardDict.put(13, 48);
 
-        cardDict.put(10, 45);
-        cardDict.put(11, 46);
-        cardDict.put(12, 47);
-        cardDict.put(13, 48);
+            cardDict.put(14, 41);
+            cardDict.put(15, 42);
+            cardDict.put(16, 43);
+            cardDict.put(17, 44);
 
-        cardDict.put(14, 41);
-        cardDict.put(15, 42);
-        cardDict.put(16, 43);
-        cardDict.put(17, 44);
+            cardDict.put(18, 37);
+            cardDict.put(19, 38);
+            cardDict.put(20, 39);
+            cardDict.put(21, 40);
 
-        cardDict.put(18, 37);
-        cardDict.put(19, 38);
-        cardDict.put(20, 39);
-        cardDict.put(21, 40);
+            cardDict.put(22, 33);
+            cardDict.put(23, 34);
+            cardDict.put(24, 35);
+            cardDict.put(25, 36);
 
-        cardDict.put(22, 33);
-        cardDict.put(23, 34);
-        cardDict.put(24, 35);
-        cardDict.put(25, 36);
+            cardDict.put(26, 29);
+            cardDict.put(27, 30);
+            cardDict.put(28, 31);
+            cardDict.put(29, 32);
 
-        cardDict.put(26, 29);
-        cardDict.put(27, 30);
-        cardDict.put(28, 31);
-        cardDict.put(29, 32);
+            cardDict.put(30, 25);
+            cardDict.put(31, 26);
+            cardDict.put(32, 27);
+            cardDict.put(33, 28);
 
-        cardDict.put(30, 25);
-        cardDict.put(31, 26);
-        cardDict.put(32, 27);
-        cardDict.put(33, 28);
+            cardDict.put(34, 21);
+            cardDict.put(35, 22);
+            cardDict.put(36, 23);
+            cardDict.put(37, 24);
 
-        cardDict.put(34, 21);
-        cardDict.put(35, 22);
-        cardDict.put(36, 23);
-        cardDict.put(37, 24);
+            cardDict.put(38, 17);
+            cardDict.put(39, 18);
+            cardDict.put(40, 19);
+            cardDict.put(41, 20);
 
-        cardDict.put(38, 17);
-        cardDict.put(39, 18);
-        cardDict.put(40, 19);
-        cardDict.put(41, 20);
+            cardDict.put(42, 13);
+            cardDict.put(43, 14);
+            cardDict.put(44, 15);
+            cardDict.put(45, 16);
 
-        cardDict.put(42, 13);
-        cardDict.put(43, 14);
-        cardDict.put(44, 15);
-        cardDict.put(45, 16);
+            cardDict.put(46, 9);
+            cardDict.put(47, 10);
+            cardDict.put(48, 11);
+            cardDict.put(49, 12);
 
-        cardDict.put(46, 9);
-        cardDict.put(47, 10);
-        cardDict.put(48, 11);
-        cardDict.put(49, 12);
-
-        cardDict.put(50, 5);
-        cardDict.put(51, 6);
-        cardDict.put(52, 7);
-        cardDict.put(53, 8);
+            cardDict.put(50, 5);
+            cardDict.put(51, 6);
+            cardDict.put(52, 7);
+            cardDict.put(53, 8);
+        }
+        return cardDict;
     }
 
+
     public static Integer transformSingleCard2ClientCard(Integer card){
-        return cardDict.get(card);
+        return CardUtils.getCardDict().get(card);
     }
 
     public static List<Integer> transformLocalCards2ClientCards(List<Integer> aList){
@@ -86,8 +89,7 @@ public class CardUtils {
         List<Integer> list = new ArrayList<>();
 
         for (Integer card : aList){
-
-            Integer value = cardDict.get(card);
+            Integer value = CardUtils.getCardDict().get(card);
             list.add(value);
         }
         return list;
@@ -280,6 +282,11 @@ public class CardUtils {
         Integer center = aList.get(2);
         int count = 0;
         for (int i = 0; i < aList.size(); i++){
+
+            if (aList.get(i) - 2  < 0){
+                continue;
+            }
+
             if ((center - 2) / 4 == (aList.get(i) - 2) / 4){
                 count++;
             }
@@ -288,21 +295,35 @@ public class CardUtils {
     }
 
     public static boolean is12345(List<Integer> list){
+        if (list.size() != 5){
+            return false;
+        }
+        
         List<Integer> aList = new ArrayList<>();
         aList.addAll(list);
         Collections.sort(aList);
         boolean is12345 = true;
-        if ((aList.get(0) - 2) / 4 == 0){
+        //判断第一张牌是不是A
+
+        if (((aList.get(0) - 2) / 4 == 0)){
             Integer last = aList.get(1);
+
+            if ((last - 2) / 4 != 9){
+                return false;
+            }
+
             for (int i = 2; i < aList.size(); i++){
                 Integer current = aList.get(i);
-                if ( ( current - 2) / 4 - (last - 2) / 4 != 1){
+                if ((current - 2) / 4 - (last - 2) / 4 != 1){
                     is12345 = false;
                     break;
                 }
                 last = current;
             }
+        }else {
+            return false;
         }
+
         return is12345;
     }
 
