@@ -29,7 +29,7 @@ public class GateApplication {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
         //注册服务
-        RedisManager.getGateRedisService().register(serverConfig.getServerType(), serverConfig.getServerId(), serverConfig.getHost(), serverConfig.getDomain(), serverConfig.getPort());
+        RedisManager.getGateRedisService().register(serverConfig.getServerType(), serverConfig.getServerId(), serverConfig.getHost(), serverConfig.getDomain(), serverConfig.getNetPort());
         //心跳
 
         //定时器
