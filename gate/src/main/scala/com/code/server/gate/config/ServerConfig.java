@@ -13,6 +13,7 @@ public class ServerConfig {
     private String domain;
 
     private int port;
+    private int netPort = 8002;
 
 
     public String getServerType() {
@@ -58,6 +59,15 @@ public class ServerConfig {
 
     public ServerConfig setDomain(String domain) {
         this.domain = domain;
+        return this;
+    }
+
+    public int getNetPort() {
+        return netPort;
+    }
+
+    public ServerConfig setNetPort(int netPort) {
+        this.netPort = netPort;
         return this;
     }
 }

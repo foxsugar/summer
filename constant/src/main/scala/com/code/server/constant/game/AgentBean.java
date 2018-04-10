@@ -11,9 +11,11 @@ public class AgentBean {
 
     private double rebate;
 
-    private int partner;
+    private long partnerId;
 
     private long parentId;
+
+    private int isPartner;
 
     private List<Long> childList = new ArrayList<>();
 
@@ -35,12 +37,12 @@ public class AgentBean {
         return this;
     }
 
-    public int getPartner() {
-        return partner;
+    public long getPartnerId() {
+        return partnerId;
     }
 
-    public AgentBean setPartner(int partner) {
-        this.partner = partner;
+    public AgentBean setPartnerId(long partnerId) {
+        this.partnerId = partnerId;
         return this;
     }
 
@@ -59,6 +61,15 @@ public class AgentBean {
 
     public AgentBean setChildList(List<Long> childList) {
         this.childList = childList;
+        return this;
+    }
+
+    public int getIsPartner() {
+        return isPartner;
+    }
+
+    public AgentBean setIsPartner(int isPartner) {
+        this.isPartner = isPartner;
         return this;
     }
 }

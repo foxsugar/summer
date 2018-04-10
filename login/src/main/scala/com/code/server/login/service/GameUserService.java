@@ -8,9 +8,7 @@ import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserVo;
 import com.code.server.db.Service.*;
-import com.code.server.db.model.Charge;
-import com.code.server.db.model.Replay;
-import com.code.server.db.model.User;
+import com.code.server.db.model.*;
 import com.code.server.db.model.UserRecord;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.rpc.RpcManager;
@@ -464,6 +462,7 @@ public class GameUserService {
     }
 
     public int guessCarBindReferrer(KafkaMsgKey msgKey, int referrerId){
+
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(msgKey.getUserId());
         if (userBean == null) {
             return ErrorCode.YOU_HAVE_NOT_LOGIN;
@@ -474,22 +473,35 @@ public class GameUserService {
         if (referrerId == msgKey.getUserId()) {
             return ErrorCode.CAN_NOT_BING_REFERRER;
         }
+
+        AgentUserService agentUserService = SpringUtil.getBean(AgentUserService.class);
+
+        AgentUser agentUser = agentUserService.getAgentUserDao().findOne(referrerId);
+
+        if (agentUser == null) {
+            return ErrorCode.REFERRER_NOT_EXIST;
+        }
+        if (agentUser.getInvite_code() == null || "".equals(agentUser.getInvite_code())) {
+            return ErrorCode.REFERRER_NOT_EXIST;
+        }
+
 //        boolean isExist = RpcManager.getInstance().referrerIsExist(referrerId);
 //        if (!isExist) {
 //            return ErrorCode.REFERRER_NOT_EXIST;
 //        }
-        UserBean referrUser = RedisManager.getUserRedisService().getUserBean(referrerId);
-        if (referrUser != null) {
-            if(referrUser.getVip() == 0){
-                return ErrorCode.REFERRER_NOT_EXIST;
-            }
-        }else{
-            User user = userService.getUserByUserId(referrerId);
-            if(user == null || user.getVip()== 0) return ErrorCode.REFERRER_NOT_EXIST;
-        }
+//        UserBean referrUser = RedisManager.getUserRedisService().getUserBean(referrerId);
+//        if (referrUser != null) {
+//            if(referrUser.getVip() == 0){
+//                return ErrorCode.REFERRER_NOT_EXIST;
+//            }
+//        }else{
+//            User user = userService.getUserByUserId(referrerId);
+//            if(user == null || user.getVip()== 0) return ErrorCode.REFERRER_NOT_EXIST;
+//        }
 
         userBean.setReferee(referrerId);
         RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
+
 
 
 

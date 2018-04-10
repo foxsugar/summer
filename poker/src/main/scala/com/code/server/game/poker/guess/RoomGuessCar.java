@@ -37,7 +37,7 @@ public class RoomGuessCar extends Room {
 
     public static int createRoom(long userId ,int chip,String gameType, String roomType)  {
         //身上的钱够不够
-        if(RedisManager.getUserRedisService().getUserMoney(userId) < chip){
+        if(RedisManager.getUserRedisService().getUserGold(userId) < chip){
             return ErrorCode.NOT_HAVE_MORE_MONEY;
         }
 
@@ -54,7 +54,7 @@ public class RoomGuessCar extends Room {
         RoomManager.addRoom(roomGuessCar.roomId, "" + serverConfig.getServerId(), roomGuessCar);
 
         //扣掉
-        RedisManager.getUserRedisService().addUserMoney(userId, -chip);
+        RedisManager.getUserRedisService().addUserGold(userId, -chip);
         roomGuessCar.bankerScore = chip;
         roomGuessCar.chip = chip;
 
@@ -73,7 +73,7 @@ public class RoomGuessCar extends Room {
         int rtn =  super.dissolution(userId, agreeOrNot, methodName);
         if (rtn == 0 && userId == this.bankerId) {
            //把钱返给庄家
-            RedisManager.getUserRedisService().addUserMoney(userId, bankerScore);
+            RedisManager.getUserRedisService().addUserGold(userId, bankerScore);
         }
         return rtn;
     }
@@ -82,14 +82,14 @@ public class RoomGuessCar extends Room {
         int rtn =  super.quitRoom(userId);
         if(rtn == 0 &&  userId == this.bankerId){
             //把钱返给庄家
-            RedisManager.getUserRedisService().addUserMoney(userId, bankerScore);
+            RedisManager.getUserRedisService().addUserGold(userId, bankerScore);
         }
         return rtn;
     }
     public int joinRoom(long userId, boolean isJoin) {
         //要多于5个钻
         if(userId != this.createUser){
-            if(RedisManager.getUserRedisService().getUserMoney(userId) < 50){
+            if(RedisManager.getUserRedisService().getUserGold(userId) < 50){
                 return ErrorCode.NOT_HAVE_MORE_MONEY;
             }
         }
@@ -130,10 +130,14 @@ public class RoomGuessCar extends Room {
         List<Map<String,Object>> rooms = new ArrayList<>();
         RoomManager.getInstance().getRooms().values().forEach(r->{
             Map<String, Object> result = new HashMap<>();
-            RoomGuessCar roomGuessCar = (RoomGuessCar) r;
+            Room roomGuessCar = (Room) r;
             result.put("roomId", roomGuessCar.getRoomId());
-            result.put("chip", roomGuessCar.getChip());
+            result.put("roomType", roomGuessCar.getRoomType());
             result.put("persionNum", roomGuessCar.getUsers().size());
+            if(r instanceof RoomGuessCar){
+                RoomGuessCar rm = (RoomGuessCar) r;
+                result.put("chip", rm.getChip());
+            }
             rooms.add(result);
         });
         MsgSender.sendMsg2Player("pokerRoomService", "getAllRoom", rooms, userId);
