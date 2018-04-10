@@ -108,6 +108,36 @@ public class GameInfoHasChi extends GameInfo {
 
     }
 
+    //听扣牌不能操作
+    private int chuPai_tingForHele(long userId, String card) {
+
+        //通知其他玩家出牌信息
+        PlayCardResp playCardResp = new PlayCardResp();
+        playCardResp.setUserId(userId);
+        playCardResp.setCard(null);
+
+        ResponseVo chupaiVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_PLAY_CARD, playCardResp);
+        MsgSender.sendMsg2Player(chupaiVo, users);
+
+        //其他人的操作 全是false 听牌后什么都不能操作
+        for (Map.Entry<Long, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
+            PlayerCardsInfoMj pci = entry.getValue();
+            pci.setCanBeGang(false);
+            pci.setCanBePeng(false);
+            pci.setCanBeHu(false);
+            pci.setCanBeTing(false);
+
+            OperateResp operateResp = new OperateResp();
+            ResponseVo OperateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
+            MsgSender.sendMsg2Player(OperateVo, entry.getKey());
+        }
+
+        //摸牌
+        long nextId = nextTurnId(turnId);
+        mopai(nextId, "userId : " + userId + " 听完下家抓牌");
+        return 0;
+    }
+
     /**
      * 出牌
      * @param userId
@@ -503,7 +533,13 @@ public class GameInfoHasChi extends GameInfo {
 //            MsgSender.sendMsg2Player(chupaiVo.toJsonObject(), users);
 
             //出牌
-            chuPai_ting(playerCardsInfo.getUserId(), card);
+            if(this.room.getGameType().equals("NZZ")){
+                chuPai_ting(playerCardsInfo.getUserId(), card);
+            }else{
+                chuPai_tingForHele(playerCardsInfo.getUserId(), card);
+            }
+
+
         } else {
             return ErrorCode.CAN_NOT_TING;
         }
