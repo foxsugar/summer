@@ -101,7 +101,7 @@ public class RoomPullMice extends Room {
         return roomVo;
     }
 
-    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, boolean hasWubuFeng) throws DataNotFoundException {
+    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, boolean hasWubuFeng, String clubId, String clubRoomModel) throws DataNotFoundException {
 
         RoomPullMice room = new RoomPullMice();
         room.personNumber = PERSONNUM;
@@ -113,6 +113,8 @@ public class RoomPullMice extends Room {
         room.bankerId = userId;
         room.roomType = roomType;
         room.setCanWuBuFeng(hasWubuFeng);
+        room.setClubId(clubId);
+        room.setClubRoomModel(clubRoomModel);
         room.init(gameNumber, multiple);
 
 

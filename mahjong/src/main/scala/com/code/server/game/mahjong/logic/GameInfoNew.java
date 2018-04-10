@@ -782,7 +782,8 @@ public class GameInfoNew extends GameInfo {
         operateReqResp.setOperateType(OperateReqResp.type_gang);
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
 
-        if (lastOperateUserId == userId) {//杠手里的牌
+        if (lastOperateUserId == userId) {
+            //杠手里的牌
             if ("".equals(card)) {
                 System.err.println("=======================杠牌时 没传数据========");
             }
@@ -1108,6 +1109,8 @@ public class GameInfoNew extends GameInfo {
 
     protected void doHu(PlayerCardsInfoMj playerCardsInfo, long userId){
         if (jieGangHuCard != null) {
+            //截杠胡
+            playerCardsInfo.setJieGangHu(true);
             playerCardsInfo.hu_dianpao(room, this, beJieGangUser, jieGangHuCard);
             playerCardsInfos.get(beJieGangUser).cards.remove(jieGangHuCard);
             beJieGangUser = -1;

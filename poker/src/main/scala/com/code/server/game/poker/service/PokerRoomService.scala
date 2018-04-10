@@ -8,7 +8,6 @@ import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower
 import com.code.server.game.poker.paijiu.{RoomGoldPaijiu, RoomPaijiu}
 import com.code.server.game.poker.pullmice.RoomPullMice
 import com.code.server.game.poker.tuitongzi.RoomTuiTongZi
-import com.code.server.game.room.IfaceRoom
 import com.code.server.game.room.service.RoomManager
 import com.fasterxml.jackson.databind.JsonNode
 
@@ -48,7 +47,7 @@ object PokerRoomService {
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
 
-        return RoomHitGoldFlower.createHitGoldFlowerRoom(userId, gameNumber,personNumber,cricleNumber,multiple,caiFen,menPai,gameType, roomType,isAA,isJoin)
+        return RoomHitGoldFlower.createHitGoldFlowerRoom(userId, gameNumber,personNumber,cricleNumber,multiple,caiFen,menPai,gameType, roomType,isAA,isJoin,clubId,clubRoomModel)
 
       case "startGameByClient" =>
         val roomId = params.get("roomId").asText()
@@ -66,7 +65,7 @@ object PokerRoomService {
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
 
-        return RoomCow.createCowRoom(userId, gameNumber,personNumber,multiple,gameType, roomType,isAA,isJoin);
+        return RoomCow.createCowRoom(userId, gameNumber,personNumber,multiple,gameType, roomType,isAA,isJoin,clubId,clubRoomModel);
 
       case "startCowGameByClient" =>
         val roomId = params.get("roomId").asText()
@@ -91,7 +90,7 @@ object PokerRoomService {
         val gameNumber = params.path("gameNumber").asInt()
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
-        return RoomPaijiu.createRoom(userId,roomType, gameType,gameNumber)
+        return RoomPaijiu.createRoom(userId,roomType, gameType,gameNumber,clubId,clubRoomModel)
 
       case "createPaijiuGoldRoom"=>
         val roomType = params.path("roomType").asText()
@@ -110,7 +109,9 @@ object PokerRoomService {
         val personNumber = params.path("personNumber").asInt()
         val isJoin = params.path("isJoin").asBoolean(false)
         val multiple = params.path("multiple").asInt()
-        return RoomTuiTongZi.createRoom(userId,roomType, gameType,gameNumber, personNumber, isJoin, multiple)
+        val clubId = params.path("clubId").asText
+        val clubRoomModel = params.path("clubRoomModel").asText
+        return RoomTuiTongZi.createRoom(userId,roomType, gameType,gameNumber, personNumber, isJoin, multiple,clubId,clubRoomModel)
 
       case "createPullMiceRoom"=>
         val roomType = params.path("roomType").asText()
@@ -120,7 +121,9 @@ object PokerRoomService {
         val isJoin = params.path("isJoin").asBoolean(false)
         val multiple = params.path("multiple").asInt()
         val hasWubuFeng = params.path("hasWubuFeng").asBoolean(false)
-        return RoomPullMice.createRoom(userId,roomType, gameType,gameNumber, personNumber, isJoin, multiple, hasWubuFeng)
+        val clubId = params.path("clubId").asText
+        val clubRoomModel = params.path("clubRoomModel").asText
+        return RoomPullMice.createRoom(userId,roomType, gameType,gameNumber, personNumber, isJoin, multiple, hasWubuFeng,clubId,clubRoomModel)
 
       case "createPaijiuRoomNotInRoom"=>
         val roomType = params.path("roomType").asText()
