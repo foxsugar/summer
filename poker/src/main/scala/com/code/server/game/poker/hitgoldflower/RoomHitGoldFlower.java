@@ -76,7 +76,7 @@ public class RoomHitGoldFlower extends Room {
 
     }
 
-    public static int createHitGoldFlowerRoom(long userId, int gameNumber, int personNumber,int cricleNumber,int multiple,int caiFen,int menPai, String gameType, String roomType, boolean isAA, boolean isJoin) throws DataNotFoundException {
+    public static int createHitGoldFlowerRoom(long userId, int gameNumber, int personNumber,int cricleNumber,int multiple,int caiFen,int menPai, String gameType, String roomType, boolean isAA, boolean isJoin, String clubId, String clubRoomModel) throws DataNotFoundException {
         RoomHitGoldFlower room = getRoomInstance(roomType);
 
         room.personNumber = personNumber;
@@ -91,6 +91,8 @@ public class RoomHitGoldFlower extends Room {
         room.menPai = menPai;
         room.bankerId = userId;
         room.cricleNumber = cricleNumber;
+        room.setClubId(clubId);
+        room.setClubRoomModel(clubRoomModel);
 
         room.init(gameNumber, multiple);
 

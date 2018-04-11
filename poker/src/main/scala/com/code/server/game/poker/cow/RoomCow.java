@@ -54,7 +54,7 @@ public class RoomCow  extends Room {
         }
     }
 
-    public static int createCowRoom(long userId, int gameNumber, int personNumber,int multiple, String gameType, String roomType, boolean isAA, boolean isJoin) throws DataNotFoundException {
+    public static int createCowRoom(long userId, int gameNumber, int personNumber,int multiple, String gameType, String roomType, boolean isAA, boolean isJoin, String clubId, String clubRoomModel) throws DataNotFoundException {
         RoomCow room = getRoomInstance(roomType);
 
         room.personNumber = personNumber;
@@ -66,6 +66,8 @@ public class RoomCow  extends Room {
         room.isCreaterJoin = isJoin;
         room.multiple = multiple;
         room.bankerId = userId;
+        room.setClubId(clubId);
+        room.setClubRoomModel(clubRoomModel);
 
         room.init(gameNumber, multiple);
 

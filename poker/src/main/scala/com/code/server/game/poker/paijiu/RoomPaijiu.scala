@@ -169,7 +169,7 @@ class RoomPaijiu extends Room {
 
 
 object RoomPaijiu extends Room {
-  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int): Int = {
+  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,clubId:String,clubRoomModel:String): Int = {
     val roomPaijiu = new RoomPaijiu
     roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId()))
     roomPaijiu.setRoomType(roomType)
@@ -178,6 +178,8 @@ object RoomPaijiu extends Room {
     roomPaijiu.setBankerId(userId)
     roomPaijiu.setCreateUser(userId)
     roomPaijiu.setPersonNumber(4)
+    roomPaijiu.setClubId(clubId)
+    roomPaijiu.setClubRoomModel(clubRoomModel)
     roomPaijiu.init(gameNumber, 1)
     val code = roomPaijiu.joinRoom(userId, true)
     if (code != 0) return code

@@ -73,6 +73,8 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     private boolean isGuoHu;
 
+    protected boolean isJieGangHu = false;
+
     /**
      * 根据发的牌初始化
      *
@@ -1232,6 +1234,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     public void setGuoHu(boolean guoHu) {
         isGuoHu = guoHu;
+    }
+
+    public boolean isJieGangHu() {
+        return isJieGangHu;
+    }
+
+    public PlayerCardsInfoMj setJieGangHu(boolean jieGangHu) {
+        isJieGangHu = jieGangHu;
+        return this;
     }
 }
 
