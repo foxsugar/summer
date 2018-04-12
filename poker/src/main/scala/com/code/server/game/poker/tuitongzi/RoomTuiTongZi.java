@@ -154,7 +154,7 @@ public class RoomTuiTongZi extends Room{
         return roomVo;
     }
 
-    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple) throws DataNotFoundException {
+    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, String clubId, String clubRoomModel) throws DataNotFoundException {
         RoomTuiTongZi room = getRoomInstance(roomType);
 
         room.personNumber = personNumber;
@@ -165,6 +165,8 @@ public class RoomTuiTongZi extends Room{
         room.multiple = multiple;
         room.bankerId = userId;
         room.roomType = roomType;
+        room.setClubId(clubId);
+        room.setClubRoomModel(clubRoomModel);
 
         room.init(gameNumber, multiple);
 
