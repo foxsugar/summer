@@ -37,6 +37,8 @@ public class RoomPullMice extends Room {
 
     private static final int PERSONNUM  = 5;
 
+    protected long lastWinnerId = -1;
+
     //上一局房间内人数
     protected long lastPersonNum;
 
