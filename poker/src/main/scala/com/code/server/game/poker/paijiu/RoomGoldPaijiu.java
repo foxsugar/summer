@@ -100,11 +100,24 @@ public class RoomGoldPaijiu extends RoomPaijiu {
 
         // 存储返回
         GameOfResult gameOfResult = new GameOfResult();
+        double bankerRedisMoney = RedisManager.getUserRedisService().getUserMoney(this.getBankerId());
+        List<UserOfResult> temp = getUserOfResult();
+        int index = 0;
+        temp.addAll(userOfResultList);
+        for (int i = 0; i < temp.size(); i++) {
+            if(temp.get(i).getUserId()==this.bankerId){
+                index=i;
+            }
+        }
+        temp.remove(index);
+        UserOfResult tempUserOfResult = temp.get(0);
         for (UserOfResult u:userOfResultList) {
             double d = Double.parseDouble(u.getScores());
             if(u.getUserId()== this.getBankerId()){
                 u.setScores(d+"");
-                RedisManager.getUserRedisService().addUserMoney(u.getUserId(), d - this.bankerInitScore());//userId-money
+                if(d!=bankerRedisMoney || d==this.bankerInitScore()){
+                    RedisManager.getUserRedisService().addUserMoney(u.getUserId(), d - this.bankerInitScore());//userId-money
+                }
             }else{
                 u.setScores(d-RedisManager.getUserRedisService().getUserMoney(u.getUserId())+"");
                 RedisManager.getUserRedisService().addUserMoney(u.getUserId(), d - RedisManager.getUserRedisService().getUserMoney(u.getUserId()));//userId-money

@@ -37,6 +37,8 @@ public class RoomPullMice extends Room {
 
     private static final int PERSONNUM  = 5;
 
+    protected long lastWinnerId = -1;
+
     //上一局房间内人数
     protected long lastPersonNum;
 
@@ -248,6 +250,7 @@ public class RoomPullMice extends Room {
 
         if (isJoin) {
             roomAddUser(userId);
+            personNumber = this.users.size();
             //加进玩家-房间映射表
             noticeJoinRoom(userId);
         }

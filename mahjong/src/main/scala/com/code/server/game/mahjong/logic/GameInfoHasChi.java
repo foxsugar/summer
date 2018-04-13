@@ -307,7 +307,7 @@ public class GameInfoHasChi extends GameInfo {
             }
 
             if (this.waitingforList.size() == 0) {
-                doGang_hand(playerCardsInfo, userId, card);
+                doGang_hand(playerCardsInfo,isMing, userId, card);
             } else {
                 //排序
                 compare(waitingforList);
@@ -336,8 +336,9 @@ public class GameInfoHasChi extends GameInfo {
 
     }
 
-    protected void doGang_hand(PlayerCardsInfoMj playerCardsInfo, long userId, String card){
+    protected void doGang_hand(PlayerCardsInfoMj playerCardsInfo, boolean isMing, long userId, String card){
         playerCardsInfo.gang_hand(room, this, userId, card);
+        playerCardsInfo.gangCompute(room, this, isMing, -1, card);
         mopai(playerCardsInfo.getUserId(),"杠后摸牌");
         turnId = playerCardsInfo.getUserId();
         lastOperateUserId = playerCardsInfo.getUserId();
@@ -459,7 +460,7 @@ public class GameInfoHasChi extends GameInfo {
             if (this.waitingforList.size() == 0) {
                 //截杠胡
                 if (jieGangHuCard != null) {
-                    doGang_hand(playerCardsInfos.get(turnId),turnId,jieGangHuCard);
+                    doGang_hand(playerCardsInfos.get(turnId),true,turnId,jieGangHuCard);
                     beJieGangUser = -1;
                     jieGangHuCard = null;
                 } else {

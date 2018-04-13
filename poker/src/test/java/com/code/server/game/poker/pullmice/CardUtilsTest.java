@@ -19,7 +19,7 @@ public class CardUtilsTest {
     @Test
     public void test(){
 
+        System.out.println("a");
     }
-
 
 }
