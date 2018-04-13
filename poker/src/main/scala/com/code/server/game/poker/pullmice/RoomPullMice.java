@@ -250,6 +250,7 @@ public class RoomPullMice extends Room {
 
         if (isJoin) {
             roomAddUser(userId);
+            personNumber = this.users.size();
             //加进玩家-房间映射表
             noticeJoinRoom(userId);
         }
