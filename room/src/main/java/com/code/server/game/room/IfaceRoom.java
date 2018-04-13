@@ -11,6 +11,11 @@ import java.util.List;
  * Created by sunxianping on 2017/5/24.
  */
 public interface IfaceRoom extends IGameConstant {
+    int GOLD_ROOM_PERMISSION_NONE = 0;
+    int GOLD_ROOM_PERMISSION_DEFAULT = 1;
+    int GOLD_ROOM_PERMISSION_PUBLIC = 2;
+    int GOLD_ROOM_PERMISSION_PRIVATE = 3;
+
     /**
      * 加入房间
      * @param userId

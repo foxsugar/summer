@@ -28,7 +28,7 @@ public class TTZRobot implements IGameConstant,ITTZRobot {
 
     @Override
     public void execute() {
-        RoomManager.getRobotRoom().forEach(this::doExecute);
+        RoomManager.getInstance().getRobotRoom().forEach(this::doExecute);
     }
 
     public void doExecute(Room room) {

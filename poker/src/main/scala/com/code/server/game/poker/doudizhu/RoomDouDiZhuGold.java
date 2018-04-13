@@ -68,7 +68,7 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
             return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
         }
 
-        Room nullRoom = RoomManager.getNullRoom(goldRoomType);
+        Room nullRoom = RoomManager.getNullRoom(gameType, goldRoomType);
         if(nullRoom==null){
             switch (roomType) {
                 case "2":
@@ -137,11 +137,11 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
             isInFullRoom = true;
         }
         if (isInFullRoom) {
-            RoomManager.removeRoom(this);
+            RoomManager.getInstance().removeFromFullRoom(this);
         }
         //删除
         if (this.users.size() == 0) {
-            RoomManager.removeRoomFromMap(this);
+            RoomManager.getInstance().removeRoomFromMap(this);
         }
 
         Notice n = new Notice();

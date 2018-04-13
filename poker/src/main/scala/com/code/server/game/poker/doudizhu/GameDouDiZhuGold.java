@@ -212,7 +212,7 @@ public class GameDouDiZhuGold extends GameDouDiZhu {
         /*a:for (Long l:room.getUsers()) {
             if (RedisManager.getUserRedisService().getUserMoney(l) < RoomDouDiZhuPlus.needsMoney.get(room.getGoldRoomType())){
                 room.clearReadyStatus(true);
-                RoomManager.removeRoom(room.getRoomId());
+                RoomManager.removeFromFullRoom(room.getRoomId());
                 //战绩
                 this.room.genRoomRecord();
                 break a;

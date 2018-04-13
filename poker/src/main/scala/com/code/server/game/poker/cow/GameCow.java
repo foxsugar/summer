@@ -404,7 +404,7 @@ public class GameCow extends Game {
             RoomManager.removeRoom(room.getRoomId());
             //战绩
             this.room.genRoomRecord();
-            RoomManager.getRobotRoom().remove(room);
+            RoomManager.getInstance().getRobotRoom().remove(room);
         }
     }
 
