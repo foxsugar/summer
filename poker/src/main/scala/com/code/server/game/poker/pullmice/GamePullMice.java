@@ -61,6 +61,11 @@ public class GamePullMice extends Game{
         this.users.clear();
         this.users.addAll(users);
 
+        //上一把谁赢了
+        if (this.room.lastWinnerId == -1){
+            this.room.lastWinnerId = this.users.get(0);
+        }
+
         Map res = new HashMap();
         this.diZhu = 1;
         res.put("diZhu", diZhu);
@@ -692,6 +697,8 @@ public class GamePullMice extends Game{
             //一开始算过地注
             room.addUserSocre(p.getUserId(), p.getScore());
         }
+
+        this.room.lastWinnerId = winner.getUserId();
     }
 
     /**
@@ -788,8 +795,22 @@ public class GamePullMice extends Game{
 
         List<PlayerPullMice> list = new ArrayList<>();
         list.addAll(playerCardInfos.values());
+
+        List<Long> aList = new ArrayList<>();
+
+        Long nextId = null;
+        Long currentId = this.room.lastWinnerId;
+        while (true){
+            nextId = nextTurnId(currentId);
+            aList.add(nextId);
+            if (nextId == this.room.lastWinnerId){
+                break;
+            }
+            currentId = nextId;
+        }
+
         //确定发牌顺序
-        CardUtils.calListPxId(list, users);
+        CardUtils.calListPxId(list, aList);
         //获取下注顺序的数组
         this.pxList = list;
         updatePxUsers();
@@ -798,29 +819,85 @@ public class GamePullMice extends Game{
     public void firstDeal(){
 
         updatePxList();
-        //发第一张牌
-        deal(this.pxList);
-        //发第二张明牌
-        deal(this.pxList);
+//        //发第一张牌
+//        deal(this.pxList);
+//        //发第二张明牌
+//        deal(this.pxList);
 
+//        fDeal(this.pxList);
+
+//        deal(this.pxList);
+        fDeal(this.pxList);
         updatePxList();
         //推送下注
         betStart();
     }
 
-    public void deal(List<PlayerPullMice> list){
 
-        System.out.println(list);
+    public void fDeal(List<PlayerPullMice> list){
+
+        Map<Object, Object> res = new HashMap<>();
+        res.put("cardsTotal", this.room.cards.size());
+        List<Map<Object, Object>> aList = new ArrayList<>();
+        res.put("players", aList);
+
+        for (int j = 0; j < 2; j++){
+            for (int i = 0; i < list.size(); i++){
+                PlayerPullMice player = list.get(i);
+                if (player.isEscape() == true){
+                    continue;
+                }
+                //一张一张的发牌
+                isNoticeClientShuffle();
+                //作弊
+                if (this.room.isCheat() && this.room.curGameNumber == (Integer) this.room.cheatInfo.get("curGameNumber")){
+                    long cheatId = (long) this.room.cheatInfo.get("cheatId");
+                    Map<Long, PlayerPullMice> map = this.room.fakePlayerInfos;
+                    Integer card = map.get(player.getUserId()).getCards().get(player.getCards().size());
+                    player.getCards().add(card);
+                    room.cards.remove(card);
+                }else {
+                    player.getCards().add(room.cards.remove(0));
+                }
+                long point = CardUtils.calculateTotalPoint(player.getCards());
+                player.setPoint(point);
+            }
+        }
 
         for (int i = 0; i < list.size(); i++){
-//            PlayerPullMice player = playerCardInfos.get(users.get(i));
+            PlayerPullMice player = list.get(i);
+            Map<Object, Object> small = new HashMap();
+            small.put("cards", CardUtils.transformLocalCards2ClientCards(player.getCards()));
+            small.put("userId", player.getUserId());
+            small.put("isEscape", player.isEscape());
+            aList.add(small);
+        }
+
+        MsgSender.sendMsg2Player(serviceName, "deal", res, this.pxUsers);
+
+    }
+
+    public void deal(List<PlayerPullMice> list){
+
+        Map<Object, Object> res = new HashMap<>();
+        res.put("cardsTotal", this.room.cards.size());
+        List<Map<Object, Object>> aList = new ArrayList<>();
+        res.put("players", aList);
+
+        for (int i = 0; i < list.size(); i++){
             PlayerPullMice player = list.get(i);
             if (player.isEscape() == true){
+                long point = CardUtils.calculateTotalPoint(player.getCards());
+                player.setPoint(point);
+                Map<Object, Object> small = new HashMap();
+                small.put("cards", CardUtils.transformLocalCards2ClientCards(player.getCards()));
+                small.put("userId", player.getUserId());
+                small.put("isEscape", true);
+                aList.add(small);
                 continue;
             }
             //一张一张的发牌
             isNoticeClientShuffle();
-
             //作弊
             if (this.room.isCheat() && this.room.curGameNumber == (Integer) this.room.cheatInfo.get("curGameNumber")){
                 long cheatId = (long) this.room.cheatInfo.get("cheatId");
@@ -831,15 +908,16 @@ public class GamePullMice extends Game{
             }else {
                 player.getCards().add(room.cards.remove(0));
             }
-
             long point = CardUtils.calculateTotalPoint(player.getCards());
             player.setPoint(point);
-            Map<Object, Object> res = new HashMap<>();
-            res.put("userId", player.getUserId());
-            res.put("cards", CardUtils.transformLocalCards2ClientCards(player.getCards()));
-            res.put("cardsTotal", this.room.cards.size());
-            MsgSender.sendMsg2Player(serviceName, "deal", res, this.pxUsers);
+            Map<Object, Object> small = new HashMap();
+            small.put("cards", CardUtils.transformLocalCards2ClientCards(player.getCards()));
+            small.put("userId", player.getUserId());
+            small.put("isEscape", false);
+            aList.add(small);
         }
+
+        MsgSender.sendMsg2Player(serviceName, "deal", res, this.pxUsers);
     }
 
     //更新排序后对应的id数组

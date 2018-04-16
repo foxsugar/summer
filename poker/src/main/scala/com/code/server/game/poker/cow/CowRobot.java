@@ -29,7 +29,7 @@ public class CowRobot implements ICowRobot,IGameConstant {
     @Override
     public void execute() {
         //TODO
-        RoomManager.getRobotRoom().forEach(this::doExecute);
+        RoomManager.getInstance().getRobotRoom().forEach(this::doExecute);
     }
 
     public void doExecute(Room room) {

@@ -46,7 +46,7 @@ public class GameDouDiZhuPlus extends GameDouDiZhu {
         updateLastOperateTime();
         //通知其他人游戏已经开始
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameBegin", "ok"), this.getUsers());
-        RoomManager.getRobotRoom().add(room);
+        RoomManager.getInstance().getRobotRoom().add(room);
     }
 
     protected void compute(boolean isDizhuWin) {

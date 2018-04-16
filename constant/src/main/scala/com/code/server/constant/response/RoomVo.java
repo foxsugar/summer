@@ -20,6 +20,7 @@ public class RoomVo implements IfaceRoomVo {
     public int curGameNumber;
     public int createType;
     public double goldRoomType;
+    public int goldRoomPermission;
     public String gameType;
 
     //填大坑专用
@@ -318,5 +319,14 @@ public class RoomVo implements IfaceRoomVo {
 
     public void setGoldType(int goldType) {
         this.goldType = goldType;
+    }
+
+    public int getGoldRoomPermission() {
+        return goldRoomPermission;
+    }
+
+    public RoomVo setGoldRoomPermission(int goldRoomPermission) {
+        this.goldRoomPermission = goldRoomPermission;
+        return this;
     }
 }

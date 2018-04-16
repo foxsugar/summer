@@ -70,6 +70,12 @@ object MahjongRoomService {
         code = createRoomButNotInRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType,roomType,mustZimo,isHasYipaoduoxiang,canChi,haveTing,clubId,clubRoomModel)
 
       }
+
+      case "joinGoldRoom"=>{
+        val gameType: String = paramsjSONObject.get("gameType").asText
+        val goldRoomType = paramsjSONObject.path("goldRoomType").asDouble()
+
+      }
     }
     return code
   }
@@ -320,30 +326,20 @@ object MahjongRoomService {
   }
 
 
-  //    public void onlinemethod(GamePlayer gamePlayer) {
-  //
-  //        Map<Integer, String> userRoom = GameManager.getInstance().getUserRoom();
-  //
-  //        String roomId = userRoom.get(gamePlayer.getUserId());//房间号
-  //
-  //        RoomInfo roomInfo = GameManager.getInstance().getRoom(roomId);
-  //
-  //        if (roomInfo != null) {
-  //            List<Integer> roomUserId = roomInfo.getUsers();
-  //
-  //            JSONObject result = new JSONObject();
-  //
-  //            Map<String, Integer> mapresult = new HashMap<String, Integer>();
-  //
-  //            mapresult.put("id", gamePlayer.getUserId());
-  //            mapresult.put("status", 1);
-  //
-  //            result.put("service", "gameService");
-  //            result.put("method", "offline");
-  //            result.put("params", new Gson().toJson(mapresult));
-  //            result.put("code", "0");
-  //
-  //            serverContext.sendToOnlinePlayer(result, roomUserId);
-  //        }
-  //    }
+  def joinGoldRoom(roomType:String, gameType:String, goldRoomType:Double): Unit ={
+    val rooms = RoomManager.getInstance().getNotFullRoom(gameType, goldRoomType)
+    if(rooms.size() == 0) {
+      val mjRoom: Room = new RoomInfo()
+      mjRoom.setRoomType(roomType)
+      mjRoom.setGameType(gameType)
+      mjRoom.setGoldRoomType(goldRoomType)
+      mjRoom.getDefaultGoldRoomInstance()
+
+      RoomManager.getInstance().addNotFullRoom(mjRoom)
+
+
+    }
+
+  }
+
 }

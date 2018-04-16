@@ -10,6 +10,8 @@ import java.util.Date;
 
 /**
  * Created by win7 on 2017/3/8.
+ * 2018.4.13 发现orm在数据库字段含有"_"时,映射不出来.
+ * 字段名称尽量用驼峰原则 不要加"_"
  */
 @DynamicUpdate
 @Entity

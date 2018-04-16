@@ -38,6 +38,8 @@ public class Charge {
     private double money_point;//房卡
     private String username;//玩家名称
     private String recharge_source;//1 微信  2 支付宝  3 分享赠送  4 充值卡  5绑定赠送
+    private double charge_before_money;
+    private double charge_after_money;
 
     public String getOrderId() {
         return orderId;
@@ -166,5 +168,23 @@ public class Charge {
 
     public void setRecharge_source(String recharge_source) {
         this.recharge_source = recharge_source;
+    }
+
+    public double getCharge_before_money() {
+        return charge_before_money;
+    }
+
+    public Charge setCharge_before_money(double charge_before_money) {
+        this.charge_before_money = charge_before_money;
+        return this;
+    }
+
+    public double getCharge_after_money() {
+        return charge_after_money;
+    }
+
+    public Charge setCharge_after_money(double charge_after_money) {
+        this.charge_after_money = charge_after_money;
+        return this;
     }
 }

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class RoomMsgDispatch {
 
 
-    public static void dispatch(ConsumerRecord<String,String> record){
+    public static void dispatch(ConsumerRecord<String, String> record) {
         try {
 
             String keyValue = record.key();
@@ -33,9 +33,9 @@ public class RoomMsgDispatch {
 
             String roomId = msgKey.getRoomId();
             long userId = msgKey.getUserId();
-            int code = dispatchRoomService(method, params, userId,roomId);
-            if(code != 0){
-                MsgSender.sendMsg2Player(service,method,code,userId);
+            int code = dispatchRoomService(method, params, userId, roomId);
+            if (code != 0) {
+                MsgSender.sendMsg2Player(service, method, code, userId);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -44,7 +44,7 @@ public class RoomMsgDispatch {
 
     }
 
-    private static int dispatchRoomService(String method, JsonNode params, long userId,String roomId) {
+    private static int dispatchRoomService(String method, JsonNode params, long userId, String roomId) {
 
 
         switch (method) {
@@ -70,7 +70,7 @@ public class RoomMsgDispatch {
                 if (room == null) {
                     return ErrorCode.CANNOT_JOIN_ROOM_NOT_EXIST;
                 }
-                return room.joinRoom(userId,true);
+                return room.joinRoom(userId, true);
             }
 //            case "joinRoomQuick":{
 //                double type = params.getDouble("type");
@@ -87,15 +87,10 @@ public class RoomMsgDispatch {
             }
             case "getReady": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
-                IfaceRoom roomPuls = RoomManager.getPlusRoom(roomId);
-                if (room == null && roomPuls == null) {
+                if (room == null) {
                     return ErrorCode.CAN_NOT_NO_ROOM;
                 }
-                if(roomPuls != null){
-                    return roomPuls.getReady(userId);
-                }else if(room != null){
-                    return room.getReady(userId);
-                }
+                return room.getReady(userId);
             }
             case "dissolveRoom": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
@@ -104,7 +99,7 @@ public class RoomMsgDispatch {
                 }
                 return room.dissolution(userId, true, method);
             }
-            case "answerIfDissolveRoom":{
+            case "answerIfDissolveRoom": {
 
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 if (room == null) {
@@ -113,7 +108,7 @@ public class RoomMsgDispatch {
                 boolean isAgree = "2".equals(params.get("answer").asText());
                 return room.dissolution(userId, isAgree, method);
             }
-            case "startGameByClient":{
+            case "startGameByClient": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 if (room == null) {
                     return ErrorCode.CAN_NOT_NO_ROOM;
@@ -122,7 +117,7 @@ public class RoomMsgDispatch {
 
             }
 
-            case "startTTZGameByClient":{
+            case "startTTZGameByClient": {
                 System.out.println("++++++++++---------------RoomMsgDispatch+startTTZGameByClient");
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 if (room == null) {
@@ -132,11 +127,11 @@ public class RoomMsgDispatch {
 
             }
 
-            case "getPrepareRoom":{
+            case "getPrepareRoom": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 return room.getPrepareRoom(userId);
             }
-            case "getRoomClubByUser":{
+            case "getRoomClubByUser": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 return room.getRoomClubByUser(userId);
             }

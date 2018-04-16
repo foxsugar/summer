@@ -34,6 +34,7 @@ public class Room implements IfaceRoom {
     protected String roomId;
     protected int createType;//房卡或金币
     protected double goldRoomType;
+    protected int goldRoomPermission;
     protected String gameType;//项目名称
     protected int createNeedMoney;
     protected static Random random = new Random();
@@ -73,10 +74,7 @@ public class Room implements IfaceRoom {
 
     public Long canStartUserId = 0L;
 
-    public static int joinRoomQuick(MsgSender player, int type) {
 
-        return 0;
-    }
 
     public static String getRoomIdStr(int roomId) {
         String s = "000000" + roomId;
@@ -131,6 +129,9 @@ public class Room implements IfaceRoom {
         clubRoomSetId();
     }
 
+    public void getDefaultGoldRoomInstance() {
+
+    }
     /**
      * 俱乐部 设置id
      */
@@ -171,6 +172,9 @@ public class Room implements IfaceRoom {
         }
     }
 
+    /**
+     * 俱乐部找钱
+     */
     private void clubDrawBack(){
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
         KafkaMsgKey kafkaKey = new KafkaMsgKey();
@@ -182,6 +186,12 @@ public class Room implements IfaceRoom {
         msgProducer.send("clubService",kafkaKey, responseVo);
     }
 
+    /**
+     * 加入房间
+     * @param userId
+     * @param isJoin
+     * @return
+     */
     public int joinRoom(long userId, boolean isJoin) {
 
         if (isClubRoom() && userId == 0) {
@@ -246,19 +256,12 @@ public class Room implements IfaceRoom {
 
 
     public void noticeJoinRoom(long userId) {
-        List<UserVo> usersList = new ArrayList<>();
         UserOfRoom userOfRoom = new UserOfRoom();
         int readyNumber = 0;
-//        for (long uid : users) {
-//            User user = this.userMap.get(uid);
-//            usersList.add(GameManager.getUserVo(user));
-//        }
-
 
         for (UserBean userBean : RedisManager.getUserRedisService().getUserBeans(users)) {
             userOfRoom.getUserList().add(userBean.toVo());
         }
-
 
         userOfRoom.setInRoomNumber(users.size());
         userOfRoom.setReadyNumber(readyNumber);
@@ -291,11 +294,6 @@ public class Room implements IfaceRoom {
                 }
             }
         }
-        if("JBPJ".equals(gameType)){//金币扎金花
-            if(RedisManager.getUserRedisService().getUserMoney(userId) <100){
-                return false;
-            }
-        }
         return true;
     }
 
@@ -323,13 +321,8 @@ public class Room implements IfaceRoom {
             Notice n = new Notice();
             n.setMessage("roomNum " + this.getRoomId() + " :has destroy success!");
             MsgSender.sendMsg2Player(new ResponseVo("roomService", "destroyRoom", n), noticeList);
-            //删除房间
-//            GameManager.getInstance().rooms.remove(roomId);
-
-//            RoomManager.removeRoom(this.roomId);
             //代开房 并且游戏未开始
             if (!isCreaterJoin && !this.isInGame && this.curGameNumber == 1) {
-              //  drawBack();
                 dissolutionRoom();
             }
 
@@ -337,9 +330,6 @@ public class Room implements IfaceRoom {
             if (room_ != null){
                 RoomManager.removeRoom(this.roomId);
             }
-
-
-
         }
 
         noticeQuitRoom(userId);
@@ -546,8 +536,8 @@ public class Room implements IfaceRoom {
     @Override
     public int getPrepareRoom(long userId) {
         List<IfaceRoomVo> result = new ArrayList<>();
-        if (RoomManager.getPrepareRoom().containsKey(userId)) {
-            for (String roomId : RoomManager.getPrepareRoom().get(userId)) {
+        if (RoomManager.getInstance().getPrepareRoom().containsKey(userId)) {
+            for (String roomId : RoomManager.getInstance().getPrepareRoom().get(userId)) {
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 if (room != null) {
                     result.add(room.toVo(userId));
@@ -1113,5 +1103,14 @@ public class Room implements IfaceRoom {
 
     public void setUserScoresForGold(Map<Long, Double> userScoresForGold) {
         this.userScoresForGold = userScoresForGold;
+    }
+
+    public int getGoldRoomPermission() {
+        return goldRoomPermission;
+    }
+
+    public Room setGoldRoomPermission(int goldRoomPermission) {
+        this.goldRoomPermission = goldRoomPermission;
+        return this;
     }
 }

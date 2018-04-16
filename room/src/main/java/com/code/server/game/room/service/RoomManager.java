@@ -17,16 +17,16 @@ public class RoomManager {
 
     private Map<String, IfaceRoom> rooms = new HashMap<>();
 
-    private static Map<Double, List<Room>> fullGoldRoom = new HashMap<>();
-    private static Map<Double,List<Room>> notFullGoldRoom = new HashMap<>();
-    private static Map<Long, List<String>> prepareRoom = new HashMap<>();
+    private  Map<String,Map<Double, List<Room>>> fullGoldRoom = new HashMap<>();
+    private  Map<String, Map<Double,List<Room>>> notFullGoldRoom = new HashMap<>();
+    private  Map<Long, List<String>> prepareRoom = new HashMap<>();
 
-    private static List<Room> robotRoom = new ArrayList<>();
+    private  List<Room> robotRoom = new ArrayList<>();
 
-    private static RoomManager ourInstance = new RoomManager();
+    private static RoomManager outInstance = new RoomManager();
 
     public static RoomManager getInstance() {
-        return ourInstance;
+        return outInstance;
     }
 
     private RoomManager() {
@@ -36,83 +36,95 @@ public class RoomManager {
         return getInstance().rooms.get(roomId);
     }
 
-    public static IfaceRoom getPlusRoom(String roomId){
-        Room room = null;
-        for (Room r:robotRoom) {
-            if(roomId.equals(r.getRoomId())){
-                room = r;
+
+
+
+
+
+
+    public List<Room> getFullRoom(String gameType, double goldGameType) {
+        Map<Double, List<Room>> fullRooms = fullGoldRoom.computeIfAbsent(gameType, k -> new HashMap<>());
+
+        List<Room> rooms = fullRooms.computeIfAbsent(goldGameType, k -> new ArrayList<>());
+        return rooms;
+    }
+
+    public List<Room> getNotFullRoom(String gameType, double goldGameType) {
+        Map<Double, List<Room>> notFullRooms = notFullGoldRoom.computeIfAbsent(gameType, k -> new HashMap<>());
+        List<Room> rooms = notFullRooms.computeIfAbsent(goldGameType, k -> new ArrayList<>());
+        return rooms;
+    }
+
+
+
+
+    public void removeFromFullRoom(Room room){
+        //删除满房间，添加不满房间
+        Map<Double, List<Room>> fullRooms = fullGoldRoom.get(room.getGameType());
+        if (fullRooms != null) {
+            //删除满的房间
+            List<Room> rooms_type = fullRooms.get(room.getGoldRoomType());
+            if (rooms_type != null) {
+
+                rooms_type.remove(room);
             }
         }
-        return room;
-    }
-
-    public static List<Room> getFullGoldRoom(Double goldRoomType){
-        return getInstance().fullGoldRoom.get(goldRoomType);
-    }
-
-    public static List<Room> getNotFullGoldRoom(Double goldRoomType){
-        return getInstance().notFullGoldRoom.get(goldRoomType);
-    }
-
-    public static Map<Double, List<Room>> getFullGoldRoom(){
-        return getInstance().fullGoldRoom;
-    }
-
-    public static Map<Double, List<Room>> getNotFullGoldRoom(){
-        return getInstance().notFullGoldRoom;
-    }
-
-
-    public static void addRoom2Map(Room room){
-        List<Room> list = notFullGoldRoom.get(room.getGoldRoomType());
-        if (list == null) {
-            list = new ArrayList<>();
-        }
-        ArrayList<Room> templist = new ArrayList<>();
-        templist.addAll(list);
-        for (Room m:list) {
-            if(m.getRoomId().equals(room.getRoomId())){
-                templist.remove(m);
+        //加入未满的房间
+        Map<Double, List<Room>> notFullRooms = notFullGoldRoom.get(room.getGameType());
+        if (notFullRooms != null) {
+            List<Room> rooms_type = notFullRooms.get(room.getGoldRoomType());
+            if (rooms_type != null) {
+                rooms_type.add(room);
+            }else{
+                notFullRooms.put(room.getGoldRoomType(), new ArrayList<>());
             }
         }
-        templist.add(room);
-        fullGoldRoom.put(room.getGoldRoomType(), templist);
+    }
+
+    public void removeFormNotFullRoom(Room room){
+        //删除满房间，添加不满房间
+        Map<Double, List<Room>> notFullRooms = notFullGoldRoom.get(room.getGameType());
+        if (notFullRooms != null) {
+            //删除满的房间
+            List<Room> rooms_type = notFullRooms.get(room.getGoldRoomType());
+            if (rooms_type != null) {
+
+                rooms_type.remove(room);
+            }
+        }
+        //加入未满的房间
+        Map<Double, List<Room>> fullRooms = fullGoldRoom.get(room.getGameType());
+        if (fullRooms != null) {
+            List<Room> rooms_type = fullRooms.get(room.getGoldRoomType());
+            if (rooms_type != null) {
+                rooms_type.add(room);
+            }else{
+                fullRooms.put(room.getGoldRoomType(), new ArrayList<>());
+            }
+        }
+    }
+
+    public void addNotFullRoom(Room room) {
+        List<Room> rooms = getNotFullRoom(room.getGameType(), room.getGoldRoomType());
+        rooms.add(room);
     }
 
 
-    //删除满房间，添加不满房间
-    public static void removeRoom(Room room){
-        List<Room> list = fullGoldRoom.get(room.getGoldRoomType());
-        ArrayList<Room> templist = new ArrayList<>();
-        templist.addAll(list);
-        if (list != null) {
-            for (Room m:list) {
-                if(m.getRoomId().equals(room.getRoomId())){
-                    templist.remove(m);
-                }
+    public  void removeRoomFromMap(Room room){
+        Map<Double, List<Room>> notFullRooms = notFullGoldRoom.get(room.getGameType());
+//        Map<Double, List<Room>> fullRooms = notFullGoldRoom.get(room.getGameType());
+        if (notFullRooms != null) {
+
+
+            //删除满的房间
+            List<Room> rooms_type = notFullRooms.get(room.getGoldRoomType());
+            if (rooms_type != null) {
+
+                rooms_type.remove(room);
             }
+
+
         }
-        //templist.add(room);
-        fullGoldRoom.put(room.getGoldRoomType(),templist);
-
-        List<Room> fulllist = notFullGoldRoom.get(room.getGoldRoomType());
-        fulllist.add(room);
-        notFullGoldRoom.put(room.getGoldRoomType(),fulllist);
-    }
-
-
-    public static void removeRoomFromMap(Room room){
-        List<Room> list = notFullGoldRoom.get(room.getGoldRoomType());
-        ArrayList<Room> templist = new ArrayList<>();
-        templist.addAll(list);
-        if (list != null) {
-            for (Room m:list) {
-                if(m.getRoomId().equals(room.getRoomId())){
-                    templist.remove(m);
-                }
-            }
-        }
-        notFullGoldRoom.put(room.getGoldRoomType(),templist);
     }
 
     public static void removeRoom(String roomId) {
@@ -130,34 +142,34 @@ public class RoomManager {
 //                }
             }
         }
-        robotRoom.remove(room);
+        getInstance().robotRoom.remove(room);
     }
 
     public static void addRoom(String roomId,String serverId, Room room) {
-        if (room.isGoldRoom()){
-            if (room.getUsers().size() >= room.getPersonNumber()) {
-                //加入已满的
-                RoomManager.addRoom2Map(room);
-                //删掉未满的
-                RoomManager.removeRoomFromMap(room);
-            }else{
-                List<Room> list = notFullGoldRoom.get(room.getGoldRoomType());
-                if (list == null) {
-                    list = new ArrayList<>();
-                }
-                ArrayList<Room> templist = new ArrayList<>();
-                templist.addAll(list);
-                for (Room m:list) {
-                    if(m.getRoomId().equals(room.getRoomId())){
-                        templist.remove(m);
-                    }
-                }
-                templist.add(room);
-                notFullGoldRoom.put(room.getGoldRoomType(),templist);
-            }
-        }
+//        if (room.isGoldRoom()){
+//            if (room.getUsers().size() >= room.getPersonNumber()) {
+//                //加入已满的
+//                RoomManager.addRoom2Map(room);
+//                //删掉未满的
+//                RoomManager.removeRoomFromMap(room);
+//            }else{
+//                List<Room> list = notFullGoldRoom.get(room.getGoldRoomType());
+//                if (list == null) {
+//                    list = new ArrayList<>();
+//                }
+//                ArrayList<Room> templist = new ArrayList<>();
+//                templist.addAll(list);
+//                for (Room m:list) {
+//                    if(m.getRoomId().equals(room.getRoomId())){
+//                        templist.remove(m);
+//                    }
+//                }
+//                templist.add(room);
+//                notFullGoldRoom.put(room.getGoldRoomType(),templist);
+//            }
+//        }
         getInstance().rooms.put(roomId, room);
-        robotRoom.add(room);
+        getInstance().robotRoom.add(room);
         RedisManager.getRoomRedisService().setServerId(roomId,serverId);
         //加入代开房列表
         if(!room.isCreaterJoin()){
@@ -165,8 +177,12 @@ public class RoomManager {
         }
     }
 
-    public static Room getNullRoom(Double roomType){
-        List<Room> list = notFullGoldRoom.get(roomType);
+    public static Room getNullRoom(String gameType, Double goldRoomType){
+        Map<Double, List<Room>> rooms = getInstance().notFullGoldRoom.get(gameType);
+        if (rooms == null) {
+            return null;
+        }
+        List<Room> list = rooms.get(goldRoomType);
         if (list!=null && list.size()>0){
             return list.get(0);
         }else {
@@ -174,29 +190,48 @@ public class RoomManager {
         }
     }
 
-    public static Map<Long, List<String>> getPrepareRoom() {
+    public Map<String, Map<Double, List<Room>>> getFullGoldRoom() {
+        return fullGoldRoom;
+    }
+
+    public RoomManager setFullGoldRoom(Map<String, Map<Double, List<Room>>> fullGoldRoom) {
+        this.fullGoldRoom = fullGoldRoom;
+        return this;
+    }
+
+    public Map<String, Map<Double, List<Room>>> getNotFullGoldRoom() {
+        return notFullGoldRoom;
+    }
+
+    public RoomManager setNotFullGoldRoom(Map<String, Map<Double, List<Room>>> notFullGoldRoom) {
+        this.notFullGoldRoom = notFullGoldRoom;
+        return this;
+    }
+
+    public Map<Long, List<String>> getPrepareRoom() {
         return prepareRoom;
     }
 
-    public static void setPrepareRoom(Map<Long, List<String>> prepareRoom) {
-        RoomManager.prepareRoom = prepareRoom;
+    public RoomManager setPrepareRoom(Map<Long, List<String>> prepareRoom) {
+        this.prepareRoom = prepareRoom;
+        return this;
+    }
+
+    public List<Room> getRobotRoom() {
+        return robotRoom;
+    }
+
+    public RoomManager setRobotRoom(List<Room> robotRoom) {
+        this.robotRoom = robotRoom;
+        return this;
     }
 
     public Map<String, IfaceRoom> getRooms() {
         return rooms;
     }
 
-    public void setRooms(Map<String, IfaceRoom> rooms) {
+    public RoomManager setRooms(Map<String, IfaceRoom> rooms) {
         this.rooms = rooms;
+        return this;
     }
-
-    public static List<Room> getRobotRoom() {
-        return robotRoom;
-    }
-
-    public static void setRobotRoom(List<Room> robotRoom) {
-        RoomManager.robotRoom = robotRoom;
-    }
-
-
 }

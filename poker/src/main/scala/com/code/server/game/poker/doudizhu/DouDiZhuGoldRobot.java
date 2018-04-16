@@ -21,7 +21,8 @@ public class DouDiZhuGoldRobot implements IDouDiZhuRobot,IGameConstant {
 
     @Override
     public void execute() {
-        RoomManager.getFullGoldRoom().values().forEach(list->list.forEach(this::doExecute));
+//        RoomManager.getInstance().getFullGoldRoom().values().forEach(list->list.forEach());
+       RoomManager.getInstance().getRobotRoom().forEach(this::doExecute);
         //RoomManager.getRobotRoom().forEach(this::doExecute);
     }
 

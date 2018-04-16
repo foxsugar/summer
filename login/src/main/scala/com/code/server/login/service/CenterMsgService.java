@@ -189,13 +189,13 @@ public class CenterMsgService implements IkafkaMsgId {
             JsonNode jsonNode = JsonUtil.readTree(msg);
             int userId = jsonNode.path("userId").asInt();
             double gold = jsonNode.path("gold").asDouble();
-//            UserBean own = RedisManager.getUserRedisService().getUserBean(userId);
-//            int bindUser1 = own.getReferee();
+            UserBean own = RedisManager.getUserRedisService().getUserBean(userId);
+            int bindUser1 = own.getReferee();
 
 
             double addGold = gold * 4;
 
-            AgentUser agentUser = agentUserService.getAgentUserDao().findOne(userId);
+            AgentUser agentUser = agentUserService.getAgentUserDao().findAgentUserByInvite_code(""+bindUser1);
             if (agentUser != null) {
                 agentUser.setGold(agentUser.getGold() + addGold);
                 agentUserService.getAgentUserDao().save(agentUser);
