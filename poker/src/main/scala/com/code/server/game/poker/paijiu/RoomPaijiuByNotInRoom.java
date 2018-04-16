@@ -28,7 +28,7 @@ import com.code.server.util.timer.TimerNode;
  */
 public class RoomPaijiuByNotInRoom extends Room {
 
-    public static int createRoomNotInRoom(long userId, String roomType, String gameType,Integer gameNumber,boolean isCreaterJoin) throws DataNotFoundException {
+    public static int createRoomNotInRoom(long userId, String roomType, String gameType,Integer gameNumber,boolean isCreaterJoin,String clubId,String clubRoomModel) throws DataNotFoundException {
         RoomPaijiu roomPaijiu = new RoomPaijiu();
         roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId()));
         roomPaijiu.setRoomType(roomType);
@@ -39,6 +39,8 @@ public class RoomPaijiuByNotInRoom extends Room {
         roomPaijiu.setPersonNumber(4);
         roomPaijiu.setCreaterJoin(isCreaterJoin);
         roomPaijiu.init(gameNumber, 1);
+        roomPaijiu.setClubId(clubId);
+        roomPaijiu.setClubRoomModel(clubRoomModel);
 
         //代建房 定时解散
         if (!isCreaterJoin) {

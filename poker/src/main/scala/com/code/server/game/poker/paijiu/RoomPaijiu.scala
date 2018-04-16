@@ -193,8 +193,8 @@ object RoomPaijiu extends Room {
     0
   }
 
-  def createRoomNotInRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int, isCreaterJoin: Boolean): Int = {
-    RoomPaijiuByNotInRoom.createRoomNotInRoom(userId, roomType, gameType, gameNumber, isCreaterJoin)
+  def createRoomNotInRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int, isCreaterJoin: Boolean,clubId:String,clubRoomModel:String): Int = {
+    RoomPaijiuByNotInRoom.createRoomNotInRoom(userId, roomType, gameType, gameNumber, isCreaterJoin,clubId, clubRoomModel)
   }
 
   /*def createRoomNotInRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,isCreaterJoin:Boolean): Int = {
