@@ -34,7 +34,7 @@ class GamePaijiu3Bet extends GamePaijiu{
     if (bankerScore2 < otherScore2) result -= 1
     //庄家赢
     if (result > 0) {
-      val changeScore = other.getBetScore(bankerScore2 >= mix8Score && bankerScore2 <= sky8Score)
+      val changeScore = other.getBetScore(bankerScore2 >= mix8Score)
       banker.addScore(this.roomPaijiu, changeScore)
       other.addScore(this.roomPaijiu, -changeScore)
       roomPaijiu.addUserSocre(banker.userId, changeScore)
@@ -48,7 +48,7 @@ class GamePaijiu3Bet extends GamePaijiu{
       other.winState = LOSE
     } else if (result < 0) {
       //闲家赢
-      val changeScore = other.getBetScore(otherScore2 >= mix8Score && otherScore2 <= sky8Score)
+      val changeScore = other.getBetScore(otherScore2 >= mix8Score)
       banker.addScore(this.roomPaijiu, -changeScore)
       other.addScore(this.roomPaijiu, changeScore)
       roomPaijiu.addUserSocre(banker.userId, -changeScore)
