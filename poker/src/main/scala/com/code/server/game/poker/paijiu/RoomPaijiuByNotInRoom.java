@@ -43,7 +43,7 @@ public class RoomPaijiuByNotInRoom extends Room {
         roomPaijiu.setClubRoomModel(clubRoomModel);
 
         //代建房 定时解散
-        if (!isCreaterJoin) {
+        if (!isCreaterJoin && !roomPaijiu.isClubRoom()) {
             //给代建房 开房者 扣钱
             if (RedisManager.getUserRedisService().getUserMoney(userId) < roomPaijiu.getCreateNeedMoney()) {
                 RoomManager.removeRoom(roomPaijiu.getRoomId());

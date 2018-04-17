@@ -115,7 +115,7 @@ class RoomPaijiu extends Room {
     this.roomStatisticsMap.put(userId, new RoomStatistics(userId))
     this.canStartUserId = users.get(0)
     //代开房
-    if (!isCreaterJoin) this.bankerId = users.get(0)
+    if (!isCreaterJoin ||isClubRoom) this.bankerId = users.get(0)
     addUser2RoomRedis(userId)
   }
 
