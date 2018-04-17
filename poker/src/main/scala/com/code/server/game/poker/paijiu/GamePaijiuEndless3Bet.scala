@@ -98,11 +98,21 @@ class GamePaijiuEndless3Bet extends GamePaijiuEndless{
     for (playerInfo <- sortedUsers) {
       val score2 = getGroupScore(playerInfo.group2)
       //庄家应该输的钱
+
+      if(score2 > sky8Score) {//第三道
+        banker.addScore(this.roomPaijiu, -playerInfo.bet.three)
+        playerInfo.addScore(this.roomPaijiu, playerInfo.bet.three)
+        roomPaijiu.addUserSocre(banker.userId, -playerInfo.bet.three)
+        roomPaijiu.addUserSocre(playerInfo.userId, playerInfo.bet.three)
+      }
+
       val bankerLoseScore = playerInfo.getBetScore(score2 >= mix8Score)
       val loseScore = if (bankerLoseScore > banker.score) banker.score else bankerLoseScore
       logger.info("应输的钱: " + bankerLoseScore)
       logger.info("实际的钱: " + loseScore)
       logger.info("庄家的钱: " + banker.score)
+
+
 
       //分数变化
       banker.addScore(roomPaijiu, -loseScore.toInt)
