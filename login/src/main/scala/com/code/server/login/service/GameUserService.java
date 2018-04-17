@@ -476,7 +476,7 @@ public class GameUserService {
 
         AgentUserService agentUserService = SpringUtil.getBean(AgentUserService.class);
 
-        AgentUser agentUser = agentUserService.getAgentUserDao().findOne(referrerId);
+        AgentUser agentUser = agentUserService.getAgentUserDao().findAgentUserByInvite_code("" + referrerId);
 
         if (agentUser == null) {
             return ErrorCode.REFERRER_NOT_EXIST;
