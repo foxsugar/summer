@@ -69,6 +69,7 @@ class GamePaijiuEndless3Bet extends GamePaijiuEndless{
             other.addScore(this.roomPaijiu, -other.bet.three)
             roomPaijiu.addUserSocre(banker.userId, other.bet.three)
             roomPaijiu.addUserSocre(other.userId, -other.bet.three)
+            roomPaijiu.bankerScore += other.bet.three
           }
           other.winState = LOSE
 
@@ -104,6 +105,7 @@ class GamePaijiuEndless3Bet extends GamePaijiuEndless{
         playerInfo.addScore(this.roomPaijiu, playerInfo.bet.three)
         roomPaijiu.addUserSocre(banker.userId, -playerInfo.bet.three)
         roomPaijiu.addUserSocre(playerInfo.userId, playerInfo.bet.three)
+        roomPaijiu.bankerScore -= playerInfo.bet.three
       }
 
       val bankerLoseScore = playerInfo.getBetScore(score2 >= mix8Score)
@@ -165,7 +167,7 @@ class GamePaijiuEndless3Bet extends GamePaijiuEndless{
         other.addScore(this.roomPaijiu, changeScore)
         roomPaijiu.addUserSocre(banker.userId, -changeScore)
         roomPaijiu.addUserSocre(other.userId, changeScore)
-        if(otherScore2 > mix8Score) {//第三道
+        if(otherScore2 > sky8Score) {//第三道
           banker.addScore(this.roomPaijiu, other.bet.three)
           other.addScore(this.roomPaijiu, -other.bet.three)
           roomPaijiu.addUserSocre(banker.userId, other.bet.three)
