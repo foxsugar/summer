@@ -115,7 +115,7 @@ class RoomPaijiu extends Room {
     this.roomStatisticsMap.put(userId, new RoomStatistics(userId))
     this.canStartUserId = users.get(0)
     //代开房
-    if (!isCreaterJoin) this.bankerId = users.get(0)
+    if (!isCreaterJoin ||isClubRoom) this.bankerId = users.get(0)
     addUser2RoomRedis(userId)
   }
 
@@ -193,8 +193,8 @@ object RoomPaijiu extends Room {
     0
   }
 
-  def createRoomNotInRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int, isCreaterJoin: Boolean): Int = {
-    RoomPaijiuByNotInRoom.createRoomNotInRoom(userId, roomType, gameType, gameNumber, isCreaterJoin)
+  def createRoomNotInRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int, isCreaterJoin: Boolean,clubId:String,clubRoomModel:String): Int = {
+    RoomPaijiuByNotInRoom.createRoomNotInRoom(userId, roomType, gameType, gameNumber, isCreaterJoin,clubId, clubRoomModel)
   }
 
   /*def createRoomNotInRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,isCreaterJoin:Boolean): Int = {

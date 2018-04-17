@@ -10,9 +10,9 @@ import com.code.server.db.model.Recommend;
 import com.code.server.login.service.AgentService;
 import com.code.server.redis.service.AgentRedisService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ import java.util.*;
  * Created by sunxianping on 2018/3/14.
  */
 
-@RestController
+@Controller
 @RequestMapping(value = "/agent")
 public class AgentAction {
 
@@ -52,8 +52,10 @@ public class AgentAction {
 //        response.sendRedirect("tt.html");
         Cookie[] cookies = request.getCookies();
         Cookie cookie = new Cookie("name","sun");
+        Cookie cookie1 = new Cookie("Admin-Token","Admin-Token");
         response.addCookie(cookie);
-        return "redirect:http://192.168.1.132:8080";
+        response.addCookie(cookie1);
+        return "redirect:http://192.168.1.132:8080/#/index";
 //        return "/ttt";
     }
 
