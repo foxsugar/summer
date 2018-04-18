@@ -42,12 +42,13 @@ public class LoginApplication extends SpringBootServletInitializer {
 
 			//检测rpc
 			RpcManager.getInstance().checkGameRpcServerWork();
+
+			//俱乐部 逻辑
+
+			ClubManager.getInstance().loadAll();
 		}
 
 
-		//俱乐部 逻辑
-
-		ClubManager.getInstance().loadAll();
 //		MsgConsumer.startAConsumer("userService",0,new UserServiceConsumer());
 //		MsgConsumer.startAConsumer("userService",1,new UserServiceConsumer());
 //		MsgConsumer.startAConsumer("userService",2,new UserServiceConsumer());
