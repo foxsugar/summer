@@ -25,6 +25,14 @@ public class GameInfoHasChi extends GameInfo {
      */
     protected void handleHuangzhuang(long userId) {
         computeAllGang();
+        switch (this.room.modeTotal) {
+            case "4":
+                break;
+            case "6":
+                break;
+            default:
+                turnResultToZeroOnHuangZhuang();
+        }
         sendResult(false, userId, null);
 //        room.addOneToCircleNumber();
 //        int nextId = nextTurnId(this.getFirstTurn());
