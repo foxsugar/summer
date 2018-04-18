@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by sunxianping on 2018/1/19.
@@ -14,6 +15,7 @@ public class ClubInfo {
     private List<ClubMember> applyList = new ArrayList<>();//申请列表
     private List<RoomModel> roomModels = new ArrayList<>();//房间信息
     private Map<String, RoomInstance> roomInstance = new HashMap<>();//房间实例
+    private List<RoomInstance> playingRoom = new CopyOnWriteArrayList<>();
 
     public Map<String, ClubMember> getMember() {
         return member;
@@ -48,6 +50,15 @@ public class ClubInfo {
 
     public ClubInfo setRoomInstance(Map<String, RoomInstance> roomInstance) {
         this.roomInstance = roomInstance;
+        return this;
+    }
+
+    public List<RoomInstance> getPlayingRoom() {
+        return playingRoom;
+    }
+
+    public ClubInfo setPlayingRoom(List<RoomInstance> playingRoom) {
+        this.playingRoom = playingRoom;
         return this;
     }
 }

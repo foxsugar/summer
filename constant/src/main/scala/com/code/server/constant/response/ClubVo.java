@@ -31,6 +31,8 @@ public class ClubVo {
 
     private List<RoomInstanceVo> roomInstance = new ArrayList<>();//房间实例
 
+    private List<RoomInstanceVo> playingRoom = new ArrayList<>();
+
 
 
     public String getId() {
@@ -147,6 +149,15 @@ public class ClubVo {
 
     public ClubVo setApplyNum(int applyNum) {
         this.applyNum = applyNum;
+        return this;
+    }
+
+    public List<RoomInstanceVo> getPlayingRoom() {
+        return playingRoom;
+    }
+
+    public ClubVo setPlayingRoom(List<RoomInstanceVo> playingRoom) {
+        this.playingRoom = playingRoom;
         return this;
     }
 }

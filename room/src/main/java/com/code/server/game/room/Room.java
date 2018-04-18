@@ -702,6 +702,7 @@ public class Room implements IfaceRoom {
      * 生成房间战绩
      */
     public void genRoomRecord() {
+        if(!isOpen) return;
         RoomRecord roomRecord = new RoomRecord();
         roomRecord.setRoomId(this.roomId);
         roomRecord.setId(this.getUuid());

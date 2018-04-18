@@ -1,6 +1,5 @@
 package com.code.server.game.mahjong.service
 
-import com.code.server.constant.game.IGameConstant
 import com.code.server.constant.response.{ErrorCode, ResponseVo}
 import com.code.server.game.mahjong.config.ServerConfig
 import com.code.server.game.mahjong.logic.{RoomFactory, RoomInfo}
@@ -318,7 +317,7 @@ object MahjongRoomService {
 
     val roomId = roomInfo.getRoomId
     val start: Long = System.currentTimeMillis
-    val node: TimerNode = new TimerNode(start, IGameConstant.ONE_HOUR, false, () => roomInfo.dissolutionRoom())
+    val node: TimerNode = roomInfo.getDissolutionRoomTimerNode
     roomInfo.setPrepareRoomTimerNode(node)
     GameTimer.addTimerNode(node)
     MsgSender.sendMsg2Player(new ResponseVo("mahjongRoomService", "createRoomButNotInRoom", roomInfo.toJSONObject), userId)

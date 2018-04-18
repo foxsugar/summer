@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by sunxianping on 2018/1/15.
@@ -119,6 +120,34 @@ public class GameClubService {
         if (isPresident) {
             clubVo.getApplyList().addAll(club.getClubInfo().getApplyList());
         }
+
+        //正在玩的房间
+
+        List<RoomInstance> removeList = new ArrayList<>();
+        club.getClubInfo().getPlayingRoom().forEach(ri->{
+            String roomId = ri.getRoomId();
+            if (RedisManager.getRoomRedisService().getServerId(roomId) == null) {
+                removeList.add(ri);
+            }else{
+                RoomInstanceVo vo = new RoomInstanceVo();
+                vo.setRoomId(roomId);
+                vo.setClubRoomModel(ri.getRoomModelId());
+                RedisManager.getRoomRedisService().getUsers(roomId).forEach(uid->{
+                    Map<String, Object> player = new HashMap<>();
+                    UserBean userBean = RedisManager.getUserRedisService().getUserBean(uid);
+                    if (userBean != null) {
+
+                        player.put("username", userBean.getUsername());
+                        player.put("image", userBean.getImage());
+                        vo.getPlayers().add(player);
+                    }
+
+                });
+                clubVo.getPlayingRoom().add(vo);
+            }
+        });
+        //删除已经解散的
+        club.getClubInfo().getPlayingRoom().removeAll(removeList);
 
 
         //todo 初始化数据
@@ -670,6 +699,8 @@ public class GameClubService {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club != null) {
             synchronized (club.lock) {
+                //加入已开房间
+                addPlayingRoom(club, club.getClubInfo().getRoomInstance().get(clubModelId));
                 //删除一个房间
                 club.getClubInfo().getRoomInstance().remove(clubModelId);
                 //统计
@@ -695,7 +726,13 @@ public class GameClubService {
         return 0;
     }
 
-
+    public void addPlayingRoom(Club club, RoomInstance roomInstance){
+        if(roomInstance == null) return;
+        if (club.getClubInfo().getPlayingRoom() == null) {
+            club.getClubInfo().setPlayingRoom(new CopyOnWriteArrayList<>());
+        }
+        club.getClubInfo().getPlayingRoom().add(roomInstance);
+    }
     private String getDateStr(long time) {
         long day = 1000L * 60 * 60 * 24;
         return "";

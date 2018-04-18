@@ -68,9 +68,6 @@ public class RoomDouDiZhu extends Room {
             GameTimer.removeNode(this.prepareRoomTimerNode);
         }
 
-        if ((this.isInGame||!isCreaterJoin) && this.curGameNumber == 1) {
-            drawBack();
-        }
 
         this.isInGame = false;
 

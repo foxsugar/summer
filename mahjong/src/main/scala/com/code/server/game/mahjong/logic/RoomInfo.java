@@ -3,6 +3,7 @@ package com.code.server.game.mahjong.logic;
 
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.game.PrepareRoomMj;
 import com.code.server.constant.game.UserBean;
@@ -12,6 +13,7 @@ import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.timer.GameTimer;
+import com.code.server.util.timer.TimerNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -291,6 +293,7 @@ public class RoomInfo extends Room {
         boolean isChange = scoreIsChange();
         if ((this.isInGame||!isCreaterJoin) && this.curGameNumber == 1 && !isChange) {
             drawBack();
+            GameTimer.removeNode(this.prepareRoomTimerNode);
         }
 
         if (isChange && gameInfo != null) {
@@ -313,6 +316,9 @@ public class RoomInfo extends Room {
 
 
 
+    public  TimerNode getDissolutionRoomTimerNode(){
+        return new TimerNode(System.currentTimeMillis(), IGameConstant.ONE_HOUR, false, this::dissolutionRoom);
+    }
 
 
 
