@@ -114,16 +114,11 @@ public class RoomManager {
         Map<Double, List<Room>> notFullRooms = notFullGoldRoom.get(room.getGameType());
 //        Map<Double, List<Room>> fullRooms = notFullGoldRoom.get(room.getGameType());
         if (notFullRooms != null) {
-
-
             //删除满的房间
             List<Room> rooms_type = notFullRooms.get(room.getGoldRoomType());
             if (rooms_type != null) {
-
                 rooms_type.remove(room);
             }
-
-
         }
     }
 

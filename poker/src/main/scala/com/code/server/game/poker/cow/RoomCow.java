@@ -2,7 +2,6 @@ package com.code.server.game.poker.cow;
 
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.IGameConstant;
-import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
@@ -193,17 +192,6 @@ public class RoomCow  extends Room {
         RedisManager.getUserRedisService().addUserMoney(this.createUser, -createNeedMoney);
     }
 
-    @Override
-    public PrepareRoom getPrepareRoomVo() {
-        PrepareRoom prepareRoom = new PrepareRoom();
-        prepareRoom.createTime = System.currentTimeMillis();
-        prepareRoom.gameType = this.getGameType();
-        prepareRoom.roomType = this.getRoomType();
-        prepareRoom.roomId = this.roomId;
-        prepareRoom.multiple = this.multiple;
-        prepareRoom.gameNumber = this.gameNumber;
-        return prepareRoom;
-    }
 
     protected void roomAddUser(long userId) {
 

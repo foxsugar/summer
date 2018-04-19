@@ -3,9 +3,7 @@ package com.code.server.game.poker.doudizhu;
 
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.response.ErrorCode;
-import com.code.server.constant.response.GameOfResult;
 import com.code.server.constant.response.ResponseVo;
-import com.code.server.constant.response.UserOfResult;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
@@ -17,9 +15,6 @@ import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 /**
  * Created by sunxianping on 2017/3/13.
  */
@@ -29,61 +24,7 @@ public class RoomDouDiZhu extends Room {
     public static final int PERSONNUM = 3;
 
 
-//    @Override
-//    protected Game getGameInstance() {
-//        switch (gameType) {
-//            case GAMETYPE_LINFEN:
-//                return new GameDouDiZhuLinFen();
-//            case GAMETYPE_QIANAN:
-//                return new GameDouDiZhuQianAn();
-//            case GAMETYPE_LONGQI:
-//                return new GameDouDiZhu();
-//            case GAMETYPE_LONGQI_LINFEN:
-//                return new GameDouDiZhuLinFenLongQi();
-//            case GAMETYPE_LONGQI_LINFEN_NO_QIANG:
-//                return new GameDouDiZhuLinFenNoQiang();
-//
-//            case GAMETYPE_LONGQI_NO_QIANG:
-//                return new GameDouDiZhuNoQiang();
-//            default:
-//                return new GameDouDiZhu();
-//        }
-//
-//    }
 
-
-
-    public void dissolutionRoom() {
-
-        if(RoomManager.getRoom(this.roomId)==null){
-            return;
-        }
-        RoomManager.removeRoom(this.roomId);
-        // 结果类
-        List<UserOfResult> userOfResultList = getUserOfResult();
-
-        //代开房 并且游戏未开始
-        if (!isCreaterJoin && !this.isInGame && this.curGameNumber == 1) {
-            drawBack();
-            GameTimer.removeNode(this.prepareRoomTimerNode);
-        }
-
-
-        this.isInGame = false;
-
-        // 存储返回
-        GameOfResult gameOfResult = new GameOfResult();
-
-        gameOfResult.setUserList(userOfResultList);
-        gameOfResult.setEndTime(LocalDateTime.now().toString());
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), users);
-
-        //战绩
-        genRoomRecord();
-
-
-
-    }
 
     public static RoomDouDiZhu getRoomInstance(String roomType) {
         switch (roomType) {
@@ -146,30 +87,6 @@ public class RoomDouDiZhu extends Room {
         return 0;
     }
 
-    public void spendMoney() {
-        super.spendMoney();
-//        RedisManager.getUserRedisService().addUserMoney(this.createUser, -createNeedMoney);
 
-        //临汾斗地主 抽成
-//        if(GAMETYPE_LINFEN.equals(gameType)){
-//            ThreadPool.getInstance().executor.execute(() -> {
-//                List<Rebate> list = new ArrayList<>();
-//                list.add(getRebate(user, createNeedMoney));
-//                RpcManager.getInstance().sendRpcRebat(list);
-//            });
-//        }
-
-
-    }
-
-//    private Rebate getRebate(User user, int num) {
-//        return new Rebate().setId(GameManager.getInstance().nextId())
-//                .setUserId(user.getUserId())
-//                .setRefereeId(user.getReferee())
-//                .setTime(System.currentTimeMillis())
-//                .setRebateNum(num)
-//                .setIsHasReferee(user.getReferee() != 0);
-//
-//    }
 
 }

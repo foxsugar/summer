@@ -528,6 +528,10 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
+    public boolean isRoomOver() {
+        return this.getCurGameNumber() >= this.getGameNumber();
+    }
+
     @Override
     public int startGameByClient(long userId) {
         return 0;
@@ -945,13 +949,6 @@ public class Room implements IfaceRoom {
         return gameType;
     }
 
-//    public Long getDealFirstOfRoom() {
-//        return dealFirstOfRoom;
-//    }
-//
-//    public void setDealFirstOfRoom(Long dealFirstOfRoom) {
-//        this.dealFirstOfRoom = dealFirstOfRoom;
-//    }
 
     public Room setGameType(String gameType) {
         this.gameType = gameType;

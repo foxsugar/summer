@@ -30,4 +30,5 @@ public class GameInfoHS extends GameInfoNew {
         }
         fapai();
     }
+
 }

@@ -57,7 +57,6 @@ public class GameClubService {
     @Autowired
     private ClubChargeService clubChargeService;
 
-    private static final int NEED_MONEY = 5000;
     private static final int JOIN_LIMIT = 5;
     private static final int ROOM_LIMIT = 3;
 
@@ -129,21 +128,7 @@ public class GameClubService {
             if (RedisManager.getRoomRedisService().getServerId(roomId) == null) {
                 removeList.add(ri);
             }else{
-                RoomInstanceVo vo = new RoomInstanceVo();
-                vo.setRoomId(roomId);
-                vo.setClubRoomModel(ri.getRoomModelId());
-                RedisManager.getRoomRedisService().getUsers(roomId).forEach(uid->{
-                    Map<String, Object> player = new HashMap<>();
-                    UserBean userBean = RedisManager.getUserRedisService().getUserBean(uid);
-                    if (userBean != null) {
-
-                        player.put("username", userBean.getUsername());
-                        player.put("image", userBean.getImage());
-                        vo.getPlayers().add(player);
-                    }
-
-                });
-                clubVo.getPlayingRoom().add(vo);
+                clubVo.getPlayingRoom().add(getRoomInstanceVo(ri));
             }
         });
         //删除已经解散的
@@ -174,14 +159,22 @@ public class GameClubService {
      */
     private RoomInstanceVo getRoomInstanceVo(RoomInstance roomInstance) {
         RoomInstanceVo vo = new RoomInstanceVo();
+        String roomId = roomInstance.getRoomId();
+        vo.setRoomId(roomId);
         vo.setClubRoomModel(roomInstance.getRoomModelId());
-        vo.setRoomId(roomInstance.getRoomId());
-        int num = 0;
-        if (roomInstance.getRoomId() != null) {
+        RedisManager.getRoomRedisService().getUsers(roomId).forEach(uid->{
+            Map<String, Object> player = new HashMap<>();
+            UserBean userBean = RedisManager.getUserRedisService().getUserBean(uid);
+            if (userBean != null) {
 
-            num = RedisManager.getRoomRedisService().getUsers(roomInstance.getRoomId()).size();
-        }
-        vo.setNum(num);
+                player.put("username", userBean.getUsername());
+                player.put("image", userBean.getImage());
+                vo.getPlayers().add(player);
+            }
+
+        });
+
+
         return vo;
     }
 

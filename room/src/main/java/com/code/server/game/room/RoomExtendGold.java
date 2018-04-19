@@ -45,6 +45,7 @@ public class RoomExtendGold extends Room {
 
     @Override
     protected boolean isCanJoinCheckMoney(long userId) {
+        //todo 检验金币
         return super.isCanJoinCheckMoney(userId);
     }
 
@@ -56,11 +57,27 @@ public class RoomExtendGold extends Room {
                 return rtn;
             }
             RoomManager.getInstance().removeFromFullRoom(this);
+
+            //todo 如果都退出了 并且不是第一局 删除房间
             return 0;
         }else return super.quitRoom(userId);
     }
 
     protected boolean isRoomFull() {
         return this.users.size() >= personNumber;
+    }
+
+
+    @Override
+    public boolean isRoomOver() {
+        //金币房 不解散
+        return !isGoldRoom() && super.isRoomOver();
+    }
+
+    @Override
+    public void clearReadyStatus(boolean isAddGameNum) {
+        //如果 金币不够 退出
+
+        super.clearReadyStatus(isAddGameNum);
     }
 }
