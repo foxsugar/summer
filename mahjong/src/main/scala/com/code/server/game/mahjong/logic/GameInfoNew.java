@@ -367,11 +367,14 @@ public class GameInfoNew extends GameInfo {
     }
 
     protected boolean isRoomOver() {
-        return room.getCurGameNumber() >= room.getGameNumber();
+        return room.isRoomOver();
     }
 
 
     public void noticeDissolutionResult() {
+        //金币房 不记录
+        if(this.room.isGoldRoom()) return;
+
         if (isRoomOver()) {
             List<UserOfResult> userOfResultList = this.room.getUserOfResult();
             // 存储返回
@@ -428,6 +431,9 @@ public class GameInfoNew extends GameInfo {
 
     @Override
     protected void genRecord() {
+        //金币房不记录
+        if (this.room.isGoldRoom()) return;
+
         long id = IdWorker.getDefaultInstance().nextId();
         genRecord(playerCardsInfos.values().stream().collect
                 (Collectors.toMap(PlayerCardsInfoMj::getUserId, PlayerCardsInfoMj::getScore)), room, id);

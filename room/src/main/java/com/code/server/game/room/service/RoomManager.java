@@ -37,70 +37,51 @@ public class RoomManager {
     }
 
 
-
-
-
-
-
+    /**
+     * 获得满的房间啊
+     * @param gameType
+     * @param goldGameType
+     * @return
+     */
     public List<Room> getFullRoom(String gameType, double goldGameType) {
         Map<Double, List<Room>> fullRooms = fullGoldRoom.computeIfAbsent(gameType, k -> new HashMap<>());
-
-        List<Room> rooms = fullRooms.computeIfAbsent(goldGameType, k -> new ArrayList<>());
-        return rooms;
+        return fullRooms.computeIfAbsent(goldGameType, k -> new ArrayList<>());
     }
 
+    /**
+     * 获得不满房间
+     * @param gameType
+     * @param goldGameType
+     * @return
+     */
     public List<Room> getNotFullRoom(String gameType, double goldGameType) {
         Map<Double, List<Room>> notFullRooms = notFullGoldRoom.computeIfAbsent(gameType, k -> new HashMap<>());
-        List<Room> rooms = notFullRooms.computeIfAbsent(goldGameType, k -> new ArrayList<>());
-        return rooms;
+        return notFullRooms.computeIfAbsent(goldGameType, k -> new ArrayList<>());
     }
 
 
-
-
-    public void removeFromFullRoom(Room room){
-        //删除满房间，添加不满房间
-        Map<Double, List<Room>> fullRooms = fullGoldRoom.get(room.getGameType());
-        if (fullRooms != null) {
-            //删除满的房间
-            List<Room> rooms_type = fullRooms.get(room.getGoldRoomType());
-            if (rooms_type != null) {
-
-                rooms_type.remove(room);
-            }
+    /**
+     * 删除满房间，添加不满房间
+     * @param room
+     */
+    public void moveFull2NotFullRoom(Room room){
+        getFullRoom(room.getGameType(), room.getGoldRoomType()).remove(room);
+        List<Room> notFull = getNotFullRoom(room.getGameType(), room.getGoldRoomType());
+        if (!notFull.contains(room)) {
+            notFull.add(room);
         }
-        //加入未满的房间
-        Map<Double, List<Room>> notFullRooms = notFullGoldRoom.get(room.getGameType());
-        if (notFullRooms != null) {
-            List<Room> rooms_type = notFullRooms.get(room.getGoldRoomType());
-            if (rooms_type != null) {
-                rooms_type.add(room);
-            }else{
-                notFullRooms.put(room.getGoldRoomType(), new ArrayList<>());
-            }
-        }
+
     }
 
-    public void removeFormNotFullRoom(Room room){
-        //删除满房间，添加不满房间
-        Map<Double, List<Room>> notFullRooms = notFullGoldRoom.get(room.getGameType());
-        if (notFullRooms != null) {
-            //删除满的房间
-            List<Room> rooms_type = notFullRooms.get(room.getGoldRoomType());
-            if (rooms_type != null) {
-
-                rooms_type.remove(room);
-            }
-        }
-        //加入未满的房间
-        Map<Double, List<Room>> fullRooms = fullGoldRoom.get(room.getGameType());
-        if (fullRooms != null) {
-            List<Room> rooms_type = fullRooms.get(room.getGoldRoomType());
-            if (rooms_type != null) {
-                rooms_type.add(room);
-            }else{
-                fullRooms.put(room.getGoldRoomType(), new ArrayList<>());
-            }
+    /**
+     * 删除不满房间，添加满房间
+     * @param room
+     */
+    public void moveNotFull2FullRoom(Room room){
+        getNotFullRoom(room.getGameType(), room.getGoldRoomType()).remove(room);
+        List<Room> full = getFullRoom(room.getGameType(), room.getGoldRoomType());
+        if (!full.contains(room)) {
+            full.add(room);
         }
     }
 
@@ -114,60 +95,41 @@ public class RoomManager {
         Map<Double, List<Room>> notFullRooms = notFullGoldRoom.get(room.getGameType());
 //        Map<Double, List<Room>> fullRooms = notFullGoldRoom.get(room.getGameType());
         if (notFullRooms != null) {
-
-
             //删除满的房间
             List<Room> rooms_type = notFullRooms.get(room.getGoldRoomType());
             if (rooms_type != null) {
-
                 rooms_type.remove(room);
             }
-
-
         }
     }
 
+    /**
+     * 删除一个房间
+     * @param roomId
+     */
     public static void removeRoom(String roomId) {
         //本地内存删除room
         IfaceRoom room = getInstance().rooms.get(roomId);
         getInstance().rooms.remove(roomId);
         RedisManager.removeRoomAllInfo(roomId);
         //删除代开房
-        if(room != null && room instanceof Room){
+        if(room != null){
             Room rm = (Room)room;
             if(!rm.isCreaterJoin()){
                 RedisManager.getUserRedisService().removePerpareRoom(rm.getCreateUser(), rm.getRoomId());
-//                if (prepareRoom.containsKey(rm.getCreateUser())) {
-//                    prepareRoom.get(rm.getCreateUser()).remove(rm.getRoomId());
-//                }
+            }
+            getInstance().robotRoom.remove(room);
+
+            if (room.isGoldRoom()) {
+                getInstance().getNotFullRoom(rm.getGameType(), rm.getGoldRoomType()).remove(room);
+                getInstance().getFullRoom(rm.getGameType(), rm.getGoldRoomType()).remove(room);
             }
         }
-        getInstance().robotRoom.remove(room);
+
+
     }
 
     public static void addRoom(String roomId,String serverId, Room room) {
-//        if (room.isGoldRoom()){
-//            if (room.getUsers().size() >= room.getPersonNumber()) {
-//                //加入已满的
-//                RoomManager.addRoom2Map(room);
-//                //删掉未满的
-//                RoomManager.removeRoomFromMap(room);
-//            }else{
-//                List<Room> list = notFullGoldRoom.get(room.getGoldRoomType());
-//                if (list == null) {
-//                    list = new ArrayList<>();
-//                }
-//                ArrayList<Room> templist = new ArrayList<>();
-//                templist.addAll(list);
-//                for (Room m:list) {
-//                    if(m.getRoomId().equals(room.getRoomId())){
-//                        templist.remove(m);
-//                    }
-//                }
-//                templist.add(room);
-//                notFullGoldRoom.put(room.getGoldRoomType(),templist);
-//            }
-//        }
         getInstance().rooms.put(roomId, room);
         getInstance().robotRoom.add(room);
         RedisManager.getRoomRedisService().setServerId(roomId,serverId);

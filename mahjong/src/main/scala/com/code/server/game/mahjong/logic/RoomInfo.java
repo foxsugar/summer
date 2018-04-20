@@ -3,15 +3,17 @@ package com.code.server.game.mahjong.logic;
 
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.game.PrepareRoomMj;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
-import com.code.server.game.room.Room;
+import com.code.server.game.room.RoomExtendGold;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.timer.GameTimer;
+import com.code.server.util.timer.TimerNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class RoomInfo extends Room {
+public class RoomInfo extends RoomExtendGold {
 
 
 //    private static final Logger logger = Logger.getLogger("game");
@@ -60,18 +62,17 @@ public class RoomInfo extends Room {
 
 
     /**
-     * @param @param modeTotal
-     * @param @param mode
-     * @param @param multiple
-     * @param @param gameNumber
-     * @param @param personNumber
-     * @param @param createUser
-     * @param @param bankerId    设定文件
-     * @return void    返回类型
-     * @throws
-     * @Title: init
-     * @Creater: Clark
-     * @Description: 创建房间
+     *
+     * @param roomId
+     * @param userId
+     * @param modeTotal
+     * @param mode
+     * @param multiple
+     * @param gameNumber
+     * @param personNumber
+     * @param createUser
+     * @param bankerId
+     * @param mustZimo
      */
     public void init(String roomId, long userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, long createUser, long bankerId, int mustZimo) {
         this.roomId = roomId;
@@ -173,6 +174,8 @@ public class RoomInfo extends Room {
             case "NIUYEZI":
                 this.setChangeBankerAfterHuangZhuang(true);
                 return new GameInfoNiuyezi();
+            case "HS":
+                return new GameInfoHS().setHasJieGangHu(true);
             default:
                 return new GameInfo();
         }
@@ -269,7 +272,7 @@ public class RoomInfo extends Room {
             userOfResultList.add(resultObj);
 
             //删除映射关系
-//            RedisManager.getUserRedisService().removeFromFullRoom(eachUser.getId());
+//            RedisManager.getUserRedisService().moveFull2NotFullRoom(eachUser.getId());
         }
         return userOfResultList;
     }
@@ -291,6 +294,7 @@ public class RoomInfo extends Room {
         boolean isChange = scoreIsChange();
         if ((this.isInGame||!isCreaterJoin) && this.curGameNumber == 1 && !isChange) {
             drawBack();
+            GameTimer.removeNode(this.prepareRoomTimerNode);
         }
 
         if (isChange && gameInfo != null) {
@@ -313,6 +317,9 @@ public class RoomInfo extends Room {
 
 
 
+    public  TimerNode getDissolutionRoomTimerNode(){
+        return new TimerNode(System.currentTimeMillis(), IGameConstant.ONE_HOUR, false, this::dissolutionRoom);
+    }
 
 
 

@@ -83,19 +83,25 @@ public class Room implements IfaceRoom {
     }
 
 
-    public static int genRoomId() {
+    public synchronized static int genRoomId(int serverId) {
 
+        long serverCount = RedisManager.getGameRedisService().getServerCount();
+        // 保证房间号不重 对服务器id取余
         while (true) {
             int id = random.nextInt(999999);
+            if(id % serverCount == serverId){
 
-            boolean isHas = RedisManager.getRoomRedisService().isExist("" + id);
+                boolean isHas = RedisManager.getRoomRedisService().isExist("" + id);
 
-            if (!isHas) {
-                return id;
+                if (!isHas) {
+                    return id;
+                }
             }
+
 
         }
     }
+
 
 
     public int getNeedMoney() throws DataNotFoundException {
@@ -528,6 +534,10 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
+    public boolean isRoomOver() {
+        return this.getCurGameNumber() >= this.getGameNumber();
+    }
+
     @Override
     public int startGameByClient(long userId) {
         return 0;
@@ -665,6 +675,8 @@ public class Room implements IfaceRoom {
         BeanUtils.copyProperties(room, roomVo);
 
         System.out.println(roomVo.roomId);
+
+        System.out.println(43421 % 4 ==2);
     }
 
     @Override
@@ -702,6 +714,7 @@ public class Room implements IfaceRoom {
      * 生成房间战绩
      */
     public void genRoomRecord() {
+        if(!isOpen) return;
         RoomRecord roomRecord = new RoomRecord();
         roomRecord.setRoomId(this.roomId);
         roomRecord.setId(this.getUuid());
@@ -944,13 +957,6 @@ public class Room implements IfaceRoom {
         return gameType;
     }
 
-//    public Long getDealFirstOfRoom() {
-//        return dealFirstOfRoom;
-//    }
-//
-//    public void setDealFirstOfRoom(Long dealFirstOfRoom) {
-//        this.dealFirstOfRoom = dealFirstOfRoom;
-//    }
 
     public Room setGameType(String gameType) {
         this.gameType = gameType;

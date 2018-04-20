@@ -103,4 +103,15 @@ public class GameRedisService implements IGameRedis,IConstant{
         game_server.entries().values().forEach(str->list.add(JsonUtil.readValue(str,ServerInfo.class)));
         return list;
     }
+
+    @Override
+    public long getServerCount() {
+        BoundHashOperations<String,String,String> game_server = redisTemplate.boundHashOps(IConstant.GAME_SERVER_LIST);
+        if (game_server == null) {
+            return 0;
+        }
+        return game_server.size();
+    }
+
+
 }

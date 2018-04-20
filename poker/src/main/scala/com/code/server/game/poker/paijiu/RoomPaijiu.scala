@@ -6,6 +6,7 @@ import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
+import com.code.server.redis.service.RedisManager
 import com.code.server.util.timer.GameTimer
 import com.code.server.util.{IdWorker, SpringUtil}
 import org.springframework.beans.BeanUtils
@@ -96,6 +97,8 @@ class RoomPaijiu extends Room {
     val game = getGameInstance
     this.game = game
     game.startGame(users, this)
+    notifyCludGameStart()
+
 
     //游戏开始 代建房 去除定时解散
     if (!isOpen && !this.isCreaterJoin) GameTimer.removeNode(prepareRoomTimerNode)
@@ -169,9 +172,11 @@ class RoomPaijiu extends Room {
 
 
 object RoomPaijiu extends Room {
-  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,clubId:String,clubRoomModel:String): Int = {
+  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,clubId:String,clubRoomModel:String,isAA:Boolean): Int = {
+    val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
+    val serverCount = RedisManager.getGameRedisService.getAllServer.size()
     val roomPaijiu = new RoomPaijiu
-    roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId()))
+    roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId(serverConfig.getServerId)))
     roomPaijiu.setRoomType(roomType)
     roomPaijiu.setGameType(gameType)
     roomPaijiu.setGameNumber(gameNumber)
@@ -180,11 +185,11 @@ object RoomPaijiu extends Room {
     roomPaijiu.setPersonNumber(4)
     roomPaijiu.setClubId(clubId)
     roomPaijiu.setClubRoomModel(clubRoomModel)
+    roomPaijiu.setAA(isAA)
     roomPaijiu.init(gameNumber, 1)
     val code = roomPaijiu.joinRoom(userId, true)
     if (code != 0) return code
 
-    val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
     RoomManager.addRoom(roomPaijiu.getRoomId, "" + serverConfig.getServerId, roomPaijiu)
     val idword = new IdWorker(serverConfig.getServerId, 0)
     roomPaijiu.setUuid(idword.nextId())

@@ -105,9 +105,11 @@ public class RoomPullMice extends Room {
 
     public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, boolean hasWubuFeng, String clubId, String clubRoomModel) throws DataNotFoundException {
 
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
         RoomPullMice room = new RoomPullMice();
         room.personNumber = PERSONNUM;
-        room.roomId = getRoomIdStr(genRoomId());
+        room.roomId = getRoomIdStr(genRoomId(serverConfig.getServerId()));
         room.createUser = userId;
         room.gameType = gameType;
         room.isCreaterJoin = isJoin;
@@ -141,7 +143,7 @@ public class RoomPullMice extends Room {
             GameTimer.addTimerNode(prepareRoomNode);
         }
 
-        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
         RoomManager.addRoom(room.roomId, "" + serverConfig.getServerId(), room);
 
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);
@@ -197,6 +199,7 @@ public class RoomPullMice extends Room {
         GamePullMice game = (GamePullMice) getGameInstance();
         this.game = game;
         game.startGame(users, this);
+        notifyCludGameStart();
 
         //游戏开始 代建房 去除定时解散
         if (!isOpen && !this.isCreaterJoin) GameTimer.removeNode(prepareRoomTimerNode);

@@ -265,18 +265,6 @@ public class GameInfo extends Game {
         //拿出一张
         String card = getMoPaiCard(playerCardsInfo);
         //有换牌需求
-//        if (isTest && playerCardsInfo.nextNeedCard != -1) {
-//            String needCard = getCardByTypeFromRemainCards(playerCardsInfo.nextNeedCard);
-//            playerCardsInfo.nextNeedCard = -1;
-//            if (needCard != null) {
-//                card = needCard;
-//                remainCards.remove(needCard);
-//            } else {
-//                card = remainCards.remove(0);
-//            }
-//        } else {
-//            card = remainCards.remove(0);
-//        }
 
         playerCardsInfo.mopai(card);
         //
@@ -1016,7 +1004,7 @@ public class GameInfo extends Game {
     }
 
     protected boolean isRoomOver() {
-        return room.getCurGameNumber() >= room.getGameNumber();
+        return room.isRoomOver();
     }
 
 

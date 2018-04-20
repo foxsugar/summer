@@ -29,8 +29,9 @@ import com.code.server.util.timer.TimerNode;
 public class RoomPaijiuByNotInRoom extends Room {
 
     public static int createRoomNotInRoom(long userId, String roomType, String gameType,Integer gameNumber,boolean isCreaterJoin,String clubId,String clubRoomModel) throws DataNotFoundException {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         RoomPaijiu roomPaijiu = new RoomPaijiu();
-        roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId()));
+        roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId(serverConfig.getServerId())));
         roomPaijiu.setRoomType(roomType);
         roomPaijiu.setGameType(gameType);
         roomPaijiu.setGameNumber(gameNumber);
@@ -56,7 +57,7 @@ public class RoomPaijiuByNotInRoom extends Room {
             GameTimer.addTimerNode(prepareRoomNode);
         }
 
-        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
         RoomManager.addRoom(roomPaijiu.getRoomId(), "" + serverConfig.getServerId(), roomPaijiu);
         IdWorker idword = new IdWorker(serverConfig.getServerId(),0);
         roomPaijiu.setUuid(idword.nextId());

@@ -34,7 +34,7 @@ public class RoomExtendGold extends Room {
             }
             //如果房间已满 加入已满房间
             if (this.isRoomFull()) {
-                RoomManager.getInstance().removeFormNotFullRoom(this);
+                RoomManager.getInstance().moveNotFull2FullRoom(this);
             }
             return 0;
         }else{
@@ -45,22 +45,45 @@ public class RoomExtendGold extends Room {
 
     @Override
     protected boolean isCanJoinCheckMoney(long userId) {
+        //todo 检验金币
         return super.isCanJoinCheckMoney(userId);
     }
 
     @Override
     public int quitRoom(long userId) {
-        if (isGoldRoom() && goldRoomPermission == GOLD_ROOM_PERMISSION_DEFAULT) {
+        if (isGoldRoom()) {
             int rtn = super.quitRoom(userId);
             if (rtn != 0) {
                 return rtn;
             }
-            RoomManager.getInstance().removeFromFullRoom(this);
+            if (goldRoomPermission == GOLD_ROOM_PERMISSION_DEFAULT) {
+                RoomManager.getInstance().moveFull2NotFullRoom(this);
+            }
+
+            //todo 如果都退出了 并且不是第一局 删除房间
+            if (this.users.size() == 0 && this.curGameNumber > 1) {
+
+                RoomManager.removeRoom(this.roomId);
+            }
             return 0;
         }else return super.quitRoom(userId);
     }
 
     protected boolean isRoomFull() {
         return this.users.size() >= personNumber;
+    }
+
+
+    @Override
+    public boolean isRoomOver() {
+        //金币房 不解散
+        return !isGoldRoom() && super.isRoomOver();
+    }
+
+    @Override
+    public void clearReadyStatus(boolean isAddGameNum) {
+        //todo 如果 金币不够 退出
+
+        super.clearReadyStatus(isAddGameNum);
     }
 }

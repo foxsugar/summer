@@ -77,10 +77,12 @@ public class RoomHitGoldFlower extends Room {
     }
 
     public static int createHitGoldFlowerRoom(long userId, int gameNumber, int personNumber,int cricleNumber,int multiple,int caiFen,int menPai, String gameType, String roomType, boolean isAA, boolean isJoin, String clubId, String clubRoomModel) throws DataNotFoundException {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
         RoomHitGoldFlower room = getRoomInstance(roomType);
 
         room.personNumber = personNumber;
-        room.roomId = getRoomIdStr(genRoomId());
+        room.roomId = getRoomIdStr(genRoomId(serverConfig.getServerId()));
         room.createUser = userId;
         room.gameType = gameType;
         room.roomType = roomType;
@@ -115,7 +117,7 @@ public class RoomHitGoldFlower extends Room {
             GameTimer.addTimerNode(prepareRoomNode);
         }
 
-        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
         RoomManager.addRoom(room.roomId, "" + serverConfig.getServerId(), room);
 
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);

@@ -2,7 +2,6 @@ package com.code.server.game.poker.cow;
 
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.IGameConstant;
-import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
@@ -55,10 +54,12 @@ public class RoomCow  extends Room {
     }
 
     public static int createCowRoom(long userId, int gameNumber, int personNumber,int multiple, String gameType, String roomType, boolean isAA, boolean isJoin, String clubId, String clubRoomModel) throws DataNotFoundException {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
         RoomCow room = getRoomInstance(roomType);
 
         room.personNumber = personNumber;
-        room.roomId = getRoomIdStr(genRoomId());
+        room.roomId = getRoomIdStr(genRoomId(serverConfig.getServerId()));
         room.createUser = userId;
         room.gameType = gameType;
         room.roomType = roomType;
@@ -90,7 +91,7 @@ public class RoomCow  extends Room {
             GameTimer.addTimerNode(prepareRoomNode);
         }
 
-        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
         RoomManager.addRoom(room.roomId, "" + serverConfig.getServerId(), room);
 
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);
@@ -193,17 +194,6 @@ public class RoomCow  extends Room {
         RedisManager.getUserRedisService().addUserMoney(this.createUser, -createNeedMoney);
     }
 
-    @Override
-    public PrepareRoom getPrepareRoomVo() {
-        PrepareRoom prepareRoom = new PrepareRoom();
-        prepareRoom.createTime = System.currentTimeMillis();
-        prepareRoom.gameType = this.getGameType();
-        prepareRoom.roomType = this.getRoomType();
-        prepareRoom.roomId = this.roomId;
-        prepareRoom.multiple = this.multiple;
-        prepareRoom.gameNumber = this.gameNumber;
-        return prepareRoom;
-    }
 
     protected void roomAddUser(long userId) {
 

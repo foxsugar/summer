@@ -1,5 +1,9 @@
 package com.code.server.constant.response;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by sunxianping on 2018/1/25.
  */
@@ -7,6 +11,9 @@ public class RoomInstanceVo {
     private int num;
     private String roomId;
     private String clubRoomModel;
+    private List<Map<String, Object>> players = new ArrayList<>();
+
+
 
     public int getNum() {
         return num;
@@ -32,6 +39,15 @@ public class RoomInstanceVo {
 
     public RoomInstanceVo setClubRoomModel(String clubRoomModel) {
         this.clubRoomModel = clubRoomModel;
+        return this;
+    }
+
+    public List<Map<String, Object>> getPlayers() {
+        return players;
+    }
+
+    public RoomInstanceVo setPlayers(List<Map<String, Object>> players) {
+        this.players = players;
         return this;
     }
 }
