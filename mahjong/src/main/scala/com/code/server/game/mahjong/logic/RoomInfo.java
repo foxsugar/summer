@@ -272,7 +272,7 @@ public class RoomInfo extends RoomExtendGold {
             userOfResultList.add(resultObj);
 
             //删除映射关系
-//            RedisManager.getUserRedisService().removeFromFullRoom(eachUser.getId());
+//            RedisManager.getUserRedisService().moveFull2NotFullRoom(eachUser.getId());
         }
         return userOfResultList;
     }

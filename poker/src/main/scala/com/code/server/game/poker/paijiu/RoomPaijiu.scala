@@ -47,7 +47,6 @@ class RoomPaijiu extends Room {
       val game = getGameInstance
       this.game = game
       game.startGame(users, this)
-      notifyCludGameStart()
 
       //游戏开始 代建房 去除定时解散
       if (!isOpen && !this.isCreaterJoin) GameTimer.removeNode(prepareRoomTimerNode)
@@ -173,7 +172,7 @@ class RoomPaijiu extends Room {
 
 
 object RoomPaijiu extends Room {
-  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,clubId:String,clubRoomModel:String): Int = {
+  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,clubId:String,clubRoomModel:String,isAA:Boolean): Int = {
     val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
     val serverCount = RedisManager.getGameRedisService.getAllServer.size()
     val roomPaijiu = new RoomPaijiu
@@ -186,6 +185,7 @@ object RoomPaijiu extends Room {
     roomPaijiu.setPersonNumber(4)
     roomPaijiu.setClubId(clubId)
     roomPaijiu.setClubRoomModel(clubRoomModel)
+    roomPaijiu.setAA(isAA)
     roomPaijiu.init(gameNumber, 1)
     val code = roomPaijiu.joinRoom(userId, true)
     if (code != 0) return code

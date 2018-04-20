@@ -3,6 +3,7 @@ package com.code.server.game.poker.paijiu
 import java.lang.Long
 import java.util
 
+import com.code.server.constant.data.DataManager
 import com.code.server.game.room.Room
 
 /**
@@ -56,7 +57,14 @@ class GamePaijiuEndless extends GamePaijiu {
     this.roomPaijiu.clearReadyStatus(true)
     val banker = playerCardInfos(bankerId)
 //    if (banker.score <= 0 || banker.score >= roomPaijiu.bankerInitScore * roomPaijiu.getUsers.size()) {
-    if (banker.score <= 0 || banker.score >= 600) {
+    var max:Double = 600
+    val roomData = DataManager.data.getRoomDataMap.get(this.roomPaijiu.getGameType)
+    if (roomData == null) {
+      if (roomData.getMaxBet != 0) {
+        max = roomData.getMaxBet
+      }
+    }
+    if (banker.score <= 0 || banker.score >= max) {
       sendFinalResult()
     }
   }

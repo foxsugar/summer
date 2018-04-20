@@ -90,7 +90,8 @@ object PokerRoomService {
         val gameNumber = params.path("gameNumber").asInt()
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
-        return RoomPaijiu.createRoom(userId,roomType, gameType,gameNumber,clubId,clubRoomModel)
+        val isAA = params.path("isAA").asBoolean(false)
+        return RoomPaijiu.createRoom(userId,roomType, gameType,gameNumber,clubId,clubRoomModel,isAA)
 
       case "createPaijiuGoldRoom"=>
         val roomType = params.path("roomType").asText()

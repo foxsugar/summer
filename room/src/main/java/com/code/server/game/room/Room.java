@@ -86,7 +86,7 @@ public class Room implements IfaceRoom {
     public synchronized static int genRoomId(int serverId) {
 
         long serverCount = RedisManager.getGameRedisService().getServerCount();
-        //todo 保证房间号不重 对服务器id取余
+        // 保证房间号不重 对服务器id取余
         while (true) {
             int id = random.nextInt(999999);
             if(id % serverCount == serverId){

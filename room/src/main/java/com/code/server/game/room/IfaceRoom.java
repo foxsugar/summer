@@ -70,4 +70,6 @@ public interface IfaceRoom extends IGameConstant {
     PrepareRoom getPrepareRoomVo();
 
     int getRoomClubByUser(long userId);
+
+    boolean isGoldRoom();
 }

@@ -137,7 +137,7 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
             isInFullRoom = true;
         }
         if (isInFullRoom) {
-            RoomManager.getInstance().removeFromFullRoom(this);
+            RoomManager.getInstance().moveFull2NotFullRoom(this);
         }
         //删除
         if (this.users.size() == 0) {
