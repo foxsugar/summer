@@ -8,6 +8,7 @@ import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -122,7 +123,7 @@ public class GameGoldPaijiu extends GamePaijiuEndless{
         }
 
         for (Long l:this.roomPaijiu().userScores.keySet()) {
-            if(this.roomPaijiu().userScores.get(l)<10 && l!=this.bankerId()){
+            if(this.roomPaijiu().userScores.get(l)<10 && !Objects.equals(l, this.bankerId())){
                 sendFinalResult();
                 return;
             }

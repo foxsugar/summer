@@ -155,10 +155,12 @@ public class RoomTuiTongZi extends Room{
     }
 
     public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, String clubId, String clubRoomModel) throws DataNotFoundException {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
         RoomTuiTongZi room = getRoomInstance(roomType);
 
         room.personNumber = personNumber;
-        room.roomId = getRoomIdStr(genRoomId());
+        room.roomId = getRoomIdStr(genRoomId(serverConfig.getServerId()));
         room.createUser = userId;
         room.gameType = gameType;
         room.isCreaterJoin = isJoin;
@@ -188,7 +190,7 @@ public class RoomTuiTongZi extends Room{
             GameTimer.addTimerNode(prepareRoomNode);
         }
 
-        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
         RoomManager.addRoom(room.roomId, "" + serverConfig.getServerId(), room);
 
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);

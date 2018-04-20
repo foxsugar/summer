@@ -67,7 +67,7 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
         if (RedisManager.getUserRedisService().getUserMoney(userId) < needMoney.get(goldRoomType)) {
             return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
         }
-
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         Room nullRoom = RoomManager.getNullRoom(gameType, goldRoomType);
         if(nullRoom==null){
             switch (roomType) {
@@ -82,7 +82,7 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
                     break;
             }
             nullRoom.setPersonNumber(PERSONNUM);
-            nullRoom.setRoomId(getRoomIdStr(genRoomId()));
+            nullRoom.setRoomId(getRoomIdStr(genRoomId(serverConfig.getServerId())));
             nullRoom.setCreateUser(userId);
             nullRoom.setGoldRoomType(goldRoomType);
             nullRoom.setGameType(GAMETYPE_LONGQI);
@@ -110,7 +110,7 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
         //room.getReady(userId);//准备
         //list.add(room);
 
-        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
         RoomManager.addRoom(nullRoom.getRoomId(), "" + serverConfig.getServerId(), nullRoom);
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(),0);
         nullRoom.setUuid(idWorker.nextId());

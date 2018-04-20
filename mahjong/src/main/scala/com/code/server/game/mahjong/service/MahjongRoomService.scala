@@ -185,7 +185,8 @@ object MahjongRoomService {
 
   def createRoom(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int, gameType: String, each: String, isJoin: Boolean,roomType:String, mustZimo:Int, yipaoduoxiang:Boolean,canChi:Boolean,haveTing:Boolean,clubId:String,clubRoomModel:String): (Int, RoomInfo) = {
     val roomInfo: RoomInfo = RoomFactory.getRoomInstance(gameType)
-    val roomId: String = Room.getRoomIdStr(Room.genRoomId)
+    val serverId: Int = SpringUtil.getBean(classOf[ServerConfig]).getServerId
+    val roomId: String = Room.getRoomIdStr(Room.genRoomId(serverId))
     roomInfo.setRoomType(roomType)
     roomInfo.setAA("1".equals(each))
     roomInfo.setEach(each)
@@ -203,7 +204,7 @@ object MahjongRoomService {
         return (code, null)
       }
     }
-    val serverId: Int = SpringUtil.getBean(classOf[ServerConfig]).getServerId
+
     RoomManager.addRoom(roomInfo.getRoomId, "" + serverId, roomInfo)
     val idWorker = new IdWorker(serverId,0)
     roomInfo.setUuid(idWorker.nextId())
@@ -335,6 +336,10 @@ object MahjongRoomService {
       mjRoom.getDefaultGoldRoomInstance()
 
       RoomManager.getInstance().addNotFullRoom(mjRoom)
+
+      //加入房间列表
+      val serverId: Int = SpringUtil.getBean(classOf[ServerConfig]).getServerId
+      RoomManager.addRoom(mjRoom.getRoomId, "" + serverId, mjRoom)
 
 
     }

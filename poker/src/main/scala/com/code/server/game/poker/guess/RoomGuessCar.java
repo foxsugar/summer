@@ -41,16 +41,18 @@ public class RoomGuessCar extends Room {
             return ErrorCode.NOT_HAVE_MORE_MONEY;
         }
 
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
         RoomGuessCar roomGuessCar = new RoomGuessCar();
         roomGuessCar.personNumber = PERSONNUM;
 
-        roomGuessCar.roomId = getRoomIdStr(genRoomId());
+        roomGuessCar.roomId = getRoomIdStr(genRoomId(serverConfig.getServerId()));
         roomGuessCar.createUser = userId;
         roomGuessCar.gameType = gameType;
         roomGuessCar.roomType = roomType;
         roomGuessCar.bankerId = userId;
 
-        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
         RoomManager.addRoom(roomGuessCar.roomId, "" + serverConfig.getServerId(), roomGuessCar);
 
         //扣掉

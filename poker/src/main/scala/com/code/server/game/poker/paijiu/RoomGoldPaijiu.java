@@ -44,8 +44,9 @@ public class RoomGoldPaijiu extends RoomPaijiu {
     protected int goldType;
 
     public static int createGoldRoom(Long userId,String roomType,String gameType,int gameNumber,int isGold,int goldType) throws DataNotFoundException {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         RoomGoldPaijiu roomGoldPaijiu = new RoomGoldPaijiu();
-        roomGoldPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId()));
+        roomGoldPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId(serverConfig.getServerId())));
         roomGoldPaijiu.setRoomType(roomType);
         roomGoldPaijiu.setGameType(gameType);
         roomGoldPaijiu.setGameNumber(gameNumber);
@@ -60,7 +61,7 @@ public class RoomGoldPaijiu extends RoomPaijiu {
             return code;
         }
 
-        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
         RoomManager.addRoom(roomGoldPaijiu.getRoomId(), "" + serverConfig.getServerId(), roomGoldPaijiu);
         IdWorker idword = new IdWorker(serverConfig.getServerId(), 0);
         roomGoldPaijiu.setUuid(idword.nextId());

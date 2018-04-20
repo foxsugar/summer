@@ -83,19 +83,25 @@ public class Room implements IfaceRoom {
     }
 
 
-    public static int genRoomId() {
+    public synchronized static int genRoomId(int serverId) {
 
+        long serverCount = RedisManager.getGameRedisService().getServerCount();
+        //todo 保证房间号不重 对服务器id取余
         while (true) {
             int id = random.nextInt(999999);
+            if(id % serverCount == serverId){
 
-            boolean isHas = RedisManager.getRoomRedisService().isExist("" + id);
+                boolean isHas = RedisManager.getRoomRedisService().isExist("" + id);
 
-            if (!isHas) {
-                return id;
+                if (!isHas) {
+                    return id;
+                }
             }
+
 
         }
     }
+
 
 
     public int getNeedMoney() throws DataNotFoundException {
@@ -669,6 +675,8 @@ public class Room implements IfaceRoom {
         BeanUtils.copyProperties(room, roomVo);
 
         System.out.println(roomVo.roomId);
+
+        System.out.println(43421 % 4 ==2);
     }
 
     @Override

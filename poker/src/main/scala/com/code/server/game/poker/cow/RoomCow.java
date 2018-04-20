@@ -54,10 +54,12 @@ public class RoomCow  extends Room {
     }
 
     public static int createCowRoom(long userId, int gameNumber, int personNumber,int multiple, String gameType, String roomType, boolean isAA, boolean isJoin, String clubId, String clubRoomModel) throws DataNotFoundException {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
         RoomCow room = getRoomInstance(roomType);
 
         room.personNumber = personNumber;
-        room.roomId = getRoomIdStr(genRoomId());
+        room.roomId = getRoomIdStr(genRoomId(serverConfig.getServerId()));
         room.createUser = userId;
         room.gameType = gameType;
         room.roomType = roomType;
@@ -89,7 +91,7 @@ public class RoomCow  extends Room {
             GameTimer.addTimerNode(prepareRoomNode);
         }
 
-        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
         RoomManager.addRoom(room.roomId, "" + serverConfig.getServerId(), room);
 
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);

@@ -107,6 +107,7 @@ public class RoomManager {
     public void addNotFullRoom(Room room) {
         List<Room> rooms = getNotFullRoom(room.getGameType(), room.getGoldRoomType());
         rooms.add(room);
+
     }
 
 

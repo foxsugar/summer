@@ -59,6 +59,10 @@ public class RoomExtendGold extends Room {
             RoomManager.getInstance().removeFromFullRoom(this);
 
             //todo 如果都退出了 并且不是第一局 删除房间
+            if (this.users.size() == 0 && this.curGameNumber > 1) {
+
+            }
+            RoomManager.removeRoom(this.roomId);
             return 0;
         }else return super.quitRoom(userId);
     }

@@ -22,5 +22,7 @@ public interface IGameRedis {
 
     List<ServerInfo> getAllServer();
 
+    long getServerCount();
+
 
 }
