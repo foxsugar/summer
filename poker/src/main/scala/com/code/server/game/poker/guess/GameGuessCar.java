@@ -47,7 +47,6 @@ public class GameGuessCar extends Game{
     public Map<Long, PlayerCardInfoGuessCar> playerCardInfos = new HashMap<>();
     protected Random rand = new Random();
     protected RoomGuessCar room;
-    protected long lastOperateTime;
     //protected long beginTime;
     protected int color = -1;
     protected double redScore;//red 0 green 1
@@ -300,10 +299,7 @@ public class GameGuessCar extends Game{
     }
 
 
-    //更新操作时间
-    protected void updateLastOperateTime() {
-        this.lastOperateTime = System.currentTimeMillis();
-    }
+
 
 
     //===========================================

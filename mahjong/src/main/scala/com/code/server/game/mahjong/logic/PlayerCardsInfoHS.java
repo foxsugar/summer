@@ -129,8 +129,10 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
             score += yu;
 
             //三家出
+            score *= this.roomInfo.getMultiple();
             for (PlayerCardsInfoMj playerCardsInfo : this.gameInfo.getPlayerCardsInfos().values()) {
                 if (playerCardsInfo.getUserId() != userId) {
+
                     playerCardsInfo.addScore(-score);
                     roomInfo.setUserSocre(playerCardsInfo.getUserId(), -score);
                     subScore += score;
@@ -150,6 +152,7 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
             }
             score += yu;
             //点炮的人出
+            score *= this.roomInfo.getMultiple();
             dianpaoPlayer.addScore(-score);
             roomInfo.setUserSocre(dianpaoPlayer.getUserId(), -score);
 

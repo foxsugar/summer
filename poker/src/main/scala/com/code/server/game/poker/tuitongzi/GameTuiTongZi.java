@@ -7,7 +7,6 @@ import com.code.server.game.room.service.RoomManager;
 import com.code.server.util.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.Int;
 
 import java.util.*;
 
@@ -34,7 +33,6 @@ public class GameTuiTongZi extends Game{
     public static final int REQUIRE_COUNT_2 = 5;
     public static final int REQUIRE_COUNT_3 = 8;
 
-    protected long lastOperateTime;
 
     public IfaceGameVo toVo(long watchUser) {
 
@@ -1020,10 +1018,7 @@ public class GameTuiTongZi extends Game{
         this.room = room;
     }
 
-    //更新操作时间
-    protected void updateLastOperateTime() {
-        this.lastOperateTime = System.currentTimeMillis();
-    }
+
 
     //更新操作时间
     protected void updateRoomLastTime() {

@@ -37,7 +37,6 @@ public class GameHitGoldFlower extends Game {
 
     protected RoomHitGoldFlower room;
 
-    protected long lastOperateTime;
     //private Double MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();//最大下注数
     private Double MAX_BET_NUM = 0.0;
 
@@ -748,10 +747,7 @@ public class GameHitGoldFlower extends Game {
         sendFinalResult();
     }
 
-    //更新操作时间
-    protected void updateLastOperateTime() {
-        this.lastOperateTime = System.currentTimeMillis();
-    }
+
 
 
     //===========================================

@@ -58,7 +58,6 @@ public class GameDouDiZhu extends Game {
     protected Set<Long> userPlayCount = new HashSet<>();
     protected int tableScore;//底分
     protected boolean isNMQiang = false;//农民是否抢过
-    protected long lastOperateTime;
     protected ReplayDouDiZhu replay = new ReplayDouDiZhu();
 
 
@@ -556,9 +555,7 @@ public class GameDouDiZhu extends Game {
         return 0;
     }
 
-    protected void updateLastOperateTime() {
-        this.lastOperateTime = System.currentTimeMillis();
-    }
+
 
     /**
      * 通知可以叫地主

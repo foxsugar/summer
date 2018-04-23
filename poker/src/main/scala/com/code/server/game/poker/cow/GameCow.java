@@ -37,7 +37,6 @@ public class GameCow extends Game {
     protected Random rand = new Random();
     protected List<Long> loseUser = new ArrayList<>();//输牌的人
     protected RoomCow room;
-    protected long lastOperateTime;
     protected int step;//步骤
     protected List<Integer> leaveCards = new ArrayList<>();//剩余的牌，暂时无用
 
@@ -313,10 +312,7 @@ public class GameCow extends Game {
         }
     }
 
-    //更新操作时间
-    protected void updateLastOperateTime() {
-        this.lastOperateTime = System.currentTimeMillis();
-    }
+
 
     //更新操作时间
     protected void updateRoomLastTime() {

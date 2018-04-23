@@ -24,6 +24,7 @@ public class Game implements IfaceGame{
 
     public List<Long> users = new ArrayList<>();
     public int number;
+    protected long lastOperateTime;
 
     public void startGame(List<Long> users,Room room){
 
@@ -32,6 +33,11 @@ public class Game implements IfaceGame{
     protected void genRecord() {
 
     }
+
+    protected void updateLastOperateTime() {
+        this.lastOperateTime = System.currentTimeMillis();
+    }
+
     /**
      * 下个人
      *

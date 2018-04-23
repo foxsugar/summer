@@ -10,6 +10,15 @@ public class RoomExtendGold extends Room {
 
 
     @Override
+    public void startGame() {
+        //todo 庄家退出游戏的处理
+        if (!this.users.contains(this.bankerId)) {
+            this.bankerId = this.users.get(0);
+        }
+        super.startGame();
+    }
+
+    @Override
     public void addUserSocre(long userId, double score) {
         super.addUserSocre(userId, score);
         //todo 金币改变
@@ -46,6 +55,10 @@ public class RoomExtendGold extends Room {
     @Override
     protected boolean isCanJoinCheckMoney(long userId) {
         //todo 检验金币
+        double gold = RedisManager.getUserRedisService().getUserGold(userId);
+        if (gold < getMinEnterGold()) {
+            return false;
+        }
         return super.isCanJoinCheckMoney(userId);
     }
 
@@ -83,7 +96,32 @@ public class RoomExtendGold extends Room {
     @Override
     public void clearReadyStatus(boolean isAddGameNum) {
         //todo 如果 金币不够 退出
+        int minGold = getMinGold();
+        for (long userId : this.users) {
+            double gold = RedisManager.getUserRedisService().getUserGold(userId);
+            if(gold < minGold){
+                this.quitRoom(userId);
+            }
+        }
 
         super.clearReadyStatus(isAddGameNum);
+    }
+
+    /**
+     * 最小金币
+     * @return
+     */
+    protected int getMinGold(){
+        //todo
+        return this.getMultiple() * 10;
+    }
+
+    /**
+     * 最小进场金币
+     * @return
+     */
+    protected int getMinEnterGold() {
+        //todo 公式
+        return this.getMultiple() * 20;
     }
 }
