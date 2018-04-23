@@ -359,13 +359,7 @@ public class GameCow extends Game {
         this.room = room;
     }
 
-    public long getLastOperateTime() {
-        return lastOperateTime;
-    }
 
-    public void setLastOperateTime(long lastOperateTime) {
-        this.lastOperateTime = lastOperateTime;
-    }
 
 
     public int getStep() {

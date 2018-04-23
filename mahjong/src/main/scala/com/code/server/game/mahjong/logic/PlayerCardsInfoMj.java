@@ -106,6 +106,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         this.catchCard = card;
         operateList.add(type_mopai);
         this.gameInfo.addUserOperate(this.userId, type_mopai);
+        this.gameInfo.updateLastOperateTime();
     }
 
     /**

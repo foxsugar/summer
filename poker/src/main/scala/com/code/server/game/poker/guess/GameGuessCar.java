@@ -356,13 +356,7 @@ public class GameGuessCar extends Game{
         this.greenScore = greenScore;
     }
 
-    public long getLastOperateTime() {
-        return lastOperateTime;
-    }
 
-    public void setLastOperateTime(long lastOperateTime) {
-        this.lastOperateTime = lastOperateTime;
-    }
 
     public int getColor() {
         return color;

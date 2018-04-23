@@ -645,14 +645,7 @@ public class GameDouDiZhu extends Game {
         return this;
     }
 
-    public List<Long> getUsers() {
-        return users;
-    }
 
-    public GameDouDiZhu setUsers(List<Long> users) {
-        this.users = users;
-        return this;
-    }
 
     public Random getRand() {
         return rand;

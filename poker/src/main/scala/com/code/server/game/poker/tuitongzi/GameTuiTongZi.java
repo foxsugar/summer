@@ -1025,13 +1025,7 @@ public class GameTuiTongZi extends Game{
         room.setRoomLastTime(System.currentTimeMillis());
     }
 
-    public long getLastOperateTime() {
-        return lastOperateTime;
-    }
 
-    public void setLastOperateTime(long lastOperateTime) {
-        this.lastOperateTime = lastOperateTime;
-    }
 
     public Map<Long, PlayerTuiTongZi> getPlayerCardInfos() {
         return playerCardInfos;

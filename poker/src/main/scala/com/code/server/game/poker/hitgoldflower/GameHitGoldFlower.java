@@ -837,13 +837,7 @@ public class GameHitGoldFlower extends Game {
         this.curUserId = curUserId;
     }
 
-    public long getLastOperateTime() {
-        return lastOperateTime;
-    }
 
-    public void setLastOperateTime(long lastOperateTime) {
-        this.lastOperateTime = lastOperateTime;
-    }
 
     public List<Long> getLoseUser() {
         return loseUser;

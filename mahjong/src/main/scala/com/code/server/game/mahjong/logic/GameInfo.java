@@ -1596,14 +1596,7 @@ public class GameInfo extends Game {
         return this;
     }
 
-    public List<Long> getUsers() {
-        return users;
-    }
 
-    public GameInfo setUsers(List<Long> users) {
-        this.users = users;
-        return this;
-    }
 
     public boolean isAlreadyHu() {
         return isAlreadyHu;
