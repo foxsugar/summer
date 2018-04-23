@@ -2,8 +2,7 @@ package com.code.server.game.poker.doudizhu;
 
 
 import com.code.server.constant.exception.DataNotFoundException;
-import com.code.server.constant.response.ErrorCode;
-import com.code.server.constant.response.ResponseVo;
+import com.code.server.constant.response.*;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
@@ -14,6 +13,7 @@ import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
+import org.springframework.beans.BeanUtils;
 
 /**
  * Created by sunxianping on 2017/3/13.
@@ -21,7 +21,7 @@ import com.code.server.util.timer.TimerNode;
 public class RoomDouDiZhu extends Room {
 
 
-    public static final int PERSONNUM = 3;
+    protected int jiaoScoreMax = 3;
 
 
 
@@ -38,11 +38,13 @@ public class RoomDouDiZhu extends Room {
 
     }
 
-    public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType, boolean isAA, boolean isJoin, boolean showChat, String clubId, String clubRoomModel) throws DataNotFoundException {
+    public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType,
+                                 boolean isAA, boolean isJoin, boolean showChat, int personNum, int jiaoScoreMax,
+                                 String clubId, String clubRoomModel) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         RoomDouDiZhu room = getRoomInstance(roomType);
 
-        room.personNumber = PERSONNUM;
+        room.personNumber = personNum;
 
         room.roomId = getRoomIdStr(genRoomId(serverConfig.getServerId()));
         room.createUser = userId;
@@ -51,6 +53,7 @@ public class RoomDouDiZhu extends Room {
         room.isAA = isAA;
         room.isCreaterJoin = isJoin;
         room.showChat = showChat;
+        room.jiaoScoreMax = jiaoScoreMax;
 
         room.setClubId(clubId);
         room.setClubRoomModel(clubRoomModel);
@@ -89,5 +92,21 @@ public class RoomDouDiZhu extends Room {
     }
 
 
-
+    @Override
+    public IfaceRoomVo toVo(long userId) {
+        RoomDoudizhuVo roomVo = new RoomDoudizhuVo();
+        BeanUtils.copyProperties(this, roomVo);
+        RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
+        if (this.game != null) {
+            roomVo.game = this.game.toVo(userId);
+        }
+        if (this.getTimerNode() != null) {
+            long time = this.getTimerNode().getStart() + this.getTimerNode().getInterval() - System.currentTimeMillis();
+            roomVo.setRemainTime(time);
+        }
+        if (users.size() > 0) {
+            roomVo.setCanStartUserId(users.get(0));
+        }
+        return roomVo;
+    }
 }

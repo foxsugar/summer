@@ -99,6 +99,9 @@ public class GameDouDiZhu extends Game {
                 return new PlayerCardInfoDouDiZhuJixian();
             case Room.GAMETYPE_LONGQI_JIXIAN_NO_QIANG:
                 return new PlayerCardInfoDouDiZhuJixian();
+            case Room.GAMETYPE_MAOSAN:
+            case Room.GAMETYPE_MAOSAN_NO_QIANG:
+                return new PlayerCardInfoMaoSan();
             default:
                 return new PlayerCardInfoDouDiZhu();
         }
@@ -329,7 +332,9 @@ public class GameDouDiZhu extends Game {
             dizhu = userId;
             tableScore = score;
             //第三个人叫的 直接开始游戏
-            if (chooseJiaoSet.size() >= users.size() || score == 3) {
+            RoomDouDiZhu r = (RoomDouDiZhu)this.room;
+            //都叫过或已经叫到最大分(默认三分,毛三有选项)
+            if (chooseJiaoSet.size() >= users.size() || score == r.jiaoScoreMax) {
                 //推送选定地主
                 qiangStepStart();
             } else {
