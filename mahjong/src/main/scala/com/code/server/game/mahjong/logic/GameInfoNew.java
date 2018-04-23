@@ -1,20 +1,14 @@
 package com.code.server.game.mahjong.logic;
 
 
-import com.code.server.constant.kafka.IKafaTopic;
-import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.GameOfResult;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserOfResult;
 import com.code.server.game.mahjong.response.*;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
-import com.code.server.kafka.MsgProducer;
-import com.code.server.util.IdWorker;
-import com.code.server.util.SpringUtil;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 
@@ -392,136 +386,11 @@ public class GameInfoNew extends GameInfo {
 
     }
 
-    /**
-     * 发送结果
-     *
-     * @param isHasWinner
-     * @param winnerId
-     * @param yipaoduoxiang
-     */
-    protected void sendResult(boolean isHasWinner, Long winnerId, List<Long> yipaoduoxiang) {
-        ResultResp result = new ResultResp();
-        ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_RESULT, result);
-
-        if (isHasWinner) {
-            if (yipaoduoxiang == null) {
-                result.setWinnerId(winnerId);
-            } else {
-                result.setYipaoduoxiang(yipaoduoxiang);
-            }
-            result.setBaoCard(baoCard);
-        }
-        List<PlayerCardsResp> list = new ArrayList<>();
-        for (PlayerCardsInfoMj info : playerCardsInfos.values()) {
-            PlayerCardsResp resp = new PlayerCardsResp(info);
-            resp.setAllScore(room.getUserScores().get(info.getUserId()));
-            list.add(resp);
-        }
-        result.setUserInfos(list);
-        result.setLaZhuang(this.room.laZhuang);
-        result.setLaZhuangStatus(this.room.laZhuangStatus);
-        MsgSender.sendMsg2Player(vo, users);
-
-
-        //回放
-        replay.setResult(result);
-        //生成记录
-        genRecord();
-    }
-
-    @Override
-    protected void genRecord() {
-        //金币房不记录
-        if (this.room.isGoldRoom()) return;
-
-        long id = IdWorker.getDefaultInstance().nextId();
-        genRecord(playerCardsInfos.values().stream().collect
-                (Collectors.toMap(PlayerCardsInfoMj::getUserId, PlayerCardsInfoMj::getScore)), room, id);
-
-        replay.setId(id);
-        replay.setCount(playerCardsInfos.size());
-        replay.setRoom_uuid(this.room.getUuid());
-        replay.setRoomInfo(this.getRoom().toJSONObject());
-
-        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_REPLAY);
-        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
-        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, replay);
-    }
 
 
 
 
 
-
-
-
-
-    /**
-     * 交换牌 测试功能
-     *
-     * @param userId
-     * @param srcType
-     * @param desType
-     * @return
-     */
-    public int exchange(long userId, int srcType, int desType) {
-        if (!isTest) {
-            return 0;
-        }
-        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
-        if (playerCardsInfo == null) {
-            return ErrorCode.USER_ERROR;
-        }
-        boolean isHas = false;
-        String desCardStr = "";
-        //从剩下的牌中找
-        for (String card : remainCards) {
-            if (desType == CardTypeUtil.cardType.get(card)) {
-                isHas = true;
-                //移除
-//                remainCards.remove(card);
-                desCardStr = card;
-                break;
-
-            }
-        }
-        //如果有
-        if (isHas) {
-            for (String card : playerCardsInfo.getCards()) {
-                //找到直接退出
-                if (srcType == CardTypeUtil.cardType.get(card)) {
-                    playerCardsInfo.getCards().remove(card);
-                    playerCardsInfo.getCards().add(desCardStr);
-                    //添加
-                    remainCards.add(card);
-                    remainCards.remove(desCardStr);
-
-                    break;
-                }
-            }
-        }
-
-        ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_EXCHANGE, new PlayerCardsResp(playerCardsInfo));
-        MsgSender.sendMsg2Player(vo, userId);
-
-        return 0;
-
-    }
-
-    public int needCard(long userId, int cardType) {
-        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
-        playerCardsInfo.nextNeedCard = cardType;
-        return 0;
-    }
-
-    protected String getCardByTypeFromRemainCards(int type) {
-        for (String card : remainCards) {
-            if (type == CardTypeUtil.cardType.get(card)) {
-                return card;
-            }
-        }
-        return null;
-    }
 
     /**
      * 下一个出牌人id
@@ -552,32 +421,10 @@ public class GameInfoNew extends GameInfo {
     }
 
 
-    protected void addUserOperate(long userId, int type) {
-        Map<Long, Integer> result = new HashMap<>();
-        result.put(userId, type);
-        this.userOperateList.add(result);
-    }
 
-    /**
-     * 牌是否一样
-     *
-     * @param cards
-     * @return
-     */
-    protected boolean isCardSame(List<String> cards) {
-        Set<Integer> set = new HashSet<>();
-        cards.forEach(card -> set.add(CardTypeUtil.getTypeByCard(card)));
-        return set.size() == 1;
 
-    }
 
-    public int getAllGangNum() {
-        int result = 0;
-        for (PlayerCardsInfoMj playerCardsInfoMj : this.playerCardsInfos.values()) {
-            result += playerCardsInfoMj.getGangNum();
-        }
-        return result;
-    }
+
 
     /**
      * 荒庄的处理

@@ -1412,6 +1412,8 @@ public class GameInfo extends Game {
         Map<Long, Integer> result = new HashMap<>();
         result.put(userId, type);
         this.userOperateList.add(result);
+        //更新最后操作时间
+        updateLastOperateTime();
     }
 
     /**
