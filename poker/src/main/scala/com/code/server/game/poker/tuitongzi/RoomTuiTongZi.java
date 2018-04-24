@@ -167,6 +167,7 @@ public class RoomTuiTongZi extends Room{
         room.multiple = multiple;
         room.bankerId = userId;
         room.roomType = roomType;
+        room.isRobotRoom = true;
         room.setClubId(clubId);
         room.setClubRoomModel(clubRoomModel);
 

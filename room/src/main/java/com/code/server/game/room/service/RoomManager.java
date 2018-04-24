@@ -21,6 +21,7 @@ public class RoomManager {
     private  Map<String, Map<Double,List<Room>>> notFullGoldRoom = new HashMap<>();
     private  Map<Long, List<String>> prepareRoom = new HashMap<>();
 
+
     private  List<Room> robotRoom = new ArrayList<>();
 
     private static RoomManager outInstance = new RoomManager();
@@ -118,9 +119,12 @@ public class RoomManager {
             if(!rm.isCreaterJoin()){
                 RedisManager.getUserRedisService().removePerpareRoom(rm.getCreateUser(), rm.getRoomId());
             }
-            getInstance().robotRoom.remove(room);
 
-            if (room.isGoldRoom()) {
+            if (rm.isRobotRoom) {
+                getInstance().robotRoom.remove(room);
+            }
+
+            if (rm.isGoldRoom() && rm.isDefaultGoldRoom() ) {
                 getInstance().getNotFullRoom(rm.getGameType(), rm.getGoldRoomType()).remove(room);
                 getInstance().getFullRoom(rm.getGameType(), rm.getGoldRoomType()).remove(room);
             }
@@ -131,12 +135,15 @@ public class RoomManager {
 
     public static void addRoom(String roomId,String serverId, Room room) {
         getInstance().rooms.put(roomId, room);
-        getInstance().robotRoom.add(room);
+        if (room.isRobotRoom) {
+            getInstance().robotRoom.add(room);
+        }
         RedisManager.getRoomRedisService().setServerId(roomId,serverId);
         //加入代开房列表
         if(!room.isCreaterJoin()){
             RedisManager.getUserRedisService().addPerpareRoom(room.getCreateUser(), room.getPrepareRoomVo());
         }
+
     }
 
     public static Room getNullRoom(String gameType, Double goldRoomType){

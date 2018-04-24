@@ -1,5 +1,6 @@
 package com.code.server.game.room;
 
+import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 
@@ -8,6 +9,11 @@ import com.code.server.redis.service.RedisManager;
  */
 public class RoomExtendGold extends Room {
 
+
+    public void init(int gameNumber, int multiple) throws DataNotFoundException {
+        super.init(gameNumber, multiple);
+        this.isRobotRoom = true;
+    }
 
     @Override
     public void startGame() {
@@ -130,5 +136,10 @@ public class RoomExtendGold extends Room {
     protected int getMinEnterGold() {
         //todo 公式
         return this.getMultiple() * 20;
+    }
+
+    @Override
+    public boolean isRobotRoom() {
+        return true;
     }
 }

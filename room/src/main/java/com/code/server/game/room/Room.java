@@ -74,6 +74,8 @@ public class Room implements IfaceRoom {
 
     public Long canStartUserId = 0L;
 
+    public boolean isRobotRoom;
+
 
 
     public static String getRoomIdStr(int roomId) {
@@ -759,6 +761,9 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
+    public boolean isDefaultGoldRoom(){
+        return goldRoomPermission == GOLD_ROOM_PERMISSION_DEFAULT;
+    }
     public boolean isClubRoom(){
         return clubId != null && !"".equals(clubId) && !"0".equals(clubId);
     }
@@ -1118,6 +1123,16 @@ public class Room implements IfaceRoom {
 
     public Room setGoldRoomPermission(int goldRoomPermission) {
         this.goldRoomPermission = goldRoomPermission;
+        return this;
+    }
+
+    @Override
+    public boolean isRobotRoom() {
+        return isRobotRoom;
+    }
+
+    public Room setRobotRoom(boolean robotRoom) {
+        isRobotRoom = robotRoom;
         return this;
     }
 }
