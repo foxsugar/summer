@@ -325,7 +325,7 @@ public class GameInfo extends Game {
         String modeTotal = this.room.getModeTotal();
         return ("LQ".equals(gameType) && "2".equals(modeTotal)) ||
                 ("HL".equals(gameType) && "2".equals(modeTotal))||
-                ("SS".equals(gameType));
+                ("SS".equals(gameType) && "HS".equals(modeTotal));
     }
 
     /**
@@ -544,7 +544,7 @@ public class GameInfo extends Game {
         static final int pengPoint = 1 << 2;
         static final int chiPoint = 1 << 1;
 
-        long myUserId;
+        public long myUserId;
         boolean isHu;
         boolean isGang;
         boolean isPeng;

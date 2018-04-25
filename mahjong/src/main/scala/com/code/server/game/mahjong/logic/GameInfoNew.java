@@ -818,6 +818,10 @@ public class GameInfoNew extends GameInfo {
         if (isAlreadyHu) {
             return ErrorCode.CAN_NOT_GUO;
         }
+        //过胡逻辑
+        if (playerCardsInfos.get(userId).isCanHu_dianpao(disCard)) {
+            playerCardsInfos.get(userId).setGuoHu(true);
+        }
         if (waitingforList.size() > 0) {
 
             List<WaitDetail> removeList = new ArrayList<>();
