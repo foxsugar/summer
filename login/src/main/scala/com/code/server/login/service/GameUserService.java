@@ -280,7 +280,7 @@ public class GameUserService {
 
         //充值记录
         Charge charge = new Charge();
-        charge.setRecharge_source(""+IChargeType.BIND_REFERRER);
+        charge.setRecharge_source("" + IChargeType.BIND_REFERRER);
         charge.setUserid(userBean.getId());
         charge.setUsername(userBean.getUsername());
         charge.setStatus(1);
@@ -352,7 +352,7 @@ public class GameUserService {
         charge.setMoney_point(money);
         charge.setCreatetime(new Date());
         charge.setCallbacktime(new Date());
-        charge.setRecharge_source(""+IChargeType.SHARE);
+        charge.setRecharge_source("" + IChargeType.SHARE);
         charge.setStatus(1);
         chargeService.save(charge);
 
@@ -383,6 +383,8 @@ public class GameUserService {
                 return 1;
             case IProjectName.CHUANQI:
                 return 1;
+            case IProjectName.HUANLE:
+                return 1;
             default:
                 return 0;
         }
@@ -410,7 +412,7 @@ public class GameUserService {
         return 0;
     }
 
-    public int kickUser(KafkaMsgKey msgKey , JsonNode params, JsonNode allParams){
+    public int kickUser(KafkaMsgKey msgKey, JsonNode params, JsonNode allParams) {
         //获得该room所在的逻辑服务器id
         String roomId = params.path("roomId").asText();
         String serverId = RedisManager.getRoomRedisService().getServerId(roomId);
@@ -418,11 +420,11 @@ public class GameUserService {
             return ErrorCode.NO_THIS_ROOM;
         }
 
-        kafkaMsgProducer.send2Partition(IKafaTopic.SERVER_SERVER_TOPIC, Integer.valueOf(serverId), msgKey, allParams.asText() );
-       return 0;
+        kafkaMsgProducer.send2Partition(IKafaTopic.SERVER_SERVER_TOPIC, Integer.valueOf(serverId), msgKey, allParams.asText());
+        return 0;
     }
 
-    public int getRoomInfo(KafkaMsgKey msgKey , JsonNode params, JsonNode allParams){
+    public int getRoomInfo(KafkaMsgKey msgKey, JsonNode params, JsonNode allParams) {
         //获得该room所在的逻辑服务器id
         String roomId = params.path("roomId").asText();
         String serverId = RedisManager.getRoomRedisService().getServerId(roomId);
@@ -436,10 +438,11 @@ public class GameUserService {
 
     /**
      * 猜汽车
+     *
      * @param msgKey
      * @return
      */
-    public int guessCarUp2Agent(KafkaMsgKey msgKey){
+    public int guessCarUp2Agent(KafkaMsgKey msgKey) {
 
         final int needMoney = 1000;
         long userId = msgKey.getUserId();
@@ -452,8 +455,8 @@ public class GameUserService {
         if (userBean.getMoney() < needMoney) {
             return ErrorCode.NOT_HAVE_MORE_MONEY;
         }
-        userBean.setVip(Integer.valueOf(""+userId));
-        RedisManager.getUserRedisService().updateUserBean(userId,userBean);
+        userBean.setVip(Integer.valueOf("" + userId));
+        RedisManager.getUserRedisService().updateUserBean(userId, userBean);
         RedisManager.getUserRedisService().addUserMoney(userId, -needMoney);
 
         ResponseVo vo = new ResponseVo("userService", "guessCarUp2Agent", userId);
@@ -461,7 +464,7 @@ public class GameUserService {
         return 0;
     }
 
-    public int guessCarBindReferrer(KafkaMsgKey msgKey, int referrerId){
+    public int guessCarBindReferrer(KafkaMsgKey msgKey, int referrerId) {
 
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(msgKey.getUserId());
         if (userBean == null) {
@@ -503,20 +506,18 @@ public class GameUserService {
         RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
 
 
-
-
         ResponseVo vo = new ResponseVo("userService", "guessCarBind", 0);
         sendMsg(msgKey, vo);
         return 0;
     }
 
 
-    public int accessCode(KafkaMsgKey msgKey, String accessCode){
-        if(accessCode == null || "".equals(accessCode)){
+    public int accessCode(KafkaMsgKey msgKey, String accessCode) {
+        if (accessCode == null || "".equals(accessCode)) {
             return ErrorCode.NO_ACCESSCODE;
         }
         String ac = ServerManager.constant.getAccessCode();
-        if(ac == null || !accessCode.equals(ac)){
+        if (ac == null || !accessCode.equals(ac)) {
             return ErrorCode.NO_ACCESSCODE;
         }
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(msgKey.getUserId());
