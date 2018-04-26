@@ -589,8 +589,13 @@ public class GameInfoNew extends GameInfo {
             long nextId = nextTurnId(turnId);
             mopai(nextId,"出牌");
         } else {
-            //比较
-            compare(waitingforList);
+            //todo 一炮多响
+            if (this.room.isYipaoduoxiang && waitingforList.stream().filter(waitDetail -> waitDetail.isHu).count() >= 2) {
+                handleYiPaoDuoXiang();
+            } else {
+                //比较
+                compare(waitingforList);
+            }
         }
         return 0;
 
