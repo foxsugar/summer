@@ -73,6 +73,8 @@ public class GameInfo extends Game {
     protected ReplayMj replay = new ReplayMj();
 
     protected List<String> chanCards = new ArrayList<>();//铲的牌
+
+    protected boolean yiPaoDuoXiangAppear = false;
 //    private Set<Long> noCanHuList = new HashSet<>();//本轮不能胡的人
 
     /**
@@ -437,7 +439,7 @@ public class GameInfo extends Game {
         });
 
         //todo 谁点炮谁坐庄
-        this.room.setBankerId(lastPlayUserId);
+        this.room.setBankerId(yipaoduoxiang.get(0));
 
         //回放
         OperateReqResp operateReqResp = new OperateReqResp();

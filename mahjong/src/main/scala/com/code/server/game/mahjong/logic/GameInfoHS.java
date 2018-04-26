@@ -51,7 +51,7 @@ public class GameInfoHS extends GameInfoNew {
         });
 
         //todo 下次的庄家
-        this.room.setBankerId(yipaoduoxiang.get(0));
+        this.room.setBankerId(lastPlayUserId);
 
         //回放
         OperateReqResp operateReqResp = new OperateReqResp();
@@ -66,5 +66,17 @@ public class GameInfoHS extends GameInfoNew {
         sendResult(true, -1L, yipaoduoxiang);
         noticeDissolutionResult();
         room.clearReadyStatus();
+    }
+
+
+    /**
+     * 设置庄家
+     *
+     * @param winnerId
+     */
+    public void setBanker(long winnerId) {
+
+        room.setBankerId(winnerId);
+
     }
 }
