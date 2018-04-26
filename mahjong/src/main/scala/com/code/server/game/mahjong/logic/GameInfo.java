@@ -436,8 +436,8 @@ public class GameInfo extends Game {
             }
         });
 
-        //todo 下次的庄家
-        this.room.setBankerId(yipaoduoxiang.get(0));
+        //todo 谁点炮谁坐庄
+        this.room.setBankerId(lastPlayUserId);
 
         //回放
         OperateReqResp operateReqResp = new OperateReqResp();

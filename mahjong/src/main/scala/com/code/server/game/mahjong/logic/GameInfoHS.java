@@ -1,5 +1,8 @@
 package com.code.server.game.mahjong.logic;
 
+import com.code.server.game.mahjong.response.OperateReqResp;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,4 +34,37 @@ public class GameInfoHS extends GameInfoNew {
         fapai();
     }
 
+
+    protected void handleYiPaoDuoXiang() {
+
+        List<Long> yipaoduoxiang = new ArrayList<>();
+
+        //删除弃牌
+        deleteDisCard(lastPlayUserId, disCard);
+        this.waitingforList.forEach(waitDetail -> {
+            if (waitDetail.isHu) {
+                long uid = waitDetail.myUserId;
+                yipaoduoxiang.add(uid);
+                PlayerCardsInfoMj playerCardsInfoMj = playerCardsInfos.get(uid);
+                playerCardsInfoMj.hu_dianpao(room, this, lastPlayUserId, disCard);
+            }
+        });
+
+        //todo 下次的庄家
+        this.room.setBankerId(yipaoduoxiang.get(0));
+
+        //回放
+        OperateReqResp operateReqResp = new OperateReqResp();
+        operateReqResp.setYipaoduoxiangUser(yipaoduoxiang);
+        operateReqResp.setOperateType(OperateReqResp.type_yipaoduoxiang);
+        operateReqResp.setIsMing(true);
+        replay.getOperate().add(operateReqResp);
+
+//        handleHu(playerCardsInfo);
+
+        isAlreadyHu = true;
+        sendResult(true, -1L, yipaoduoxiang);
+        noticeDissolutionResult();
+        room.clearReadyStatus();
+    }
 }
