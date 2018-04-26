@@ -46,6 +46,9 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
         if (isHasMode(this.roomInfo.getMode(), 5)) {
             return 12;
         }
+        if (isHasMode(this.roomInfo.getMode(), 6)) {
+            return 20;
+        }
         return 0;
     }
 
@@ -55,7 +58,7 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
 
         //明杠1分
 
-
+        int sub = 0;
         int gangFan = 0;
         gangFan += this.anGangType.size() * 2;
 
@@ -70,20 +73,19 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
                 roomInfo.setUserSocre(dianGangUser, -temp);
 
                 //自己加分
-
-                this.addScore(-temp);
-                this.addGangScore(-temp);
-                roomInfo.setUserSocre(this.getUserId(), -temp);
+                this.addScore(temp);
+                this.addGangScore(temp);
+                roomInfo.setUserSocre(this.getUserId(), temp);
 
             } else {
-                gangFan += this.anGangType.size() * 1;
+                gangFan += 1;
             }
         }
 
 
         //除了点杠
         int score = gangFan * roomInfo.getMultiple();
-        int sub = 0;
+
         for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
             if (playerCardsInfo.getUserId() != this.userId) {
                 playerCardsInfo.addScore(-score);
@@ -92,7 +94,7 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
                 sub += score;
             }
         }
-        this.addGangScore(-sub);
+        this.addGangScore(sub);
         this.addScore(sub);
         roomInfo.setUserSocre(this.getUserId(), sub);
     }
@@ -146,9 +148,9 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
 
             //截杠胡 输三倍
             if (isJieGangHu) {
-                score *= 3;
+                score *= 9;
             } else { //普通点炮 输两倍
-                score *= 2;
+                score *= 3;
             }
             score += yu;
             //点炮的人出

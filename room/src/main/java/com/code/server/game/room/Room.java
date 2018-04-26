@@ -59,7 +59,7 @@ public class Room implements IfaceRoom {
     protected int hasNine;
     protected boolean isCanDissloution = false;
     protected long dissloutionUser = -1;//申请解散房间的人
-//    protected Long dealFirstOfRoom;//第一个发牌的人
+    //    protected Long dealFirstOfRoom;//第一个发牌的人
     protected boolean isAA;//是否共同付费
     protected boolean isCreaterJoin = true;//是否是代开房
     protected boolean isAddGold;
@@ -74,6 +74,7 @@ public class Room implements IfaceRoom {
 
     public Long canStartUserId = 0L;
 
+    public boolean isRobotRoom;
 
 
     public static String getRoomIdStr(int roomId) {
@@ -86,11 +87,15 @@ public class Room implements IfaceRoom {
     public synchronized static int genRoomId(int serverId) {
 
         long serverCount = RedisManager.getGameRedisService().getServerCount();
-        if(serverCount == 0) serverCount =1;
         // 保证房间号不重 对服务器id取余
         while (true) {
             int id = random.nextInt(999999);
-            if(id % serverCount == serverId){
+            boolean flag = false;
+            //服务器只有一个就不取余了
+            if (serverCount == 0 || serverCount == 1) {
+                flag = true;
+            }
+            if (flag || (id % serverCount == serverId)) {
 
                 boolean isHas = RedisManager.getRoomRedisService().isExist("" + id);
 
@@ -98,11 +103,9 @@ public class Room implements IfaceRoom {
                     return id;
                 }
             }
-
-
         }
-    }
 
+    }
 
 
     public int getNeedMoney() throws DataNotFoundException {
@@ -139,10 +142,11 @@ public class Room implements IfaceRoom {
     public void getDefaultGoldRoomInstance() {
 
     }
+
     /**
      * 俱乐部 设置id
      */
-    public void clubRoomSetId(){
+    public void clubRoomSetId() {
         if (isClubRoom()) {
             MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
             KafkaMsgKey kafkaKey = new KafkaMsgKey();
@@ -153,8 +157,8 @@ public class Room implements IfaceRoom {
             msg.put("clubId", this.clubId);
             msg.put("clubModelId", this.clubRoomModel);
             msg.put("roomId", this.roomId);
-            ResponseVo responseVo = new ResponseVo("clubService","clubRoomSetId",msg);
-            msgProducer.send("clubService",kafkaKey, responseVo);
+            ResponseVo responseVo = new ResponseVo("clubService", "clubRoomSetId", msg);
+            msgProducer.send("clubService", kafkaKey, responseVo);
         }
 
     }
@@ -162,7 +166,7 @@ public class Room implements IfaceRoom {
     /**
      * 通知 俱乐部游戏开始
      */
-    public void notifyCludGameStart(){
+    public void notifyCludGameStart() {
         if (!isOpen && isClubRoom()) {
 
             MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
@@ -174,27 +178,28 @@ public class Room implements IfaceRoom {
             msg.put("clubId", this.clubId);
             msg.put("clubModelId", this.clubRoomModel);
             msg.put("roomId", this.roomId);
-            ResponseVo responseVo = new ResponseVo("clubService","clubGameStart",msg);
-            msgProducer.send("clubService",kafkaKey, responseVo);
+            ResponseVo responseVo = new ResponseVo("clubService", "clubGameStart", msg);
+            msgProducer.send("clubService", kafkaKey, responseVo);
         }
     }
 
     /**
      * 俱乐部找钱
      */
-    private void clubDrawBack(){
+    private void clubDrawBack() {
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
         KafkaMsgKey kafkaKey = new KafkaMsgKey();
         kafkaKey.setUserId(0);
         Map<String, Object> msg = new HashMap<>();
         msg.put("clubId", this.clubId);
         msg.put("clubModelId", this.clubRoomModel);
-        ResponseVo responseVo = new ResponseVo("clubService","clubDrawBack",msg);
-        msgProducer.send("clubService",kafkaKey, responseVo);
+        ResponseVo responseVo = new ResponseVo("clubService", "clubDrawBack", msg);
+        msgProducer.send("clubService", kafkaKey, responseVo);
     }
 
     /**
      * 加入房间
+     *
      * @param userId
      * @param isJoin
      * @return
@@ -334,7 +339,7 @@ public class Room implements IfaceRoom {
             }
 
             Room room_ = (Room) RoomManager.getRoom(this.roomId);
-            if (room_ != null){
+            if (room_ != null) {
                 RoomManager.removeRoom(this.roomId);
             }
         }
@@ -447,7 +452,6 @@ public class Room implements IfaceRoom {
     public void pushScoreChange() {
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userScores), this.getUsers());
     }
-
 
 
     public int dissolution(long userId, boolean agreeOrNot, String methodName) {
@@ -580,7 +584,7 @@ public class Room implements IfaceRoom {
      * 解散房间
      */
     protected void dissolutionRoom() {
-        if(RoomManager.getRoom(this.roomId)==null){
+        if (RoomManager.getRoom(this.roomId) == null) {
             return;
         }
         RoomManager.removeRoom(this.roomId);
@@ -677,7 +681,7 @@ public class Room implements IfaceRoom {
 
         System.out.println(roomVo.roomId);
 
-        System.out.println(43421 % 4 ==2);
+        System.out.println(43421 % 4 == 2);
     }
 
     @Override
@@ -715,7 +719,7 @@ public class Room implements IfaceRoom {
      * 生成房间战绩
      */
     public void genRoomRecord() {
-        if(!isOpen) return;
+        if (!isOpen) return;
         RoomRecord roomRecord = new RoomRecord();
         roomRecord.setRoomId(this.roomId);
         roomRecord.setId(this.getUuid());
@@ -748,7 +752,7 @@ public class Room implements IfaceRoom {
         if (this.clubId == null) {
             result.put("clubId", 0);
             MsgSender.sendMsg2Player(new ResponseVo("roomService", "getRoomClubByUser", result), userId);
-        }else{
+        } else {
 
             result.put("clubId", this.clubId);
             KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ROOM_CLUB_USER);
@@ -759,7 +763,11 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
-    public boolean isClubRoom(){
+    public boolean isDefaultGoldRoom() {
+        return goldRoomPermission == GOLD_ROOM_PERMISSION_DEFAULT;
+    }
+
+    public boolean isClubRoom() {
         return clubId != null && !"".equals(clubId) && !"0".equals(clubId);
     }
 
@@ -1020,7 +1028,7 @@ public class Room implements IfaceRoom {
 
 
     public boolean isGoldRoom() {
-        return goldRoomType > 0.0 && "2".equals(roomType);
+        return false;
     }
 
     public boolean isOpen() {
@@ -1057,7 +1065,6 @@ public class Room implements IfaceRoom {
         this.uuid = uuid;
         return this;
     }
-
 
 
     public Long getCanStartUserId() {
@@ -1118,6 +1125,16 @@ public class Room implements IfaceRoom {
 
     public Room setGoldRoomPermission(int goldRoomPermission) {
         this.goldRoomPermission = goldRoomPermission;
+        return this;
+    }
+
+    @Override
+    public boolean isRobotRoom() {
+        return isRobotRoom;
+    }
+
+    public Room setRobotRoom(boolean robotRoom) {
+        isRobotRoom = robotRoom;
         return this;
     }
 }

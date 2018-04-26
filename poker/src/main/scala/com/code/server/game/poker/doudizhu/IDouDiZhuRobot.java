@@ -1,7 +1,7 @@
 package com.code.server.game.poker.doudizhu;
 
 
-import com.code.server.game.poker.robot.IRobot;
+import com.code.server.constant.robot.IRobot;
 
 /**
  * Created by sunxianping on 2017/5/16.

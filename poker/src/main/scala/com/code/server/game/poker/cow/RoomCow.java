@@ -67,8 +67,10 @@ public class RoomCow  extends Room {
         room.isCreaterJoin = isJoin;
         room.multiple = multiple;
         room.bankerId = userId;
+        room.isRobotRoom = true;
         room.setClubId(clubId);
         room.setClubRoomModel(clubRoomModel);
+
 
         room.init(gameNumber, multiple);
 

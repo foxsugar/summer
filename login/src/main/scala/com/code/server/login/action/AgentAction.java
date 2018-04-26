@@ -47,15 +47,25 @@ public class AgentAction {
     RecommendService recommendService;
 
     @GetMapping(value = "/index1")
-    String charge(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    void charge(HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("======");
 //        response.sendRedirect("tt.html");
-        Cookie[] cookies = request.getCookies();
+            Cookie[] cookies = request.getCookies();
         Cookie cookie = new Cookie("name","sun");
         Cookie cookie1 = new Cookie("Admin-Token","Admin-Token");
+        cookie1.setDomain("3348ns.natappfree.cc");
+        cookie1.setPath("/");
         response.addCookie(cookie);
         response.addCookie(cookie1);
-        return "redirect:http://192.168.1.132:8080/#/index";
+//        return "redirect:http://192.168.1.132:8080/#/index";
+//        return "redirect:http://3348ns.natappfree.cc/wx/#/index";
+
+
+        String new_url = "http://3348ns.natappfree.cc/wx/#/index";
+        response.sendRedirect(new_url);
+//        String html = "<script type='text/javascript'>location.href='"+new_url+"';</script>";
+//        response.getWriter().print(html);
+
 //        return "/ttt";
     }
 

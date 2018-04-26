@@ -1,5 +1,6 @@
 package com.code.server.game.room;
 
+import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 
@@ -9,10 +10,15 @@ import com.code.server.redis.service.RedisManager;
 public class RoomExtendGold extends Room {
 
 
+    public void init(int gameNumber, int multiple) throws DataNotFoundException {
+        super.init(gameNumber, multiple);
+        this.isRobotRoom = true;
+    }
+
     @Override
     public void startGame() {
         //todo 庄家退出游戏的处理
-        if (!this.users.contains(this.bankerId)) {
+        if (isGoldRoom() && !this.users.contains(this.bankerId)) {
             this.bankerId = this.users.get(0);
         }
         super.startGame();
@@ -55,11 +61,16 @@ public class RoomExtendGold extends Room {
     @Override
     protected boolean isCanJoinCheckMoney(long userId) {
         //todo 检验金币
-        double gold = RedisManager.getUserRedisService().getUserGold(userId);
-        if (gold < getMinEnterGold()) {
-            return false;
+        if (isGoldRoom()) {
+            double gold = RedisManager.getUserRedisService().getUserGold(userId);
+            if (gold < getMinEnterGold()) {
+                return false;
+            }
+        } else {
+
+            return super.isCanJoinCheckMoney(userId);
         }
-        return super.isCanJoinCheckMoney(userId);
+        return true;
     }
 
     @Override
@@ -96,11 +107,13 @@ public class RoomExtendGold extends Room {
     @Override
     public void clearReadyStatus(boolean isAddGameNum) {
         //todo 如果 金币不够 退出
-        int minGold = getMinGold();
-        for (long userId : this.users) {
-            double gold = RedisManager.getUserRedisService().getUserGold(userId);
-            if(gold < minGold){
-                this.quitRoom(userId);
+        if (isGoldRoom()) {
+            int minGold = getMinGold();
+            for (long userId : this.users) {
+                double gold = RedisManager.getUserRedisService().getUserGold(userId);
+                if(gold < minGold){
+                    this.quitRoom(userId);
+                }
             }
         }
 
@@ -123,5 +136,10 @@ public class RoomExtendGold extends Room {
     protected int getMinEnterGold() {
         //todo 公式
         return this.getMultiple() * 20;
+    }
+
+    @Override
+    public boolean isRobotRoom() {
+        return true;
     }
 }

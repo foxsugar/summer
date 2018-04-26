@@ -73,6 +73,8 @@ public class GameInfo extends Game {
     protected ReplayMj replay = new ReplayMj();
 
     protected List<String> chanCards = new ArrayList<>();//铲的牌
+
+    protected boolean yiPaoDuoXiangAppear = false;
 //    private Set<Long> noCanHuList = new HashSet<>();//本轮不能胡的人
 
     /**
@@ -325,7 +327,7 @@ public class GameInfo extends Game {
         String modeTotal = this.room.getModeTotal();
         return ("LQ".equals(gameType) && "2".equals(modeTotal)) ||
                 ("HL".equals(gameType) && "2".equals(modeTotal))||
-                ("SS".equals(gameType));
+                ("SS".equals(gameType) && "HS".equals(modeTotal));
     }
 
     /**
@@ -436,7 +438,7 @@ public class GameInfo extends Game {
             }
         });
 
-        //todo 下次的庄家
+        //todo 谁点炮谁坐庄
         this.room.setBankerId(yipaoduoxiang.get(0));
 
         //回放
@@ -544,7 +546,7 @@ public class GameInfo extends Game {
         static final int pengPoint = 1 << 2;
         static final int chiPoint = 1 << 1;
 
-        long myUserId;
+        public long myUserId;
         boolean isHu;
         boolean isGang;
         boolean isPeng;

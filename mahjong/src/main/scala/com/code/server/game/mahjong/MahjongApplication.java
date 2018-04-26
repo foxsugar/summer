@@ -33,6 +33,8 @@ public class MahjongApplication {
         System.out.println("启动心跳");
         GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), IConstant.SECOND_5,true,()->RedisManager.getGameRedisService().heart(serverConfig.getServerId())));
 
+        //机器人
+
 
 //        MsgConsumer.startAConsumer("gameLogicService", serverConfig.getServerId(), MsgDispatch::dispatch);
 //        MsgConsumer.startAConsumer("reconnService", serverConfig.getServerId(), MsgDispatch::dispatch);

@@ -40,6 +40,9 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
         useMoney.put(100D,6);
     }
 
+    public boolean isGoldRoom() {
+        return goldRoomType > 0.0 && "2".equals(roomType);
+    }
     @Override
     protected Game getGameInstance() {
         return new GameDouDiZhuGold();
