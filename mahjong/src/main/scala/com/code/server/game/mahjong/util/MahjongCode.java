@@ -177,8 +177,10 @@ public class MahjongCode {
 				put("235", 9);
 				put("244", 9);
 				put("253", 18);
+				put("254", 18);
 				put("266", 18);
 				put("288", 27);
+
 		}
 	};
 
@@ -206,5 +208,18 @@ public class MahjongCode {
 		    put("253", 8);
 		    put("266", 9);
 	    }
-	};	
+	};
+
+	//分数 XXPB 2018-04-26
+	public static final Map<String, Integer> HUTOSCOREFORXXPB = new HashMap<String, Integer>() {
+		//private static final long serialVersionUID = 1L;
+		{
+			put("201", 5);
+			put("222", 12*3);
+			put("235", 24*3);
+			put("244", 24*3);
+			put("253", 24*3);
+			put("266", 32*3);
+		}
+	};
 }
