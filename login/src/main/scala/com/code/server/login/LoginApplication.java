@@ -49,6 +49,7 @@ public class LoginApplication extends SpringBootServletInitializer {
 		}
 
 
+
 //		MsgConsumer.startAConsumer("userService",0,new UserServiceConsumer());
 //		MsgConsumer.startAConsumer("userService",1,new UserServiceConsumer());
 //		MsgConsumer.startAConsumer("userService",2,new UserServiceConsumer());

@@ -241,9 +241,6 @@ public class GameInfo extends Game {
      * @param userId
      */
     protected void mopai(long userId, String... wz) {
-        System.err.println("摸牌===============================userId : " + userId);
-
-//        noCanHuList.remove(userId);
         PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
         if (isHasGuoHu()) {
             playerCardsInfo.setGuoHu(false);
@@ -438,7 +435,7 @@ public class GameInfo extends Game {
             }
         });
 
-        //todo 谁点炮谁坐庄
+
         this.room.setBankerId(yipaoduoxiang.get(0));
 
         //回放
@@ -717,7 +714,7 @@ public class GameInfo extends Game {
 
             MsgSender.sendMsg2Player(vo, users);
 
-
+            //截杠胡
             if (isHasJieGangHu && isMing) {
 
                 for (Map.Entry<Long, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
@@ -786,7 +783,7 @@ public class GameInfo extends Game {
 
             //删除弃牌
             deleteDisCard(lastPlayUserId, disCard);
-            lastOperateUserId = userId;
+
 
             playerCardsInfo.gang_discard(room, this, lastPlayUserId, disCard);
             operateReqResp.setFromUserId(lastPlayUserId);//谁出的牌
@@ -800,6 +797,7 @@ public class GameInfo extends Game {
             mopai(userId, "userId : " + userId + " 点杠后抓牌");
             turnId = userId;
             this.disCard = null;
+            lastOperateUserId = userId;
         }
 
 
@@ -1094,6 +1092,11 @@ public class GameInfo extends Game {
         if (playerCardsInfo == null) {
             return ErrorCode.USER_ERROR;
         }
+
+        if (!playerCardsInfo.cards.contains(card)) {
+            return ErrorCode.CAN_NOT_TING;
+        }
+
         OperateReqResp operateReqResp = new OperateReqResp();
         operateReqResp.setOperateType(OperateReqResp.type_ting);
         operateReqResp.setUserId(userId);
@@ -1105,9 +1108,6 @@ public class GameInfo extends Game {
         temp.addAll(playerCardsInfo.getCards());
         temp.remove(card);
 
-        if (!playerCardsInfo.cards.contains(card)) {
-            return ErrorCode.CAN_NOT_TING;
-        }
         boolean isCan = playerCardsInfo.isCanTing(temp);//不多一张
         if (isCan) {
             playerCardsInfo.ting(card);

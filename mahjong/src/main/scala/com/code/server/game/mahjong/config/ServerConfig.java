@@ -14,6 +14,7 @@ public class ServerConfig {
     private int robotExeCycle = 1000;
     private int isStartRobot = 1;
     private String dataFile;
+    private String domain;
 
     public String getServerType() {
         return serverType;
@@ -68,6 +69,15 @@ public class ServerConfig {
 
     public ServerConfig setDataFile(String dataFile) {
         this.dataFile = dataFile;
+        return this;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public ServerConfig setDomain(String domain) {
+        this.domain = domain;
         return this;
     }
 }
