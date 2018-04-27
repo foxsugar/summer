@@ -81,7 +81,8 @@ public class AgentAction {
 //        return "redirect:http://3348ns.natappfree.cc/wx/#/index";
 
 
-        String new_url = "http://3348ns.natappfree.cc/wx/#/index";
+        String new_url = " http://ekzgev.natappfree.cc/agent/#/index";
+
         response.sendRedirect(new_url);
 //        String html = "<script type='text/javascript'>location.href='"+new_url+"';</script>";
 //        response.getWriter().print(html);
