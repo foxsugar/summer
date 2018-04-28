@@ -4,6 +4,7 @@ import com.code.server.login.config.ServerConfig;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.kefu.WxMpKefuMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.slf4j.Logger;
@@ -55,7 +56,12 @@ public class WechatAction extends Cors{
         try {
             wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
             WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
-            wxMpUser.getUnionId();
+            String s = wxMpUser.getUnionId();
+            WxMpUser wxMpUser1 = wxMpService.getUserService().userInfo(wxMpUser.getOpenId());
+            WxMpKefuMessage wxMpKefuMessage = new WxMpKefuMessage();
+            wxMpKefuMessage.setToUser(wxMpUser.getOpenId());
+            wxMpService.getKefuService().sendKefuMessage(wxMpKefuMessage);
+
         } catch (WxErrorException e) {
             logger.error("【微信网页授权】{}", e);
         }

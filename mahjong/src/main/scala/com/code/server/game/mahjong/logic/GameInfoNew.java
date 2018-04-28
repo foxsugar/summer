@@ -371,7 +371,7 @@ public class GameInfoNew extends GameInfo {
     }
 
 
-    private int chuPai_ting(long userId, String card) {
+    protected int chuPai_ting(long userId, String card) {
         //出牌的玩家
         PlayerCardsInfoMj chupaiPlayerCardsInfo = playerCardsInfos.get(userId);
         if (this.turnId != userId||isAlreadyHu) {
@@ -546,7 +546,7 @@ public class GameInfoNew extends GameInfo {
 
     }
 
-    private void add2WaitingList(long userId, boolean isHu, boolean isGang, boolean isPeng, boolean isChi, boolean isChiTing, boolean isPengTing) {
+    protected void add2WaitingList(long userId, boolean isHu, boolean isGang, boolean isPeng, boolean isChi, boolean isChiTing, boolean isPengTing) {
         if (isHu) {
             this.waitingforList.add(new WaitDetail(userId, true, false, false, false, false, false));
         }
@@ -823,7 +823,7 @@ public class GameInfoNew extends GameInfo {
         return 0;
     }
 
-    private void pushAllPass(){
+    protected void pushAllPass(){
         Map map = new HashMap();
         map.put("isAllPass", true);
         map.put("lastPlayUser", lastPlayUserId);
