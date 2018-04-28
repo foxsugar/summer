@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by win7 on 2017/2/24.
  */
-public class GameInfoShengShi extends GameInfo {
+public class GameInfoShengShi extends GameInfoNew {
 
     protected static final String SS_Ping_HAVEFENG_CANTING = "13051314";//13表示盛世，03表示无风（13表示有风），14表示需要听（04表示不需要听）平胡05  大胡 15
     protected static final String SS_Ping_HAVEFENG_NOTING = "13051304";
