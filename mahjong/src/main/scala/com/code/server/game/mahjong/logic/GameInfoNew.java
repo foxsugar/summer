@@ -388,7 +388,11 @@ public class GameInfoNew extends GameInfo {
         //通知其他玩家出牌信息
         PlayCardResp playCardResp = new PlayCardResp();
         playCardResp.setUserId(userId);
-        playCardResp.setCard(this.disCard);
+        if (afterTingShowCard) {
+            playCardResp.setCard(this.disCard);
+        }else{
+            playCardResp.setCard(null);
+        }
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_PLAY_CARD, playCardResp);
         MsgSender.sendMsg2Player(vo, users);
 
@@ -401,13 +405,13 @@ public class GameInfoNew extends GameInfo {
             if (userId != entry.getKey()) {
                 //通知其他玩家出了什么牌 自己能有什么操作
                 PlayerCardsInfoMj playerCardsInfo = entry.getValue();
-                boolean isCanGang = playerCardsInfo.isCanGangAddThisCard(card);
-                boolean isCanPeng = playerCardsInfo.isCanPengAddThisCard(card);
-                boolean isCanHu = playerCardsInfo.isCanHu_dianpao(card);
-                boolean isNext = nextTurnId(chupaiPlayerCardsInfo.getUserId()) == playerCardsInfo.getUserId();
-                boolean isCanChi = isNext && playerCardsInfo.isHasChi(card);
-                boolean isCanChiTing = playerCardsInfo.isCanChiTing(card);
-                boolean isCanPengTing = playerCardsInfo.isCanPengTing(card);
+                boolean isCanGang = afterTingShowCard && playerCardsInfo.isCanGangAddThisCard(card);
+                boolean isCanPeng = afterTingShowCard && playerCardsInfo.isCanPengAddThisCard(card);
+                boolean isCanHu = afterTingShowCard && playerCardsInfo.isCanHu_dianpao(card);
+                boolean isNext = afterTingShowCard && (nextTurnId(chupaiPlayerCardsInfo.getUserId()) == playerCardsInfo.getUserId());
+                boolean isCanChi = afterTingShowCard && isNext && playerCardsInfo.isHasChi(card);
+                boolean isCanChiTing = afterTingShowCard && playerCardsInfo.isCanChiTing(card);
+                boolean isCanPengTing = afterTingShowCard && playerCardsInfo.isCanPengTing(card);
                 //设置返回结果
                 operateResp.setCanBeOperate(isCanChi, isCanPeng, isCanGang, false, isCanHu, isCanChiTing, isCanPengTing);
 

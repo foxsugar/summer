@@ -74,6 +74,8 @@ public class GameInfo extends Game {
 
     protected List<String> chanCards = new ArrayList<>();//铲的牌
 
+    protected boolean afterTingShowCard = false;//听牌后是否扣牌
+
     protected boolean yiPaoDuoXiangAppear = false;
 //    private Set<Long> noCanHuList = new HashSet<>();//本轮不能胡的人
 
@@ -1725,6 +1727,15 @@ public class GameInfo extends Game {
 
     public GameInfo setHun(List<Integer> hun) {
         this.hun = hun;
+        return this;
+    }
+
+    public boolean isAfterTingShowCard() {
+        return afterTingShowCard;
+    }
+
+    public GameInfo setAfterTingShowCard(boolean afterTingShowCard) {
+        this.afterTingShowCard = afterTingShowCard;
         return this;
     }
 }
