@@ -670,6 +670,9 @@ public class GameInfoNew extends GameInfo {
 
     protected void doGang_hand(PlayerCardsInfoMj playerCardsInfo, long userId, String card){
         boolean isMing = playerCardsInfo.gang_hand(room, this, userId, card);
+        if (isMing) {
+            userId = -1;
+        }
         playerCardsInfo.gangCompute(room, this, isMing, userId, card);
         mopai(playerCardsInfo.getUserId(),"杠后摸牌");
         turnId = playerCardsInfo.getUserId();
