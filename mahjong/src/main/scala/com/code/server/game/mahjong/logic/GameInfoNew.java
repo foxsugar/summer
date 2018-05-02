@@ -669,7 +669,8 @@ public class GameInfoNew extends GameInfo {
     }
 
     protected void doGang_hand(PlayerCardsInfoMj playerCardsInfo, long userId, String card){
-        playerCardsInfo.gang_hand(room, this, userId, card);
+        boolean isMing = playerCardsInfo.gang_hand(room, this, userId, card);
+        playerCardsInfo.gangCompute(room, this, isMing, userId, card);
         mopai(playerCardsInfo.getUserId(),"杠后摸牌");
         turnId = playerCardsInfo.getUserId();
         lastOperateUserId = playerCardsInfo.getUserId();
@@ -803,7 +804,7 @@ public class GameInfoNew extends GameInfo {
                 //截杠胡
                 if (jieGangHuCard != null) {
                     //截的 都是碰的明杠
-                    doGang_hand(playerCardsInfos.get(beJieGangUser),turnId,jieGangHuCard);
+                    doGang_hand(playerCardsInfos.get(beJieGangUser),-1,jieGangHuCard);
                     beJieGangUser = -1;
                     jieGangHuCard = null;
                 } else {
