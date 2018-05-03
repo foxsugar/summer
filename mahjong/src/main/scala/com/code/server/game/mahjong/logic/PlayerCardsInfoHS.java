@@ -127,6 +127,7 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
 
             if (isGangKai()) {
                 score *= 3;
+                this.winType.add(hu_杠上开花);
             } else {
                 score *= 2;
             }
