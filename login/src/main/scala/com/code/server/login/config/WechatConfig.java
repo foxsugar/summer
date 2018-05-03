@@ -19,6 +19,17 @@ public class WechatConfig {
     private String mpAppSecret;
 
     /**
+     * token
+     */
+    private String token;
+
+
+    /**
+     * aesKey
+     */
+    private String aesKey;
+
+    /**
      * 开放平台id
      */
     private String openAppId;
@@ -118,6 +129,24 @@ public class WechatConfig {
 
     public WechatConfig setNotifyUrl(String notifyUrl) {
         this.notifyUrl = notifyUrl;
+        return this;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public WechatConfig setToken(String token) {
+        this.token = token;
+        return this;
+    }
+
+    public String getAesKey() {
+        return aesKey;
+    }
+
+    public WechatConfig setAesKey(String aesKey) {
+        this.aesKey = aesKey;
         return this;
     }
 }

@@ -128,6 +128,13 @@ public class HuUtil implements HuType {
             if (playerCardsInfo.isHasSpecialHu(hu_豪华七小对) && isHaoHuaQixiaodui(cards, playerCardsInfo, 1)) {
                 huList.add(HuCardType.getSpecialHuInstance(hu_豪华七小对).setFan(playerCardsInfo.getSpecialHuScore(hu_豪华七小对)));
             }
+            if (playerCardsInfo.isHasSpecialHu(hu_双豪七小对) && isHaoHuaQixiaodui(cards, playerCardsInfo, 2)) {
+                huList.add(HuCardType.getSpecialHuInstance(hu_双豪七小对).setFan(playerCardsInfo.getSpecialHuScore(hu_双豪七小对)));
+            }
+            if (playerCardsInfo.isHasSpecialHu(hu_三豪七小对) && isHaoHuaQixiaodui(cards, playerCardsInfo, 3)) {
+                huList.add(HuCardType.getSpecialHuInstance(hu_三豪七小对).setFan(playerCardsInfo.getSpecialHuScore(hu_三豪七小对)));
+            }
+
             if (playerCardsInfo.isHasSpecialHu(hu_双豪七小对_山西) && isShuangHaoQixiaodui(cards, playerCardsInfo)) {
                 huList.add(HuCardType.getSpecialHuInstance(hu_双豪七小对_山西).setFan(playerCardsInfo.getSpecialHuScore(hu_双豪七小对_山西)));
             }

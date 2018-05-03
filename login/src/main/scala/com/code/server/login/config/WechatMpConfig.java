@@ -32,6 +32,8 @@ public class WechatMpConfig {
         WxMpInRedisConfigStorage wxMpConfigStorage = new WxMpInRedisConfigStorage(redisPool);
         wxMpConfigStorage.setAppId(accountConfig.getMpAppId());
         wxMpConfigStorage.setSecret(accountConfig.getMpAppSecret());
+        wxMpConfigStorage.setToken(accountConfig.getToken());
+        wxMpConfigStorage.setAesKey(accountConfig.getAesKey());
         return wxMpConfigStorage;
     }
 }

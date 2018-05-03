@@ -1383,6 +1383,25 @@ public class GameInfo extends Game {
         return null;
     }
 
+    public int tingWhat(long userId) {
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
+        if (playerCardsInfo == null) {
+            return ErrorCode.USER_ERROR;
+        }
+        Map<Integer, Set<Integer>> result = new HashMap<>();
+        playerCardsInfo.getTingWhatInfo().forEach(huCardType -> {
+            int removeCardType = CardTypeUtil.getTypeByCard(huCardType.getTingRemoveCard());
+            result.putIfAbsent(removeCardType, new HashSet<>());
+            result.get(removeCardType).add(huCardType.tingCardType);
+        });
+
+
+        ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, "tingWhat", result);
+        MsgSender.sendMsg2Player(vo, userId);
+
+        return 0;
+    }
+
     /**
      * 下一个出牌人id
      *

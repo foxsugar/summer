@@ -28,6 +28,8 @@ public class GameAgent extends BaseEntity {
 
     private int isPartner;
 
+    private String qrTicket;
+
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
@@ -84,6 +86,15 @@ public class GameAgent extends BaseEntity {
 
     public GameAgent setIsPartner(int isPartner) {
         this.isPartner = isPartner;
+        return this;
+    }
+
+    public String getQrTicket() {
+        return qrTicket;
+    }
+
+    public GameAgent setQrTicket(String qrTicket) {
+        this.qrTicket = qrTicket;
         return this;
     }
 }

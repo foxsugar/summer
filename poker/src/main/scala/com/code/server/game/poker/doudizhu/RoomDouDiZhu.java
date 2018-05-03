@@ -96,6 +96,7 @@ public class RoomDouDiZhu extends Room {
     public IfaceRoomVo toVo(long userId) {
         RoomDoudizhuVo roomVo = new RoomDoudizhuVo();
         BeanUtils.copyProperties(this, roomVo);
+        roomVo.setJiaoScoreMax(this.jiaoScoreMax);
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.game != null) {
             roomVo.game = this.game.toVo(userId);

@@ -17,6 +17,8 @@ public class AgentBean {
 
     private int isPartner;
 
+    private String qrTicket;
+
     private List<Long> childList = new ArrayList<>();
 
     public long getId() {
@@ -70,6 +72,15 @@ public class AgentBean {
 
     public AgentBean setIsPartner(int isPartner) {
         this.isPartner = isPartner;
+        return this;
+    }
+
+    public String getQrTicket() {
+        return qrTicket;
+    }
+
+    public AgentBean setQrTicket(String qrTicket) {
+        this.qrTicket = qrTicket;
         return this;
     }
 }
