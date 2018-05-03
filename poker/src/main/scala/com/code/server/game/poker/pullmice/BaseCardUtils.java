@@ -69,7 +69,7 @@ public class BaseCardUtils {
 
     public static String client2String(Integer card){
         int chushu = (card - 1) / 4;
-        int yushu = card % 4;
+        int yushu = (card - 1) % 4;
         if (card == 53){
             return values[13];
         }else if(card == 54){
