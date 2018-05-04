@@ -215,7 +215,7 @@ public class GameInfoNew extends GameInfo {
         });
 
         //todo 下次的庄家
-        this.room.setBankerId(yipaoduoxiang.get(0));
+        setBanker(yipaoduoxiang.get(0));
 
         //回放
         OperateReqResp operateReqResp = new OperateReqResp();
@@ -955,6 +955,8 @@ public class GameInfoNew extends GameInfo {
         OperateReqResp operateReqResp = new OperateReqResp();
         operateReqResp.setUserId(userId);
         operateReqResp.setOperateType(OperateReqResp.type_hu);
+
+        setBanker(userId);
 
         if (jieGangHuCard != null) {
             //截杠胡

@@ -1,4 +1,4 @@
-package com.code.server.login.handler;
+package com.code.server.login.wechat.handler;
 
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
@@ -18,6 +18,8 @@ import java.util.Map;
 public class MsgHandler extends AbstractHandler {
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context, WxMpService wxMpService, WxSessionManager sessionManager) throws WxErrorException {
+        System.out.println("xiaoxi");
+
         return WxMpXmlOutMessage
                 .TRANSFER_CUSTOMER_SERVICE().fromUser(wxMessage.getToUser())
                 .toUser(wxMessage.getFromUser()).build();

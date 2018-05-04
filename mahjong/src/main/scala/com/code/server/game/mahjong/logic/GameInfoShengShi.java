@@ -41,4 +41,27 @@ public class GameInfoShengShi extends GameInfoNew {
         }
         fapai();
     }
+
+
+
+
+
+    /**
+     * 荒庄的处理
+     *
+     * @param userId
+     */
+    protected void handleHuangzhuang(long userId) {
+        turnResultToZeroOnHuangZhuang();
+        super.handleHuangzhuang(userId);
+    }
+
+    /**
+     * 设置庄家
+     *
+     * @param winnerId
+     */
+    public void setBanker(long winnerId) {
+        room.setBankerId(winnerId);
+    }
 }
