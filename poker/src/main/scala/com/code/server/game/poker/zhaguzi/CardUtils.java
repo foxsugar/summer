@@ -1,5 +1,8 @@
 package com.code.server.game.poker.zhaguzi;
 import com.code.server.game.poker.pullmice.BaseCardUtils;
+import com.code.server.game.poker.pullmice.IfCard;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import scala.Int;
 import java.util.*;
 
@@ -7,43 +10,173 @@ import java.util.*;
  * Created by dajuejinxian on 2018/5/2.
  */
 
-public class CardUtils extends BaseCardUtils{
+public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
+    //输赢状况
+    //赢了
+    public static final int WIN = 0;
+    //平手
+    public static final int DRAW = 1;
+    //输了
+    public static final int LOSE = 2;
+
+    //牌型
     //王炸
     public static final int WANG_ZHA = 1;
     //四人炸弹
-    public static final int SI_ZHA = 1;
+    public static final int SI_ZHA = 2;
     //三人炸弹
-    public static final int SAN_ZHA = 2;
+    public static final int SAN_ZHA = 3;
     //对子
-    public static final int Dui_ZI = 3;
+    public static final int Dui_ZI = 4;
     //单牌
-    public static final int DAN_ZI = 4;
+    public static final int DAN_ZI = 5;
     // 错误牌型
-    public static final int ERROR = 5;
+    public static final int ERROR = 6;
 
     private static Map<Integer, Integer> cardDict = new HashMap<>();
+
+    //要考虑 亮三 不亮3 5人玩法， 六人玩法
+    public static int compare(PlayerZhaGuZi player1, PlayerZhaGuZi player2){
+
+//        return cardsCompare(player1.cards, player2.cards);
+        return 1;
+    }
 
     public static int cardsCompare(List<Integer> aList, List<Integer> bList){
 
         int typeA = computeCardType(aList);
         int typeB = computeCardType(bList);
 
+        List<Integer> lList = new ArrayList<>();
+        List<Integer> rList = new ArrayList<>();
+        lList.addAll(aList);
+        rList.addAll(bList);
+        Collections.sort(lList);
+        Collections.sort(rList);
+
+        int ret = -1;
+
         if (typeA == ERROR){
             System.out.println("A类型错误");
-            return -1;
+            return LEFT_CARDS_ERROR;
         }else if(typeB == ERROR){
             System.out.println("B类型错误");
-            return -2;
+            return RIGHT_CARDS_ERROR;
         }
 
         if (typeA != typeB){
 
+            //右边的人比牌比较大
+            if (typeA > typeB){
+
+                if (typeB == Dui_ZI || typeB == DAN_ZI){
+                    return RIGHT_CARDS_ERROR;
+                }
+
+                return LOSE;
+
+            }else {
+
+                if (typeA == Dui_ZI || typeA == DAN_ZI){
+                    return LEFT_CARDS_ERROR;
+                }
+
+                return WIN;
+
+            }
+
         }else {
 
-        }
-        return 1;
+            Integer a = (lList.get(0) - 2) / 4;
+            Integer b = (rList.get(0) - 2) / 4;
 
+            switch (typeA){
+
+                case SI_ZHA:
+
+                    if (a < b){
+                        ret = WIN;
+                    }else if (a == b){
+                        ret = DRAW;
+                    }else {
+                        ret = LOSE;
+                    }
+                    break;
+
+                case SAN_ZHA:
+
+                    if (a < b){
+                        ret = WIN;
+                    }else if (a == b){
+                        ret = DRAW;
+                    }else {
+                        ret = LOSE;
+                    }
+                    break;
+
+                case Dui_ZI:
+
+                    if (a < b){
+                        ret = WIN;
+                    }else if (a == b){
+                        ret = DRAW;
+                    }else {
+                        ret = LOSE;
+                    }
+                    break;
+
+                case DAN_ZI:
+
+                    if (a < b){
+                        ret = WIN;
+                    }else if (a == b){
+                        ret = DRAW;
+                    }else {
+                        ret = LOSE;
+                    }
+                    break;
+            }
+        }
+
+        return ret;
+
+    }
+
+    //打印牌型
+    public static String cardsTypeDesc(int type){
+
+        String str = null;
+
+        switch (type){
+
+            case WANG_ZHA:
+                str = "王炸";
+                break;
+            case SI_ZHA:
+                str = "四炸";
+                break;
+            case SAN_ZHA:
+                str = "三炸";
+                break;
+            case Dui_ZI:
+                str = "对子";
+                break;
+            case DAN_ZI:
+                str = "单子";
+                break;
+            default:
+                str = "类型错误";
+
+        }
+
+        return str;
+    }
+
+    public static String cardsTypeDesc(List<Integer> list){
+
+        int type = computeCardType(list);
+        return cardsTypeDesc(type);
     }
 
     //计算牌型
