@@ -9,9 +9,14 @@ import java.util.List;
 public class AgentBean {
     private long id;
 
+    private String openId;
+
+    private String unionId;
+
     private double rebate;
 
     private long partnerId;
+
 
     private long parentId;
 
@@ -81,6 +86,24 @@ public class AgentBean {
 
     public AgentBean setQrTicket(String qrTicket) {
         this.qrTicket = qrTicket;
+        return this;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public AgentBean setOpenId(String openId) {
+        this.openId = openId;
+        return this;
+    }
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public AgentBean setUnionId(String unionId) {
+        this.unionId = unionId;
         return this;
     }
 }

@@ -1,10 +1,11 @@
 package com.code.server.login.action;
 
+import com.code.server.db.Service.GameAgentService;
 import com.code.server.login.config.ServerConfig;
-import com.code.server.login.service.WechatCoreService;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
+import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.kefu.WxMpKefuMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URLEncoder;
 
 /**
@@ -40,11 +42,16 @@ public class WechatAction extends Cors{
     @Autowired
     private ServerConfig serverConfig;
 
-    @Autowired
-    protected WechatCoreService coreService;
+
 
     @Autowired
     protected WxMpConfigStorage configStorage;
+
+    @Autowired
+    private GameAgentService gameAgentService;
+
+    @Autowired
+    private WxMpMessageRouter router;
 
     @RequestMapping(value = "/core")
     public void wechatCore(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -77,7 +84,7 @@ public class WechatAction extends Cors{
         if ("raw".equals(encryptType)) {
             // 明文传输的消息
             WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(request.getInputStream());
-            WxMpXmlOutMessage outMessage = this.coreService.route(inMessage);
+            WxMpXmlOutMessage outMessage = this.route(inMessage);
             if (outMessage == null) {
                 response.getWriter().write("");
             } else {
@@ -93,7 +100,7 @@ public class WechatAction extends Cors{
                     request.getInputStream(), this.configStorage, timestamp, nonce,
                     msgSignature);
             this.logger.debug("\n消息解密后内容为：\n{} ", inMessage.toString());
-            WxMpXmlOutMessage outMessage = this.coreService.route(inMessage);
+            WxMpXmlOutMessage outMessage = this.route(inMessage);
             if (outMessage == null) {
                 response.getWriter().write("");
             } else {
@@ -120,13 +127,13 @@ public class WechatAction extends Cors{
 
     @GetMapping("/userInfo")
     public String userInfo(@RequestParam("code") String code,
-                           @RequestParam("state") String returnUrl, HttpServletRequest request, HttpServletResponse response) {
+                           @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("获取信息");
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
         try {
             wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
             WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
-            String s = wxMpUser.getUnionId();
+            String unionId = wxMpUser.getUnionId();
             WxMpUser wxMpUser1 = wxMpService.getUserService().userInfo(wxMpUser.getOpenId());
             WxMpKefuMessage wxMpKefuMessage = new WxMpKefuMessage();
             wxMpKefuMessage.setToUser(wxMpUser.getOpenId());
@@ -142,17 +149,57 @@ public class WechatAction extends Cors{
 //        9_BFOoh64g8jIPNzEczVfVZzUJrHKeidD3ihR8MEqNyOhBezx6BTOrb79e7wZlIS1LL5xWdNPSXhrW6p5KgZ0R9Q
 
 
-        Cookie cookie1 = new Cookie("Admin-Token","Admin-Token");
-        cookie1.setDomain(serverConfig.getDomain());
-        cookie1.setPath("/");
-        response.addCookie(cookie1);
+        switch (state) {
+            case "loginAgent":
+//                handleLoginAgent(response);
+                break;
+            case "getReferralLink":
 
-        returnUrl = "http://3348ns.natappfree.cc/wx/#/index";
-        returnUrl = "http://ekzgev.natappfree.cc/agent/#/index";
-        System.out.println(returnUrl);
+                break;
+            case "charge":
+                break;
+            case "clear":
+                break;
+        }
 
-//        return "redirect:" + returnUrl + "?openid=" + openId;
-        return "redirect:" + returnUrl;
+        return "redirect:" + state;
     }
+
+
+    private void handleLoginAgent(String unionId,HttpServletResponse response) throws IOException {
+        //todo token
+        Cookie cookie = new Cookie("Admin-Token","Admin-Token");
+        cookie.setDomain(serverConfig.getDomain());
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        String url = "http://ekzgev.natappfree.cc/agent/#/index";
+        response.sendRedirect(url);
+
+
+    }
+
+    private void getReferralLink(String unionId,HttpServletResponse response){
+        //已经有推广链接 直接跳转
+        Long agentId = gameAgentService.getGameAgentDao().getUserIdByUnionId(unionId);
+        if (agentId == null || agentId == 0) {
+
+        }
+
+
+    }
+
+
+
+    private WxMpXmlOutMessage route(WxMpXmlMessage message) {
+        try {
+            return this.router.route(message);
+        } catch (Exception e) {
+            this.logger.error(e.getMessage(), e);
+        }
+
+        return null;
+    }
+
+
 
 }
