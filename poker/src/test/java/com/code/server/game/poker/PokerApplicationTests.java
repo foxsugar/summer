@@ -10,14 +10,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 public class PokerApplicationTests {
 
 
 	public static void main(String[] args) {
 
 		Integer i = CardUtils.string2Client("大王");
-
 		Integer j = CardUtils.string2Client("小王");
 
 		List<String> list = new ArrayList<>();

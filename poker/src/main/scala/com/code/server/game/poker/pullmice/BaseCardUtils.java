@@ -111,7 +111,7 @@ public class BaseCardUtils {
 
         int ret = chushu * 4 + yushu;
 
-        return ret;
+        return ret + 1;
     }
 
     public static Integer string2Local(String str, IfCard card){
