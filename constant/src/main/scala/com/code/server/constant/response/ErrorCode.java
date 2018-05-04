@@ -120,6 +120,9 @@ public class ErrorCode {
 	//红绿车
 	public static final int STATE_ERROR = 800001;
 
+	//扎股子
+	public static final int CARDS_ERROR = 900001;
+	public static final int CAN_NOT_DISCARD = 900002;//管不了
 
 	static class ErrorCodeRepeatChecker {
     	public void check() {

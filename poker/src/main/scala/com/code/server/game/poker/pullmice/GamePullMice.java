@@ -873,6 +873,8 @@ public class GamePullMice extends Game{
             aList.add(small);
         }
 
+        //如果剩余0张 预先洗牌
+        isNoticeClientShuffle();
         MsgSender.sendMsg2Player(serviceName, "deal", res, this.pxUsers);
 
     }
@@ -917,6 +919,8 @@ public class GamePullMice extends Game{
             aList.add(small);
         }
 
+        //如果剩余0张 预先洗牌
+        isNoticeClientShuffle();
         MsgSender.sendMsg2Player(serviceName, "deal", res, this.pxUsers);
     }
 
