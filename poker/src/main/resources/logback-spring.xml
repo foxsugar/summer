@@ -38,7 +38,7 @@
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>/root/poker/info.%d.log</fileNamePattern>
+            <fileNamePattern>/root/poker/error.%d.log</fileNamePattern>
             <!--<fileNamePattern>/var/log/tomcat/poker/error.%d.log</fileNamePattern>-->
         </rollingPolicy>
     </appender>
