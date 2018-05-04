@@ -215,7 +215,7 @@ public class GameInfoNew extends GameInfo {
         });
 
         //todo 下次的庄家
-        this.room.setBankerId(yipaoduoxiang.get(0));
+        setBanker(yipaoduoxiang.get(0));
 
         //回放
         OperateReqResp operateReqResp = new OperateReqResp();
