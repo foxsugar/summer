@@ -956,6 +956,8 @@ public class GameInfoNew extends GameInfo {
         operateReqResp.setUserId(userId);
         operateReqResp.setOperateType(OperateReqResp.type_hu);
 
+        setBanker(userId);
+
         if (jieGangHuCard != null) {
             //截杠胡
             playerCardsInfo.setJieGangHu(true);
