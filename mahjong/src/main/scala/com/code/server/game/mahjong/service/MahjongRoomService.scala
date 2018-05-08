@@ -92,7 +92,7 @@ object MahjongRoomService {
       if (mode != "1" && mode != "2" && mode != "3" && mode != "4" && mode != "11" && mode != "12" && mode != "13" && mode != "14") {
         return false
       }
-      if (multiple != "1" && multiple != "2" && multiple != "5") {
+      if (multiple != "1" && multiple != "2" && multiple != "3" &&  multiple != "5") {
         return false
       }
     }

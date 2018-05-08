@@ -80,7 +80,9 @@ public class PlayerCardsInfoFactory {
             case "101":
                 playerCardsInfo = new PlayerCardsInfoKD_XZ();
                 break;
-
+            case "102":
+                playerCardsInfo = new PlayerCardsInfoXXPB();
+                break;
 
 
             default:

@@ -2,10 +2,7 @@ package com.code.server.game.mahjong.logic;
 
 
 import com.code.server.constant.response.IfacePlayerInfoVo;
-import com.code.server.game.mahjong.util.HuCardType;
-import com.code.server.game.mahjong.util.HuLimit;
-import com.code.server.game.mahjong.util.HuType;
-import com.code.server.game.mahjong.util.HuUtil;
+import com.code.server.game.mahjong.util.*;
 import com.code.server.game.room.PlayerCardInfo;
 
 import java.util.*;
@@ -787,6 +784,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     protected boolean isGangKai() {
         int size = this.operateList.size();
         return size >= 2 && this.operateList.get(size - 2) == type_gang;
+    }
+
+    /**
+     * 是否是sanpeng
+     *
+     * @return
+     */
+    protected boolean isSanPeng() {
+       return true;
     }
 
     /**
