@@ -123,6 +123,7 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
         int score = huCardType.fan == 0 ? 1 : huCardType.fan;
         int subScore = 0;
 
+        this.fan = huCardType.fan;
         //yu
         int yu = getYu();
 
