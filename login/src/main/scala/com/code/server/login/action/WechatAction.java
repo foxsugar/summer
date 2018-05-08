@@ -28,6 +28,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by sunxianping on 2018/3/22.
@@ -137,11 +141,59 @@ public class WechatAction extends Cors{
         System.out.println("授权---------------");
         //1. 配置
         //2. 调用方法
-        String url ="http://"+ serverConfig.getDomain() + "/game/wechat/userInfo";
+        String url ="http://"+ serverConfig.getDomain() + "/game/wechat/clickLink";
         String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_BASE, URLEncoder.encode(returnUrl));
         return "redirect:" + redirectUrl;
     }
 
+
+    @GetMapping("/clickLink")
+    public void clickLink(@RequestParam("code") String code,
+                         @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        System.out.println("获取信息");
+        WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
+        try {
+            wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
+            WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
+            String unionId = wxMpUser.getUnionId();
+            String openId = wxMpUser.getOpenId();
+            WxMpUser wxMpUser1 = wxMpService.getUserService().userInfo(wxMpUser.getOpenId());
+
+            String id = state;
+
+
+            Map<String, Object> info = new HashMap<>();
+            info.put("icon", "http://img.zcool.cn/community/0142135541fe180000019ae9b8cf86.jpg@1280w_1l_2o_100sh.png");
+            info.put("qr", "this is qr");
+            String sid = ""+System.currentTimeMillis() +"_"+ new Random().nextInt(9999999);
+
+            String json = JsonUtil.toJson(info);
+            json = URLEncoder.encode(json);
+            Cookie cookie = new Cookie("info"+sid,json);
+            cookie.setDomain(serverConfig.getDomain());
+            cookie.setPath("/");
+            //过期时间
+            cookie.setMaxAge(30);
+            response.addCookie(cookie);
+
+            String url = MessageFormat.format("http://tfdg38.natappfree.cc/agent/#/test?id={0}&sid={1}",id,sid);
+            response.sendRedirect(url);
+
+
+            System.out.println(state);
+        } catch (WxErrorException e) {
+            logger.error("【微信网页授权】{}", e);
+        }
+
+        String openId = wxMpOAuth2AccessToken.getOpenId();
+
+
+//        9_BFOoh64g8jIPNzEczVfVZzUJrHKeidD3ihR8MEqNyOhBezx6BTOrb79e7wZlIS1LL5xWdNPSXhrW6p5KgZ0R9Q
+
+
+
+//        return "redirect:" + state;
+    }
 
     @GetMapping("/userInfo")
     public void userInfo(@RequestParam("code") String code,

@@ -70,4 +70,12 @@ public class ResultResp {
         return this;
     }
 
+    public String getYu() {
+        return yu;
+    }
+
+    public ResultResp setYu(String yu) {
+        this.yu = yu;
+        return this;
+    }
 }

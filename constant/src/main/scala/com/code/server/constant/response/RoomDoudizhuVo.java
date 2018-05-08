@@ -5,6 +5,7 @@ package com.code.server.constant.response;
  */
 public class RoomDoudizhuVo extends RoomVo {
     public int jiaoScoreMax;
+    public int shuanglong;
 
     public int getJiaoScoreMax() {
         return jiaoScoreMax;
@@ -12,6 +13,15 @@ public class RoomDoudizhuVo extends RoomVo {
 
     public RoomDoudizhuVo setJiaoScoreMax(int jiaoScoreMax) {
         this.jiaoScoreMax = jiaoScoreMax;
+        return this;
+    }
+
+    public int getShuanglong() {
+        return shuanglong;
+    }
+
+    public RoomDoudizhuVo setShuanglong(int shuanglong) {
+        this.shuanglong = shuanglong;
         return this;
     }
 }
