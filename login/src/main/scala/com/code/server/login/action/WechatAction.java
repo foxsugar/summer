@@ -2,6 +2,7 @@ package com.code.server.login.action;
 
 import com.code.server.db.Service.GameAgentService;
 import com.code.server.login.config.ServerConfig;
+import com.code.server.util.JsonUtil;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +54,12 @@ public class WechatAction extends Cors{
 
     @Autowired
     private WxMpMessageRouter router;
+
+    @RequestMapping(value = "/jsapiparam")
+    @ResponseBody
+    public String wxJs(@RequestParam("url") String url) throws WxErrorException {
+        return JsonUtil.toJson(wxMpService.createJsapiSignature(url));
+    }
 
     @RequestMapping(value = "/core")
     public void wechatCore(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -124,9 +132,19 @@ public class WechatAction extends Cors{
         return "redirect:" + redirectUrl;
     }
 
+    @GetMapping("/authorize_base")
+    public String authorize_base(@RequestParam("returnUrl") String returnUrl) {
+        System.out.println("授权---------------");
+        //1. 配置
+        //2. 调用方法
+        String url ="http://"+ serverConfig.getDomain() + "/game/wechat/userInfo";
+        String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_BASE, URLEncoder.encode(returnUrl));
+        return "redirect:" + redirectUrl;
+    }
+
 
     @GetMapping("/userInfo")
-    public String userInfo(@RequestParam("code") String code,
+    public void userInfo(@RequestParam("code") String code,
                            @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("获取信息");
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
@@ -160,9 +178,13 @@ public class WechatAction extends Cors{
                 break;
             case "clear":
                 break;
+            case "base":
+                response.sendRedirect("http://localhost:8080/#/test");
+                System.out.println("hhh");
+              break;
         }
 
-        return "redirect:" + state;
+//        return "redirect:" + state;
     }
 
 

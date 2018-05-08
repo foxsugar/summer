@@ -95,14 +95,14 @@ public class GameHitGoldFlower extends Game {
         }
         MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
         if(seeUser.contains(userId)){
-            if(addChip!=chip*2+2 && addChip!=chip*2*2 && addChip!=chip*2*4 && addChip!=MAX_BET_NUM){
-                return ErrorCode.BET_WRONG;
-            }
+//            if(addChip!=chip*2+2 && addChip!=chip*2*2 && addChip!=chip*2*4 && addChip!=MAX_BET_NUM){
+//                return ErrorCode.BET_WRONG;
+//            }
             chip = addChip/2;
         }else{
-            if(addChip!=chip+2 && addChip!=chip*2 && addChip!=chip*4 && addChip!=MAX_BET_NUM/2){
-                return ErrorCode.BET_WRONG;
-            }
+//            if(addChip!=chip+2 && addChip!=chip*2 && addChip!=chip*4 && addChip!=MAX_BET_NUM/2){
+//                return ErrorCode.BET_WRONG;
+//            }
             chip = addChip;
         }
 
