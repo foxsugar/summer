@@ -325,8 +325,9 @@ public class GameInfo extends Game {
         String gameType = this.room.getGameType();
         String modeTotal = this.room.getModeTotal();
         return ("LQ".equals(gameType) && "2".equals(modeTotal)) ||
-                ("HL".equals(gameType) && "2".equals(modeTotal))||
-                ("SS".equals(gameType) && "HS".equals(modeTotal));
+                ("HL".equals(gameType) && "2".equals(modeTotal)) ||
+                "SS".equals(gameType) ||
+                "HS".equals(modeTotal);
     }
 
     /**
@@ -1620,7 +1621,6 @@ public class GameInfo extends Game {
         this.waitingforList = waitingforList;
         return this;
     }
-
 
 
     public boolean isAlreadyHu() {

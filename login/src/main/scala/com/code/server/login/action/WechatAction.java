@@ -2,6 +2,7 @@ package com.code.server.login.action;
 
 import com.code.server.db.Service.GameAgentService;
 import com.code.server.login.config.ServerConfig;
+import com.code.server.util.JsonUtil;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
@@ -20,12 +21,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by sunxianping on 2018/3/22.
@@ -52,6 +58,12 @@ public class WechatAction extends Cors{
 
     @Autowired
     private WxMpMessageRouter router;
+
+    @RequestMapping(value = "/jsapiparam")
+    @ResponseBody
+    public String wxJs(@RequestParam("url") String url) throws WxErrorException {
+        return JsonUtil.toJson(wxMpService.createJsapiSignature(url));
+    }
 
     @RequestMapping(value = "/core")
     public void wechatCore(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -124,9 +136,67 @@ public class WechatAction extends Cors{
         return "redirect:" + redirectUrl;
     }
 
+    @GetMapping("/authorize_base")
+    public String authorize_base(@RequestParam("returnUrl") String returnUrl) {
+        System.out.println("授权---------------");
+        //1. 配置
+        //2. 调用方法
+        String url ="http://"+ serverConfig.getDomain() + "/game/wechat/clickLink";
+        String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_BASE, URLEncoder.encode(returnUrl));
+        return "redirect:" + redirectUrl;
+    }
+
+
+    @GetMapping("/clickLink")
+    public void clickLink(@RequestParam("code") String code,
+                         @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        System.out.println("获取信息");
+        WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
+        try {
+            wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
+            WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
+            String unionId = wxMpUser.getUnionId();
+            String openId = wxMpUser.getOpenId();
+            WxMpUser wxMpUser1 = wxMpService.getUserService().userInfo(wxMpUser.getOpenId());
+
+            String id = state;
+
+
+            Map<String, Object> info = new HashMap<>();
+            info.put("icon", "http://img.zcool.cn/community/0142135541fe180000019ae9b8cf86.jpg@1280w_1l_2o_100sh.png");
+            info.put("qr", "this is qr");
+            String sid = ""+System.currentTimeMillis() +"_"+ new Random().nextInt(9999999);
+
+            String json = JsonUtil.toJson(info);
+            json = URLEncoder.encode(json);
+            Cookie cookie = new Cookie("info"+sid,json);
+            cookie.setDomain(serverConfig.getDomain());
+            cookie.setPath("/");
+            //过期时间
+            cookie.setMaxAge(30);
+            response.addCookie(cookie);
+
+            String url = MessageFormat.format("http://tfdg38.natappfree.cc/agent/#/test?id={0}&sid={1}",id,sid);
+            response.sendRedirect(url);
+
+
+            System.out.println(state);
+        } catch (WxErrorException e) {
+            logger.error("【微信网页授权】{}", e);
+        }
+
+        String openId = wxMpOAuth2AccessToken.getOpenId();
+
+
+//        9_BFOoh64g8jIPNzEczVfVZzUJrHKeidD3ihR8MEqNyOhBezx6BTOrb79e7wZlIS1LL5xWdNPSXhrW6p5KgZ0R9Q
+
+
+
+//        return "redirect:" + state;
+    }
 
     @GetMapping("/userInfo")
-    public String userInfo(@RequestParam("code") String code,
+    public void userInfo(@RequestParam("code") String code,
                            @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("获取信息");
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
@@ -160,9 +230,13 @@ public class WechatAction extends Cors{
                 break;
             case "clear":
                 break;
+            case "base":
+                response.sendRedirect("http://localhost:8080/#/test");
+                System.out.println("hhh");
+              break;
         }
 
-        return "redirect:" + state;
+//        return "redirect:" + state;
     }
 
 

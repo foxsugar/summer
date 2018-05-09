@@ -11,7 +11,6 @@ import com.code.server.game.room.service.RoomManager;
 import java.util.*;
 
 
-
 public class GameInfoNew extends GameInfo {
 
     /**
@@ -80,8 +79,6 @@ public class GameInfoNew extends GameInfo {
     protected void doAfterFapai() {
 
     }
-
-
 
 
     protected void computeAllGang() {
@@ -198,7 +195,6 @@ public class GameInfoNew extends GameInfo {
     }
 
 
-
     protected void handleYiPaoDuoXiang() {
 
         List<Long> yipaoduoxiang = new ArrayList<>();
@@ -233,26 +229,11 @@ public class GameInfoNew extends GameInfo {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     protected void doGang_hand_after(PlayerCardsInfoMj playerCardsInfo, boolean isMing, int userId, String card) {
         playerCardsInfo.gangCompute(room, this, isMing, -1, card);
         mopai(playerCardsInfo.getUserId(), "userId : " + playerCardsInfo.getUserId() + " 自摸杠抓牌");
         turnId = playerCardsInfo.getUserId();
     }
-
 
 
     /**
@@ -275,8 +256,6 @@ public class GameInfoNew extends GameInfo {
     }
 
 
-
-
     protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
         isAlreadyHu = true;
         sendResult(true, playerCardsInfo.getUserId(), null);
@@ -285,11 +264,9 @@ public class GameInfoNew extends GameInfo {
     }
 
 
-
-
     public void noticeDissolutionResult() {
         //金币房 不记录
-        if(this.room.isGoldRoom()) return;
+        if (this.room.isGoldRoom()) return;
 
         if (isRoomOver()) {
             List<UserOfResult> userOfResultList = this.room.getUserOfResult();
@@ -307,11 +284,6 @@ public class GameInfoNew extends GameInfo {
 
 
     }
-
-
-
-
-
 
 
     /**
@@ -343,11 +315,6 @@ public class GameInfoNew extends GameInfo {
     }
 
 
-
-
-
-
-
     /**
      * 荒庄的处理
      *
@@ -374,7 +341,7 @@ public class GameInfoNew extends GameInfo {
     protected int chuPai_ting(long userId, String card) {
         //出牌的玩家
         PlayerCardsInfoMj chupaiPlayerCardsInfo = playerCardsInfos.get(userId);
-        if (this.turnId != userId||isAlreadyHu) {
+        if (this.turnId != userId || isAlreadyHu) {
             return ErrorCode.CAN_NOT_PLAYCARD;
         }
 
@@ -390,7 +357,7 @@ public class GameInfoNew extends GameInfo {
         playCardResp.setUserId(userId);
         if (afterTingShowCard) {
             playCardResp.setCard(this.disCard);
-        }else{
+        } else {
             playCardResp.setCard(null);
         }
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_PLAY_CARD, playCardResp);
@@ -407,7 +374,7 @@ public class GameInfoNew extends GameInfo {
                 PlayerCardsInfoMj playerCardsInfo = entry.getValue();
                 boolean isCanGang = afterTingShowCard && playerCardsInfo.isCanGangAddThisCard(card);
                 boolean isCanPeng = afterTingShowCard && playerCardsInfo.isCanPengAddThisCard(card);
-                boolean isCanHu = afterTingShowCard && playerCardsInfo.isCanHu_dianpao(card);
+                boolean isCanHu = !(isHasGuoHu() && playerCardsInfo.isGuoHu()) && afterTingShowCard && playerCardsInfo.isCanHu_dianpao(card);
                 boolean isNext = afterTingShowCard && (nextTurnId(chupaiPlayerCardsInfo.getUserId()) == playerCardsInfo.getUserId());
                 boolean isCanChi = afterTingShowCard && isNext && playerCardsInfo.isHasChi(card);
                 boolean isCanChiTing = afterTingShowCard && playerCardsInfo.isCanChiTing(card);
@@ -436,7 +403,7 @@ public class GameInfoNew extends GameInfo {
         if (this.waitingforList.size() == 0) {
             pushAllPass();
             long nextId = nextTurnId(turnId);
-            mopai(nextId,"出牌");
+            mopai(nextId, "出牌");
         } else {
             //todo 一炮多响
             if (this.room.isYipaoduoxiang && waitingforList.stream().filter(waitDetail -> waitDetail.isHu).count() >= 2) {
@@ -452,6 +419,7 @@ public class GameInfoNew extends GameInfo {
 
     /**
      * 出牌
+     *
      * @param userId
      * @param card
      */
@@ -525,18 +493,18 @@ public class GameInfoNew extends GameInfo {
 
             //可能的操作
             ResponseVo OperateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-            MsgSender.sendMsg2Player(OperateVo,  entry.getKey());
+            MsgSender.sendMsg2Player(OperateVo, entry.getKey());
         }
 
         resetCanBeOperate(chupaiPlayerCardsInfo);
 
 
-        System.out.println("======= waiting list : "+waitingforList.size());
+        System.out.println("======= waiting list : " + waitingforList.size());
         //如果等待列表为空 就轮到下个人摸牌
         if (this.waitingforList.size() == 0) {
             pushAllPass();
             long nextId = nextTurnId(turnId);
-            mopai(nextId,"出牌");
+            mopai(nextId, "出牌");
         } else {
             //todo 一炮多响
             if (this.room.isYipaoduoxiang && waitingforList.stream().filter(waitDetail -> waitDetail.isHu).count() >= 2) {
@@ -594,7 +562,7 @@ public class GameInfoNew extends GameInfo {
             if ("".equals(card)) {
                 System.err.println("=======================杠牌时 没传数据========");
             }
-            if(!playerCardsInfo.isCanGangThisCard(card)){
+            if (!playerCardsInfo.isCanGangThisCard(card)) {
                 return ErrorCode.CAN_NOT_GANG;
             }
             int gangType = CardTypeUtil.getTypeByCard(card);
@@ -649,7 +617,6 @@ public class GameInfoNew extends GameInfo {
             }
 
 
-
         } else {
             if (disCard == null || !playerCardsInfo.canBeGang) {
                 return ErrorCode.CAN_NOT_GANG;
@@ -668,13 +635,13 @@ public class GameInfoNew extends GameInfo {
 
     }
 
-    protected void doGang_hand(PlayerCardsInfoMj playerCardsInfo, long userId, String card){
+    protected void doGang_hand(PlayerCardsInfoMj playerCardsInfo, long userId, String card) {
         boolean isMing = playerCardsInfo.gang_hand(room, this, userId, card);
         if (isMing) {
             userId = -1;
         }
         playerCardsInfo.gangCompute(room, this, isMing, userId, card);
-        mopai(playerCardsInfo.getUserId(),"杠后摸牌");
+        mopai(playerCardsInfo.getUserId(), "杠后摸牌");
         turnId = playerCardsInfo.getUserId();
         lastOperateUserId = playerCardsInfo.getUserId();
     }
@@ -700,7 +667,7 @@ public class GameInfoNew extends GameInfo {
         MsgSender.sendMsg2Player(vo, users);
 
         //摸牌
-        mopai(userId,"杠后摸牌 点杠");
+        mopai(userId, "杠后摸牌 点杠");
         turnId = userId;
         this.disCard = null;
         lastOperateUserId = userId;
@@ -733,7 +700,7 @@ public class GameInfoNew extends GameInfo {
         return 0;
     }
 
-    protected void doPeng(PlayerCardsInfoMj playerCardsInfo, long userId){
+    protected void doPeng(PlayerCardsInfoMj playerCardsInfo, long userId) {
         playerCardsInfo.peng(disCard, lastPlayUserId);
         lastOperateUserId = userId;
 
@@ -766,7 +733,7 @@ public class GameInfoNew extends GameInfo {
         operateResp.setIsCanTing(isCanTing);
         operateResp.setIsCanGang(isCanGang);
         ResponseVo operateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
-        MsgSender.sendMsg2Player(operateVo,userId);
+        MsgSender.sendMsg2Player(operateVo, userId);
         this.disCard = null;
         //自己将能做的处理
         playerCardsInfo.canBePeng = false;
@@ -775,7 +742,6 @@ public class GameInfoNew extends GameInfo {
         playerCardsInfo.canBeHu = false;
         resetOtherOperate(userId);
     }
-
 
 
     /**
@@ -807,7 +773,7 @@ public class GameInfoNew extends GameInfo {
                 //截杠胡
                 if (jieGangHuCard != null) {
                     //截的 都是碰的明杠
-                    doGang_hand(playerCardsInfos.get(beJieGangUser),-1,jieGangHuCard);
+                    doGang_hand(playerCardsInfos.get(beJieGangUser), -1, jieGangHuCard);
                     beJieGangUser = -1;
                     jieGangHuCard = null;
                 } else {
@@ -815,7 +781,7 @@ public class GameInfoNew extends GameInfo {
                     pushAllPass();
                     long nextId = nextTurnId(turnId);
                     //下个人摸牌
-                    mopai(nextId,"过后摸牌");
+                    mopai(nextId, "过后摸牌");
                 }
             } else {
                 WaitDetail waitDetail = this.waitingforList.get(0);
@@ -831,12 +797,12 @@ public class GameInfoNew extends GameInfo {
         return 0;
     }
 
-    protected void pushAllPass(){
+    protected void pushAllPass() {
         Map map = new HashMap();
         map.put("isAllPass", true);
         map.put("lastPlayUser", lastPlayUserId);
         ResponseVo responseVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_ALL_PASS, map);
-        MsgSender.sendMsg2Player(responseVo,users);
+        MsgSender.sendMsg2Player(responseVo, users);
     }
 
     /**
@@ -951,7 +917,7 @@ public class GameInfoNew extends GameInfo {
 
     }
 
-    protected void doHu(PlayerCardsInfoMj playerCardsInfo, long userId){
+    protected void doHu(PlayerCardsInfoMj playerCardsInfo, long userId) {
         OperateReqResp operateReqResp = new OperateReqResp();
         operateReqResp.setUserId(userId);
         operateReqResp.setOperateType(OperateReqResp.type_hu);
@@ -1008,7 +974,7 @@ public class GameInfoNew extends GameInfo {
             return ErrorCode.CAN_NOT_CHI;
         }
 
-        handleWait(userId, WaitDetail.chiPoint,one,two);
+        handleWait(userId, WaitDetail.chiPoint, one, two);
         return 0;
     }
 
@@ -1066,7 +1032,7 @@ public class GameInfoNew extends GameInfo {
             return ErrorCode.CAN_NOT_CHI_TING;
         }
 
-        handleWait(userId, WaitDetail.chiTingPoint,one,two);
+        handleWait(userId, WaitDetail.chiTingPoint, one, two);
         return 0;
     }
 
@@ -1172,7 +1138,7 @@ public class GameInfoNew extends GameInfo {
         for (WaitDetail waitDetail1 : waitingforList) {
             if (waitDetail1.myUserId == userId) {
                 if (waitDetail1.getPoint() == operateType) {
-                    waitDetail1.operate(this,operateType, params);
+                    waitDetail1.operate(this, operateType, params);
                 } else {
                     removeList.add(waitDetail1);
                 }

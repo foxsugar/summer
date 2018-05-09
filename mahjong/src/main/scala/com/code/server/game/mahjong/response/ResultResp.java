@@ -14,6 +14,7 @@ public class ResultResp {
     private Map<Long, Integer> laZhuang = new HashMap<>();
     private Map<Long, Boolean> laZhuangStatus = new HashMap<>();
     private List<Long> yipaoduoxiang;
+    private String yu;
 
 
     public String getBaoCard() {
@@ -66,6 +67,15 @@ public class ResultResp {
 
     public ResultResp setYipaoduoxiang(List<Long> yipaoduoxiang) {
         this.yipaoduoxiang = yipaoduoxiang;
+        return this;
+    }
+
+    public String getYu() {
+        return yu;
+    }
+
+    public ResultResp setYu(String yu) {
+        this.yu = yu;
         return this;
     }
 }
