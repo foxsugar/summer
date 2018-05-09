@@ -25,4 +25,11 @@ public class Bet {
     public void setZhu(int zhu) {
         this.zhu = zhu;
     }
+
+    @Override
+    public String toString() {
+        return "Bet{" +
+                "zhu=" + zhu +
+                '}';
+    }
 }

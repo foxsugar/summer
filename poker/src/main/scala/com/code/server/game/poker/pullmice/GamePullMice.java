@@ -3,15 +3,17 @@ import com.code.server.constant.response.*;
 import com.code.server.game.poker.tuitongzi.TuiTongZiConstant;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
+import com.code.server.game.room.kafka.IfaceMsgSender;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.util.IdWorker;
-import groovy.util.logging.Slf4j;
+import com.code.server.util.JsonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
 import java.util.*;
 
-@Slf4j
 public class GamePullMice extends Game{
 
     protected static final String serviceName = "gamePullMiceService";
@@ -31,6 +33,10 @@ public class GamePullMice extends Game{
     protected boolean allFeng;
 
     protected long diZhu;
+
+    private Logger log = LoggerFactory.getLogger(GamePullMice.class);
+
+    protected IfaceMsgSender ifaceMsgSender;
 
     @Override
     public IfaceGameVo toVo(long watchUser) {
@@ -55,9 +61,19 @@ public class GamePullMice extends Game{
     }
 
     public void startGame(List<Long> users, Room room){
+
         this.room = (RoomPullMice) room;
 
+        log.error("拉老鼠游戏开始:房间号{}, 第{}局，房主是{}", this.room.getRoomId(),this.room.curGameNumber, room.users.get(0));
 //        this.users = users;
+
+        this.ifaceMsgSender = new IfaceMsgSender() {
+            @Override
+            public void callback(Object object, long userId) {
+                log.warn("userId:{}, msg: {}", userId, object);
+            };
+        };
+
         this.users.clear();
         this.users.addAll(users);
 
@@ -69,12 +85,13 @@ public class GamePullMice extends Game{
         Map res = new HashMap();
         this.diZhu = 1;
         res.put("diZhu", diZhu);
-        MsgSender.sendMsg2Player(serviceName, "gamePullMiceBegin_", res, users);
+        MsgSender.sendMsg2Player(serviceName, "gamePullMiceBegin_", res, users, this.ifaceMsgSender);
         isNoticeClientShuffle();
         initPlayer();
         for (PlayerPullMice p : playerCardInfos.values()){
-            p.setScore(-diZhu);
-            this.room.potBottom += diZhu;
+//            p.setScore(-diZhu);
+//            this.room.potBottom += diZhu;
+            this.addScore(p, diZhu);
         }
 
         //先推送一下分数
@@ -95,7 +112,7 @@ public class GamePullMice extends Game{
         this.room.cheatInfo.put("curGameNumber", this.room.curGameNumber + 1);
         this.room.cheatInfo.put("cheatId", cheatId);
         this.room.fakePlayerInfos = fakePlayerInfos;
-        MsgSender.sendMsg2Player(serviceName, "cheat", 0 , uid);
+        MsgSender.sendMsg2Player(serviceName, "cheat", 0 , uid, this.ifaceMsgSender);
 
         return 0;
     }
@@ -262,7 +279,14 @@ public class GamePullMice extends Game{
         result.put("state", this.state);
         result.put("canWuBuFeng", this.room.canWuBuFeng);
         //此时pxId为1的先下注
-        MsgSender.sendMsg2Player(serviceName, "betStart", result, userId);
+        MsgSender.sendMsg2Player(serviceName, "betStart", result, userId, this.ifaceMsgSender);
+    }
+
+    public void addScore(PlayerPullMice playerPullMice, long score){
+        this.room.potBottom += score;
+        long score_ = playerPullMice.getScore();
+        score_ -= score;
+        playerPullMice.setScore(score_);
     }
 
     public int fiveStepClose(Long userId, Integer zhu){
@@ -277,15 +301,17 @@ public class GamePullMice extends Game{
         long ret = 0;
         if (zhu == Bet.WU_BU_FENG){
             playerPullMice = this.pxList.get(0);
-            playerPullMice.setScore(playerPullMice.getScore() - 5);
-            this.room.potBottom += 5;
+//            playerPullMice.setScore(playerPullMice.getScore() - 5);
+//            this.room.potBottom += 5;
+            this.addScore(playerPullMice, 5);
             ret = 5;
 
             playerPullMice.getBetList().add(bet);
         }else if(zhu == Bet.FENG){
             playerPullMice = this.playerCardInfos.get(userId);
-            playerPullMice.setScore(playerPullMice.getScore() - 10);
-            this.room.potBottom += 10;
+//            playerPullMice.setScore(playerPullMice.getScore() - 10);
+//            this.room.potBottom += 10;
+            this.addScore(playerPullMice, 10);
             ret = 10;
             playerPullMice.getBetList().add(bet);
 
@@ -306,8 +332,9 @@ public class GamePullMice extends Game{
 
         }else if(zhu == Bet.FOLLOW){
             playerPullMice = this.playerCardInfos.get(userId);
-            playerPullMice.setScore(playerPullMice.getScore() - 5);
-            this.room.potBottom += 5;
+//            playerPullMice.setScore(playerPullMice.getScore() - 5);
+//            this.room.potBottom += 5;
+            this.addScore(playerPullMice, 5);
             ret = 5;
 
             playerPullMice.getBetList().add(bet);
@@ -388,6 +415,7 @@ public class GamePullMice extends Game{
                         if (b.getZhu() == Bet.WU_BU_FENG && p.isAlreadyFeng() == false){
                             p.setScore(p.getScore() + 5);
                             this.room.potBottom -= 5;
+
                             ret = 5;
                         }
                     }
@@ -406,8 +434,8 @@ public class GamePullMice extends Game{
         res.put("potBottom", this.room.potBottom);
         res.put("zhu",zhu_);
 
-        MsgSender.sendMsg2Player(serviceName, "fiveStepCloseResult", res, this.pxUsers);
-        MsgSender.sendMsg2Player(serviceName, "fiveStepClose", "0", userId);
+        MsgSender.sendMsg2Player(serviceName, "fiveStepCloseResult", res, this.pxUsers, this.ifaceMsgSender);
+        MsgSender.sendMsg2Player(serviceName, "fiveStepClose", "0", userId, this.ifaceMsgSender);
 
         if (isOver){
             //推送一下分数
@@ -527,8 +555,9 @@ public class GamePullMice extends Game{
             escapeCount++;
         }
 
-        playerPullMice.setScore(playerPullMice.getScore() - ret);
-        this.room.potBottom += ret;
+//        playerPullMice.setScore(playerPullMice.getScore() - ret);
+//        this.room.potBottom += ret;
+        this.addScore(playerPullMice, ret);
 
         Map<String, Object> res = new HashMap<>();
         res.put("userId", userId);
@@ -538,18 +567,18 @@ public class GamePullMice extends Game{
         res.put("zhu",zhu_);
 
         if (times == 1){
-            MsgSender.sendMsg2Player(serviceName, "betResult1", res, this.pxUsers);
-            MsgSender.sendMsg2Player(serviceName, "bet1", "0", userId);
+            MsgSender.sendMsg2Player(serviceName, "betResult1", res, this.pxUsers, this.ifaceMsgSender);
+            MsgSender.sendMsg2Player(serviceName, "bet1", "0", userId, this.ifaceMsgSender);
         }else if(times == 2){
-            MsgSender.sendMsg2Player(serviceName, "betResult2", res, this.pxUsers);
-            MsgSender.sendMsg2Player(serviceName, "bet2", "0", userId);
+            MsgSender.sendMsg2Player(serviceName, "betResult2", res, this.pxUsers, this.ifaceMsgSender);
+            MsgSender.sendMsg2Player(serviceName, "bet2", "0", userId, this.ifaceMsgSender);
         }else if(times == 3){
-            MsgSender.sendMsg2Player(serviceName, "betResult3", res, this.pxUsers);
-            MsgSender.sendMsg2Player(serviceName, "bet3", "0", userId);
+            MsgSender.sendMsg2Player(serviceName, "betResult3", res, this.pxUsers, this.ifaceMsgSender);
+            MsgSender.sendMsg2Player(serviceName, "bet3", "0", userId, this.ifaceMsgSender);
         }else if(times == 4){
 
-            MsgSender.sendMsg2Player(serviceName, "betResult4", res, this.pxUsers);
-            MsgSender.sendMsg2Player(serviceName, "bet4", "0", userId);
+            MsgSender.sendMsg2Player(serviceName, "betResult4", res, this.pxUsers, this.ifaceMsgSender);
+            MsgSender.sendMsg2Player(serviceName, "bet4", "0", userId, this.ifaceMsgSender);
         }
 
         boolean isDeal = true;
@@ -728,7 +757,11 @@ public class GamePullMice extends Game{
         aList.addAll(witnessUsers);
 
 
-        MsgSender.sendMsg2Player(serviceName, "gameResult", list, aList);
+        MsgSender.sendMsg2Player(serviceName, "gameResult", list, aList, this.ifaceMsgSender);
+
+        this.room.debugPlayerList.add(list);
+
+        log.error("小局战绩:curGameNumber:{}, player:{}, 用户id{}", this.room.curGameNumber, JsonUtil.toJson(list), JsonUtil.toJson(aList));
 
         //推送一下分数
         this.pushScoreChange();
@@ -743,7 +776,27 @@ public class GamePullMice extends Game{
            PlayerPullMice p = entry.getValue();
             map.put(p.getUserId(), p.getScore() + 0.0);
         }
+
+        double total = 0;
+        for (Double s : map.values()){
+            total += s;
+        }
+
         genRecord(map, this.room, id);
+
+        //debugMap
+        Map<Object, Object> debug = new HashMap<>();
+        debug.put("scores", map);
+        debug.put("roomId", this.room.getRoomId());
+        debug.put("roomMaster", this.room.getUsers().get(0));
+        debug.put("curGameNumber", this.room.curGameNumber);
+        this.room.debugList.add(debug);
+
+        if (total != 0){
+            log.error("小局战绩不等于零:curGameNum{}, result:{}",this.room.curGameNumber, JsonUtil.toJson(map));
+            log.error("{}", this.room.debugList);
+            log.error("{}", this.room.debugPlayerList);
+        }
     }
 
     public void gameOver(){
@@ -773,7 +826,12 @@ public class GamePullMice extends Game{
         List<UserOfResult>  userOfResult =  this.room.getUserOfResult();
         GameOfResult gameOfResult = new GameOfResult();
         gameOfResult.setUserList(userOfResult);
-        MsgSender.sendMsg2Player("gameService", "gamePullMiceFinalResult", gameOfResult, this.pxUsers);
+        MsgSender.sendMsg2Player("gameService", "gamePullMiceFinalResult", gameOfResult, this.pxUsers, this.ifaceMsgSender);
+        log.error("房间号：{} gamePullMiceFinalResult总战绩:{}",this.room.getRoomId(), JsonUtil.toJson(gameOfResult));
+        log.error("deubgList:{}", JsonUtil.toJson(this.room.debugList));
+        log.error("playerList:{}", JsonUtil.toJson(this.room.debugPlayerList));
+
+
         RoomManager.removeRoom(room.getRoomId());
 
         this.room.genRoomRecord();
@@ -876,7 +934,7 @@ public class GamePullMice extends Game{
 
         //如果剩余0张 预先洗牌
         isNoticeClientShuffle();
-        MsgSender.sendMsg2Player(serviceName, "deal", res, this.pxUsers);
+        MsgSender.sendMsg2Player(serviceName, "deal", res, this.pxUsers, this.ifaceMsgSender);
 
     }
 
@@ -922,7 +980,7 @@ public class GamePullMice extends Game{
 
         //如果剩余0张 预先洗牌
         isNoticeClientShuffle();
-        MsgSender.sendMsg2Player(serviceName, "deal", res, this.pxUsers);
+        MsgSender.sendMsg2Player(serviceName, "deal", res, this.pxUsers, this.ifaceMsgSender);
     }
 
     //更新排序后对应的id数组
@@ -947,7 +1005,7 @@ public class GamePullMice extends Game{
             userScores.put(uid, p.getScore());
         }
 
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChangePullMiceWuBu", userScores), this.getUsers());
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChangePullMiceWuBu", userScores), this.getUsers(), this.ifaceMsgSender);
     }
 
     /*
@@ -956,6 +1014,6 @@ public class GamePullMice extends Game{
     public void pushScoreChange() {
         Map<Long, Double> userScores = new HashMap<>();
         userScores.putAll(this.room.userScores);
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChangePullMice", userScores), this.getUsers());
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChangePullMice", userScores), this.getUsers(), this.ifaceMsgSender);
     }
 }

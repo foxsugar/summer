@@ -1,4 +1,6 @@
 package com.code.server.game.poker.zhaguzi;
+import com.code.server.game.poker.doudizhu.CardUtil;
+import com.code.server.game.poker.hitgoldflower.Player;
 import com.code.server.game.poker.pullmice.BaseCardUtils;
 import com.code.server.game.poker.pullmice.IfCard;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,26 +25,282 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
     //牌型
     //王炸
     public static final int WANG_ZHA = 1;
+    //双三
+    public static final int SHUANG_SAN = 2;
+
     //四人炸弹
-    public static final int SI_ZHA = 2;
+    public static final int SI_ZHA = 3;
     //三人炸弹
-    public static final int SAN_ZHA = 3;
+    public static final int SAN_ZHA = 4;
     //对子
-    public static final int Dui_ZI = 4;
+    public static final int Dui_ZI = 5;
     //单牌
-    public static final int DAN_ZI = 5;
+    public static final int DAN_ZI = 6;
     // 错误牌型
-    public static final int ERROR = 6;
+    public static final int ERROR = 7;
 
     private static Map<Integer, Integer> cardDict = new HashMap<>();
 
-    //要考虑 亮三 不亮3 5人玩法， 六人玩法
-    public static int compare(PlayerZhaGuZi player1, PlayerZhaGuZi player2){
+    //牌型转转类
+    private static IfCard ifCard = new IfCard() {
+        @Override
+        public Map<Integer, Integer> cardDict() {
+            return CardUtils.getCardDict();
+        }
+    };
 
-//        return cardsCompare(player1.cards, player2.cards);
-        return 1;
+    public static int computeCardType(PlayerZhaGuZi playerZhaGuZi){
+
+        List<Integer> aList = new ArrayList<>();
+        aList.addAll(playerZhaGuZi.cards);
+        Collections.sort(aList);
+
+        if (aList.size() == 1){
+            return DAN_ZI;
+        }
+
+        if (aList.size() == 2){
+
+            Integer a = aList.get(0);
+            Integer b = aList.get(1);
+            //王炸
+            if (a == 0 && b == 1){
+
+                return WANG_ZHA;
+            }
+
+            //六人场中没有双三
+            //双三必须是五人场中 并且亮了方片三才会有
+            if (playerZhaGuZi.getRoomPersonNum() == 5){
+
+                if (playerZhaGuZi.getLiangList().size() > 0){
+                    Integer i = playerZhaGuZi.getLiangList().get(0);
+
+                    if ( i == 9){
+                        if (a == 7 && b == 9){
+                            return SHUANG_SAN;
+                        }
+                    }
+                }
+
+            }
+
+            if ( a > 1 && b > 1){
+
+                if ((a - 2) / 4 == (b - 2) / 4){
+                    return Dui_ZI;
+                }else {
+                    return ERROR;
+                }
+
+            }else {
+                return ERROR;
+            }
+        }
+        boolean isFind = true;
+
+        Integer last = aList.get(0);
+
+        for (int i = 1; i < aList.size(); i++){
+            Integer current = aList.get(i);
+            if ((current - 2) / 4 != (last - 2) / 4){
+                isFind = false;
+                break;
+            }
+        }
+
+        if (isFind){
+
+            if (aList.size() == 3){
+                return SAN_ZHA;
+            }else {
+                return SI_ZHA;
+            }
+
+        }else {
+            return ERROR;
+        }
+
     }
 
+    //要考虑 亮三 不亮3 5人玩法， 六人玩法
+    public static int compare(PlayerZhaGuZi player1, List<Integer> cards1, PlayerZhaGuZi player2, List<Integer> cards2){
+
+        List<Integer> aList = cards1;
+        List<Integer> bList = cards2;
+
+        int typeA = computeCardType(player1);
+        int typeB = computeCardType(player2);
+
+        List<Integer> lList = new ArrayList<>();
+        List<Integer> rList = new ArrayList<>();
+        lList.addAll(aList);
+        rList.addAll(bList);
+        Collections.sort(lList);
+        Collections.sort(rList);
+
+        int ret = -1;
+
+        if (typeA == ERROR){
+            System.out.println("A类型错误");
+            return LEFT_CARDS_ERROR;
+        }else if(typeB == ERROR){
+            System.out.println("B类型错误");
+            return RIGHT_CARDS_ERROR;
+        }
+
+        if (typeA != typeB){
+
+            //先比较特殊牌型
+            //双三和王炸一样打
+            if (player1.getRoomPersonNum() == 5){
+
+                if (typeA == SHUANG_SAN || typeB == WANG_ZHA){
+                    return DRAW;
+                }
+
+            }
+
+
+            //右边的人比牌比较大
+            if (typeA > typeB){
+
+                if (typeB == Dui_ZI || typeB == DAN_ZI){
+                    return RIGHT_CARDS_ERROR;
+                }
+
+                return LOSE;
+
+            }else {
+
+                if (typeA == Dui_ZI || typeA == DAN_ZI){
+                    return LEFT_CARDS_ERROR;
+                }
+
+                return WIN;
+
+            }
+
+        }else {
+
+            Integer a = (lList.get(0) - 2) / 4;
+            Integer b = (rList.get(0) - 2) / 4;
+
+            //五人玩法中 红三能不能打4
+            if (player1.getRoomPersonNum() == 5){
+
+                //判断下红桃三可以管4
+                if (lList.get(0) == 7){
+                    if (b == 0){
+                        return WIN;
+                    }
+                }
+                //判断下红桃三可以管4
+                if (rList.get(0) == 7){
+                    if (a == 0){
+                        return WIN;
+                    }
+                }
+
+                //方片三是否可以管4
+                if (lList.get(0) == 9){
+
+                    boolean isLiang = false;
+                    if (player1.getLiangList().size() != 0){
+
+                        Integer liang = player1.getLiangList().get(0);
+
+                        //亮的是 方片饭
+                        if (liang == 9){
+                            isLiang = true;
+
+                        }
+                    }
+
+                    //如果亮3的情况下
+                    if (b == 0 && isLiang){
+                        return WIN;
+                    }
+                }
+                //方片三是否可以管4
+                if (rList.get(0) == 9){
+
+
+                    boolean isLiang = false;
+                    if (player2.getLiangList().size() != 0){
+
+                        Integer liang = player2.getLiangList().get(0);
+
+                        //亮的是 方片饭
+                        if (liang == 9){
+                            isLiang = true;
+
+                        }
+                    }
+
+                    if (a == 0){
+                        return WIN;
+                    }
+                }
+
+            }
+
+            switch (typeA){
+
+                case SI_ZHA:
+
+                    if (a < b){
+                        ret = WIN;
+                    }else if (a == b){
+                        ret = DRAW;
+                    }else {
+                        ret = LOSE;
+                    }
+                    break;
+
+                case SAN_ZHA:
+
+                    if (a < b){
+                        ret = WIN;
+                    }else if (a == b){
+                        ret = DRAW;
+                    }else {
+                        ret = LOSE;
+                    }
+                    break;
+
+                case Dui_ZI:
+
+                    if (a < b){
+                        ret = WIN;
+                    }else if (a == b){
+                        ret = DRAW;
+                    }else {
+                        ret = LOSE;
+                    }
+                    break;
+
+                case DAN_ZI:
+
+                    if (a < b){
+                        ret = WIN;
+                    }else if (a == b){
+                        ret = DRAW;
+                    }else {
+                        ret = LOSE;
+                    }
+                    break;
+            }
+        }
+
+        return ret;
+
+    }
+
+    /*
+    * 暂时弃用 因为 有些特殊情况不能处理
+    * */
+    @Deprecated
     public static int cardsCompare(List<Integer> aList, List<Integer> bList){
 
         int typeA = computeCardType(aList);
@@ -153,6 +411,9 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
             case WANG_ZHA:
                 str = "王炸";
                 break;
+            case SHUANG_SAN:
+                str = "双三";
+                break;
             case SI_ZHA:
                 str = "四炸";
                 break;
@@ -180,6 +441,10 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
     }
 
     //计算牌型
+      /*
+    * 暂时弃用 因为 有些特殊情况不能处理
+    * */
+    @Deprecated
     public static int computeCardType(List<Integer> list){
 
         List<Integer> aList = new ArrayList<>();
@@ -198,6 +463,10 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
             if (a == 0 && b == 1){
 
                 return WANG_ZHA;
+            }
+            //双三 在这里不考虑双三是否起作用
+            if (a == 7 && b == 9){
+                return SHUANG_SAN;
             }
 
             if ( a > 1 && b > 1){
@@ -235,6 +504,44 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
         }else {
             return ERROR;
         }
+    }
+
+    //胜者组必须有头游并且没有尾游 否则平局
+    public void findWinnerList(List<PlayerZhaGuZi> aList){
+
+        PlayerZhaGuZi pFirst = null;
+        PlayerZhaGuZi pFinal = null;
+        for (PlayerZhaGuZi p : aList){
+
+            //去除第一个出完牌的人
+            if (p.rank == 1){
+                pFirst = p;
+            }
+
+            if (p.rank == p.getRoomPersonNum()){
+                pFinal = p;
+            }
+        }
+
+        //平局情况
+        if (pFinal.getIsSanJia() == pFirst.getIsSanJia()){
+
+            for (PlayerZhaGuZi p : aList){
+
+                p.setIsWinner(PlayerZhaGuZi.DRAW);
+            }
+
+        }else {
+
+            Integer isSanJia = pFirst.getIsSanJia();
+
+            for (PlayerZhaGuZi p : aList){
+
+                p.setIsWinner(isSanJia);
+
+            }
+        }
+
     }
 
     public static Map<Integer, Integer> getCardDict() {

@@ -42,6 +42,9 @@ public class RoomPullMice extends Room {
     //上一局房间内人数
     protected long lastPersonNum;
 
+    protected List<Object> debugList = new ArrayList<>();
+    protected List<Object> debugPlayerList = new ArrayList<>();
+
     protected Map<String, Object> cheatInfo = new HashMap<>();
     Map<Long, PlayerPullMice> fakePlayerInfos = new HashMap<>();
 
@@ -154,11 +157,20 @@ public class RoomPullMice extends Room {
         return 0;
     }
 
+    public void clearDebug(){
+        this.debugPlayerList.clear();
+        this.debugList.clear();
+    }
+
     @Override
     public int startGameByClient(long userId) {
 
         if (this.users.get(0) != userId){
             return ErrorCode.ROOM_START_NOT_CREATEUSER;
+        }
+
+        if (this.curGameNumber == 1){
+            this.clearDebug();
         }
 
         //第一局

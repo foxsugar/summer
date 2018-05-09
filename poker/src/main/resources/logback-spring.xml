@@ -20,7 +20,7 @@
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>/root/poker/info.%d.log</fileNamePattern>
+            <fileNamePattern>/root/poker/logs/info.%d.log</fileNamePattern>
             <!--<fileNamePattern>/var/log/tomcat/poker/info.%d.log</fileNamePattern>-->
         </rollingPolicy>
     </appender>
@@ -32,14 +32,31 @@
         </filter>
         <encoder>
             <pattern>
-                %msg%n
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}:  %msg%n</pattern>
             </pattern>
         </encoder>
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>/root/poker/error.%d.log</fileNamePattern>
+            <fileNamePattern>/root/poker/logs/error.%d.log</fileNamePattern>
             <!--<fileNamePattern>/var/log/tomcat/poker/error.%d.log</fileNamePattern>-->
+        </rollingPolicy>
+    </appender>
+
+    <appender name="fileWarnLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <encoder>
+            <pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}:  %msg%n</pattern>
+            </pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--路径-->
+            <fileNamePattern>/root/poker/logs/warn.%d.log</fileNamePattern>
+            <!--<fileNamePattern>/var/log/tomcat/poker/warn.%d.log</fileNamePattern>-->
         </rollingPolicy>
     </appender>
 
@@ -47,6 +64,7 @@
         <appender-ref ref="consoleLog" />
         <appender-ref ref="fileInfoLog" />
         <appender-ref ref="fileErrorLog" />
+        <appender-ref ref="fileWarnLog" />
     </root>
 
 </configuration>

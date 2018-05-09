@@ -4,6 +4,7 @@ package com.code.server.game.poker.zhaguzi;
  * Created by dajuejinxian on 2018/5/2.
  */
 public class Operator {
+    public static final int NOT_OPERATION = 0;
     //亮3
     public static final int LIANG_SAN = 1;
     //扎股子

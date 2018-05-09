@@ -145,14 +145,16 @@ object GameService {
 
     case "talk" =>
       val op = params.path("op").asInt(0)
-      game.talk(userId, op)
+      //亮牌的时候带过来的牌，默认传 -1
+      val card = params.path("card").asInt(0)
+      game.talk(userId, op, card)
     case "isGiveUp"=>
       val ret = params.path("isGiveUp").asBoolean()
       game.isGiveUp(userId, ret)
-    case "discard"=>
-      val firstId = params.path("firstId").asLong()
-      //      game.open(userId, firstId);
-//      game.open(userId, firstId);
+    case "beingDiscard"=>
+      val op = params.path("op").asInt(0)
+      val li = null
+      game.beingDiscard(userId, op, li)
     case "fightForBanker" =>
       val flag = params.path("flag").asBoolean()
 //      game.fightForBanker(userId, flag)

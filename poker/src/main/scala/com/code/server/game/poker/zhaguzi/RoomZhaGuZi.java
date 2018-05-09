@@ -2,10 +2,12 @@ package com.code.server.game.poker.zhaguzi;
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.response.ErrorCode;
+import com.code.server.constant.response.IfaceRoomVo;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.tuitongzi.GameTuiTongZi;
 import com.code.server.game.poker.tuitongzi.RoomTuiTongZi;
+import com.code.server.game.poker.tuitongzi.RoomTuiTongZiVo;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
@@ -15,6 +17,7 @@ import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
+import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -27,6 +30,27 @@ public class RoomZhaGuZi extends Room{
     //第一个发牌的人的Id
     protected long firstId;
     protected long lastWinnderId;
+
+
+    public IfaceRoomVo toVo(long user){
+
+        GameZhaGuZi game = (GameZhaGuZi) this.getGame();
+
+        RoomZhaGuZiVo roomVo = new RoomZhaGuZiVo();
+        BeanUtils.copyProperties(this, roomVo);
+        RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
+        if (this.game != null) {
+            roomVo.game = this.game.toVo(user);
+        }
+        if (this.getTimerNode() != null) {
+            long time = this.getTimerNode().getStart() + this.getTimerNode().getInterval() - System.currentTimeMillis();
+            roomVo.setRemainTime(time);
+        }
+
+        BeanUtils.copyProperties(this,roomVo);
+
+        return roomVo;
+    }
 
     public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, String clubId, String clubRoomModel) throws DataNotFoundException {
 
@@ -93,7 +117,7 @@ public class RoomZhaGuZi extends Room{
             if(status == IGameConstant.STATUS_READY) readyCount++;
         }
 
-        if (readyCount < 2) return ErrorCode.READY_NUM_ERROR;
+        if (readyCount < 5) return ErrorCode.READY_NUM_ERROR;
 
         this.setPersonNumber(userScores.size());
         //没准备的人
@@ -112,8 +136,8 @@ public class RoomZhaGuZi extends Room{
         }
 
         //通知其他人游戏已经开始
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameTTZBegin", "ok"), this.getUsers());
-        MsgSender.sendMsg2Player(new ResponseVo("roomService", "startTTZGameByClient", 0), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameZhaGuZiBegin", "ok"), this.getUsers());
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "startZhaGuZiGameByClient", 0), userId);
 
         GameTuiTongZi gameTuiTongZi = (GameTuiTongZi) getGameInstance();
         this.game = gameTuiTongZi;
