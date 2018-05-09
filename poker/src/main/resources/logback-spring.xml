@@ -20,7 +20,7 @@
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>/root/poker/logs/info.%d.log</fileNamePattern>
+            <fileNamePattern>/root/poker/info.%d.log</fileNamePattern>
             <!--<fileNamePattern>/var/log/tomcat/poker/info.%d.log</fileNamePattern>-->
         </rollingPolicy>
     </appender>
@@ -38,7 +38,7 @@
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>/root/poker/logs/error.%d.log</fileNamePattern>
+            <fileNamePattern>/root/poker/error.%d.log</fileNamePattern>
             <!--<fileNamePattern>/var/log/tomcat/poker/error.%d.log</fileNamePattern>-->
         </rollingPolicy>
     </appender>
@@ -55,7 +55,7 @@
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>/root/poker/logs/warn.%d.log</fileNamePattern>
+            <fileNamePattern>/root/poker/warn.%d.log</fileNamePattern>
             <!--<fileNamePattern>/var/log/tomcat/poker/warn.%d.log</fileNamePattern>-->
         </rollingPolicy>
     </appender>
