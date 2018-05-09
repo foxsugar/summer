@@ -123,6 +123,8 @@ public class ErrorCode {
 	//扎股子
 	public static final int CARDS_ERROR = 900001;
 	public static final int CAN_NOT_DISCARD = 900002;//管不了
+	public static final int ALREADY_TALK = 900003;//已经说完话话了
+	public static final int OPERATOR_ERROR = 900004;//操作错误
 
 	static class ErrorCodeRepeatChecker {
     	public void check() {
