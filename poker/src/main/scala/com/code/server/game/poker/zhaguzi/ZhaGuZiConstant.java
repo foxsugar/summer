@@ -9,12 +9,14 @@ public class ZhaGuZiConstant {
 
     //开始
     public static final Integer START_GAME = 1;
-    //说话
+    //说话完毕
     public static final Integer TALK = 2;
-    //提示弃牌
+    //提示认输
     public static final Integer GIVE_UP = 3;
-    //出牌
-    public static final Integer DISCARD = 4;
+    //刚开是出牌
+    public static final Integer BEING_DISCARD = 4;
+//    //出牌完毕
+//    public static final Integer DISCARD = 4;
     //算分
     public static final Integer COMPUTE = 5;
 

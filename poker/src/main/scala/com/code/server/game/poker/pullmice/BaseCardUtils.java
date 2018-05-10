@@ -15,7 +15,7 @@ public class BaseCardUtils {
 
     private static Map<Integer, Integer> cardDict = new HashMap<>();
 
-    public static String[] colors = {"♠", "♥", "♣", "♦"};
+    public static String[] colors = {"黑桃", "红桃", "梅花", "方片"};
 
     public static String[] values = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "小王", "大王"};
 

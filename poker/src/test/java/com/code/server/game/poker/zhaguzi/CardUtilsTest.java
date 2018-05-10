@@ -10,11 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.CollectionUtils;
 import scala.Int;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -25,7 +28,31 @@ import static org.junit.Assert.*;
 @SpringBootTest
 public class CardUtilsTest {
 
-//    @Autowired
+    @Test
+    public void compare() throws Exception {
+    }
+
+    @Test
+    public void cardsCompare() throws Exception {
+    }
+
+    @Test
+    public void cardsTypeDesc() throws Exception {
+    }
+
+    @Test
+    public void cardsTypeDesc1() throws Exception {
+    }
+
+    @Test
+    public void computeCardType() throws Exception {
+    }
+
+    @Test
+    public void getCardDict1() throws Exception {
+    }
+
+    //    @Autowired
     private IfCard ifCard = new IfCard() {
     @Override
     public Map<Integer, Integer> cardDict() {
@@ -288,6 +315,117 @@ public class CardUtilsTest {
 //        类型错误
     }
 
+    @Test
+    //测试牌型
+    public void demo7(){
 
+        List<Integer> aList = new ArrayList<>();
+        int a1 = 7;
+        int a2 = 9;
+        aList.add(a1);
+        aList.add(a2);
+        String str = CardUtils.cardsTypeDesc(aList);
+        Assert.assertEquals(str, "双三");
+
+    }
+
+    //测试base
+    @Test
+    public void base1(){
+
+
+        for (int i = 1; i < 55; i++){
+
+            String str = CardUtils.client2String(i);
+            System.out.println(str);
+        }
+
+    }
+
+    @Test
+    public void base2(){
+
+
+        for (int i = 0; i < 54; i++){
+
+            String str = CardUtils.local2String(i , ifCard);
+            System.out.println(str);
+        }
+
+    }
+
+    public void testTalk(List<PlayerZhaGuZi> list){
+
+
+        Integer hongtao = CardUtils.string2Local("红桃-3", ifCard);
+        Integer fangpian = CardUtils.string2Local("方片-3 ", ifCard);
+        for (int i = 0; i < list.size(); i++){
+            PlayerZhaGuZi playerZhaGuZi = list.get(i);
+
+            if (playerZhaGuZi.getOp() != 0){
+                continue;
+            }
+            //包含红桃三或者方片三
+            if (playerZhaGuZi.cards.contains(hongtao) || playerZhaGuZi.cards.contains(fangpian)){
+                playerZhaGuZi.setOp(Operator.LIANG_SAN);
+
+                if (playerZhaGuZi.cards.contains(hongtao)){
+                    playerZhaGuZi.getLiangList().add(hongtao);
+                }else {
+                    playerZhaGuZi.getLiangList().add(fangpian);
+                }
+
+            }else {
+                playerZhaGuZi.setOp(Operator.ZHA_GU);
+            }
+        }
+    }
+
+    //模拟发牌
+    public List<PlayerZhaGuZi> testStart(){
+
+        List<PlayerZhaGuZi> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++){
+            PlayerZhaGuZi playerZhaGuZi = new PlayerZhaGuZi();
+            playerZhaGuZi.setRoomPersonNum(5);
+            list.add(playerZhaGuZi);
+        }
+
+        List<Integer> cards = new ArrayList<>();
+
+        for (int i = 0; i < 54; i++){
+            cards.add(i);
+        }
+
+        //发牌
+        Collections.shuffle(cards);
+
+        PlayerZhaGuZi playerCurrent = null;
+        Integer idx = 0;
+        while (true){
+            playerCurrent = list.get(idx);
+            if (playerCurrent.cards.size() >= 10){
+                idx++;
+                if (idx >= list.size()){
+                    break;
+                }
+                playerCurrent = list.get(idx);
+            }
+
+            Integer card = cards.get(0);
+            playerCurrent.cards.add(card);
+        }
+
+        return list;
+
+    }
+
+    @Test
+    public void testCompare(){
+
+        List<PlayerZhaGuZi> list = testStart();
+        testTalk(list);
+
+    }
 
 }
