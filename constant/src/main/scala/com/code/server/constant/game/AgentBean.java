@@ -24,6 +24,8 @@ public class AgentBean {
 
     private String qrTicket;
 
+    private String image;
+
     private List<Long> childList = new ArrayList<>();
 
     public long getId() {
@@ -104,6 +106,15 @@ public class AgentBean {
 
     public AgentBean setUnionId(String unionId) {
         this.unionId = unionId;
+        return this;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public AgentBean setImage(String image) {
+        this.image = image;
         return this;
     }
 }

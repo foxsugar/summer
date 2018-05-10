@@ -23,5 +23,6 @@ public interface IAgentRedis {
 //    boolean isAgent(long userId);
 
 
+    boolean isExit(long agentId);
 
 }

@@ -539,7 +539,9 @@ public class GameClubService {
         if (club.getPresident() != userId) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
-        if (club.getClubInfo().getRoomModels().size() >= ROOM_LIMIT) {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        int limit = serverConfig.getClubRoomModelLimit();
+        if (club.getClubInfo().getRoomModels().size() >= limit) {
             return ErrorCode.CLUB_NOT_MODEL_LIMIT;
         }
 

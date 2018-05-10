@@ -63,6 +63,12 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         addSaveAgent(agentBean.getId());
     }
 
+    @Override
+    public boolean isExit(long agentId) {
+        BoundHashOperations<String, String, String> agent_bean = redisTemplate.boundHashOps(AGENT_BEAN);
+        return agent_bean.hasKey(""+agentId);
+    }
+
 
     private void addSaveAgent(long agentId) {
         BoundSetOperations<String, String> save_agent = redisTemplate.boundSetOps(SAVE_AGENT);

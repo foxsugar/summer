@@ -15,16 +15,16 @@ import javax.persistence.Id;
 public class Recommend extends BaseEntity {
 
     @Id
-    private String openId;
+    private String unionId;
 
     private long agentId;
 
-    public String getOpenId() {
-        return openId;
+    public String getUnionId() {
+        return unionId;
     }
 
-    public Recommend setOpenId(String openId) {
-        this.openId = openId;
+    public Recommend setUnionId(String unionId) {
+        this.unionId = unionId;
         return this;
     }
 
