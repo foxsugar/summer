@@ -3,6 +3,7 @@ package com.code.server.db.model;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "game_agent_wx")
 public class GameAgentWx {
+    @Id
     private String unionId;
     private String openId;
 
