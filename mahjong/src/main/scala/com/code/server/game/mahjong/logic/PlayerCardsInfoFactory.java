@@ -83,7 +83,8 @@ public class PlayerCardsInfoFactory {
             case "102":
                 playerCardsInfo = new PlayerCardsInfoXXPB();
                 break;
-
+            case "103":
+                playerCardsInfo = new PlayerCardsInfoKD_XY();//小翼扣点
 
             default:
                 logger.error("初始化 playercardsInfo 错误");

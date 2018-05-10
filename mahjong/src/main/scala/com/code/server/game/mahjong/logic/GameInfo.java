@@ -327,7 +327,8 @@ public class GameInfo extends Game {
         return ("LQ".equals(gameType) && "2".equals(modeTotal)) ||
                 ("HL".equals(gameType) && "2".equals(modeTotal)) ||
                 "SS".equals(gameType) ||
-                "HS".equals(modeTotal);
+                "HS".equals(gameType)||
+                "KXHY".equals(gameType);
     }
 
     /**
