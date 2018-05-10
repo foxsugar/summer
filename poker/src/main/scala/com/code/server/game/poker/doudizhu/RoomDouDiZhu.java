@@ -22,6 +22,7 @@ public class RoomDouDiZhu extends Room {
 
 
     protected int jiaoScoreMax = 3;
+    protected int shuanglong = 0;
 
 
 
@@ -39,7 +40,7 @@ public class RoomDouDiZhu extends Room {
     }
 
     public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType,
-                                 boolean isAA, boolean isJoin, boolean showChat, int personNum, int jiaoScoreMax,
+                                 boolean isAA, boolean isJoin, boolean showChat, int personNum, int jiaoScoreMax,int shuanglong,
                                  String clubId, String clubRoomModel) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         RoomDouDiZhu room = getRoomInstance(roomType);
@@ -54,6 +55,8 @@ public class RoomDouDiZhu extends Room {
         room.isCreaterJoin = isJoin;
         room.showChat = showChat;
         room.jiaoScoreMax = jiaoScoreMax;
+        room.shuanglong = shuanglong;
+
 
         room.setClubId(clubId);
         room.setClubRoomModel(clubRoomModel);
@@ -96,6 +99,8 @@ public class RoomDouDiZhu extends Room {
     public IfaceRoomVo toVo(long userId) {
         RoomDoudizhuVo roomVo = new RoomDoudizhuVo();
         BeanUtils.copyProperties(this, roomVo);
+        roomVo.setJiaoScoreMax(this.jiaoScoreMax);
+        roomVo.setShuanglong(this.shuanglong);
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.game != null) {
             roomVo.game = this.game.toVo(userId);
@@ -109,4 +114,6 @@ public class RoomDouDiZhu extends Room {
         }
         return roomVo;
     }
+
+
 }

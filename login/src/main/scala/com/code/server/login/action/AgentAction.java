@@ -9,6 +9,8 @@ import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.Recommend;
 import com.code.server.login.service.AgentService;
 import com.code.server.redis.service.AgentRedisService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,7 @@ import java.util.*;
 @RequestMapping(value = "/agent")
 public class AgentAction {
 
+    private static final Logger logger = LoggerFactory.getLogger(AgentAction.class);
     @Autowired
     private ChargeService chargeService;
 
@@ -46,10 +49,27 @@ public class AgentAction {
     @Autowired
     RecommendService recommendService;
 
+
+
+
     @GetMapping(value = "/index1")
     void charge(HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("======");
 //        response.sendRedirect("tt.html");
+
+        String code = request.getParameter("code");
+
+//        try {
+//            WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
+//            String openId = wxMpOAuth2AccessToken.getOpenId();
+//        } catch (WxErrorException e) {
+//            logger.error("【微信网页授权】{}", e);
+////            throw new SellException(ResultEnum.WECHAT_MP_ERROR.getCode(), e.getError().getErrorMsg());
+//        }
+
+
+
+
             Cookie[] cookies = request.getCookies();
         Cookie cookie = new Cookie("name","sun");
         Cookie cookie1 = new Cookie("Admin-Token","Admin-Token");
@@ -61,7 +81,8 @@ public class AgentAction {
 //        return "redirect:http://3348ns.natappfree.cc/wx/#/index";
 
 
-        String new_url = "http://3348ns.natappfree.cc/wx/#/index";
+        String new_url = " http://ekzgev.natappfree.cc/agent/#/index";
+
         response.sendRedirect(new_url);
 //        String html = "<script type='text/javascript'>location.href='"+new_url+"';</script>";
 //        response.getWriter().print(html);

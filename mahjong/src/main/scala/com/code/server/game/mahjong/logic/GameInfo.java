@@ -74,6 +74,8 @@ public class GameInfo extends Game {
 
     protected List<String> chanCards = new ArrayList<>();//铲的牌
 
+    protected boolean afterTingShowCard = false;//听牌后是否扣牌
+
     protected boolean yiPaoDuoXiangAppear = false;
 //    private Set<Long> noCanHuList = new HashSet<>();//本轮不能胡的人
 
@@ -241,9 +243,6 @@ public class GameInfo extends Game {
      * @param userId
      */
     protected void mopai(long userId, String... wz) {
-        System.err.println("摸牌===============================userId : " + userId);
-
-//        noCanHuList.remove(userId);
         PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
         if (isHasGuoHu()) {
             playerCardsInfo.setGuoHu(false);
@@ -326,8 +325,9 @@ public class GameInfo extends Game {
         String gameType = this.room.getGameType();
         String modeTotal = this.room.getModeTotal();
         return ("LQ".equals(gameType) && "2".equals(modeTotal)) ||
-                ("HL".equals(gameType) && "2".equals(modeTotal))||
-                ("SS".equals(gameType) && "HS".equals(modeTotal));
+                ("HL".equals(gameType) && "2".equals(modeTotal)) ||
+                "SS".equals(gameType) ||
+                "HS".equals(modeTotal);
     }
 
     /**
@@ -438,7 +438,7 @@ public class GameInfo extends Game {
             }
         });
 
-        //todo 谁点炮谁坐庄
+
         this.room.setBankerId(yipaoduoxiang.get(0));
 
         //回放
@@ -717,7 +717,7 @@ public class GameInfo extends Game {
 
             MsgSender.sendMsg2Player(vo, users);
 
-
+            //截杠胡
             if (isHasJieGangHu && isMing) {
 
                 for (Map.Entry<Long, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
@@ -786,7 +786,7 @@ public class GameInfo extends Game {
 
             //删除弃牌
             deleteDisCard(lastPlayUserId, disCard);
-            lastOperateUserId = userId;
+
 
             playerCardsInfo.gang_discard(room, this, lastPlayUserId, disCard);
             operateReqResp.setFromUserId(lastPlayUserId);//谁出的牌
@@ -800,6 +800,7 @@ public class GameInfo extends Game {
             mopai(userId, "userId : " + userId + " 点杠后抓牌");
             turnId = userId;
             this.disCard = null;
+            lastOperateUserId = userId;
         }
 
 
@@ -1094,6 +1095,11 @@ public class GameInfo extends Game {
         if (playerCardsInfo == null) {
             return ErrorCode.USER_ERROR;
         }
+
+        if (!playerCardsInfo.cards.contains(card)) {
+            return ErrorCode.CAN_NOT_TING;
+        }
+
         OperateReqResp operateReqResp = new OperateReqResp();
         operateReqResp.setOperateType(OperateReqResp.type_ting);
         operateReqResp.setUserId(userId);
@@ -1105,9 +1111,6 @@ public class GameInfo extends Game {
         temp.addAll(playerCardsInfo.getCards());
         temp.remove(card);
 
-        if (!playerCardsInfo.cards.contains(card)) {
-            return ErrorCode.CAN_NOT_TING;
-        }
         boolean isCan = playerCardsInfo.isCanTing(temp);//不多一张
         if (isCan) {
             playerCardsInfo.ting(card);
@@ -1381,6 +1384,25 @@ public class GameInfo extends Game {
         return null;
     }
 
+    public int tingWhat(long userId) {
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
+        if (playerCardsInfo == null) {
+            return ErrorCode.USER_ERROR;
+        }
+        Map<Integer, Set<Integer>> result = new HashMap<>();
+        playerCardsInfo.getTingWhatInfo().forEach(huCardType -> {
+            int removeCardType = CardTypeUtil.getTypeByCard(huCardType.getTingRemoveCard());
+            result.putIfAbsent(removeCardType, new HashSet<>());
+            result.get(removeCardType).add(huCardType.tingCardType);
+        });
+
+
+        ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, "tingWhat", result);
+        MsgSender.sendMsg2Player(vo, userId);
+
+        return 0;
+    }
+
     /**
      * 下一个出牌人id
      *
@@ -1601,7 +1623,6 @@ public class GameInfo extends Game {
     }
 
 
-
     public boolean isAlreadyHu() {
         return isAlreadyHu;
     }
@@ -1725,6 +1746,15 @@ public class GameInfo extends Game {
 
     public GameInfo setHun(List<Integer> hun) {
         this.hun = hun;
+        return this;
+    }
+
+    public boolean isAfterTingShowCard() {
+        return afterTingShowCard;
+    }
+
+    public GameInfo setAfterTingShowCard(boolean afterTingShowCard) {
+        this.afterTingShowCard = afterTingShowCard;
         return this;
     }
 }

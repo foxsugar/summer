@@ -9,6 +9,7 @@ import com.code.server.game.poker.guess.GameGuessCar
 import com.code.server.game.poker.paijiu.{GameGoldPaijiu, GamePaijiu}
 import com.code.server.game.poker.pullmice.GamePullMice
 import com.code.server.game.poker.tuitongzi.GameTuiTongZi
+import com.code.server.game.poker.zhaguzi.GameZhaGuZi
 import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
 import com.code.server.util.JsonUtil
@@ -135,6 +136,40 @@ object GameService {
       val cheatId = params.path("cheatId").asLong()
       val uid = params.path("uid").asLong()
       game.cheat(cheatId, uid)
+    case _ =>
+      ErrorCode.REQUEST_PARAM_ERROR
+  }
+
+  //扎股子
+  private def dispatchGameZhaGuZiService(userId:Long, method: String, game: GameZhaGuZi, params: JsonNode) = method match {
+
+    case "talk" =>
+      val op = params.path("op").asInt(0)
+      game.talk(userId, op)
+    case "isGiveUp"=>
+      val ret = params.path("isGiveUp").asBoolean()
+      game.isGiveUp(userId, ret)
+    case "discard"=>
+      val firstId = params.path("firstId").asLong()
+      //      game.open(userId, firstId);
+//      game.open(userId, firstId);
+    case "fightForBanker" =>
+      val flag = params.path("flag").asBoolean()
+//      game.fightForBanker(userId, flag)
+    case "bankerSetScore" =>
+      val score = params.path("score").asInt()
+//      game.bankerSetScore(userId, score)
+
+    case "bankerBreak" =>
+      val flag = params.path("flag").asBoolean()
+//      game.bankerBreak(userId, flag)
+
+
+    case "exchange" =>
+      val cardsPattern = params.path("cardsPattern").asInt(0)
+//      game.exchange(userId, cardsPattern);
+    case "setTestUser" =>
+//      game.setTestUser(userId)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

@@ -87,7 +87,8 @@ dependencies {
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 
-	compile group: 'com.github.binarywang', name: 'weixin-java-cp', version: '2.9.0'
+	compile group: 'com.github.binarywang', name: 'weixin-java-cp', version: '3.0.0'
+	compile 'com.github.binarywang:weixin-java-mp:3.0.0'
 
 //	compile ('org.quartz-scheduler:quartz:2.2.1'){
 //		//排除c3p0的依赖

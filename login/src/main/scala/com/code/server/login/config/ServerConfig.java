@@ -30,6 +30,8 @@ public class ServerConfig {
 
     private int clubCreateMoney = 5000;
 
+    private String domain = "";
+
 
     public String getServerType() {
         return serverType;
@@ -150,6 +152,15 @@ public class ServerConfig {
 
     public ServerConfig setClubCreateMoney(int clubCreateMoney) {
         this.clubCreateMoney = clubCreateMoney;
+        return this;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public ServerConfig setDomain(String domain) {
+        this.domain = domain;
         return this;
     }
 }

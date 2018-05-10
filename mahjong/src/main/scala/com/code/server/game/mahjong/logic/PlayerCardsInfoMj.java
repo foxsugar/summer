@@ -71,6 +71,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     private boolean isGuoHu;
 
     protected boolean isJieGangHu = false;
+    protected List<HuCardType> tingWhatInfo = new ArrayList<>();
 
     /**
      * 根据发的牌初始化
@@ -550,6 +551,10 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
             tingList.addAll(HuUtil.isTing(handCards, this, limit));
         }
         return tingList;
+    }
+
+    public void tingWhat(){
+
     }
 
     public List<HuCardType> getTingHuCardType(List<String> cards, HuLimit limit) {
@@ -1248,6 +1253,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     public PlayerCardsInfoMj setJieGangHu(boolean jieGangHu) {
         isJieGangHu = jieGangHu;
+        return this;
+    }
+
+    public List<HuCardType> getTingWhatInfo() {
+        return tingWhatInfo;
+    }
+
+    public PlayerCardsInfoMj setTingWhatInfo(List<HuCardType> tingWhatInfo) {
+        this.tingWhatInfo = tingWhatInfo;
         return this;
     }
 }

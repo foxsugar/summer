@@ -25,7 +25,10 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
     }
 
     public boolean isCanTing(List<String> cards) {
-        return false;
+
+        List<HuCardType> list = getTingHuCardType(getCardsNoChiPengGang(cards), null);
+        tingWhatInfo = list;
+        return tingWhatInfo.size() > 0;
     }
 
     public boolean isHasChi(String card) {
@@ -33,23 +36,27 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
     }
 
 
-    private int getYu() {
-        if (isHasMode(this.roomInfo.getMode(), 2)) {
+    public static int getYuNum(String mode){
+        if (isHasMode(mode, 2)) {
             return 2;
         }
-        if (isHasMode(this.roomInfo.getMode(), 3)) {
+        if (isHasMode(mode, 3)) {
             return 5;
         }
-        if (isHasMode(this.roomInfo.getMode(), 4)) {
+        if (isHasMode(mode, 4)) {
             return 8;
         }
-        if (isHasMode(this.roomInfo.getMode(), 5)) {
+        if (isHasMode(mode, 5)) {
             return 12;
         }
-        if (isHasMode(this.roomInfo.getMode(), 6)) {
+        if (isHasMode(mode, 6)) {
             return 20;
         }
         return 0;
+    }
+    private int getYu() {
+        return getYuNum(this.roomInfo.getMode());
+
     }
 
     @Override
@@ -116,6 +123,7 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
         int score = huCardType.fan == 0 ? 1 : huCardType.fan;
         int subScore = 0;
 
+        this.fan = huCardType.fan;
         //yu
         int yu = getYu();
 
@@ -124,6 +132,7 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
 
             if (isGangKai()) {
                 score *= 3;
+                this.winType.add(hu_杠上开花);
             } else {
                 score *= 2;
             }

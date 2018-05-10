@@ -14,11 +14,18 @@ import java.util.List;
 
 @DynamicUpdate
 @Entity
+@Table(name = "game_agent",
+      indexes = {@Index(name = "id", columnList = "id"),
+@Index(name="unionId",columnList = "unionId")})
 public class GameAgent extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    private String openId;
+
+    private String unionId;
 
     private double rebate;
 
@@ -27,6 +34,8 @@ public class GameAgent extends BaseEntity {
     private long parentId;//上级
 
     private int isPartner;
+
+    private String qrTicket;
 
     @Type(type = "json")
     @Lob
@@ -84,6 +93,33 @@ public class GameAgent extends BaseEntity {
 
     public GameAgent setIsPartner(int isPartner) {
         this.isPartner = isPartner;
+        return this;
+    }
+
+    public String getQrTicket() {
+        return qrTicket;
+    }
+
+    public GameAgent setQrTicket(String qrTicket) {
+        this.qrTicket = qrTicket;
+        return this;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public GameAgent setOpenId(String openId) {
+        this.openId = openId;
+        return this;
+    }
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public GameAgent setUnionId(String unionId) {
+        this.unionId = unionId;
         return this;
     }
 }

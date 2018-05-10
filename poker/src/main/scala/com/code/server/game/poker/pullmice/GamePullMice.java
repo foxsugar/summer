@@ -78,7 +78,7 @@ public class GamePullMice extends Game{
         }
 
         //先推送一下分数
-        this.pushScoreChange();
+        //this.pushScoreChange();
         firstDeal();
     }
 
@@ -411,7 +411,8 @@ public class GamePullMice extends Game{
 
         if (isOver){
             //推送一下分数
-            this.pushScoreChange();
+//            this.pushScoreChange();
+            this.pushScoreChangeWuBu();
             state = PullMiceConstant.STATE_OPEN;
             this.gameOver();
         }else {
@@ -873,6 +874,8 @@ public class GamePullMice extends Game{
             aList.add(small);
         }
 
+        //如果剩余0张 预先洗牌
+        isNoticeClientShuffle();
         MsgSender.sendMsg2Player(serviceName, "deal", res, this.pxUsers);
 
     }
@@ -917,6 +920,8 @@ public class GamePullMice extends Game{
             aList.add(small);
         }
 
+        //如果剩余0张 预先洗牌
+        isNoticeClientShuffle();
         MsgSender.sendMsg2Player(serviceName, "deal", res, this.pxUsers);
     }
 
@@ -926,6 +931,23 @@ public class GamePullMice extends Game{
         for (PlayerPullMice p : this.pxList){
             pxUsers.add(p.getUserId());
         }
+    }
+
+    /*
+   * 推送玩家分数
+   * */
+    public void pushScoreChangeWuBu() {
+        Map<Long, Long> userScores = new HashMap<>();
+
+        List<Long> aList = new ArrayList<>();
+        for (int i = 0; i < this.getUsers().size(); i++){
+            long uid = this.getUsers().get(i);
+            PlayerPullMice p = playerCardInfos.get(uid);
+            aList.add(p.getScore());
+            userScores.put(uid, p.getScore());
+        }
+
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChangePullMiceWuBu", userScores), this.getUsers());
     }
 
     /*

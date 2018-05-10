@@ -20,6 +20,18 @@ public class CardUtilsTest {
     public void test(){
 
         System.out.println("a");
+
+        for (int i = 0; i < 54; i++){
+
+            String str = CardUtils.local2String(i, new IfCard() {
+                @Override
+                public Map<Integer, Integer> cardDict() {
+                    return CardUtils.getCardDict();
+                }
+            });
+
+            System.out.println(str);
+        }
     }
 
 }

@@ -83,6 +83,9 @@ public class GameLogicService {
                 int num = paramsjSONObject.path("num").asInt();
                 code = ((GameInfoTJ)getGameInfo(roomId)).laZhuang(userId, num);
                 break;
+            case "tingWhat":
+                code = tingWhat(roomId, userId);
+                break;
         }
         if (code == 0) {
             MsgSender.sendMsg2Player("gameLogicService",method,code, userId);
@@ -162,6 +165,10 @@ public class GameLogicService {
 
 //        return (GameInfoJiuZhou)getGameInfo(roomId).xuanfengdan(serverContext, userId, xuanfengType, xuanfengCard);
         return 0;
+    }
+
+    public static int tingWhat(String roomId, long userId) {
+        return getGameInfo(roomId).tingWhat(userId);
     }
 
 }
