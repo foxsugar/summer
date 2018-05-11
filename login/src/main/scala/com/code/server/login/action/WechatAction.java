@@ -42,7 +42,7 @@ import java.util.Random;
  */
 @Controller
 @RequestMapping(value = "/wechat")
-public class WechatAction extends Cors{
+public class WechatAction extends Cors {
 
     private static final Logger logger = LoggerFactory.getLogger(WechatAction.class);
 
@@ -51,7 +51,6 @@ public class WechatAction extends Cors{
 
     @Autowired
     private ServerConfig serverConfig;
-
 
 
     @Autowired
@@ -138,7 +137,7 @@ public class WechatAction extends Cors{
         System.out.println("授权---------------");
         //1. 配置
         //2. 调用方法
-        String url ="http://"+ serverConfig.getDomain() + "/game/wechat/userInfo";
+        String url = "http://" + serverConfig.getDomain() + "/game/wechat/userInfo";
         String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, URLEncoder.encode(returnUrl));
         return "redirect:" + redirectUrl;
     }
@@ -148,7 +147,7 @@ public class WechatAction extends Cors{
         System.out.println("授权---------------");
         //1. 配置
         //2. 调用方法
-        String url ="http://"+ serverConfig.getDomain() + "/game/wechat/clickLink";
+        String url = "http://" + serverConfig.getDomain() + "/game/wechat/clickLink";
         String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, URLEncoder.encode(returnUrl));
         return "redirect:" + redirectUrl;
     }
@@ -156,6 +155,7 @@ public class WechatAction extends Cors{
 
     /**
      * 点击分享链接
+     *
      * @param code
      * @param state
      * @param request
@@ -164,7 +164,7 @@ public class WechatAction extends Cors{
      */
     @GetMapping("/clickLink")
     public void clickLink(@RequestParam("code") String code,
-                         @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {
+                          @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
         try {
             wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
@@ -173,7 +173,7 @@ public class WechatAction extends Cors{
             //state 是id
             long agentId = Long.valueOf(state);
             //代理不存在 直接退出
-            if( !RedisManager.getAgentRedisService().isExit(agentId)) return;
+            if (!RedisManager.getAgentRedisService().isExit(agentId)) return;
 
 
             String unionId = wxMpUser.getUnionId();
@@ -189,29 +189,9 @@ public class WechatAction extends Cors{
                 String name = wxMpUser.getNickname();
 
 
-
             }
-
-            //二维码 和 图片 放到cookie里
-            AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
-
-            //cookie 里的值
-            Map<String, Object> info = new HashMap<>();
-            info.put("icon", agentBean.getImage());
-            info.put("qr", agentBean.getQrTicket());
-            String sid = ""+System.currentTimeMillis() +"_"+ new Random().nextInt(999999);
-
-            String json = JsonUtil.toJson(info);
-            json = URLEncoder.encode(json);
-            Cookie cookie = new Cookie("info"+sid,json);
-            cookie.setDomain(serverConfig.getDomain());
-            cookie.setPath("/");
-            //过期时间 30s
-            cookie.setMaxAge(30);
-            response.addCookie(cookie);
-
-            String url = MessageFormat.format("http://tfdg38.natappfree.cc/agent/#/test?id={0}&sid={1}",agentId,sid);
-            response.sendRedirect(url);
+            //处理跳转
+            handle_link_redirect(agentId, response);
 
 
         } catch (WxErrorException e) {
@@ -220,73 +200,100 @@ public class WechatAction extends Cors{
 
     }
 
+
+    private void handle_link_redirect(long agentId, HttpServletResponse response) {
+
+        //二维码 和 图片 放到cookie里
+        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+
+        //cookie 里的值
+        Map<String, Object> info = new HashMap<>();
+        info.put("icon", agentBean.getImage());
+        info.put("qr", agentBean.getQrTicket());
+        String sid = "" + System.currentTimeMillis() + "_" + new Random().nextInt(999999);
+
+        String json = JsonUtil.toJson(info);
+        json = URLEncoder.encode(json);
+        Cookie cookie = new Cookie("info" + sid, json);
+        cookie.setDomain(serverConfig.getDomain());
+        cookie.setPath("/");
+        //过期时间 30s
+        cookie.setMaxAge(30);
+        response.addCookie(cookie);
+
+        String url = MessageFormat.format("http://tfdg38.natappfree.cc/agent/#/test?id={0}&sid={1}", agentId, sid);
+        try {
+            response.sendRedirect(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     @GetMapping("/userInfo")
     public void userInfo(@RequestParam("code") String code,
-                           @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {
+                         @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("获取信息");
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
         try {
             wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
             WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
             String unionId = wxMpUser.getUnionId();
-            WxMpUser wxMpUser1 = wxMpService.getUserService().userInfo(wxMpUser.getOpenId());
             WxMpKefuMessage wxMpKefuMessage = new WxMpKefuMessage();
             wxMpKefuMessage.setToUser(wxMpUser.getOpenId());
             wxMpService.getKefuService().sendKefuMessage(wxMpKefuMessage);
 
-        } catch (WxErrorException e) {
-            logger.error("【微信网页授权】{}", e);
-        }
 
-        String openId = wxMpOAuth2AccessToken.getOpenId();
+            String openId = wxMpOAuth2AccessToken.getOpenId();
 
 
 //        9_BFOoh64g8jIPNzEczVfVZzUJrHKeidD3ihR8MEqNyOhBezx6BTOrb79e7wZlIS1LL5xWdNPSXhrW6p5KgZ0R9Q
 
 
-        switch (state) {
-            case "loginAgent":
-//                handleLoginAgent(response);
-                break;
-            case "getReferralLink":
+            switch (state) {
+                case "loginAgent":
+                    handleLoginAgent(unionId, response);
+                    break;
+                case "getReferralLink":
+                    getReferralLink(unionId, response);
+                    break;
+                case "charge":
+                    handle_charge(unionId, response);
+                    break;
 
-                break;
-            case "charge":
-                break;
-            case "clear":
-                break;
-            case "base":
-                response.sendRedirect("http://localhost:8080/#/test");
-                System.out.println("hhh");
-              break;
+            }
+
+        } catch (WxErrorException e) {
+            logger.error("【微信网页授权】{}", e);
         }
-
-//        return "redirect:" + state;
     }
 
 
-    private void handleLoginAgent(String unionId,HttpServletResponse response) throws IOException {
+    private void handleLoginAgent(String unionId, HttpServletResponse response) throws IOException {
         //todo token
-        Cookie cookie = new Cookie("Admin-Token","Admin-Token");
+        Cookie cookie = new Cookie("Admin-Token", "Admin-Token");
         cookie.setDomain(serverConfig.getDomain());
         cookie.setPath("/");
         response.addCookie(cookie);
         String url = "http://ekzgev.natappfree.cc/agent/#/index";
         response.sendRedirect(url);
-
-
     }
 
-    private void getReferralLink(String unionId,HttpServletResponse response){
+    private void getReferralLink(String unionId, HttpServletResponse response) {
         //已经有推广链接 直接跳转
         Long agentId = gameAgentService.getGameAgentDao().getUserIdByUnionId(unionId);
-        if (agentId == null || agentId == 0) {
+        if (agentId != null && agentId == 0) {
 
+            handle_link_redirect(agentId, response);
         }
 
 
     }
 
+    private void handle_charge(String unionId, HttpServletResponse response) throws IOException {
+        String url = "http://ekzgev.natappfree.cc/agent/#/index";
+        response.sendRedirect(url);
+    }
 
 
     private WxMpXmlOutMessage route(WxMpXmlMessage message) {
@@ -298,7 +305,6 @@ public class WechatAction extends Cors{
 
         return null;
     }
-
 
 
 }
