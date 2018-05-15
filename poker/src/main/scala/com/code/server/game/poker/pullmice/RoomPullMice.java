@@ -178,6 +178,9 @@ public class RoomPullMice extends Room {
 
         if (userStatus.get(userId) != IGameConstant.STATUS_READY) return ErrorCode.ROOM_START_CAN_NOT;
 
+        //防止多次点开始
+        if(this.game != null) return ErrorCode.ROOM_START_CAN_NOT;
+
         int readyCount = 0;
         for (Map.Entry<Long, Integer> entry : userStatus.entrySet()) {
 

@@ -1,5 +1,7 @@
 package com.code.server.game.poker.paijiu
 
+import com.code.server.constant.data.DataManager
+
 /**
   * 项目名称：${project_name}   
   * 类名称：${type_name}   
@@ -27,7 +29,15 @@ class GamePaijiuEndless3Bet extends GamePaijiuEndless{
     this.roomPaijiu.clearReadyStatus(true)
     val banker = playerCardInfos(bankerId)
     //    if (banker.score <= 0 || banker.score >= roomPaijiu.bankerInitScore * roomPaijiu.getUsers.size()) {
-    if (banker.score <= 0 || banker.score >= 1000) {
+
+    var max:Double = 1000
+    val roomData = DataManager.data.getRoomDataMap.get(this.roomPaijiu.getGameType)
+    if (roomData == null) {
+      if (roomData.getMaxBet != 0) {
+        max = roomData.getMaxBet
+      }
+    }
+    if (banker.score <= 0 || banker.score >= max) {
       sendFinalResult()
     }
   }

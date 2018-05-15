@@ -1,39 +1,37 @@
 package com.code.server.db.model;
 
-import com.code.server.db.utils.BaseEntity;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
- * Created by sunxianping on 2018/4/3.
+ * Created by sunxianping on 2018/5/9.
  */
-
 @DynamicUpdate
 @Entity
-public class Recommend extends BaseEntity {
-
+@Table(name = "game_agent_wx")
+public class GameAgentWx {
     @Id
     private String unionId;
-
-    private long agentId;
+    private String openId;
 
     public String getUnionId() {
         return unionId;
     }
 
-    public Recommend setUnionId(String unionId) {
+    public GameAgentWx setUnionId(String unionId) {
         this.unionId = unionId;
         return this;
     }
 
-    public long getAgentId() {
-        return agentId;
+    public String getOpenId() {
+        return openId;
     }
 
-    public Recommend setAgentId(long agentId) {
-        this.agentId = agentId;
+    public GameAgentWx setOpenId(String openId) {
+        this.openId = openId;
         return this;
     }
 }

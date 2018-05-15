@@ -45,6 +45,7 @@ public class MenuHandler extends AbstractHandler {
                 case "LINK":
                     return handle_link(wxMessage,weixinService);
                 case "CLEAR":
+                    return handle_clear(wxMessage, weixinService);
 
 
 

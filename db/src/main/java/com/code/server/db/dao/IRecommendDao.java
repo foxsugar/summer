@@ -9,4 +9,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface IRecommendDao extends PagingAndSortingRepository<Recommend, String> {
 
 
+    Recommend getByUnionId(String unionId);
 }
