@@ -1,9 +1,6 @@
 package com.code.server.game.mahjong.logic;
 
-import com.code.server.game.mahjong.util.CardUtil;
-import com.code.server.game.mahjong.util.HuCardType;
-import com.code.server.game.mahjong.util.HuLimit;
-import com.code.server.game.mahjong.util.HuUtil;
+import com.code.server.game.mahjong.util.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,21 +11,18 @@ import java.util.Map;
  */
 public class PlayerCardsInfoKD_XY extends PlayerCardsInfoKD {
 
+    private static final int ZIMO_MIN_SCORE = 4;
+
     //创建房间mode：显庄 扣听 包杠 （1是0否）
+
 
 
     @Override
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card){
         super.gangCompute(room,gameInfo,isMing,diangangUser,card);
-        String ifBaoGang = room.getMode();
-        if(!ifBaoGang.isEmpty() && (ifBaoGang.endsWith("1"))){
-            gangComputeBG( room,  gameInfo,  isMing,  diangangUser,  card);
-        }else {
-            gangComputePT( room,  gameInfo,  isMing,  diangangUser,  card);
-        }
     }
 
-    public void computeALLGang(){
+    public void computeALLGangPT(){
 
         Map<Long,Integer> scores = new HashMap<>();//分数计算key:use,value:score
         for (long i : gameInfo.users) {
@@ -38,15 +32,89 @@ public class PlayerCardsInfoKD_XY extends PlayerCardsInfoKD {
         for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
             //暗杠计算
             for (long i : scores.keySet()) {
-                scores.put(i, scores.get(i) - playerCardsInfo.getAnGangType().size()*2);
+                for (Integer integer:playerCardsInfo.getAnGangType()) {
+                    scores.put(i, scores.get(i) - CardTypeUtil.cardTingScore.get(integer)*2);
+                }
             }
-            scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId())+playerCardsInfo.getAnGangType().size()*2*4);
+            for (Integer integer:playerCardsInfo.getAnGangType()) {
+                scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId())+CardTypeUtil.cardTingScore.get(integer)*2*4);
+            }
+
             //明杠计算
             for (Integer ii : playerCardsInfo.getMingGangType().keySet()) {
-                for (long i : scores.keySet()) {
-                    scores.put(i, scores.get(i) - 1);
+                if(playerCardsInfo.getMingGangType().get(ii)!=-1){//点杠diangangUser
+                    if(playerCardsInfo.isTing){//听了，3家出
+                        for (long i : scores.keySet()) {
+                            scores.put(i, scores.get(i) - CardTypeUtil.cardTingScore.get(ii));
+                        }
+                        scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId()) + CardTypeUtil.cardTingScore.get(ii)*4);
+                    }else{//未听一家出
+                        scores.put(playerCardsInfo.getMingGangType().get(ii), scores.get(playerCardsInfo.getUserId()) - CardTypeUtil.cardTingScore.get(ii)*4);
+                        scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId()) + CardTypeUtil.cardTingScore.get(ii)*4);
+                    }
+                }else{//自摸明杠
+                    for (long i : scores.keySet()) {
+                        scores.put(i, scores.get(i) - CardTypeUtil.cardTingScore.get(ii));
+                    }
+                    scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId()) + CardTypeUtil.cardTingScore.get(ii)*4);
                 }
-                scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId()) + 4);
+            }
+        }
+        for (long i : scores.keySet()) {
+            gameInfo.getPlayerCardsInfos().get(i).setScore(scores.get(i));
+            roomInfo.setUserSocre(i, scores.get(i));
+        }
+    }
+
+    public void computeALLGangBG(long dianpaoUser){
+
+        Map<Long,Integer> scores = new HashMap<>();//分数计算key:use,value:score
+        for (long i : gameInfo.users) {
+            scores.put(i, 0);
+        }
+
+        for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
+            //暗杠计算
+            if(gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing){
+                for (long i : scores.keySet()) {
+                    for (Integer integer:playerCardsInfo.getAnGangType()) {
+                        scores.put(i, scores.get(i) - CardTypeUtil.cardTingScore.get(integer)*2);
+                    }
+                }
+            }else{
+                for (Integer integer:playerCardsInfo.getAnGangType()) {
+                    scores.put(dianpaoUser, scores.get(playerCardsInfo.getUserId())-CardTypeUtil.cardTingScore.get(integer)*2*4);
+                }
+            }
+            for (Integer integer:playerCardsInfo.getAnGangType()) {
+                scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId())+CardTypeUtil.cardTingScore.get(integer)*2*4);
+            }
+
+            //明杠计算
+            if(gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing){
+                for (Integer ii : playerCardsInfo.getMingGangType().keySet()) {
+                    if(playerCardsInfo.getMingGangType().get(ii)!=-1){//点杠diangangUser
+                        if(playerCardsInfo.isTing){//听了，3家出
+                            for (long i : scores.keySet()) {
+                                scores.put(i, scores.get(i) - CardTypeUtil.cardTingScore.get(ii));
+                            }
+                            scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId()) + CardTypeUtil.cardTingScore.get(ii)*4);
+                        }else{//未听一家出
+                            scores.put(playerCardsInfo.getMingGangType().get(ii), scores.get(playerCardsInfo.getUserId()) - CardTypeUtil.cardTingScore.get(ii)*4);
+                            scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId()) + CardTypeUtil.cardTingScore.get(ii)*4);
+                        }
+                    }else{//自摸明杠
+                        for (long i : scores.keySet()) {
+                            scores.put(i, scores.get(i) - CardTypeUtil.cardTingScore.get(ii));
+                        }
+                        scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId()) + CardTypeUtil.cardTingScore.get(ii)*4);
+                    }
+                }
+            }else{
+                for (Integer ii : playerCardsInfo.getMingGangType().keySet()) {
+                    scores.put(dianpaoUser, scores.get(playerCardsInfo.getUserId()) - CardTypeUtil.cardTingScore.get(ii)*4);
+                    scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId()) + CardTypeUtil.cardTingScore.get(ii)*4);
+                }
             }
         }
         for (long i : scores.keySet()) {
@@ -56,36 +124,16 @@ public class PlayerCardsInfoKD_XY extends PlayerCardsInfoKD {
     }
 
 
-    /**
-     * 点杠包杠
-     * @param room
-     * @param gameInfo
-     * @param isMing
-     * @param diangangUser
-     * @param card
-     */
-    private void gangComputePT(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card){
-
-    }
-
-    /**
-     * 点炮包杠
-     * @param room
-     * @param gameInfo
-     * @param isMing
-     * @param diangangUser
-     * @param card
-     */
-    private void gangComputeBG(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card){
-
-    }
-
-
-
 
 
     @Override
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
+        String ifBaoGang = room.getMode();
+        if(!ifBaoGang.isEmpty() && (ifBaoGang.endsWith("1"))){
+            computeALLGangPT();
+        }else {
+            computeALLGangBG(dianpaoUser);
+        }
         super.huCompute(room, gameInfo, isZimo, dianpaoUser, card);
         String ifXianZhuang = room.getMode();
         if(!ifXianZhuang.isEmpty() && (ifXianZhuang.startsWith("1"))){
@@ -122,6 +170,23 @@ public class PlayerCardsInfoKD_XY extends PlayerCardsInfoKD {
                 sb.append(",");
             }
         }
+
+        //是否是杠开
+        boolean isGangKai = isGangKai();
+        if (isGangKai){//杠开算自摸
+            this.winType.add(HuType.hu_杠开);
+            for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
+                gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
+                room.setUserSocre(i, - 2 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
+            }
+            this.score = this.score +  8 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length()-1),card,huCardType) * room.getMultiple();
+            room.setUserSocre(this.userId, 8 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length()-1),card,huCardType) * room.getMultiple());
+            this.fan = 2 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType);
+            System.out.println("======自摸：" + 6 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length()-1),card,huCardType) * room.getMultiple());
+            return;
+        }
+
+
 //		if (room.getMode().equals("6")){
         if(isZimo){
             for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
@@ -167,6 +232,30 @@ public class PlayerCardsInfoKD_XY extends PlayerCardsInfoKD {
         boolean isBankerWin = this.userId == bankerUserId;
         PlayerCardsInfoMj bankerUser = this.gameInfo.getPlayerCardsInfos().get(bankerUserId);
 
+        //是否是杠开
+        boolean isGangKai = isGangKai();
+        if (isGangKai) {
+            this.winType.add(HuType.hu_杠开);
+            //闲家自摸
+            if (!isBankerWin) {
+                bankerUser.addScore(-10);
+                room.addUserSocre(bankerUserId, -10);
+                this.addScore(10);
+                room.addUserSocre(this.userId, 10);
+
+            } else {//庄家自摸
+                for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.getPlayerCardsInfos().values()) {
+                    if (playerCardsInfoMj.getUserId() != this.userId) {
+                        playerCardsInfoMj.addScore(-10);
+                        room.addUserSocre(playerCardsInfoMj.getUserId(), -10);
+                    }
+                }
+                this.addScore(30);
+                room.addUserSocre(this.userId, 30);
+            }
+            return;
+        }
+
         if (isZimo) {
 
             //闲家自摸
@@ -208,5 +297,15 @@ public class PlayerCardsInfoKD_XY extends PlayerCardsInfoKD {
             this.addScore(5);
             room.addUserSocre(this.userId, 5);
         }
+    }
+
+    /**
+     * 在4点及4点以上点数时能自摸，4点以下不能自摸胡
+     * @param card
+     * @return
+     */
+    @Override
+    public boolean isCanHu_zimo(String card) {
+        return isTing && CardTypeUtil.getCardTingScore(card)>=ZIMO_MIN_SCORE && super.isCanHu_zimo(card);
     }
 }
