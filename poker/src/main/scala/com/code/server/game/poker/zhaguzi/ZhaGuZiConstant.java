@@ -15,8 +15,6 @@ public class ZhaGuZiConstant {
     public static final Integer GIVE_UP = 3;
     //刚开是出牌
     public static final Integer BEING_DISCARD = 4;
-//    //出牌完毕
-//    public static final Integer DISCARD = 4;
     //算分
     public static final Integer COMPUTE = 5;
 

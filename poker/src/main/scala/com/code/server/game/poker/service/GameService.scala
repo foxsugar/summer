@@ -31,6 +31,7 @@ object GameService {
       case x:GameCow =>dispatchGameCowService(userId,method,game.asInstanceOf[GameCow],params)
       case x:GameTuiTongZi =>dispatchGameTTZService(userId,method,game.asInstanceOf[GameTuiTongZi],params)
       case x:GamePullMice =>dispatchGamePullMiceService(userId,method,game.asInstanceOf[GamePullMice],params)
+      case x:GameZhaGuZi =>dispatchGameZhaGuZiService(userId,method,game.asInstanceOf[GameZhaGuZi],params)
     }
 
   }
@@ -155,23 +156,6 @@ object GameService {
       val op = params.path("op").asInt(0)
       val li = null
       game.beingDiscard(userId, op, li)
-    case "fightForBanker" =>
-      val flag = params.path("flag").asBoolean()
-//      game.fightForBanker(userId, flag)
-    case "bankerSetScore" =>
-      val score = params.path("score").asInt()
-//      game.bankerSetScore(userId, score)
-
-    case "bankerBreak" =>
-      val flag = params.path("flag").asBoolean()
-//      game.bankerBreak(userId, flag)
-
-
-    case "exchange" =>
-      val cardsPattern = params.path("cardsPattern").asInt(0)
-//      game.exchange(userId, cardsPattern);
-    case "setTestUser" =>
-//      game.setTestUser(userId)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

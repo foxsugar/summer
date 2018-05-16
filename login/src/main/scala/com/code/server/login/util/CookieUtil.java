@@ -11,6 +11,10 @@ import java.util.Map;
  */
 public class CookieUtil {
 
+
+    public static long getAgentIdByCookie(){
+        return 1;
+    }
     /**
      * 设置
      * @param response
@@ -59,4 +63,7 @@ public class CookieUtil {
         }
         return cookieMap;
     }
+
+
+
 }
