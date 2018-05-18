@@ -32,7 +32,7 @@ class GamePaijiuEndless3Bet extends GamePaijiuEndless{
 
     var max:Double = 1000
     val roomData = DataManager.data.getRoomDataMap.get(this.roomPaijiu.getGameType)
-    if (roomData == null) {
+    if (roomData != null) {
       if (roomData.getMaxBet != 0) {
         max = roomData.getMaxBet
       }

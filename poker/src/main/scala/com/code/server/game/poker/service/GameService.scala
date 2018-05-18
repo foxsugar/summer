@@ -4,8 +4,8 @@ import com.code.server.constant.game.CardStruct
 import com.code.server.constant.response.ErrorCode
 import com.code.server.game.poker.cow.GameCow
 import com.code.server.game.poker.doudizhu.{GameDouDiZhu, GameDouDiZhuGold}
-import com.code.server.game.poker.hitgoldflower.GameHitGoldFlower
 import com.code.server.game.poker.guess.GameGuessCar
+import com.code.server.game.poker.hitgoldflower.GameHitGoldFlower
 import com.code.server.game.poker.paijiu.{GameGoldPaijiu, GamePaijiu}
 import com.code.server.game.poker.pullmice.GamePullMice
 import com.code.server.game.poker.tuitongzi.GameTuiTongZi
@@ -53,6 +53,9 @@ object GameService {
       game.pass(userId)
     case "sayHello" =>
       game.sayHello()
+    case "test"=>
+      val json = params.path("cards").asText
+      game.test(userId,json)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

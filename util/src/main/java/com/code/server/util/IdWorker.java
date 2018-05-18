@@ -28,7 +28,7 @@ public class IdWorker {
 
     public IdWorker(int serverId,int workId){
         this.serverId = serverId;
-        this.workId = serverId;
+        this.workId = workId;
     }
 
     public synchronized long nextId(){

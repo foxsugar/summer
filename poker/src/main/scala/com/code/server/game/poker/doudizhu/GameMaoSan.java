@@ -30,14 +30,22 @@ public class GameMaoSan extends GameDouDiZhu {
     protected void deal() {
         cards.remove(Integer.valueOf(10));
         cards.remove(Integer.valueOf(54));
-        for (PlayerCardInfoDouDiZhu playerCardInfo : playerCardInfos.values()) {
-            for (int i = 0; i < this.initCardNum; i++) {
-                playerCardInfo.cards.add(cards.remove(0));
-            }
-            //通知发牌
-            MsgSender.sendMsg2Player(new ResponseVo("gameService", "deal", playerCardInfo.cards), playerCardInfo.userId);
-        }
 
+
+
+
+        RoomDouDiZhu roomDouDiZhu = (RoomDouDiZhu) room;
+        if (roomDouDiZhu.testNextCards != null) {
+            testDeal();
+        } else {
+            for (PlayerCardInfoDouDiZhu playerCardInfo : playerCardInfos.values()) {
+                for (int i = 0; i < this.initCardNum; i++) {
+                    playerCardInfo.cards.add(cards.remove(0));
+                }
+                //通知发牌
+                MsgSender.sendMsg2Player(new ResponseVo("gameService", "deal", playerCardInfo.cards), playerCardInfo.userId);
+            }
+        }
         //底牌
         tableCards.add(10);
         tableCards.add(54);
@@ -45,28 +53,7 @@ public class GameMaoSan extends GameDouDiZhu {
     }
 
 
-    /**
-     * 选叫地主
-     *
-     * @param lastJiaoUser
-     */
-    protected void chooseDizhu(long lastJiaoUser) {
-        step = STEP_JIAO_DIZHU;
-        long canJiao = 0;
-        //红桃4 先叫
 
-        for (PlayerCardInfoDouDiZhu playerCardInfo : this.playerCardInfos.values()) {
-            if (playerCardInfo.cards.contains(HONGTAO4)) {
-                canJiao = playerCardInfo.getUserId();
-            }
-        }
-        canJiaoUser = canJiao;
-
-        noticeCanJiao(canJiaoUser);
-        //下次叫的人
-        room.setBankerId(nextTurnId(canJiaoUser));
-
-    }
 
 
 

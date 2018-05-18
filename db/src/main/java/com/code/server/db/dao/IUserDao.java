@@ -20,5 +20,7 @@ public interface IUserDao extends PagingAndSortingRepository<User, Long> {
     String getOpenIdById(long userId);
 
 
+    @Query(value = "select id from users where open_id=?1", nativeQuery = true)
+    Long getIdByOpenId(String openId);
 
 }
