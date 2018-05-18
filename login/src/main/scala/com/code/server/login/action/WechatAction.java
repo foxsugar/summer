@@ -3,9 +3,11 @@ package com.code.server.login.action;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.db.Service.GameAgentService;
 import com.code.server.db.Service.RecommendService;
+import com.code.server.db.Service.UserService;
 import com.code.server.db.model.Recommend;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
@@ -60,10 +62,16 @@ public class WechatAction extends Cors {
     private GameAgentService gameAgentService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private WxMpMessageRouter router;
 
     @Autowired
     private RecommendService recommendService;
+
+    private static final String AGENT_COOKIE_NAME = "AGENT_TOKEN";
+
 
     @RequestMapping(value = "/jsapiparam")
     @ResponseBody
@@ -201,7 +209,7 @@ public class WechatAction extends Cors {
     }
 
 
-    private void handle_link_redirect(long agentId, HttpServletResponse response) {
+    private void handle_link_redirect(long agentId, HttpServletResponse response) throws IOException {
 
         //二维码 和 图片 放到cookie里
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
@@ -222,11 +230,9 @@ public class WechatAction extends Cors {
         response.addCookie(cookie);
 
         String url = MessageFormat.format("http://tfdg38.natappfree.cc/agent/#/test?id={0}&sid={1}", agentId, sid);
-        try {
-            response.sendRedirect(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        response.sendRedirect(url);
+
 
     }
 
@@ -238,13 +244,8 @@ public class WechatAction extends Cors {
         try {
             wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
             WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
-            String unionId = wxMpUser.getUnionId();
-            WxMpKefuMessage wxMpKefuMessage = new WxMpKefuMessage();
-            wxMpKefuMessage.setToUser(wxMpUser.getOpenId());
-            wxMpService.getKefuService().sendKefuMessage(wxMpKefuMessage);
-
-
-            String openId = wxMpOAuth2AccessToken.getOpenId();
+//            String unionId = wxMpUser.getUnionId();
+//            String openId = wxMpUser.getOpenId();
 
 
 //        9_BFOoh64g8jIPNzEczVfVZzUJrHKeidD3ihR8MEqNyOhBezx6BTOrb79e7wZlIS1LL5xWdNPSXhrW6p5KgZ0R9Q
@@ -252,13 +253,13 @@ public class WechatAction extends Cors {
 
             switch (state) {
                 case "loginAgent":
-                    handleLoginAgent(unionId, response);
+                    handleLoginAgent(wxMpUser, request, response);
                     break;
                 case "getReferralLink":
-                    getReferralLink(unionId, response);
+                    getReferralLink(wxMpUser, request, response);
                     break;
                 case "charge":
-                    handle_charge(unionId, response);
+                    handle_charge(wxMpUser, request, response);
                     break;
 
             }
@@ -269,20 +270,46 @@ public class WechatAction extends Cors {
     }
 
 
-    private void handleLoginAgent(String unionId, HttpServletResponse response) throws IOException {
+    private void handleLoginAgent(WxMpUser wxMpUser, HttpServletRequest request, HttpServletResponse response) throws IOException, WxErrorException {
+
+        Long agentId = gameAgentService.getGameAgentDao().getUserIdByUnionId(wxMpUser.getUnionId());
+        if (agentId == null || agentId == 0) {
+            //不是代理
+            wxMpService.getKefuService().sendKefuMessage(
+                    WxMpKefuMessage
+                            .TEXT()
+                            .toUser(wxMpUser.getOpenId())
+                            .content("您还不是代理")
+                            .build());
+            System.out.println(request.getRequestURL());
+            response.getOutputStream().write("您不是代理".getBytes());
+            return;
+        }
+
+        Map<String, String> rd = new HashMap<>();
+        rd.put("agentId", "" + agentId);
+        rd.put("openId", wxMpUser.getOpenId());
+        rd.put("unionId", wxMpUser.getUnionId());
+
+        //设置redis
+        String token = "" + IdWorker.getDefaultInstance().nextId();
+        RedisManager.getAgentRedisService().setAgentToken(token, rd);
+
         //todo token
-        Cookie cookie = new Cookie("Admin-Token", "Admin-Token");
+        Cookie cookie = new Cookie(AGENT_COOKIE_NAME, token);
         cookie.setDomain(serverConfig.getDomain());
         cookie.setPath("/");
         response.addCookie(cookie);
-        String url = "http://ekzgev.natappfree.cc/agent/#/index";
+
+
+        String url = "http://" + serverConfig.getDomain() + "/agent/#/index";
         response.sendRedirect(url);
     }
 
-    private void getReferralLink(String unionId, HttpServletResponse response) {
+    private void getReferralLink(WxMpUser wxMpUser, HttpServletRequest request, HttpServletResponse response) throws IOException {
         //已经有推广链接 直接跳转
-        Long agentId = gameAgentService.getGameAgentDao().getUserIdByUnionId(unionId);
-        if (agentId != null && agentId == 0) {
+        Long agentId = gameAgentService.getGameAgentDao().getUserIdByUnionId(wxMpUser.getUnionId());
+        if (agentId != null && agentId != 0) {
 
             handle_link_redirect(agentId, response);
         }
@@ -290,11 +317,40 @@ public class WechatAction extends Cors {
 
     }
 
-    private void handle_charge(String unionId, HttpServletResponse response) throws IOException {
-        String url = "http://ekzgev.natappfree.cc/agent/#/index";
+    private void handle_charge(WxMpUser wxMpUser, HttpServletRequest request, HttpServletResponse response) throws IOException, WxErrorException {
+        Long userId = userService.getUserDao().getIdByOpenId(wxMpUser.getUnionId());
+
+        if (userId == null || userId == 0) {
+            //不是代理
+            wxMpService.getKefuService().sendKefuMessage(
+                    WxMpKefuMessage
+                            .TEXT()
+                            .toUser(wxMpUser.getOpenId())
+                            .content("您还不是玩家")
+                            .build());
+            response.getOutputStream().write("您还不是玩家".getBytes());
+            return;
+        }
+
+        String url = "http://" + serverConfig.getDomain() + "/agent/#/index";
         response.sendRedirect(url);
     }
 
+
+    public Map<String, String> getAgentByToken(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        Cookie cookie = null;
+        for (Cookie c : cookies) {
+            if (AGENT_COOKIE_NAME.equals(c.getName())) {
+                cookie = c;
+            }
+        }
+        if (cookie != null) {
+            return RedisManager.getAgentRedisService().getAgentByToken(cookie.getValue());
+        }
+
+        return null;
+    }
 
     private WxMpXmlOutMessage route(WxMpXmlMessage message) {
         try {

@@ -2,7 +2,10 @@ package com.code.server.game.poker.doudizhu;
 
 
 import com.code.server.constant.exception.DataNotFoundException;
-import com.code.server.constant.response.*;
+import com.code.server.constant.response.ErrorCode;
+import com.code.server.constant.response.IfaceRoomVo;
+import com.code.server.constant.response.ResponseVo;
+import com.code.server.constant.response.RoomDoudizhuVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
@@ -15,6 +18,8 @@ import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
 import org.springframework.beans.BeanUtils;
 
+import java.util.List;
+
 /**
  * Created by sunxianping on 2017/3/13.
  */
@@ -23,6 +28,8 @@ public class RoomDouDiZhu extends Room {
 
     protected int jiaoScoreMax = 3;
     protected int shuanglong = 0;
+    protected List<Integer> testNextCards ;
+    protected long testUserId;
 
 
 

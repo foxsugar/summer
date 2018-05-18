@@ -219,6 +219,17 @@ public class GameDouDiZhu extends Game {
         return 0;
     }
 
+    public int test(long userId, String cards) {
+        RoomDouDiZhu roomDouDiZhu = (RoomDouDiZhu) this.room;
+        roomDouDiZhu.testNextCards = new ArrayList<>();
+        for (String s : cards.split(",")) {
+            roomDouDiZhu.testNextCards.add(Integer.valueOf(s));
+        }
+        roomDouDiZhu.testUserId = userId;
+        MsgSender.sendMsg2Player("gameService", "test", "ok", userId);
+        return 0;
+    }
+
     /**
      * 洗牌
      */
@@ -229,20 +240,49 @@ public class GameDouDiZhu extends Game {
         Collections.shuffle(cards);
     }
 
+    protected void testDeal() {
+        RoomDouDiZhu roomDouDiZhu = (RoomDouDiZhu) room;
+        long testUserId = roomDouDiZhu.testUserId;
+
+        playerCardInfos.get(testUserId).cards.addAll(roomDouDiZhu.testNextCards);
+        //通知发牌
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "deal", roomDouDiZhu.testNextCards), testUserId);
+
+        for (PlayerCardInfoDouDiZhu playerCardInfo : playerCardInfos.values()) {
+            if (playerCardInfo.userId != testUserId) {
+
+                for (int i = 0; i < this.initCardNum; i++) {
+                    playerCardInfo.cards.add(cards.remove(0));
+                }
+                //通知发牌
+                MsgSender.sendMsg2Player(new ResponseVo("gameService", "deal", playerCardInfo.cards), playerCardInfo.userId);
+            }
+        }
+
+        roomDouDiZhu.testNextCards = null;
+        roomDouDiZhu.testUserId = 0;
+    }
+
     /**
      * 发牌
      */
     protected void deal() {
-        for (PlayerCardInfoDouDiZhu playerCardInfo : playerCardInfos.values()) {
-            for (int i = 0; i < this.initCardNum; i++) {
-                playerCardInfo.cards.add(cards.remove(0));
-            }
-            //通知发牌
-            MsgSender.sendMsg2Player(new ResponseVo("gameService", "deal", playerCardInfo.cards), playerCardInfo.userId);
-        }
+        RoomDouDiZhu roomDouDiZhu = (RoomDouDiZhu) room;
+        if (roomDouDiZhu.testNextCards != null) {
+           testDeal();
+        } else {
 
-        //底牌
-        tableCards.addAll(cards);
+            for (PlayerCardInfoDouDiZhu playerCardInfo : playerCardInfos.values()) {
+                for (int i = 0; i < this.initCardNum; i++) {
+                    playerCardInfo.cards.add(cards.remove(0));
+                }
+                //通知发牌
+                MsgSender.sendMsg2Player(new ResponseVo("gameService", "deal", playerCardInfo.cards), playerCardInfo.userId);
+            }
+
+            //底牌
+            tableCards.addAll(cards);
+        }
 
     }
 
@@ -332,7 +372,7 @@ public class GameDouDiZhu extends Game {
             dizhu = userId;
             tableScore = score;
             //第三个人叫的 直接开始游戏
-            RoomDouDiZhu r = (RoomDouDiZhu)this.room;
+            RoomDouDiZhu r = (RoomDouDiZhu) this.room;
             //都叫过或已经叫到最大分(默认三分,毛三有选项)
             if (chooseJiaoSet.size() >= users.size() || score == r.jiaoScoreMax) {
                 //推送选定地主
@@ -561,7 +601,6 @@ public class GameDouDiZhu extends Game {
     }
 
 
-
     /**
      * 通知可以叫地主
      *
@@ -649,7 +688,6 @@ public class GameDouDiZhu extends Game {
         this.playerCardInfos = playerCardInfos;
         return this;
     }
-
 
 
     public Random getRand() {

@@ -36,6 +36,7 @@ public class Charge {
     private String share_content;//分享内容
     private String share_area;//分享区域
     private double money_point;//房卡
+    private int chargeType;
     private String username;//玩家名称
     private String recharge_source;//1 微信  2 支付宝  3 分享赠送  4 充值卡  5绑定赠送
     private double charge_before_money;
@@ -185,6 +186,15 @@ public class Charge {
 
     public Charge setCharge_after_money(double charge_after_money) {
         this.charge_after_money = charge_after_money;
+        return this;
+    }
+
+    public int getChargeType() {
+        return chargeType;
+    }
+
+    public Charge setChargeType(int chargeType) {
+        this.chargeType = chargeType;
         return this;
     }
 }

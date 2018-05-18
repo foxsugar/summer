@@ -5,12 +5,10 @@ import com.code.server.redis.config.IConstant;
 import com.code.server.redis.dao.IAgentRedis;
 import com.code.server.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.BoundHashOperations;
-import org.springframework.data.redis.core.BoundSetOperations;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -69,6 +67,27 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         return agent_bean.hasKey(""+agentId);
     }
 
+    @Override
+    public void setAgentToken(String token, Map<String, String> data) {
+
+        BoundValueOperations<String,String> agentData = redisTemplate.boundValueOps(getAgentToken(token));
+
+        agentData.set(JsonUtil.toJson(data));
+    }
+
+    @Override
+    public Map<String,String> getAgentByToken(String token) {
+        BoundValueOperations<String,String> agentData = redisTemplate.boundValueOps(getAgentToken(token));
+        String json = agentData.get();
+        if (json != null) {
+            return JsonUtil.readValue(json, Map.class);
+        }
+        return null;
+    }
+
+    private String getAgentToken(String token) {
+        return AGENT_TOKEN + token;
+    }
 
     private void addSaveAgent(long agentId) {
         BoundSetOperations<String, String> save_agent = redisTemplate.boundSetOps(SAVE_AGENT);
@@ -103,6 +122,7 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         BoundHashOperations<String,String,Double> agent_rebate = redisTemplate.boundHashOps(AGENT_REBATE);
         return agent_rebate.size();
     }
+
 
 
 }
