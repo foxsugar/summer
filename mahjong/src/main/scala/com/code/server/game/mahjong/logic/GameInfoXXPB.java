@@ -47,6 +47,12 @@ public class GameInfoXXPB extends GameInfo {
      * @param winnerId
      */
     public void setBanker(long winnerId) {
-        room.setBankerId(winnerId);
+        if (winnerId == this.getFirstTurn()) {
+
+            room.setBankerId(winnerId);
+        } else {
+            long nextId = nextTurnId(this.getFirstTurn());
+            room.setBankerId(nextId);
+        }
     }
 }
