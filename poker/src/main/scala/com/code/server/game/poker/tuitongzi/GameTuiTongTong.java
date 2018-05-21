@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * Created by dajuejinxian on 2018/5/16.
  */
+// 270 GameTuiTongTong
 public class GameTuiTongTong extends GameTuiTongZi {
 
     //推筒筒 算分
@@ -115,12 +116,6 @@ public class GameTuiTongTong extends GameTuiTongZi {
                 delta = lastGuoDi;
             }
 
-
-            // 是不是起对周锅
-            boolean isQiDui = TuiTongTongCardUtils.isDuiZi(winner.getPlayerCards());
-            if (isQiDui){
-                delta = delta * 1;
-            }
             if (delta > currentGuoDi){
                 delta = currentGuoDi;
             }

@@ -9,6 +9,18 @@ import java.util.List;
 
 public class TuiTongTongCardUtils extends TuiTongZiCardUtils{
 
+
+    public static boolean zhuangIsBiggerThanXian(PlayerTuiTongZi pZhuang, PlayerTuiTongZi pXian) throws Exception {
+
+        int type = cardsPatterns(pXian.getPlayerCards());
+        //如果闲家是 0 点 必须输
+        if (type == Ling){
+            return true;
+        }
+
+        return (mAIsBiggerThanB(pZhuang, pXian) != 2);
+    }
+
     public static int mAIsBiggerThanB(List<Integer> listA, List<Integer> listB) throws Exception {
         boolean aIsDuiZi = isDuiZi(listA);
         boolean bIsDuiZi = isDuiZi(listB);
@@ -42,7 +54,7 @@ public class TuiTongTongCardUtils extends TuiTongZiCardUtils{
                 Integer c = (listB.get(0) / 4 + 1);
                 Integer d = (listB.get(1) / 4 + 1);
 
-
+                //平点的情况下在比较手中最大的牌
                 Integer maxA = a > b ? a : b;
                 Integer maxB = c > d ? c : d;
 
