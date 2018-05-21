@@ -475,7 +475,10 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
     }
 
     //胜者组必须有头游并且没有尾游 否则平局
-    public void findWinnerList(List<PlayerZhaGuZi> aList){
+    //0 三家赢 1 平局 2 三家输
+    public static int findWinnerList(List<PlayerZhaGuZi> aList){
+
+        int result = 0;
 
         PlayerZhaGuZi pFirst = null;
         PlayerZhaGuZi pFinal = null;
@@ -498,6 +501,8 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
                 p.setIsWinner(PlayerZhaGuZi.DRAW);
             }
+            //平局
+            return 1;
 
         }else {
 
@@ -510,6 +515,11 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
             }
         }
 
+        if (pFirst.getIsSanJia() == PlayerZhaGuZi.SAN_JIA){
+            return 0;
+        }else {
+            return 2;
+        }
     }
 
     public static Map<Integer, Integer> getCardDict() {

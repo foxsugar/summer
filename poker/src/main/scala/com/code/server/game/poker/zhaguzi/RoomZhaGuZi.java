@@ -93,7 +93,7 @@ public class RoomZhaGuZi extends Room{
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);
         room.setUuid(idWorker.nextId());
 
-        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createTTZRoom", room.toVo(userId)), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createZGZRoom", room.toVo(userId)), userId);
 
         return 0;
     }
@@ -140,7 +140,7 @@ public class RoomZhaGuZi extends Room{
 
         //通知其他人游戏已经开始
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameZhaGuZiBegin", "ok"), this.getUsers());
-        MsgSender.sendMsg2Player(new ResponseVo("roomService", "startZhaGuZiGameByClient", 0), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "startGameByClient", 0), userId);
 
         GameTuiTongZi gameTuiTongZi = (GameTuiTongZi) getGameInstance();
         this.game = gameTuiTongZi;
