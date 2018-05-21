@@ -12,22 +12,6 @@ public class AgentResponse implements ErrorCode{
     public Map<String, Object> data = new HashMap<>();
 
 
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public Map<String, Object> getData() {
-        return data;
-    }
-
-    public void setData(Map<String, Object> data) {
-        this.data = data;
-    }
-
     public AgentResponse(int code, List<?> list) {
         this.code = code;
         Map<String, Object> map = new HashMap<>();
