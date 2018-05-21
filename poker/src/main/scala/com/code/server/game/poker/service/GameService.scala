@@ -157,7 +157,7 @@ object GameService {
       game.isGiveUp(userId, ret)
     case "beingDiscard"=>
       val op = params.path("op").asInt(0)
-      val li = null
+      val li = params.path("li").asText()
       game.beingDiscard(userId, op, li)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
