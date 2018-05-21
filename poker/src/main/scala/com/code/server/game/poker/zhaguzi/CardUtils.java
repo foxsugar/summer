@@ -3,8 +3,10 @@ import com.code.server.game.poker.doudizhu.CardUtil;
 import com.code.server.game.poker.hitgoldflower.Player;
 import com.code.server.game.poker.pullmice.BaseCardUtils;
 import com.code.server.game.poker.pullmice.IfCard;
+import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.util.StringUtils;
 import scala.Int;
 import java.util.*;
 
@@ -249,52 +251,42 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
                 case SI_ZHA:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
 
                 case SAN_ZHA:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
 
                 case Dui_ZI:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
 
                 case DAN_ZI:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
             }
         }
 
         return ret;
 
+    }
+
+
+    public static int compareAB(int a, int b){
+
+        int ret = 0;
+        if (a < b){
+            ret = WIN;
+        }else if (a == b){
+            ret = DRAW;
+        }else {
+            ret = LOSE;
+        }
+        return ret;
     }
 
     /*
@@ -353,46 +345,22 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
                 case SI_ZHA:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
 
                 case SAN_ZHA:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
 
                 case Dui_ZI:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
 
                 case DAN_ZI:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
             }
         }
@@ -631,6 +599,18 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
         }
         return cardDict;
+    }
+
+    //把字符串转化为数组
+    public static List<Integer> transfromStringToCards(String str){
+        int maxSplit = 1000;
+        String[] cards = str.split("_", maxSplit);
+        List<Integer> list = new ArrayList<>();
+
+        for (String string : cards){
+            list.add(Integer.valueOf(string));
+        }
+        return list;
     }
 
 }
