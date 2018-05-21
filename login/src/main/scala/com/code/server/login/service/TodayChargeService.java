@@ -4,6 +4,8 @@ import com.code.server.login.vo.OneLevelVo;
 import com.code.server.login.vo.TodayChargeVo;
 import com.code.server.login.vo.TwoLevelVo;
 import com.code.server.login.vo.WaterRecordVo;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,6 +18,8 @@ public interface TodayChargeService {
    //流水记录
    List<WaterRecordVo> waterRecords();
    //一级代理手下的充值记录
+   OneLevelVo oneLevelCharges(Date start, Date end);
+   //当日一级代理
    OneLevelVo oneLevelCharges();
    //二级代理充值记录
    TwoLevelVo twoLevelCharges();

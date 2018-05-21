@@ -73,19 +73,28 @@ public class TodayChargeServiceImpl implements TodayChargeService {
     }
 
     @Override
-    public OneLevelVo oneLevelCharges() {
+    public OneLevelVo oneLevelCharges(Date start, Date end) {
         long agentId = CookieUtil.getAgentIdByCookie();
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
-
-        Date start = DateUtil.getDayBegin();
-        Date end = new Date();
 
         OneLevelVo oneLevelVo = new OneLevelVo();
         oneLevelVo.setCategoryName("game name");
 
         double total = 0d;
         List<OneLevelInfoVo> oneLevelInfoVoList = new ArrayList<>();
-        for (Long uid : agentBean.getChildList()){
+
+        List<Long> aList = new ArrayList<>();
+        aList.add(agentBean.getId());
+        aList.addAll(agentBean.getChildList());
+
+        //查一下手下玩家
+        for (Long uid : aList){
+
+            //如果自己是代理
+            if (RedisManager.getAgentRedisService().isExit(agentId)){
+                continue;
+            }
+
             List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetween(Arrays.asList(uid), start, end);
 
             double totalMoney = 0d;
@@ -105,6 +114,14 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         oneLevelVo.setList(oneLevelInfoVoList);
 
         return oneLevelVo;
+    }
+
+    //某个时间段手下玩家和自己的充值记录
+    @Override
+    public OneLevelVo oneLevelCharges() {
+        Date start = DateUtil.getDayBegin();
+        Date end = new Date();
+        return oneLevelCharges(start, end);
     }
 
     @Override
