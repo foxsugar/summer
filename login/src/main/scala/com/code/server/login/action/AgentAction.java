@@ -52,9 +52,8 @@ public class AgentAction {
 
 
 
-    @GetMapping(value = "/index1")
+    @GetMapping(value = "/login")
     void charge(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("======");
 //        response.sendRedirect("tt.html");
 
         String code = request.getParameter("code");

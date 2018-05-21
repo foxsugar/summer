@@ -12,9 +12,13 @@ import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutNewsMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Map;
 
 import static me.chanjar.weixin.common.api.WxConsts.MenuButtonType;
@@ -27,6 +31,7 @@ public class MenuHandler extends AbstractHandler {
 
     @Autowired
     private GameAgentService gameAgentService;
+
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage,
                                     Map<String, Object> context, WxMpService weixinService,
@@ -42,12 +47,16 @@ public class MenuHandler extends AbstractHandler {
 
         if (MenuButtonType.CLICK.equalsIgnoreCase(wxMessage.getEvent())) {
             switch (wxMessage.getEventKey()) {
+                case "LOGIN_AGENT":
+
+                    return handle_login_agent(wxMessage, weixinService);
                 case "LINK":
-                    return handle_link(wxMessage,weixinService);
+                    return handle_link(wxMessage, weixinService);
                 case "CLEAR":
                     return handle_clear(wxMessage, weixinService);
+                case "DOWNLOAD_GAME":
 
-
+                case "KEFU_ONLINE":
 
             }
         }
@@ -57,8 +66,33 @@ public class MenuHandler extends AbstractHandler {
                 .build();
     }
 
+    private WxMpXmlOutMessage handle_login_agent(WxMpXmlMessage wxMessage, WxMpService wxService) {
+        WxMpUser wxMpUser = null;
+        try {
+            wxMpUser = wxService.getUserService().userInfo(wxMessage.getFromUser());
 
-    private WxMpXmlOutMessage handle_clear(WxMpXmlMessage wxMessage,WxMpService wxService){
+
+            String unionId = wxMpUser.getUnionId();
+            Long agentId = gameAgentService.getGameAgentDao().getUserIdByUnionId(wxMpUser.getUnionId());
+//            if (agentId == null || agentId == 0) {
+//                //不是代理
+//                return new TextBuilder().build("您还不是代理", wxMessage, wxService);
+//            }else{
+                HttpClient httpclient = HttpClients.createDefault();
+
+                // 创建http GET请求
+                HttpGet httpGet = new HttpGet("http://fap4k2.natappfree.cc/game/wechat/authorize?returnUrl=loginAgent");
+                httpclient.execute(httpGet);
+                return null;
+//            }
+        } catch (WxErrorException | IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    private WxMpXmlOutMessage handle_clear(WxMpXmlMessage wxMessage, WxMpService wxService) {
         WxMpUser wxMpUser = null;
         try {
             wxMpUser = wxService.getUserService().userInfo(wxMessage.getFromUser());
@@ -75,18 +109,21 @@ public class MenuHandler extends AbstractHandler {
             }
 
         } catch (WxErrorException e) {
-            logger.error("提现出错",e);
+            logger.error("提现出错", e);
         }
         return null;
     }
 
+
+
     /**
      * 处理链接
+     *
      * @param wxMessage
      * @param wxService
      * @return
      */
-    private WxMpXmlOutMessage handle_link(WxMpXmlMessage wxMessage,WxMpService wxService) {
+    private WxMpXmlOutMessage handle_link(WxMpXmlMessage wxMessage, WxMpService wxService) {
 
         try {
             WxMpUser wxMpUser = wxService.getUserService().userInfo(wxMessage.getFromUser());
@@ -98,7 +135,7 @@ public class MenuHandler extends AbstractHandler {
             //gameAgent 是否已经生成ticket
             AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
 
-            if(agentBean.getQrTicket() == null || "".equals(agentBean.getQrTicket())){
+            if (agentBean.getQrTicket() == null || "".equals(agentBean.getQrTicket())) {
                 //根据unionId生成二维码
                 WxMpQrCodeTicket ticket = wxService.getQrcodeService().qrCodeCreateLastTicket(unionId);
                 agentBean.setQrTicket(ticket.getTicket());

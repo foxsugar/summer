@@ -72,8 +72,10 @@ public class WxMenuController implements WxMpMenuService {
 
     WxMenuButton button21 = new WxMenuButton();
     button21.setType(MenuButtonType.VIEW);
+//    button21.setType(MenuButtonType.CLICK);
     button21.setName("进入后台");
-    button21.setUrl("http://dongxiaojieqipai/game/wechat/authorize?returnUrl=loginAgent");
+//    button21.setKey("LOGIN_AGENT");
+    button21.setUrl("http://fap4k2.natappfree.cc/game/wechat/authorize?returnUrl=loginAgent");
 //    button11.setKey("DOWNLOAD_GAME");
 
     WxMenuButton button22 = new WxMenuButton();
@@ -94,7 +96,7 @@ public class WxMenuController implements WxMpMenuService {
     WxMenuButton button3 = new WxMenuButton();
     button3.setName("充值");
     button3.setType(MenuButtonType.VIEW);
-    button3.setUrl("http://dongxiaojieqipai/game/wechat/authorize?returnUrl=charge");
+    button3.setUrl("http://fap4k2.natappfree.cc/game/wechat/authorize?returnUrl=charge");
 
 
 

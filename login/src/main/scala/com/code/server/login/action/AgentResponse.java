@@ -44,4 +44,22 @@ public class AgentResponse implements ErrorCode{
 
     public AgentResponse() {
     }
+
+    public int getCode() {
+        return code;
+    }
+
+    public AgentResponse setCode(int code) {
+        this.code = code;
+        return this;
+    }
+
+    public Map<String, Object> getData() {
+        return data;
+    }
+
+    public AgentResponse setData(Map<String, Object> data) {
+        this.data = data;
+        return this;
+    }
 }
