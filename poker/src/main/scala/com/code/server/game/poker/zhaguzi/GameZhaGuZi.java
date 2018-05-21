@@ -86,7 +86,19 @@ public class GameZhaGuZi extends Game {
     public void deal(){
 
         int count = cards.size() / users.size();
-        long lastId = this.room.firstId;
+
+        //发牌：第一局随机选择给一位玩家先发牌；第二局发牌是上一局第一个出完牌的人的下一家先发第一张牌。
+        long lastId = 0;
+        if (this.room.curGameNumber == 1){
+
+            Random random = new Random();
+            int index = random.nextInt(this.room.getPersonNumber());
+            lastId = users.get(index);
+
+        }else {
+            lastId = nextTurnId(this.room.lastWinnderId);
+        }
+
         long currentId = lastId;
 
         Map<Object, Object> result = new HashMap<>();
@@ -102,6 +114,7 @@ public class GameZhaGuZi extends Game {
                     break;
                 }
             }
+
             list.add((PlayerZhaGuZiVo) playerZhaGuZi.toVo());
             //轮圈完毕
             if (currentId == lastId){
