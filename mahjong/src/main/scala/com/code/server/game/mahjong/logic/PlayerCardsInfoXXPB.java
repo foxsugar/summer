@@ -102,8 +102,8 @@ public class PlayerCardsInfoXXPB extends PlayerCardsInfoMj {
 			System.out.println("胡牌拥有的类型: " + huCardType.specialHuList);
 			int s = huCardType.fan+0;
 			//2倍
-			if (huCardType.specialHuList.contains(hu_三碰)){
-				s+=2;
+			if (isSanPeng){
+				s+=3;
 			}
 			if (huCardType.specialHuList.contains(hu_混一色) ){
 				s+=2;
