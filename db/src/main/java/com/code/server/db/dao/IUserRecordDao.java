@@ -1,6 +1,4 @@
 package com.code.server.db.dao;
-
-
 import com.code.server.db.model.UserRecord;
 import org.springframework.data.repository.PagingAndSortingRepository;
 

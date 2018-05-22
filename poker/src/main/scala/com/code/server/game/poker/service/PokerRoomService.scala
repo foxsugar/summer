@@ -8,6 +8,7 @@ import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower
 import com.code.server.game.poker.paijiu.{RoomGoldPaijiu, RoomPaijiu}
 import com.code.server.game.poker.pullmice.RoomPullMice
 import com.code.server.game.poker.tuitongzi.RoomTuiTongZi
+import com.code.server.game.poker.zhaguzi.RoomZhaGuZi
 import com.code.server.game.room.service.RoomManager
 import com.fasterxml.jackson.databind.JsonNode
 
@@ -117,6 +118,18 @@ object PokerRoomService {
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
         return RoomTuiTongZi.createRoom(userId,roomType, gameType,gameNumber, personNumber, isJoin, multiple,clubId,clubRoomModel)
+
+      case "createZGZRoom"=>
+        val roomType = params.path("roomType").asText()
+        val gameType = params.path("gameType").asText()
+        val gameNumber = params.path("gameNumber").asInt()
+        val personNumber = params.path("personNumber").asInt()
+        val isJoin = params.path("isJoin").asBoolean(false)
+        val multiple = params.path("multiple").asInt()
+        val clubId = params.path("clubId").asText
+        val clubRoomModel = params.path("clubRoomModel").asText
+        val isShowCard = params.path("showCard").asText
+        return RoomZhaGuZi.createRoom(userId,roomType, gameType,gameNumber, personNumber, isJoin, multiple,clubId,clubRoomModel)
 
       case "createPullMiceRoom"=>
         val roomType = params.path("roomType").asText()

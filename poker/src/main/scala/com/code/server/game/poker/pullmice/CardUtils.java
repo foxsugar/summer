@@ -294,6 +294,27 @@ public class CardUtils extends BaseCardUtils{
         return count > 2;
     }
 
+    //是 3x 或者 4x 的情况 下 相同牌的数量
+    public static int Xcount(List<Integer> list){
+        List<Integer> aList = new ArrayList<>();
+        aList.addAll(list);
+        Collections.sort(aList);
+
+        Integer center = aList.get(2);
+        int count = 0;
+        for (int i = 0; i < aList.size(); i++){
+
+            if (aList.get(i) - 2  < 0){
+                continue;
+            }
+
+            if ((center - 2) / 4 == (aList.get(i) - 2) / 4){
+                count++;
+            }
+        }
+        return count;
+    }
+
     public static boolean is12345(List<Integer> list){
         if (list.size() != 5){
             return false;
@@ -394,8 +415,16 @@ public class CardUtils extends BaseCardUtils{
 
         //第五张牌发完以后才计算
         if (list.size() == 5 && is3Xor4X(list)){
-            point += 30;
+
+            int count = Xcount(list);
+            if (count == 3){
+                point += 30;
+            }else if(count == 4){
+                point += 80;
+            }
+
         }
+
         return point;
     }
 

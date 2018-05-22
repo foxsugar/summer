@@ -2,10 +2,7 @@ package com.code.server.db.model;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -38,7 +35,7 @@ public class Charge {
     private double money_point;//房卡
     private int chargeType;
     private String username;//玩家名称
-    private String recharge_source;//1 微信  2 支付宝  3 分享赠送  4 充值卡  5绑定赠送
+    private String recharge_source;//1 微信  2 支付宝  3 分享赠送  4 充值卡  5绑定赠送  11.提现
     private double charge_before_money;
     private double charge_after_money;
 

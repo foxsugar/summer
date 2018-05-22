@@ -8,6 +8,7 @@ public class Player {
     }
 
 	public enum Rules{
+    	//欢乐：AKQ > A23 > 其他
 		XiaoYao, HuanLe
 	}
     
