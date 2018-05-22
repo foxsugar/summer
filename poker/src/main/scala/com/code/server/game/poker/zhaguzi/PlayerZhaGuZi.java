@@ -14,7 +14,7 @@ public class PlayerZhaGuZi implements IfacePlayerInfo {
     public static Integer UNKNOW = 0;
     public static Integer SAN_JIA = 1;
     public static Integer GU_JIA = 2;
-    public static Integer DRAW = 2;
+    public static Integer DRAW = 3;
 
     protected long userId;
 
@@ -33,9 +33,20 @@ public class PlayerZhaGuZi implements IfacePlayerInfo {
 
     private Integer isSanJia;
 
-    private Integer score;
+    private double score;
 
     private Integer isWinner;
+
+    //是不是能接风
+    private boolean canJieFeng;
+
+    public boolean isCanJieFeng() {
+        return canJieFeng;
+    }
+
+    public void setCanJieFeng(boolean canJieFeng) {
+        this.canJieFeng = canJieFeng;
+    }
 
     public int getOp() {
         return op;
@@ -75,11 +86,11 @@ public class PlayerZhaGuZi implements IfacePlayerInfo {
         this.roomPersonNum = roomPersonNum;
     }
 
-    public Integer getScore() {
+    public double getScore() {
         return score;
     }
 
-    public void setScore(Integer score) {
+    public void setScore(double score) {
         this.score = score;
     }
 
@@ -100,11 +111,12 @@ public class PlayerZhaGuZi implements IfacePlayerInfo {
 
             if (this.cards.contains(hongtao) || this.cards.contains(fangpian)){
                 isSanJia = SAN_JIA;
-                return SAN_JIA;
+
             }else {
                 isSanJia = GU_JIA;
-                return GU_JIA;
             }
+
+            return isSanJia;
 
         }else if (roomPersonNum == 6){
 
@@ -119,11 +131,11 @@ public class PlayerZhaGuZi implements IfacePlayerInfo {
             if (this.cards.contains(hongtao) || this.cards.contains(fangpian) || this.cards.contains(heitao)){
                 if (this.cards.contains(hongtao) || this.cards.contains(fangpian)){
                     isSanJia = SAN_JIA;
-                    return SAN_JIA;
                 }else {
                     isSanJia = GU_JIA;
-                    return GU_JIA;
                 }
+
+                return isSanJia;
             }
         }
 

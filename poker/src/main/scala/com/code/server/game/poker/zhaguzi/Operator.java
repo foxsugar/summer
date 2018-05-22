@@ -11,7 +11,7 @@ public class Operator {
     public static final int ZHA_GU = 2;
     //不亮
     public static final int BU_LIANG = 3;
-    //没亮
+    //还没说话
     public static final int MEI_LIANG = 4;
     //管上
     public static final int GUAN_SHANG = 5;

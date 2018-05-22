@@ -93,7 +93,7 @@ public class RoomZhaGuZi extends Room{
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);
         room.setUuid(idWorker.nextId());
 
-        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createTTZRoom", room.toVo(userId)), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createZGZRoom", room.toVo(userId)), userId);
 
         return 0;
     }
@@ -109,6 +109,9 @@ public class RoomZhaGuZi extends Room{
         if (this.curGameNumber != 1) return ErrorCode.ROOM_START_CAN_NOT;
 
         if (userStatus.get(userId) != IGameConstant.STATUS_READY) return ErrorCode.ROOM_START_CAN_NOT;
+
+        //防止多次点开始
+        if(this.game != null) return ErrorCode.ROOM_START_CAN_NOT;
 
         int readyCount = 0;
         for (Map.Entry<Long, Integer> entry : userStatus.entrySet()) {
@@ -137,7 +140,7 @@ public class RoomZhaGuZi extends Room{
 
         //通知其他人游戏已经开始
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameZhaGuZiBegin", "ok"), this.getUsers());
-        MsgSender.sendMsg2Player(new ResponseVo("roomService", "startZhaGuZiGameByClient", 0), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "startGameByClient", 0), userId);
 
         GameTuiTongZi gameTuiTongZi = (GameTuiTongZi) getGameInstance();
         this.game = gameTuiTongZi;

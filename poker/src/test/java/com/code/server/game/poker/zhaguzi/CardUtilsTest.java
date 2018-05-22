@@ -27,6 +27,13 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CardUtilsTest {
+    @Test
+    public void transfromStringToCards() throws Exception {
+
+
+        List<Integer> list = CardUtils.transfromStringToCards("1_2_3");
+        System.out.println(list);
+    }
 
     @Test
     public void compare() throws Exception {

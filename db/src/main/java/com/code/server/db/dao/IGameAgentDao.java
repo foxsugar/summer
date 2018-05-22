@@ -11,4 +11,7 @@ public interface IGameAgentDao extends PagingAndSortingRepository<GameAgent, Lon
 
     @Query(value = "select id from game_agent where union_id = ?1", nativeQuery = true)
     Long getUserIdByUnionId(String  unionId);
+
+    GameAgent findGameAgentByOpenId(String openId);
+
 }

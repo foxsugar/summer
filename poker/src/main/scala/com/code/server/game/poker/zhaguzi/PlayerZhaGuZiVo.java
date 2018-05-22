@@ -28,4 +28,78 @@ public class PlayerZhaGuZiVo implements IfacePlayerInfoVo{
     private Integer isSanJia;
 
     private Integer isWinner;
+
+    private boolean canJieFeng;
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public List<Integer> getCards() {
+        return cards;
+    }
+
+    public void setCards(List<Integer> cards) {
+        this.cards = cards;
+    }
+
+    public int getOp() {
+        return op;
+    }
+
+    public void setOp(int op) {
+        this.op = op;
+    }
+
+    public List<Integer> getOpList() {
+        return opList;
+    }
+
+    public void setOpList(List<Integer> opList) {
+        this.opList = opList;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    public Integer getRoomPersonNum() {
+        return roomPersonNum;
+    }
+
+    public void setRoomPersonNum(Integer roomPersonNum) {
+        this.roomPersonNum = roomPersonNum;
+    }
+
+    public Integer getIsSanJia() {
+        return isSanJia;
+    }
+
+    public void setIsSanJia(Integer isSanJia) {
+        this.isSanJia = isSanJia;
+    }
+
+    public Integer getIsWinner() {
+        return isWinner;
+    }
+
+    public void setIsWinner(Integer isWinner) {
+        this.isWinner = isWinner;
+    }
+
+    public boolean isCanJieFeng() {
+        return canJieFeng;
+    }
+
+    public void setCanJieFeng(boolean canJieFeng) {
+        this.canJieFeng = canJieFeng;
+    }
 }

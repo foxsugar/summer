@@ -3,8 +3,10 @@ import com.code.server.game.poker.doudizhu.CardUtil;
 import com.code.server.game.poker.hitgoldflower.Player;
 import com.code.server.game.poker.pullmice.BaseCardUtils;
 import com.code.server.game.poker.pullmice.IfCard;
+import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.util.StringUtils;
 import scala.Int;
 import java.util.*;
 
@@ -249,52 +251,42 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
                 case SI_ZHA:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
 
                 case SAN_ZHA:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
 
                 case Dui_ZI:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
 
                 case DAN_ZI:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
             }
         }
 
         return ret;
 
+    }
+
+
+    public static int compareAB(int a, int b){
+
+        int ret = 0;
+        if (a < b){
+            ret = WIN;
+        }else if (a == b){
+            ret = DRAW;
+        }else {
+            ret = LOSE;
+        }
+        return ret;
     }
 
     /*
@@ -353,46 +345,22 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
                 case SI_ZHA:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
 
                 case SAN_ZHA:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
 
                 case Dui_ZI:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
 
                 case DAN_ZI:
 
-                    if (a < b){
-                        ret = WIN;
-                    }else if (a == b){
-                        ret = DRAW;
-                    }else {
-                        ret = LOSE;
-                    }
+                    ret = compareAB(a, b);
                     break;
             }
         }
@@ -507,7 +475,10 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
     }
 
     //胜者组必须有头游并且没有尾游 否则平局
-    public void findWinnerList(List<PlayerZhaGuZi> aList){
+    //0 三家赢 1 平局 2 三家输
+    public static int findWinnerList(List<PlayerZhaGuZi> aList){
+
+        int result = 0;
 
         PlayerZhaGuZi pFirst = null;
         PlayerZhaGuZi pFinal = null;
@@ -530,6 +501,8 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
                 p.setIsWinner(PlayerZhaGuZi.DRAW);
             }
+            //平局
+            return 1;
 
         }else {
 
@@ -542,6 +515,11 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
             }
         }
 
+        if (pFirst.getIsSanJia() == PlayerZhaGuZi.SAN_JIA){
+            return 0;
+        }else {
+            return 2;
+        }
     }
 
     public static Map<Integer, Integer> getCardDict() {
@@ -631,6 +609,18 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
         }
         return cardDict;
+    }
+
+    //把字符串转化为数组
+    public static List<Integer> transfromStringToCards(String str){
+        int maxSplit = 1000;
+        String[] cards = str.split("_", maxSplit);
+        List<Integer> list = new ArrayList<>();
+
+        for (String string : cards){
+            list.add(Integer.valueOf(string));
+        }
+        return list;
     }
 
 }

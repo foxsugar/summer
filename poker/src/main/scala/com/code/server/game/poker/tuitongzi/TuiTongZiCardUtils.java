@@ -28,6 +28,7 @@ public class TuiTongZiCardUtils {
     public static final int Yi = 1;
     public static final int Ling = 0;
 
+
     public static boolean zhuangIsBiggerThanXian(PlayerTuiTongZi pZhuang, PlayerTuiTongZi pXian) throws Exception {
 
         return (mAIsBiggerThanB(pZhuang, pXian) != 2);
