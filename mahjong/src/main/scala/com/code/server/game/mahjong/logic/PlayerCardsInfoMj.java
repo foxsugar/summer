@@ -484,10 +484,22 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         return set;
     }
 
+    public int getHunNum() {
+        int result = 0;
+        for (String s : getCardsNoChiPengGang(cards)) {
+            int type = CardTypeUtil.getTypeByCard(s);
+            if (this.gameInfo.hun.contains(type)) {
+                result++;
+            }
 
-    public int getGangNum(){
+        }
+        return result;
+    }
+
+    public int getGangNum() {
         return this.mingGangType.size() + this.anGangType.size();
     }
+
     /**
      * 是否有旋风蛋
      *
@@ -553,7 +565,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         return tingList;
     }
 
-    public void tingWhat(){
+    public void tingWhat() {
 
     }
 
@@ -575,6 +587,29 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
             }
         } else {
             tingList.addAll(HuUtil.getTingHuList(handCards, this, limit, null));
+        }
+        return tingList;
+    }
+
+
+    public List<HuCardType> getTingHuCardTypeWithHun(List<String> cards, List<Integer> hun,int chiPengGangNum) {
+        List<String> handCards = new ArrayList<>();
+        handCards.addAll(cards);
+
+        //是否多一张牌
+        int size = handCards.size();
+        boolean isMore = (size - 2) % 3 == 0;//去掉将如果能整除说明手牌多一张
+        List<HuCardType> tingList = new ArrayList<>();
+        if (isMore) {//多一张
+            //循环去掉一张看能否听
+            for (String card : handCards) {
+                List<String> tempCards = new ArrayList<>();
+                tempCards.addAll(handCards);
+                tempCards.remove(card);
+                tingList.addAll(HuUtil.getTingHuListWithHun(tempCards, this, hun, card,chiPengGangNum));
+            }
+        } else {
+            tingList.addAll(HuUtil.getTingHuListWithHun(handCards, this, hun, null,chiPengGangNum));
         }
         return tingList;
     }
@@ -797,7 +832,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
      * @return
      */
     protected boolean isSanPeng() {
-       return true;
+        return true;
     }
 
     /**
@@ -861,7 +896,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         operateList.add(type_mopai);
     }
 
-    protected int getCardGroup(List<String> cs){
+    protected int getCardGroup(List<String> cs) {
         Set<Integer> set = new HashSet<>();
         for (String s : cs) {
             int group = CardTypeUtil.getCardGroup(s);
@@ -879,20 +914,21 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     public static void main(String[] args) {
 
-        PlayerCardsInfoMj playerCardsInfo = new PlayerCardsInfoMj();
-
-        playerCardsInfo.isHasFengShun = true;
-
-//        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","042","124","135"};
-//        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","134","042","124","135"};
-//        String[] s = new String[]{"124","128","132",     "016",  "017","018",    "020",     "024","025","026",   "028","029",    "032","033"};
-        String[] s = new String[]{"012", "013", "014", "016", "017", "018", "020", "024", "025", "026", "028", "029", "032", "033"};
-
-        List<String> cs = Arrays.asList(s);
-        playerCardsInfo.cards = cs;
-        playerCardsInfo.init(playerCardsInfo.cards);
-//        System.out.println(playerCardsInfo.getTingCardType(playerCardsInfo.cards,null));
-        System.out.println(playerCardsInfo.isCanHu_zimo("033"));
+//        PlayerCardsInfoMj playerCardsInfo = new PlayerCardsInfoMj();
+//
+//        playerCardsInfo.isHasFengShun = true;
+//
+////        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","042","124","135"};
+////        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","134","042","124","135"};
+////        String[] s = new String[]{"124","128","132",     "016",  "017","018",    "020",     "024","025","026",   "028","029",    "032","033"};
+//        String[] s = new String[]{"012", "013", "014", "016", "017", "018", "020", "024", "025", "026", "028", "029", "032", "033"};
+//
+//        List<String> cs = Arrays.asList(s);
+//        playerCardsInfo.cards = cs;
+//        playerCardsInfo.init(playerCardsInfo.cards);
+////        System.out.println(playerCardsInfo.getTingCardType(playerCardsInfo.cards,null));
+//        System.out.println(playerCardsInfo.isCanHu_zimo("033"));
+        System.out.println(isHasMode("2",1));
     }
 
     public long getUserId() {

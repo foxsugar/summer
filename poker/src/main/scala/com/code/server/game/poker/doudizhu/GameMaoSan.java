@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by sunxianping on 2018/4/23.
  */
-public class GameMaoSan extends GameDouDiZhu {
+public class GameMaoSan extends GameDouDiZhuMaoSan {
 
     public static final Integer HONGTAO4 = 14;
 

@@ -229,7 +229,7 @@ public class WechatAction extends Cors {
         cookie.setMaxAge(30);
         response.addCookie(cookie);
 
-        String url = MessageFormat.format("http://tfdg38.natappfree.cc/agent/#/test?id={0}&sid={1}", agentId, sid);
+        String url = MessageFormat.format("http://" + serverConfig.getDomain() +"/agent/#/sharelink?id={0}&sid={1}", agentId, sid);
 
         response.sendRedirect(url);
 
@@ -286,21 +286,12 @@ public class WechatAction extends Cors {
             return;
         }
 
-        Map<String, String> rd = new HashMap<>();
-        rd.put("agentId", "" + agentId);
-        rd.put("openId", wxMpUser.getOpenId());
-        rd.put("unionId", wxMpUser.getUnionId());
 
-        //设置redis
-        String token = "" + IdWorker.getDefaultInstance().nextId();
-        RedisManager.getAgentRedisService().setAgentToken(token, rd);
-
-        //todo token
-        Cookie cookie = new Cookie(AGENT_COOKIE_NAME, token);
-        cookie.setDomain(serverConfig.getDomain());
-        cookie.setPath("/");
-        response.addCookie(cookie);
-
+        //设置cookie
+        Map<String, String> agent = getAgentByToken(request);
+        if (agent == null) {
+            setTokenCookie2Redis(wxMpUser,response,agentId);
+        }
 
         String url = "http://" + serverConfig.getDomain() + "/agent/#/index";
         response.sendRedirect(url);
@@ -328,17 +319,43 @@ public class WechatAction extends Cors {
                             .toUser(wxMpUser.getOpenId())
                             .content("您还不是玩家")
                             .build());
-            response.getOutputStream().write("您还不是玩家".getBytes());
+            response.getOutputStream().write("您还不是玩家".getBytes("utf-8"));
             return;
         }
 
-        String url = "http://" + serverConfig.getDomain() + "/agent/#/index";
+        //设置cookie
+        Map<String, String> agent = getAgentByToken(request);
+        if (agent == null) {
+            setTokenCookie2Redis(wxMpUser,response,userId);
+        }
+
+        String url = "http://" + serverConfig.getDomain() + "/agent/#/charge";
         response.sendRedirect(url);
     }
 
+    public void setTokenCookie2Redis(WxMpUser wxMpUser,HttpServletResponse response,long agentId){
+        Map<String, String> rd = new HashMap<>();
+        rd.put("agentId", "" + agentId);
+        rd.put("openId", wxMpUser.getOpenId());
+        rd.put("unionId", wxMpUser.getUnionId());
 
-    public Map<String, String> getAgentByToken(HttpServletRequest request) {
+        int timeout = 1800;//30分钟
+        //设置redis
+        String token = "" + IdWorker.getDefaultInstance().nextId();
+        RedisManager.getAgentRedisService().setAgentToken(token, rd,timeout);
+
+        //todo token
+        //todo 过期时间
+        Cookie cookie = new Cookie(AGENT_COOKIE_NAME, token);
+        cookie.setDomain(serverConfig.getDomain());
+        cookie.setPath("/");
+        cookie.setMaxAge(timeout);
+        response.addCookie(cookie);
+    }
+
+    public static Map<String, String> getAgentByToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
+        if(cookies == null) return null;
         Cookie cookie = null;
         for (Cookie c : cookies) {
             if (AGENT_COOKIE_NAME.equals(c.getName())) {

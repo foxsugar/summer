@@ -181,13 +181,32 @@ public class HuUtil implements HuType {
 
 
     public static List<HuCardType> isHu(PlayerCardsInfoMj playerCardsInfo, List<String> cards, int chiPengGangNum, List<Integer> hun, int lastCard) {
-        List<HuCardType> huList = HuWithHun.getHuCardType(playerCardsInfo, analyse(convert(cards)), chiPengGangNum, hun, lastCard);
+        List<HuCardType> huList = new ArrayList<>();
+        if (playerCardsInfo.isHasSpecialHu(hu_七小对)) {
+            HuCardType huCardType = isQixiaodui_hun(cards, playerCardsInfo, hun, lastCard);
+            if (huCardType != null) {
+                huCardType.setFan(playerCardsInfo.getSpecialHuScore(hu_七小对)).specialHuList.add(hu_七小对);
+                huList.add(huCardType);
+            }
+        }
+
+        if (playerCardsInfo.isHasSpecialHu(hu_豪华七小对)) {
+            HuCardType huCardType = isHaoHuaQixiaodui_hun(cards, playerCardsInfo, hun, lastCard);
+            if (huCardType != null) {
+                huCardType.setFan(playerCardsInfo.getSpecialHuScore(hu_豪华七小对)).specialHuList.add(hu_豪华七小对);
+                huList.add(huCardType);
+            }
+        }
+
+
+        huList.addAll(HuWithHun.getHuCardType(playerCardsInfo, cards,analyse(convert(cards)), chiPengGangNum, hun, lastCard));
 
         for (HuCardType huCardType : huList) {
             //设置胡的类型
             HuCardType.setHuCardType(huCardType, playerCardsInfo);
+            huCardType.tingCardType = lastCard;
             for (Integer huType : huCardType.specialHuList) {
-                if (playerCardsInfo.getSpecialHuScore().containsKey(huType) ) {
+                if (playerCardsInfo.getSpecialHuScore().containsKey(huType)) {
                     huCardType.fan += playerCardsInfo.getSpecialHuScore().get(huType);
                 }
             }
@@ -242,6 +261,41 @@ public class HuUtil implements HuType {
             newCards.add(addCard);
 
             List<HuCardType> huCardTypes = isHu(newCards, playerCardsInfo, i, limit);
+            for (HuCardType huCardType : huCardTypes) {
+                tingSet.add(i);
+                huCardType.tingCardType = i;
+                huCardType.cards.clear();
+                huCardType.cards.addAll(newCards);
+                huCardType.tingRemoveCard = removeCard;
+            }
+            result.addAll(huCardTypes);
+        }
+        if (tingSet.size() > 1) {
+            for (HuCardType huCardType : result) {
+                huCardType.isCheckYiZhangying = false;
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * @param cards
+     * @param playerCardsInfo
+     * @param removeCard      听删掉的牌
+     * @return
+     */
+    public static List<HuCardType> getTingHuListWithHun(List<String> cards, PlayerCardsInfoMj playerCardsInfo, List<Integer> hun, String removeCard,int chiPengGangNum) {
+        List<HuCardType> result = new ArrayList<>();
+        Set<Integer> tingSet = new HashSet<>();
+//        int chiPengGangNum = playerCardsInfo.getChiPengGangNum();
+        for (int i = 0; i < n_zero.length; i++) {
+            String addCard = CardTypeUtil.getCardStrByType(i);
+            List<String> newCards = new ArrayList<>();
+            newCards.addAll(cards);
+            newCards.add(addCard);
+
+            List<HuCardType> huCardTypes = isHu(playerCardsInfo, cards, chiPengGangNum, hun, i);
             for (HuCardType huCardType : huCardTypes) {
                 tingSet.add(i);
                 huCardType.tingCardType = i;
@@ -566,6 +620,7 @@ public class HuUtil implements HuType {
 
     }
 
+
     public static boolean isHaoHuaQixiaodui(List<String> cards, PlayerCardsInfoMj playerCardsInfo, int haohuaNum) {
         List<String> temp = new ArrayList<>();
         temp.addAll(cards);
@@ -610,9 +665,134 @@ public class HuUtil implements HuType {
 
     }
 
-    public static boolean is13BuKao(List<String> cards, PlayerCardsInfoMj playerCardsInfo){
+    public static boolean cardIsHun(List<Integer> hun, int cardType) {
+        return hun.contains(cardType);
+    }
 
-        if(cards.size() != 14){
+    public static HuCardType isQixiaodui_hun(List<String> cards, PlayerCardsInfoMj playerCardsInfo, List<Integer> hun, int lastCard) {
+
+        HuCardType huCardType = new HuCardType();
+
+        List<String> temp = new ArrayList<>();
+        temp.addAll(cards);
+        int size = playerCardsInfo.getMingGangType().size() + playerCardsInfo.getAnGangType().size() + playerCardsInfo.getPengType().size() + playerCardsInfo.getChiType().size();
+        if (size > 0) {
+            return null;
+        }
+        int hunSize = playerCardsInfo.getHunNum();
+        Map<Integer, Integer> cardMap = PlayerCardsInfoMj.getCardNum(temp);
+        //去掉混的牌型种类
+        for (Integer hunType : playerCardsInfo.getGameInfo().getHun()) {
+            cardMap.remove(hunType);
+        }
+        if (cardMap.size() > 7) {
+            return null;
+        }
+        List<Integer> needHun = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> entry : cardMap.entrySet()) {
+            //多于两张牌 可能是豪七
+            if (entry.getValue() != 2 && entry.getValue() != 1) {
+                return null;
+            }
+            if (entry.getValue() == 1) {
+                needHun.add(entry.getKey());
+                huCardType.hunReplaceCard.add(entry.getKey());
+            }
+        }
+
+        //混不够用
+        if (needHun.size() > hunSize) {
+            return null;
+        }
+
+        //判断混替代什么
+        //最后抓的牌是混
+        if (hunSize - needHun.size() >= 2) {
+            //-1 什么都能代替
+            huCardType.hunReplaceCard.add(-1);
+        }
+
+
+        return huCardType;
+    }
+
+
+    public static HuCardType isHaoHuaQixiaodui_hun(List<String> cards, PlayerCardsInfoMj playerCardsInfo, List<Integer> hun, int lastCard) {
+        HuCardType huCardType = new HuCardType();
+        List<String> temp = new ArrayList<>();
+        temp.addAll(cards);
+
+        int size = playerCardsInfo.getMingGangType().size() + playerCardsInfo.getAnGangType().size() + playerCardsInfo.getPengType().size() + playerCardsInfo.getChiType().size();
+        if (size > 0) {
+            return null;
+        }
+
+
+        int hunSize = playerCardsInfo.getHunNum();
+        Map<Integer, Integer> cardMap = PlayerCardsInfoMj.getCardNum(temp);
+        //去掉混的牌型种类
+        for (Integer hunType : playerCardsInfo.getGameInfo().getHun()) {
+            cardMap.remove(hunType);
+        }
+
+        if (cardMap.size() > 7) {
+            return null;
+        }
+
+        int isHas4Num = 0;
+        List<Integer> needHunList = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> entry : cardMap.entrySet()) {
+            if (entry.getValue() != 2 && entry.getValue() != 4) {
+                needHunList.add(entry.getKey());
+            }
+            if (entry.getValue() == 4) {
+                isHas4Num++;
+            }
+        }
+        if (needHunList.size() > hunSize) {
+            return null;
+        }
+        //没有四张牌的
+        boolean lastCardIsHun = cardIsHun(hun, lastCard);
+        if (isHas4Num == 0) {
+
+            List<Integer> has3key = mapHasValue(cardMap, 3);
+            if (has3key.size() > 0) {
+                if (lastCardIsHun) {
+                    huCardType.hunReplaceCard.addAll(has3key);
+                }
+            } else {
+                //需要 混数 - 需要混数 > 2 才能凑够豪华
+                if (hunSize - needHunList.size() < 2) {
+                    return null;
+                }
+                //混能替换的牌是
+                if (lastCardIsHun) {
+                    huCardType.hunReplaceCard.addAll(mapHasValue(cardMap, 1));
+                    huCardType.hunReplaceCard.addAll(mapHasValue(cardMap, 2));
+                }
+            }
+        }
+
+
+        return huCardType;
+
+    }
+
+    private static List<Integer> mapHasValue(Map<Integer, Integer> map, int size) {
+        List<Integer> result = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if (entry.getValue() == size) {
+                result.add(entry.getKey());
+            }
+        }
+        return result;
+    }
+
+
+    public static boolean is13BuKao(List<String> cards, PlayerCardsInfoMj playerCardsInfo) {
+
+        if (cards.size() != 14) {
             return false;
         }
 
@@ -622,17 +802,17 @@ public class HuUtil implements HuType {
 
         List<Integer> list2 = new ArrayList<>();
 
-        for (int i = 0; i < cards.size(); i++){
+        for (int i = 0; i < cards.size(); i++) {
 
             int index = Integer.parseInt(cards.get(i));
-            if (index >= 108 && index <= 135){
+            if (index >= 108 && index <= 135) {
                 list.add((index - 108) / 4);
-            }else {
+            } else {
                 list2.add(index);
             }
         }
 
-        if (list.size() != 8){
+        if (list.size() != 8) {
             return false;
         }
 
@@ -640,17 +820,17 @@ public class HuUtil implements HuType {
         list.clear();
         list.addAll(h);
         Collections.sort(list);
-        if (list.size() != 7){
+        if (list.size() != 7) {
             return false;
         }
         System.out.println("含有东南西北中发白带将");
 
         //判断六张牌是不是都是万或都是筒或都是条
         int last = 0;
-        for(int i = 0; i < list2.size(); i++){
+        for (int i = 0; i < list2.size(); i++) {
             int a = list2.get(i);
             int current = isWanTongTiao(a);
-            if(last != current && i != 0){
+            if (last != current && i != 0) {
                 last = 0;
                 break;
             }
@@ -658,167 +838,85 @@ public class HuUtil implements HuType {
         }
 
         //如果种类相同
-        if(last != 0){
+        if (last != 0) {
             return false;
-            //因为进行了排序所以要把牌拆开
-//
-//            boolean isFind = false;
-//            for(int i = 0; i < list2.size(); i++){
-//
-//                for(int j = i + 1; j < list2.size(); j++){
-//
-//                    for(int k = j + 1; k < list2.size(); k++){
-//
-//                        int item1 = list2.get(i);
-//                        int item2 = list2.get(j);
-//                        int item3 = list2.get(k);
-//
-//                        //判断花色
-//
-////                        int yushu1 = item1 % 4;
-////                        int yushu2 = item2 % 4;
-////                        int yushu3 = item3 % 4;
-//
-////                        //是不是一个颜色
-////                        if(!((yushu1 == yushu2) && (yushu1 == yushu3))){
-////                            continue;
-////                        }
-//
-//                        int ret = m147_258_369_158(item1 / 4, item2 / 4, item3 / 4);
-//                        if(ret != 0){
-//                            //现在找到了符和的一个序列
-//                            //判断剩下的序列
-//                            List<Integer> sList = new ArrayList<>();
-//
-//                            for(int w = 0; w < list2.size(); w++){
-//                                if(!(w == i || w == j || w == k )){
-//                                    sList.add(list2.get(w));
-//                                }
-//                            }
-//
-////                            yushu1 = sList.get(0) % 4;
-////                            yushu2 = sList.get(1) % 4;
-////                            yushu3 = sList.get(2) % 4;
-//
-////                            //是不是一个颜色
-////                            if(!((yushu1 == yushu2) && (yushu1 == yushu3))){
-////
-////                                continue;
-////                            }
-//
-//                            int ret2 = m147_258_369_158(sList.get(0) / 4, sList.get(1) / 4, sList.get(2) / 4);
-//
-//                            if((ret2 != 0 ) && (ret != ret2)){
-//
-//                                isFind = true;
-//                                break;
-//                            }
-//                        }
-//                    }
-//
-//                    if (isFind == true){
-//                        break;
-//                    }
-//                }
-//
-//                if (isFind == true){
-//                    break;
-//                }
-//            }
-//
-//           if (!isFind){
-//               return false;
-//           }
-
-
-        }else{
+        } else {
 
             int result1 = m13buKaoType(list2.get(0), list2.get(1), list2.get(2));
             int result2 = m13buKaoType(list2.get(3), list2.get(4), list2.get(5));
 
-            if(result1 == 0 || result2 == 0){
+            if (result1 == 0 || result2 == 0) {
                 return false;
             }
-//            //百位代表万筒条， 十位代表花色， 个位代表 那种牌型
-//            int type1 = result1 / 100;
-//            int type2 = result2 / 100;
-//
-//            int cType1 = result1 % 10;
-//            int cType2 = result2 % 10;
-//
-//            if(type1 == type2 && cType1 == cType2){
-//                return false;
-//            }
-
         }
 
         return true;
     }
 
-    public static int isWanTongTiao(int d){
+    public static int isWanTongTiao(int d) {
 
         int ret = 0;
 
-        if ((d / 4 < 9) && (d / 4 >=0)){
+        if ((d / 4 < 9) && (d / 4 >= 0)) {
             //万
             ret = 1;
-        }else if(d / 4 < 18){
+        } else if (d / 4 < 18) {
             ret = 2;
             //条
-        }else  if(d / 4 < 27){
+        } else if (d / 4 < 27) {
             ret = 3;
             //筒
-        }else {
+        } else {
             ret = 0;
         }
         return ret;
     }
 
-    public static int m147_258_369_158(int shang1, int shang2, int shang3){
+    public static int m147_258_369_158(int shang1, int shang2, int shang3) {
 
-        if(shang1 == 0 && shang2 == 3 && shang3 == 6){
+        if (shang1 == 0 && shang2 == 3 && shang3 == 6) {
             return 1;
-        }else if(shang1 == 9 && shang2 == 12 && shang3 == 15){
+        } else if (shang1 == 9 && shang2 == 12 && shang3 == 15) {
             return 1;
-        }else if(shang1 == 18 && shang2 == 21 && shang3 == 24){
+        } else if (shang1 == 18 && shang2 == 21 && shang3 == 24) {
             return 1;
-        }else if(shang1 == 1 && shang2 == 4 && shang3 == 7){
+        } else if (shang1 == 1 && shang2 == 4 && shang3 == 7) {
             return 2;
-        }else if(shang1 == 10 && shang2 == 13 && shang3 == 16){
+        } else if (shang1 == 10 && shang2 == 13 && shang3 == 16) {
             return 2;
-        }else if(shang1 == 19 && shang2 == 22 && shang3 == 25){
+        } else if (shang1 == 19 && shang2 == 22 && shang3 == 25) {
             return 2;
-        }else if(shang1 == 2 && shang2 == 5 && shang3 == 8){
+        } else if (shang1 == 2 && shang2 == 5 && shang3 == 8) {
             return 3;
-        }else if(shang1 == 11 && shang2 == 14 && shang3 == 17){
+        } else if (shang1 == 11 && shang2 == 14 && shang3 == 17) {
             return 3;
-        }else if(shang1 == 20 && shang2 == 23 && shang3 == 26){
+        } else if (shang1 == 20 && shang2 == 23 && shang3 == 26) {
             return 3;
-        }else if(shang1 == 0 && shang2 == 4 && shang3 == 7){
+        } else if (shang1 == 0 && shang2 == 4 && shang3 == 7) {
             return 4;
-        }else if(shang1 == 9 && shang2 == 13 && shang3 == 16){
+        } else if (shang1 == 9 && shang2 == 13 && shang3 == 16) {
             return 4;
-        } else if(shang1 == 18 && shang2 == 22 && shang3 == 25){
+        } else if (shang1 == 18 && shang2 == 22 && shang3 == 25) {
             return 4;
         }
         return 0;
     }
 
-    public static int m13buKaoType(int a, int b, int c){
+    public static int m13buKaoType(int a, int b, int c) {
 
         int ret1 = isWanTongTiao(a);
         int ret2 = isWanTongTiao(b);
         int ret3 = isWanTongTiao(c);
 
         int ret = 0;
-        if ( (ret1 == ret2) && (ret1 == ret3) && (ret1 != 0)){
+        if ((ret1 == ret2) && (ret1 == ret3) && (ret1 != 0)) {
             ret = ret1;
-        }else {
+        } else {
             return 0;
         }
 
         int shang1 = a / 4;
-        int yu1 = a %4;
+        int yu1 = a % 4;
 
         int shang2 = b / 4;
         int yu2 = b % 4;
@@ -832,7 +930,7 @@ public class HuUtil implements HuType {
 //        }
 
         int res = m147_258_369_158(shang1, shang2, shang3);
-        if(res == 0){
+        if (res == 0) {
             return 0;
         }
 
@@ -861,7 +959,7 @@ public class HuUtil implements HuType {
     }
 
 
-        public static void main(String[] args) {
+    public static void main(String[] args) {
 
 
         int[] hai = {
@@ -962,27 +1060,26 @@ public class HuUtil implements HuType {
 //        }
 
 
+        list.clear();
+        list.add("081");
+        list.add("121");
+        list.add("115");
+        list.add("116");
+        list.add("110");
+        list.add("126");
+        list.add("130");
+        list.add("134");
 
-            list.clear();
-            list.add("081");
-            list.add("121");
-            list.add("115");
-            list.add("116");
-            list.add("110");
-            list.add("126");
-            list.add("130");
-            list.add("134");
+        list.add("003");
+        list.add("014");
+        list.add("024");
+        list.add("093");
+        list.add("107");
+        list.add("119");
 
-            list.add("003");
-            list.add("014");
-            list.add("024");
-            list.add("093");
-            list.add("107");
-            list.add("119");
-
-            boolean res =  is13BuKao(list, null);
-            System.out.println("==================");
-            System.out.println(res);
+        boolean res = is13BuKao(list, null);
+        System.out.println("==================");
+        System.out.println(res);
 
     }
 
@@ -1024,7 +1121,7 @@ public class HuUtil implements HuType {
      * @param cards
      * @return
      */
-    private static boolean duanyao(List<String> cards,  PlayerCardsInfoMj playerCardsInfo) {
+    private static boolean duanyao(List<String> cards, PlayerCardsInfoMj playerCardsInfo) {
 
         List<Integer> tempList = new ArrayList<>();
         tempList.add(0);
@@ -1042,8 +1139,9 @@ public class HuUtil implements HuType {
         tempList.add(33);
 
         boolean results = true;
-        a:for (String s:playerCardsInfo.getCards()) {
-            if(tempList.contains(CardTypeUtil.getTypeByCard(s))){
+        a:
+        for (String s : playerCardsInfo.getCards()) {
+            if (tempList.contains(CardTypeUtil.getTypeByCard(s))) {
                 results = false;
                 break a;
             }

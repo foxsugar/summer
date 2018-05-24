@@ -544,6 +544,7 @@ public class GameInfoNZZ extends GameInfo {
             operateReqResp.setUserId(userId);
             operateReqResp.setCard(card);
             operateReqResp.setIsMing(isMing);
+            replay.getOperate().add(operateReqResp);
             //通知所有人有杠
             MsgSender.sendMsg2Player(vo, users);
 
@@ -676,6 +677,9 @@ public class GameInfoNZZ extends GameInfo {
         operateReqResp.setCard(disCard);
         operateReqResp.setFromUserId(lastPlayUserId);
         operateReqResp.setUserId(userId);
+
+        //回放
+        replay.getOperate().add(operateReqResp);
 
         //通知其他人
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);

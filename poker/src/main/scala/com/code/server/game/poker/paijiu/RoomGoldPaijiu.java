@@ -149,6 +149,7 @@ public class RoomGoldPaijiu extends RoomPaijiu {
         roomRecord.setTime(System.currentTimeMillis());
         roomRecord.setClubId(this.getClubId());
         roomRecord.setClubRoomModel(this.getClubRoomModel());
+        roomRecord.setGameType(this.gameType);
 
         for(Long l :userScoresForGold.keySet()){
             UserRecord userRecord = new UserRecord();
