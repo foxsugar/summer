@@ -15,6 +15,7 @@ public class RoomRecord {
     String clubId;
     String clubRoomModel;
     String name;
+    String gameType;
 
     public void addRecord(UserRecord userRecord) {
         records.add(userRecord);
@@ -89,6 +90,15 @@ public class RoomRecord {
 
     public RoomRecord setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public String getGameType() {
+        return gameType;
+    }
+
+    public RoomRecord setGameType(String gameType) {
+        this.gameType = gameType;
         return this;
     }
 }

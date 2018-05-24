@@ -48,7 +48,6 @@ public class GameInfoXXPB extends GameInfo {
      */
     public void setBanker(long winnerId) {
         if (winnerId == this.getFirstTurn()) {
-
             room.setBankerId(winnerId);
         } else {
             long nextId = nextTurnId(this.getFirstTurn());

@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Set;
 
 public class PlayerCardsInfoKD extends PlayerCardsInfoMj {
-	private static final int TING_MIN_SCORE = 6;
-	private static final int ZIMO_MIN_SCORE = 3;
-	private static final int DIANPAO_MIN_SCORE = 6;
+	protected static final int TING_MIN_SCORE = 6;
+	protected static final int ZIMO_MIN_SCORE = 3;
+	protected static final int DIANPAO_MIN_SCORE = 6;
 
 	@Override
 	public void init(List<String> cards) {
@@ -48,9 +48,13 @@ public class PlayerCardsInfoKD extends PlayerCardsInfoMj {
 		}
 		return false;
 	}
+
+
+
 	public boolean isHasChi(String card){
 		return false;
 	}
+
 	@Override
 	public boolean isCanGangAddThisCard(String card) {
 		//听之后 杠后的牌还能听
@@ -106,7 +110,7 @@ public class PlayerCardsInfoKD extends PlayerCardsInfoMj {
 	 * @param cardType
 	 * @return
 	 */
-	private boolean isCanTingAfterGang(List<String> cards,int cardType){
+	protected boolean isCanTingAfterGang(List<String> cards,int cardType){
 		//先删除这次杠的
 		removeCardByType(cards,cardType,4);
 		//去掉碰

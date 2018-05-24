@@ -28,7 +28,7 @@ public interface IAgentRedis {
     boolean isExit(long agentId);
 
 
-    void setAgentToken(String token, Map<String,String> data);
+    void setAgentToken(String token, Map<String,String> data,long timeout);
 
     Map<String,String> getAgentByToken(String token);
 

@@ -26,14 +26,15 @@ public class PlayerCardsInfoXXPB extends PlayerCardsInfoMj {
 	@Override
 	public void init(List<String> cards) {
 		super.init(cards);
-		specialHuScore.put(hu_清一色,1);
-		specialHuScore.put(hu_一条龙,1);
-		specialHuScore.put(hu_七小对,1);
-		specialHuScore.put(hu_十三幺,1);
-		specialHuScore.put(hu_杠上开花,1);
-		specialHuScore.put(hu_混一色,1);
-		specialHuScore.put(hu_字一色,1);
-		specialHuScore.put(hu_三碰,1);
+		specialHuScore.put(hu_清一色,4);
+		specialHuScore.put(hu_一条龙,2);
+		specialHuScore.put(hu_七小对,2);
+		specialHuScore.put(hu_十三幺,6);
+		specialHuScore.put(hu_杠上开花,2);
+		specialHuScore.put(hu_混一色,2);
+		specialHuScore.put(hu_字一色,6);
+		specialHuScore.put(hu_三碰,2);
+		specialHuScore.put(hu_豪华七小对,4);
 	}
 
 
@@ -102,36 +103,14 @@ public class PlayerCardsInfoXXPB extends PlayerCardsInfoMj {
 			System.out.println("胡牌拥有的类型: " + huCardType.specialHuList);
 			int s = huCardType.fan+0;
 			//2倍
-			if (huCardType.specialHuList.contains(hu_三碰)){
-				s+=2;
-			}
-			if (huCardType.specialHuList.contains(hu_混一色) ){
-				s+=2;
-			}
-			if (huCardType.specialHuList.contains(hu_七小对) ){
-				s+=2;
-			}
-			if (huCardType.specialHuList.contains(hu_一条龙) ){
-				s+=2;
+			if (isSanPeng){
+				s+=3;
 			}
 			if (huCardType.specialHuList.contains(hu_杠上开花) ){
-				s+=2;
+				s+=3;
 			}
 
-			//4倍
-			if (huCardType.specialHuList.contains(hu_清一色) ){
-				s+=4;
-			}
-			if (huCardType.specialHuList.contains(hu_豪华七小对) ){
-				s+=4;
-			}
-			//6倍
-			if (huCardType.specialHuList.contains(hu_字一色) ){
-				s+=6;
-			}
-			if (huCardType.specialHuList.contains(hu_十三幺) ){
-				s+=6;
-			}
+
 			huCardType.fan = s;
 			System.out.println("牌型的番数 : "+s);
 			if (s >= maxFan) {
@@ -156,7 +135,7 @@ public class PlayerCardsInfoXXPB extends PlayerCardsInfoMj {
 				this.fan = maxFan;
 			}else{//闲赢
 				for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
-					if(gameInfo.getFirstTurn() == userId){
+					if(gameInfo.getFirstTurn() == i){
 						gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 4 * maxFan * room.getMultiple());
 						room.setUserSocre(i, - 4 * maxFan * room.getMultiple());
 					}else{

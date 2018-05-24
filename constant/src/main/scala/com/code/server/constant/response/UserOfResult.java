@@ -36,6 +36,11 @@ public class UserOfResult {
     private int nullCowNum;
     private int winNum;
 
+    //选齐齐
+    private int numThree;
+    private int numFive;
+    private int numSix;
+
     private RoomStatistics roomStatistics;
 
     public long getUserId() {
@@ -241,5 +246,29 @@ public class UserOfResult {
 
     public void setWinNum(int winNum) {
         this.winNum = winNum;
+    }
+
+    public int getNumThree() {
+        return numThree;
+    }
+
+    public void setNumThree(int numThree) {
+        this.numThree = numThree;
+    }
+
+    public int getNumFive() {
+        return numFive;
+    }
+
+    public void setNumFive(int numFive) {
+        this.numFive = numFive;
+    }
+
+    public int getNumSix() {
+        return numSix;
+    }
+
+    public void setNumSix(int numSix) {
+        this.numSix = numSix;
     }
 }

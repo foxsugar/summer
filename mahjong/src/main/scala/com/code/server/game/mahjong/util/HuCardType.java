@@ -20,7 +20,7 @@ public class HuCardType implements HuType {
     public Set<Integer> anGang = new HashSet<>();
     public List<Integer> shun = new ArrayList<>();//顺中的第一个
     public List<Integer> ke = new ArrayList<>();
-    public List<Integer> hun2 = new ArrayList<>();
+    public List<Integer> hun2 = new ArrayList<>();//两个混
     public List<Integer> hun3 = new ArrayList<>();
     public boolean hunJiang = false;
     public int jiangOneHun = -1;
@@ -38,6 +38,7 @@ public class HuCardType implements HuType {
     public List<String> cards = new ArrayList<>();
     public String tingRemoveCard;
     public boolean isCheckYiZhangying = true;
+    public List<Integer> hunReplaceCard = new ArrayList<>();
 
 
     public HuCardType() {
