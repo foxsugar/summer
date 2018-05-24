@@ -28,10 +28,15 @@ import static org.junit.Assert.*;
 @SpringBootTest
 public class CardUtilsTest {
     @Test
+    public void transfromStringToCards1() throws Exception {
+    }
+
+    @Test
     public void transfromStringToCards() throws Exception {
 
 
-        List<Integer> list = CardUtils.transfromStringToCards("1_2_3");
+        List<Integer> list = CardUtils.transfromStringToCards("_-1_2____3_");
+
         System.out.println(list);
     }
 
@@ -433,6 +438,29 @@ public class CardUtilsTest {
         List<PlayerZhaGuZi> list = testStart();
         testTalk(list);
 
+    }
+
+    @Test
+    public void testA(){
+
+        Integer local = 9;
+
+        IfCard ifCard = new IfCard() {
+            @Override
+            public Map<Integer, Integer> cardDict() {
+                return CardUtils.getCardDict();
+            }
+        };
+
+        Integer client6 = CardUtils.local2Client(6, ifCard);
+        Integer client7 = CardUtils.local2Client(7, ifCard);
+        Integer client8 = CardUtils.local2Client(8, ifCard);
+        Integer client9 = CardUtils.local2Client(9, ifCard);
+
+        System.out.println(client6);
+        System.out.println(client7);
+        System.out.println(client8);
+        System.out.println(client9);
     }
 
 }
