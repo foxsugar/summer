@@ -9,6 +9,7 @@ import com.code.server.game.poker.hitgoldflower.GameHitGoldFlower
 import com.code.server.game.poker.paijiu.{GameGoldPaijiu, GamePaijiu}
 import com.code.server.game.poker.pullmice.GamePullMice
 import com.code.server.game.poker.tuitongzi.GameTuiTongZi
+import com.code.server.game.poker.xuanqiqi.GameXuanQiQi
 import com.code.server.game.poker.zhaguzi.GameZhaGuZi
 import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
@@ -32,6 +33,7 @@ object GameService {
       case x:GameTuiTongZi =>dispatchGameTTZService(userId,method,game.asInstanceOf[GameTuiTongZi],params)
       case x:GamePullMice =>dispatchGamePullMiceService(userId,method,game.asInstanceOf[GamePullMice],params)
       case x:GameZhaGuZi =>dispatchGameZhaGuZiService(userId,method,game.asInstanceOf[GameZhaGuZi],params)
+      case x:GameXuanQiQi =>dispatchGameXQQService(userId,method,game.asInstanceOf[GameXuanQiQi],params)
     }
 
   }
@@ -216,6 +218,26 @@ object GameService {
       val userId = params.path("userId").asLong(0)
       val cardType = params.path("type").asText()
       game.changeCard(userId,cardType);
+    case _ =>
+      ErrorCode.REQUEST_PARAM_ERROR
+  }
+
+  private def dispatchGameXQQService(userId:Long,method: String, game: GameXuanQiQi, params: JsonNode):Int = method match {
+    case "setMultiple" =>
+      val userId = params.path("userId").asLong(0)
+      val multiple = params.path("multiple").asInt()
+      game.setMultiple(userId,multiple);
+    case "xuan" =>
+      game.xuan(userId);
+    case "kou" =>
+      game.kou(userId);
+    case "play" =>
+      val userId = params.path("userId").asLong(0)
+      val cardNumber = params.path("cardNumber").asInt()
+      val card1 = params.path("card1").asInt()
+      val card2 = params.path("card2").asInt()
+      val card3 = params.path("card3").asInt()
+      game.play(userId,cardNumber,card1,card2,card3);
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }
