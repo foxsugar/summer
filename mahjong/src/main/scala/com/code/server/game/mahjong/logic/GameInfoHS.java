@@ -32,7 +32,7 @@ public class GameInfoHS extends GameInfoNew {
         this.cardSize = 13;
         this.playerSize = room.getPersonNumber();
         //不带风
-        if (PlayerCardsInfoMj.isHasMode(this.room.getMode(), 1)) {
+        if (!PlayerCardsInfoMj.isHasMode(this.room.getMode(), 1)) {
             remainCards.removeAll(CardTypeUtil.FENG_CARD);
             remainCards.removeAll(CardTypeUtil.ZI_CARD);
         }
