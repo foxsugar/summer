@@ -32,13 +32,48 @@ public class GameZhaGuZi extends Game {
 
     protected List<Map<String, Object>> leaveCards = new ArrayList<>();
 
+    public List<Map<String, Object>> getLeaveCards() {
+        return leaveCards;
+    }
+
+    public void setLeaveCards(List<Map<String, Object>> leaveCards) {
+        this.leaveCards = leaveCards;
+    }
+
     protected Integer status = ZhaGuZiConstant.START_GAME;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    protected long currentTalkId;
+
+    public long getCurrentTalkId() {
+        return currentTalkId;
+    }
+
+    public void setCurrentTalkId(long currentTalkId) {
+        this.currentTalkId = currentTalkId;
+    }
+
+    public IfCard ifCard = new IfCard() {
+        @Override
+        public Map<Integer, Integer> cardDict() {
+            return CardUtils.getCardDict();
+        }
+    };
 
     public IfaceGameVo toVo(long watchUser) {
 
         GameZhaGuZiVo vo = new GameZhaGuZiVo();
         BeanUtils.copyProperties(this, vo);
-        vo.cards.clear();
+//        vo.cards.clear();
+
+        List<Integer> aList = new ArrayList<>();
         for (int i = 0; i < this.cards.size(); i++){
 
             Integer card = this.cards.get(i);
@@ -48,8 +83,32 @@ public class GameZhaGuZi extends Game {
                     return CardUtils.getCardDict();
                 }
             });
-            vo.cards.add(ret);
+
+            aList.add(ret);
         }
+
+        vo.cards = aList;
+
+        for (PlayerZhaGuZi playerZhaGuZi : playerCardInfos.values()){
+            vo.playerCardInfos.put(playerZhaGuZi.getUserId(), (PlayerZhaGuZiVo) playerZhaGuZi.toVo());
+        }
+
+        vo.leaveCards = new ArrayList<>();
+
+        for (Map<String, Object> oo : this.leaveCards){
+
+            List<Integer> localCards = (List<Integer>) oo.get("cards");
+            List<Integer> clientCards = new ArrayList<>();
+
+            for (Integer l : localCards){
+                Integer c = CardUtils.local2Client(l, ifCard);
+                clientCards.add(c);
+            }
+
+            oo.put("cards", clientCards);
+
+        }
+
         return vo;
     }
 
@@ -59,6 +118,10 @@ public class GameZhaGuZi extends Game {
         this.users = users;
         initPlayer();
         initCards();
+
+        //通知其他人游戏已经开始
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameZhaGuZiBegin", "ok"), this.getUsers());
+
         deal();
 
         //第一局 红桃5 先说话
@@ -80,6 +143,7 @@ public class GameZhaGuZi extends Game {
         }
 
         talkStart(this.room.lastWinnderId);
+
     }
 
     //发牌
@@ -110,93 +174,146 @@ public class GameZhaGuZi extends Game {
                 playerZhaGuZi.cards.add(this.cards.get(0));
                 this.cards.remove(0);
                 if (playerZhaGuZi.cards.size() == count){
+                    int isSanJia = CardUtils.computeIsSanJia(this.room.getPersonNumber(), playerZhaGuZi);
+                    playerZhaGuZi.setSanJia(isSanJia);
                     currentId = nextTurnId(currentId);
+
                     break;
                 }
             }
 
-            list.add((PlayerZhaGuZiVo) playerZhaGuZi.toVo());
             //轮圈完毕
             if (currentId == lastId){
                 break;
             }
         }
+
+        for (PlayerZhaGuZi playerZhaGuZi : playerCardInfos.values()){
+
+            for (Integer card : playerZhaGuZi.cards){
+
+                if (card > 5 && card < 10){
+                    playerZhaGuZi.getRetain3List().add(card);
+                }
+            }
+            list.add((PlayerZhaGuZiVo) playerZhaGuZi.toVo());
+        }
+
         result.put("players", list);
         MsgSender.sendMsg2Player(serviceName, "deal", result, users);
+
     }
 
     //通知发话
     public void talkStart(long userId){
-        MsgSender.sendMsg2Player(serviceName, "talkStart","pleaseTalk",userId);
+
+        this.currentTalkId = userId;
+
+        PlayerZhaGuZi player = playerCardInfos.get(userId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("uid", player.getUserId());
+        result.put("sanJia", player.getSanJia());
+
+        Integer hongsan = CardUtils.string2Local("红桃-3", ifCard);
+        Integer fangpian = CardUtils.string2Local("方片-3", ifCard);
+
+        boolean giveup = false;
+        if (player.getRetain3List().contains(hongsan) && player.getRetain3List().contains(fangpian)){
+            giveup = true;
+        }
+
+        result.put("giveup", giveup);
+
+        MsgSender.sendMsg2Player(serviceName, "talkStart", result, userId);
     }
 
     //说话
-    public int talk(long userId, int op, int card){
+    public int talk(long userId, int op, String cards){
+
+        List<Integer> aList =  CardUtils.transfromStringToCards(cards);
+
+        //本地牌编号
+        List<Integer> bList = new ArrayList<>();
+
+        for (Integer v : aList){
+
+            if (v == -1){
+                bList.add(v);
+                continue;
+            }
+
+            Integer va = CardUtils.client2Local(v , ifCard);
+
+            bList.add(va);
+
+        }
+
         PlayerZhaGuZi playerZhaGuZi = this.playerCardInfos.get(userId);
 
         if (op != Operator.LIANG_SAN && op != Operator.ZHA_GU && op != Operator.BU_LIANG){
             return ErrorCode.OPERATOR_ERROR;
         }
 
-        if (playerZhaGuZi.getOp() != Operator.NOT_OPERATION){
+        if (playerZhaGuZi.getOp() != Operator.MEI_LIANG){
             //已经说话完毕了
             return ErrorCode.ALREADY_TALK;
         }
 
         //判断玩家说话是否正常
-        int isSanJia = playerZhaGuZi.getIsSanJia();
+
+        int isSanJia = playerZhaGuZi.getSanJia();
         //如果是3家
-        if (isSanJia == playerZhaGuZi.SAN_JIA){
 
-            if (op != Operator.BU_LIANG && op != Operator.LIANG_SAN){
+        if (op == Operator.BU_LIANG ){
+
+            if (bList.get(0) != -1){
                 return ErrorCode.OPERATOR_ERROR;
             }
 
-        }else {
+        }else if (op == Operator.LIANG_SAN) {
 
-            if (op != Operator.BU_LIANG && op != Operator.ZHA_GU){
+            //不是三家 操作了 亮3
+            if (isSanJia != PlayerZhaGuZi.SAN_JIA){
                 return ErrorCode.OPERATOR_ERROR;
             }
 
-        }
-
-        if (op == Operator.BU_LIANG && card != -1){
-            return ErrorCode.OPERATOR_ERROR;
-        }
-
-        // 说明牌是应该是3
-        if (card != -1){
-
-            Integer localCardValue = CardUtils.client2Local(card, new IfCard() {
-                @Override
-                public Map<Integer, Integer> cardDict() {
-                    return CardUtils.getCardDict();
-                }
-            });
-
-            //如果不是3
-            if (localCardValue != 4 && localCardValue != 5 && localCardValue != 6 && localCardValue != 7){
+            if (bList.contains(7) == false && bList.contains(9) == false){
                 return ErrorCode.OPERATOR_ERROR;
             }
 
-            //暂时只考虑五人的情况
-            if (op == Operator.LIANG_SAN){
-                if (card != 7 && card != 9){
+            for (Integer card : bList){
+                // 说明牌是应该是3
+//                Integer localCardValue = CardUtils.client2Local(card, ifCard);
+
+                if ((card - 2) / 4 != 1){
                     return ErrorCode.OPERATOR_ERROR;
                 }
             }
 
-            if (op == Operator.ZHA_GU){
-                if (card != 6 && card != 8){
+
+        }else if (op == Operator.ZHA_GU){
+
+            //不是股家操作了扎股
+            if (isSanJia != PlayerZhaGuZi.GU_JIA){
+                return ErrorCode.OPERATOR_ERROR;
+            }
+
+            for (Integer card : bList){
+                if (card != 6 && card != 8 && card != -1){
                     return ErrorCode.OPERATOR_ERROR;
                 }
             }
         }
 
         playerZhaGuZi.setOp(op);
-        playerZhaGuZi.getLiangList().add(card);
+        playerZhaGuZi.getLiangList().addAll(bList);
 
-        MsgSender.sendMsg2Player(serviceName, "talkResult","0",userId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("uid", userId);
+        result.put("op", op);
+        result.put("cards", aList);
+        MsgSender.sendMsg2Player(serviceName, "talkResult", result,users);
+        MsgSender.sendMsg2Player(serviceName, "talk","0",userId);
 
         long nextId = nextTurnId(userId);
         //全部说话完毕
@@ -206,6 +323,7 @@ public class GameZhaGuZi extends Game {
         }else {
             talkStart(nextId);
         }
+
         return 0;
     }
 
@@ -226,46 +344,7 @@ public class GameZhaGuZi extends Game {
 
         }else {
 
-            PlayerZhaGuZi hongTao = null;
-            PlayerZhaGuZi fangPian = null;
-            PlayerZhaGuZi heiTao = null;
-
-            for (PlayerZhaGuZi playerZhaGuZi : playerCardInfos.values()){
-
-                for (Integer card : playerZhaGuZi.cards){
-                    //红桃三
-                    if (card == 7){
-                        hongTao = playerZhaGuZi;
-                    }else if(card == 9){
-                        fangPian = playerZhaGuZi;
-                    }else if(card == 6){
-                        heiTao = playerZhaGuZi;
-                    }
-                }
-            }
-
-             if (this.room.getPersonNumber() == 5){
-                //红桃三方片三是一个人
-                if (hongTao == fangPian){
-                    status = ZhaGuZiConstant.GIVE_UP;
-                    MsgSender.sendMsg2Player(serviceName, "isGiveUpStart", "0", hongTao.userId);
-
-                }else {
-                    continuePlay();
-                }
-
-             }else {
-                 //红桃三方片三黑桃三是一个人
-                 if (hongTao == fangPian && hongTao == heiTao){
-                     status = ZhaGuZiConstant.GIVE_UP;
-                     MsgSender.sendMsg2Player(serviceName, "isGiveUpStart", "0", hongTao.userId);
-
-
-
-                 }else {
-                     continuePlay();
-                 }
-             }
+            continuePlay();
         }
     }
 
@@ -294,8 +373,18 @@ public class GameZhaGuZi extends Game {
             player = playerCardInfos.get(this.room.lastWinnderId);
         }
 
-        //提示出牌
-        MsgSender.sendMsg2Player(serviceName, "discardStart", "0", player.userId);
+
+        for (PlayerZhaGuZi playerZhaGuZi : playerCardInfos.values()){
+
+            if (playerZhaGuZi == player){
+                playerZhaGuZi.setSelfTurn(true);
+            }else {
+                playerZhaGuZi.setSelfTurn(false);
+            }
+        }
+
+//        //提示出牌
+        MsgSender.sendMsg2Player(serviceName, "discardStart", player.toVo(), player.userId);
 
     }
 
@@ -330,9 +419,134 @@ public class GameZhaGuZi extends Game {
             logger.info("股家赢");
         }
 
-        //具体算分
-        for (PlayerZhaGuZi playerZhaGuZi : aList){
+        double base = 0;
 
+        Integer hongtaosan = CardUtils.string2Local("红桃-3", ifCard);
+        Integer fangpiansan = CardUtils.string2Local("方片-3", ifCard);
+        Integer heitaosan = CardUtils.string2Local("黑桃-3", ifCard);
+        Integer meihuasan = CardUtils.string2Local("梅花-3", ifCard);
+
+        if (ret != 1){
+
+            //先算两三数和扎股数之和
+
+            //具体算分
+            for (PlayerZhaGuZi playerZhaGuZi : aList){
+
+                if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA){
+
+                    if (playerZhaGuZi.getOp() == Operator.LIANG_SAN){
+                        //如果是三家
+                        List<Integer> liangList = playerZhaGuZi.getLiangList();
+
+                        if (!liangList.contains(hongtaosan) && !liangList.contains(fangpiansan)){
+                            logger.warn("亮三错误，检查talk");
+                        }
+
+                        if (liangList.contains(hongtaosan)){
+                            base += 2;
+                        }
+
+                        if (liangList.contains(fangpiansan)){
+                            base += 1;
+                        }
+
+                        if (liangList.contains(heitaosan)){
+                            base += 1;
+                        }
+
+                        if (liangList.contains(meihuasan)){
+                            base += 1;
+                        }
+                    }
+
+                }else if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA){
+
+                    if (playerZhaGuZi.getOp() ==  Operator.ZHA_GU){
+                        base++;
+                        //如果是股家
+                        List<Integer> liangList = playerZhaGuZi.getLiangList();
+
+                        if (liangList.contains(meihuasan)){
+                            base++;
+                        }
+
+                        if (liangList.contains(heitaosan)){
+                            base++;
+                        }
+                    }
+
+                }
+            }
+
+            int count = 0;
+
+            if (ret == 0){
+
+                for (PlayerZhaGuZi playerZhaGuZi : aList){
+                    if ((playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA) && (!playerZhaGuZi.isOver())){
+                        count++;
+                    }
+                }
+            }else {
+                for (PlayerZhaGuZi playerZhaGuZi : aList){
+                    if ((playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) && (!playerZhaGuZi.isOver())){
+                        count++;
+                    }
+                }
+            }
+
+            logger.warn("{}家没出完" + count);
+
+            base += count;
+        }
+
+        if (ret == 0){
+            //三家赢
+            for (PlayerZhaGuZi playerZhaGuZi : aList){
+
+                double score = 0;
+
+                if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA){
+                    if (playerZhaGuZi.getRetain3List().contains(hongtaosan)){
+                        score += base * 2;
+                    }else if (playerZhaGuZi.getRetain3List().contains(fangpiansan)){
+                        score += base;
+                    }
+
+                }else if(playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA){
+                    score -= base;
+                }
+
+                playerZhaGuZi.setScore(score);
+
+            }
+
+        }else if (ret == 2){
+            //股家赢
+            for (PlayerZhaGuZi playerZhaGuZi : aList){
+
+                double score = 0;
+
+                if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA){
+                    if (playerZhaGuZi.getRetain3List().contains(hongtaosan)){
+                        score -= base * 2;
+                    }else if (playerZhaGuZi.getRetain3List().contains(fangpiansan)){
+                        score -= base;
+                    }
+
+                }else if(playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA){
+                    score += base;
+                }
+
+                playerZhaGuZi.setScore(score);
+
+            }
+        }
+
+        //算分
+        for (PlayerZhaGuZi playerZhaGuZi : aList){
+            this.room.addUserSocre(playerZhaGuZi.getUserId(), playerZhaGuZi.getScore());
         }
 
         this.pushScoreChange();
@@ -422,7 +636,7 @@ public class GameZhaGuZi extends Game {
         boolean isOver1 = true;
         for (PlayerZhaGuZi p : playerCardInfos.values()){
 
-            if (p.getIsSanJia() == PlayerZhaGuZi.SAN_JIA){
+            if (p.getSanJia() == PlayerZhaGuZi.SAN_JIA){
                 if (p.isOver() == false){
                     isOver1 = false;
                     break;
@@ -433,7 +647,7 @@ public class GameZhaGuZi extends Game {
         boolean isOver2 = true;
         for (PlayerZhaGuZi p : playerCardInfos.values()){
 
-            if (p.getIsSanJia() == PlayerZhaGuZi.GU_JIA){
+            if (p.getSanJia() == PlayerZhaGuZi.GU_JIA){
                 if (p.isOver() == false){
                     isOver2 = false;
                     break;
@@ -466,7 +680,17 @@ public class GameZhaGuZi extends Game {
 
         playerZhaGuZi.setCanJieFeng(ret);
 
-                MsgSender.sendMsg2Player(serviceName, "discardStart", playerZhaGuZi.toVo(), nextID, new IfaceMsgSender() {
+        //是否轮到自己出牌
+        for (PlayerZhaGuZi ppp : playerCardInfos.values()){
+
+            if (ppp == playerZhaGuZi){
+                ppp.setSelfTurn(true);
+            }else {
+                ppp.setSelfTurn(false);
+            }
+        }
+
+        MsgSender.sendMsg2Player(serviceName, "discardStart", playerZhaGuZi.toVo(), nextID, new IfaceMsgSender() {
             @Override
             public void callback(Object object, long userId) {
 
@@ -512,7 +736,22 @@ public class GameZhaGuZi extends Game {
     //出牌协议
     public int beingDiscard(long uid, int op, String li){
 
-        List<Integer> list = CardUtils.transfromStringToCards(li);
+        List<Integer> clientList = CardUtils.transfromStringToCards(li);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("cards", clientList);
+        result.put("op", op);
+        result.put("uid", uid);
+
+        List<Integer> list = new ArrayList<>();
+        for (Integer value : clientList){
+            if (value == -1){
+                continue;
+            }
+            Integer local = CardUtils.client2Local(value, ifCard);
+            list.add(local);
+        }
+
         PlayerZhaGuZi playerZhaGuZi = playerCardInfos.get(uid);
         //如果过的话 提示下一个人出牌
         if (op == Operator.PASS){
@@ -521,31 +760,75 @@ public class GameZhaGuZi extends Game {
                 return MUST_JIE_FENG;
             }
 
+            List<PlayerZhaGuZiVo> bList = new ArrayList<>();
+            for (PlayerZhaGuZi player : playerCardInfos.values()){
+                PlayerZhaGuZiVo vo = (PlayerZhaGuZiVo) player.toVo();
+                bList.add(vo);
+            }
+            result.put("players", bList);
+
             playerZhaGuZi.opList.add(op);
             MsgSender.sendMsg2Player(serviceName, "discardResult", "0", uid);
+
+            //
+            Map<String, Object> map = new HashMap();
+            map.put("uid", uid);
+            map.put("op", op);
+            map.put("cards", list);
+            leaveCards.add(map);
+
             noticeDiscardStart(uid);
         }
         //管上
         else if(op == Operator.GUAN_SHANG){
 
-            boolean ret = false;
-
             Map<String, Object> last = null;
             if (leaveCards.size() != 0){
-                last = leaveCards.get(leaveCards.size() - 1);
+//                last = leaveCards.get(leaveCards.size() - 1);
+
+                while (true){
+
+                    int lastIndex = leaveCards.size() - 1;
+                    if (lastIndex >= 0){
+
+                        last = leaveCards.get(lastIndex);
+                        Integer lastOp = (Integer) last.get("op");
+
+                        if (lastOp != Operator.PASS){
+                            break;
+                        }
+
+
+                    }else {
+
+                        System.out.println("没有找到 报异常 -------");
+                        break;
+                    }
+
+                }
+
             }
 
             //第一次出牌
             if (last == null){
-                playerZhaGuZi.opList.add(op);
-                MsgSender.sendMsg2Player(serviceName, "discardResult", "0", uid);
 
+                List<PlayerZhaGuZiVo> bList = new ArrayList<>();
+                for (PlayerZhaGuZi player : playerCardInfos.values()){
+                    PlayerZhaGuZiVo vo = (PlayerZhaGuZiVo) player.toVo();
+                    bList.add(vo);
+                }
+                result.put("players", bList);
+
+                playerZhaGuZi.opList.add(op);
+                MsgSender.sendMsg2Player(serviceName, "discardResult", result, users);
+                MsgSender.sendMsg2Player(serviceName, "discard", 0, uid);
                 for (Integer a : list){
                     playerZhaGuZi.cards.remove(a);
                 }
 
                 Map<String, Object> map = new HashMap();
                 map.put("uid", uid);
+                map.put("op", op);
                 map.put("cards", list);
                 leaveCards.add(map);
                 noticeDiscardStart(uid);
@@ -561,36 +844,11 @@ public class GameZhaGuZi extends Game {
                 }
 
                 playerZhaGuZi.opList.add(op);
-                //是不是接风
-                PlayerZhaGuZi lastPlayer = playerCardInfos.get(lastTurn(uid));
-
-//                boolean isFeng = false;
-//                //假如上一个人出牌完毕
-//                if (lastPlayer.isOver()){
-//                    boolean ret1 = playerZhaGuZi.opList.size() - lastPlayer.opList.size() == 1 ? true : false;
-//                    boolean ret2 = true;
-//
-//                    for (PlayerZhaGuZi p : playerCardInfos.values()){
-//
-//                        if (p.isOver() == true){
-//                            continue;
-//                        }
-//                        if ((p.opList.get(p.opList.size() - 1) != Operator.PASS)){
-//                            ret2 = false;
-//                            break;
-//                        }
-//                    }
-//
-//                    //轮到自己接风
-//                    if (ret1 && ret2){
-//                        isFeng = true;
-//                    }
-//                }
 
                 boolean isFeng = playerZhaGuZi.isCanJieFeng();
 
                 if (isFeng == false){
-                    if (res == 0 || res == 1){
+                    if (res == 1 || res == 2){
                         return ErrorCode.CAN_NOT_DISCARD;
                     }
                 }
@@ -613,20 +871,19 @@ public class GameZhaGuZi extends Game {
                     playerZhaGuZi.rank += 1;
                 }
 
-                List<Object> resList = new ArrayList<>();
+                List<PlayerZhaGuZiVo> bList = new ArrayList<>();
                 for (PlayerZhaGuZi player : playerCardInfos.values()){
-                    Map<Object, Object> result = new HashMap<>();
-                    result.put("uid", player.userId);
-                    result.put("player", player.toVo());
-                    resList.add(resList);
+                    PlayerZhaGuZiVo vo = (PlayerZhaGuZiVo) player.toVo();
+                    bList.add(vo);
                 }
+                result.put("players", bList);
 
-                Map resultMap = new HashMap();
-                resultMap.put("resList", resList);
-                MsgSender.sendMsg2Player(serviceName, "discardResult", resultMap, uid);
+                MsgSender.sendMsg2Player(serviceName, "discardResult", result, users);
+                MsgSender.sendMsg2Player(serviceName, "discard", 0, uid);
 
                 Map<String, Object> map = new HashMap();
                 map.put("uid", uid);
+                map.put("op", op);
                 map.put("cards", list);
                 leaveCards.add(map);
                 noticeDiscardStart(uid);
@@ -648,7 +905,8 @@ public class GameZhaGuZi extends Game {
 
     public int isGiveUp(long uid, boolean isGiveUp){
 
-        MsgSender.sendMsg2Player(serviceName, "isGiveUpResult", "0", uid);
+        MsgSender.sendMsg2Player(serviceName, "isGiveUpResult", "0", users);
+        MsgSender.sendMsg2Player(serviceName, "isGiveUp", "0", uid);
 
         if (isGiveUp){
             computeGiveUp(uid);
