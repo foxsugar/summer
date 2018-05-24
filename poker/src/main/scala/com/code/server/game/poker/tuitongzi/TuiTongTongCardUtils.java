@@ -17,8 +17,7 @@ public class TuiTongTongCardUtils extends TuiTongZiCardUtils{
         if (type == Ling){
             return true;
         }
-
-        return (mAIsBiggerThanB(pZhuang, pXian) != 2);
+        return (TuiTongTongCardUtils.mAIsBiggerThanB(pZhuang, pXian) != 2);
     }
 
     public static int mAIsBiggerThanB(List<Integer> listA, List<Integer> listB) throws Exception {

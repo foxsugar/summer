@@ -291,6 +291,7 @@ public class GameTuiTongZi extends Game{
     }
 
     public void initCards(){
+
         // 如果打完4局还剩4张牌
         if (room.cards.size() <= 4){
             room.cards.clear();
