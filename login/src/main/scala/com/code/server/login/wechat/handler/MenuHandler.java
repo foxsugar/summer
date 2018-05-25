@@ -3,8 +3,15 @@ package com.code.server.login.wechat.handler;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.db.Service.GameAgentService;
 import com.code.server.login.config.ServerConfig;
+import com.code.server.login.config.WechatConfig;
+import com.code.server.login.util.Sha1Util;
 import com.code.server.login.wechat.builder.TextBuilder;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.IdWorker;
+import com.code.server.util.Utils;
+import com.github.binarywang.wxpay.bean.entpay.EntPayRequest;
+import com.github.binarywang.wxpay.bean.entpay.EntPayResult;
+import com.github.binarywang.wxpay.service.WxPayService;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -20,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Random;
@@ -37,6 +45,22 @@ public class MenuHandler extends AbstractHandler {
 
     @Autowired
     private ServerConfig serverConfig;
+
+    @Autowired
+    private WxPayService payService;
+
+    @Autowired
+    private WechatConfig wechatConfig;
+
+    private IdWorker idWorker;
+
+
+    private long createOrderId() {
+        if (idWorker == null) {
+            idWorker = new IdWorker(serverConfig.getServerId(), 1);
+        }
+        return idWorker.nextId();
+    }
 
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage,
@@ -103,6 +127,7 @@ public class MenuHandler extends AbstractHandler {
         try {
             wxMpUser = wxService.getUserService().userInfo(wxMessage.getFromUser());
             String unionId = wxMpUser.getUnionId();
+            String openId = wxMpUser.getOpenId();
             Long agentId = gameAgentService.getGameAgentDao().getUserIdByUnionId(unionId);
             if (agentId == null || agentId == 0) {
                 return new TextBuilder().build("代理不存在", wxMessage, wxService);
@@ -114,8 +139,48 @@ public class MenuHandler extends AbstractHandler {
                 return new TextBuilder().build("金额小于100,不能提现", wxMessage, wxService);
             }
 
+
+
+            double amount = agentBean.getRebate() * 100;
+
+            long tradeId = createOrderId();
+
+            String ip = Utils.getLocalIp();
+
+            EntPayRequest wxEntPayRequest = new EntPayRequest();
+            wxEntPayRequest.setAppid(wechatConfig.getMpAppId());
+            wxEntPayRequest.setMchId(wechatConfig.getMchId());
+            wxEntPayRequest.setNonceStr(Sha1Util.getNonceStr());
+            wxEntPayRequest.setPartnerTradeNo(""+tradeId);
+            wxEntPayRequest.setOpenid(openId);
+            wxEntPayRequest.setCheckName("NO_CHECK");
+            //金额 为分
+            wxEntPayRequest.setAmount((int)amount);
+            wxEntPayRequest.setDescription("提现");
+            wxEntPayRequest.setSpbillCreateIp(ip);
+
+            try {
+                EntPayResult wxEntPayResult = payService.getEntPayService().entPay(wxEntPayRequest);
+                if ("SUCCESS".equals(wxEntPayResult.getResultCode().toUpperCase())
+                        && "SUCCESS".equals(wxEntPayResult.getReturnCode().toUpperCase())) {
+                    this.logger.info("企业对个人付款成功！\n付款信息：\n" + wxEntPayResult.toString());
+
+
+
+                } else {
+                    this.logger.error("err_code: " + wxEntPayResult.getErrCode()
+                            + "  err_code_des: " + wxEntPayResult.getErrCodeDes());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+
         } catch (WxErrorException e) {
             logger.error("提现出错", e);
+        } catch (SocketException e) {
+            e.printStackTrace();
         }
         return null;
     }

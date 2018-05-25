@@ -16,9 +16,6 @@ import java.util.Date;
 public class Charge {
 
     @Id
-//    @GeneratedValue(generator = "system-uuid")
-//    @GenericGenerator(name="system-uuid", strategy = "uuid")
-//    @Column(name = "orderId", length = 32)
     private String orderId;
     private String transaction_id;
     private long userid;
@@ -33,7 +30,7 @@ public class Charge {
     private String share_content;//分享内容
     private String share_area;//分享区域
     private double money_point;//房卡
-    private int chargeType;
+    private int chargeType;//充值类型
     private String username;//玩家名称
     private String recharge_source;//1 微信  2 支付宝  3 分享赠送  4 充值卡  5绑定赠送  11.提现
     private double charge_before_money;
