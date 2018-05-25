@@ -2,9 +2,11 @@ package com.code.server.login.action;
 
 import com.code.server.constant.game.AgentBean;
 import com.code.server.db.Service.GameAgentService;
+import com.code.server.db.Service.GameAgentWxService;
 import com.code.server.db.Service.RecommendService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.model.GameAgent;
+import com.code.server.db.model.GameAgentWx;
 import com.code.server.db.model.Recommend;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.service.AgentService;
@@ -70,13 +72,14 @@ public class WechatAction extends Cors {
     @Autowired
     private WxMpMessageRouter router;
 
-
+    @Autowired
+    private AgentRedisService agentRedisService;
 
     @Autowired
-    AgentRedisService agentRedisService;
+    private RecommendService recommendService;
 
     @Autowired
-    RecommendService recommendService;
+    private GameAgentWxService gameAgentWxService;
 
     private static final String AGENT_COOKIE_NAME = "AGENT_TOKEN";
 
@@ -237,7 +240,7 @@ public class WechatAction extends Cors {
         cookie.setMaxAge(30);
         response.addCookie(cookie);
 
-        String url = MessageFormat.format("http://" + serverConfig.getDomain() +"/agent/#/sharelink?id={0}&sid={1}", agentId, sid);
+        String url = MessageFormat.format("http://" + serverConfig.getDomain() + "/agent/#/sharelink?id={0}&sid={1}", agentId, sid);
 
         response.sendRedirect(url);
 
@@ -298,7 +301,7 @@ public class WechatAction extends Cors {
         //设置cookie
         Map<String, String> agent = getAgentByToken(request);
         if (agent == null) {
-            setTokenCookie2Redis(wxMpUser,response,agentId);
+            setTokenCookie2Redis(wxMpUser, response, agentId);
         }
 
         String url = "http://" + serverConfig.getDomain() + "/agent/#/index";
@@ -334,14 +337,14 @@ public class WechatAction extends Cors {
         //设置cookie
         Map<String, String> agent = getAgentByToken(request);
         if (agent == null) {
-            setTokenCookie2Redis(wxMpUser,response,userId);
+            setTokenCookie2Redis(wxMpUser, response, userId);
         }
 
         String url = "http://" + serverConfig.getDomain() + "/agent/#/charge";
         response.sendRedirect(url);
     }
 
-    public void setTokenCookie2Redis(WxMpUser wxMpUser,HttpServletResponse response,long agentId){
+    public void setTokenCookie2Redis(WxMpUser wxMpUser, HttpServletResponse response, long agentId) {
         Map<String, String> rd = new HashMap<>();
         rd.put("agentId", "" + agentId);
         rd.put("openId", wxMpUser.getOpenId());
@@ -350,7 +353,7 @@ public class WechatAction extends Cors {
         int timeout = 1800;//30分钟
         //设置redis
         String token = "" + IdWorker.getDefaultInstance().nextId();
-        RedisManager.getAgentRedisService().setAgentToken(token, rd,timeout);
+        RedisManager.getAgentRedisService().setAgentToken(token, rd, timeout);
 
         //todo token
         //todo 过期时间
@@ -363,7 +366,7 @@ public class WechatAction extends Cors {
 
     public static Map<String, String> getAgentByToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
-        if(cookies == null) return null;
+        if (cookies == null) return null;
         Cookie cookie = null;
         for (Cookie c : cookies) {
             if (AGENT_COOKIE_NAME.equals(c.getName())) {
@@ -390,53 +393,62 @@ public class WechatAction extends Cors {
 
     @RequestMapping("/becomeAgent")
     @ResponseBody
-    public AgentResponse becomeAgent(long userId){
+    public AgentResponse becomeAgent(long userId) {
 
         AgentResponse agentResponse = new AgentResponse();
 
 
         AgentBean agentBean = agentRedisService.getAgentBean(userId);
 
+        //todo 之前是代理
         if (agentBean != null) {
-            //todo 之前是代理
+            return new AgentResponse().setCode(ErrorCode.ALREADY_AGENT);
         }
-
-
 
 
         //之前不是代理
-        if (agentBean == null) {
-            GameAgent gameAgent = new GameAgent();
-            gameAgent.setId(userId);
 
-            //推荐
-            String openId = userService.getUserDao().getOpenIdById(userId);
-            Recommend recommend = recommendService.getRecommendDao().findOne(openId);
+        GameAgent gameAgent = new GameAgent();
+        gameAgent.setId(userId);
 
-            //有推荐
-            if (recommend != null) {
-                long agentId = recommend.getAgentId();
+        //推荐
+        String unionId = userService.getUserDao().getOpenIdById(userId);
+        Recommend recommend = recommendService.getRecommendDao().findOne(unionId);
 
-                AgentBean parent = agentRedisService.getAgentBean(agentId);
-                //上级代理存在
-                if (parent != null) {
-                    //和上级的partner是同一个
-                    gameAgent.setPartnerId(parent.getPartnerId());
-                    gameAgent.setParentId(agentId);
-                    gameAgent.setIsPartner(0);
+        GameAgentWx gameAgentWx = gameAgentWxService.getGameAgentWxDao().findOne(unionId);
 
-                    //上级代理加一个child
-                    parent.getChildList().add(userId);
-                }
-            }
-
-            //保存到数据库
-            gameAgentService.getGameAgentDao().save(gameAgent);
-            agentBean = AgentService.gameAgent2AgentBean(gameAgent);
-            //保存的reids
-            agentRedisService.setAgent2Redis(agentBean);
-
+        if (gameAgentWx == null) {
+            return new AgentResponse().setCode(ErrorCode.NOT_WX_USER);
         }
+
+        String openId= gameAgentWx.getOpenId();
+
+        gameAgent.setOpenId(openId);
+        gameAgent.setId(userId);
+        gameAgent.setUnionId(unionId);
+        //有推荐
+        if (recommend != null) {
+            long parentId = recommend.getAgentId();
+
+            AgentBean parent = agentRedisService.getAgentBean(parentId);
+            //上级代理存在
+            if (parent != null) {
+                //和上级的partner是同一个
+                gameAgent.setPartnerId(parent.getPartnerId());
+                gameAgent.setParentId(parentId);
+                gameAgent.setIsPartner(0);
+                //上级代理加一个child
+                parent.getChildList().add(userId);
+            }
+        }
+
+        //保存到数据库
+        gameAgentService.getGameAgentDao().save(gameAgent);
+        agentBean = AgentService.gameAgent2AgentBean(gameAgent);
+        //保存的reids
+        agentRedisService.setAgent2Redis(agentBean);
+
+
         return agentResponse;
     }
 
