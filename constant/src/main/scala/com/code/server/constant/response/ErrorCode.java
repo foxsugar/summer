@@ -125,6 +125,7 @@ public class ErrorCode {
 	public static final int CAN_NOT_DISCARD = 900002;//管不了
 	public static final int ALREADY_TALK = 900003;//已经说完话话了
 	public static final int OPERATOR_ERROR = 900004;//操作错误
+	public static final int MUST_HONGTAO_FIVE = 900005;//必须出红桃5
 
 	static class ErrorCodeRepeatChecker {
     	public void check() {

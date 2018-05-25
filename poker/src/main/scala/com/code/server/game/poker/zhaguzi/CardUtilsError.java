@@ -13,4 +13,6 @@ public interface CardUtilsError {
     public static final int MUST_JIE_FENG = -3;
     //操作失败
     public static final int OPERATOR_ERROR = ErrorCode.OPERATOR_ERROR;
+
+    public static final int MUST_HONGTAO_FIVE = ErrorCode.MUST_HONGTAO_FIVE;
 }

@@ -18,6 +18,36 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 public class TuiTongTongCardUtilsTest {
     @Test
+    public void zhuangIsBiggerThanXian() throws Exception {
+    }
+
+    @Test
+    public void mAIsBiggerThanB1() throws Exception {
+
+        // 87   // 96
+
+        List<Integer> aList = new ArrayList<>();
+        aList.add(24);
+        aList.add(28);
+
+        List<Integer> bList = new ArrayList<>();
+        bList.add(32);
+        bList.add(20);
+
+        PlayerTuiTongZi playerZ = new PlayerTuiTongZi();
+        PlayerTuiTongZi playerX = new PlayerTuiTongZi();
+
+        playerX.setPlayerCards(bList);
+        playerZ.setPlayerCards(aList);
+
+        boolean  rrr =  TuiTongTongCardUtils.zhuangIsBiggerThanXian(playerZ, playerX);
+
+        System.out.println(rrr);
+
+
+    }
+
+    @Test
     public void mAIsBiggerThanB() throws Exception {
 
         List<Integer> aList = new ArrayList<>();

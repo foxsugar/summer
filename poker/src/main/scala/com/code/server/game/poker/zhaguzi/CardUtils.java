@@ -51,10 +51,12 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
         }
     };
 
-    public static int computeCardType(PlayerZhaGuZi playerZhaGuZi){
+    /*
+    * param1 player
+    * param2 要出的牌
+    * */
+    public static int computeCardType(PlayerZhaGuZi playerZhaGuZi, List<Integer> aList){
 
-        List<Integer> aList = new ArrayList<>();
-        aList.addAll(playerZhaGuZi.cards);
         Collections.sort(aList);
 
         if (aList.size() == 1){
@@ -99,6 +101,7 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
                 return ERROR;
             }
         }
+
         boolean isFind = true;
 
         Integer last = aList.get(0);
@@ -115,14 +118,13 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
             if (aList.size() == 3){
                 return SAN_ZHA;
-            }else {
+            }else if (aList.size() == 4){
                 return SI_ZHA;
             }
 
-        }else {
-            return ERROR;
         }
 
+        return ERROR;
     }
 
     //要考虑 亮三 不亮3 5人玩法， 六人玩法
@@ -131,8 +133,8 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
         List<Integer> aList = cards1;
         List<Integer> bList = cards2;
 
-        int typeA = computeCardType(player1);
-        int typeB = computeCardType(player2);
+        int typeA = computeCardType(player1, cards1);
+        int typeB = computeCardType(player2, cards2);
 
         List<Integer> lList = new ArrayList<>();
         List<Integer> rList = new ArrayList<>();
@@ -191,58 +193,62 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
             //五人玩法中 红三能不能打4
             if (player1.getRoomPersonNum() == 5){
 
-                //判断下红桃三可以管4
-                if (lList.get(0) == 7){
-                    if (b == 0){
-                        return WIN;
-                    }
-                }
-                //判断下红桃三可以管4
-                if (rList.get(0) == 7){
-                    if (a == 0){
-                        return WIN;
-                    }
-                }
+                //如果是单子
+                if (typeA == DAN_ZI){
 
-                //方片三是否可以管4
-                if (lList.get(0) == 9){
-
-                    boolean isLiang = false;
-                    if (player1.getLiangList().size() != 0){
-
-                        Integer liang = player1.getLiangList().get(0);
-
-                        //亮的是 方片饭
-                        if (liang == 9){
-                            isLiang = true;
-
+                    //判断下红桃三可以管4
+                    if (lList.get(0) == 7){
+                        if (b == 0){
+                            return WIN;
                         }
                     }
 
-                    //如果亮3的情况下
-                    if (b == 0 && isLiang){
-                        return WIN;
-                    }
-                }
-                //方片三是否可以管4
-                if (rList.get(0) == 9){
-
-
-                    boolean isLiang = false;
-                    if (player2.getLiangList().size() != 0){
-
-                        Integer liang = player2.getLiangList().get(0);
-
-                        //亮的是 方片饭
-                        if (liang == 9){
-                            isLiang = true;
-
+                    //判断下红桃三可以管4
+                    if (rList.get(0) == 7){
+                        if (a == 0){
+                            return LOSE;
                         }
                     }
 
-                    if (a == 0){
-                        return WIN;
+                    //方片三是否可以管4
+                    if (lList.get(0) == 9){
+
+                        boolean isLiang = false;
+                        if (player1.getLiangList().size() != 0){
+
+                            //亮的是 方片饭
+                            if (player1.getLiangList().contains(9)){
+                                isLiang = true;
+                            }
+
+                        }
+
+                        //如果亮3的情况下
+                        if (b == 0 && isLiang){
+                            return WIN;
+                        }
                     }
+                    //方片三是否可以管4
+                    if (rList.get(0) == 9){
+
+
+                        boolean isLiang = false;
+                        if (player2.getLiangList().size() != 0){
+
+                            Integer liang = player2.getLiangList().get(0);
+
+                            //亮的是 方片饭
+                            if (liang == 9){
+                                isLiang = true;
+
+                            }
+                        }
+
+                        if (a == 0){
+                            return LOSE;
+                        }
+                    }
+
                 }
 
             }
@@ -489,7 +495,8 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
                 pFirst = p;
             }
 
-            if (p.rank == p.getRoomPersonNum()){
+            //最有一个人没出完牌 所以排名是没有的
+            if (p.rank == 0){
                 pFinal = p;
             }
         }
