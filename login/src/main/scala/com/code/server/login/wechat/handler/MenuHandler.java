@@ -1,7 +1,9 @@
 package com.code.server.login.wechat.handler;
 
 import com.code.server.constant.game.AgentBean;
+import com.code.server.db.Service.ChargeService;
 import com.code.server.db.Service.GameAgentService;
+import com.code.server.db.model.Charge;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.config.WechatConfig;
 import com.code.server.login.util.Sha1Util;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.SocketException;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 
@@ -51,6 +54,9 @@ public class MenuHandler extends AbstractHandler {
 
     @Autowired
     private WechatConfig wechatConfig;
+
+    @Autowired
+    private ChargeService chargeService;
 
     private IdWorker idWorker;
 
@@ -139,9 +145,15 @@ public class MenuHandler extends AbstractHandler {
                 return new TextBuilder().build("金额小于100,不能提现", wxMessage, wxService);
             }
 
+            double rebate = agentBean.getRebate();
+            //不能大于20000
+            if (rebate > 20000) {
 
+            }
 
-            double amount = agentBean.getRebate() * 100;
+            //todo 扣 7%
+
+            double amount = rebate * 100;
 
             long tradeId = createOrderId();
 
@@ -166,6 +178,25 @@ public class MenuHandler extends AbstractHandler {
                     this.logger.info("企业对个人付款成功！\n付款信息：\n" + wxEntPayResult.toString());
 
 
+                    RedisManager.getAgentRedisService().addRebate(agentId, -rebate);
+
+                    //充值记录
+                    Charge charge = new Charge();
+                    charge.setOrderId(""+tradeId);
+                    charge.setUserid(agentId);
+                    charge.setMoney(rebate);
+                    charge.setMoney_point(rebate);
+                    charge.setStatus(1);
+                    charge.setSp_ip(ip);
+                    charge.setRecharge_source("11");
+                    //充值类型
+                    charge.setChargeType(0);
+                    charge.setCreatetime(new Date());
+
+                    chargeService.save(charge);
+
+                    //发送消息
+                    return new TextBuilder().build("提现成功,共提现"+rebate, wxMessage, wxService);
 
                 } else {
                     this.logger.error("err_code: " + wxEntPayResult.getErrCode()
