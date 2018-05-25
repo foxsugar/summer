@@ -32,6 +32,9 @@ object MahjongRoomService {
         val haveTing = paramsjSONObject.path("haveTing").asBoolean(false)
         val clubId = paramsjSONObject.path("clubId").asText
         val clubRoomModel = paramsjSONObject.path("clubRoomModel").asText
+        val goldRoomType = paramsjSONObject.path("goldRoomType").asDouble()
+        val goldRoomPermission = paramsjSONObject.path("goldRoomPermission").asInt()
+
         code = createRoomByUser(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType,roomType,mustZimo,isHasYipaoduoxiang,canChi,haveTing,clubId,clubRoomModel)
 
       }
@@ -49,6 +52,8 @@ object MahjongRoomService {
         val haveTing = paramsjSONObject.path("haveTing").asBoolean(false)
         val clubId = paramsjSONObject.path("clubId").asText
         val clubRoomModel = paramsjSONObject.path("clubRoomModel").asText
+        val goldRoomType = paramsjSONObject.path("goldRoomType").asDouble()
+        val goldRoomPermission = paramsjSONObject.path("goldRoomPermission").asInt()
         code = createRoomByEachUser(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType,roomType,mustZimo,isHasYipaoduoxiang,canChi,haveTing,clubId,clubRoomModel)
 
       }
@@ -66,6 +71,8 @@ object MahjongRoomService {
         val haveTing = paramsjSONObject.path("haveTing").asBoolean(false)
         val clubId = paramsjSONObject.path("clubId").asText
         val clubRoomModel = paramsjSONObject.path("clubRoomModel").asText
+        val goldRoomType = paramsjSONObject.path("goldRoomType").asDouble()
+        val goldRoomPermission = paramsjSONObject.path("goldRoomPermission").asInt()
         code = createRoomButNotInRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType,roomType,mustZimo,isHasYipaoduoxiang,canChi,haveTing,clubId,clubRoomModel)
 
       }

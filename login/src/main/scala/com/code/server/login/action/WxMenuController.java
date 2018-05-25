@@ -1,5 +1,6 @@
 package com.code.server.login.action;
 
+import com.code.server.login.config.ServerConfig;
 import me.chanjar.weixin.common.bean.menu.WxMenu;
 import me.chanjar.weixin.common.bean.menu.WxMenuButton;
 import me.chanjar.weixin.common.exception.WxErrorException;
@@ -27,6 +28,9 @@ public class WxMenuController implements WxMpMenuService {
   @Autowired
   private WxMpService wxService;
 
+  @Autowired
+  private ServerConfig serverConfig;
+
   /**
    * <pre>
    * 自定义菜单创建接口
@@ -52,10 +56,10 @@ public class WxMenuController implements WxMpMenuService {
 
 
     WxMenuButton button11 = new WxMenuButton();
-    button11.setType(MenuButtonType.CLICK);
+    button11.setType(MenuButtonType.VIEW);
     button11.setName("下载游戏");
-//    button11.setUrl("http://v.qq.com/");
-    button11.setKey("DOWNLOAD_GAME");
+    button11.setUrl("http://"+ serverConfig.getDomain() +"/agent/#/download");
+//    button11.setKey("DOWNLOAD_GAME");
 
     WxMenuButton button12 = new WxMenuButton();
     button12.setType(MenuButtonType.CLICK);
@@ -75,7 +79,7 @@ public class WxMenuController implements WxMpMenuService {
 //    button21.setType(MenuButtonType.CLICK);
     button21.setName("进入后台");
 //    button21.setKey("LOGIN_AGENT");
-    button21.setUrl("http://fap4k2.natappfree.cc/game/wechat/authorize?returnUrl=loginAgent");
+    button21.setUrl("http://"+ serverConfig.getDomain() +"/game/wechat/authorize?returnUrl=loginAgent");
 //    button11.setKey("DOWNLOAD_GAME");
 
     WxMenuButton button22 = new WxMenuButton();
@@ -96,7 +100,7 @@ public class WxMenuController implements WxMpMenuService {
     WxMenuButton button3 = new WxMenuButton();
     button3.setName("充值");
     button3.setType(MenuButtonType.VIEW);
-    button3.setUrl("http://fap4k2.natappfree.cc/game/wechat/authorize?returnUrl=charge");
+    button3.setUrl("http://"+ serverConfig.getDomain() +"/game/wechat/authorize?returnUrl=charge");
 
 
 

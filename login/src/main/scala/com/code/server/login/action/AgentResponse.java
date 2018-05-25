@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class AgentResponse implements ErrorCode{
     public int code;
-    public Map<String, Object> data = new HashMap<>();
+    public Object data = new HashMap<>();
 
 
     public AgentResponse(int code, List<?> list) {
@@ -38,11 +38,11 @@ public class AgentResponse implements ErrorCode{
         return this;
     }
 
-    public Map<String, Object> getData() {
+    public Object getData() {
         return data;
     }
 
-    public AgentResponse setData(Map<String, Object> data) {
+    public AgentResponse setData(Object data) {
         this.data = data;
         return this;
     }

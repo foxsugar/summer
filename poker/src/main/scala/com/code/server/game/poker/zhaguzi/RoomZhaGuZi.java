@@ -28,9 +28,24 @@ import java.util.Map;
 public class RoomZhaGuZi extends Room{
 
     //第一个发牌的人的Id
-    protected long firstId;
     protected long lastWinnderId;
+    protected String showCard;
 
+    public long getLastWinnderId() {
+        return lastWinnderId;
+    }
+
+    public void setLastWinnderId(long lastWinnderId) {
+        this.lastWinnderId = lastWinnderId;
+    }
+
+    public String getShowCard() {
+        return showCard;
+    }
+
+    public void setShowCard(String showCard) {
+        this.showCard = showCard;
+    }
 
     public IfaceRoomVo toVo(long user){
 
@@ -52,7 +67,7 @@ public class RoomZhaGuZi extends Room{
         return roomVo;
     }
 
-    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, String clubId, String clubRoomModel) throws DataNotFoundException {
+    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, String clubId, String clubRoomModel, String isShowCard) throws DataNotFoundException {
 
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         RoomZhaGuZi room = new RoomZhaGuZi();
@@ -64,8 +79,10 @@ public class RoomZhaGuZi extends Room{
         room.multiple = multiple;
         room.bankerId = userId;
         room.roomType = roomType;
+        room.showCard = isShowCard;
         room.isRobotRoom = true;
         room.setClubId(clubId);
+
         room.setClubRoomModel(clubRoomModel);
 
         room.init(gameNumber, multiple);

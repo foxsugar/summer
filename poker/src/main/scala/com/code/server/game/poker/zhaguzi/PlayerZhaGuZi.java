@@ -2,6 +2,7 @@ package com.code.server.game.poker.zhaguzi;
 import com.code.server.constant.response.IfacePlayerInfoVo;
 import com.code.server.game.poker.pullmice.IfCard;
 import com.code.server.game.room.IfacePlayerInfo;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.BeanUtils;
 import scala.Int;
 
@@ -31,7 +32,7 @@ public class PlayerZhaGuZi implements IfacePlayerInfo {
     //房间人数
     private Integer roomPersonNum;
 
-    private Integer isSanJia;
+    private Integer sanJia;
 
     private double score;
 
@@ -39,6 +40,28 @@ public class PlayerZhaGuZi implements IfacePlayerInfo {
 
     //是不是能接风
     private boolean canJieFeng;
+
+    //是不是改自己出牌
+    private boolean selfTurn;
+
+    //自己发牌之后持有的三 算分用 其他情况不用
+    private List<Integer> retain3List = new ArrayList<>();
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
 
     public boolean isCanJieFeng() {
         return canJieFeng;
@@ -57,7 +80,7 @@ public class PlayerZhaGuZi implements IfacePlayerInfo {
     }
     //是否出完牌
     public boolean isOver(){
-        return this.rank == 0 ? false : true;
+        return this.cards.size() == 0 ? true : false;
     }
 
     public Integer getIsWinner() {
@@ -94,53 +117,28 @@ public class PlayerZhaGuZi implements IfacePlayerInfo {
         this.score = score;
     }
 
-    public Integer getIsSanJia() {
+    public Integer getSanJia() {
+        return sanJia;
+    }
 
-        if (isSanJia > 0){
-            return isSanJia;
-        }
+    public void setSanJia(Integer sanJia) {
+        this.sanJia = sanJia;
+    }
 
-        if (roomPersonNum == 5){
+    public List<Integer> getRetain3List() {
+        return retain3List;
+    }
 
-            Integer hongtao = 7;
-            Integer fangpian = 9;
+    public boolean isSelfTurn() {
+        return selfTurn;
+    }
 
-            if (this.cards.size() < 10){
-                return UNKNOW;
-            }
+    public void setSelfTurn(boolean selfTurn) {
+        this.selfTurn = selfTurn;
+    }
 
-            if (this.cards.contains(hongtao) || this.cards.contains(fangpian)){
-                isSanJia = SAN_JIA;
-
-            }else {
-                isSanJia = GU_JIA;
-            }
-
-            return isSanJia;
-
-        }else if (roomPersonNum == 6){
-
-            Integer hongtao = 7;
-            Integer fangpian = 9;
-            Integer heitao = 6;
-
-            if (this.cards.size() < 9){
-                return UNKNOW;
-            }
-
-            if (this.cards.contains(hongtao) || this.cards.contains(fangpian) || this.cards.contains(heitao)){
-                if (this.cards.contains(hongtao) || this.cards.contains(fangpian)){
-                    isSanJia = SAN_JIA;
-                }else {
-                    isSanJia = GU_JIA;
-                }
-
-                return isSanJia;
-            }
-        }
-
-        return UNKNOW;
-
+    public void setRetain3List(List<Integer> retain3List) {
+        this.retain3List = retain3List;
     }
 
     @Override
@@ -148,22 +146,51 @@ public class PlayerZhaGuZi implements IfacePlayerInfo {
 
         PlayerZhaGuZiVo playerZhaGuZiVo = new PlayerZhaGuZiVo();
         BeanUtils.copyProperties(this, playerZhaGuZiVo);
+        playerZhaGuZiVo.setIsSanJia_(this.sanJia);
+        playerZhaGuZiVo.cards = new ArrayList<>();
 
-        playerZhaGuZiVo.cards.clear();
+        IfCard ifCard = new IfCard() {
+            @Override
+            public Map<Integer, Integer> cardDict() {
+                return CardUtils.getCardDict();
+            }
+        };
 
-        for (int i = 0; i < playerZhaGuZiVo.cards.size(); i++){
+        for (int i = 0; i < this.cards.size(); i++){
 
-            Integer ret = CardUtils.local2Client(playerZhaGuZiVo.cards.get(i), new IfCard() {
-                @Override
-                public Map<Integer, Integer> cardDict() {
-                    return CardUtils.getCardDict();
-                }
-            });
+            Integer ret = CardUtils.local2Client(this.cards.get(i), ifCard);
             playerZhaGuZiVo.cards.add(ret);
         }
 
+        List<Integer> aList = new ArrayList<>();
+
+        for (Integer card : this.getRetain3List()){
+
+            Integer ret = CardUtils.local2Client(card, ifCard);
+
+            aList.add(ret);
+        }
+
+        playerZhaGuZiVo.setRetain3List(aList);
+
+        List<Integer> bList = new ArrayList<>();
+
+        for (Integer liang : this.liangList){
+
+            if (liang == -1){
+                bList.add(liang);
+                continue;
+            }
+            Integer ret = CardUtils.local2Client(liang, ifCard);
+            bList.add(ret);
+        }
+
+        playerZhaGuZiVo.setLiangList(bList);
+
         return playerZhaGuZiVo;
     }
+
+
 
     @Override
     public IfacePlayerInfoVo toVo(long watchUser) {

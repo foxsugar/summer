@@ -25,11 +25,35 @@ public class PlayerZhaGuZiVo implements IfacePlayerInfoVo{
     //房间人数
     private Integer roomPersonNum;
 
-    private Integer isSanJia;
+    private Integer isSanJia_;
 
     private Integer isWinner;
 
     private boolean canJieFeng;
+
+    //自己发牌之后持有的三 算分用 其他情况不用
+    private List<Integer> retain3List = new ArrayList<>();
+
+    private List<Integer> liangList = new ArrayList<>();
+
+    //是不是改自己出牌
+    private boolean selfTurn;
+
+    public boolean isSelfTurn() {
+        return selfTurn;
+    }
+
+    public void setSelfTurn(boolean selfTurn) {
+        this.selfTurn = selfTurn;
+    }
+
+    public List<Integer> getLiangList() {
+        return liangList;
+    }
+
+    public void setLiangList(List<Integer> liangList) {
+        this.liangList = liangList;
+    }
 
     public long getUserId() {
         return userId;
@@ -79,12 +103,12 @@ public class PlayerZhaGuZiVo implements IfacePlayerInfoVo{
         this.roomPersonNum = roomPersonNum;
     }
 
-    public Integer getIsSanJia() {
-        return isSanJia;
+    public Integer getIsSanJia_() {
+        return isSanJia_;
     }
 
-    public void setIsSanJia(Integer isSanJia) {
-        this.isSanJia = isSanJia;
+    public void setIsSanJia_(Integer isSanJia_) {
+        this.isSanJia_ = isSanJia_;
     }
 
     public Integer getIsWinner() {
@@ -101,5 +125,13 @@ public class PlayerZhaGuZiVo implements IfacePlayerInfoVo{
 
     public void setCanJieFeng(boolean canJieFeng) {
         this.canJieFeng = canJieFeng;
+    }
+
+    public List<Integer> getRetain3List() {
+        return retain3List;
+    }
+
+    public void setRetain3List(List<Integer> retain3List) {
+        this.retain3List = retain3List;
     }
 }

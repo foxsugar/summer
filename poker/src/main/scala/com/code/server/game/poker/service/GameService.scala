@@ -152,15 +152,15 @@ object GameService {
     case "talk" =>
       val op = params.path("op").asInt(0)
       //亮牌的时候带过来的牌，默认传 -1
-      val card = params.path("card").asInt(0)
-      game.talk(userId, op, card)
+      val cards = params.path("card").asText()
+      game.talk(userId, op, cards)
     case "isGiveUp"=>
       val ret = params.path("isGiveUp").asBoolean()
       game.isGiveUp(userId, ret)
-    case "beingDiscard"=>
+    case "discard"=>
       val op = params.path("op").asInt(0)
       val li = params.path("li").asText()
-      game.beingDiscard(userId, op, li)
+      game.discard(userId, op, li)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

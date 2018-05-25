@@ -727,6 +727,7 @@ public class Room implements IfaceRoom {
         roomRecord.setTime(System.currentTimeMillis());
         roomRecord.setClubId(clubId);
         roomRecord.setClubRoomModel(clubRoomModel);
+        roomRecord.setGameType(gameType);
 
         this.userScores.forEach((key, value) -> {
             UserRecord userRecord = new UserRecord();

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by sunxianping on 2018/3/13.
@@ -68,11 +69,11 @@ public class AgentRedisService implements IAgentRedis, IConstant {
     }
 
     @Override
-    public void setAgentToken(String token, Map<String, String> data) {
+    public void setAgentToken(String token, Map<String, String> data,long timeout) {
 
         BoundValueOperations<String,String> agentData = redisTemplate.boundValueOps(getAgentToken(token));
 
-        agentData.set(JsonUtil.toJson(data));
+        agentData.set(JsonUtil.toJson(data), timeout,TimeUnit.SECONDS);
     }
 
     @Override
