@@ -108,7 +108,7 @@ public class GameInfoXYKD extends GameInfo {
             return ErrorCode.CAN_NOT_TING;
         }
 
-        PlayerCardsInfoNZZ playerCardsInfo = (PlayerCardsInfoNZZ)playerCardsInfos.get(userId);
+        PlayerCardsInfoKD_XY playerCardsInfo = (PlayerCardsInfoKD_XY)playerCardsInfos.get(userId);
         if (playerCardsInfo == null) {
             return ErrorCode.USER_ERROR;
         }
@@ -153,7 +153,7 @@ public class GameInfoXYKD extends GameInfo {
 
     private int chuPai_ting(long userId, String card) {
         //出牌的玩家
-        PlayerCardsInfoNZZ chupaiPlayerCardsInfo = (PlayerCardsInfoNZZ)playerCardsInfos.get(userId);
+        PlayerCardsInfoKD_XY chupaiPlayerCardsInfo = (PlayerCardsInfoKD_XY)playerCardsInfos.get(userId);
         if (this.turnId != userId||isAlreadyHu) {
             return ErrorCode.CAN_NOT_PLAYCARD;
         }
@@ -169,19 +169,41 @@ public class GameInfoXYKD extends GameInfo {
         //通知其他玩家出牌信息
         PlayCardResp playCardResp = new PlayCardResp();
         playCardResp.setUserId(userId);
-        playCardResp.setCard(null);
+        playCardResp.setCard(card);
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_PLAY_CARD, playCardResp);
         MsgSender.sendMsg2Player(vo, users);
 
-        //其他人的操作 全是false 听牌后什么都不能操作
+        //其他人能做的操作
         for (Map.Entry<Long, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
-            PlayerCardsInfoMj pci = entry.getValue();
-            pci.setCanBeGang(false);
-            pci.setCanBePeng(false);
-            pci.setCanBeHu(false);
-            pci.setCanBeTing(false);
-
             OperateResp operateResp = new OperateResp();
+
+            //其他玩家的处理 碰杠等 如果有加入等待列表(要等待这些玩家"过")
+            if (userId != entry.getKey()) {
+                //通知其他玩家出了什么牌 自己能有什么操作
+                PlayerCardsInfoMj playerInfo = entry.getValue();
+                boolean isCanGang = playerInfo.isCanGangAddThisCard(card);
+                boolean isCanPeng = playerInfo.isCanPengAddThisCard(card);
+                boolean isCanHu;
+
+                isCanHu = playerInfo.isCanHu_dianpao(card);
+
+
+                boolean isCanChi = playerInfo.isHasChi(card);
+                boolean isCanChiTing = playerInfo.isCanChiTing(card);
+                boolean isCanPengTing = playerInfo.isCanPengTing(card);
+                //设置返回结果
+                operateResp.setCanBeOperate(isCanChi, isCanPeng, isCanGang, false, isCanHu, isCanChiTing, isCanPengTing);
+
+                //设置自己能做的操作
+                playerInfo.setCanBeOperate(isCanChi, isCanPeng, isCanGang, false, isCanHu, isCanChiTing, isCanPengTing);
+
+                boolean isWait = isCanGang || isCanPeng || isCanHu || isCanChi || isCanChiTing || isCanPengTing;
+                if (isWait) {
+                    this.waitingforList.add(new WaitDetail(entry.getKey(), isCanHu, isCanGang, isCanPeng, isCanChi, isCanChiTing, isCanPengTing));
+                }
+            }
+
+            //可能的操作
             ResponseVo OperateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
             MsgSender.sendMsg2Player(OperateVo, entry.getKey());
         }

@@ -203,4 +203,12 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
     public void setPlayCards(List<Integer> playCards) {
         this.playCards = playCards;
     }
+
+    public String getCanChoose() {
+        return canChoose;
+    }
+
+    public void setCanChoose(String canChoose) {
+        this.canChoose = canChoose;
+    }
 }
