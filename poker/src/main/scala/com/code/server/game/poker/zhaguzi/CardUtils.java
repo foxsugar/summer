@@ -495,7 +495,7 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
         }
 
         //平局情况
-        if (pFinal.getIsSanJia() == pFirst.getIsSanJia()){
+        if (pFinal.getSanJia() == pFirst.getSanJia()){
 
             for (PlayerZhaGuZi p : aList){
 
@@ -506,7 +506,7 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
         }else {
 
-            Integer isSanJia = pFirst.getIsSanJia();
+            Integer isSanJia = pFirst.getSanJia();
 
             for (PlayerZhaGuZi p : aList){
 
@@ -515,7 +515,7 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
             }
         }
 
-        if (pFirst.getIsSanJia() == PlayerZhaGuZi.SAN_JIA){
+        if (pFirst.getSanJia() == PlayerZhaGuZi.SAN_JIA){
             return 0;
         }else {
             return 2;
@@ -613,14 +613,68 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
     //把字符串转化为数组
     public static List<Integer> transfromStringToCards(String str){
+
+//        if (str.equals("-1")){
+//            List<Integer> list = new ArrayList<>();
+//            return list;
+//        }
+
         int maxSplit = 1000;
         String[] cards = str.split("_", maxSplit);
         List<Integer> list = new ArrayList<>();
 
         for (String string : cards){
+            if (string.equals("")){
+                continue;
+            }
             list.add(Integer.valueOf(string));
         }
         return list;
+    }
+
+    public static Integer computeIsSanJia(int roomPersonNum, PlayerZhaGuZi playerZhaGuZi) {
+
+        int isSanJia;
+
+        if (roomPersonNum == 5){
+
+            Integer hongtao = 7;
+            Integer fangpian = 9;
+
+            if (playerZhaGuZi.cards.size() < 10){
+                return PlayerZhaGuZi.UNKNOW;
+            }
+
+            if (playerZhaGuZi.cards.contains(hongtao) || playerZhaGuZi.cards.contains(fangpian)){
+                isSanJia = PlayerZhaGuZi.SAN_JIA;
+
+            }else {
+                isSanJia = PlayerZhaGuZi.GU_JIA;
+            }
+
+            return isSanJia;
+
+        }else if (roomPersonNum == 6){
+
+            Integer hongtao = 7;
+            Integer fangpian = 9;
+            Integer heitao = 6;
+
+            if (playerZhaGuZi.cards.size() < 9){
+                return PlayerZhaGuZi.UNKNOW;
+            }
+
+            if (playerZhaGuZi.cards.contains(hongtao) || playerZhaGuZi.cards.contains(fangpian) || playerZhaGuZi.cards.contains(heitao)){
+                isSanJia = PlayerZhaGuZi.SAN_JIA;
+            }else {
+                isSanJia = PlayerZhaGuZi.GU_JIA;
+            }
+
+            return isSanJia;
+        }
+
+        return PlayerZhaGuZi.UNKNOW;
+
     }
 
 }
