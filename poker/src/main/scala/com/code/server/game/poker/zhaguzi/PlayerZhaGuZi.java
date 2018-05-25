@@ -190,8 +190,6 @@ public class PlayerZhaGuZi implements IfacePlayerInfo {
         return playerZhaGuZiVo;
     }
 
-
-
     @Override
     public IfacePlayerInfoVo toVo(long watchUser) {
         return this.toVo();

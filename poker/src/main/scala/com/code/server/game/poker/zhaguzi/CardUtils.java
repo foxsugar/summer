@@ -43,6 +43,95 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
     private static Map<Integer, Integer> cardDict = new HashMap<>();
 
+    public static Map<Integer, Integer> getCardDict() {
+
+        //大王-小王-4-3-2-1-K,Q,J,10,9,8,7,6,5
+        if (cardDict.size() == 0){
+            cardDict.put(0, 54);
+            cardDict.put(1, 53);
+
+            //4
+            cardDict.put(2, 13);
+            cardDict.put(3, 14);
+            cardDict.put(4, 15);
+            cardDict.put(5, 16);
+
+            //3
+            cardDict.put(6, 9);
+            cardDict.put(7, 10);
+            cardDict.put(8, 11);
+            cardDict.put(9, 12);
+
+            //2
+            cardDict.put(10, 5);
+            cardDict.put(11, 6);
+            cardDict.put(12, 7);
+            cardDict.put(13, 8);
+
+            //A
+            cardDict.put(14, 1);
+            cardDict.put(15, 2);
+            cardDict.put(16, 3);
+            cardDict.put(17, 4);
+
+            //K
+            cardDict.put(18, 49);
+            cardDict.put(19, 50);
+            cardDict.put(20, 51);
+            cardDict.put(21, 52);
+
+            //Q
+            cardDict.put(22, 45);
+            cardDict.put(23, 46);
+            cardDict.put(24, 47);
+            cardDict.put(25, 48);
+
+            //J
+            cardDict.put(26, 41);
+            cardDict.put(27, 42);
+            cardDict.put(28, 43);
+            cardDict.put(29, 44);
+
+            //10
+            cardDict.put(30, 37);
+            cardDict.put(31, 38);
+            cardDict.put(32, 39);
+            cardDict.put(33, 40);
+
+            //9
+            cardDict.put(34, 33);
+            cardDict.put(35, 34);
+            cardDict.put(36, 35);
+            cardDict.put(37, 36);
+
+            //8
+            cardDict.put(38, 29);
+            cardDict.put(39, 30);
+            cardDict.put(40, 31);
+            cardDict.put(41, 32);
+
+            //7
+            cardDict.put(42, 25);
+            cardDict.put(43, 26);
+            cardDict.put(44, 27);
+            cardDict.put(45, 28);
+
+            //6
+            cardDict.put(46, 21);
+            cardDict.put(47, 22);
+            cardDict.put(48, 23);
+            cardDict.put(49, 24);
+
+            //5
+            cardDict.put(50, 17);
+            cardDict.put(51, 18);
+            cardDict.put(52, 19);
+            cardDict.put(53, 20);
+
+        }
+        return cardDict;
+    }
+
     //牌型转转类
     private static IfCard ifCard = new IfCard() {
         @Override
@@ -127,6 +216,16 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
         return ERROR;
     }
 
+    //判断玩家是否亮了方片3
+    public static boolean fangSanIsLiang(PlayerZhaGuZi playerZhaGuZi){
+
+        Integer fangpiansan = CardUtils.string2Local("方片-3", ifCard);
+        if (playerZhaGuZi.getLiangList().contains(fangpiansan)){
+            return true;
+        }
+        return false;
+    }
+
     //要考虑 亮三 不亮3 5人玩法， 六人玩法
     public static int compare(PlayerZhaGuZi player1, List<Integer> cards1, PlayerZhaGuZi player2, List<Integer> cards2){
 
@@ -165,7 +264,6 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
             }
 
-
             //右边的人比牌比较大
             if (typeA > typeB){
 
@@ -196,57 +294,50 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
                 //如果是单子
                 if (typeA == DAN_ZI){
 
-                    //判断下红桃三可以管4
-                    if (lList.get(0) == 7){
-                        if (b == 0){
-                            return WIN;
-                        }
-                    }
+                    //p1是否亮牌
+                    boolean isLiang1 = fangSanIsLiang(player1);
+                    //p2是否亮牌
+                    boolean isLiang2 = fangSanIsLiang(player2);
 
-                    //判断下红桃三可以管4
-                    if (rList.get(0) == 7){
-                        if (a == 0){
+                    Integer fangpiansan = CardUtils.string2Local("方片-3", ifCard);
+
+                    Integer hongtaosan = CardUtils.string2Local("红桃-3", ifCard);
+
+                    //先算红桃3 和方片3 比较
+                    if (lList.contains(fangpiansan) && rList.contains(hongtaosan)){
+
+                        if (isLiang1){
+                            return DRAW;
+                        }else {
                             return LOSE;
                         }
                     }
 
-                    //方片三是否可以管4
-                    if (lList.get(0) == 9){
+                    if (lList.contains(hongtaosan) && rList.contains(fangpiansan)){
 
-                        boolean isLiang = false;
-                        if (player1.getLiangList().size() != 0){
-
-                            //亮的是 方片饭
-                            if (player1.getLiangList().contains(9)){
-                                isLiang = true;
-                            }
-
-                        }
-
-                        //如果亮3的情况下
-                        if (b == 0 && isLiang){
+                        if (isLiang2){
+                            return DRAW;
+                        }else {
                             return WIN;
                         }
                     }
-                    //方片三是否可以管4
-                    if (rList.get(0) == 9){
 
+                    //红桃3和别的比
+                    if (lList.contains(hongtaosan)){
+                        return WIN;
+                    }
 
-                        boolean isLiang = false;
-                        if (player2.getLiangList().size() != 0){
+                    if (rList.contains(hongtaosan)){
+                        return LOSE;
+                    }
 
-                            Integer liang = player2.getLiangList().get(0);
+                    //方片3 和别的比
+                    if (isLiang1 && lList.contains(fangpiansan)){
+                        return WIN;
+                    }
 
-                            //亮的是 方片饭
-                            if (liang == 9){
-                                isLiang = true;
-
-                            }
-                        }
-
-                        if (a == 0){
-                            return LOSE;
-                        }
+                    if (isLiang2 && rList.contains(fangpiansan)){
+                        return LOSE;
                     }
 
                 }
@@ -527,95 +618,6 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
         }else {
             return 2;
         }
-    }
-
-    public static Map<Integer, Integer> getCardDict() {
-
-        //大王-小王-4-3-2-1-K,Q,J,10,9,8,7,6,5
-        if (cardDict.size() == 0){
-            cardDict.put(0, 54);
-            cardDict.put(1, 53);
-
-            //4
-            cardDict.put(2, 13);
-            cardDict.put(3, 14);
-            cardDict.put(4, 15);
-            cardDict.put(5, 16);
-
-            //3
-            cardDict.put(6, 9);
-            cardDict.put(7, 10);
-            cardDict.put(8, 11);
-            cardDict.put(9, 12);
-
-            //2
-            cardDict.put(10, 5);
-            cardDict.put(11, 6);
-            cardDict.put(12, 7);
-            cardDict.put(13, 8);
-
-            //A
-            cardDict.put(14, 1);
-            cardDict.put(15, 2);
-            cardDict.put(16, 3);
-            cardDict.put(17, 4);
-
-            //K
-            cardDict.put(18, 49);
-            cardDict.put(19, 50);
-            cardDict.put(20, 51);
-            cardDict.put(21, 52);
-
-            //Q
-            cardDict.put(22, 45);
-            cardDict.put(23, 46);
-            cardDict.put(24, 47);
-            cardDict.put(25, 48);
-
-            //J
-            cardDict.put(26, 41);
-            cardDict.put(27, 42);
-            cardDict.put(28, 43);
-            cardDict.put(29, 44);
-
-            //10
-            cardDict.put(30, 37);
-            cardDict.put(31, 38);
-            cardDict.put(32, 39);
-            cardDict.put(33, 40);
-
-            //9
-            cardDict.put(34, 33);
-            cardDict.put(35, 34);
-            cardDict.put(36, 35);
-            cardDict.put(37, 36);
-
-            //8
-            cardDict.put(38, 29);
-            cardDict.put(39, 30);
-            cardDict.put(40, 31);
-            cardDict.put(41, 32);
-
-            //7
-            cardDict.put(42, 25);
-            cardDict.put(43, 26);
-            cardDict.put(44, 27);
-            cardDict.put(45, 28);
-
-            //6
-            cardDict.put(46, 21);
-            cardDict.put(47, 22);
-            cardDict.put(48, 23);
-            cardDict.put(49, 24);
-
-            //5
-            cardDict.put(50, 17);
-            cardDict.put(51, 18);
-            cardDict.put(52, 19);
-            cardDict.put(53, 20);
-
-        }
-        return cardDict;
     }
 
     //把字符串转化为数组
