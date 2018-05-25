@@ -4,10 +4,12 @@ import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.util.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 项目名称：${project_name}
@@ -50,7 +52,7 @@ public class GameXuanQiQi extends Game {
     //赢为1，输为0，未比过为-1
     protected Map<Long,Integer> compareCard = new HashMap<>();
 
-
+    protected Map<Long,XuanParam> xuanList = new HashMap<>();
 
 
     protected RoomXuanQiQi room;
@@ -179,17 +181,23 @@ public class GameXuanQiQi extends Game {
     public int setMultiple(long userId,int multiple){
         bankerMultiple = multiple;
         playerCardInfos.get(room.getBankerId()).setCanSetMultiple("0");
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChoose", room.getBankerId()), room.getBankerId());
-        playerCardInfos.get(room.getBankerId()).setCanSetMultiple("1");
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChoose", room.getBankerId()), users);
         return 0;
     }
 
     //宣牌
     public int xuan(long userId) {
         //TODO XuanParam参数未设置
-        if(xuanOrGuo.get(userId)==0){
+        if(xuanOrGuo.get(userId)==0 && chuPaiId ==userId){//庄宣，直接通知出牌
             xuanOrGuo.put(userId,1);
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", chuPaiId), users);
+        }else{
+            XuanParam xuanParam = new XuanParam();
+            xuanParam.setXuaned_UserId(chuPaiId);
+            xuanParam.setXuan_LuoNum(playerCardInfos.get(userId).winCards.size()/3);
+            xuanParam.setXuaned_UserId(playerCardInfos.get(chuPaiId).winCards.size()/3);
+            xuanParam.setGotLuo(false);
+            xuanList.put(userId,xuanParam);
         }
         return 0;
     }
@@ -295,8 +303,17 @@ public class GameXuanQiQi extends Game {
 
             setWinCardAndCardType();//存记录分罗
 
-            //TODO 清记录，进入下一宣牌环节
-            cleanRecord();
+            if(playerCardInfos.get(0).getHandCards().size()>0){
+                //清除所有状态,游戏继续
+                cleanRecord();
+                MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChoose", room.getBankerId()), users);
+            }else{
+                //游戏结算
+                compute();
+                sendResult();
+                genRecord();
+
+            }
         }
 
         return 0;
@@ -367,6 +384,7 @@ public class GameXuanQiQi extends Game {
      * 存记录，分罗
      */
     private void setWinCardAndCardType(){
+        //TODO XuanParam设置罗数是不是有效
         long finalWinnerId = 0l;
         a:for (long l:compareCard.keySet()) {//取最后赢的人
             if(compareCard.get(l)==1){
@@ -416,20 +434,60 @@ public class GameXuanQiQi extends Game {
         }
         playerCardInfos.get(finalWinnerId).getCardsType().putAll(tempCardsType);//设置罗的明/扣
 
+        chuPaiId = finalWinnerId;//设置下一个出牌的人
+        operatId = finalWinnerId;
+
         Map<String, Object> result = new HashMap<>();
         result.put("finalWinnerId",finalWinnerId);
         result.put("cardsType",tempCardsType);
         ResponseVo vo = new ResponseVo("gameService", "winResult", result);
         MsgSender.sendMsg2Player(vo, users);
+
+        for (long l :playerCardInfos.keySet()) {
+            if(finalWinnerId == l){
+                playerCardInfos.get(l).setCanChoose("1");
+            }else{
+                playerCardInfos.get(l).setCanChoose("0");
+            }
+        }
+
+
     }
 
+    /**
+     * 清除状态
+     */
     private void cleanRecord(){
+        for (Long uid : users) {
+            xuanOrGuo.put(uid,0);
+            ifChuPai.put(uid,0);
+            compareCard.put(uid,-1);
+        }
+    }
+
+    /**
+     * 算分
+     */
+    protected void compute(){
 
     }
 
+    /**
+     * 发送结算版
+     */
+    protected void sendResult() {
+        //TODO 结算
+        MsgSender.sendMsg2Player("gameService", "gameResult", null, users);
+    }
 
-
-
+    /**
+     * 战绩
+     */
+    protected void genRecord() {
+        long id = IdWorker.getDefaultInstance().nextId();
+        genRecord(playerCardInfos.values().stream().collect
+                (Collectors.toMap(PlayerCardInfoXuanQiQi::getUserId, PlayerCardInfoXuanQiQi::getScore)), room, id);
+    }
 
 
 
@@ -528,5 +586,13 @@ public class GameXuanQiQi extends Game {
 
     public void setCompareCard(Map<Long, Integer> compareCard) {
         this.compareCard = compareCard;
+    }
+
+    public Map<Long, XuanParam> getXuanList() {
+        return xuanList;
+    }
+
+    public void setXuanList(Map<Long, XuanParam> xuanList) {
+        this.xuanList = xuanList;
     }
 }

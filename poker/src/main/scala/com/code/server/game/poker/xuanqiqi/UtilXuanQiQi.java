@@ -1,6 +1,8 @@
 package com.code.server.game.poker.xuanqiqi;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -103,10 +105,53 @@ public class UtilXuanQiQi {
     }
 
     public static boolean getThreeCardWin(int a1,int b1,int c1,int a2,int b2,int c2){
-        //TODO 比牌 三张
+        if(ifRed(a1,b1,c1)){
+            return true;
+        }else if(ifRed(a2,b2,c2)){
+            return false;
+        }else if(ifBlack(a1,b1,c1) && !ifRed(a2,b2,c2)){
+            return true;
+        }else if(ifBlack(a2,b2,c2) && !ifRed(a1,b1,c1)){
+            return false;
+        }
         return true;
     }
 
+    /**
+     * 判断三张牌是不是红JQK
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
+    private static boolean ifRed(int x,int y,int z){
+        boolean b = false;
+        List<Integer> redList = new ArrayList<>();
+        redList.add(42);
+        redList.add(46);
+        redList.add(50);
+        if(redList.contains(x)&&redList.contains(y) && redList.contains(z)){
+            return true;
+        }
+        return b;
+    }
 
-
+    /**
+     * 判断三张牌是不是黑JQK
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
+    private static boolean ifBlack(int x,int y,int z){
+        boolean b = false;
+        List<Integer> blackList = new ArrayList<>();
+        blackList.add(41);
+        blackList.add(45);
+        blackList.add(49);
+        if(blackList.contains(x)&&blackList.contains(y) && blackList.contains(z)){
+            return true;
+        }
+        return b;
+    }
 }
