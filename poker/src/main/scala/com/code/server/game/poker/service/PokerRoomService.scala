@@ -9,6 +9,7 @@ import com.code.server.game.poker.paijiu.{RoomGoldPaijiu, RoomPaijiu}
 import com.code.server.game.poker.pullmice.RoomPullMice
 import com.code.server.game.poker.tuitongzi.RoomTuiTongZi
 import com.code.server.game.poker.zhaguzi.RoomZhaGuZi
+import com.code.server.game.poker.zhaguzi.RoomZhaGuZi._
 import com.code.server.game.room.service.RoomManager
 import com.fasterxml.jackson.databind.JsonNode
 
@@ -129,7 +130,7 @@ object PokerRoomService {
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
         val isShowCard = params.path("showCard").asText
-        return RoomZhaGuZi.createRoom(userId,roomType, gameType,gameNumber, personNumber, isJoin, multiple,clubId,clubRoomModel)
+        return RoomZhaGuZi.createRoom(userId,roomType, gameType,gameNumber, personNumber, isJoin, multiple,clubId,clubRoomModel, isShowCard)
 
       case "createPullMiceRoom"=>
         val roomType = params.path("roomType").asText()
