@@ -239,7 +239,7 @@ public class WechatAction extends Cors {
         cookie.setDomain(serverConfig.getDomain());
         cookie.setPath("/");
         //过期时间 30s
-        cookie.setMaxAge(30);
+        cookie.setMaxAge(300);
         response.addCookie(cookie);
 
         String url = MessageFormat.format("http://" + serverConfig.getDomain() + "/agent/#/sharelink?id={0}&sid={1}", ""+agentId, sid);
