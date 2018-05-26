@@ -88,8 +88,8 @@ public class WechatAction extends Cors {
 
     @RequestMapping(value = "/jsapiparam")
     @ResponseBody
-    public String wxJs(@RequestParam("url") String url) throws WxErrorException {
-        return JsonUtil.toJson(wxMpService.createJsapiSignature(url));
+    public AgentResponse wxJs(@RequestParam("url") String url) throws WxErrorException {
+        return new AgentResponse().setData(wxMpService.createJsapiSignature(url));
     }
 
     @RequestMapping(value = "/core")
