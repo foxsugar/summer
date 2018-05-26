@@ -20,7 +20,6 @@ import java.util.List;
 public class GameAgent extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private String openId;
