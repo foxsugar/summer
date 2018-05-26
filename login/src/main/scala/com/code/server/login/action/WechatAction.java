@@ -1,6 +1,7 @@
 package com.code.server.login.action;
 
 import com.code.server.constant.game.AgentBean;
+import com.code.server.constant.game.UserBean;
 import com.code.server.db.Service.GameAgentService;
 import com.code.server.db.Service.GameAgentWxService;
 import com.code.server.db.Service.RecommendService;
@@ -8,6 +9,7 @@ import com.code.server.db.Service.UserService;
 import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.GameAgentWx;
 import com.code.server.db.model.Recommend;
+import com.code.server.db.model.User;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.service.AgentService;
 import com.code.server.redis.service.AgentRedisService;
@@ -452,4 +454,32 @@ public class WechatAction extends Cors {
         return agentResponse;
     }
 
+
+    @RequestMapping("/getUserInfo")
+    @ResponseBody
+    public AgentResponse getUserInfo(HttpServletRequest request) {
+        Map<String, String> map = getAgentByToken(request);
+        AgentResponse agentResponse = new AgentResponse();
+        if(map == null) return agentResponse.setCode(ErrorCode.NOT_LOGIN);
+        long userId = Long.valueOf(map.get("agentId"));
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        Map<String, Object> result = new HashMap<>();
+        if (userBean != null) {
+            result.put("id", userBean.getId());
+            result.put("name", userBean.getUsername());
+            result.put("money", userBean.getMoney());
+            result.put("gold", userBean.getGold());
+        }else{
+            User user = userService.getUserByUserId(userId);
+            if (user != null) {
+                result.put("id", user.getId());
+                result.put("name", user.getUsername());
+                result.put("money", user.getMoney());
+                result.put("gold", user.getGold());
+            }
+        }
+
+        return agentResponse.setData(result);
+
+    }
 }
