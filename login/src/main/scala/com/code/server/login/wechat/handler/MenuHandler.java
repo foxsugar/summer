@@ -237,13 +237,14 @@ public class MenuHandler extends AbstractHandler {
             //gameAgent 是否已经生成ticket
             AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
 
+            agentBean.setImage(wxMpUser.getHeadImgUrl());
             if (agentBean.getQrTicket() == null || "".equals(agentBean.getQrTicket())) {
                 //根据unionId生成二维码
                 WxMpQrCodeTicket ticket = wxService.getQrcodeService().qrCodeCreateLastTicket(unionId);
                 agentBean.setQrTicket(ticket.getTicket());
-                RedisManager.getAgentRedisService().updateAgentBean(agentBean);
 
             }
+            RedisManager.getAgentRedisService().updateAgentBean(agentBean);
 
 
         } catch (WxErrorException e) {
