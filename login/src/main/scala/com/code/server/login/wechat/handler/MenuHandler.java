@@ -263,7 +263,7 @@ public class MenuHandler extends AbstractHandler {
 //          item1.setDescription("点击进入专属界面");
 //        String url = "http://" + serverConfig.getDomain() + "/game/wechat/clickLink";
         String sid = "" + System.currentTimeMillis() + "_" + new Random().nextInt(999999);
-        String url = MessageFormat.format("http://" + serverConfig.getDomain() +"/agent/#/sharelink?id={0}&sid={1}", agentId, sid);
+        String url = MessageFormat.format("http://" + serverConfig.getDomain() +"/agent/#/sharelink?id={0}&sid={1}", ""+agentId, sid);
         item1.setUrl(url);
 
         WxMpXmlOutNewsMessage m = WxMpXmlOutMessage.NEWS()

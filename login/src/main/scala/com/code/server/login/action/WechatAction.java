@@ -194,13 +194,16 @@ public class WechatAction extends Cors {
             //state 是id
             long agentId = Long.valueOf(state);
             //代理不存在 直接退出
-            if (!RedisManager.getAgentRedisService().isExit(agentId)) return;
+            AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+            if (agentBean == null) return;
 
 
             String unionId = wxMpUser.getUnionId();
             //这个人是否已经点过
+            //todo 自己不能推荐自己
             Recommend recommend = recommendService.getRecommendDao().getByUnionId(unionId);
-            if (recommend == null) {
+            boolean isSelf = agentBean.getUnionId().equals(unionId);
+            if (recommend == null && !isSelf) {
                 recommend = new Recommend();
                 recommend.setUnionId(unionId).setAgentId(agentId);
                 //保存
@@ -209,6 +212,12 @@ public class WechatAction extends Cors {
                 //通知 代理 有人绑定他
                 String name = wxMpUser.getNickname();
 
+                wxMpService.getKefuService().sendKefuMessage(
+                        WxMpKefuMessage
+                                .TEXT()
+                                .toUser(agentBean.getOpenId())
+                                .content(name+"已点击您的专属链接,成功绑定")
+                                .build());
 
             }
             //处理跳转
