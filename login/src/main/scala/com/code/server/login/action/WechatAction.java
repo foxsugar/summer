@@ -212,6 +212,12 @@ public class WechatAction extends Cors {
                 //通知 代理 有人绑定他
                 String name = wxMpUser.getNickname();
 
+                wxMpService.getKefuService().sendKefuMessage(
+                        WxMpKefuMessage
+                                .TEXT()
+                                .toUser(agentBean.getOpenId())
+                                .content(name+"已点击您的专属链接,成功绑定")
+                                .build());
 
             }
             //处理跳转
