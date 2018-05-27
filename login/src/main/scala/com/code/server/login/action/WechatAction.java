@@ -351,7 +351,8 @@ public class WechatAction extends Cors {
             setTokenCookie2Redis(wxMpUser, response, userId);
         }
 
-        String url = "http://" + serverConfig.getDomain() + "/agent/#/charge";
+        long time = System.currentTimeMillis();
+        String url = "http://" + serverConfig.getDomain() + "/agent/#/charge?time="+time;
         response.sendRedirect(url);
     }
 
