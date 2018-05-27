@@ -22,6 +22,8 @@ import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutNewsMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
@@ -31,6 +33,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.SocketException;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Random;
@@ -148,12 +151,20 @@ public class MenuHandler extends AbstractHandler {
             double rebate = agentBean.getRebate();
             //不能大于20000
             if (rebate > 20000) {
-
+                rebate = 20000;
             }
+
 
             //todo 扣 7%
 
-            double amount = rebate * 100;
+            Double amount = rebate * 93;
+
+
+            //到账金额
+            double amountInt = amount.intValue() / 100;
+            //手续费
+            double poundage = rebate - amountInt;
+
 
             long tradeId = createOrderId();
 
@@ -167,7 +178,7 @@ public class MenuHandler extends AbstractHandler {
             wxEntPayRequest.setOpenid(openId);
             wxEntPayRequest.setCheckName("NO_CHECK");
             //金额 为分
-            wxEntPayRequest.setAmount((int)amount);
+            wxEntPayRequest.setAmount(100);
             wxEntPayRequest.setDescription("提现");
             wxEntPayRequest.setSpbillCreateIp(ip);
 
@@ -195,9 +206,39 @@ public class MenuHandler extends AbstractHandler {
 
                     chargeService.save(charge);
 
-                    //发送消息
-                    return new TextBuilder().build("提现成功,共提现"+rebate, wxMessage, wxService);
 
+                    SimpleDateFormat dateFormat = new SimpleDateFormat(
+                            "yyyy-MM-dd HH:mm:ss.SSS");
+
+                    WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
+                            .toUser(wxMpUser.getOpenId())
+                            .templateId("fT9wgjkN5Wfm8dtbPQiozDg7uftEaE6AoMq3YLDeUxc")
+                            .url("")
+                            .build();
+
+                    WxMpTemplateData wxMpTemplateData = new WxMpTemplateData();
+                    templateMessage.addData(new WxMpTemplateData("first","您申请的提现金额已到帐."))
+                            .addData(new WxMpTemplateData("keyword1", dateFormat.format(new Date())))
+                            .addData(new WxMpTemplateData("keyword2","提现到零钱"))
+                            .addData(new WxMpTemplateData("keyword3", ""+rebate))
+                            .addData(new WxMpTemplateData("keyword4", ""+poundage))
+                            .addData(new WxMpTemplateData("keyword1", ""+amountInt))
+                            .addData(new WxMpTemplateData("remark", "感谢您的使用"));
+                    String msgId = wxService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+
+                    System.out.println(msgId);
+
+                    wxService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+                    //发送消息
+                    return null;
+
+//                    {{first.DATA}}{{fi
+//                        申请时间：{{keyword1.DATA}}
+//                        提现方式：{{keyword2.DATA}}
+//                        提现金额：{{keyword3.DATA}}
+//                        手续费用：{{keyword4.DATA}}
+//                        到账金额：{{keyword5.DATA}}
+//                        {{remark.DATA}}
                 } else {
                     this.logger.error("err_code: " + wxEntPayResult.getErrCode()
                             + "  err_code_des: " + wxEntPayResult.getErrCodeDes());
@@ -210,6 +251,7 @@ public class MenuHandler extends AbstractHandler {
 
         } catch (WxErrorException e) {
             logger.error("提现出错", e);
+            return new TextBuilder().build(e.getMessage(), wxMessage, wxService);
         } catch (SocketException e) {
             e.printStackTrace();
         }
