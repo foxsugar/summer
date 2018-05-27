@@ -1,13 +1,16 @@
 package com.code.server.login.action;
 
 
+import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.db.Service.ConstantService;
 import com.code.server.db.Service.GameRecordService;
+import com.code.server.db.Service.RecommendService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.model.Constant;
+import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
@@ -55,6 +58,9 @@ public class LoginAction {
     @Autowired
     private ConstantService constantService;
 
+    @Autowired
+    private RecommendService recommendService;
+
     //    @Value("serverConfig.serverId")
 
 
@@ -90,7 +96,28 @@ public class LoginAction {
         if (user == null) {
             //新建玩家
             user = createUser(openId, userName, img, sex);
+
+            //代理推荐情况
+            Recommend recommend = recommendService.getRecommendDao().getByUnionId(openId);
+            if (recommend != null) {
+                //玩家设置代理
+                user.setReferee((int)recommend.getAgentId());
+
+            }
+
+            //保存
             userService.save(user);
+
+            if (recommend != null) {
+                //代理多了一个玩家
+                AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(recommend.getAgentId());
+                if (agentBean != null) {
+                    if(!agentBean.getChildList().contains(user.getId())){
+                        agentBean.getChildList().add(user.getId());
+                    }
+                }
+            }
+
         }
         String token = getToken(user.getId());
         saveUser2Redis(user, token);
@@ -246,20 +273,20 @@ public class LoginAction {
     }
 
 
-    @RequestMapping("/")
-    public Map<String, Object> test() {
-//        RedisManager.getUserRedisService().addUserMoney("", 1);
-        int partition = 0;
-        KafkaMsgKey kafkaKey = new KafkaMsgKey();
-        kafkaKey.setUserId(3);
-        kafkaKey.setPartition(1);
-        String keyJson = JsonUtil.toJson(kafkaKey);
-        SpringUtil.getBean(MsgProducer.class).send("gamePaijiuService", kafkaKey, "hello");
-
-        Map<String, Object> params = new HashMap<>();
-        System.out.println("====");
-        return params;
-    }
+//    @RequestMapping("/")
+//    public Map<String, Object> test() {
+////        RedisManager.getUserRedisService().addUserMoney("", 1);
+//        int partition = 0;
+//        KafkaMsgKey kafkaKey = new KafkaMsgKey();
+//        kafkaKey.setUserId(3);
+//        kafkaKey.setPartition(1);
+//        String keyJson = JsonUtil.toJson(kafkaKey);
+//        SpringUtil.getBean(MsgProducer.class).send("gamePaijiuService", kafkaKey, "hello");
+//
+//        Map<String, Object> params = new HashMap<>();
+//        System.out.println("====");
+//        return params;
+//    }
 
     @RequestMapping("/addblacklist")
     public Map<String, Object> addBlackList(String userId) {
