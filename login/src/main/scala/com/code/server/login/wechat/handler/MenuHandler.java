@@ -156,6 +156,8 @@ public class MenuHandler extends AbstractHandler {
             }
 
 
+            //todo 测试
+//            rebate = 1;
             //todo 扣 7%
 
             Double amount = rebate * 93;
@@ -164,7 +166,7 @@ public class MenuHandler extends AbstractHandler {
             //到账金额
             double amountInt = Double.valueOf(df.format(amount / 100)) ;
             //手续费
-            double poundage = rebate - amountInt;
+            double poundage =  Double.valueOf(df.format((rebate *100 - amountInt *100)/100));
 
 
             long tradeId = createOrderId();
@@ -179,7 +181,7 @@ public class MenuHandler extends AbstractHandler {
             wxEntPayRequest.setOpenid(openId);
             wxEntPayRequest.setCheckName("NO_CHECK");
             //金额 为分
-            wxEntPayRequest.setAmount(100);
+            wxEntPayRequest.setAmount(amount.intValue());
             wxEntPayRequest.setDescription("提现");
             wxEntPayRequest.setSpbillCreateIp(ip);
 
@@ -217,17 +219,16 @@ public class MenuHandler extends AbstractHandler {
                             .url("")
                             .build();
 
-                    WxMpTemplateData wxMpTemplateData = new WxMpTemplateData();
+                    String date = dateFormat.format(new Date());
+                    System.out.println(date);
+
                     templateMessage.addData(new WxMpTemplateData("first","您申请的提现金额已到帐."))
-                            .addData(new WxMpTemplateData("keyword1", dateFormat.format(new Date())))
+                            .addData(new WxMpTemplateData("keyword1",date))
                             .addData(new WxMpTemplateData("keyword2","提现到零钱"))
                             .addData(new WxMpTemplateData("keyword3", ""+rebate))
                             .addData(new WxMpTemplateData("keyword4", ""+poundage))
-                            .addData(new WxMpTemplateData("keyword1", ""+amountInt))
+                            .addData(new WxMpTemplateData("keyword5", ""+amountInt))
                             .addData(new WxMpTemplateData("remark", "感谢您的使用"));
-                    String msgId = wxService.getTemplateMsgService().sendTemplateMsg(templateMessage);
-
-                    System.out.println(msgId);
 
                     wxService.getTemplateMsgService().sendTemplateMsg(templateMessage);
                     //发送消息
