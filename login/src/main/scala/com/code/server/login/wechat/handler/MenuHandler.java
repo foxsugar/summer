@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.SocketException;
+import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -159,9 +160,9 @@ public class MenuHandler extends AbstractHandler {
 
             Double amount = rebate * 93;
 
-
+            DecimalFormat df   = new DecimalFormat("######0.00");
             //到账金额
-            double amountInt = amount.intValue() / 100;
+            double amountInt = Double.valueOf(df.format(amount / 100)) ;
             //手续费
             double poundage = rebate - amountInt;
 
