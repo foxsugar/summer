@@ -577,11 +577,15 @@ public class GameZhaGuZi extends Game {
 
                 boolean isFeng = playerZhaGuZi.isCanJieFeng();
 
-                if (isFeng == false) {
-                    if (res == 1 || res == 2) {
-                        return ErrorCode.CAN_NOT_DISCARD;
+                //如果不是同一个人在判断
+                if (playerZhaGuZi1.userId != playerZhaGuZi2.userId){
+                    if (isFeng == false) {
+                        if (res == 1 || res == 2) {
+                            return ErrorCode.CAN_NOT_DISCARD;
+                        }
                     }
                 }
+
 
                 playerZhaGuZi.opList.add(op);
 
