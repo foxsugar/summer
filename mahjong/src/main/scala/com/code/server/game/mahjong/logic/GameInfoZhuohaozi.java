@@ -11,10 +11,12 @@ import java.util.Random;
  */
 public class GameInfoZhuohaozi extends GameInfoNew {
 
-    public static final int mode_单耗子 = 1;
-    public static final int mode_双耗子 = 2;
-    public static final int mode_扛耗子 = 3;
-    public static final int mode_显庄 = 4;
+    public static final int mode_风耗子 = 1;
+    public static final int mode_随机耗子 = 2;
+    public static final int mode_单耗子 = 3;
+    public static final int mode_双耗子 = 4;
+    public static final int mode_显庄 = 5;
+    public static final int mode_扛耗子 = 6;
 
     /**
      * 初始化方法
@@ -39,21 +41,23 @@ public class GameInfoZhuohaozi extends GameInfoNew {
     }
 
 
-
-
     /**
      * 初始化混
-     *
      */
     public void initHun() {
 
         //随机混
         Random rand = new Random();
-        int hunIndex = rand.nextInt(34);
-
-        if(PlayerCardsInfoMj.isHasMode(this.room.mode,mode_双耗子)){
-            this.hun = HuWithHun.getHunType(hunIndex);
+        int hunIndex = 0;
+        if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_风耗子)) {
+            hunIndex = 27 + rand.nextInt(7);
         }else{
+            hunIndex = rand.nextInt(34);
+        }
+
+        if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_双耗子)) {
+            this.hun = HuWithHun.getHunType(hunIndex);
+        } else {
             this.hun.add(hunIndex);
         }
 
@@ -61,8 +65,6 @@ public class GameInfoZhuohaozi extends GameInfoNew {
         MsgSender.sendMsg2Player("gameService", "noticeHun", this.hun, users);
 
     }
-
-
 
 
 }

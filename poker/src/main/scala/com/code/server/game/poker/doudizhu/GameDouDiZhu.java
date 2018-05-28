@@ -247,6 +247,7 @@ public class GameDouDiZhu extends Game {
         playerCardInfos.get(testUserId).cards.addAll(roomDouDiZhu.testNextCards);
         //通知发牌
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "deal", roomDouDiZhu.testNextCards), testUserId);
+        cards.removeAll(roomDouDiZhu.testNextCards);
 
         for (PlayerCardInfoDouDiZhu playerCardInfo : playerCardInfos.values()) {
             if (playerCardInfo.userId != testUserId) {
@@ -258,6 +259,8 @@ public class GameDouDiZhu extends Game {
                 MsgSender.sendMsg2Player(new ResponseVo("gameService", "deal", playerCardInfo.cards), playerCardInfo.userId);
             }
         }
+
+
 
         roomDouDiZhu.testNextCards = null;
         roomDouDiZhu.testUserId = 0;
@@ -281,8 +284,8 @@ public class GameDouDiZhu extends Game {
             }
 
             //底牌
-            tableCards.addAll(cards);
         }
+        tableCards.addAll(cards);
 
     }
 

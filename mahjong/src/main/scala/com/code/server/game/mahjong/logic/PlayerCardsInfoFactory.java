@@ -86,6 +86,9 @@ public class PlayerCardsInfoFactory {
             case "103":
                 playerCardsInfo = new PlayerCardsInfoKD_XY();//小翼扣点
                 break;
+            case "104":
+                playerCardsInfo = new PlayerCardsInfoZhuohaozi();
+                break;
             default:
                 logger.error("初始化 playercardsInfo 错误");
                 return null;
