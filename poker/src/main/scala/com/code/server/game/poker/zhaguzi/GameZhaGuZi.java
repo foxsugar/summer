@@ -569,17 +569,20 @@ public class GameZhaGuZi extends Game {
                 PlayerZhaGuZi playerZhaGuZi1 = playerCardInfos.get(uid);
                 PlayerZhaGuZi playerZhaGuZi2 = playerCardInfos.get(last.get("uid"));
 
-                int res = CardUtils.compare(playerZhaGuZi1, list, playerZhaGuZi2, (List<Integer>) last.get("cards"));
-                //说明报错了
-                if (res != 0 && res != 1 && res != 2) {
-                    return ErrorCode.CARDS_ERROR;
-                }
+                int res = 0;
 
                 boolean isFeng = playerZhaGuZi.isCanJieFeng();
 
                 //如果不是同一个人在判断
                 if (playerZhaGuZi1.userId != playerZhaGuZi2.userId){
                     if (isFeng == false) {
+
+                        CardUtils.compare(playerZhaGuZi1, list, playerZhaGuZi2, (List<Integer>) last.get("cards"));
+                        //说明报错了
+                        if (res != 0 && res != 1 && res != 2) {
+                            return ErrorCode.CARDS_ERROR;
+                        }
+
                         if (res == 1 || res == 2) {
                             return ErrorCode.CAN_NOT_DISCARD;
                         }
