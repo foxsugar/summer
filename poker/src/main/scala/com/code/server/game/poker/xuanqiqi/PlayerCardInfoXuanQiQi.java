@@ -42,7 +42,7 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
     protected double score;
     protected double allScore;
 
-
+    public Integer safeNum = 0;//有效罗数
 
     //状态 got推送客户端一次，catch表示已经扣过，可以得到分数
     protected boolean gotThree = false;
@@ -210,5 +210,21 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
 
     public void setCanChoose(String canChoose) {
         this.canChoose = canChoose;
+    }
+
+    public Integer getSafeNum() {
+        return safeNum;
+    }
+
+    public void setSafeNum(Integer safeNum) {
+        this.safeNum = safeNum;
+    }
+
+    public void addScore(int addScore){
+        this.score = score+addScore;
+    }
+
+    public void addAllScore(int addScore){
+        this.allScore = allScore+addScore;
     }
 }
