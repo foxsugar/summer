@@ -124,7 +124,6 @@ public class GameZhaGuZi extends Game {
 
     public void startGame(List<Long> users, Room room) {
 
-
         this.room = (RoomZhaGuZi) room;
         this.users = users;
 
@@ -494,7 +493,7 @@ public class GameZhaGuZi extends Game {
 
             result.put("player", assembleDiscardResult(playerZhaGuZi));
             MsgSender.sendMsg2Player(serviceName, "discardResult", result, users);
-
+            MsgSender.sendMsg2Player(serviceName, "discard", 0, uid);
             //
             Map<String, Object> map = new HashMap();
             map.put("uid", uid);
@@ -510,9 +509,11 @@ public class GameZhaGuZi extends Game {
             Map<String, Object> last = null;
             if (leaveCards.size() != 0) {
 //                last = leaveCards.get(leaveCards.size() - 1);
+                int lastIndex = leaveCards.size() - 1;
+
                 while (true) {
 
-                    int lastIndex = leaveCards.size() - 1;
+
                     if (lastIndex >= 0) {
 
                         last = leaveCards.get(lastIndex);
@@ -527,6 +528,8 @@ public class GameZhaGuZi extends Game {
                         System.out.println("没有找到 报异常 -------");
                         break;
                     }
+
+                    lastIndex--;
                 }
             }
 
@@ -537,6 +540,13 @@ public class GameZhaGuZi extends Game {
                 //第一把第一个人必须出红桃5
                 if (!list.contains(local8) && this.room.curGameNumber == 1) {
                     return MUST_HONGTAO_FIVE;
+                }
+
+                //然后判断 list
+
+                int type = CardUtils.computeCardType(playerZhaGuZi, list);
+                if (type == CardUtils.ERROR){
+                    return ErrorCode.CARDS_ERROR;
                 }
 
                 result.put("player", assembleDiscardResult(playerZhaGuZi));
@@ -562,7 +572,7 @@ public class GameZhaGuZi extends Game {
                 int res = CardUtils.compare(playerZhaGuZi1, list, playerZhaGuZi2, (List<Integer>) last.get("cards"));
                 //说明报错了
                 if (res != 0 && res != 1 && res != 2) {
-                    return res;
+                    return ErrorCode.CARDS_ERROR;
                 }
 
                 boolean isFeng = playerZhaGuZi.isCanJieFeng();
