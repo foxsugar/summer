@@ -29,7 +29,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
             return false;
         }
 
-        List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(getCardsNoChiPengGang(cards), this.gameInfo.hun,this.getChiPengGangNum());
+        List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(getCardsNoChiPengGang(cards), this.gameInfo.hun, this.getChiPengGangNum());
         for (HuCardType huCardType : huCardTypes) {
             int point = getMaxPoint(huCardType);
             if (point >= TING_MIN_SCORE) {
@@ -55,18 +55,19 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
     /**
      * 杠之后是否能听
+     *
      * @param cards
      * @param cardType
      * @return
      */
-    protected boolean isCanTingAfterGang(List<String> cards,int cardType){
+    protected boolean isCanTingAfterGang(List<String> cards, int cardType) {
         //先删除这次杠的
-        removeCardByType(cards,cardType,4);
+        removeCardByType(cards, cardType, 4);
         int chipenggangNum = this.getChiPengGangNum();
         //去掉碰
-        for(int pt : pengType.keySet()){//如果杠的是之前碰过的牌
+        for (int pt : pengType.keySet()) {//如果杠的是之前碰过的牌
             if (pt != cardType) {
-                removeCardByType(cards,pt,3);
+                removeCardByType(cards, pt, 3);
                 chipenggangNum--;
             }
         }
@@ -75,7 +76,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
         chipenggangNum++;
 
-        List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(cards, this.gameInfo.hun,chipenggangNum);
+        List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(cards, this.gameInfo.hun, chipenggangNum);
 
         for (HuCardType huCardType : huCardTypes) {
             int point = getMaxPoint(huCardType);
@@ -90,7 +91,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
     @Override
     public boolean isCanHu_dianpao(String card) {
-        if(!isTing) return false;
+        if (!isTing) return false;
         //混牌 不能点炮
         int cardType = CardTypeUtil.getTypeByCard(card);
         if (this.gameInfo.hun.contains(cardType)) {
@@ -107,10 +108,9 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
     }
 
 
-
     @Override
     public boolean isCanHu_zimo(String card) {
-        if(!isTing) return false;
+        if (!isTing) return false;
         int lastCard = CardTypeUtil.getTypeByCard(card);
 
         List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), getChiPengGangNum(), this.gameInfo.hun, lastCard);
@@ -127,28 +127,67 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
     }
 
 
-
     @Override
-    public void computeALLGang() {
-        int gangScore = 0;
-        gangScore += this.mingGangType.size();
-        for (int gangType : this.anGangType) {
-            boolean isJinGang = this.gameInfo.hun.contains(gangType);
-            if (isJinGang) {
-                gangScore += 8;
-            } else {
-                gangScore += 2;
+    public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card) {
+        super.gangCompute(room, gameInfo, isMing, diangangUser, card);
+        int gangType = CardTypeUtil.getTypeByCard(card);
+        boolean isJinGang = this.gameInfo.hun.contains(gangType);
+        int score = CardTypeUtil.cardTingScore.get(gangType) * 2;
+        if (isJinGang) score = 100;
+        int allScore = 0;
+
+        if (isMing && diangangUser != -1) {
+
+            boolean isDianpaoTing = this.gameInfo.getPlayerCardsInfos().get(diangangUser).isTing;
+
+            for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
+                if (playerCardsInfoMj.getUserId() != this.userId) {
+                    allScore += score;
+                    if (isDianpaoTing) {
+                        playerCardsInfoMj.addGangScore(-score);
+                        playerCardsInfoMj.addScore(-score);
+                        this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -score);
+                    }
+
+                }
+
+            }
+
+            if (!isDianpaoTing) {
+                PlayerCardsInfoMj dianGangUser = this.gameInfo.getPlayerCardsInfos().get(diangangUser);
+                dianGangUser.addGangScore(-allScore);
+                dianGangUser.addScore(-allScore);
+                this.roomInfo.addUserSocre(dianGangUser.getUserId(), -allScore);
+            }
+        } else {
+            if (!isMing) score *= 2;
+            for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
+                if (playerCardsInfoMj.getUserId() != this.userId) {
+                    allScore += score;
+                    playerCardsInfoMj.addGangScore(-score);
+                    playerCardsInfoMj.addScore(-score);
+                    this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -score);
+                }
             }
         }
-//        computeAddScore(gangScore, this.userId, true);
+
+        this.addGangScore(allScore);
+        this.addScore(allScore);
+        this.roomInfo.addUserSocre(this.getUserId(), allScore);
+
+
+
+        room.pushScoreChange();
     }
+
+
+
 
     @Override
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
-        //算杠分
-        gameInfo.computeAllGang();
 
 
+        //显庄 庄家输赢每家多10分
 
         System.out.println("===========房间倍数============ " + room.getMultiple());
         List<String> cs = getCardsNoChiPengGang(cards);
@@ -163,9 +202,9 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
     }
 
 
-
     /**
      * 得到最大听的点数
+     *
      * @param huCardType
      * @return
      */

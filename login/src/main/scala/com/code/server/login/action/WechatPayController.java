@@ -1,5 +1,6 @@
 package com.code.server.login.action;
 
+import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.ChargeService;
@@ -10,6 +11,7 @@ import com.code.server.login.config.ServerConfig;
 import com.code.server.login.config.WechatConfig;
 import com.code.server.login.kafka.MsgSender;
 import com.code.server.login.util.XMLUtil;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.IdWorker;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
@@ -237,6 +239,16 @@ public class WechatPayController {
     }
 
 
+    private void agentRebate(long userId,long parentId){
+        //自己是否是代理
+        AgentBean own = RedisManager.getAgentRedisService().getAgentBean(userId);
+        //自己不是代理
+        if (own == null) {
+
+        }else{//自己是代理
+
+        }
+    }
     /**
      * 获取访问者IP
      * <p>

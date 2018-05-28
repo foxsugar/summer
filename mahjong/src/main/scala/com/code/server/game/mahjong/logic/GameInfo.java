@@ -1398,7 +1398,7 @@ public class GameInfo extends Game {
         });
 
 
-        ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, "tingWhat", result);
+        ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, "tingWhatResp", result);
         MsgSender.sendMsg2Player(vo, userId);
 
         return 0;

@@ -10,5 +10,7 @@ public interface ErrorCode {
     int ALREADY_AGENT = 100;
     int NOT_WX_USER = 101;//未关注
 
+    int NOT_LOGIN = 1000;//未关注
+
 
 }

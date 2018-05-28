@@ -1,6 +1,7 @@
 package com.code.server.login.action;
 
 import com.code.server.constant.game.AgentBean;
+import com.code.server.constant.game.UserBean;
 import com.code.server.db.Service.GameAgentService;
 import com.code.server.db.Service.GameAgentWxService;
 import com.code.server.db.Service.RecommendService;
@@ -8,6 +9,7 @@ import com.code.server.db.Service.UserService;
 import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.GameAgentWx;
 import com.code.server.db.model.Recommend;
+import com.code.server.db.model.User;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.service.AgentService;
 import com.code.server.redis.service.AgentRedisService;
@@ -86,8 +88,8 @@ public class WechatAction extends Cors {
 
     @RequestMapping(value = "/jsapiparam")
     @ResponseBody
-    public String wxJs(@RequestParam("url") String url) throws WxErrorException {
-        return JsonUtil.toJson(wxMpService.createJsapiSignature(url));
+    public AgentResponse wxJs(@RequestParam("url") String url) throws WxErrorException {
+        return new AgentResponse().setData(wxMpService.createJsapiSignature(url));
     }
 
     @RequestMapping(value = "/core")
@@ -192,13 +194,16 @@ public class WechatAction extends Cors {
             //state 是id
             long agentId = Long.valueOf(state);
             //代理不存在 直接退出
-            if (!RedisManager.getAgentRedisService().isExit(agentId)) return;
+            AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+            if (agentBean == null) return;
 
 
             String unionId = wxMpUser.getUnionId();
             //这个人是否已经点过
+            //todo 自己不能推荐自己
             Recommend recommend = recommendService.getRecommendDao().getByUnionId(unionId);
-            if (recommend == null) {
+            boolean isSelf = agentBean.getUnionId().equals(unionId);
+            if (recommend == null && !isSelf) {
                 recommend = new Recommend();
                 recommend.setUnionId(unionId).setAgentId(agentId);
                 //保存
@@ -207,6 +212,12 @@ public class WechatAction extends Cors {
                 //通知 代理 有人绑定他
                 String name = wxMpUser.getNickname();
 
+                wxMpService.getKefuService().sendKefuMessage(
+                        WxMpKefuMessage
+                                .TEXT()
+                                .toUser(agentBean.getOpenId())
+                                .content(name+"已点击您的专属链接,成功绑定")
+                                .build());
 
             }
             //处理跳转
@@ -237,10 +248,10 @@ public class WechatAction extends Cors {
         cookie.setDomain(serverConfig.getDomain());
         cookie.setPath("/");
         //过期时间 30s
-        cookie.setMaxAge(30);
+        cookie.setMaxAge(300);
         response.addCookie(cookie);
 
-        String url = MessageFormat.format("http://" + serverConfig.getDomain() + "/agent/#/sharelink?id={0}&sid={1}", agentId, sid);
+        String url = MessageFormat.format("http://" + serverConfig.getDomain() + "/agent/#/sharelink?id={0}&sid={1}", ""+agentId, sid);
 
         response.sendRedirect(url);
 
@@ -340,7 +351,8 @@ public class WechatAction extends Cors {
             setTokenCookie2Redis(wxMpUser, response, userId);
         }
 
-        String url = "http://" + serverConfig.getDomain() + "/agent/#/charge";
+        long time = System.currentTimeMillis();
+        String url = "http://" + serverConfig.getDomain() + "/agent/#/charge?time="+time;
         response.sendRedirect(url);
     }
 
@@ -452,4 +464,32 @@ public class WechatAction extends Cors {
         return agentResponse;
     }
 
+
+    @RequestMapping("/getUserInfo")
+    @ResponseBody
+    public AgentResponse getUserInfo(HttpServletRequest request) {
+        Map<String, String> map = getAgentByToken(request);
+        AgentResponse agentResponse = new AgentResponse();
+        if(map == null) return agentResponse.setCode(ErrorCode.NOT_LOGIN);
+        long userId = Long.valueOf(map.get("agentId"));
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        Map<String, Object> result = new HashMap<>();
+        if (userBean != null) {
+            result.put("id", userBean.getId());
+            result.put("name", userBean.getUsername());
+            result.put("money", userBean.getMoney());
+            result.put("gold", userBean.getGold());
+        }else{
+            User user = userService.getUserByUserId(userId);
+            if (user != null) {
+                result.put("id", user.getId());
+                result.put("name", user.getUsername());
+                result.put("money", user.getMoney());
+                result.put("gold", user.getGold());
+            }
+        }
+
+        return agentResponse.setData(result);
+
+    }
 }
