@@ -197,6 +197,49 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         int lastCard = CardTypeUtil.getTypeByCard(card);
         int chiPengGangNum = getChiPengGangNum();
         List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), chiPengGangNum, this.gameInfo.hun, lastCard);
+        int maxPoint = 0;
+        for (HuCardType huCardType : huList) {
+
+            int temp = getMaxPoint(huCardType);
+            if(temp > maxPoint){
+                maxPoint = temp;
+            }
+
+        }
+        boolean bankerIsZhuang = this.userId == this.gameInfo.getFirstTurn();
+
+        //显庄 并且 赢得人是庄家
+        boolean isBankerWinMore = bankerIsZhuang && isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_显庄);
+        if(isBankerWinMore) maxPoint += 10;
+
+        if(isZimo) maxPoint *= 2;
+
+        boolean isBaoAll = !isZimo && !this.gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing;
+
+        int allScore = 0;
+        for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
+            if (playerCardsInfoMj.getUserId() != this.userId) {
+
+                int tempScore = maxPoint;
+                //庄家多输
+                if (playerCardsInfoMj.getUserId() == this.gameInfo.getFirstTurn()) {
+                    if(isZimo) {
+                        tempScore += 20;
+                    }else{
+                        tempScore += 10;
+                    }
+                }
+                allScore += tempScore;
+
+                playerCardsInfoMj.addScore(-tempScore);
+                this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -tempScore);
+
+            }
+        }
+
+
+        this.addScore(allScore);
+        this.roomInfo.addUserSocre(this.userId, allScore);
 
 
     }

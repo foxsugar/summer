@@ -18,8 +18,6 @@ import java.util.Map;
 public class MsgHandler extends AbstractHandler {
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context, WxMpService wxMpService, WxSessionManager sessionManager) throws WxErrorException {
-        System.out.println("xiaoxi");
-
         return WxMpXmlOutMessage
                 .TRANSFER_CUSTOMER_SERVICE().fromUser(wxMessage.getToUser())
                 .toUser(wxMessage.getFromUser()).build();
