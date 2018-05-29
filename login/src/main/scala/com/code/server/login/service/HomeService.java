@@ -9,5 +9,5 @@ import java.util.Map;
  */
 
 public interface HomeService {
-    Map<Object, Object> findChargeInfoByOpenId(long agentId);
+    Map<Object, Object> findChargeInfoByAgentId(long agentId);
 }
