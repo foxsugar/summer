@@ -42,7 +42,7 @@ object GameService {
     case "jiaoDizhu" =>
       val isJiao = params.get("isJiao").asBoolean()
       val score = params.path("score").asInt(0)
-//      params.
+      //      params.
       game.jiaoDizhu(userId, isJiao, score)
     case "qiangDizhu" =>
 
@@ -118,7 +118,7 @@ object GameService {
       game.crap(userId)
     case "open"=>
       val firstId = params.path("firstId").asLong()
-//      game.open(userId, firstId);
+      //      game.open(userId, firstId);
       game.open(userId, firstId);
     case "fightForBanker" =>
       val flag = params.path("flag").asBoolean()
@@ -138,7 +138,7 @@ object GameService {
     case "setTestUser" =>
       game.setTestUser(userId)
     case "cheat" =>
-//      game.cheat(userId)
+      //      game.cheat(userId)
       val cheatId = params.path("cheatId").asLong()
       val uid = params.path("uid").asLong()
       game.cheat(cheatId, uid)
