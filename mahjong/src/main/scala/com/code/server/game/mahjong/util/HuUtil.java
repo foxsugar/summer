@@ -295,7 +295,7 @@ public class HuUtil implements HuType {
             newCards.addAll(cards);
             newCards.add(addCard);
 
-            List<HuCardType> huCardTypes = isHu(playerCardsInfo, cards, chiPengGangNum, hun, i);
+            List<HuCardType> huCardTypes = isHu(playerCardsInfo, newCards, chiPengGangNum, hun, i);
             for (HuCardType huCardType : huCardTypes) {
                 tingSet.add(i);
                 huCardType.tingCardType = i;

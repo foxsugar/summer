@@ -41,8 +41,8 @@ public class AgentService {
 
     public void loadAllAgent2Redis() {
         //如果redis里没有数据 则load
-        userService.getUserDao().count();
-        if (agentRedisService.getAgentNum() != 0) {
+//        userService.getUserDao().count();
+        if (agentRedisService.getAgentNum() == 0) {
             gameAgentService.getGameAgentDao().findAll().forEach(gameAgent -> {
                 agentRedisService.setAgentBean(gameAgent2AgentBean(gameAgent));
             });

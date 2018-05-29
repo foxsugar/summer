@@ -24,22 +24,22 @@ object HuWithHun {
     println("混的数量 : " + hunNum)
     //    for(c<- noHunCards if c !=0) println(c)
 
-    var list: util.List[util.List[CardGroup]] = new util.ArrayList()
+    var completeList: util.List[util.List[CardGroup]] = new util.ArrayList()
     var allList: util.List[util.List[CardGroup]] = new util.ArrayList()
     var groups: util.List[CardGroup] = new util.ArrayList()
-    Hu.testHun(true, noHunCards, list, allList, groups)
+    Hu.testHun(true, noHunCards, completeList, allList, groups)
 
-    System.out.println("配好的 : " + list)
+    System.out.println("配好的 : " + completeList)
     System.out.println("没配好的 : " + allList)
 
     var finalResult: util.List[HuCardType] = new util.ArrayList[HuCardType]()
     //全都是混
     if (hunNum == getCardNum(cardArray)) {
-      list.add(new util.ArrayList[CardGroup]())
+      completeList.add(new util.ArrayList[CardGroup]())
     }
 
     //有配成的
-    if (list.size() > 0) {
+    if (completeList.size() > 0) {
       //如果有混 肯定全是混组成的牌型
       if (hunNum > 0) {
         //三个混的数量
@@ -47,19 +47,19 @@ object HuWithHun {
         val isHasHun2 = hunNum % 3 == 2
 
         for (i <- 0 until hun3Num) {
-          list.forEach(l => l.add(new CardGroup(Hu.CARD_GROUP_TYPE_THREE_HUN, -1, 3)))
+          completeList.forEach(l => l.add(new CardGroup(Hu.CARD_GROUP_TYPE_THREE_HUN, -1, 3)))
 
         }
-        if (isHasHun2) list.forEach(l => l.add(new CardGroup(Hu.CARD_GROUP_TYPE_TWO_HUN_JIANG, -1, 2)))
+        if (isHasHun2) completeList.forEach(l => l.add(new CardGroup(Hu.CARD_GROUP_TYPE_TWO_HUN_JIANG, -1, 2)))
 
       }
 
       //      list
-      println(list.size())
-      println(list)
+      println(completeList.size())
+      println(completeList)
     }
 
-    var complete: util.List[util.List[CardGroup]] = new util.ArrayList(list)
+    var complete: util.List[util.List[CardGroup]] = new util.ArrayList(completeList)
 
     println("去重的 : " + allList)
 
@@ -109,7 +109,7 @@ object HuWithHun {
     var huCardTypeList: util.List[HuCardType] = new util.ArrayList[HuCardType]()
     //转换成hucardtype
     complete.forEach(cardGroups => huCardTypeList.add(Hu.convert2HuCardType(cardGroups)))
-//    huCardTypeList.forEach(huType => println(huType))
+    huCardTypeList.forEach(huType => println(huType))
 
 
     huCardTypeList.forEach(huCardType => getHuType(playerCardsInfo, cardArray,noHunCards, huCardType, hun, lastCard, hunNum))
