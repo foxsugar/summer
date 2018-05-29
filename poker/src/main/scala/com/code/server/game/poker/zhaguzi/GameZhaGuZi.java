@@ -65,6 +65,11 @@ public class GameZhaGuZi extends Game {
         this.currentTalkId = currentTalkId;
     }
 
+    protected  PlayerZhaGuZi lastOverPlayer = null;
+
+    //第一个出牌人的Id
+    protected  long firstDiscardId;
+
     public IfCard ifCard = new IfCard() {
         @Override
         public Map<Integer, Integer> cardDict() {
@@ -393,6 +398,8 @@ public class GameZhaGuZi extends Game {
             }
         }
 
+        this.firstDiscardId = player.getUserId();
+
 //        //提示出牌
         MsgSender.sendMsg2Player(serviceName, "discardStart", assembleDiscardResult(player), users);
 
@@ -500,7 +507,6 @@ public class GameZhaGuZi extends Game {
             map.put("op", op);
             map.put("cards", list);
             leaveCards.add(map);
-
             noticeDiscardStart(uid);
         }
         //管上
@@ -608,6 +614,8 @@ public class GameZhaGuZi extends Game {
                     }
 
                     playerZhaGuZi.rank = max + 1;
+
+                    this.lastOverPlayer = playerZhaGuZi;
                 }
 
                 List<PlayerZhaGuZiVo> bList = new ArrayList<>();
@@ -877,43 +885,87 @@ public class GameZhaGuZi extends Game {
     //能不能接风
     public boolean isCanJieFeng(PlayerZhaGuZi playerZhaGuZi) {
 
-        boolean isCanJieFeng = true;
+        if (this.lastOverPlayer == null) return false;
 
-        long lastId = playerZhaGuZi.userId;
-        while (true) {
+        List<Long> uidList = new ArrayList<>();
+        long nextId = this.firstDiscardId;
+        uidList.add(nextId);
+        while (true){
 
-            //上一个人的id
-            lastId = lastTurn(lastId);
-
-            if (lastId == playerZhaGuZi.userId) {
+            nextId = nextTurnId(nextId);
+            if (nextId == this.firstDiscardId){
                 break;
             }
+            uidList.add(nextId);
+        }
 
-            PlayerZhaGuZi shangJia = playerCardInfos.get(lastId);
-            if (shangJia.isOver() == false) {
-                isCanJieFeng = false;
+        if (uidList.get(0) - this.lastOverPlayer.getUserId() == 0){
+
+            for (PlayerZhaGuZi playerZhaGuZi1 : playerCardInfos.values()){
+
+                if (playerZhaGuZi1.opList.size() != this.lastOverPlayer.opList.size()){
+                    return false;
+                }
             }
 
-            PlayerZhaGuZi playerCurrent = playerCardInfos.get(lastId);
 
-            int index = playerCurrent.opList.size() - 1;
+        }else if (uidList.get(uidList.size() - 1) - this.lastOverPlayer.getUserId() == 0){
 
-            if (index < 0) {
-                isCanJieFeng = false;
-                break;
+            for (PlayerZhaGuZi playerZhaGuZi1 : playerCardInfos.values()){
+
+                if (playerZhaGuZi1 == lastOverPlayer) continue;
+
+                if (playerZhaGuZi1.opList.size() != (this.lastOverPlayer.opList.size() + 1)){
+                    return false;
+                }
             }
 
-            int operator = playerCurrent.opList.get(playerCurrent.opList.size() - 1);
+        }else {
 
-            if (playerCurrent.isOver()) continue;
+            long index = uidList.indexOf(this.lastOverPlayer.userId);
 
-            if (operator != Operator.PASS) {
-                isCanJieFeng = false;
+            for (int i = 0; i < uidList.size(); i++){
+
+                long uid = uidList.get(i);
+                PlayerZhaGuZi p = playerCardInfos.get(uid);
+                if (i < index){
+
+                    if (p.opList.size() != this.lastOverPlayer.opList.size() + 1){
+                        return false;
+                    }
+
+                }else if (i == index){
+
+                }else {
+
+                    if (p.opList.size() != this.lastOverPlayer.opList.size()){
+                        return false;
+                    }
+                }
+
+            }
+
+        }
+
+        int count = 0;
+
+        for (PlayerZhaGuZi playerZhaGuZi1 : playerCardInfos.values()){
+            if (playerZhaGuZi1.isOver()){
+                count++;
+            }else {
+                int op = playerZhaGuZi1.opList.get(playerZhaGuZi1.opList.size() - 1);
+                if (op == Operator.PASS){
+                    count++;
+                }
             }
         }
 
-        return isCanJieFeng;
+        if (count != playerCardInfos.size()){
+            return false;
+        }
 
+
+        return true;
     }
 
     //组装发牌的时候客户端需要的数据
