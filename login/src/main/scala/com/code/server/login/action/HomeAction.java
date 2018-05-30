@@ -28,7 +28,7 @@ public class HomeAction {
     public AgentResponse showHomePage(){
 
         long agentId = CookieUtil.getAgentIdByCookie();
-        Map<Object, Object> result = homeService.findChargeInfoByOpenId(agentId);
+        Map<Object, Object> result = homeService.findChargeInfoByAgentId(agentId);
 
         AgentResponse agentResponse = new AgentResponse();
 

@@ -23,13 +23,10 @@ import java.util.*;
 public class HomeServiceImpl implements HomeService{
 
     @Autowired
-    private IGameAgentDao gameAgentDao;
-
-    @Autowired
     private IChargeDao chargeDao;
 
     @Override
-    public Map<Object, Object> findChargeInfoByOpenId(long agentId) {
+    public Map<Object, Object> findChargeInfoByAgentId(long agentId) {
 
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         Date begin = DateUtil.getDayBegin();
