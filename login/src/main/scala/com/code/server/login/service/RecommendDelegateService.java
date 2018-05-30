@@ -9,9 +9,8 @@ import java.util.List;
  */
 public interface RecommendDelegateService {
 
-    //授权的游戏
-    List<String> authorizationGameList();
-
+    //查询玩家
     RecommandUserVo findRecommandUser(long userId);
 
+    boolean bindDelegate(long userId);
 }
