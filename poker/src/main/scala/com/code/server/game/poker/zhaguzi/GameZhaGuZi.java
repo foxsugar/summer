@@ -3,7 +3,9 @@ package com.code.server.game.poker.zhaguzi;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
 import com.code.server.game.poker.doudizhu.CardUtil;
+import com.code.server.game.poker.hitgoldflower.Player;
 import com.code.server.game.poker.pullmice.IfCard;
+import com.code.server.game.poker.tuitongzi.PlayerTuiTongZi;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.PlayerCardInfo;
 import com.code.server.game.room.Room;
@@ -799,15 +801,15 @@ public class GameZhaGuZi extends Game {
     }
 
     public void sendGameResult(int winCode){
-        List<Object> list = new ArrayList<>();
+        List<PlayerZhaGuZiVo> list = new ArrayList<>();
         //算分
         for (PlayerZhaGuZi playerZhaGuZi : playerCardInfos.values()) {
             this.room.addUserSocre(playerZhaGuZi.getUserId(), playerZhaGuZi.getScore());
-//            list.add((PlayerZhaGuZiVo) playerZhaGuZi.toVo());
-            list.add(assembleDiscardResult(playerZhaGuZi));
+            list.add((PlayerZhaGuZiVo) playerZhaGuZi.toVo());
         }
 
         Map<String, Object> result = new HashMap<>();
+
         result.put("winCode", winCode);
         result.put("players", list);
 
@@ -817,6 +819,8 @@ public class GameZhaGuZi extends Game {
         this.pushScoreChange();
 
         this.genRecord();
+
+        room.clearReadyStatus(true);
 
         this.sendFinalResult();
     }
