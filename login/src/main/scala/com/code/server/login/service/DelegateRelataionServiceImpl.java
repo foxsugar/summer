@@ -35,21 +35,79 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
             aList.add(uid);
         }
 
+        List<OneLevelInfoVo> result = new ArrayList<>();
         List<User> userList = this.userDao.findUsersByIdIn(aList);
         for (User user : userList){
-
+            OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
+            oneLevelInfoVo.setImage(user.getImage());
+            oneLevelInfoVo.setUsername(user.getUsername());
+            oneLevelInfoVo.setUid(user.getId() );
+            result.add(oneLevelInfoVo);
         }
 
-        return null;
+        return result;
     }
 
     @Override
     public List<TwoLevelInfoVo> fetchTwoLevelDelegateList() {
-        return null;
+
+        long agentId = CookieUtil.getAgentIdByCookie();
+        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+
+        List<Long> aList = new ArrayList<>();
+        for (long uid : agentBean.getChildList()){
+            if (RedisManager.getAgentRedisService().isExit(uid)){
+                aList.add(uid);
+            }
+        }
+
+        List<TwoLevelInfoVo> result = new ArrayList<>();
+        List<User> userList = this.userDao.findUsersByIdIn(aList);
+        for (User user : userList){
+            TwoLevelInfoVo twoLevelInfoVo = new TwoLevelInfoVo();
+            twoLevelInfoVo.setImage(user.getImage());
+            twoLevelInfoVo.setUsername(user.getUsername());
+            twoLevelInfoVo.setUid(user.getId() );
+            result.add(twoLevelInfoVo);
+        }
+
+        return result;
     }
 
     @Override
     public List<ThreeLevelInfoVo> fetchThreeLevelDelegateList() {
-        return null;
+
+        long agentId = CookieUtil.getAgentIdByCookie();
+        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+
+        List<Long> aList = new ArrayList<>();
+        for (long uid : agentBean.getChildList()){
+            if (RedisManager.getAgentRedisService().isExit(uid)){
+                aList.add(uid);
+            }
+        }
+
+        List<Long> bList = new ArrayList<>();
+        for (Long id : aList){
+            AgentBean bean = RedisManager.getAgentRedisService().getAgentBean(id);
+            for (Long uid : bean.getChildList()){
+                if (RedisManager.getAgentRedisService().isExit(uid)){
+                    bList.add(uid);
+                }
+            }
+        }
+
+        List<User> cList = userDao.findUsersByIdIn(bList);
+
+        List<ThreeLevelInfoVo> resultList = new ArrayList<>();
+        for (User user : cList){
+
+            ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
+            threeLevelInfoVo.setImage(user.getImage());
+            threeLevelInfoVo.setUsername(user.getUsername());
+            threeLevelInfoVo.setUid(user.getId());
+            resultList.add(threeLevelInfoVo);
+        }
+        return resultList;
     }
 }
