@@ -492,4 +492,17 @@ public class WechatAction extends Cors {
         return agentResponse.setData(result);
 
     }
+
+
+    @RequestMapping("/getAgentQr")
+    @ResponseBody
+    public AgentResponse getAgentQr(HttpServletRequest request) {
+        Map<String, String> map = new HashMap<>();
+        AgentResponse agentResponse = new AgentResponse();
+        long agentId = Long.valueOf(request.getParameter("agentId"));
+        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+        map.put("qr", agentBean.getQrTicket());
+        map.put("icon", agentBean.getImage());
+        return agentResponse.setData(map);
+    }
 }
