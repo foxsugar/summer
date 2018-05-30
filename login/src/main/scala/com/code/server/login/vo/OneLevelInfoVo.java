@@ -5,6 +5,8 @@ package com.code.server.login.vo;
  */
 public class OneLevelInfoVo {
 
+    private String uid;
+
     private String categoryName;
 
     private String image;
@@ -12,6 +14,14 @@ public class OneLevelInfoVo {
     private String username;
 
     private String money;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     public String getCategoryName() {
         return categoryName;

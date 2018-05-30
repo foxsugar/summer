@@ -2,10 +2,7 @@ package com.code.server.login.action;
 import com.code.server.db.dao.IChargeDao;
 import com.code.server.login.service.TodayChargeService;
 import com.code.server.login.service.TodayChargeServiceImpl;
-import com.code.server.login.vo.OneLevelVo;
-import com.code.server.login.vo.ThreeLevelVo;
-import com.code.server.login.vo.TwoLevelVo;
-import com.code.server.login.vo.WaterRecordVo;
+import com.code.server.login.vo.*;
 import com.code.server.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +30,26 @@ public class TodayChargeAction {
 
         List<WaterRecordVo> waterRecordVoList = todayChargeService.waterRecords();
         AgentResponse agentResponse = new AgentResponse(200, waterRecordVoList);
+        return agentResponse;
+    }
+
+    @RequestMapping("/homeCharge")
+    public AgentResponse homeCharge(){
+        HomeChargeVo homeChargeVo = todayChargeService.showCharge();
+        Map<String, Object> result = new HashMap<>();
+        result.put("result", homeChargeVo);
+        AgentResponse agentResponse = new AgentResponse(200, result);
+        return agentResponse;
+    }
+
+    @RequestMapping("/dhomeCharge")
+    public AgentResponse homeCharge(String start, String end){
+        Date startDate = DateUtil.convert2Date(start);
+        Date endDate = DateUtil.convert2Date(end);
+        HomeChargeVo homeChargeVo = todayChargeService.showCharge(startDate, endDate);
+        Map<String, Object> result = new HashMap<>();
+        result.put("result", homeChargeVo);
+        AgentResponse agentResponse = new AgentResponse(200, result);
         return agentResponse;
     }
 

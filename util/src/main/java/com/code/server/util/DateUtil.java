@@ -55,6 +55,11 @@ public final class DateUtil {
         return date;
     }
 
+    // todo
+    public static Date convert2Date(String string){
+        return new Date();
+    }
+
     public static String convert2String(Date date){
         return convert2String(date, DATE_TIME_FORMAT_YYYYMMDD_HH_MI);
     }
