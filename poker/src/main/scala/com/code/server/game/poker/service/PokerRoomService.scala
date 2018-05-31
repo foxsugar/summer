@@ -9,7 +9,6 @@ import com.code.server.game.poker.paijiu.{RoomGoldPaijiu, RoomPaijiu}
 import com.code.server.game.poker.pullmice.RoomPullMice
 import com.code.server.game.poker.tuitongzi.RoomTuiTongZi
 import com.code.server.game.poker.zhaguzi.RoomZhaGuZi
-import com.code.server.game.poker.zhaguzi.RoomZhaGuZi._
 import com.code.server.game.room.service.RoomManager
 import com.fasterxml.jackson.databind.JsonNode
 
@@ -153,7 +152,7 @@ object PokerRoomService {
         val clubRoomModel = params.path("clubRoomModel").asText
         return RoomPaijiu.createRoomNotInRoom(userId,roomType, gameType,gameNumber,isCreaterJoin,clubId,clubRoomModel)
       case "joinGoldRoom" =>
-        val goldRoomType = params.get("goldRoomType").asDouble()
+        val goldRoomType = params.get("goldRoomType").asInt()
         val roomType = params.get("roomType").asText()
         val gameType = params.get("gameType").asText()
         return RoomDouDiZhuGold.joinGoldRoom(userId,goldRoomType,roomType,gameType);
