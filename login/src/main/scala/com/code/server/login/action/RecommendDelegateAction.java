@@ -30,7 +30,7 @@ public class RecommendDelegateAction {
         return agentResponse;
     }
 
-    @RequestMapping("bindDelegate")
+    @RequestMapping("/bindDelegate")
     public AgentResponse bindDelegate(long userId){
 
         boolean ret = recommendDelegateService.bindDelegate(userId);
