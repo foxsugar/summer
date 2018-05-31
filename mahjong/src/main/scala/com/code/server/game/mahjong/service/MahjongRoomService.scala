@@ -80,7 +80,7 @@ object MahjongRoomService {
       case "joinGoldRoom"=>{
 
         val gameType: String = paramsjSONObject.get("gameType").asText
-        val goldRoomType = paramsjSONObject.path("goldRoomType").asDouble()
+        val goldRoomType = paramsjSONObject.path("goldRoomType").asInt()
         val rooms = RoomManager.getInstance().getNotFullRoom(gameType,goldRoomType)
         if(rooms.size() ==0 ) {
 
@@ -339,7 +339,7 @@ object MahjongRoomService {
   }
 
 
-  def joinGoldRoom(userId:Long, roomType:String, gameType:String, goldRoomType:Double): Unit ={
+  def joinGoldRoom(userId:Long, roomType:String, gameType:String, goldRoomType:Int): Unit ={
     val rooms = RoomManager.getInstance().getNotFullRoom(gameType, goldRoomType)
     if(rooms.size() == 0) {
       val mjRoom: Room = new RoomInfoGold()
