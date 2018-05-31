@@ -31,6 +31,16 @@ public class PlayerZhaGuZiVo implements IfacePlayerInfoVo{
 
     private boolean canJieFeng;
 
+    private double score;
+
+    public double getScore() {
+        return score;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
+    }
+
     //自己发牌之后持有的三 算分用 其他情况不用
     private List<Integer> retain3List = new ArrayList<>();
 

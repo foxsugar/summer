@@ -1,6 +1,7 @@
 package com.code.server.login.service;
 
 import com.code.server.constant.game.AgentBean;
+import com.code.server.constant.game.UserBean;
 import com.code.server.db.dao.IUserDao;
 import com.code.server.db.model.User;
 import com.code.server.login.util.CookieUtil;
@@ -23,22 +24,10 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
     private IUserDao userDao;
 
     @Override
-    public List<String> authorizationGameList() {
-
-        long agentId = CookieUtil.getAgentIdByCookie();
-        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
-        String gameItem = "game name";
-
-        List<String> list = new ArrayList<>();
-        if (agentBean == null){
-            list.add(gameItem);
-        }
-
-        return list;
-    }
-
-    @Override
     public RecommandUserVo findRecommandUser(long userId) {
+
+         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+
         //推荐代理
         User user = userDao.findOne(userId);
 
@@ -46,7 +35,7 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
 
         if (user == null){
             recommandUserVo.setUsername("用户不存在");
-            recommandUserVo.setUserId(userId);
+            recommandUserVo.setUserId(new Long(0));
             recommandUserVo.setImage(user.getImage());
         }else {
             recommandUserVo.setImage(user.getImage());
@@ -55,6 +44,12 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
         }
 
         return recommandUserVo;
+    }
+
+    @Override
+    public boolean bindDelegate(long userId) {
+
+        return false;
     }
 
 

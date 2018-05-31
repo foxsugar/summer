@@ -5,6 +5,16 @@ package com.code.server.login.vo;
  */
 public class TwoLevelInfoVo {
 
+    private long uid;
+
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
+    }
+
     private String categoryName;
 
     private String image;

@@ -5,6 +5,8 @@ package com.code.server.login.vo;
  */
 public class ThreeLevelInfoVo {
 
+    private long uid;
+
     private String categoryName;
 
     private String image;
@@ -12,6 +14,14 @@ public class ThreeLevelInfoVo {
     private String username;
 
     private String money;
+
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
+    }
 
     public String getCategoryName() {
         return categoryName;
