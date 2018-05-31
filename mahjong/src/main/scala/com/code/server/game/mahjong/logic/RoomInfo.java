@@ -115,15 +115,19 @@ public class RoomInfo extends RoomExtendGold {
         userScores.put(userId, s + score);
     }
 
-    public void clearReadyStatus() {
+    public void clearReadyStatus(boolean isAddGameNum) {
 //        GameManager.getInstance().remove(game);
+        clearReadyStatusGoldRoom(isAddGameNum);
         this.setGame(null);
 
         this.setInGame(false);
         for (Map.Entry<Long, Integer> entry : this.userStatus.entrySet()) {
             entry.setValue(STATUS_JOIN);
         }
-        this.curGameNumber += 1;
+        if(isAddGameNum){
+
+            this.curGameNumber += 1;
+        }
         //每局的庄家
         this.bankerMap.put(curGameNumber, bankerId);
 

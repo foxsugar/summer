@@ -44,7 +44,7 @@ public class GameInfoHM extends GameInfo {
             room.setBankerId(nextId);
         }
         noticeDissolutionResult();
-        room.clearReadyStatus();
+        room.clearReadyStatus(true);
     }
 
     protected boolean isRoomOver() {
@@ -79,7 +79,7 @@ public class GameInfoHM extends GameInfo {
         computeAllGang();
         sendResult(false, userId, null);
         noticeDissolutionResult();
-        room.clearReadyStatus();
+        room.clearReadyStatus(true);
     }
 
     /**

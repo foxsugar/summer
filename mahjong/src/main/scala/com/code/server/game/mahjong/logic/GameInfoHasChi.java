@@ -61,7 +61,7 @@ public class GameInfoHasChi extends GameInfoNew {
 //        room.setBankerId(nextId);
         noticeDissolutionResult();
         //通知所有玩家结束
-        room.clearReadyStatus();
+        room.clearReadyStatus(true);
 
     }
 

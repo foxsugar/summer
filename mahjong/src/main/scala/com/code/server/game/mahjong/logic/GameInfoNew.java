@@ -225,7 +225,7 @@ public class GameInfoNew extends GameInfo {
         isAlreadyHu = true;
         sendResult(true, -1L, yipaoduoxiang);
         noticeDissolutionResult();
-        room.clearReadyStatus();
+        room.clearReadyStatus(true);
     }
 
 
@@ -260,7 +260,7 @@ public class GameInfoNew extends GameInfo {
         isAlreadyHu = true;
         sendResult(true, playerCardsInfo.getUserId(), null);
         noticeDissolutionResult();
-        room.clearReadyStatus();
+        room.clearReadyStatus(true);
     }
 
 
@@ -325,7 +325,7 @@ public class GameInfoNew extends GameInfo {
         sendResult(false, userId, null);
         noticeDissolutionResult();
         //通知所有玩家结束
-        room.clearReadyStatus();
+        room.clearReadyStatus(true);
 
         //庄家换下个人
         if (room instanceof RoomInfo) {

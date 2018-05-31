@@ -216,6 +216,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         boolean isBaoAll = !isZimo && !this.gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing;
 
         int allScore = 0;
+
         for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
             if (playerCardsInfoMj.getUserId() != this.userId) {
 
@@ -230,12 +231,19 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
                 }
                 allScore += tempScore;
 
-                playerCardsInfoMj.addScore(-tempScore);
-                this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -tempScore);
+                if(!isBaoAll){
+                    playerCardsInfoMj.addScore(-tempScore);
+                    this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -tempScore);
+                }
 
             }
         }
 
+        if (isBaoAll) {
+            PlayerCardsInfoMj dpUser = this.gameInfo.getPlayerCardsInfos().get(dianpaoUser);
+            dpUser.addScore(-allScore);
+            this.roomInfo.addUserSocre(dpUser.getUserId(), -allScore);
+        }
 
         this.addScore(allScore);
         this.roomInfo.addUserSocre(this.userId, allScore);

@@ -46,7 +46,7 @@ public class GameInfoDonghu extends GameInfo {
         sendResult(false, userId, null);
         noticeDissolutionResult();
         //通知所有玩家结束
-        room.clearReadyStatus();
+        room.clearReadyStatus(true);
         //庄家换下个人
 //        if (room instanceof RoomInfo) {
 //            RoomInfo roomInfo = (RoomInfo) room;
