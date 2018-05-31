@@ -87,7 +87,7 @@ public class CenterService {
             });
 
             if (removeList.size() > 0) {
-                RedisManager.getAgentRedisService().removeSaveAgent(removeList);
+                RedisManager.getAgentRedisService().removeSaveAgent(removeList.toArray());
             }
         }
     }

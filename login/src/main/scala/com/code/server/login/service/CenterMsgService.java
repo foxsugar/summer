@@ -122,6 +122,7 @@ public class CenterMsgService implements IkafkaMsgId {
             replay.setLeftCount(count);
             replay.setData(msg);
             replay.setRoomUuid(room_uuid);
+            replay.setDate(new Date());
             replayService.save(replay);
         }
 

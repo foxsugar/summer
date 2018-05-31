@@ -4,6 +4,7 @@ import com.code.server.db.utils.BaseEntity;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by Administrator on 2017/7/3.
@@ -11,7 +12,12 @@ import javax.persistence.*;
 @DynamicUpdate
 @Entity
 @Table(name = "replay",
-        indexes = {@Index(name = "id", columnList = "id")})
+        indexes = {
+            @Index(name = "id", columnList = "id"),
+            @Index(name = "date", columnList = "date"),
+            @Index(name = "leftCount", columnList = "leftCount"),
+        }
+        )
 public class Replay extends BaseEntity {
     @Id
     private long id;
@@ -19,6 +25,8 @@ public class Replay extends BaseEntity {
     @Lob
     @Column(columnDefinition = "longtext")
     private String data;
+
+    private Date date;
 
     private long roomUuid;
 
@@ -54,6 +62,15 @@ public class Replay extends BaseEntity {
 
     public Replay setRoomUuid(long roomUuid) {
         this.roomUuid = roomUuid;
+        return this;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public Replay setDate(Date date) {
+        this.date = date;
         return this;
     }
 }

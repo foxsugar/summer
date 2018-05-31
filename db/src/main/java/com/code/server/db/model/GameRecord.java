@@ -13,7 +13,10 @@ import java.util.Date;
 @DynamicUpdate
 @Entity
 @Table(name = "game_record",
-        indexes = {@Index(name = "uuid", columnList = "uuid")})
+        indexes = {
+        @Index(name = "uuid", columnList = "uuid"),
+        @Index(name = "date", columnList = "date"),
+})
 public class GameRecord {
 
     @Id

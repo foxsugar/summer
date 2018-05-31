@@ -27,17 +27,17 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
 
     public static final int PERSONNUM = 3;
 
-    private static final Map<Double,Integer> needMoney = new HashMap<>();
-    private static final Map<Double,Integer> useMoney = new HashMap<>();
+    private static final Map<Integer, Integer> needMoney = new HashMap<Integer, Integer>();
+    private static final Map<Integer, Integer> useMoney = new HashMap<Integer, Integer>();
 
     static {
-        needMoney.put(10D,60);
-        needMoney.put(50D,300);
-        needMoney.put(100D,1000);
+        needMoney.put(10,60);
+        needMoney.put(50,300);
+        needMoney.put(100,1000);
 
-        useMoney.put(10D,2);
-        useMoney.put(50D,4);
-        useMoney.put(100D,6);
+        useMoney.put(10,2);
+        useMoney.put(50,4);
+        useMoney.put(100,6);
     }
 
     public boolean isGoldRoom() {
