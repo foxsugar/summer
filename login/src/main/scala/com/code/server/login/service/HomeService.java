@@ -1,5 +1,6 @@
 package com.code.server.login.service;
 
+import com.code.server.login.vo.HomePageVo;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -9,5 +10,6 @@ import java.util.Map;
  */
 
 public interface HomeService {
-    Map<Object, Object> findChargeInfoByAgentId(long agentId);
+
+    HomePageVo showHomePage();
 }
