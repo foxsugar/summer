@@ -1,5 +1,6 @@
 package com.code.server.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -57,7 +58,15 @@ public final class DateUtil {
 
     // todo
     public static Date convert2Date(String string){
-        return new Date();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME_FORMAT_YYYYMMDD_HH_MI);
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse(string);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 
     public static String convert2String(Date date){
