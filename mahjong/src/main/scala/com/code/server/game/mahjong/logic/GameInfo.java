@@ -181,7 +181,7 @@ public class GameInfo extends Game {
         sendResult(false, userId, null);
         noticeDissolutionResult();
         //通知所有玩家结束
-        room.clearReadyStatus();
+        room.clearReadyStatus(true);
         //庄家换下个人
         if (room instanceof RoomInfo) {
             RoomInfo roomInfo = (RoomInfo) room;
@@ -454,7 +454,7 @@ public class GameInfo extends Game {
         isAlreadyHu = true;
         sendResult(true, -1L, yipaoduoxiang);
         noticeDissolutionResult();
-        room.clearReadyStatus();
+        room.clearReadyStatus(true);
     }
 
 
@@ -1004,7 +1004,7 @@ public class GameInfo extends Game {
         isAlreadyHu = true;
         sendResult(true, playerCardsInfo.getUserId(), null);
         noticeDissolutionResult();
-        room.clearReadyStatus();
+        room.clearReadyStatus(true);
     }
 
     protected boolean isRoomOver() {

@@ -33,7 +33,7 @@ public class Room implements IfaceRoom {
     protected String roomType;
     protected String roomId;
     protected int createType;//房卡或金币
-    protected double goldRoomType;
+    protected int goldRoomType;
     protected int goldRoomPermission;
     protected String gameType;//项目名称
     protected int createNeedMoney;
@@ -115,7 +115,7 @@ public class Room implements IfaceRoom {
             throw new DataNotFoundException("roomdata not found : " + gameType);
         }
         //俱乐部 加入不要钱
-        if (isClubRoom()) {
+        if (isClubRoom() || isGoldRoom()) {
             return 0;
         }
 
@@ -139,7 +139,7 @@ public class Room implements IfaceRoom {
         clubRoomSetId();
     }
 
-    public void getDefaultGoldRoomInstance() {
+    public void getDefaultGoldRoomInstance(long userId, String roomType, String gameType, Integer goldRoomType ) {
 
     }
 
@@ -926,11 +926,11 @@ public class Room implements IfaceRoom {
         return this;
     }
 
-    public double getGoldRoomType() {
+    public int getGoldRoomType() {
         return goldRoomType;
     }
 
-    public Room setGoldRoomType(double goldRoomType) {
+    public Room setGoldRoomType(int goldRoomType) {
         this.goldRoomType = goldRoomType;
         return this;
     }

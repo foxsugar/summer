@@ -61,7 +61,7 @@ public class GameInfoNZZ extends GameInfo {
         computeAllGang();
         sendResult(false, userId, null);
         noticeDissolutionResult();
-        room.clearReadyStatus();
+        room.clearReadyStatus(true);
     }
 
     /**

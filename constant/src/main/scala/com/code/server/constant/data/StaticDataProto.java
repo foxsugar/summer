@@ -5932,11 +5932,84 @@ public final class StaticDataProto {
         getPaijiuDataNameBytes();
 
     /**
-     * <code>string instanceName = 8;</code>
+     * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+     */
+    int getEnterGoldCount();
+    /**
+     * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+     */
+    boolean containsEnterGold(
+        int key);
+    /**
+     * Use {@link #getEnterGoldMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.Integer, java.lang.Integer>
+    getEnterGold();
+    /**
+     * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+     */
+    java.util.Map<java.lang.Integer, java.lang.Integer>
+    getEnterGoldMap();
+    /**
+     * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+     */
+
+    int getEnterGoldOrDefault(
+        int key,
+        int defaultValue);
+    /**
+     * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+     */
+
+    int getEnterGoldOrThrow(
+        int key);
+
+    /**
+     * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+     */
+    int getOutGoldCount();
+    /**
+     * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+     */
+    boolean containsOutGold(
+        int key);
+    /**
+     * Use {@link #getOutGoldMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.Integer, java.lang.Integer>
+    getOutGold();
+    /**
+     * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+     */
+    java.util.Map<java.lang.Integer, java.lang.Integer>
+    getOutGoldMap();
+    /**
+     * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+     */
+
+    int getOutGoldOrDefault(
+        int key,
+        int defaultValue);
+    /**
+     * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+     */
+
+    int getOutGoldOrThrow(
+        int key);
+
+    /**
+     * <code>int32 rebate = 10;</code>
+     */
+    int getRebate();
+
+    /**
+     * <code>string instanceName = 11;</code>
      */
     java.lang.String getInstanceName();
     /**
-     * <code>string instanceName = 8;</code>
+     * <code>string instanceName = 11;</code>
      */
     com.google.protobuf.ByteString
         getInstanceNameBytes();
@@ -5958,6 +6031,7 @@ public final class StaticDataProto {
       isAddGold_ = 0;
       isWinner2Dizhu_ = 0;
       paijiuDataName_ = "";
+      rebate_ = 0;
       instanceName_ = "";
     }
 
@@ -6040,6 +6114,37 @@ public final class StaticDataProto {
               break;
             }
             case 66: {
+              if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
+                enterGold_ = com.google.protobuf.MapField.newMapField(
+                    EnterGoldDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000080;
+              }
+              com.google.protobuf.MapEntry<java.lang.Integer, java.lang.Integer>
+              enterGold__ = input.readMessage(
+                  EnterGoldDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              enterGold_.getMutableMap().put(
+                  enterGold__.getKey(), enterGold__.getValue());
+              break;
+            }
+            case 74: {
+              if (!((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
+                outGold_ = com.google.protobuf.MapField.newMapField(
+                    OutGoldDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000100;
+              }
+              com.google.protobuf.MapEntry<java.lang.Integer, java.lang.Integer>
+              outGold__ = input.readMessage(
+                  OutGoldDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              outGold_.getMutableMap().put(
+                  outGold__.getKey(), outGold__.getValue());
+              break;
+            }
+            case 80: {
+
+              rebate_ = input.readInt32();
+              break;
+            }
+            case 90: {
               java.lang.String s = input.readStringRequireUtf8();
 
               instanceName_ = s;
@@ -6069,6 +6174,10 @@ public final class StaticDataProto {
           return internalGetMoney();
         case 4:
           return internalGetEachMoney();
+        case 8:
+          return internalGetEnterGold();
+        case 9:
+          return internalGetOutGold();
         default:
           throw new RuntimeException(
               "Invalid map field number: " + number);
@@ -6329,10 +6438,171 @@ public final class StaticDataProto {
       }
     }
 
-    public static final int INSTANCENAME_FIELD_NUMBER = 8;
+    public static final int ENTERGOLD_FIELD_NUMBER = 8;
+    private static final class EnterGoldDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.Integer, java.lang.Integer> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.Integer, java.lang.Integer>newDefaultInstance(
+                  com.code.server.constant.data.StaticDataProto.internal_static_RoomData_EnterGoldEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.INT32,
+                  0,
+                  com.google.protobuf.WireFormat.FieldType.INT32,
+                  0);
+    }
+    private com.google.protobuf.MapField<
+        java.lang.Integer, java.lang.Integer> enterGold_;
+    private com.google.protobuf.MapField<java.lang.Integer, java.lang.Integer>
+    internalGetEnterGold() {
+      if (enterGold_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            EnterGoldDefaultEntryHolder.defaultEntry);
+      }
+      return enterGold_;
+    }
+
+    public int getEnterGoldCount() {
+      return internalGetEnterGold().getMap().size();
+    }
+    /**
+     * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+     */
+
+    public boolean containsEnterGold(
+        int key) {
+      
+      return internalGetEnterGold().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getEnterGoldMap()} instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.Integer, java.lang.Integer> getEnterGold() {
+      return getEnterGoldMap();
+    }
+    /**
+     * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+     */
+
+    public java.util.Map<java.lang.Integer, java.lang.Integer> getEnterGoldMap() {
+      return internalGetEnterGold().getMap();
+    }
+    /**
+     * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+     */
+
+    public int getEnterGoldOrDefault(
+        int key,
+        int defaultValue) {
+      
+      java.util.Map<java.lang.Integer, java.lang.Integer> map =
+          internalGetEnterGold().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+     */
+
+    public int getEnterGoldOrThrow(
+        int key) {
+      
+      java.util.Map<java.lang.Integer, java.lang.Integer> map =
+          internalGetEnterGold().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int OUTGOLD_FIELD_NUMBER = 9;
+    private static final class OutGoldDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.Integer, java.lang.Integer> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.Integer, java.lang.Integer>newDefaultInstance(
+                  com.code.server.constant.data.StaticDataProto.internal_static_RoomData_OutGoldEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.INT32,
+                  0,
+                  com.google.protobuf.WireFormat.FieldType.INT32,
+                  0);
+    }
+    private com.google.protobuf.MapField<
+        java.lang.Integer, java.lang.Integer> outGold_;
+    private com.google.protobuf.MapField<java.lang.Integer, java.lang.Integer>
+    internalGetOutGold() {
+      if (outGold_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            OutGoldDefaultEntryHolder.defaultEntry);
+      }
+      return outGold_;
+    }
+
+    public int getOutGoldCount() {
+      return internalGetOutGold().getMap().size();
+    }
+    /**
+     * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+     */
+
+    public boolean containsOutGold(
+        int key) {
+      
+      return internalGetOutGold().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getOutGoldMap()} instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.Integer, java.lang.Integer> getOutGold() {
+      return getOutGoldMap();
+    }
+    /**
+     * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+     */
+
+    public java.util.Map<java.lang.Integer, java.lang.Integer> getOutGoldMap() {
+      return internalGetOutGold().getMap();
+    }
+    /**
+     * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+     */
+
+    public int getOutGoldOrDefault(
+        int key,
+        int defaultValue) {
+      
+      java.util.Map<java.lang.Integer, java.lang.Integer> map =
+          internalGetOutGold().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+     */
+
+    public int getOutGoldOrThrow(
+        int key) {
+      
+      java.util.Map<java.lang.Integer, java.lang.Integer> map =
+          internalGetOutGold().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int REBATE_FIELD_NUMBER = 10;
+    private int rebate_;
+    /**
+     * <code>int32 rebate = 10;</code>
+     */
+    public int getRebate() {
+      return rebate_;
+    }
+
+    public static final int INSTANCENAME_FIELD_NUMBER = 11;
     private volatile java.lang.Object instanceName_;
     /**
-     * <code>string instanceName = 8;</code>
+     * <code>string instanceName = 11;</code>
      */
     public java.lang.String getInstanceName() {
       java.lang.Object ref = instanceName_;
@@ -6347,7 +6617,7 @@ public final class StaticDataProto {
       }
     }
     /**
-     * <code>string instanceName = 8;</code>
+     * <code>string instanceName = 11;</code>
      */
     public com.google.protobuf.ByteString
         getInstanceNameBytes() {
@@ -6402,8 +6672,23 @@ public final class StaticDataProto {
       if (!getPaijiuDataNameBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 7, paijiuDataName_);
       }
+      com.google.protobuf.GeneratedMessageV3
+        .serializeIntegerMapTo(
+          output,
+          internalGetEnterGold(),
+          EnterGoldDefaultEntryHolder.defaultEntry,
+          8);
+      com.google.protobuf.GeneratedMessageV3
+        .serializeIntegerMapTo(
+          output,
+          internalGetOutGold(),
+          OutGoldDefaultEntryHolder.defaultEntry,
+          9);
+      if (rebate_ != 0) {
+        output.writeInt32(10, rebate_);
+      }
       if (!getInstanceNameBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, instanceName_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 11, instanceName_);
       }
     }
 
@@ -6450,8 +6735,32 @@ public final class StaticDataProto {
       if (!getPaijiuDataNameBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, paijiuDataName_);
       }
+      for (java.util.Map.Entry<java.lang.Integer, java.lang.Integer> entry
+           : internalGetEnterGold().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.Integer, java.lang.Integer>
+        enterGold__ = EnterGoldDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(8, enterGold__);
+      }
+      for (java.util.Map.Entry<java.lang.Integer, java.lang.Integer> entry
+           : internalGetOutGold().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.Integer, java.lang.Integer>
+        outGold__ = OutGoldDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(9, outGold__);
+      }
+      if (rebate_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(10, rebate_);
+      }
       if (!getInstanceNameBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, instanceName_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, instanceName_);
       }
       memoizedSize = size;
       return size;
@@ -6485,6 +6794,12 @@ public final class StaticDataProto {
           == other.getIsWinner2Dizhu());
       result = result && getPaijiuDataName()
           .equals(other.getPaijiuDataName());
+      result = result && internalGetEnterGold().equals(
+          other.internalGetEnterGold());
+      result = result && internalGetOutGold().equals(
+          other.internalGetOutGold());
+      result = result && (getRebate()
+          == other.getRebate());
       result = result && getInstanceName()
           .equals(other.getInstanceName());
       return result;
@@ -6516,6 +6831,16 @@ public final class StaticDataProto {
       hash = (53 * hash) + getIsWinner2Dizhu();
       hash = (37 * hash) + PAIJIUDATANAME_FIELD_NUMBER;
       hash = (53 * hash) + getPaijiuDataName().hashCode();
+      if (!internalGetEnterGold().getMap().isEmpty()) {
+        hash = (37 * hash) + ENTERGOLD_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetEnterGold().hashCode();
+      }
+      if (!internalGetOutGold().getMap().isEmpty()) {
+        hash = (37 * hash) + OUTGOLD_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetOutGold().hashCode();
+      }
+      hash = (37 * hash) + REBATE_FIELD_NUMBER;
+      hash = (53 * hash) + getRebate();
       hash = (37 * hash) + INSTANCENAME_FIELD_NUMBER;
       hash = (53 * hash) + getInstanceName().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -6620,6 +6945,10 @@ public final class StaticDataProto {
             return internalGetMoney();
           case 4:
             return internalGetEachMoney();
+          case 8:
+            return internalGetEnterGold();
+          case 9:
+            return internalGetOutGold();
           default:
             throw new RuntimeException(
                 "Invalid map field number: " + number);
@@ -6633,6 +6962,10 @@ public final class StaticDataProto {
             return internalGetMutableMoney();
           case 4:
             return internalGetMutableEachMoney();
+          case 8:
+            return internalGetMutableEnterGold();
+          case 9:
+            return internalGetMutableOutGold();
           default:
             throw new RuntimeException(
                 "Invalid map field number: " + number);
@@ -6674,6 +7007,10 @@ public final class StaticDataProto {
 
         paijiuDataName_ = "";
 
+        internalGetMutableEnterGold().clear();
+        internalGetMutableOutGold().clear();
+        rebate_ = 0;
+
         instanceName_ = "";
 
         return this;
@@ -6709,6 +7046,11 @@ public final class StaticDataProto {
         result.isAddGold_ = isAddGold_;
         result.isWinner2Dizhu_ = isWinner2Dizhu_;
         result.paijiuDataName_ = paijiuDataName_;
+        result.enterGold_ = internalGetEnterGold();
+        result.enterGold_.makeImmutable();
+        result.outGold_ = internalGetOutGold();
+        result.outGold_.makeImmutable();
+        result.rebate_ = rebate_;
         result.instanceName_ = instanceName_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -6772,6 +7114,13 @@ public final class StaticDataProto {
         if (!other.getPaijiuDataName().isEmpty()) {
           paijiuDataName_ = other.paijiuDataName_;
           onChanged();
+        }
+        internalGetMutableEnterGold().mergeFrom(
+            other.internalGetEnterGold());
+        internalGetMutableOutGold().mergeFrom(
+            other.internalGetOutGold());
+        if (other.getRebate() != 0) {
+          setRebate(other.getRebate());
         }
         if (!other.getInstanceName().isEmpty()) {
           instanceName_ = other.instanceName_;
@@ -7266,9 +7615,281 @@ public final class StaticDataProto {
         return this;
       }
 
+      private com.google.protobuf.MapField<
+          java.lang.Integer, java.lang.Integer> enterGold_;
+      private com.google.protobuf.MapField<java.lang.Integer, java.lang.Integer>
+      internalGetEnterGold() {
+        if (enterGold_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              EnterGoldDefaultEntryHolder.defaultEntry);
+        }
+        return enterGold_;
+      }
+      private com.google.protobuf.MapField<java.lang.Integer, java.lang.Integer>
+      internalGetMutableEnterGold() {
+        onChanged();;
+        if (enterGold_ == null) {
+          enterGold_ = com.google.protobuf.MapField.newMapField(
+              EnterGoldDefaultEntryHolder.defaultEntry);
+        }
+        if (!enterGold_.isMutable()) {
+          enterGold_ = enterGold_.copy();
+        }
+        return enterGold_;
+      }
+
+      public int getEnterGoldCount() {
+        return internalGetEnterGold().getMap().size();
+      }
+      /**
+       * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+       */
+
+      public boolean containsEnterGold(
+          int key) {
+        
+        return internalGetEnterGold().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getEnterGoldMap()} instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.Integer, java.lang.Integer> getEnterGold() {
+        return getEnterGoldMap();
+      }
+      /**
+       * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+       */
+
+      public java.util.Map<java.lang.Integer, java.lang.Integer> getEnterGoldMap() {
+        return internalGetEnterGold().getMap();
+      }
+      /**
+       * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+       */
+
+      public int getEnterGoldOrDefault(
+          int key,
+          int defaultValue) {
+        
+        java.util.Map<java.lang.Integer, java.lang.Integer> map =
+            internalGetEnterGold().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+       */
+
+      public int getEnterGoldOrThrow(
+          int key) {
+        
+        java.util.Map<java.lang.Integer, java.lang.Integer> map =
+            internalGetEnterGold().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearEnterGold() {
+        internalGetMutableEnterGold().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+       */
+
+      public Builder removeEnterGold(
+          int key) {
+        
+        internalGetMutableEnterGold().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.Integer, java.lang.Integer>
+      getMutableEnterGold() {
+        return internalGetMutableEnterGold().getMutableMap();
+      }
+      /**
+       * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+       */
+      public Builder putEnterGold(
+          int key,
+          int value) {
+        
+        
+        internalGetMutableEnterGold().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <code>map&lt;int32, int32&gt; enterGold = 8;</code>
+       */
+
+      public Builder putAllEnterGold(
+          java.util.Map<java.lang.Integer, java.lang.Integer> values) {
+        internalGetMutableEnterGold().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+
+      private com.google.protobuf.MapField<
+          java.lang.Integer, java.lang.Integer> outGold_;
+      private com.google.protobuf.MapField<java.lang.Integer, java.lang.Integer>
+      internalGetOutGold() {
+        if (outGold_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              OutGoldDefaultEntryHolder.defaultEntry);
+        }
+        return outGold_;
+      }
+      private com.google.protobuf.MapField<java.lang.Integer, java.lang.Integer>
+      internalGetMutableOutGold() {
+        onChanged();;
+        if (outGold_ == null) {
+          outGold_ = com.google.protobuf.MapField.newMapField(
+              OutGoldDefaultEntryHolder.defaultEntry);
+        }
+        if (!outGold_.isMutable()) {
+          outGold_ = outGold_.copy();
+        }
+        return outGold_;
+      }
+
+      public int getOutGoldCount() {
+        return internalGetOutGold().getMap().size();
+      }
+      /**
+       * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+       */
+
+      public boolean containsOutGold(
+          int key) {
+        
+        return internalGetOutGold().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getOutGoldMap()} instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.Integer, java.lang.Integer> getOutGold() {
+        return getOutGoldMap();
+      }
+      /**
+       * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+       */
+
+      public java.util.Map<java.lang.Integer, java.lang.Integer> getOutGoldMap() {
+        return internalGetOutGold().getMap();
+      }
+      /**
+       * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+       */
+
+      public int getOutGoldOrDefault(
+          int key,
+          int defaultValue) {
+        
+        java.util.Map<java.lang.Integer, java.lang.Integer> map =
+            internalGetOutGold().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+       */
+
+      public int getOutGoldOrThrow(
+          int key) {
+        
+        java.util.Map<java.lang.Integer, java.lang.Integer> map =
+            internalGetOutGold().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearOutGold() {
+        internalGetMutableOutGold().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+       */
+
+      public Builder removeOutGold(
+          int key) {
+        
+        internalGetMutableOutGold().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.Integer, java.lang.Integer>
+      getMutableOutGold() {
+        return internalGetMutableOutGold().getMutableMap();
+      }
+      /**
+       * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+       */
+      public Builder putOutGold(
+          int key,
+          int value) {
+        
+        
+        internalGetMutableOutGold().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <code>map&lt;int32, int32&gt; outGold = 9;</code>
+       */
+
+      public Builder putAllOutGold(
+          java.util.Map<java.lang.Integer, java.lang.Integer> values) {
+        internalGetMutableOutGold().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+
+      private int rebate_ ;
+      /**
+       * <code>int32 rebate = 10;</code>
+       */
+      public int getRebate() {
+        return rebate_;
+      }
+      /**
+       * <code>int32 rebate = 10;</code>
+       */
+      public Builder setRebate(int value) {
+        
+        rebate_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 rebate = 10;</code>
+       */
+      public Builder clearRebate() {
+        
+        rebate_ = 0;
+        onChanged();
+        return this;
+      }
+
       private java.lang.Object instanceName_ = "";
       /**
-       * <code>string instanceName = 8;</code>
+       * <code>string instanceName = 11;</code>
        */
       public java.lang.String getInstanceName() {
         java.lang.Object ref = instanceName_;
@@ -7283,7 +7904,7 @@ public final class StaticDataProto {
         }
       }
       /**
-       * <code>string instanceName = 8;</code>
+       * <code>string instanceName = 11;</code>
        */
       public com.google.protobuf.ByteString
           getInstanceNameBytes() {
@@ -7299,7 +7920,7 @@ public final class StaticDataProto {
         }
       }
       /**
-       * <code>string instanceName = 8;</code>
+       * <code>string instanceName = 11;</code>
        */
       public Builder setInstanceName(
           java.lang.String value) {
@@ -7312,7 +7933,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>string instanceName = 8;</code>
+       * <code>string instanceName = 11;</code>
        */
       public Builder clearInstanceName() {
         
@@ -7321,7 +7942,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>string instanceName = 8;</code>
+       * <code>string instanceName = 11;</code>
        */
       public Builder setInstanceNameBytes(
           com.google.protobuf.ByteString value) {
@@ -10369,6 +10990,16 @@ public final class StaticDataProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_RoomData_EachMoneyEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_RoomData_EnterGoldEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_RoomData_EnterGoldEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_RoomData_OutGoldEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_RoomData_OutGoldEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_TestData_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -10444,24 +11075,29 @@ public final class StaticDataProto {
       "\001(\005\"*\n\016PaijiuCardData\022\n\n\002id\030\001 \001(\005\022\014\n\004car",
       "d\030\002 \001(\005\"/\n\023PaijiuCardGroupData\022\n\n\002id\030\001 \001" +
       "(\t\022\014\n\004name\030\002 \001(\t\"5\n\030PaijiuCardGroupScore" +
-      "Data\022\n\n\002id\030\001 \001(\t\022\r\n\005score\030\002 \001(\005\"\261\002\n\010Room" +
+      "Data\022\n\n\002id\030\001 \001(\t\022\r\n\005score\030\002 \001(\005\"\371\003\n\010Room" +
       "Data\022\n\n\002id\030\001 \001(\t\022#\n\005money\030\002 \003(\0132\024.RoomDa" +
       "ta.MoneyEntry\022\016\n\006maxBet\030\003 \001(\001\022+\n\teachMon" +
       "ey\030\004 \003(\0132\030.RoomData.EachMoneyEntry\022\021\n\tis" +
       "AddGold\030\005 \001(\005\022\026\n\016isWinner2Dizhu\030\006 \001(\005\022\026\n" +
-      "\016paijiuDataName\030\007 \001(\t\022\024\n\014instanceName\030\010 " +
-      "\001(\t\032,\n\nMoneyEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030" +
-      "\002 \001(\005:\0028\001\0320\n\016EachMoneyEntry\022\013\n\003key\030\001 \001(\005",
+      "\016paijiuDataName\030\007 \001(\t\022+\n\tenterGold\030\010 \003(\013" +
+      "2\030.RoomData.EnterGoldEntry\022\'\n\007outGold\030\t " +
+      "\003(\0132\026.RoomData.OutGoldEntry\022\016\n\006rebate\030\n ",
+      "\001(\005\022\024\n\014instanceName\030\013 \001(\t\032,\n\nMoneyEntry\022" +
+      "\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\005:\0028\001\0320\n\016EachM" +
+      "oneyEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\005:\0028" +
+      "\001\0320\n\016EnterGoldEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005valu" +
+      "e\030\002 \001(\005:\0028\001\032.\n\014OutGoldEntry\022\013\n\003key\030\001 \001(\005" +
       "\022\r\n\005value\030\002 \001(\005:\0028\001\"\275\002\n\010TestData\022\n\n\002id\030\001" +
       " \001(\005\022\014\n\004name\030\002 \001(\t\022\013\n\003age\030\003 \001(\005\022\013\n\003exp\030\004" +
       " \003(\005\022%\n\006weapon\030\005 \003(\0132\025.TestData.WeaponEn" +
       "try\022\020\n\010testLong\030\006 \001(\003\022\022\n\ntestDouble\030\007 \001(" +
-      "\001\022\026\n\016testListDouble\030\010 \003(\001\0223\n\rtestMapDoub" +
+      "\001\022\026\n\016testListDouble\030\010 \003(\001\0223\n\rtestMapDoub",
       "le\030\t \003(\0132\034.TestData.TestMapDoubleEntry\032-" +
       "\n\013WeaponEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(" +
       "\t:\0028\001\0324\n\022TestMapDoubleEntry\022\013\n\003key\030\001 \001(\003" +
       "\022\r\n\005value\030\002 \001(\001:\0028\001\"6\n\032XiaoyaoPaijiuCard" +
-      "GroupData\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\"<\n\037X",
+      "GroupData\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\"<\n\037X" +
       "iaoyaoPaijiuCardGroupScoreData\022\n\n\002id\030\001 \001" +
       "(\t\022\r\n\005score\030\002 \001(\005B?\n\035com.code.server.con" +
       "stant.dataB\017StaticDataProto\252\002\014com.bsl.da" +
@@ -10574,7 +11210,7 @@ public final class StaticDataProto {
     internal_static_RoomData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_RoomData_descriptor,
-        new java.lang.String[] { "Id", "Money", "MaxBet", "EachMoney", "IsAddGold", "IsWinner2Dizhu", "PaijiuDataName", "InstanceName", });
+        new java.lang.String[] { "Id", "Money", "MaxBet", "EachMoney", "IsAddGold", "IsWinner2Dizhu", "PaijiuDataName", "EnterGold", "OutGold", "Rebate", "InstanceName", });
     internal_static_RoomData_MoneyEntry_descriptor =
       internal_static_RoomData_descriptor.getNestedTypes().get(0);
     internal_static_RoomData_MoneyEntry_fieldAccessorTable = new
@@ -10586,6 +11222,18 @@ public final class StaticDataProto {
     internal_static_RoomData_EachMoneyEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_RoomData_EachMoneyEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_RoomData_EnterGoldEntry_descriptor =
+      internal_static_RoomData_descriptor.getNestedTypes().get(2);
+    internal_static_RoomData_EnterGoldEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_RoomData_EnterGoldEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_RoomData_OutGoldEntry_descriptor =
+      internal_static_RoomData_descriptor.getNestedTypes().get(3);
+    internal_static_RoomData_OutGoldEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_RoomData_OutGoldEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_TestData_descriptor =
       getDescriptor().getMessageTypes().get(7);

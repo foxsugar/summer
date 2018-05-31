@@ -156,17 +156,16 @@ public class MenuHandler extends AbstractHandler {
             }
 
 
-            //todo 测试
-//            rebate = 1;
-            //todo 扣 7%
 
-            Double amount = rebate * 93;
+
+            Double amount = rebate * 100;
 
             DecimalFormat df   = new DecimalFormat("######0.00");
             //到账金额
             double amountInt = Double.valueOf(df.format(amount / 100)) ;
             //手续费
-            double poundage =  Double.valueOf(df.format((rebate *100 - amountInt *100)/100));
+//            double poundage =  Double.valueOf(df.format((rebate *100 - amountInt *100)/100));
+            double poundage =  0;
 
 
             long tradeId = createOrderId();
@@ -220,14 +219,13 @@ public class MenuHandler extends AbstractHandler {
                             .build();
 
                     String date = dateFormat.format(new Date());
-                    System.out.println(date);
 
                     templateMessage.addData(new WxMpTemplateData("first","您申请的提现金额已到帐."))
                             .addData(new WxMpTemplateData("keyword1",date))
                             .addData(new WxMpTemplateData("keyword2","提现到零钱"))
-                            .addData(new WxMpTemplateData("keyword3", ""+rebate))
-                            .addData(new WxMpTemplateData("keyword4", ""+poundage))
-                            .addData(new WxMpTemplateData("keyword5", ""+amountInt))
+                            .addData(new WxMpTemplateData("keyword3", ""+amountInt))
+//                            .addData(new WxMpTemplateData("keyword4", ""+poundage))
+//                            .addData(new WxMpTemplateData("keyword5", ""+amountInt))
                             .addData(new WxMpTemplateData("remark", "感谢您的使用"));
 
                     wxService.getTemplateMsgService().sendTemplateMsg(templateMessage);

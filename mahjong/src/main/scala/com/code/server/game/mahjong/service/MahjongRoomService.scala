@@ -2,7 +2,7 @@ package com.code.server.game.mahjong.service
 
 import com.code.server.constant.response.{ErrorCode, ResponseVo}
 import com.code.server.game.mahjong.config.ServerConfig
-import com.code.server.game.mahjong.logic.{RoomFactory, RoomInfo}
+import com.code.server.game.mahjong.logic.{RoomFactory, RoomInfo, RoomInfoGold}
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
@@ -78,8 +78,14 @@ object MahjongRoomService {
       }
 
       case "joinGoldRoom"=>{
+
         val gameType: String = paramsjSONObject.get("gameType").asText
         val goldRoomType = paramsjSONObject.path("goldRoomType").asDouble()
+        val rooms = RoomManager.getInstance().getNotFullRoom(gameType,goldRoomType)
+        if(rooms.size() ==0 ) {
+
+        }
+        val goldRoomPermission = 1;
 
       }
     }
@@ -333,21 +339,21 @@ object MahjongRoomService {
   }
 
 
-  def joinGoldRoom(roomType:String, gameType:String, goldRoomType:Double): Unit ={
+  def joinGoldRoom(userId:Long, roomType:String, gameType:String, goldRoomType:Double): Unit ={
     val rooms = RoomManager.getInstance().getNotFullRoom(gameType, goldRoomType)
     if(rooms.size() == 0) {
-      val mjRoom: Room = new RoomInfo()
-      mjRoom.setRoomType(roomType)
-      mjRoom.setGameType(gameType)
-      mjRoom.setGoldRoomType(goldRoomType)
-      mjRoom.getDefaultGoldRoomInstance()
+      val mjRoom: Room = new RoomInfoGold()
+      mjRoom.getDefaultGoldRoomInstance(userId,roomType, gameType, goldRoomType)
 
-      RoomManager.getInstance().addNotFullRoom(mjRoom)
+
+      RoomManager.getInstance().addNotFullGoldRoom(mjRoom)
 
       //加入房间列表
       val serverId: Int = SpringUtil.getBean(classOf[ServerConfig]).getServerId
       RoomManager.addRoom(mjRoom.getRoomId, "" + serverId, mjRoom)
 
+      MsgSender.sendMsg2Player(new ResponseVo("mahjongRoomService", "joinGoldRoom", mjRoom.asInstanceOf[RoomInfo].toJSONObject), userId)
+      return 0
 
     }
 

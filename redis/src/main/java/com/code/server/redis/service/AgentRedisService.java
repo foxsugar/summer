@@ -178,22 +178,25 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         int scala3 = getScala(type, 3);
 
 
-
+        //房卡 扣6%的税
+        if (type == 0) {
+            num = num * 94 /100;
+        }
 
         if(agentId1 != 0) addRebate(agentId1, scala1 * num / 100);
         if(agentId2 != 0) addRebate(agentId2, scala2 * num / 100);
         if(agentId3 != 0) addRebate(agentId3, scala3 * num / 100);
 
-        //合伙人
+        //合伙人 10%
         if(partnerId !=0) addRebate(partnerId, 10 * num / 100);
     }
 
     private int getScala(int type, int level) {
 
         if (type == 0) {
-            return moneyScala.get(type);
+            return moneyScala.get(level);
         } else {
-            return goldScala.get(type);
+            return goldScala.get(level);
         }
 
     }
