@@ -10,7 +10,6 @@ import com.code.server.game.poker.paijiu.{GameGoldPaijiu, GamePaijiu}
 import com.code.server.game.poker.pullmice.GamePullMice
 import com.code.server.game.poker.tuitongzi.GameTuiTongZi
 import com.code.server.game.poker.xuanqiqi.GameXuanQiQi
-import com.code.server.game.poker.zhaguz.GameYSZ
 import com.code.server.game.poker.zhaguzi.GameZhaGuZi
 import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
@@ -25,8 +24,8 @@ object GameService {
   def dispatch(userId:Long, method:String, roomId:String, params:JsonNode):Int = {
     val game = getGame(roomId)
     game match {
-      case x:GameDouDiZhuGold =>dispatchGameDDZGoldService(userId,method,game.asInstanceOf[GameDouDiZhuGold],params)
       case x:GameDouDiZhu =>dispatchGameDDZService(userId,method,game.asInstanceOf[GameDouDiZhu],params)
+      case x:GameDouDiZhuGold =>dispatchGameDDZGoldService(userId,method,game.asInstanceOf[GameDouDiZhuGold],params)
       case x:GamePaijiu =>dispatchGamePJService(userId,method,game.asInstanceOf[GamePaijiu],params)
       case x:GameHitGoldFlower =>dispatchGameHGFService(userId,method,game.asInstanceOf[GameHitGoldFlower],params)
       case x:GameGuessCar =>dispatchGameGuessService(userId,method,game.asInstanceOf[GameGuessCar],params)
@@ -35,7 +34,6 @@ object GameService {
       case x:GamePullMice =>dispatchGamePullMiceService(userId,method,game.asInstanceOf[GamePullMice],params)
       case x:GameZhaGuZi =>dispatchGameZhaGuZiService(userId,method,game.asInstanceOf[GameZhaGuZi],params)
       case x:GameXuanQiQi =>dispatchGameXQQService(userId,method,game.asInstanceOf[GameXuanQiQi],params)
-      case x:GameYSZ =>dispatchGameYSZService(userId,method,game.asInstanceOf[GameYSZ],params)
     }
 
   }
@@ -202,29 +200,6 @@ object GameService {
   }
 
   private def dispatchGameHGFService(userId:Long,method: String, game: GameHitGoldFlower, params: JsonNode):Int = method match {
-    case "raise" =>
-      val addChip = params.path("addChip").asLong(0)
-      game.raise(userId,addChip);
-    case "call"=>
-      game.call(userId);
-    case "fold" =>
-      game.fold(userId);
-    case "see" =>
-      game.see(userId);
-    case "kill" =>
-      val accepterId = params.path("accepterId").asLong(0)
-      game.kill(userId,accepterId);
-    case "perspective" =>
-      game.perspective(userId);
-    case "changeCard" =>
-      val userId = params.path("userId").asLong(0)
-      val cardType = params.path("type").asText()
-      game.changeCard(userId,cardType);
-    case _ =>
-      ErrorCode.REQUEST_PARAM_ERROR
-  }
-
-  private def dispatchGameYSZService(userId:Long,method: String, game: GameYSZ, params: JsonNode):Int = method match {
     case "raise" =>
       val addChip = params.path("addChip").asLong(0)
       game.raise(userId,addChip);
