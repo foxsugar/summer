@@ -216,6 +216,7 @@ public class GameTuiTongZi extends Game{
 
         betStart();
     }
+
     //询问是否继续坐庄
     public void continueBankerStart(){
 
@@ -226,6 +227,7 @@ public class GameTuiTongZi extends Game{
         MsgSender.sendMsg2Player(serviceName, "continueBankerStart", param, users);
 
     }
+
     //是否继续坐庄
     public int continueBanker(boolean isZhuang, long userId){
         if (isBaWangZhuang()){

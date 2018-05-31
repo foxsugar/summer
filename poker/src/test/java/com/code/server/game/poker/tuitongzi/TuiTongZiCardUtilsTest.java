@@ -1,10 +1,13 @@
 package com.code.server.game.poker.tuitongzi;
 
+import com.code.server.util.DateUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Date;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -62,5 +65,18 @@ public class TuiTongZiCardUtilsTest {
         PlayerTuiTongZi pB = new PlayerTuiTongZi(2, 14, 21);
         Boolean ret = TuiTongZiCardUtils.zhuangIsBiggerThanXian(pA, pB);
         Assert.assertEquals(true, ret);
+    }
+
+    @Test
+    public void testDate1(){
+        String str = "20000112 22:11";
+        Date date = DateUtil.convert2Date(str);
+        System.out.println(date);
+    }
+
+    @Test
+    public void testDate2(){
+        Date date = DateUtil.getDayBegin();
+        System.out.println(date);
     }
 }
