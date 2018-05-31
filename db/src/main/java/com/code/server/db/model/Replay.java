@@ -12,7 +12,12 @@ import java.util.Date;
 @DynamicUpdate
 @Entity
 @Table(name = "replay",
-        indexes = {@Index(name = "id", columnList = "id")})
+        indexes = {
+            @Index(name = "id", columnList = "id"),
+            @Index(name = "date", columnList = "date"),
+            @Index(name = "leftCount", columnList = "leftCount"),
+        }
+        )
 public class Replay extends BaseEntity {
     @Id
     private long id;
