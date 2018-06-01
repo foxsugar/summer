@@ -200,7 +200,7 @@ public class WechatAction extends Cors {
 
             String unionId = wxMpUser.getUnionId();
             //这个人是否已经点过
-            //todo 自己不能推荐自己
+
             Recommend recommend = recommendService.getRecommendDao().getByUnionId(unionId);
             boolean isSelf = agentBean.getUnionId().equals(unionId);
             if (recommend == null && !isSelf) {
@@ -220,6 +220,7 @@ public class WechatAction extends Cors {
                                 .build());
 
             }
+            //todo 如果这时点击的人呢已经是玩家 那么就绑定他
             //处理跳转
             handle_link_redirect(agentId, response);
 
