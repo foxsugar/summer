@@ -45,7 +45,6 @@ public class AgentAuthorizeAspect
         if (cookie == null) {
 //            log.warn("【登录校验】Cookie中查不到token");
             System.out.println("【登录校验】Cookie中查不到token");
-            action.errorCallback(1);
             return;
         }
 
@@ -53,7 +52,6 @@ public class AgentAuthorizeAspect
         String tokenValue = redisTemplate.opsForValue().get(String.format(RedisConstant.TOKEN_PREFIX, cookie.getValue()));
         if (StringUtils.isEmpty(tokenValue)) {
             System.out.println("【登录校验】Redis中查不到token");
-            action.errorCallback(2);
         }
     }
 }

@@ -12,6 +12,7 @@ import java.util.Map;
 public class CookieUtil {
 
 
+    //暂时这么命名 根据token取 agentId
     public static long getAgentIdByCookie(){
         return 1;
     }

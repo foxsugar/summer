@@ -1,5 +1,6 @@
 package com.code.server.login.action;
 
+import com.code.server.login.anotation.AuthChecker;
 import com.code.server.login.service.HomeService;
 import com.code.server.login.util.CookieUtil;
 import com.code.server.login.vo.HomePageVo;
@@ -25,6 +26,7 @@ public class HomeAction {
     @Autowired
     private HomeService homeService;
 
+    @AuthChecker
     @RequestMapping("/show")
     public AgentResponse showHomePage(){
         HomePageVo homePageVo = homeService.showHomePage();

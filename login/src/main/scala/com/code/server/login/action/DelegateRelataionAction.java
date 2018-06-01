@@ -1,5 +1,6 @@
 package com.code.server.login.action;
 
+import com.code.server.login.anotation.AuthChecker;
 import com.code.server.login.service.DelegateRelataionService;
 import com.code.server.login.vo.OneLevelInfoVo;
 import com.code.server.login.vo.ThreeLevelInfoVo;
@@ -22,6 +23,7 @@ public class DelegateRelataionAction {
     @Autowired
     private DelegateRelataionService delegateRelataionService;
 
+    @AuthChecker
     @RequestMapping("/fetchPlayers")
     public AgentResponse fetchPlayers(){
 
@@ -32,6 +34,7 @@ public class DelegateRelataionAction {
         return agentResponse;
     }
 
+    @AuthChecker
     @RequestMapping("/fetch2Delegate")
     public AgentResponse fetchOneLevelDelegate(){
 
@@ -42,6 +45,7 @@ public class DelegateRelataionAction {
         return agentResponse;
     }
 
+    @AuthChecker
     @RequestMapping("/fetch3Delegate")
     public AgentResponse fetchTwoLevelDelegate(){
         List<ThreeLevelInfoVo> list = delegateRelataionService.fetchThreeLevelDelegateList();

@@ -1,5 +1,6 @@
 package com.code.server.login.action;
 import com.code.server.db.dao.IChargeDao;
+import com.code.server.login.anotation.AuthChecker;
 import com.code.server.login.service.TodayChargeService;
 import com.code.server.login.service.TodayChargeServiceImpl;
 import com.code.server.login.vo.*;
@@ -24,6 +25,7 @@ public class TodayChargeAction {
     @Autowired
     private TodayChargeService todayChargeService;
 
+    @AuthChecker
     //流水记录
     @RequestMapping("/waterRecord")
     public AgentResponse waterRecord(){
@@ -33,6 +35,7 @@ public class TodayChargeAction {
         return agentResponse;
     }
 
+    @AuthChecker
     @RequestMapping("/homeCharge")
     public AgentResponse homeCharge(){
         HomeChargeVo homeChargeVo = todayChargeService.showCharge();
@@ -42,6 +45,7 @@ public class TodayChargeAction {
         return agentResponse;
     }
 
+    @AuthChecker
     @RequestMapping("/dhomeCharge")
     public AgentResponse homeCharge(String start, String end){
         Date startDate = DateUtil.convert2Date(start);
@@ -53,6 +57,7 @@ public class TodayChargeAction {
         return agentResponse;
     }
 
+    @AuthChecker
     //直接玩家
     @RequestMapping("/level1Charges")
     public AgentResponse showTodayOneLevelChargeList(){
@@ -64,6 +69,7 @@ public class TodayChargeAction {
         return agentResponse;
     }
 
+    @AuthChecker
     @RequestMapping("/dlevel1Charges")
     public AgentResponse showTodayOneLevelChargeList(String start, String end){
 
@@ -76,6 +82,7 @@ public class TodayChargeAction {
         return agentResponse;
     }
 
+    @AuthChecker
     //二级代理充值记录
     @RequestMapping("/level2Charges")
     public AgentResponse showTodayTwoLevelChargeList(){
@@ -88,6 +95,7 @@ public class TodayChargeAction {
         return agentResponse;
     }
 
+    @AuthChecker
     //二级代理充值记录
     @RequestMapping("/dlevel2Charges")
     public AgentResponse showTodayTwoLevelChargeList(String start, String end){
@@ -101,6 +109,7 @@ public class TodayChargeAction {
         return agentResponse;
     }
 
+    @AuthChecker
     //二级代理充值记录
     @RequestMapping("/level3Charges")
     public AgentResponse showTodayThreeLevelChargeList(){
@@ -113,6 +122,7 @@ public class TodayChargeAction {
         return agentResponse;
     }
 
+    @AuthChecker
     //二级代理充值记录
     @RequestMapping("/dlevel3Charges")
     public AgentResponse showTodayThreeLevelChargeList(String start, String end){

@@ -1,4 +1,5 @@
 package com.code.server.login.action;
+import com.code.server.login.anotation.AuthChecker;
 import com.code.server.login.service.RecommendDelegateService;
 import com.code.server.login.vo.RecommandUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class RecommendDelegateAction {
     @Autowired
     private RecommendDelegateService recommendDelegateService;
 
+    @AuthChecker
     @RequestMapping("/findUser")
     public AgentResponse findUser(long userId){
 
@@ -30,6 +32,7 @@ public class RecommendDelegateAction {
         return agentResponse;
     }
 
+    @AuthChecker
     @RequestMapping("/bindDelegate")
     public AgentResponse bindDelegate(long userId){
 

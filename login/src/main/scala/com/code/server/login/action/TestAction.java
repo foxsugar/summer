@@ -6,15 +6,18 @@ import com.code.server.db.Service.ChargeService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.model.Charge;
 import com.code.server.db.model.User;
+import com.code.server.login.anotation.AuthChecker;
 import com.code.server.login.kafka.MsgSender;
 import com.code.server.login.util.PayUtil;
 import com.code.server.redis.service.UserRedisService;
+import com.sun.org.apache.regexp.internal.RE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -195,6 +198,14 @@ public class TestAction {
         }
 
         return "success";
+    }
+
+    @ResponseBody
+    @RequestMapping("/test")
+    @AuthChecker
+    public String test(){
+
+        return "hello world";
     }
 
     public static String md5(String str) throws NoSuchAlgorithmException {
