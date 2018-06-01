@@ -103,7 +103,7 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         return AGENT_TOKEN + token;
     }
 
-    private void addSaveAgent(long agentId) {
+    public void addSaveAgent(long agentId) {
         BoundSetOperations<String, String> save_agent = redisTemplate.boundSetOps(SAVE_AGENT);
         save_agent.add("" + agentId);
     }
@@ -131,6 +131,7 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         //rebate
         BoundHashOperations<String, String, String> agent_rebate = redisTemplate.boundHashOps(AGENT_REBATE);
         agent_rebate.put("" + agentBean.getId(), "" + agentBean.getRebate());
+
     }
 
     public long getAgentNum() {
