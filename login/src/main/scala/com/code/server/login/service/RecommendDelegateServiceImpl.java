@@ -11,7 +11,6 @@ import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.GameAgentWx;
 import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
-import com.code.server.login.action.AgentResponse;
 import com.code.server.login.vo.RecommandUserVo;
 import com.code.server.redis.service.RedisManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +66,6 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
     public boolean bindDelegate(long userId, long agentId) {
 
 
-
-
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(userId);
 
         //todo 之前是代理
@@ -112,37 +109,36 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
         String openId = gameAgentWx.getOpenId();
 
 
-        GameAgent gameAgent = new GameAgent();
-        gameAgent.setId(userId);
-        gameAgent.setOpenId(openId);
-        gameAgent.setUnionId(unionId);
-        //有推荐
-        if (recommend != null) {
-            long parentId = recommend.getAgentId();
-
-            AgentBean parent = RedisManager.getAgentRedisService().getAgentBean(agentId);
-            //上级代理存在
-            if (parent != null) {
-                //和上级的partner是同一个
-                gameAgent.setPartnerId(parent.getPartnerId());
-                gameAgent.setParentId(parentId);
-                gameAgent.setIsPartner(0);
-                //上级代理加一个child
-                parent.getChildList().add(userId);
-                RedisManager.getAgentRedisService().addSaveAgent(parent.getId());
-            }
-        }
-
-        //保存到数据库
-        gameAgentService.getGameAgentDao().save(gameAgent);
-        agentBean = AgentService.gameAgent2AgentBean(gameAgent);
-        //保存的reids
-        RedisManager.getAgentRedisService().setAgent2Redis(agentBean);
-        RedisManager.getAgentRedisService().addSaveAgent(agentBean.getId());
+        AgentBean parentAgentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+        //变成代理
+        user2Agent(userId, openId, unionId, parentAgentBean);
 
 
         return true;
     }
 
 
+    public void user2Agent(long userId, String openId, String unionId, AgentBean parent) {
+        GameAgent gameAgent = new GameAgent();
+        gameAgent.setId(userId);
+        gameAgent.setOpenId(openId);
+        gameAgent.setUnionId(unionId);
+        //有推荐
+
+
+        //和上级的partner是同一个
+        gameAgent.setPartnerId(parent.getPartnerId());
+        gameAgent.setParentId(parent.getId());
+        gameAgent.setIsPartner(0);
+        //上级代理加一个child
+        parent.getChildList().add(userId);
+        RedisManager.getAgentRedisService().addSaveAgent(parent.getId());
+
+        //保存到数据库
+        gameAgentService.getGameAgentDao().save(gameAgent);
+        AgentBean agentBean = AgentService.gameAgent2AgentBean(gameAgent);
+        //保存的reids
+        RedisManager.getAgentRedisService().setAgent2Redis(agentBean);
+        RedisManager.getAgentRedisService().addSaveAgent(agentBean.getId());
+    }
 }
