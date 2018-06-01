@@ -1,17 +1,12 @@
 package com.code.server.login.service;
 
-import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.UserBean;
 import com.code.server.db.dao.IUserDao;
 import com.code.server.db.model.User;
-import com.code.server.login.util.CookieUtil;
 import com.code.server.login.vo.RecommandUserVo;
 import com.code.server.redis.service.RedisManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by dajuejinxian on 2018/5/16.
@@ -24,7 +19,7 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
     private IUserDao userDao;
 
     @Override
-    public RecommandUserVo findRecommandUser(long userId) {
+    public RecommandUserVo findRecommandUser(long userId, long agentId) {
 
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
 
@@ -48,7 +43,7 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
     }
 
     @Override
-    public boolean bindDelegate(long userId) {
+    public boolean bindDelegate(long userId, long agentId) {
 
         return false;
     }

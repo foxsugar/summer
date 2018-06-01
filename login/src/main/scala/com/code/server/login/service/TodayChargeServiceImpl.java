@@ -1,22 +1,20 @@
 package com.code.server.login.service;
 import com.code.server.constant.game.AgentBean;
-import com.code.server.constant.game.UserBean;
 import com.code.server.db.dao.IChargeDao;
-import com.code.server.db.dao.IGameAgentDao;
 import com.code.server.db.dao.IUserDao;
 import com.code.server.db.model.Charge;
-import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.User;
-import com.code.server.grpc.idl.Game;
-import com.code.server.login.util.CookieUtil;
+import com.code.server.login.util.AgentUtil;
 import com.code.server.login.vo.*;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import scala.Char;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by dajuejinxian on 2018/5/14.
@@ -35,11 +33,11 @@ public class TodayChargeServiceImpl implements TodayChargeService {
     public static final String CHARGE_TYPE_CASH = "11";
 
     @Override
-    public HomeChargeVo showCharge(Date start, Date end) {
+    public HomeChargeVo showCharge(Date start, Date end, long agentId) {
 
-        OneLevelVo oneLevelVo = oneLevelCharges(start, end);
-        TwoLevelVo twoLevelVo = twoLevelCharges(start, end);
-        ThreeLevelVo threeLevelVo = threeLevelCharges(start, end);
+        OneLevelVo oneLevelVo = oneLevelCharges(start, end, agentId);
+        TwoLevelVo twoLevelVo = twoLevelCharges(start, end, agentId);
+        ThreeLevelVo threeLevelVo = threeLevelCharges(start, end, agentId);
         HomeChargeVo homeChargeVo = new HomeChargeVo();
         homeChargeVo.setOnelevel("￥" + oneLevelVo.getMoney());
         homeChargeVo.setTwoLevel("￥" + twoLevelVo.getMoney());
@@ -50,9 +48,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
     }
 
     @Override
-    public List<WaterRecordVo> waterRecords() {
+    public List<WaterRecordVo> waterRecords(long agentId) {
 
-        long agentId = CookieUtil.getAgentIdByCookie();
         Date start = DateUtil.getThisYearStart();
         Date end = new Date();
         List<Charge> list = chargeDao.getChargesByUserrAndRechargeSourceAndDate(agentId, CHARGE_TYPE_CASH, start, end);
@@ -71,11 +68,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
     //直接玩家充值
     @Override
-    public OneLevelVo oneLevelCharges(Date start, Date end) {
+    public OneLevelVo oneLevelCharges(Date start, Date end, long agentId) {
 
-        long agentId = CookieUtil.getAgentIdByCookie();
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
-
         OneLevelVo oneLevelVo = new OneLevelVo();
         oneLevelVo.setCategoryName("game name");
 
@@ -112,11 +107,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
     }
 
     @Override
-    public TwoLevelVo twoLevelCharges(Date start, Date end) {
+    public TwoLevelVo twoLevelCharges(Date start, Date end, long agentId) {
 
-        long agentId = CookieUtil.getAgentIdByCookie();
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
-
         TwoLevelVo twoLevelVo = new TwoLevelVo();
         twoLevelVo.setCategoryName("game name");
 
@@ -192,9 +185,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
     }
 
     @Override
-    public ThreeLevelVo threeLevelCharges(Date start, Date end) {
+    public ThreeLevelVo threeLevelCharges(Date start, Date end, long angetId) {
 
-        long agentId = CookieUtil.getAgentIdByCookie();
+        long agentId = AgentUtil.getAgentIdByCookie();
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         ThreeLevelVo threeLevelVo = new ThreeLevelVo();
         threeLevelVo.setCategoryName("game name");
@@ -245,32 +238,32 @@ public class TodayChargeServiceImpl implements TodayChargeService {
     }
 
     @Override
-    public HomeChargeVo showCharge() {
+    public HomeChargeVo showCharge(long agentId) {
         //今日
         Date start = DateUtil.getDayBegin();
         Date end = new Date();
-        return showCharge(start, end);
+        return showCharge(start, end, agentId);
     }
     @Override
-    public OneLevelVo oneLevelCharges() {
+    public OneLevelVo oneLevelCharges(long agentId) {
         //今日
         Date start = DateUtil.getDayBegin();
         Date end = new Date();
-        return oneLevelCharges(start, end);
+        return oneLevelCharges(start, end, agentId);
     }
 
     @Override
-    public TwoLevelVo twoLevelCharges() {
+    public TwoLevelVo twoLevelCharges(long agentId) {
         Date start = DateUtil.getDayBegin();
         Date end = new Date();
-        return twoLevelCharges(start, end);
+        return twoLevelCharges(start, end, agentId);
     }
 
     @Override
-    public ThreeLevelVo threeLevelCharges() {
+    public ThreeLevelVo threeLevelCharges(long agentId) {
         Date start = DateUtil.getDayBegin();
         Date end = new Date();
-        return threeLevelCharges(start, end);
+        return threeLevelCharges(start, end, agentId);
     }
 
 }
