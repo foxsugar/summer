@@ -11,9 +11,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import scala.math.Ordering;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -39,6 +41,9 @@ public class HttpAopAdviseDefine {
 
         // 检查用户所传递的 token 是否合法
         Map<String, String> map = getAgentByToken(request);
+
+        Object[] objects = joinPoint.getArgs();
+
         if (null == map) {
             return "错误, 请登录!";
         };

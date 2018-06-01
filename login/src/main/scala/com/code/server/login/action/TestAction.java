@@ -204,7 +204,6 @@ public class TestAction {
     @RequestMapping("/test")
     @AuthChecker
     public String test(){
-
         return "hello world";
     }
 

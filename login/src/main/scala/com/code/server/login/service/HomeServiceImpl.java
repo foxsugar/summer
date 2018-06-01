@@ -30,8 +30,7 @@ public class HomeServiceImpl implements HomeService{
 
     @Override
     public HomePageVo showHomePage() {
-
-        long agentId = CookieUtil.getAgentIdByCookie();
+        long agentId = 0;
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
 
         HomePageVo homePageVo = new HomePageVo();
