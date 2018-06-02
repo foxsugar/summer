@@ -56,10 +56,10 @@ public class GameRpcNewHandler implements GameRPCNew.AsyncIface {
             name = userBean.getUsername();
             if (order.getType() == ChargeType.money.getValue()) {
                RedisManager.getUserRedisService().addUserMoney(userId, order.getNum());
-                saveUserBean(userId);
+                GameUserService.saveUserBean(userId);
             } else if (order.getType() == ChargeType.gold.getValue()) {
                RedisManager.getUserRedisService().addUserGold(userId, order.getNum());
-                saveUserBean(userId);
+                GameUserService.saveUserBean(userId);
             }
         }
         //充值记录
@@ -119,7 +119,7 @@ public class GameRpcNewHandler implements GameRPCNew.AsyncIface {
             UserRedisService userRedisService = RedisManager.getUserRedisService();
             userRedisService.addUserMoney(userId, -order.getNum());
             userRedisService.addUserGold(userId, order.getNum());
-            saveUserBean(userId);
+            GameUserService.saveUserBean(userId);
         }
         resultHandler.onComplete(0);
     }
@@ -216,7 +216,7 @@ public class GameRpcNewHandler implements GameRPCNew.AsyncIface {
         if (userBean != null) {
             userBean.setReferee(referee);
             RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
-            saveUserBean(userId);
+            GameUserService.saveUserBean(userId);
 
         } else {
             UserService userService = SpringUtil.getBean(UserService.class);
@@ -228,11 +228,6 @@ public class GameRpcNewHandler implements GameRPCNew.AsyncIface {
     }
 
 
-    private void saveUserBean(long userId) {
-        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-        User user = GameUserService.userBean2User(userBean);
-        UserService userService = SpringUtil.getBean(UserService.class);
-        userService.getUserDao().save(user);
-    }
+
 
 }

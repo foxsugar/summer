@@ -65,59 +65,39 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
     @Override
     public boolean bindDelegate(long userId, long agentId) {
 
-
-        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(userId);
+        AgentBean userAgentBean = RedisManager.getAgentRedisService().getAgentBean(userId);
 
         //todo 之前是代理
-        if (agentBean != null) {
+        if (userAgentBean != null) {
             return false;
         }
 
-
-        //之前不是代理
-
-        long refereeId = 0;
-        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-        if (userBean != null) {
-            refereeId = userBean.getReferee();
-        } else {
-            User user = userService.getUserByUserId(userId);
-            if (user != null) {
-                refereeId = user.getReferee();
-            }
-        }
-        //有上级代理 或代理不是agent
-        if (!(refereeId == 0 || refereeId == agentId)) {
+        //必须先在公众号点击专属链接 成为下级
+        AgentBean parentAgentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+        if (!parentAgentBean.getChildList().contains(userId)) {
             return false;
         }
 
-        //有推荐人 或 推荐人不是代理
         String unionId = userService.getUserDao().getOpenIdById(userId);
-        Recommend recommend = recommendService.getRecommendDao().findOne(unionId);
-        boolean isNoRecommend = recommend == null || recommend.getAgentId() == agentId;
-        if (!isNoRecommend) {
-            return false;
-        }
 
         GameAgentWx gameAgentWx = gameAgentWxService.getGameAgentWxDao().findOne(unionId);
 
-        //没关注公众号
-        if (gameAgentWx == null) {
-            return false;
-        }
-
         String openId = gameAgentWx.getOpenId();
 
-
-        AgentBean parentAgentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         //变成代理
         user2Agent(userId, openId, unionId, parentAgentBean);
-
 
         return true;
     }
 
 
+    /**
+     * 玩家成为代理
+     * @param userId
+     * @param openId
+     * @param unionId
+     * @param parent
+     */
     public void user2Agent(long userId, String openId, String unionId, AgentBean parent) {
         GameAgent gameAgent = new GameAgent();
         gameAgent.setId(userId);
