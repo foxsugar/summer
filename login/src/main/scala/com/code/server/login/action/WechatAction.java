@@ -232,7 +232,7 @@ public class WechatAction extends Cors {
                     //代理添加下级
                     agentBean.getChildList().add(userId);
                     //加入保存队列
-                    RedisManager.getAgentRedisService().addSaveAgent(agentId);
+                    RedisManager.getAgentRedisService().updateAgentBean(agentBean);
                 }
 
             }else{
@@ -439,6 +439,9 @@ public class WechatAction extends Cors {
 
         return null;
     }
+
+
+
 
 
     @RequestMapping("/becomeAgent")

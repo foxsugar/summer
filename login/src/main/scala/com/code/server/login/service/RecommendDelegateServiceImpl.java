@@ -80,12 +80,10 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
 
         String unionId = userService.getUserDao().getOpenIdById(userId);
 
-        GameAgentWx gameAgentWx = gameAgentWxService.getGameAgentWxDao().findOne(unionId);
 
-        String openId = gameAgentWx.getOpenId();
 
         //变成代理
-        user2Agent(userId, openId, unionId, parentAgentBean);
+        user2Agent(userId, unionId, parentAgentBean);
 
         return true;
     }
@@ -94,14 +92,12 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
     /**
      * 玩家成为代理
      * @param userId
-     * @param openId
      * @param unionId
      * @param parent
      */
-    public void user2Agent(long userId, String openId, String unionId, AgentBean parent) {
+    public void user2Agent(long userId, String unionId, AgentBean parent) {
         GameAgent gameAgent = new GameAgent();
         gameAgent.setId(userId);
-        gameAgent.setOpenId(openId);
         gameAgent.setUnionId(unionId);
         //有推荐
 
@@ -112,13 +108,13 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
         gameAgent.setIsPartner(0);
         //上级代理加一个child
         parent.getChildList().add(userId);
-        RedisManager.getAgentRedisService().addSaveAgent(parent.getId());
+        RedisManager.getAgentRedisService().updateAgentBean(parent);
 
         //保存到数据库
         gameAgentService.getGameAgentDao().save(gameAgent);
         AgentBean agentBean = AgentService.gameAgent2AgentBean(gameAgent);
         //保存的reids
         RedisManager.getAgentRedisService().setAgent2Redis(agentBean);
-        RedisManager.getAgentRedisService().addSaveAgent(agentBean.getId());
+        RedisManager.getAgentRedisService().updateAgentBean(agentBean);
     }
 }

@@ -80,8 +80,10 @@ public class CenterService {
             agents.forEach(agent->{
                 long agentId = Long.valueOf(agent);
                 AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
-                GameAgent gameAgent = AgentService.agentBean2GameAgent(agentBean);
-                gameAgentService.getGameAgentDao().save(gameAgent);
+                if (agentBean != null) {
+                    GameAgent gameAgent = AgentService.agentBean2GameAgent(agentBean);
+                    gameAgentService.getGameAgentDao().save(gameAgent);
+                }
                 removeList.add(agent);
 
             });
