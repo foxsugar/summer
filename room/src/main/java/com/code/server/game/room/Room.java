@@ -12,6 +12,7 @@ import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
@@ -1132,6 +1133,22 @@ public class Room implements IfaceRoom {
     @Override
     public boolean isRobotRoom() {
         return isRobotRoom;
+    }
+
+    @Override
+    public GameLogKey getGameLogKey() {
+        GameLogKey gameLogKey = new GameLogKey();
+        gameLogKey.setRoomType(roomType);
+        gameLogKey.setGameType(gameType);
+        gameLogKey.setGameNumber(gameNumber);
+        gameLogKey.setGoldRoomType(goldRoomType);
+        gameLogKey.setGoldRoomPermission(goldRoomPermission);
+
+        return gameLogKey;
+    }
+
+    public String getGameLogKeyStr(){
+        return JsonUtil.toJson(getGameLogKey());
     }
 
     public Room setRobotRoom(boolean robotRoom) {
