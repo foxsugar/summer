@@ -95,4 +95,19 @@ public class HomeChargeVo {
     public void setTotal(String total) {
         this.total = total;
     }
+
+    @Override
+    public String toString() {
+        return "HomeChargeVo{" +
+                "onelevel='" + onelevel + '\'' +
+                ", twoLevel='" + twoLevel + '\'' +
+                ", threeLevel='" + threeLevel + '\'' +
+                ", total='" + total + '\'' +
+                ", start='" + start + '\'' +
+                ", end='" + end + '\'' +
+                ", oneLevelVoList=" + oneLevelVoList +
+                ", twoLevelInfoVoList=" + twoLevelInfoVoList +
+                ", threeLevelInfoVoList=" + threeLevelInfoVoList +
+                '}';
+    }
 }
