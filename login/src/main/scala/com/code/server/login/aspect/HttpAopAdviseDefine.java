@@ -49,6 +49,9 @@ public class HttpAopAdviseDefine {
             return new AgentResponse(1000, rs);
         };
 
+        System.out.println("-----------------------------------------------------------------------------");
+        System.out.println(map);
+
         return joinPoint.proceed();
     }
 
