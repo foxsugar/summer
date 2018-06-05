@@ -96,7 +96,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
             oneLevelInfoVo.setImage(user.getImage());
             oneLevelInfoVo.setUsername(user.getUsername());
-            oneLevelInfoVo.setMoney("¥" + totalMoney);
+            oneLevelInfoVo.setMoney("" + totalMoney);
             oneLevelInfoVoList.add(oneLevelInfoVo);
         }
 
@@ -154,7 +154,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             }
             twoLevelInfoVo.setImage(user.getImage());
             twoLevelInfoVo.setUsername(user.getUsername());
-            twoLevelInfoVo.setMoney("￥" + totalMoney);
+            twoLevelInfoVo.setMoney("" + totalMoney);
             total += totalMoney;
             twoLevelVo.getList().add(twoLevelInfoVo);
 
@@ -174,7 +174,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
                     twoLevelUserTotal += charge.getMoney();
                 }
                 total += twoLevelUserTotal;
-                infoVo.setMoney("￥" + twoLevelUserTotal);
+                infoVo.setMoney("" + twoLevelUserTotal);
                 twoLevelVo.getList().add(infoVo);
             }
 
@@ -226,7 +226,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             for (Charge charge : chargeList){
                 totalMoney += charge.getMoney();
             }
-            threeLevelInfoVo.setMoney("￥" + totalMoney);
+            threeLevelInfoVo.setMoney("" + totalMoney);
             total += totalMoney;
             threeLevelVo.getList().add(threeLevelInfoVo);
         }
