@@ -16,6 +16,8 @@ public final class DateUtil {
 
     public static final String DATE_TIME_FORMAT_YYYYMMDD_HH_MI = "yyyyMMdd HH:mm";
 
+    //年月日
+    public static final String DATE_TIME_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
     public static boolean isSameDate(long time1, long time2) {
 
         Calendar calendar1 = Calendar.getInstance();
