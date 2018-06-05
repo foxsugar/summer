@@ -1,11 +1,11 @@
 package com.code.server.db.dao;
 
-import com.code.server.db.model.OnlineRecord;
+import com.code.server.db.model.LogRecord;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  * Created by sunxianping on 2018/2/28.
  */
-public interface IOnlineRecordDao extends PagingAndSortingRepository<OnlineRecord, String> {
+public interface ILogRecordDao extends PagingAndSortingRepository<LogRecord, String> {
 
 }

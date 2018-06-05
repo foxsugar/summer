@@ -7,7 +7,6 @@ import com.code.server.db.Service.GameAgentWxService;
 import com.code.server.db.Service.RecommendService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.model.GameAgent;
-import com.code.server.db.model.GameAgentWx;
 import com.code.server.db.model.User;
 import com.code.server.redis.service.AgentRedisService;
 import com.code.server.redis.service.RedisManager;
@@ -93,6 +92,8 @@ public class AgentService {
 
         //上级变为0
         agentBean.setParentId(0);
+
+        RedisManager.getAgentRedisService().updateAgentBean(agentBean);
 
         //user 上的改变 把上级去掉
         changePlayerReferee(userId, 0);

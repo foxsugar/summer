@@ -50,6 +50,8 @@ public class LoginApplication extends SpringBootServletInitializer {
 
 			SpringUtil.getBean(AgentService.class).loadAllAgent2Redis();
 
+			CenterService.loadLogInfo();
+
 		}
 
 

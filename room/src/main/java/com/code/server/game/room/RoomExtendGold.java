@@ -20,21 +20,29 @@ public class RoomExtendGold extends Room {
 
     @Override
     public void startGame() {
-        //todo 庄家退出游戏的处理
-        if (isGoldRoom() && !this.users.contains(this.bankerId)) {
-            this.bankerId = this.users.get(0);
-        }
-        if (isGiveAgentRebate()) {
+        goldRoomStart();
+        super.startGame();
+        //记录局数
+        RedisManager.getLogRedisService().addGameNum(getGameLogKeyStr(), 1);
+    }
 
+    protected void goldRoomStart() {
+        if (isGoldRoom()) {
+            if (!this.users.contains(this.bankerId)) {
+                this.bankerId = this.users.get(0);
+            }
             int cost = this.getGoldRoomType() / 10;
+
             for (long userId : users) {
                 //扣除费用
                 RedisManager.getUserRedisService().addUserGold(userId, -cost);
+                //返利
                 UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
                 RedisManager.getAgentRedisService().addRebate(userId, userBean.getReferee(), 1, cost / 100);
             }
+            //
+            RedisManager.getLogRedisService().addGoldIncome(getGameLogKeyStr(), cost * users.size());
         }
-        super.startGame();
     }
 
     @Override
@@ -54,6 +62,7 @@ public class RoomExtendGold extends Room {
      * @return
      */
     protected boolean isGiveAgentRebate() {
+
         return false;
     }
 

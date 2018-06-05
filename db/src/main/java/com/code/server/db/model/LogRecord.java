@@ -15,8 +15,8 @@ import javax.persistence.*;
 
 @DynamicUpdate
 @Entity
-@Table(name = "online_record")
-public class OnlineRecord extends BaseEntity {
+@Table(name = "log_record")
+public class LogRecord extends BaseEntity {
 
     @Id
     private String id;
@@ -42,7 +42,7 @@ public class OnlineRecord extends BaseEntity {
         return id;
     }
 
-    public OnlineRecord setId(String id) {
+    public LogRecord setId(String id) {
         this.id = id;
         return this;
     }
@@ -51,7 +51,7 @@ public class OnlineRecord extends BaseEntity {
         return onlineData;
     }
 
-    public OnlineRecord setOnlineData(OnlineData onlineData) {
+    public LogRecord setOnlineData(OnlineData onlineData) {
         this.onlineData = onlineData;
         return this;
     }
@@ -60,7 +60,7 @@ public class OnlineRecord extends BaseEntity {
         return gameNumData;
     }
 
-    public OnlineRecord setGameNumData(GameNumData gameNumData) {
+    public LogRecord setGameNumData(GameNumData gameNumData) {
         this.gameNumData = gameNumData;
         return this;
     }
@@ -69,8 +69,17 @@ public class OnlineRecord extends BaseEntity {
         return goldRoomIncomeData;
     }
 
-    public OnlineRecord setGoldRoomIncomeData(GoldRoomIncomeData goldRoomIncomeData) {
+    public LogRecord setGoldRoomIncomeData(GoldRoomIncomeData goldRoomIncomeData) {
         this.goldRoomIncomeData = goldRoomIncomeData;
+        return this;
+    }
+
+    public double getChargeRebate() {
+        return chargeRebate;
+    }
+
+    public LogRecord setChargeRebate(double chargeRebate) {
+        this.chargeRebate = chargeRebate;
         return this;
     }
 }

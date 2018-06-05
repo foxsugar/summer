@@ -7,13 +7,13 @@ import java.util.Map;
  * Created by Administrator on 2018/6/3.
  */
 public class GameNumData {
-    private Map<String, Integer> info = new HashMap<>();
+    private Map<String, String> info = new HashMap<>();
 
-    public Map<String, Integer> getInfo() {
+    public Map<String, String> getInfo() {
         return info;
     }
 
-    public GameNumData setInfo(Map<String, Integer> info) {
+    public GameNumData setInfo(Map<String, String> info) {
         this.info = info;
         return this;
     }

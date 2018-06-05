@@ -212,10 +212,9 @@ public class RoomInfo extends RoomExtendGold {
         if (!isOpen && isCreaterJoin) {
             spendMoney();
         }
-//        //扣钱
-//        if (curGameNumber == 1) {
-//            spendMoney();
-//        }
+        //金币房的处理
+        goldRoomStart();
+
         //游戏开始 代建房 去除定时解散
         if (!isOpen && !this.isCreaterJoin()) {
             GameTimer.removeNode(prepareRoomTimerNode);
@@ -233,6 +232,9 @@ public class RoomInfo extends RoomExtendGold {
         pushScoreChange();
         notifyCludGameStart();
         this.isOpen = true;
+
+        //记录局数
+        RedisManager.getLogRedisService().addGameNum(getGameLogKeyStr(), 1);
     }
 
 
