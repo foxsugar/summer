@@ -1,5 +1,6 @@
 package com.code.server.login.aspect;
 
+import com.code.server.login.action.AgentResponse;
 import com.code.server.redis.service.RedisManager;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -13,6 +14,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -42,7 +44,9 @@ public class HttpAopAdviseDefine {
         Object[] objects = joinPoint.getArgs();
 
         if (null == map) {
-            return "错误, 请登录!";
+//            return "错误, 请登录!";
+            Map<String, Object> rs = new HashMap<>();
+            return new AgentResponse(1000, rs);
         };
 
         return joinPoint.proceed();
