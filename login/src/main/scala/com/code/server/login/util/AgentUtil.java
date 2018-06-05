@@ -31,7 +31,7 @@ public class AgentUtil {
             }
         }
         String agentIdStr = RedisManager.getAgentRedisService().getAgentByToken(cookie.getValue()).get("agentId");
-        logger.info("agentId is:", agentIdStr);
+        logger.info("agentId is:{}", agentIdStr);
         return Integer.parseInt(agentIdStr);
     }
 

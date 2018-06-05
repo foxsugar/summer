@@ -42,7 +42,7 @@ public class HomeAction {
         long agentId = AgentUtil.getAgentByRequest(request);
 
         logger.info("------");
-        logger.info("agent Id:是", agentId);
+        logger.info("agent Id:是{}", agentId);
 
         HomePageVo homePageVo = homeService.showHomePage(agentId);
         Map<String, Object> rs = new HashMap<>();
