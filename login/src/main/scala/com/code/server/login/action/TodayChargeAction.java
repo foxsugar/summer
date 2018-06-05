@@ -3,12 +3,16 @@ import com.code.server.db.dao.IChargeDao;
 import com.code.server.login.anotation.AuthChecker;
 import com.code.server.login.service.TodayChargeService;
 import com.code.server.login.service.TodayChargeServiceImpl;
+import com.code.server.login.util.AgentUtil;
 import com.code.server.login.vo.*;
 import com.code.server.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -98,7 +102,7 @@ public class TodayChargeAction {
 
         Date startDate = DateUtil.convert2Date(start);
         Date endDate = DateUtil.convert2Date(end);
-        OneLevelVo oneLevelVo = todayChargeService.oneLevelCharges(startDate, endDate);
+        OneLevelVo oneLevelVo = todayChargeService.oneLevelCharges(startDate, endDate, agentId);
         Map<String, Object> result = new HashMap<>();
         result.put("result", oneLevelVo);
         AgentResponse agentResponse = new AgentResponse(200, result);
@@ -115,6 +119,7 @@ public class TodayChargeAction {
         long agentId = AgentUtil.getAgentByRequest(request);
 
         Map<String, Object> result = new HashMap<>();
+        TwoLevelVo twoLevelVo = todayChargeService.twoLevelCharges(agentId);
         result.put("result", twoLevelVo);
         AgentResponse agentResponse = new AgentResponse(200, result);
         return agentResponse;
@@ -131,7 +136,7 @@ public class TodayChargeAction {
 
         Date startDate = DateUtil.convert2Date(start);
         Date endDate = DateUtil.convert2Date(end);
-        TwoLevelVo twoLevelVo = todayChargeService.twoLevelCharges(startDate, endDate);
+        TwoLevelVo twoLevelVo = todayChargeService.twoLevelCharges(startDate, endDate, agentId);
 
         Map<String, Object> result = new HashMap<>();
         result.put("result", twoLevelVo);
@@ -144,8 +149,9 @@ public class TodayChargeAction {
     @RequestMapping("/level3Charges")
     public AgentResponse showTodayThreeLevelChargeList(){
 
-        ThreeLevelVo threeLevelVo = todayChargeService.threeLevelCharges();
-
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        long agentId = AgentUtil.getAgentByRequest(request);
         ThreeLevelVo threeLevelVo = todayChargeService.threeLevelCharges(agentId);
         Map<String, Object> result = new HashMap<>();
         result.put("result", threeLevelVo);
@@ -164,7 +170,7 @@ public class TodayChargeAction {
 
         Date startDate = DateUtil.convert2Date(start);
         Date endDate = DateUtil.convert2Date(end);
-        ThreeLevelVo threeLevelVo = todayChargeService.threeLevelCharges(startDate, endDate);
+        ThreeLevelVo threeLevelVo = todayChargeService.threeLevelCharges(startDate, endDate ,agentId);
         Map<String, Object> result = new HashMap<>();
         result.put("result", threeLevelVo);
         AgentResponse agentResponse = new AgentResponse(200, result);
