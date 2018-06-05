@@ -2,10 +2,7 @@ package com.code.server.login.action;
 
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.UserBean;
-import com.code.server.db.Service.GameAgentService;
-import com.code.server.db.Service.GameAgentWxService;
-import com.code.server.db.Service.RecommendService;
-import com.code.server.db.Service.UserService;
+import com.code.server.db.Service.*;
 import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.GameAgentWx;
 import com.code.server.db.model.Recommend;
@@ -83,6 +80,9 @@ public class WechatAction extends Cors {
 
     @Autowired
     private GameAgentWxService gameAgentWxService;
+
+    @Autowired
+    private AgentService agentService;
 
     private static final String AGENT_COOKIE_NAME = "AGENT_TOKEN";
 
@@ -210,7 +210,7 @@ public class WechatAction extends Cors {
                 String uid = RedisManager.getUserRedisService().getUserIdByOpenId(unionId);
                 //玩家是不是代理
                 boolean userIsAgnet = true;
-                if (uid != null) {
+                if (uid != null) {//玩家在内存里
                     userId = Long.valueOf(uid);
                     if (!RedisManager.getAgentRedisService().isExit(userId)) {
                         userIsAgnet = false;
@@ -222,12 +222,14 @@ public class WechatAction extends Cors {
 
                 }else{
 
+                    //玩家在数据库
                     User user = userService.getUserByOpenId(unionId);
                     if (!RedisManager.getAgentRedisService().isExit(user.getId())) {
                         userIsAgnet = false;
                         user.setReferee((int) agentId);
                     }
                 }
+                //玩家不是代理
                 if (!userIsAgnet) {
                     //代理添加下级
                     agentBean.getChildList().add(userId);
@@ -441,6 +443,54 @@ public class WechatAction extends Cors {
     }
 
 
+    @RequestMapping("/toAgent")
+    @ResponseBody
+    public AgentResponse toAgent(long userId) {
+
+        AgentResponse agentResponse = new AgentResponse();
+
+
+        agentService.change2Agent(userId);
+
+        return agentResponse;
+    }
+
+    @RequestMapping("/toUser")
+    @ResponseBody
+    public AgentResponse toUser(long userId) {
+
+        AgentResponse agentResponse = new AgentResponse();
+
+
+        agentService.change2Player(userId);
+
+        return agentResponse;
+    }
+
+    @RequestMapping("/toPartner")
+    @ResponseBody
+    public AgentResponse toPartner(long userId) {
+
+        AgentResponse agentResponse = new AgentResponse();
+
+
+        agentService.change2Partner(userId);
+
+        return agentResponse;
+    }
+
+
+    @RequestMapping("/addChild")
+    @ResponseBody
+    public AgentResponse addChild(long agentId, long userId) {
+
+        AgentResponse agentResponse = new AgentResponse();
+
+
+        agentService.change2Partner(userId);
+
+        return agentResponse;
+    }
 
 
 

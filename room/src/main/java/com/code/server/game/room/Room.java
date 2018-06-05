@@ -448,6 +448,8 @@ public class Room implements IfaceRoom {
         notifyCludGameStart();
         this.isOpen = true;
         pushScoreChange();
+        //记录局数
+        RedisManager.getLogRedisService().addGameNum(getGameLogKeyStr(), 1);
     }
 
     public void pushScoreChange() {

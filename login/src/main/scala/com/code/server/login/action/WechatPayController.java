@@ -224,7 +224,9 @@ public class WechatPayController {
 
                             //返利情况
 
-                            RedisManager.getAgentRedisService().addRebate(userId, referee, 0, charge.getMoney());
+                            //扣6%的税
+                            double num = charge.getMoney() * 94 /100;
+                            RedisManager.getAgentRedisService().addRebate(userId, referee, 0, num);
                         }
 
 

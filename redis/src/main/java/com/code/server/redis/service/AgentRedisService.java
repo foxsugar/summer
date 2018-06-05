@@ -135,14 +135,15 @@ public class AgentRedisService implements IAgentRedis, IConstant {
 
     }
 
-    public void removeAgentBean(String agentId){
+    public void removeAgentBean(String agentId) {
         //bean
-        BoundSetOperations<String, String> agent_bean = redisTemplate.boundSetOps(AGENT_BEAN);
-        agent_bean.remove(agentId);
+        BoundHashOperations<String,String, String> agent_bean = redisTemplate.boundHashOps(AGENT_BEAN);
+        agent_bean.delete(agentId);
+
 
         //rebate
-        BoundSetOperations<String, String> agent_rebate = redisTemplate.boundSetOps(AGENT_REBATE);
-        agent_rebate.remove(agentId);
+        BoundHashOperations<String,String, String> agent_rebate = redisTemplate.boundHashOps(AGENT_REBATE);
+        agent_rebate.delete(agentId);
 
         //save list
         removeSaveAgent(agentId);
@@ -188,23 +189,40 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         }
 
 
-
         int scala1 = getScala(type, 1);
         int scala2 = getScala(type, 2);
         int scala3 = getScala(type, 3);
 
 
-        //房卡 扣6%的税
-        if (type == 0) {
-            num = num * 94 /100;
+        double allRebate = 0;
+        if (agentId1 != 0) {
+            double t = scala1 * num / 100;
+            allRebate += t;
+            addRebate(agentId1, t);
+        }
+        if (agentId2 != 0) {
+            double t = scala2 * num / 100;
+            allRebate += t;
+            addRebate(agentId2, t);
+        }
+        if (agentId3 != 0) {
+            double t = scala3 * num / 100;
+            allRebate += t;
+            addRebate(agentId3, t);
         }
 
-        if(agentId1 != 0) addRebate(agentId1, scala1 * num / 100);
-        if(agentId2 != 0) addRebate(agentId2, scala2 * num / 100);
-        if(agentId3 != 0) addRebate(agentId3, scala3 * num / 100);
-
         //合伙人 10%
-        if(partnerId !=0) addRebate(partnerId, 10 * num / 100);
+        if (partnerId != 0) {
+            double t = 10 * num / 100;
+            allRebate += t;
+            addRebate(partnerId, t);
+        }
+
+        if (type == 0) {
+            //房卡返利
+            RedisManager.getLogRedisService().addChargeRebate(allRebate);
+        }
+
     }
 
     private int getScala(int type, int level) {

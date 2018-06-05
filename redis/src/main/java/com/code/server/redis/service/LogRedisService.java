@@ -2,6 +2,7 @@ package com.code.server.redis.service;
 
 import com.code.server.redis.config.IConstant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -19,45 +20,72 @@ public class LogRedisService implements IConstant {
     private RedisTemplate redisTemplate;
 
 
-    public Map<String,Integer> getGameNumInfo(){
-        HashOperations<String, String, Integer> gameNum = redisTemplate.opsForHash();
 
-        return gameNum.entries(getKayAddDateStr(LOG_GAMENUM));
+    public Map<String,String> getGameNumInfo(String date){
+        HashOperations<String, String, String> gameNum = redisTemplate.opsForHash();
+
+        return gameNum.entries(getKayAddDateStr(LOG_GAMENUM,date));
     }
 
 
-    public Map<String,Double> getGoldIncomeInfo(){
-        HashOperations<String, String, Double> gameNum = redisTemplate.opsForHash();
+    public Map<String,String> getGoldIncomeInfo(String date){
+        HashOperations<String, String, String> gameNum = redisTemplate.opsForHash();
 
-        return gameNum.entries(getKayAddDateStr(LOG_GOLDINCOME));
+        return gameNum.entries(getKayAddDateStr(LOG_GOLDINCOME,date));
     }
 
-    public double getChargeRebate(){
-        HashOperations<String, String, Double> gameNum = redisTemplate.opsForHash();
-        return gameNum.get(LOG_CHARGE_REBATE, getTodayStr());
+    public double getChargeRebate(String date){
+//        HashOperations<String, String, Double> gameNum = redisTemplate.opsForHash();
+        BoundHashOperations<String,String,String> data = redisTemplate.boundHashOps(LOG_CHARGE_REBATE);
+        if (data == null) {
+            return 0;
+        }
+        String result = data.get(date);
+        if (result == null) {
+            return 0;
+        }
+        return Double.valueOf(result);
     }
 
     public void addGameNum(String gamelogKey, int num) {
         HashOperations<String, String, Integer> gameNum = redisTemplate.opsForHash();
-        gameNum.putIfAbsent(getKayAddDateStr(LOG_GAMENUM), gamelogKey, 0);
+//        gameNum.putIfAbsent(getKayAddDateStr(LOG_GAMENUM), gamelogKey, 0);
         gameNum.increment(getKayAddDateStr(LOG_GAMENUM), gamelogKey, num);
     }
 
 
     public void addGoldIncome(String gamelogKey, double income){
         HashOperations<String, String, Double> gameNum = redisTemplate.opsForHash();
-        gameNum.putIfAbsent(getKayAddDateStr(LOG_GOLDINCOME), gamelogKey, 0D);
+//        gameNum.putIfAbsent(getKayAddDateStr(LOG_GOLDINCOME), gamelogKey, 0D);
         gameNum.increment(getKayAddDateStr(LOG_GOLDINCOME), gamelogKey, income);
     }
 
     public void addChargeRebate(double rebate) {
         HashOperations<String, String, Double> gameNum = redisTemplate.opsForHash();
-        gameNum.putIfAbsent(LOG_CHARGE_REBATE, getTodayStr(), 0D);
+//        gameNum.putIfAbsent(LOG_CHARGE_REBATE, getTodayStr(), 0D);
         gameNum.increment(LOG_CHARGE_REBATE, getTodayStr(), rebate);
+    }
+
+    public void putGameNum(Map<String,String> map) {
+        HashOperations<String, String, String> gameNum = redisTemplate.opsForHash();
+        gameNum.putAll(getKayAddDateStr(LOG_GAMENUM),map);
+    }
+    public void putGoldIncome(Map<String,String> map) {
+        HashOperations<String, String, String> gameNum = redisTemplate.opsForHash();
+        gameNum.putAll(getKayAddDateStr(LOG_GOLDINCOME),map);
+    }
+
+    public void putChargeRebate(double num) {
+        HashOperations<String, String, String> gameNum = redisTemplate.opsForHash();
+        gameNum.putIfAbsent(LOG_CHARGE_REBATE, getTodayStr(), ""+num);
     }
 
     private String getKayAddDateStr(String key) {
         return key + getTodayStr();
+    }
+
+    private String getKayAddDateStr(String key,String date) {
+        return key + date;
     }
 
     private String getTodayStr() {
