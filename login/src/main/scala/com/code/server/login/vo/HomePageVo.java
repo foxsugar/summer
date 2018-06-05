@@ -34,4 +34,13 @@ public class HomePageVo {
     public void setRebate(String rebate) {
         this.rebate = rebate;
     }
+
+    @Override
+    public String toString() {
+        return "HomePageVo{" +
+                "InvitationCode='" + InvitationCode + '\'' +
+                ", totalMoney='" + totalMoney + '\'' +
+                ", rebate='" + rebate + '\'' +
+                '}';
+    }
 }
