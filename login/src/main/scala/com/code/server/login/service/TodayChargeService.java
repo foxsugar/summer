@@ -29,4 +29,6 @@ public interface TodayChargeService {
    ThreeLevelVo threeLevelCharges(Date start, Date end);
    //待机代理充值记录
    ThreeLevelVo threeLevelCharges();
+
+   double canBlance();
 }

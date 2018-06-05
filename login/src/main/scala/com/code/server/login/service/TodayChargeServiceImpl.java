@@ -273,4 +273,11 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         return threeLevelCharges(start, end);
     }
 
+    @Override
+    public double canBlance() {
+        long agentId = CookieUtil.getAgentIdByCookie();
+        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+        return agentBean.getRebate();
+    }
+
 }

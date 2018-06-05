@@ -134,4 +134,14 @@ public class TodayChargeAction {
         AgentResponse agentResponse = new AgentResponse(200, result);
         return agentResponse;
     }
+
+    @AuthChecker
+    @RequestMapping("/canBlance")
+     public AgentResponse canBlance(){
+        double canBlance = todayChargeService.canBlance();
+         Map<String, Object> result = new HashMap<>();
+         result.put("result", canBlance);
+        AgentResponse agentResponse = new AgentResponse(200, result);
+        return agentResponse;
+     }
 }
