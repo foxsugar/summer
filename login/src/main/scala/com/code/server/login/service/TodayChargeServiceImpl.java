@@ -39,11 +39,11 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         TwoLevelVo twoLevelVo = twoLevelCharges(start, end, agentId);
         ThreeLevelVo threeLevelVo = threeLevelCharges(start, end, agentId);
         HomeChargeVo homeChargeVo = new HomeChargeVo();
-        homeChargeVo.setOnelevel("￥" + oneLevelVo.getMoney());
-        homeChargeVo.setTwoLevel("￥" + twoLevelVo.getMoney());
-        homeChargeVo.setThreeLevel("￥" + threeLevelVo.getMoney());
+        homeChargeVo.setOnelevel("" + oneLevelVo.getMoney());
+        homeChargeVo.setTwoLevel("" + twoLevelVo.getMoney());
+        homeChargeVo.setThreeLevel("" + threeLevelVo.getMoney());
         double total = oneLevelVo.getMoney() + twoLevelVo.getMoney() + threeLevelVo.getMoney();
-        homeChargeVo.setTotal("¥" + total);
+        homeChargeVo.setTotal("" + total);
         return homeChargeVo;
     }
 

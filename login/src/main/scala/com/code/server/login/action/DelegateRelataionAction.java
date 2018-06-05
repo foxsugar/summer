@@ -6,6 +6,8 @@ import com.code.server.login.util.AgentUtil;
 import com.code.server.login.vo.OneLevelInfoVo;
 import com.code.server.login.vo.ThreeLevelInfoVo;
 import com.code.server.login.vo.TwoLevelInfoVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +26,7 @@ import java.util.Map;
 @RequestMapping("/delegateRel")
 public class DelegateRelataionAction {
 
+    private static final Logger logger = LoggerFactory.getLogger(DelegateRelataionAction.class);
     @Autowired
     private DelegateRelataionService delegateRelataionService;
 
