@@ -36,11 +36,11 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         TwoLevelVo twoLevelVo = twoLevelCharges(start, end, agentId);
         ThreeLevelVo threeLevelVo = threeLevelCharges(start, end, agentId);
         HomeChargeVo homeChargeVo = new HomeChargeVo();
-        homeChargeVo.setOnelevel("￥" + oneLevelVo.getMoney());
-        homeChargeVo.setTwoLevel("￥" + twoLevelVo.getMoney());
-        homeChargeVo.setThreeLevel("￥" + threeLevelVo.getMoney());
+        homeChargeVo.setOnelevel("" + oneLevelVo.getMoney());
+        homeChargeVo.setTwoLevel("" + twoLevelVo.getMoney());
+        homeChargeVo.setThreeLevel("" + threeLevelVo.getMoney());
         double total = oneLevelVo.getMoney() + twoLevelVo.getMoney() + threeLevelVo.getMoney();
-        homeChargeVo.setTotal("¥" + total);
+        homeChargeVo.setTotal("" + total);
         return homeChargeVo;
     }
 
@@ -93,7 +93,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
             oneLevelInfoVo.setImage(user.getImage());
             oneLevelInfoVo.setUsername(user.getUsername());
-            oneLevelInfoVo.setMoney("¥" + totalMoney);
+            oneLevelInfoVo.setMoney("" + totalMoney);
             oneLevelInfoVoList.add(oneLevelInfoVo);
         }
 
@@ -151,7 +151,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             }
             twoLevelInfoVo.setImage(user.getImage());
             twoLevelInfoVo.setUsername(user.getUsername());
-            twoLevelInfoVo.setMoney("￥" + totalMoney);
+            twoLevelInfoVo.setMoney("" + totalMoney);
             total += totalMoney;
             twoLevelVo.getList().add(twoLevelInfoVo);
 
@@ -171,7 +171,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
                     twoLevelUserTotal += charge.getMoney();
                 }
                 total += twoLevelUserTotal;
-                infoVo.setMoney("￥" + twoLevelUserTotal);
+                infoVo.setMoney("" + twoLevelUserTotal);
                 twoLevelVo.getList().add(infoVo);
             }
 
@@ -182,12 +182,12 @@ public class TodayChargeServiceImpl implements TodayChargeService {
     }
 
     @Override
-    public ThreeLevelVo threeLevelCharges(Date start, Date end, long angetId) {
+    public ThreeLevelVo threeLevelCharges(Date start, Date end, long agentId) {
 
-        long agentId = AgentUtil.getAgentIdByCookie();
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         ThreeLevelVo threeLevelVo = new ThreeLevelVo();
         threeLevelVo.setCategoryName("game name");
+
 
         //所有的二级代理
         List<Long> aList = new ArrayList<>();
@@ -223,7 +223,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             for (Charge charge : chargeList){
                 totalMoney += charge.getMoney();
             }
-            threeLevelInfoVo.setMoney("￥" + totalMoney);
+            threeLevelInfoVo.setMoney("" + totalMoney);
             total += totalMoney;
             threeLevelVo.getList().add(threeLevelInfoVo);
         }

@@ -117,4 +117,20 @@ public class AgentBean {
         this.image = image;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "AgentBean{" +
+                "id=" + id +
+                ", openId='" + openId + '\'' +
+                ", unionId='" + unionId + '\'' +
+                ", rebate=" + rebate +
+                ", partnerId=" + partnerId +
+                ", parentId=" + parentId +
+                ", isPartner=" + isPartner +
+                ", qrTicket='" + qrTicket + '\'' +
+                ", image='" + image + '\'' +
+                ", childList=" + childList +
+                '}';
+    }
 }

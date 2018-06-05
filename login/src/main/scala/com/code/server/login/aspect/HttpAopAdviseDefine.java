@@ -1,11 +1,14 @@
 package com.code.server.login.aspect;
 
+import com.code.server.login.action.AgentAction;
 import com.code.server.login.action.AgentResponse;
 import com.code.server.redis.service.RedisManager;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -26,6 +29,7 @@ public class HttpAopAdviseDefine {
 
     private static final String AGENT_COOKIE_NAME = "AGENT_TOKEN";
 
+    private static final Logger logger = LoggerFactory.getLogger(HttpAopAdviseDefine.class);
     @Autowired
     private StringRedisTemplate redisTemplate;
 
@@ -48,6 +52,10 @@ public class HttpAopAdviseDefine {
             Map<String, Object> rs = new HashMap<>();
             return new AgentResponse(1000, rs);
         };
+
+        logger.info("----------map is -- {}", map);
+//        System.out.println("-----------------------------------------------------------------------------");
+//        System.out.println(map);
 
         return joinPoint.proceed();
     }
