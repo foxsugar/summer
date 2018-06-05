@@ -24,7 +24,7 @@ public class HomeServiceImpl implements HomeService{
     public HomePageVo showHomePage(long agentId) {
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
 
-        logger.info("agentBean{}", agentBean);
+        logger.info("agentBean{}", agentBean.getRebate());
         HomePageVo homePageVo = new HomePageVo();
         homePageVo.setRebate("" + agentBean.getRebate());
         homePageVo.setInvitationCode("" + agentId);
