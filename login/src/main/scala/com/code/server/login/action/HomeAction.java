@@ -4,6 +4,8 @@ import com.code.server.login.anotation.AuthChecker;
 import com.code.server.login.service.HomeService;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.vo.HomePageVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +28,8 @@ public class HomeAction {
 
     private static final String AGENT_COOKIE_NAME = "AGENT_TOKEN";
 
+    protected static final Logger logger = LoggerFactory.getLogger(HomeAction.class);
+
     @Autowired
     private HomeService homeService;
 
@@ -36,6 +40,9 @@ public class HomeAction {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         long agentId = AgentUtil.getAgentByRequest(request);
+
+        logger.info("------");
+        logger.info("agent Id:是", agentId);
 
         HomePageVo homePageVo = homeService.showHomePage(agentId);
         Map<String, Object> rs = new HashMap<>();

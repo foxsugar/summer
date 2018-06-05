@@ -1,6 +1,8 @@
 package com.code.server.login.util;
 
 import com.code.server.redis.service.RedisManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +16,7 @@ import java.util.Map;
 public class AgentUtil {
 
     private static final String AGENT_COOKIE_NAME = "AGENT_TOKEN";
-
+    protected static final Logger logger = LoggerFactory.getLogger(AgentUtil.class);
     //暂时这么命名 根据token取 agentId
     public static long getAgentIdByCookie(){
         return 1;
@@ -29,6 +31,7 @@ public class AgentUtil {
             }
         }
         String agentIdStr = RedisManager.getAgentRedisService().getAgentByToken(cookie.getValue()).get("agentId");
+        logger.info("agentId is:", agentIdStr);
         return Integer.parseInt(agentIdStr);
     }
 
