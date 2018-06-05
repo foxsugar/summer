@@ -30,6 +30,8 @@ public class HomeServiceImpl implements HomeService{
         String total = homeChargeVo.getTotal();
 
         logger.info("+++= {}", homeChargeVo);
+
+        logger.info("---{}", total);
         homePageVo.setTotalMoney(total);
         return homePageVo;
     }
