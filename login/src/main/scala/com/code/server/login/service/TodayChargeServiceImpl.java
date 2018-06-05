@@ -185,12 +185,12 @@ public class TodayChargeServiceImpl implements TodayChargeService {
     }
 
     @Override
-    public ThreeLevelVo threeLevelCharges(Date start, Date end, long angetId) {
+    public ThreeLevelVo threeLevelCharges(Date start, Date end, long agentId) {
 
-        long agentId = AgentUtil.getAgentIdByCookie();
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         ThreeLevelVo threeLevelVo = new ThreeLevelVo();
         threeLevelVo.setCategoryName("game name");
+
 
         //所有的二级代理
         List<Long> aList = new ArrayList<>();
