@@ -4,6 +4,7 @@ import com.code.server.login.vo.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dajuejinxian on 2018/5/14.
@@ -28,4 +29,6 @@ public interface TodayChargeService {
    ThreeLevelVo threeLevelCharges(Date start, Date end, long agentId);
    //待机代理充值记录
    ThreeLevelVo threeLevelCharges(long agentId);
+
+   public double canBlance(long agentId);
 }

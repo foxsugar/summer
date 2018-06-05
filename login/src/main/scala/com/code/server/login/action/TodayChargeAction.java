@@ -1,7 +1,8 @@
 package com.code.server.login.action;
-
+import com.code.server.db.dao.IChargeDao;
 import com.code.server.login.anotation.AuthChecker;
 import com.code.server.login.service.TodayChargeService;
+import com.code.server.login.service.TodayChargeServiceImpl;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.vo.*;
 import com.code.server.util.DateUtil;
@@ -117,8 +118,8 @@ public class TodayChargeAction {
         HttpServletRequest request = attributes.getRequest();
         long agentId = AgentUtil.getAgentByRequest(request);
 
-        TwoLevelVo twoLevelVo = todayChargeService.twoLevelCharges(agentId);
         Map<String, Object> result = new HashMap<>();
+        TwoLevelVo twoLevelVo = todayChargeService.twoLevelCharges(agentId);
         result.put("result", twoLevelVo);
         AgentResponse agentResponse = new AgentResponse(200, result);
         return agentResponse;
@@ -151,7 +152,6 @@ public class TodayChargeAction {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         long agentId = AgentUtil.getAgentByRequest(request);
-
         ThreeLevelVo threeLevelVo = todayChargeService.threeLevelCharges(agentId);
         Map<String, Object> result = new HashMap<>();
         result.put("result", threeLevelVo);
@@ -170,13 +170,10 @@ public class TodayChargeAction {
 
         Date startDate = DateUtil.convert2Date(start);
         Date endDate = DateUtil.convert2Date(end);
-        ThreeLevelVo threeLevelVo = todayChargeService.threeLevelCharges(startDate, endDate, agentId);
+        ThreeLevelVo threeLevelVo = todayChargeService.threeLevelCharges(startDate, endDate ,agentId);
         Map<String, Object> result = new HashMap<>();
         result.put("result", threeLevelVo);
         AgentResponse agentResponse = new AgentResponse(200, result);
         return agentResponse;
     }
-
-
-
 }
