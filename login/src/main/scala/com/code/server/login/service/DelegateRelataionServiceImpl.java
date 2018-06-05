@@ -3,7 +3,6 @@ package com.code.server.login.service;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.db.dao.IUserDao;
 import com.code.server.db.model.User;
-import com.code.server.login.util.CookieUtil;
 import com.code.server.login.vo.OneLevelInfoVo;
 import com.code.server.login.vo.ThreeLevelInfoVo;
 import com.code.server.login.vo.TwoLevelInfoVo;
@@ -24,11 +23,9 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
     private IUserDao userDao;
 
     @Override
-    public List<OneLevelInfoVo> fetchSelfPlayerList() {
+    public List<OneLevelInfoVo> fetchSelfPlayerList(long agentId) {
 
-        long agentId = CookieUtil.getAgentIdByCookie();
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
-
         List<Long> aList = new ArrayList<>();
         for (long uid : agentBean.getChildList()){
             if (RedisManager.getAgentRedisService().isExit(uid))continue;
@@ -49,9 +46,8 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
     }
 
     @Override
-    public List<TwoLevelInfoVo> fetchTwoLevelDelegateList() {
+    public List<TwoLevelInfoVo> fetchTwoLevelDelegateList(long agentId) {
 
-        long agentId = CookieUtil.getAgentIdByCookie();
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
 
         List<Long> aList = new ArrayList<>();
@@ -75,11 +71,9 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
     }
 
     @Override
-    public List<ThreeLevelInfoVo> fetchThreeLevelDelegateList() {
+    public List<ThreeLevelInfoVo> fetchThreeLevelDelegateList(long agentId) {
 
-        long agentId = CookieUtil.getAgentIdByCookie();
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
-
         List<Long> aList = new ArrayList<>();
         for (long uid : agentBean.getChildList()){
             if (RedisManager.getAgentRedisService().isExit(uid)){
@@ -98,10 +92,8 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
         }
 
         List<User> cList = userDao.findUsersByIdIn(bList);
-
         List<ThreeLevelInfoVo> resultList = new ArrayList<>();
         for (User user : cList){
-
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
             threeLevelInfoVo.setImage(user.getImage());
             threeLevelInfoVo.setUsername(user.getUsername());

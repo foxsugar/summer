@@ -39,6 +39,9 @@ public class RedisManager {
         return SpringUtil.getBean(AgentRedisService.class);
     }
 
+    public static LogRedisService getLogRedisService(){
+        return SpringUtil.getBean(LogRedisService.class);}
+
     public static void addGold(long userId, double add){
         getUserRedisService().addUserGold(userId, add);
     }

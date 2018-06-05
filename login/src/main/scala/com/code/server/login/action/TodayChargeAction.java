@@ -22,6 +22,7 @@ import java.util.Map;
 @RequestMapping("/todayCharge")
 public class TodayChargeAction {
 
+    private static final String AGENT_COOKIE_NAME = "AGENT_TOKEN";
     @Autowired
     private TodayChargeService todayChargeService;
 
@@ -30,7 +31,11 @@ public class TodayChargeAction {
     @RequestMapping("/waterRecord")
     public AgentResponse waterRecord(){
 
-        List<WaterRecordVo> waterRecordVoList = todayChargeService.waterRecords();
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        long agentId = AgentUtil.getAgentByRequest(request);
+
+        List<WaterRecordVo> waterRecordVoList = todayChargeService.waterRecords(agentId);
         AgentResponse agentResponse = new AgentResponse(200, waterRecordVoList);
         return agentResponse;
     }
@@ -38,7 +43,12 @@ public class TodayChargeAction {
     @AuthChecker
     @RequestMapping("/homeCharge")
     public AgentResponse homeCharge(){
-        HomeChargeVo homeChargeVo = todayChargeService.showCharge();
+
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        long agentId = AgentUtil.getAgentByRequest(request);
+
+        HomeChargeVo homeChargeVo = todayChargeService.showCharge(agentId);
         Map<String, Object> result = new HashMap<>();
         result.put("result", homeChargeVo);
         AgentResponse agentResponse = new AgentResponse(200, result);
@@ -48,9 +58,14 @@ public class TodayChargeAction {
     @AuthChecker
     @RequestMapping("/dhomeCharge")
     public AgentResponse homeCharge(String start, String end){
+
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        long agentId = AgentUtil.getAgentByRequest(request);
+
         Date startDate = DateUtil.convert2Date(start);
         Date endDate = DateUtil.convert2Date(end);
-        HomeChargeVo homeChargeVo = todayChargeService.showCharge(startDate, endDate);
+        HomeChargeVo homeChargeVo = todayChargeService.showCharge(startDate, endDate, agentId);
         Map<String, Object> result = new HashMap<>();
         result.put("result", homeChargeVo);
         AgentResponse agentResponse = new AgentResponse(200, result);
@@ -62,7 +77,11 @@ public class TodayChargeAction {
     @RequestMapping("/level1Charges")
     public AgentResponse showTodayOneLevelChargeList(){
 
-        OneLevelVo oneLevelVo = todayChargeService.oneLevelCharges();
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        long agentId = AgentUtil.getAgentByRequest(request);
+
+        OneLevelVo oneLevelVo = todayChargeService.oneLevelCharges(agentId);
         Map<String, Object> result = new HashMap<>();
         result.put("result", oneLevelVo);
         AgentResponse agentResponse = new AgentResponse(200, result);
@@ -72,6 +91,10 @@ public class TodayChargeAction {
     @AuthChecker
     @RequestMapping("/dlevel1Charges")
     public AgentResponse showTodayOneLevelChargeList(String start, String end){
+
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        long agentId = AgentUtil.getAgentByRequest(request);
 
         Date startDate = DateUtil.convert2Date(start);
         Date endDate = DateUtil.convert2Date(end);
@@ -87,7 +110,9 @@ public class TodayChargeAction {
     @RequestMapping("/level2Charges")
     public AgentResponse showTodayTwoLevelChargeList(){
 
-        TwoLevelVo twoLevelVo = todayChargeService.twoLevelCharges();
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        long agentId = AgentUtil.getAgentByRequest(request);
 
         Map<String, Object> result = new HashMap<>();
         result.put("result", twoLevelVo);
@@ -99,6 +124,11 @@ public class TodayChargeAction {
     //二级代理充值记录
     @RequestMapping("/dlevel2Charges")
     public AgentResponse showTodayTwoLevelChargeList(String start, String end){
+
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        long agentId = AgentUtil.getAgentByRequest(request);
+
         Date startDate = DateUtil.convert2Date(start);
         Date endDate = DateUtil.convert2Date(end);
         TwoLevelVo twoLevelVo = todayChargeService.twoLevelCharges(startDate, endDate);
@@ -116,6 +146,7 @@ public class TodayChargeAction {
 
         ThreeLevelVo threeLevelVo = todayChargeService.threeLevelCharges();
 
+        ThreeLevelVo threeLevelVo = todayChargeService.threeLevelCharges(agentId);
         Map<String, Object> result = new HashMap<>();
         result.put("result", threeLevelVo);
         AgentResponse agentResponse = new AgentResponse(200, result);
@@ -126,6 +157,11 @@ public class TodayChargeAction {
     //二级代理充值记录
     @RequestMapping("/dlevel3Charges")
     public AgentResponse showTodayThreeLevelChargeList(String start, String end){
+
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        long agentId = AgentUtil.getAgentByRequest(request);
+
         Date startDate = DateUtil.convert2Date(start);
         Date endDate = DateUtil.convert2Date(end);
         ThreeLevelVo threeLevelVo = todayChargeService.threeLevelCharges(startDate, endDate);
@@ -134,14 +170,4 @@ public class TodayChargeAction {
         AgentResponse agentResponse = new AgentResponse(200, result);
         return agentResponse;
     }
-
-    @AuthChecker
-    @RequestMapping("/canBlance")
-     public AgentResponse canBlance(){
-        double canBlance = todayChargeService.canBlance();
-         Map<String, Object> result = new HashMap<>();
-         result.put("result", canBlance);
-        AgentResponse agentResponse = new AgentResponse(200, result);
-        return agentResponse;
-     }
 }

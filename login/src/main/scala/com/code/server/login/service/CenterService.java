@@ -80,8 +80,10 @@ public class CenterService {
             agents.forEach(agent->{
                 long agentId = Long.valueOf(agent);
                 AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
-                GameAgent gameAgent = AgentService.agentBean2GameAgent(agentBean);
-                gameAgentService.getGameAgentDao().save(gameAgent);
+                if (agentBean != null) {
+                    GameAgent gameAgent = AgentService.agentBean2GameAgent(agentBean);
+                    gameAgentService.getGameAgentDao().save(gameAgent);
+                }
                 removeList.add(agent);
 
             });
@@ -97,13 +99,14 @@ public class CenterService {
         int hour = LocalTime.now().getHour();
 
         OnlineRecordService onlineRecordService = SpringUtil.getBean(OnlineRecordService.class);
-        OnlineRecord onlineRecord = onlineRecordService.getOnlineRecordDao().findOne(date);
-        if (onlineRecord == null) {
-            onlineRecord = new OnlineRecord();
-            onlineRecord.setId(date);
+        OnlineRecord record = onlineRecordService.getOnlineRecordDao().findOne(date);
+        if (record == null) {
+            record = new OnlineRecord();
+            record.setId(date);
         }
 
-        OnlineInfo onlineInfo = onlineRecord.getOnlineData().getInfo().get(""+hour);
+        //玩家在线数据
+        OnlineInfo onlineInfo = record.getOnlineData().getInfo().get(""+hour);
         if (onlineInfo == null) {
             onlineInfo = new OnlineInfo();
         }
@@ -115,9 +118,22 @@ public class CenterService {
         if (roomNum > onlineInfo.getRoom()) {
             onlineInfo.setRoom(roomNum);
         }
-        onlineRecord.getOnlineData().getInfo().put(""+hour,onlineInfo);
 
-        onlineRecordService.getOnlineRecordDao().save(onlineRecord);
+        record.getOnlineData().getInfo().put(""+hour,onlineInfo);
+
+        //牌局数
+
+
+
+
+//        record.getGameNumData().setInfo()
+
+        //gold 收入
+
+        //返利数据
+
+
+        onlineRecordService.getOnlineRecordDao().save(record);
     }
 
     public static void main(String[] args) {

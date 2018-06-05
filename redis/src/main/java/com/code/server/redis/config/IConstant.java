@@ -61,5 +61,9 @@ public interface IConstant {
 
     String SAVE_AGENT = "save_agent";
 
+    String LOG_GAMENUM = "log_gameNum:";
+    String LOG_GOLDINCOME = "log_goldIncome:";
+    String LOG_CHARGE_REBATE = "log_chargeRebate";
+
 
 }

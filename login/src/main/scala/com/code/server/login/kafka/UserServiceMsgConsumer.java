@@ -39,12 +39,12 @@ public class UserServiceMsgConsumer {
 
     @KafkaListener(id = "centerTopic", topicPattern = "center_topic")
     public void listen2(ConsumerRecord<String, String> record) {
-        ThreadPool.getInstance().executor.execute(() -> {
-            String key = record.key();
-            String value = record.value();
-            KafkaMsgKey msgKey = JsonUtil.readValue(key, KafkaMsgKey.class);
-            CenterMsgService.dispatch(msgKey, value);
-        });
+//        ThreadPool.getInstance().executor.execute(() -> {
+        String key = record.key();
+        String value = record.value();
+        KafkaMsgKey msgKey = JsonUtil.readValue(key, KafkaMsgKey.class);
+        CenterMsgService.dispatch(msgKey, value);
+//        });
 
 
     }
@@ -59,7 +59,6 @@ public class UserServiceMsgConsumer {
         JsonNode msgValue = JsonUtil.readTree(value);
         ClubServiceMsgDispatch clubServiceMsgDispatch = SpringUtil.getBean(ClubServiceMsgDispatch.class);
         clubServiceMsgDispatch.dispatchMsg(msgKey, msgValue);
-
 
 
     }

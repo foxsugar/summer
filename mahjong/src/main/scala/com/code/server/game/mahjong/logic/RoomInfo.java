@@ -3,10 +3,7 @@ package com.code.server.game.mahjong.logic;
 
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.exception.DataNotFoundException;
-import com.code.server.constant.game.IGameConstant;
-import com.code.server.constant.game.PrepareRoom;
-import com.code.server.constant.game.PrepareRoomMj;
-import com.code.server.constant.game.UserBean;
+import com.code.server.constant.game.*;
 import com.code.server.constant.response.*;
 import com.code.server.game.room.RoomExtendGold;
 import com.code.server.game.room.kafka.MsgSender;
@@ -473,6 +470,14 @@ public class RoomInfo extends RoomExtendGold {
         prepareRoom.clubId = this.getClubId();
         prepareRoom.clubRoomModel = this.getClubRoomModel();
         return prepareRoom;
+    }
+
+    @Override
+    public GameLogKey getGameLogKey() {
+        GameLogKey gameLogKey =  super.getGameLogKey();
+        gameLogKey.getParams().put("mode", mode);
+        gameLogKey.getParams().put("modeTotal", modeTotal);
+        return gameLogKey;
     }
 
     public String getModeTotal() {

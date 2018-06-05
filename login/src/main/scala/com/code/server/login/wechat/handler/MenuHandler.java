@@ -280,6 +280,7 @@ public class MenuHandler extends AbstractHandler {
             AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
 
             agentBean.setImage(wxMpUser.getHeadImgUrl());
+            agentBean.setOpenId(wxMpUser.getOpenId());
             if (agentBean.getQrTicket() == null || "".equals(agentBean.getQrTicket())) {
                 //根据unionId生成二维码
                 WxMpQrCodeTicket ticket = wxService.getQrcodeService().qrCodeCreateLastTicket(unionId);

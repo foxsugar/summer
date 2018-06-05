@@ -1,6 +1,7 @@
 package com.code.server.game.room;
 
 
+import com.code.server.constant.game.GameLogKey;
 import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.response.IfaceRoomVo;
@@ -74,4 +75,6 @@ public interface IfaceRoom extends IGameConstant {
     boolean isGoldRoom();
 
     boolean isRobotRoom();
+
+    GameLogKey getGameLogKey();
 }

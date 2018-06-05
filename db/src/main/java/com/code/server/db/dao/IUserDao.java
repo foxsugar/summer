@@ -25,6 +25,9 @@ public interface IUserDao extends PagingAndSortingRepository<User, Long> {
     @Query(value = "select id from users where open_id=?1", nativeQuery = true)
     Long getIdByOpenId(String openId);
 
+    @Query(value = "select referee from users where open_id=?1", nativeQuery = true)
+    Integer getRefereeByOpenId(String openId);
+
     List<User> findUsersByIdIn(List<Long> list);
 
 }
