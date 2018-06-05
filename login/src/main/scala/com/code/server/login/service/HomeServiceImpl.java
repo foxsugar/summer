@@ -23,13 +23,13 @@ public class HomeServiceImpl implements HomeService{
     @Override
     public HomePageVo showHomePage(long agentId) {
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
-
-        logger.info("agentBean{}", agentBean.getRebate());
         HomePageVo homePageVo = new HomePageVo();
         homePageVo.setRebate("" + agentBean.getRebate());
         homePageVo.setInvitationCode("" + agentId);
         HomeChargeVo homeChargeVo = todayChargeService.showCharge(agentId);
         String total = homeChargeVo.getTotal();
+
+        logger.info("+++= {}", homeChargeVo);
         homePageVo.setTotalMoney(total);
         return homePageVo;
     }
