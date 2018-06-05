@@ -4,8 +4,14 @@ import com.code.server.constant.data.DataManager;
 import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.UserBean;
+import com.code.server.constant.response.RoomSimpleVo;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2018/4/11.
@@ -187,8 +193,29 @@ public class RoomExtendGold extends Room {
         return this.getMultiple() * 20;
     }
 
+
     @Override
     public boolean isRobotRoom() {
         return true;
+    }
+
+    /**
+     * 获得类型下所有金币房
+     * @param gameType
+     * @return
+     */
+    public static Map<String, Object> getGoldRoomsVo(String gameType) {
+        Map<String, Object> result = new HashMap<>();
+        List<RoomSimpleVo> list = new ArrayList<>();
+        Map<Integer, List<Room>> map = RoomManager.getInstance().getPublicGoldRoom().get(gameType);
+        if (map != null) {
+            for (List<Room> l : map.values()) {
+                for (Room r : l) {
+                    list.add(r.toSimpleVo());
+                }
+            }
+        }
+        result.put("rooms", list);
+        return result;
     }
 }

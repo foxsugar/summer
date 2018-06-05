@@ -11,10 +11,7 @@ import com.code.server.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by dajuejinxian on 2018/5/14.
@@ -126,7 +123,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         for (Long childId : aList){
 
             AgentBean child = RedisManager.getAgentRedisService().getAgentBean(childId);
-            List<Long> grandchild = child.getChildList();
+            Set<Long> grandchild = child.getChildList();
 
             List<Long> temp = new ArrayList<>();
             //刨除三级代理

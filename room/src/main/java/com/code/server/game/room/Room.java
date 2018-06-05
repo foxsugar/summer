@@ -705,6 +705,16 @@ public class Room implements IfaceRoom {
         return roomVo;
     }
 
+    public RoomSimpleVo toSimpleVo() {
+        RoomSimpleVo roomVo = new RoomSimpleVo();
+
+        roomVo.setGoldRoomType(this.goldRoomType);
+        roomVo.setRoomId(this.roomId);
+        roomVo.setRoomType(this.roomType);
+        roomVo.setGameType(this.gameType);
+        roomVo.setPeople(this.users.size());
+        return roomVo;
+    }
 
     @Override
     public PrepareRoom getPrepareRoomVo() {

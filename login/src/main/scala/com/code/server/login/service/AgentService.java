@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -264,7 +263,7 @@ public class AgentService {
                 long newPartnerId = 0;
                 if (newAgentBean != null) {
                     //自己的合伙人 和 新上级的合伙人是否是同一人
-                    newPartnerId = agentBean.getPartnerId();
+                    newPartnerId = newAgentBean.getPartnerId();
                 }
 
                 //如果合伙人id换了
@@ -311,7 +310,7 @@ public class AgentService {
      * @param agents
      */
     public void findAllClildAgent(AgentBean agentBean,Set<AgentBean> agents){
-        List<Long> ids = agentBean.getChildList();
+        Set<Long> ids = agentBean.getChildList();
         if (ids.size() > 0) {
             ids.forEach(id->{
                 AgentBean child = agentRedisService.getAgentBean(id);

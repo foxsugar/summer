@@ -479,6 +479,18 @@ public class WechatAction extends Cors {
         return agentResponse;
     }
 
+    @RequestMapping("/changeAgent")
+    @ResponseBody
+    public AgentResponse changeAgent(long agentId, long newAgentId) {
+
+        AgentResponse agentResponse = new AgentResponse();
+
+
+        agentService.changeAgent(agentId, newAgentId);
+
+        return agentResponse;
+    }
+
 
     @RequestMapping("/addChild")
     @ResponseBody
@@ -486,8 +498,32 @@ public class WechatAction extends Cors {
 
         AgentResponse agentResponse = new AgentResponse();
 
+        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+        if (agentBean == null) {
+            return new AgentResponse().setData("不是代理");
+        }
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+            userBean.setReferee((int)agentId);
+        }else{
+            User user = userService.getUserByUserId(userId);
+            user.setReferee((int) agentId);
 
-        agentService.change2Partner(userId);
+        }
+        AgentBean userAgentBean = RedisManager.getAgentRedisService().getAgentBean(userId);
+        //自己也是代理
+        if (userAgentBean != null) {
+            userAgentBean.setParentId(agentId);
+            userAgentBean.setPartnerId(agentBean.getPartnerId());
+            RedisManager.getAgentRedisService().updateAgentBean(userAgentBean);
+        }
+
+
+        agentBean.getChildList().add(userId);
+
+        RedisManager.getAgentRedisService().updateAgentBean(agentBean);
+
+
 
         return agentResponse;
     }

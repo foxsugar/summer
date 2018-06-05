@@ -3,7 +3,7 @@ package com.code.server.game.mahjong.service
 import com.code.server.constant.response.{ErrorCode, ResponseVo}
 import com.code.server.game.mahjong.config.ServerConfig
 import com.code.server.game.mahjong.logic.{RoomFactory, RoomInfo, RoomInfoGold}
-import com.code.server.game.room.Room
+import com.code.server.game.room.{Room, RoomExtendGold}
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
 import com.code.server.redis.service.RedisManager
@@ -88,18 +88,19 @@ object MahjongRoomService {
         val roomType: String = paramsjSONObject.get("roomType").asText
         val gameType: String = paramsjSONObject.get("gameType").asText
         val goldRoomType = paramsjSONObject.path("goldRoomType").asInt()
-        val rooms = RoomManager.getInstance().getNotFullRoom(gameType, goldRoomType)
-        if (rooms.size() == 0) {
-
-        }
-
 
         code = joinGoldRoom(userId, roomType, gameType, goldRoomType)
 
       }
 
       case "getGoldRooms" => {
+        val roomType: String = paramsjSONObject.get("roomType").asText
+        val gameType: String = paramsjSONObject.get("gameType").asText
+        val goldRoomType = paramsjSONObject.path("goldRoomType").asInt()
 
+        val result = RoomExtendGold.getGoldRoomsVo(gameType)
+        MsgSender.sendMsg2Player("mahjongRoomService", "joinGoldRoom", result, userId)
+        code = 0
       }
     }
     return code

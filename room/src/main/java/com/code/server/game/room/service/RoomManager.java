@@ -21,10 +21,10 @@ public class RoomManager {
     private Map<String, Map<Integer, List<Room>>> fullGoldRoom = new HashMap<>();
     private Map<String, Map<Integer, List<Room>>> notFullGoldRoom = new HashMap<>();
     private Map<String, Map<Integer, List<Room>>> publicGoldRoom = new HashMap<>();
-    private  Map<Long, List<String>> prepareRoom = new HashMap<>();
+    private Map<Long, List<String>> prepareRoom = new HashMap<>();
 
 
-    private  List<Room> robotRoom = new ArrayList<>();
+    private List<Room> robotRoom = new ArrayList<>();
 
     private static RoomManager outInstance = new RoomManager();
 
@@ -35,13 +35,14 @@ public class RoomManager {
     private RoomManager() {
     }
 
-    public static IfaceRoom getRoom(String roomId){
+    public static IfaceRoom getRoom(String roomId) {
         return getInstance().rooms.get(roomId);
     }
 
 
     /**
      * 获得满的房间啊
+     *
      * @param gameType
      * @param goldGameType
      * @return
@@ -53,6 +54,7 @@ public class RoomManager {
 
     /**
      * 获得不满房间
+     *
      * @param gameType
      * @param goldGameType
      * @return
@@ -64,20 +66,22 @@ public class RoomManager {
 
     /**
      * 获得公开金币房
+     *
      * @param gameType
      * @param goldGameType
      * @return
      */
-    public List<Room> getPublicGoldRoom(String gameType, int goldGameType){
+    public List<Room> getPublicGoldRoom(String gameType, int goldGameType) {
         Map<Integer, List<Room>> publicGoldRoom = this.publicGoldRoom.computeIfAbsent(gameType, k -> new HashMap<>());
         return publicGoldRoom.computeIfAbsent(goldGameType, k -> new ArrayList<>());
     }
 
     /**
      * 删除满房间，添加不满房间
+     *
      * @param room
      */
-    public void moveFull2NotFullRoom(Room room){
+    public void moveFull2NotFullRoom(Room room) {
         getFullRoom(room.getGameType(), room.getGoldRoomType()).remove(room);
         List<Room> notFull = getNotFullRoom(room.getGameType(), room.getGoldRoomType());
         if (!notFull.contains(room)) {
@@ -88,9 +92,10 @@ public class RoomManager {
 
     /**
      * 删除不满房间，添加满房间
+     *
      * @param room
      */
-    public void moveGoldRoomNotFull2Full(Room room){
+    public void moveGoldRoomNotFull2Full(Room room) {
         getNotFullRoom(room.getGameType(), room.getGoldRoomType()).remove(room);
         List<Room> full = getFullRoom(room.getGameType(), room.getGoldRoomType());
         if (!full.contains(room)) {
@@ -100,6 +105,7 @@ public class RoomManager {
 
     /**
      * 添加一个不满的金币房
+     *
      * @param room
      */
     public void addNotFullGoldRoom(Room room) {
@@ -110,9 +116,10 @@ public class RoomManager {
 
     /**
      * 删除一个满的金币房
+     *
      * @param room
      */
-    public  void removeGoldRoomFromMap(Room room){
+    public void removeGoldRoomFromMap(Room room) {
         Map<Integer, List<Room>> notFullRooms = notFullGoldRoom.get(room.getGameType());
 //        Map<Double, List<Room>> fullRooms = notFullGoldRoom.get(room.getGameType());
         if (notFullRooms != null) {
@@ -126,6 +133,7 @@ public class RoomManager {
 
     /**
      * 删除一个房间
+     *
      * @param roomId
      */
     public static void removeRoom(String roomId) {
@@ -134,10 +142,10 @@ public class RoomManager {
         getInstance().rooms.remove(roomId);
         RedisManager.removeRoomAllInfo(roomId);
         //删除代开房
-        if(room != null){
-            Room rm = (Room)room;
+        if (room != null) {
+            Room rm = (Room) room;
             //是否是代建房
-            if(!rm.isCreaterJoin()){
+            if (!rm.isCreaterJoin()) {
                 RedisManager.getUserRedisService().removePerpareRoom(rm.getCreateUser(), rm.getRoomId());
             }
 
@@ -147,12 +155,12 @@ public class RoomManager {
             }
 
             //金币房
-            if (rm.isGoldRoom() && rm.isDefaultGoldRoom() ) {
+            if (rm.isGoldRoom() && rm.isDefaultGoldRoom()) {
                 //默认金币房
                 if (rm.isDefaultGoldRoom()) {
                     getInstance().getNotFullRoom(rm.getGameType(), rm.getGoldRoomType()).remove(room);
                     getInstance().getFullRoom(rm.getGameType(), rm.getGoldRoomType()).remove(room);
-                }else{
+                } else {
                     //公开金币房
                     getInstance().getPublicGoldRoom(rm.getGameType(), rm.getGoldRoomType()).remove(room);
                 }
@@ -164,11 +172,12 @@ public class RoomManager {
 
     /**
      * 添加一个房间
+     *
      * @param roomId
      * @param serverId
      * @param room
      */
-    public static void addRoom(String roomId,String serverId, Room room) {
+    public static void addRoom(String roomId, String serverId, Room room) {
         getInstance().rooms.put(roomId, room);
         //加入机器人房
         if (room.isRobotRoom) {
@@ -179,9 +188,9 @@ public class RoomManager {
             getInstance().getPublicGoldRoom(room.getGameType(), room.getGoldRoomType()).add(room);
         }
         //加入redis server-room 列表
-        RedisManager.getRoomRedisService().setServerId(roomId,serverId);
+        RedisManager.getRoomRedisService().setServerId(roomId, serverId);
         //加入代开房列表
-        if(!room.isCreaterJoin()){
+        if (!room.isCreaterJoin()) {
             RedisManager.getUserRedisService().addPerpareRoom(room.getCreateUser(), room.getPrepareRoomVo());
         }
 
@@ -189,19 +198,20 @@ public class RoomManager {
 
     /**
      * 获得空的金币房
+     *
      * @param gameType
      * @param goldRoomType
      * @return
      */
-    public static Room getNullGoldRoom(String gameType, int goldRoomType){
+    public static Room getNullGoldRoom(String gameType, int goldRoomType) {
         Map<Integer, List<Room>> rooms = getInstance().notFullGoldRoom.get(gameType);
         if (rooms == null) {
             return null;
         }
         List<Room> list = rooms.get(goldRoomType);
-        if (list!=null && list.size()>0){
+        if (list != null && list.size() > 0) {
             return list.get(0);
-        }else {
+        } else {
             return null;
         }
     }
