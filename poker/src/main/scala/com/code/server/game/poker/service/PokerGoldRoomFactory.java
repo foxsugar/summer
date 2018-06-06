@@ -9,6 +9,11 @@ public class PokerGoldRoomFactory {
 
     public static Room create(long userId, String roomType, String gameType, int goldRoomType) {
 
+
+        switch (gameType) {
+            case " ysz":
+                return new Room();
+        }
         return new Room();
     }
 }
