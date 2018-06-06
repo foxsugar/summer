@@ -49,7 +49,7 @@ public class RoomXuanQiQi extends Room {
 
     public static RoomXuanQiQi getRoomInstance(String roomType){
         switch (roomType) {
-            case "1":
+            case "9":
                 return new RoomXuanQiQi();
             default:
                 return new RoomXuanQiQi();
@@ -102,7 +102,7 @@ public class RoomXuanQiQi extends Room {
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);
         room.setUuid(idWorker.nextId());
 
-        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createHitGoldFlowerRoom", room.toVo(userId)), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createXuanQiQiRoom", room.toVo(userId)), userId);
 
         return 0;
     }

@@ -1,6 +1,7 @@
 package com.code.server.game.poker.xuanqiqi;
 
 import com.code.server.constant.response.GameOfResult;
+import com.code.server.constant.response.IfaceGameVo;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserOfResult;
 import com.code.server.game.room.Game;
@@ -68,6 +69,7 @@ public class GameXuanQiQi extends Game {
         for (Long uid : users) {
             PlayerCardInfoXuanQiQi playerCardInfo = getGameTypePlayerCardInfo();
             playerCardInfo.userId = uid;
+            playerCardInfo.canSetMultiple = "-1";
             playerCardInfos.put(uid, playerCardInfo);
             xuanOrGuo.put(uid,0);
             ifChuPai.put(uid,0);
@@ -113,6 +115,27 @@ public class GameXuanQiQi extends Game {
         randamCards.add(53);
         randamCards.add(54);
         Collections.shuffle(cards);
+
+        while (true){
+            List<Integer> list1 = new ArrayList<>();
+            List<Integer> list2 = new ArrayList<>();
+            List<Integer> list3 = new ArrayList<>();
+            for (int i = 0; i < 8; i++) {
+                list1.add(cards.get(i));
+            }
+            for (int i = 8; i < 16; i++) {
+                list2.add(cards.get(i));
+            }
+            for (int i = 16; i < 24; i++) {
+                list3.add(cards.get(i));
+            }
+            if(dealAgain(list1) && dealAgain(list2) && dealAgain(list3)){
+                return;
+            }
+            else {
+                Collections.shuffle(cards);
+            }
+        }
     }
 
     /**
@@ -134,40 +157,40 @@ public class GameXuanQiQi extends Game {
     protected void tellBanker(){
         Collections.shuffle(randamCards);
         Map<Long,Integer> randamCardOfPlayer = new HashMap<>();
+        List<Long> tempList = new ArrayList<>();
         int temp = 0;
         for (PlayerCardInfoXuanQiQi playerCardInfo : playerCardInfos.values()) {
             randamCardOfPlayer.put(playerCardInfo.getUserId(),randamCards.get(temp));
+            tempList.add(playerCardInfo.getUserId());
             temp++;
         }
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "tellRandomCard", randamCardOfPlayer), users);
 
+
         //0和1比，0大
-        if(UtilXuanQiQi.getOneCardWin(randamCardOfPlayer.get(playerCardInfos.get(0).getUserId()),randamCardOfPlayer.get(playerCardInfos.get(1).getUserId()))){
-            if(UtilXuanQiQi.getOneCardWin(randamCardOfPlayer.get(playerCardInfos.get(0).getUserId()),randamCardOfPlayer.get(playerCardInfos.get(2).getUserId()))){
-                room.setBankerId(playerCardInfos.get(0).getUserId());
+        if(UtilXuanQiQi.getOneCardWin(randamCardOfPlayer.get(tempList.get(0)),randamCardOfPlayer.get(tempList.get(1)))){
+            if(UtilXuanQiQi.getOneCardWin(randamCardOfPlayer.get(tempList.get(0)),randamCardOfPlayer.get(tempList.get(2)))){
+                room.setBankerId(tempList.get(0));
             }else{
-                room.setBankerId(playerCardInfos.get(2).getUserId());
+                room.setBankerId(tempList.get(2));
             }
         }else{//0和1比,1大
-            if(UtilXuanQiQi.getOneCardWin(randamCardOfPlayer.get(playerCardInfos.get(1).getUserId()),randamCardOfPlayer.get(playerCardInfos.get(2).getUserId()))){
-                room.setBankerId(playerCardInfos.get(1).getUserId());
+            if(UtilXuanQiQi.getOneCardWin(randamCardOfPlayer.get(tempList.get(1)),randamCardOfPlayer.get(tempList.get(2)))){
+                room.setBankerId(tempList.get(1));
             }else{
-                room.setBankerId(playerCardInfos.get(2).getUserId());
+                room.setBankerId(tempList.get(2));
             }
         }
         chuPaiId = room.getBankerId();
         operatId = room.getBankerId();
         playerCardInfos.get(room.getBankerId()).setCanSetMultiple("1");
+
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "tellBankerId", room.getBankerId()), users);
+
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "canDouble", room.getBankerId()), room.getBankerId());
     }
 
-    /**
-     * 游戏结束
-     */
-    protected void gameOver(){
 
-    }
 
     public PlayerCardInfoXuanQiQi getGameTypePlayerCardInfo() {
         switch (room.getGameType()) {
@@ -194,7 +217,6 @@ public class GameXuanQiQi extends Game {
 
         if(xuanOrGuo.get(userId)==0 && chuPaiId ==userId){//庄宣，直接通知出牌
             xuanOrGuo.put(userId,1);
-            MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", chuPaiId), users);
         }else{
             //XuanParam参数设置
             XuanParam xuanParam = new XuanParam();
@@ -204,6 +226,8 @@ public class GameXuanQiQi extends Game {
             xuanParam.setGotLuo(false);
             xuanList.put(userId,xuanParam);
         }
+        operatId = chuPaiId;
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", chuPaiId), users);
         return 0;
     }
 
@@ -211,17 +235,36 @@ public class GameXuanQiQi extends Game {
     public int kou(long userId) {
         xuanOrGuo.put(userId,2);
         boolean isAllKou = allKou();
+        //判断是不是全扣了
         if(isAllKou){
-            gameOver();
+            if(playerCardInfos.get(room.getBankerId()).getHandCards().size()==8){
+                MsgSender.sendMsg2Player(new ResponseVo("gameService", "dealAgain", null), users);
+                room.clearReadyStatus(false);
+            }else{
+                compute();
+                sendResult();
+                genRecord();
+                room.clearReadyStatus(true);
+                sendFinalResult();
+            }
+        }else {
+            //判断下一个人
+            if(chuPaiId==userId){//出牌的就是他，通知下一个人是否宣
+                PlayerCardInfoXuanQiQi safer = playerCardInfos.get(userId);
+                safer.setSafeNum(safer.getWinCards().size()/3);
+                xuanOrGuo.put(userId,2);
+                long canXuanUserId = nextTurnId(userId);
+                operatId = canXuanUserId;
+                MsgSender.sendMsg2Player(new ResponseVo("gameService", "canXuan", canXuanUserId), users);
+            }else {
+                xuanOrGuo.put(userId,2);
+                long canXuanUserId = nextTurnId(userId);
+                operatId = canXuanUserId;
+                MsgSender.sendMsg2Player(new ResponseVo("gameService", "canXuan", canXuanUserId), users);
+            }
         }
-        if(chuPaiId==userId){//出牌的就是他，通知下一个人是否宣
-            PlayerCardInfoXuanQiQi safer = playerCardInfos.get(userId);
-            safer.setSafeNum(safer.getWinCards().size()/3);
-            xuanOrGuo.put(userId,2);
-            long canXuanUserId = nextTurnId(userId);
-            operatId = canXuanUserId;
-            MsgSender.sendMsg2Player(new ResponseVo("gameService", "canXuan", canXuanUserId), users);
-        }
+
+
         return 0;
     }
 
@@ -279,6 +322,8 @@ public class GameXuanQiQi extends Game {
 
         int chuPaiCount = chuPaiIndex();
         if(chuPaiCount ==1){//第一个出牌，通知下家出
+            chuPaiId = nextTurnId(userId);
+            operatId= nextTurnId(userId);
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", chuPaiId), users);
         }else if(chuPaiCount ==2){//第二个人出牌，比牌，通知下家出
             PlayerCardInfoXuanQiQi p1 = null;
@@ -291,8 +336,10 @@ public class GameXuanQiQi extends Game {
                 }
             }
             compareCard(cardNumber,p1,p2);
+            chuPaiId = nextTurnId(userId);
+            operatId= nextTurnId(userId);
+            MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", chuPaiId), users);
         }else if(chuPaiCount ==3){//第三个人出牌，存记录，分罗
-            PlayerCardInfoXuanQiQi p1 = null;
             PlayerCardInfoXuanQiQi p2 = null;
             long winnerId = 0l;
             for (long l:compareCard.keySet()) {//取前两个人比牌赢的
@@ -300,7 +347,7 @@ public class GameXuanQiQi extends Game {
                     winnerId = l;
                 }
             }
-            p1 =playerCardInfos.get(winnerId);
+            PlayerCardInfoXuanQiQi p1 =playerCardInfos.get(winnerId);
             for (Long l:ifChuPai.keySet()) {
                 if(ifChuPai.get(l)==3){
                     p2 =playerCardInfos.get(l);
@@ -313,7 +360,7 @@ public class GameXuanQiQi extends Game {
             if(playerCardInfos.get(0).getHandCards().size()>0){
                 //清除所有状态,游戏继续
                 cleanRecord();
-                MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChoose", room.getBankerId()), users);
+                MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChoose", chuPaiId), users);
             }else{
                 //游戏结算
                 compute();
@@ -349,6 +396,22 @@ public class GameXuanQiQi extends Game {
         }
         return temp;
     }
+
+    //是不是所有牌都在一个人身上99 1010
+    private boolean dealAgain(List<Integer> checkList){
+        boolean b = false;
+        List<Integer> list = new ArrayList<>();
+        for (int i = 33; i < 41; i++) {
+            list.add(i);
+        }
+        for (Integer i:checkList) {
+            if(list.contains(i)){
+                b = true;
+            }
+        }
+        return b;
+    }
+
 
     /**
      * 比牌
@@ -600,7 +663,20 @@ public class GameXuanQiQi extends Game {
     }
 
 
-
+    @Override
+    public IfaceGameVo toVo(long userId) {
+        GameXuanQiQiVO vo = new GameXuanQiQiVO();
+        vo.bankerMultiple = this.bankerMultiple;
+        vo.chuPaiId = this.chuPaiId;
+        vo.operatId = this.operatId;
+        vo.cards = this.cards;
+        vo.randamCards = this.randamCards;
+        vo.xuanOrGuo = this.xuanOrGuo;
+        vo.ifChuPai = this.ifChuPai;
+        vo.compareCard = this.compareCard;
+        vo.xuanList = this.xuanList;
+        return vo;
+    }
 
 
 

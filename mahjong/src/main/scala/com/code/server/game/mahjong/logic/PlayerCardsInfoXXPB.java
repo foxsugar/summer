@@ -41,6 +41,7 @@ public class PlayerCardsInfoXXPB extends PlayerCardsInfoMj {
 	//杠牌分数计算(不用提前计算)
 	@Override
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card){
+		super.gangCompute(room,gameInfo,isMing,diangangUser,card);
 		if(!isMing){//暗杠
 			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
 				gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
@@ -92,7 +93,7 @@ public class PlayerCardsInfoXXPB extends PlayerCardsInfoMj {
 
 		//是否是杠开
 		boolean isGangKai = isGangKai();
-		if (isGangKai) this.winType.add(HuType.hu_杠开);
+		if (isGangKai) this.winType.add(HuType.hu_杠上开花);
 
 
 		for (HuCardType huCardType : huList) {
@@ -104,10 +105,10 @@ public class PlayerCardsInfoXXPB extends PlayerCardsInfoMj {
 			int s = huCardType.fan+0;
 			//2倍
 			if (isSanPeng){
-				s+=3;
+				s+=2;
 			}
-			if (huCardType.specialHuList.contains(hu_杠上开花) ){
-				s+=3;
+			if (isGangKai){
+				s+=2;
 			}
 
 
@@ -120,9 +121,9 @@ public class PlayerCardsInfoXXPB extends PlayerCardsInfoMj {
 
 		//设置胡牌类型
 		setWinTypeResult(getMaxScoreHuCardType(huList));
-		if(maxFan>1){
+		/*if(maxFan>1){
 			maxFan=maxFan-1;
-		}
+		}*/
 
 		if(isZimo){
 			if(gameInfo.getFirstTurn() == userId){//庄赢

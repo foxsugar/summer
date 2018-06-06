@@ -55,7 +55,7 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
 
     //游戏状态
     //1表示显示
-    protected String canSetMultiple;//庄可以加倍
+    protected String canSetMultiple;//庄可以加倍 -1默认，0已设置，1未设置
     protected String canChoose;//可出牌
     protected String fold;//弃牌
     protected String kill;//比牌
@@ -66,15 +66,6 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
 
 
 
-
-    @Override
-    public IfacePlayerInfoVo toVo() {
-        return null;
-    }
-    @Override
-    public IfacePlayerInfoVo toVo(long watchUser) {
-        return null;
-    }
 
     public long getUserId() {
         return userId;
@@ -226,5 +217,60 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
 
     public void addAllScore(int addScore){
         this.allScore = allScore+addScore;
+    }
+
+
+    @Override
+    public IfacePlayerInfoVo toVo() {
+        PlayerCardInfoXuanQiQiVo vo = new PlayerCardInfoXuanQiQiVo();
+        vo.userId =this.userId;
+        vo.randomCard = this.randomCard;
+        vo.handCards = this.handCards;
+        vo.playCards = this.playCards;
+        vo.winCards = this.winCards;
+        vo.cardsType = this.cardsType;
+        vo.score =this.score;
+        vo.allScore = this.allScore;
+        vo.safeNum = this.safeNum;
+        vo.gotThree = this.gotThree;
+        vo.gotFive = this.gotFive;
+        vo.gotSix = this.gotSix;
+        vo.catchThree = this.catchThree;
+        vo.catchFive = this.catchFive;
+        vo.catchSix = this.catchSix;
+        vo.canSetMultiple = this.canSetMultiple;
+        vo.canChoose = this.canChoose;
+        vo.fold = this.fold;
+        vo.kill = this.kill;
+        vo.see = this.see;
+        vo.curRoundNumber = this.curRoundNumber;
+        return vo;
+    }
+
+    @Override
+    public IfacePlayerInfoVo toVo(long watchUser) {
+        PlayerCardInfoXuanQiQiVo vo = new PlayerCardInfoXuanQiQiVo();
+        vo.userId =this.userId;
+        vo.randomCard = this.randomCard;
+        vo.handCards = this.handCards;
+        vo.playCards = this.playCards;
+        vo.winCards = this.winCards;
+        vo.cardsType = this.cardsType;
+        vo.score =this.score;
+        vo.allScore = this.allScore;
+        vo.safeNum = this.safeNum;
+        vo.gotThree = this.gotThree;
+        vo.gotFive = this.gotFive;
+        vo.gotSix = this.gotSix;
+        vo.catchThree = this.catchThree;
+        vo.catchFive = this.catchFive;
+        vo.catchSix = this.catchSix;
+        vo.canSetMultiple = this.canSetMultiple;
+        vo.canChoose = this.canChoose;
+        vo.fold = this.fold;
+        vo.kill = this.kill;
+        vo.see = this.see;
+        vo.curRoundNumber = this.curRoundNumber;
+        return vo;
     }
 }

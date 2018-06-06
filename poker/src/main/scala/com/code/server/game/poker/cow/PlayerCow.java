@@ -31,6 +31,7 @@ public class PlayerCow  implements IfacePlayerInfo {
     //1表示显示
     protected int raise;//加注
     protected int kill;//比牌
+    protected int setMultipleForGetBanker;//比牌
 
     @Override
     public IfacePlayerInfoVo toVo() {
@@ -43,6 +44,7 @@ public class PlayerCow  implements IfacePlayerInfo {
         vo.kill = this.getKill();
         vo.player = this.player;
         vo.sanzhangshi = this.sanzhangshi;
+        vo.setMultipleForGetBanker = this.setMultipleForGetBanker;
         return vo;
     }
 
@@ -57,6 +59,7 @@ public class PlayerCow  implements IfacePlayerInfo {
         vo.raise = this.getRaise();
         vo.kill = this.getKill();
         vo.player = this.player;
+        vo.setMultipleForGetBanker = this.setMultipleForGetBanker;
         return vo;
     }
 
@@ -122,5 +125,13 @@ public class PlayerCow  implements IfacePlayerInfo {
 
     public void setSanzhangshi(List<Integer> sanzhangshi) {
         this.sanzhangshi = sanzhangshi;
+    }
+
+    public int getSetMultipleForGetBanker() {
+        return setMultipleForGetBanker;
+    }
+
+    public void setSetMultipleForGetBanker(int setMultipleForGetBanker) {
+        this.setMultipleForGetBanker = setMultipleForGetBanker;
     }
 }

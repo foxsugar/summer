@@ -57,6 +57,7 @@ public class CowRobot implements ICowRobot,IGameConstant {
                     case STEP_COMPARE:
                         compare(game);
                         break;
+                    case STEP_MULTIPLE:
                 }
             }
         }
@@ -104,6 +105,29 @@ public class CowRobot implements ICowRobot,IGameConstant {
         }
 
         ResponseRobotVo result = new ResponseRobotVo("gameService", "compare",put);
+        SpringUtil.getBean(MsgProducer.class).send2Partition("gameService",partition, msgKey, result);
+    }
+
+    @Override
+    public void setMultipleForGetBanker(GameCow game) {
+        String roomId = game.getRoom().getRoomId();
+        int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
+        KafkaMsgKey msgKey = new KafkaMsgKey();
+
+        msgKey.setRoomId(roomId);
+        msgKey.setPartition(partition);
+
+        Map<String, Object> put = new HashMap();
+
+        for (PlayerCow p : game.getPlayerCardInfos().values()) {
+            if(0==p.getKill()){
+                msgKey.setUserId(p.getUserId());
+                put.put("userId",p.getUserId());
+                put.put("multiple",1);
+            }
+        }
+
+        ResponseRobotVo result = new ResponseRobotVo("gameService", "setMultipleForGetBanker",put);
         SpringUtil.getBean(MsgProducer.class).send2Partition("gameService",partition, msgKey, result);
     }
 
