@@ -133,13 +133,7 @@ public class GameZhaGuZiLiu extends GameZhaGuZi{
                     double score = 0;
 
                     if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) {
-//                        if (playerZhaGuZi.getRetain3List().contains(hongtaosan)) {
-//                            score += base;
-//                        } else if (playerZhaGuZi.getRetain3List().contains(fangpiansan)) {
-//                            score += base;
-//                        }else if(playerZhaGuZi.getRetain3List().contains(heitaosan)){
-//                            score += base;
-//                        }
+
                         score += base;
 
                     } else if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA) {
@@ -157,13 +151,6 @@ public class GameZhaGuZiLiu extends GameZhaGuZi{
                     double score = 0;
 
                     if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) {
-//                        if (playerZhaGuZi.getRetain3List().contains(hongtaosan)) {
-//                            score -= base;
-//                        } else if (playerZhaGuZi.getRetain3List().contains(fangpiansan)) {
-//                            score -= base;
-//                        }else if (playerZhaGuZi.getRetain3List().contains(fangpiansan)){
-//                            score -= base;
-//                        }
                         score -= base;
 
                     } else if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA) {
