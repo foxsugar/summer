@@ -55,7 +55,7 @@ public class GameInfoJinCheng124 extends GameInfo {
             room.setBankerId(nextId);
         }
         noticeDissolutionResult();
-        room.clearReadyStatus();
+        room.clearReadyStatus(true);
     }
 
     protected boolean isRoomOver() {

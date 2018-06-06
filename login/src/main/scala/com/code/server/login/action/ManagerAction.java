@@ -65,4 +65,12 @@ public class ManagerAction extends Cors{
         return result;
 
     }
+
+    @RequestMapping("/")
+    public Map<String, Object> test(String roomId) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("hello", "hello");
+        return result;
+
+    }
 }

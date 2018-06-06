@@ -12,7 +12,15 @@ import java.util.Date;
 @DynamicUpdate
 @Entity
 @Table(name = "charge",
-        indexes = {@Index(name = "userId", columnList = "userId")})
+        indexes = {
+        @Index(name = "userId", columnList = "userid"),
+        @Index(name = "recharge_source", columnList = "recharge_source"),
+        @Index(name = "chargeType", columnList = "chargeType"),
+        @Index(name = "createtime", columnList = "createtime"),
+        @Index(name = "status", columnList = "status"),
+
+}
+        )
 public class Charge {
 
     @Id

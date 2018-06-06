@@ -70,7 +70,7 @@ public class GameInfoHS extends GameInfoNew {
         isAlreadyHu = true;
         sendResult(true, -1L, yipaoduoxiang);
         noticeDissolutionResult();
-        room.clearReadyStatus();
+        room.clearReadyStatus(true);
     }
 
 

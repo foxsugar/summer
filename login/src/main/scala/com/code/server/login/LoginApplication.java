@@ -2,6 +2,7 @@ package com.code.server.login;
 
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.rpc.RpcManager;
+import com.code.server.login.service.AgentService;
 import com.code.server.login.service.CenterService;
 import com.code.server.login.service.ClubManager;
 import com.code.server.login.service.ServerManager;
@@ -46,6 +47,11 @@ public class LoginApplication extends SpringBootServletInitializer {
 			//俱乐部 逻辑
 
 			ClubManager.getInstance().loadAll();
+
+			SpringUtil.getBean(AgentService.class).loadAllAgent2Redis();
+
+			CenterService.loadLogInfo();
+
 		}
 
 

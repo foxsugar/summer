@@ -4,10 +4,10 @@ import com.code.server.constant.db.OnlineInfo;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.UserBean;
 import com.code.server.db.Service.GameAgentService;
-import com.code.server.db.Service.OnlineRecordService;
+import com.code.server.db.Service.LogRecordService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.model.GameAgent;
-import com.code.server.db.model.OnlineRecord;
+import com.code.server.db.model.LogRecord;
 import com.code.server.db.model.User;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -27,9 +28,7 @@ import java.util.Set;
 public class CenterService {
 
 
-
-
-    public static void work(){
+    public static void work() {
 
 
         //检测服务器状态
@@ -37,22 +36,22 @@ public class CenterService {
 
 
         //保存玩家
-        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(),1000L*60*5,true, CenterService::saveUser));
+        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 5, true, CenterService::saveUser));
 
-        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(),1000L*60*5,true, CenterService::saveAgent));
+        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 5, true, CenterService::saveAgent));
 
         //在线记录
-        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(),1000L*60*10,true, CenterService::onlineRecord));
+        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 10, true, CenterService::saveLogRecord));
 
 
     }
 
-    private static void saveUser(){
+    private static void saveUser() {
         Set<String> users = RedisManager.getUserRedisService().getSaveUsers();
         if (users != null) {
             UserService userService = SpringUtil.getBean(UserService.class);
             Set<String> removeList = new HashSet<>();
-            users.forEach(userId-> {
+            users.forEach(userId -> {
                 long uid = Long.valueOf(userId);
                 UserBean userBean = RedisManager.getUserRedisService().getUserBean(uid);
                 User user = GameUserService.userBean2User(userBean);
@@ -77,33 +76,40 @@ public class CenterService {
         if (agents != null) {
             GameAgentService gameAgentService = SpringUtil.getBean(GameAgentService.class);
             Set<String> removeList = new HashSet<>();
-            agents.forEach(agent->{
+            agents.forEach(agent -> {
                 long agentId = Long.valueOf(agent);
                 AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
-                GameAgent gameAgent = AgentService.agentBean2GameAgent(agentBean);
-                gameAgentService.getGameAgentDao().save(gameAgent);
+                if (agentBean != null) {
+                    GameAgent gameAgent = AgentService.agentBean2GameAgent(agentBean);
+                    gameAgentService.getGameAgentDao().save(gameAgent);
+                }
                 removeList.add(agent);
 
             });
 
             if (removeList.size() > 0) {
-                RedisManager.getAgentRedisService().removeSaveAgent(removeList);
+                RedisManager.getAgentRedisService().removeSaveAgent(removeList.toArray());
             }
         }
     }
 
-    private static void onlineRecord(){
+    /**
+     * 保存log信息
+     */
+    private static void saveLogRecord() {
         String date = LocalDate.now().toString();
         int hour = LocalTime.now().getHour();
+        int min = LocalTime.now().getMinute();
 
-        OnlineRecordService onlineRecordService = SpringUtil.getBean(OnlineRecordService.class);
-        OnlineRecord onlineRecord = onlineRecordService.getOnlineRecordDao().findOne(date);
-        if (onlineRecord == null) {
-            onlineRecord = new OnlineRecord();
-            onlineRecord.setId(date);
+        LogRecordService onlineRecordService = SpringUtil.getBean(LogRecordService.class);
+        LogRecord record = onlineRecordService.getOnlineRecordDao().findOne(date);
+        if (record == null) {
+            record = new LogRecord();
+            record.setId(date);
         }
 
-        OnlineInfo onlineInfo = onlineRecord.getOnlineData().getInfo().get(""+hour);
+        //玩家在线数据
+        OnlineInfo onlineInfo = record.getOnlineData().getInfo().get("" + hour);
         if (onlineInfo == null) {
             onlineInfo = new OnlineInfo();
         }
@@ -115,13 +121,71 @@ public class CenterService {
         if (roomNum > onlineInfo.getRoom()) {
             onlineInfo.setRoom(roomNum);
         }
-        onlineRecord.getOnlineData().getInfo().put(""+hour,onlineInfo);
 
-        onlineRecordService.getOnlineRecordDao().save(onlineRecord);
+        record.getOnlineData().getInfo().put("" + hour, onlineInfo);
+
+        setGameNumAndRebateData(record, date);
+
+        onlineRecordService.getOnlineRecordDao().save(record);
+
+        //定时保存数据,防止昨天数据最后数据没保存上,保存昨天数据
+        String lastDate = LocalDate.now().minusDays(1).toString();
+        //20分钟内
+        if (hour == 0 && min < 20) {
+            LogRecord lastRecord = onlineRecordService.getOnlineRecordDao().findOne(lastDate);
+            if (lastRecord != null) {
+                if (lastRecord.getGameNumData() != null && lastRecord.getGameNumData().getInfo() != null) {
+                    setGameNumAndRebateData(lastRecord,lastDate);
+                    onlineRecordService.getOnlineRecordDao().save(lastRecord);
+                }
+            }
+        }
+
+    }
+
+
+    /**
+     * 设置开局数,返利等相关信息
+     * @param logRecord
+     * @param date
+     */
+    private static void setGameNumAndRebateData(LogRecord logRecord,String date){
+        //牌局数
+        logRecord.getGameNumData().getInfo().putAll(RedisManager.getLogRedisService().getGameNumInfo(date));
+        //gold 收入
+        logRecord.getGoldRoomIncomeData().getInfo().putAll(RedisManager.getLogRedisService().getGoldIncomeInfo(date));
+        //返利数据
+        logRecord.setChargeRebate(RedisManager.getLogRedisService().getChargeRebate(date));
+    }
+
+
+    /**
+     * 读取log信息
+     */
+    public static void loadLogInfo(){
+        String date = LocalDate.now().toString();
+        Map<String,String> gameNumInfo = RedisManager.getLogRedisService().getGameNumInfo(date);
+        Map<String,String> goldIncomeInfo = RedisManager.getLogRedisService().getGoldIncomeInfo(date);
+
+        //redis 有数据
+        boolean redisHasData = (RedisManager.getLogRedisService().getChargeRebate(date) > 0) ||
+                (gameNumInfo != null && gameNumInfo.size() > 0) ||
+                (goldIncomeInfo != null && goldIncomeInfo.size() > 0);
+        if (!redisHasData) {
+            //数据库中是否有今日数据
+            LogRecordService onlineRecordService = SpringUtil.getBean(LogRecordService.class);
+            LogRecord data = onlineRecordService.getOnlineRecordDao().findOne(date);
+            boolean isHasData = data != null && data.getGameNumData() != null && data.getGameNumData().getInfo()!=null;
+            if (isHasData) {
+                RedisManager.getLogRedisService().addChargeRebate(data.getChargeRebate());
+                RedisManager.getLogRedisService().putGameNum(data.getGameNumData().getInfo());
+                RedisManager.getLogRedisService().putGoldIncome(data.getGoldRoomIncomeData().getInfo());
+            }
+        }
     }
 
     public static void main(String[] args) {
-        onlineRecord();
+        saveLogRecord();
     }
 
 }

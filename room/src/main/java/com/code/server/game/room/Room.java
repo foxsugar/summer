@@ -12,6 +12,7 @@ import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
@@ -33,7 +34,7 @@ public class Room implements IfaceRoom {
     protected String roomType;
     protected String roomId;
     protected int createType;//房卡或金币
-    protected double goldRoomType;
+    protected int goldRoomType;
     protected int goldRoomPermission;
     protected String gameType;//项目名称
     protected int createNeedMoney;
@@ -115,7 +116,7 @@ public class Room implements IfaceRoom {
             throw new DataNotFoundException("roomdata not found : " + gameType);
         }
         //俱乐部 加入不要钱
-        if (isClubRoom()) {
+        if (isClubRoom() || isGoldRoom()) {
             return 0;
         }
 
@@ -139,7 +140,7 @@ public class Room implements IfaceRoom {
         clubRoomSetId();
     }
 
-    public void getDefaultGoldRoomInstance() {
+    public void getDefaultGoldRoomInstance(long userId, String roomType, String gameType, Integer goldRoomType ) {
 
     }
 
@@ -447,6 +448,8 @@ public class Room implements IfaceRoom {
         notifyCludGameStart();
         this.isOpen = true;
         pushScoreChange();
+        //记录局数
+        RedisManager.getLogRedisService().addGameNum(getGameLogKeyStr(), 1);
     }
 
     public void pushScoreChange() {
@@ -702,6 +705,16 @@ public class Room implements IfaceRoom {
         return roomVo;
     }
 
+    public RoomSimpleVo toSimpleVo() {
+        RoomSimpleVo roomVo = new RoomSimpleVo();
+
+        roomVo.setGoldRoomType(this.goldRoomType);
+        roomVo.setRoomId(this.roomId);
+        roomVo.setRoomType(this.roomType);
+        roomVo.setGameType(this.gameType);
+        roomVo.setPeople(this.users.size());
+        return roomVo;
+    }
 
     @Override
     public PrepareRoom getPrepareRoomVo() {
@@ -926,11 +939,11 @@ public class Room implements IfaceRoom {
         return this;
     }
 
-    public double getGoldRoomType() {
+    public int getGoldRoomType() {
         return goldRoomType;
     }
 
-    public Room setGoldRoomType(double goldRoomType) {
+    public Room setGoldRoomType(int goldRoomType) {
         this.goldRoomType = goldRoomType;
         return this;
     }
@@ -1132,6 +1145,22 @@ public class Room implements IfaceRoom {
     @Override
     public boolean isRobotRoom() {
         return isRobotRoom;
+    }
+
+    @Override
+    public GameLogKey getGameLogKey() {
+        GameLogKey gameLogKey = new GameLogKey();
+        gameLogKey.setRoomType(roomType);
+        gameLogKey.setGameType(gameType);
+        gameLogKey.setGameNumber(gameNumber);
+        gameLogKey.setGoldRoomType(goldRoomType);
+        gameLogKey.setGoldRoomPermission(goldRoomPermission);
+
+        return gameLogKey;
+    }
+
+    public String getGameLogKeyStr(){
+        return JsonUtil.toJson(getGameLogKey());
     }
 
     public Room setRobotRoom(boolean robotRoom) {

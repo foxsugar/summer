@@ -1,12 +1,10 @@
 package com.code.server.login.service;
 
-import com.code.server.login.vo.OneLevelVo;
-import com.code.server.login.vo.TodayChargeVo;
-import com.code.server.login.vo.TwoLevelVo;
-import com.code.server.login.vo.WaterRecordVo;
+import com.code.server.login.vo.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dajuejinxian on 2018/5/14.
@@ -14,15 +12,23 @@ import java.util.List;
 public interface TodayChargeService {
 
    //显示今日充值
-   TodayChargeVo showTodayCharge();
+   HomeChargeVo showCharge(long agentId);
+   //显示充值
+   HomeChargeVo showCharge(Date start, Date end, long agentId);
    //流水记录
-   List<WaterRecordVo> waterRecords();
+   List<WaterRecordVo> waterRecords(long agentId);
    //一级代理手下的充值记录
-   OneLevelVo oneLevelCharges(Date start, Date end);
-   //当日一级代理
-   OneLevelVo oneLevelCharges();
+   OneLevelVo oneLevelCharges(Date start, Date end, long agentId);
+   //一级代理手下的充值记录
+   OneLevelVo oneLevelCharges(long agentId);
    //二级代理充值记录
-   TwoLevelVo twoLevelCharges();
+   TwoLevelVo twoLevelCharges(Date start, Date end, long agnetId);
+   //二级代理充值记录
+   TwoLevelVo twoLevelCharges(long agentId);
    //三级代理充值
+   ThreeLevelVo threeLevelCharges(Date start, Date end, long agentId);
+   //待机代理充值记录
+   ThreeLevelVo threeLevelCharges(long agentId);
 
+   public double canBlance(long agentId);
 }

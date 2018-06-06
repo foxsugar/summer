@@ -1,23 +1,23 @@
 package com.code.server.db.Service;
 
-import com.code.server.db.dao.IOnlineRecordDao;
+import com.code.server.db.dao.ILogRecordDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  * Created by sunxianping on 2018/2/28.
  */
-@Service("onlineRecordService")
-public class OnlineRecordService {
+@Service("logRecordService")
+public class LogRecordService {
 
     @Autowired
-    private IOnlineRecordDao onlineRecordDao;
+    private ILogRecordDao onlineRecordDao;
 
-    public IOnlineRecordDao getOnlineRecordDao() {
+    public ILogRecordDao getOnlineRecordDao() {
         return onlineRecordDao;
     }
 
-    public OnlineRecordService setOnlineRecordDao(IOnlineRecordDao onlineRecordDao) {
+    public LogRecordService setOnlineRecordDao(ILogRecordDao onlineRecordDao) {
         this.onlineRecordDao = onlineRecordDao;
         return this;
     }

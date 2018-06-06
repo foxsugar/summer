@@ -37,7 +37,7 @@ public class GameInfoXXPB extends GameInfo {
         sendResult(false, userId, null);
         noticeDissolutionResult();
         //通知所有玩家结束
-        room.clearReadyStatus();
+        room.clearReadyStatus(true);
     }
 
 

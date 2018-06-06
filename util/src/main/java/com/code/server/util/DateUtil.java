@@ -1,5 +1,6 @@
 package com.code.server.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -15,6 +16,8 @@ public final class DateUtil {
 
     public static final String DATE_TIME_FORMAT_YYYYMMDD_HH_MI = "yyyyMMdd HH:mm";
 
+    //年月日
+    public static final String DATE_TIME_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
     public static boolean isSameDate(long time1, long time2) {
 
         Calendar calendar1 = Calendar.getInstance();
@@ -52,6 +55,19 @@ public final class DateUtil {
         ZoneId zoneId = ZoneId.systemDefault();
         ZonedDateTime zdt = localDate.atStartOfDay(zoneId);
         Date date = Date.from(zdt.toInstant());
+        return date;
+    }
+
+    // todo
+    public static Date convert2Date(String string){
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME_FORMAT_YYYYMMDD_HH_MI);
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse(string);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return date;
     }
 

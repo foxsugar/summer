@@ -5,8 +5,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by sunxianping on 2018/3/13.
@@ -20,7 +20,6 @@ import java.util.List;
 public class GameAgent extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private String openId;
@@ -40,7 +39,7 @@ public class GameAgent extends BaseEntity {
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
-    private List<Long> childList = new ArrayList<>();
+    private Set<Long> childList = new HashSet<>();
 
     public long getId() {
         return id;
@@ -69,11 +68,11 @@ public class GameAgent extends BaseEntity {
         return this;
     }
 
-    public List<Long> getChildList() {
+    public Set<Long> getChildList() {
         return childList;
     }
 
-    public GameAgent setChildList(List<Long> childList) {
+    public GameAgent setChildList(Set<Long> childList) {
         this.childList = childList;
         return this;
     }

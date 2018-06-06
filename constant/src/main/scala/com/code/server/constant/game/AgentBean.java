@@ -1,7 +1,7 @@
 package com.code.server.constant.game;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by sunxianping on 2018/3/13.
@@ -26,7 +26,7 @@ public class AgentBean {
 
     private String image;
 
-    private List<Long> childList = new ArrayList<>();
+    private Set<Long> childList = new HashSet<>();
 
     public long getId() {
         return id;
@@ -64,11 +64,11 @@ public class AgentBean {
         return this;
     }
 
-    public List<Long> getChildList() {
+    public Set<Long> getChildList() {
         return childList;
     }
 
-    public AgentBean setChildList(List<Long> childList) {
+    public AgentBean setChildList(Set<Long> childList) {
         this.childList = childList;
         return this;
     }
@@ -116,5 +116,21 @@ public class AgentBean {
     public AgentBean setImage(String image) {
         this.image = image;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "AgentBean{" +
+                "id=" + id +
+                ", openId='" + openId + '\'' +
+                ", unionId='" + unionId + '\'' +
+                ", rebate=" + rebate +
+                ", partnerId=" + partnerId +
+                ", parentId=" + parentId +
+                ", isPartner=" + isPartner +
+                ", qrTicket='" + qrTicket + '\'' +
+                ", image='" + image + '\'' +
+                ", childList=" + childList +
+                '}';
     }
 }

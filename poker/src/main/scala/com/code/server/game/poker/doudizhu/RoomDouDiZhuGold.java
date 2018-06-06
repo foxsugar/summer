@@ -27,17 +27,17 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
 
     public static final int PERSONNUM = 3;
 
-    private static final Map<Double,Integer> needMoney = new HashMap<>();
-    private static final Map<Double,Integer> useMoney = new HashMap<>();
+    private static final Map<Integer, Integer> needMoney = new HashMap<Integer, Integer>();
+    private static final Map<Integer, Integer> useMoney = new HashMap<Integer, Integer>();
 
     static {
-        needMoney.put(10D,60);
-        needMoney.put(50D,300);
-        needMoney.put(100D,1000);
+        needMoney.put(10,60);
+        needMoney.put(50,300);
+        needMoney.put(100,1000);
 
-        useMoney.put(10D,2);
-        useMoney.put(50D,4);
-        useMoney.put(100D,6);
+        useMoney.put(10,2);
+        useMoney.put(50,4);
+        useMoney.put(100,6);
     }
 
     public boolean isGoldRoom() {
@@ -62,7 +62,7 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
     }*/
 
     //金币场加入房间
-    public static int joinGoldRoom(long userId,Double goldRoomType,String roomType,String gameType) throws DataNotFoundException {
+    public static int joinGoldRoom(long userId, Integer goldRoomType, String roomType, String gameType) throws DataNotFoundException {
 
         if (RedisManager.getUserRedisService().getRoomId(userId) != null) {
             return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;
@@ -71,7 +71,7 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
             return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
         }
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
-        Room nullRoom = RoomManager.getNullRoom(gameType, goldRoomType);
+        Room nullRoom = RoomManager.getNullGoldRoom(gameType, goldRoomType);
         if(nullRoom==null){
             switch (roomType) {
                 case "2":
@@ -144,7 +144,7 @@ public class RoomDouDiZhuGold extends RoomDouDiZhu {
         }
         //删除
         if (this.users.size() == 0) {
-            RoomManager.getInstance().removeRoomFromMap(this);
+            RoomManager.getInstance().removeGoldRoomFromMap(this);
         }
 
         Notice n = new Notice();

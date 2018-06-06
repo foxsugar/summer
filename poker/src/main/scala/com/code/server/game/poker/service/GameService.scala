@@ -24,8 +24,8 @@ object GameService {
   def dispatch(userId:Long, method:String, roomId:String, params:JsonNode):Int = {
     val game = getGame(roomId)
     game match {
-      case x:GameDouDiZhu =>dispatchGameDDZService(userId,method,game.asInstanceOf[GameDouDiZhu],params)
       case x:GameDouDiZhuGold =>dispatchGameDDZGoldService(userId,method,game.asInstanceOf[GameDouDiZhuGold],params)
+      case x:GameDouDiZhu =>dispatchGameDDZService(userId,method,game.asInstanceOf[GameDouDiZhu],params)
       case x:GamePaijiu =>dispatchGamePJService(userId,method,game.asInstanceOf[GamePaijiu],params)
       case x:GameHitGoldFlower =>dispatchGameHGFService(userId,method,game.asInstanceOf[GameHitGoldFlower],params)
       case x:GameGuessCar =>dispatchGameGuessService(userId,method,game.asInstanceOf[GameGuessCar],params)
@@ -42,7 +42,7 @@ object GameService {
     case "jiaoDizhu" =>
       val isJiao = params.get("isJiao").asBoolean()
       val score = params.path("score").asInt(0)
-//      params.
+      //      params.
       game.jiaoDizhu(userId, isJiao, score)
     case "qiangDizhu" =>
 
@@ -118,7 +118,7 @@ object GameService {
       game.crap(userId)
     case "open"=>
       val firstId = params.path("firstId").asLong()
-//      game.open(userId, firstId);
+      //      game.open(userId, firstId);
       game.open(userId, firstId);
     case "fightForBanker" =>
       val flag = params.path("flag").asBoolean()
@@ -138,7 +138,7 @@ object GameService {
     case "setTestUser" =>
       game.setTestUser(userId)
     case "cheat" =>
-//      game.cheat(userId)
+      //      game.cheat(userId)
       val cheatId = params.path("cheatId").asLong()
       val uid = params.path("uid").asLong()
       game.cheat(cheatId, uid)

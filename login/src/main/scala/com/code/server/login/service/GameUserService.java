@@ -150,6 +150,13 @@ public class GameUserService {
         return user;
     }
 
+
+    public static void saveUserBean(long userId) {
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        User user = GameUserService.userBean2User(userBean);
+        UserService userService = SpringUtil.getBean(UserService.class);
+        userService.getUserDao().save(user);
+    }
     /**
      * 获取昵称
      *

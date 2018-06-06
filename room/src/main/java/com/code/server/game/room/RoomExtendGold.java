@@ -1,8 +1,19 @@
 package com.code.server.game.room;
 
+import com.code.server.constant.data.DataManager;
+import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.game.UserBean;
+import com.code.server.constant.response.ResponseVo;
+import com.code.server.constant.response.RoomSimpleVo;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2018/4/11.
@@ -16,12 +27,40 @@ public class RoomExtendGold extends Room {
     }
 
     @Override
-    public void startGame() {
-        //todo 庄家退出游戏的处理
-        if (isGoldRoom() && !this.users.contains(this.bankerId)) {
-            this.bankerId = this.users.get(0);
+    public void pushScoreChange() {
+        if (isGoldRoom()) {
+            for(long userId : users){
+                userScores.put(userId, RedisManager.getUserRedisService().getUserGold(userId));
+            }
         }
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userScores), this.getUsers());
+    }
+
+    @Override
+    public void startGame() {
+        goldRoomStart();
         super.startGame();
+        //记录局数
+        RedisManager.getLogRedisService().addGameNum(getGameLogKeyStr(), 1);
+    }
+
+    protected void goldRoomStart() {
+        if (isGoldRoom()) {
+            if (!this.users.contains(this.bankerId)) {
+                this.bankerId = this.users.get(0);
+            }
+            int cost = this.getGoldRoomType() / 10;
+
+            for (long userId : users) {
+                //扣除费用
+                RedisManager.getUserRedisService().addUserGold(userId, -cost);
+                //返利
+                UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+                RedisManager.getAgentRedisService().addRebate(userId, userBean.getReferee(), 1, cost / 100);
+            }
+            //
+            RedisManager.getLogRedisService().addGoldIncome(getGameLogKeyStr(), cost * users.size());
+        }
     }
 
     @Override
@@ -30,8 +69,19 @@ public class RoomExtendGold extends Room {
         //todo 金币改变
         if (isGoldRoom()) {
             RedisManager.getUserRedisService().addUserGold(userId, score);
+
         }
 
+    }
+
+    /**
+     * 是否给代理返利
+     *
+     * @return
+     */
+    protected boolean isGiveAgentRebate() {
+
+        return false;
     }
 
     @Override
@@ -49,10 +99,10 @@ public class RoomExtendGold extends Room {
             }
             //如果房间已满 加入已满房间
             if (this.isRoomFull()) {
-                RoomManager.getInstance().moveNotFull2FullRoom(this);
+                RoomManager.getInstance().moveGoldRoomNotFull2Full(this);
             }
             return 0;
-        }else{
+        } else {
             return super.joinRoom(userId, isJoin);
         }
 
@@ -63,7 +113,7 @@ public class RoomExtendGold extends Room {
         //todo 检验金币
         if (isGoldRoom()) {
             double gold = RedisManager.getUserRedisService().getUserGold(userId);
-            if (gold < getMinEnterGold()) {
+            if (gold < getEnterGold()) {
                 return false;
             }
         } else {
@@ -90,7 +140,7 @@ public class RoomExtendGold extends Room {
                 RoomManager.removeRoom(this.roomId);
             }
             return 0;
-        }else return super.quitRoom(userId);
+        } else return super.quitRoom(userId);
     }
 
     protected boolean isRoomFull() {
@@ -107,39 +157,77 @@ public class RoomExtendGold extends Room {
     @Override
     public void clearReadyStatus(boolean isAddGameNum) {
         //todo 如果 金币不够 退出
-        if (isGoldRoom()) {
-            int minGold = getMinGold();
-            for (long userId : this.users) {
-                double gold = RedisManager.getUserRedisService().getUserGold(userId);
-                if(gold < minGold){
-                    this.quitRoom(userId);
-                }
-            }
-        }
+        clearReadyStatusGoldRoom(isAddGameNum);
 
         super.clearReadyStatus(isAddGameNum);
     }
 
+
+    public void clearReadyStatusGoldRoom(boolean isAddGameNum) {
+        if (isGoldRoom()) {
+            int minGold = getOutGold();
+            for (long userId : this.users) {
+                double gold = RedisManager.getUserRedisService().getUserGold(userId);
+                if (gold < minGold) {
+                    this.quitRoom(userId);
+                }
+            }
+
+            //
+
+        }
+    }
+
     /**
      * 最小金币
+     *
      * @return
      */
-    protected int getMinGold(){
-        //todo
-        return this.getMultiple() * 10;
+    protected int getOutGold() {
+        StaticDataProto.RoomData roomData = DataManager.data.getRoomDataMap().get(gameType);
+        if (roomData != null) {
+            return roomData.getOutGoldMap().get(goldRoomType);
+        }
+        return this.getMultiple() * 20;
     }
 
     /**
      * 最小进场金币
+     *
      * @return
      */
-    protected int getMinEnterGold() {
-        //todo 公式
+    protected int getEnterGold() {
+        StaticDataProto.RoomData roomData = DataManager.data.getRoomDataMap().get(gameType);
+        if (roomData != null) {
+
+            return roomData.getEnterGoldMap().get(goldRoomType);
+        }
         return this.getMultiple() * 20;
     }
+
 
     @Override
     public boolean isRobotRoom() {
         return true;
+    }
+
+    /**
+     * 获得类型下所有金币房
+     * @param gameType
+     * @return
+     */
+    public static Map<String, Object> getGoldRoomsVo(String gameType) {
+        Map<String, Object> result = new HashMap<>();
+        List<RoomSimpleVo> list = new ArrayList<>();
+        Map<Integer, List<Room>> map = RoomManager.getInstance().getPublicGoldRoom().get(gameType);
+        if (map != null) {
+            for (List<Room> l : map.values()) {
+                for (Room r : l) {
+                    list.add(r.toSimpleVo());
+                }
+            }
+        }
+        result.put("rooms", list);
+        return result;
     }
 }

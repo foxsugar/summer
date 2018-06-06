@@ -3,10 +3,7 @@ package com.code.server.game.mahjong.logic;
 
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.exception.DataNotFoundException;
-import com.code.server.constant.game.IGameConstant;
-import com.code.server.constant.game.PrepareRoom;
-import com.code.server.constant.game.PrepareRoomMj;
-import com.code.server.constant.game.UserBean;
+import com.code.server.constant.game.*;
 import com.code.server.constant.response.*;
 import com.code.server.game.room.RoomExtendGold;
 import com.code.server.game.room.kafka.MsgSender;
@@ -115,15 +112,19 @@ public class RoomInfo extends RoomExtendGold {
         userScores.put(userId, s + score);
     }
 
-    public void clearReadyStatus() {
+    public void clearReadyStatus(boolean isAddGameNum) {
 //        GameManager.getInstance().remove(game);
+        clearReadyStatusGoldRoom(isAddGameNum);
         this.setGame(null);
 
         this.setInGame(false);
         for (Map.Entry<Long, Integer> entry : this.userStatus.entrySet()) {
             entry.setValue(STATUS_JOIN);
         }
-        this.curGameNumber += 1;
+        if(isAddGameNum){
+
+            this.curGameNumber += 1;
+        }
         //每局的庄家
         this.bankerMap.put(curGameNumber, bankerId);
 
@@ -180,6 +181,10 @@ public class RoomInfo extends RoomExtendGold {
                 return new GameInfoXXPB().setHasJieGangHu(true);
             case "XYKD":
                 return new GameInfoXYKD().setHasJieGangHu(true);
+            case "KXZHZ":
+                return new GameInfoZhuohaozi().setHasJieGangHu(true);
+            case "TC1":
+                return new GameInfoTC_M();
             default:
                 return new GameInfo();
         }
@@ -209,10 +214,9 @@ public class RoomInfo extends RoomExtendGold {
         if (!isOpen && isCreaterJoin) {
             spendMoney();
         }
-//        //扣钱
-//        if (curGameNumber == 1) {
-//            spendMoney();
-//        }
+        //金币房的处理
+        goldRoomStart();
+
         //游戏开始 代建房 去除定时解散
         if (!isOpen && !this.isCreaterJoin()) {
             GameTimer.removeNode(prepareRoomTimerNode);
@@ -230,6 +234,9 @@ public class RoomInfo extends RoomExtendGold {
         pushScoreChange();
         notifyCludGameStart();
         this.isOpen = true;
+
+        //记录局数
+        RedisManager.getLogRedisService().addGameNum(getGameLogKeyStr(), 1);
     }
 
 
@@ -467,6 +474,14 @@ public class RoomInfo extends RoomExtendGold {
         prepareRoom.clubId = this.getClubId();
         prepareRoom.clubRoomModel = this.getClubRoomModel();
         return prepareRoom;
+    }
+
+    @Override
+    public GameLogKey getGameLogKey() {
+        GameLogKey gameLogKey =  super.getGameLogKey();
+        gameLogKey.getParams().put("mode", mode);
+        gameLogKey.getParams().put("modeTotal", modeTotal);
+        return gameLogKey;
     }
 
     public String getModeTotal() {

@@ -1,5 +1,6 @@
 package com.code.server.login.action;
 
+import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.ChargeService;
@@ -10,6 +11,7 @@ import com.code.server.login.config.ServerConfig;
 import com.code.server.login.config.WechatConfig;
 import com.code.server.login.kafka.MsgSender;
 import com.code.server.login.util.XMLUtil;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.IdWorker;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
@@ -172,29 +174,33 @@ public class WechatPayController {
                         String orderId = kvm.get("out_trade_no");
                         Charge charge = chargeService.getChargeByOrderid(orderId);
                         if (0 == charge.getStatus()) {
+                            long userId = charge.getUserid();
 //                            System.out.println("修改订单状态");
                             //修改支付订单状态 已支付
                             charge.setStatus(1);
                             charge.setCallbacktime(new Date());
 
-                            UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
+                            UserBean userBeanRedis = userRedisService.getUserBean(userId);
 
 
                             double addMoney = charge.getMoney_point();
 
                             double before = 0;
                             double after = 0;
-                            if (UserBeanRedis != null) {
+                            int referee = 0;
+                            if (userBeanRedis != null) {
+                                referee = userBeanRedis.getReferee();
                                 if (charge.getChargeType() == 0) {
-                                    before = UserBeanRedis.getMoney();
-                                    after = userRedisService.addUserMoney(charge.getUserid(), addMoney);
+                                    before = userBeanRedis.getMoney();
+                                    after = userRedisService.addUserMoney(userId, addMoney);
                                 } else {
-                                    before = UserBeanRedis.getGold();
-                                    after = userRedisService.addUserGold(charge.getUserid(), addMoney);
+                                    before = userBeanRedis.getGold();
+                                    after = userRedisService.addUserGold(userId, addMoney);
                                 }
                             } else {
                                 //查询玩家
-                                User user = userService.getUserByUserId(charge.getUserid());
+                                User user = userService.getUserByUserId(userId);
+                                referee = user.getReferee();
                                 //修改玩家豆豆
                                 if (charge.getChargeType() == 0) {
                                     before = user.getMoney();
@@ -216,7 +222,11 @@ public class WechatPayController {
                             Map<String, String> rs = new HashMap<>();
                             MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
 
-                            //todo 返利情况
+                            //返利情况
+
+                            //扣6%的税
+                            double num = charge.getMoney() * 94 /100;
+                            RedisManager.getAgentRedisService().addRebate(userId, referee, 0, num);
                         }
 
 
@@ -237,6 +247,16 @@ public class WechatPayController {
     }
 
 
+    private void agentRebate(long userId,long parentId){
+        //自己是否是代理
+        AgentBean own = RedisManager.getAgentRedisService().getAgentBean(userId);
+        //自己不是代理
+        if (own == null) {
+
+        }else{//自己是代理
+
+        }
+    }
     /**
      * 获取访问者IP
      * <p>

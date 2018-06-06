@@ -1,15 +1,15 @@
 package com.code.server.login.action;
 
 import com.code.server.constant.game.AgentBean;
-import com.code.server.db.Service.GameAgentService;
-import com.code.server.db.Service.GameAgentWxService;
-import com.code.server.db.Service.RecommendService;
-import com.code.server.db.Service.UserService;
+import com.code.server.constant.game.UserBean;
+import com.code.server.db.Service.*;
 import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.GameAgentWx;
 import com.code.server.db.model.Recommend;
+import com.code.server.db.model.User;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.service.AgentService;
+import com.code.server.login.service.GameUserService;
 import com.code.server.redis.service.AgentRedisService;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
@@ -81,13 +81,16 @@ public class WechatAction extends Cors {
     @Autowired
     private GameAgentWxService gameAgentWxService;
 
+    @Autowired
+    private AgentService agentService;
+
     private static final String AGENT_COOKIE_NAME = "AGENT_TOKEN";
 
 
     @RequestMapping(value = "/jsapiparam")
     @ResponseBody
-    public String wxJs(@RequestParam("url") String url) throws WxErrorException {
-        return JsonUtil.toJson(wxMpService.createJsapiSignature(url));
+    public AgentResponse wxJs(@RequestParam("url") String url) throws WxErrorException {
+        return new AgentResponse().setData(wxMpService.createJsapiSignature(url));
     }
 
     @RequestMapping(value = "/core")
@@ -192,23 +195,71 @@ public class WechatAction extends Cors {
             //state 是id
             long agentId = Long.valueOf(state);
             //代理不存在 直接退出
-            if (!RedisManager.getAgentRedisService().isExit(agentId)) return;
+            AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+            if (agentBean == null) return;
 
 
             String unionId = wxMpUser.getUnionId();
             //这个人是否已经点过
-            Recommend recommend = recommendService.getRecommendDao().getByUnionId(unionId);
-            if (recommend == null) {
-                recommend = new Recommend();
-                recommend.setUnionId(unionId).setAgentId(agentId);
-                //保存
-                recommendService.getRecommendDao().save(recommend);
 
-                //通知 代理 有人绑定他
-                String name = wxMpUser.getNickname();
+            //这个人如果已经是玩家 并且玩家没有上级 那么成为这个人的下级
+            Integer refereeId = userService.getUserDao().getRefereeByOpenId(unionId);
+            if(refereeId != null){
 
+                long userId = 0;
+                String uid = RedisManager.getUserRedisService().getUserIdByOpenId(unionId);
+                //玩家是不是代理
+                boolean userIsAgnet = true;
+                if (uid != null) {//玩家在内存里
+                    userId = Long.valueOf(uid);
+                    if (!RedisManager.getAgentRedisService().isExit(userId)) {
+                        userIsAgnet = false;
+                        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+                        //绑定代理
+                        userBean.setReferee((int)agentId);
+                        GameUserService.saveUserBean(userId);
+                    }
 
+                }else{
+
+                    //玩家在数据库
+                    User user = userService.getUserByOpenId(unionId);
+                    if (!RedisManager.getAgentRedisService().isExit(user.getId())) {
+                        userIsAgnet = false;
+                        user.setReferee((int) agentId);
+                    }
+                }
+                //玩家不是代理
+                if (!userIsAgnet) {
+                    //代理添加下级
+                    agentBean.getChildList().add(userId);
+                    //加入保存队列
+                    RedisManager.getAgentRedisService().updateAgentBean(agentBean);
+                }
+
+            }else{
+                Recommend recommend = recommendService.getRecommendDao().getByUnionId(unionId);
+                boolean isSelf = agentBean.getUnionId().equals(unionId);
+                if (recommend == null && !isSelf) {
+                    recommend = new Recommend();
+                    recommend.setUnionId(unionId).setAgentId(agentId);
+                    //保存
+                    recommendService.getRecommendDao().save(recommend);
+
+                    //通知 代理 有人绑定他
+                    String name = wxMpUser.getNickname();
+
+                    wxMpService.getKefuService().sendKefuMessage(
+                            WxMpKefuMessage
+                                    .TEXT()
+                                    .toUser(agentBean.getOpenId())
+                                    .content(name+"已点击您的专属链接,成功绑定")
+                                    .build());
+
+                }
             }
+
+
             //处理跳转
             handle_link_redirect(agentId, response);
 
@@ -237,10 +288,10 @@ public class WechatAction extends Cors {
         cookie.setDomain(serverConfig.getDomain());
         cookie.setPath("/");
         //过期时间 30s
-        cookie.setMaxAge(30);
+        cookie.setMaxAge(300);
         response.addCookie(cookie);
 
-        String url = MessageFormat.format("http://" + serverConfig.getDomain() + "/agent/#/sharelink?id={0}&sid={1}", agentId, sid);
+        String url = MessageFormat.format("http://" + serverConfig.getDomain() + "/agent/#/sharelink?id={0}&sid={1}", ""+agentId, sid);
 
         response.sendRedirect(url);
 
@@ -304,7 +355,7 @@ public class WechatAction extends Cors {
             setTokenCookie2Redis(wxMpUser, response, agentId);
         }
 
-        String url = "http://" + serverConfig.getDomain() + "/agent/#/index";
+        String url = "http://" + serverConfig.getDomain() + "/agent/#/";
         response.sendRedirect(url);
     }
 
@@ -340,7 +391,8 @@ public class WechatAction extends Cors {
             setTokenCookie2Redis(wxMpUser, response, userId);
         }
 
-        String url = "http://" + serverConfig.getDomain() + "/agent/#/charge";
+        long time = System.currentTimeMillis();
+        String url = "http://" + serverConfig.getDomain() + "/agent/#/charge?time="+time;
         response.sendRedirect(url);
     }
 
@@ -389,6 +441,93 @@ public class WechatAction extends Cors {
 
         return null;
     }
+
+
+    @RequestMapping("/toAgent")
+    @ResponseBody
+    public AgentResponse toAgent(long userId) {
+
+        AgentResponse agentResponse = new AgentResponse();
+
+
+        agentService.change2Agent(userId);
+
+        return agentResponse;
+    }
+
+    @RequestMapping("/toUser")
+    @ResponseBody
+    public AgentResponse toUser(long userId) {
+
+        AgentResponse agentResponse = new AgentResponse();
+
+
+        agentService.change2Player(userId);
+
+        return agentResponse;
+    }
+
+    @RequestMapping("/toPartner")
+    @ResponseBody
+    public AgentResponse toPartner(long userId) {
+
+        AgentResponse agentResponse = new AgentResponse();
+
+
+        agentService.change2Partner(userId);
+
+        return agentResponse;
+    }
+
+    @RequestMapping("/changeAgent")
+    @ResponseBody
+    public AgentResponse changeAgent(long agentId, long newAgentId) {
+
+        AgentResponse agentResponse = new AgentResponse();
+
+
+        agentService.changeAgent(agentId, newAgentId);
+
+        return agentResponse;
+    }
+
+
+    @RequestMapping("/addChild")
+    @ResponseBody
+    public AgentResponse addChild(long agentId, long userId) {
+
+        AgentResponse agentResponse = new AgentResponse();
+
+        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+        if (agentBean == null) {
+            return new AgentResponse().setData("不是代理");
+        }
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+            userBean.setReferee((int)agentId);
+        }else{
+            User user = userService.getUserByUserId(userId);
+            user.setReferee((int) agentId);
+
+        }
+        AgentBean userAgentBean = RedisManager.getAgentRedisService().getAgentBean(userId);
+        //自己也是代理
+        if (userAgentBean != null) {
+            userAgentBean.setParentId(agentId);
+            userAgentBean.setPartnerId(agentBean.getPartnerId());
+            RedisManager.getAgentRedisService().updateAgentBean(userAgentBean);
+        }
+
+
+        agentBean.getChildList().add(userId);
+
+        RedisManager.getAgentRedisService().updateAgentBean(agentBean);
+
+
+
+        return agentResponse;
+    }
+
 
 
     @RequestMapping("/becomeAgent")
@@ -452,4 +591,45 @@ public class WechatAction extends Cors {
         return agentResponse;
     }
 
+
+    @RequestMapping("/getUserInfo")
+    @ResponseBody
+    public AgentResponse getUserInfo(HttpServletRequest request) {
+        Map<String, String> map = getAgentByToken(request);
+        AgentResponse agentResponse = new AgentResponse();
+        if(map == null) return agentResponse.setCode(ErrorCode.NOT_LOGIN);
+        long userId = Long.valueOf(map.get("agentId"));
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        Map<String, Object> result = new HashMap<>();
+        if (userBean != null) {
+            result.put("id", userBean.getId());
+            result.put("name", userBean.getUsername());
+            result.put("money", userBean.getMoney());
+            result.put("gold", userBean.getGold());
+        }else{
+            User user = userService.getUserByUserId(userId);
+            if (user != null) {
+                result.put("id", user.getId());
+                result.put("name", user.getUsername());
+                result.put("money", user.getMoney());
+                result.put("gold", user.getGold());
+            }
+        }
+
+        return agentResponse.setData(result);
+
+    }
+
+
+    @RequestMapping("/getAgentQr")
+    @ResponseBody
+    public AgentResponse getAgentQr(HttpServletRequest request) {
+        Map<String, String> map = new HashMap<>();
+        AgentResponse agentResponse = new AgentResponse();
+        long agentId = Long.valueOf(request.getParameter("agentId"));
+        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+        map.put("qr", agentBean.getQrTicket());
+        map.put("icon", agentBean.getImage());
+        return agentResponse.setData(map);
+    }
 }

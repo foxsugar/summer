@@ -19,7 +19,7 @@ public class RoomVo implements IfaceRoomVo {
     public IfaceGameVo game;
     public int curGameNumber;
     public int createType;
-    public double goldRoomType;
+    public int goldRoomType;
     public int goldRoomPermission;
     public String gameType;
 
@@ -134,11 +134,11 @@ public class RoomVo implements IfaceRoomVo {
         return this;
     }
 
-    public double getGoldRoomType() {
+    public int getGoldRoomType() {
         return goldRoomType;
     }
 
-    public RoomVo setGoldRoomType(double goldRoomType) {
+    public RoomVo setGoldRoomType(int goldRoomType) {
         this.goldRoomType = goldRoomType;
         return this;
     }

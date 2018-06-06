@@ -1,6 +1,5 @@
 package com.code.server.login.service;
 
-import com.code.server.db.dao.IGameAgentDao;
 import com.code.server.db.model.GameAgent;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.Map;
-
-import static org.junit.Assert.*;
+import java.util.HashSet;
 
 /**
  * Created by dajuejinxian on 2018/5/14.
@@ -29,7 +25,7 @@ public class HomeServiceImplTest {
 
         GameAgent gameAgent = new GameAgent();
 
-        gameAgent.setChildList(new ArrayList<>());
+        gameAgent.setChildList(new HashSet<>());
         gameAgent.setParentId(99);
         gameAgent.setIsPartner(30);
         gameAgent.setPartnerId(49);

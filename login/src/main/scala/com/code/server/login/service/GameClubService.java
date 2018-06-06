@@ -125,10 +125,13 @@ public class GameClubService {
         List<RoomInstance> removeList = new ArrayList<>();
         club.getClubInfo().getPlayingRoom().forEach(ri->{
             String roomId = ri.getRoomId();
-            if (RedisManager.getRoomRedisService().getServerId(roomId) == null) {
-                removeList.add(ri);
-            }else{
-                clubVo.getPlayingRoom().add(getRoomInstanceVo(ri));
+            if (roomId != null) {
+
+                if (RedisManager.getRoomRedisService().getServerId(roomId) == null) {
+                    removeList.add(ri);
+                }else{
+                    clubVo.getPlayingRoom().add(getRoomInstanceVo(ri));
+                }
             }
         });
         //删除已经解散的
