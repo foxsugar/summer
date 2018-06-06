@@ -147,6 +147,7 @@ public class AgentService {
 
                 agentBean.setIsPartner(0);
                 agentBean.setPartnerId(0);
+                RedisManager.getAgentRedisService().updateAgentBean(agentBean);
                 //合伙人下面所有代理的合伙人 全变成0
                 Set<AgentBean> subAgents = new HashSet<>();
                 findAllClildAgent(agentBean, subAgents);
@@ -167,7 +168,6 @@ public class AgentService {
      */
     public void change2Player(long userId){
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(userId);
-        String unionId = userService.getUserDao().getOpenIdById(userId);
         //玩家
         if (agentBean == null) {
 
@@ -188,7 +188,7 @@ public class AgentService {
                     //合伙人下面一层代理的上级变为0
                     if (subAgent.getParentId() == userId) {
                         changePlayerReferee(subAgent.getParentId(),0);
-                        subAgent.setPartnerId(0);
+                        subAgent.setParentId(0);
                     }
                     //加到保存列表
                     RedisManager.getAgentRedisService().updateAgentBean(subAgent);
@@ -198,16 +198,33 @@ public class AgentService {
                 //所有下级的上级 变成 这个代理的上级
                 Set<AgentBean> subAgents = new HashSet<>();
                 findAllClildAgent(agentBean, subAgents);
+                //上级代理id
                 long parentId = agentBean.getParentId();
+                AgentBean parentAgentBean = RedisManager.getAgentRedisService().getAgentBean(parentId);
+
+                //改变一级下级的上级代理
                 for (AgentBean subAgent : subAgents) {
 
                     //合伙人下面一层代理的上级变为个代理的上级
                     if (subAgent.getParentId() == userId) {
+                        subAgent.setParentId(parentId);
                         changePlayerReferee(subAgent.getParentId(),(int)parentId);
-                        //加到保存列表
+                        if (parentAgentBean != null) {
+                            parentAgentBean.getChildList().add(subAgent.getId());
+                        }
+                        //保存
                         RedisManager.getAgentRedisService().updateAgentBean(subAgent);
                     }
                 }
+
+                //合伙人不会变
+
+                //从列表中删除
+                if (parentAgentBean != null) {
+                    parentAgentBean.getChildList().remove(userId);
+                    RedisManager.getAgentRedisService().updateAgentBean(parentAgentBean);
+                }
+
             }
 
             //删除代理
@@ -227,12 +244,14 @@ public class AgentService {
         //user 上的改变 把上级去掉
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         if (userBean != null) {
-            userBean.setReferee(0);
+            userBean.setReferee(parentId);
             RedisManager.getUserRedisService().updateUserBean(userBean.getId(),userBean);
         }else {
             User user = userService.getUserByUserId(userId);
-            user.setReferee(0);
-            userService.save(user);
+            if (user != null) {
+                user.setReferee(parentId);
+                userService.save(user);
+            }
         }
     }
 
@@ -260,10 +279,14 @@ public class AgentService {
             }else{
 
                 AgentBean newAgentBean = RedisManager.getAgentRedisService().getAgentBean(newAgentId);
+                //原来的上级代理
+                AgentBean parentBean = RedisManager.getAgentRedisService().getAgentBean(agentBean.getParentId());
                 long newPartnerId = 0;
                 if (newAgentBean != null) {
                     //自己的合伙人 和 新上级的合伙人是否是同一人
                     newPartnerId = newAgentBean.getPartnerId();
+                    newAgentBean.getChildList().add(userId);
+                    RedisManager.getAgentRedisService().updateAgentBean(newAgentBean);
                 }
 
                 //如果合伙人id换了
@@ -282,6 +305,18 @@ public class AgentService {
 
                 //自己换上级
                 agentBean.setParentId(newAgentId);
+                //原来的上级代理 删掉一个下级
+                if (parentBean != null) {
+                    parentBean.getChildList().remove(userId);
+                    RedisManager.getAgentRedisService().updateAgentBean(parentBean);
+                }
+                //新上级 加一个代理
+                if (newAgentBean != null) {
+                    newAgentBean.getChildList().add(userId);
+                    RedisManager.getAgentRedisService().updateAgentBean(newAgentBean);
+                }
+
+                //保存自己
                 RedisManager.getAgentRedisService().updateAgentBean(agentBean);
             }
         }
