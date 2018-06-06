@@ -1,12 +1,11 @@
 package com.code.server.db.model;
 
+import com.code.server.constant.db.AgentChild;
 import com.code.server.db.utils.BaseEntity;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by sunxianping on 2018/3/13.
@@ -39,7 +38,7 @@ public class GameAgent extends BaseEntity {
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
-    private Set<Long> childList = new HashSet<>();
+    private AgentChild agentChild = new AgentChild();
 
     public long getId() {
         return id;
@@ -68,12 +67,12 @@ public class GameAgent extends BaseEntity {
         return this;
     }
 
-    public Set<Long> getChildList() {
-        return childList;
+    public AgentChild getAgentChild() {
+        return agentChild;
     }
 
-    public GameAgent setChildList(Set<Long> childList) {
-        this.childList = childList;
+    public GameAgent setAgentChild(AgentChild agentChild) {
+        this.agentChild = agentChild;
         return this;
     }
 

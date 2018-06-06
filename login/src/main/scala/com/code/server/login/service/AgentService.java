@@ -330,12 +330,14 @@ public class AgentService {
     public static GameAgent agentBean2GameAgent(AgentBean agentBean) {
         GameAgent gameAgent = new GameAgent();
         BeanUtils.copyProperties(agentBean, gameAgent);
+        gameAgent.getAgentChild().setChildren(agentBean.getChildList());
         return gameAgent;
     }
 
     public static AgentBean gameAgent2AgentBean(GameAgent gameAgent) {
         AgentBean agentBean = new AgentBean();
         BeanUtils.copyProperties(gameAgent, agentBean);
+        agentBean.setChildList(gameAgent.getAgentChild().getChildren());
         return agentBean;
     }
 
