@@ -40,20 +40,28 @@ public class GameCow extends Game {
     protected int step;//步骤
     protected List<Integer> leaveCards = new ArrayList<>();//剩余的牌，暂时无用
 
+    public Map<Long, Double> setMultipleForGetBankers = new HashMap<>();//叫牌的倍数，最后存到room的multiple里
+
     public void init(List<Long> users) {
 
         //初始化玩家
         for (Long uid : users) {
             PlayerCow playerCardInfo = getGameTypePlayerCardInfo();
             playerCardInfo.userId = uid;
+            playerCardInfo.setMultipleForGetBanker = 0;
             playerCardInfos.put(uid, playerCardInfo);
+            setMultipleForGetBankers.put(uid,-1.0);
         }
         this.users.addAll(users);
         //通知游戏开始
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameCowBegin", "ok"), room.users);
         shuffle();//洗牌
         deal();//发牌
-        noticePlayerBet();
+        if(!"305".equals(this.room.getGameType())){
+            noticePlayerBet();
+        }else{
+            noticeAllSetMutiple();
+        }
         this.step = IGameConstant.STEP_RAISE;
         updateLastOperateTime();
     }
@@ -137,10 +145,25 @@ public class GameCow extends Game {
     }
 
     /**
+     * 通知所有人设置倍数
+     */
+    protected void noticeAllSetMutiple() {
+        for (Long l :playerCardInfos.keySet()) {
+            playerCardInfos.get(l).setSetMultipleForGetBanker(1);
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "noticeAllSetMutiple", "noticeAllSetMutiple"),users);
+    }
+
+    /**
      * 通知闲家可以开牌
      */
     protected void noticePlayerCompare() {
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "noticePlayerCompare", "canCompare"),users);
+    }
+
+
+    public int setMultipleForGetBanker(long userId,double addChip){
+        return 0;
     }
 
     /**
@@ -359,8 +382,21 @@ public class GameCow extends Game {
         this.room = room;
     }
 
+    public List<Integer> getLeaveCards() {
+        return leaveCards;
+    }
 
+    public void setLeaveCards(List<Integer> leaveCards) {
+        this.leaveCards = leaveCards;
+    }
 
+    public Map<Long, Double> getSetMultipleForGetBankers() {
+        return setMultipleForGetBankers;
+    }
+
+    public void setSetMultipleForGetBankers(Map<Long, Double> setMultipleForGetBankers) {
+        this.setMultipleForGetBankers = setMultipleForGetBankers;
+    }
 
     public int getStep() {
         return step;

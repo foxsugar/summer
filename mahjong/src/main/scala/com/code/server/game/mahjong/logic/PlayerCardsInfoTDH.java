@@ -571,6 +571,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 //                		this.winType = CardUtil.huForWinType(cards);
 					}
 				}
+
 			}
 			else{
 				if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3")||room.getMode().equals("11")||room.getMode().equals("13"))){//平胡

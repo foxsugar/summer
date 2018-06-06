@@ -29,6 +29,7 @@ public class PlayerCowVo implements IfacePlayerInfoVo {
     //1表示显示
     protected int raise;//加注
     protected int kill;//比牌
+    protected int setMultipleForGetBanker;
 
     public PlayerCowVo(){
 
@@ -96,5 +97,13 @@ public class PlayerCowVo implements IfacePlayerInfoVo {
 
     public void setSanzhangshi(List<Integer> sanzhangshi) {
         this.sanzhangshi = sanzhangshi;
+    }
+
+    public int getSetMultipleForGetBanker() {
+        return setMultipleForGetBanker;
+    }
+
+    public void setSetMultipleForGetBanker(int setMultipleForGetBanker) {
+        this.setMultipleForGetBanker = setMultipleForGetBanker;
     }
 }

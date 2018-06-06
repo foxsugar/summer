@@ -373,20 +373,30 @@ object MahjongRoomService {
 
   def joinGoldRoom(userId: Long, roomType: String, gameType: String, goldRoomType: Int): Int = {
     val rooms = RoomManager.getInstance().getNotFullRoom(gameType, goldRoomType)
-    if (rooms.size() == 0) {
-      val mjRoom: Room = new RoomInfoGold()
+    var room:Room = null
+    if(rooms.size()>0) {
+      room = rooms.get(0)
+    }
+    if (room == null) {
+      room = new RoomInfoGold()
       //获得一个默认房间
-      mjRoom.getDefaultGoldRoomInstance(userId, roomType, gameType, goldRoomType)
-
-
-      RoomManager.getInstance().addNotFullGoldRoom(mjRoom)
-
+      room.getDefaultGoldRoomInstance(userId, roomType, gameType, goldRoomType)
       //加入房间列表
       val serverId: Int = SpringUtil.getBean(classOf[ServerConfig]).getServerId
-      RoomManager.addRoom(mjRoom.getRoomId, "" + serverId, mjRoom)
+      val roomId: String = Room.getRoomIdStr(Room.genRoomId(serverId))
+      room.setRoomId(roomId)
 
-      MsgSender.sendMsg2Player(new ResponseVo("mahjongRoomService", "joinGoldRoom", mjRoom.asInstanceOf[RoomInfo].toJSONObject), userId)
+      RoomManager.getInstance().addNotFullGoldRoom(room)
+      RoomManager.addRoom(room.getRoomId, "" + serverId, room)
 
+
+    }
+
+    val rtn:Int = room.joinRoom(userId,true)
+    if(rtn != 0) {
+      return rtn
+    }else{
+      MsgSender.sendMsg2Player(new ResponseVo("mahjongRoomService", "joinGoldRoom", room.asInstanceOf[RoomInfo].toJSONObject), userId)
     }
     return 0
 

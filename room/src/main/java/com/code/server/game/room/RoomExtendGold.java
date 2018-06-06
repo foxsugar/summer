@@ -4,7 +4,9 @@ import com.code.server.constant.data.DataManager;
 import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.UserBean;
+import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.RoomSimpleVo;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 
@@ -22,6 +24,16 @@ public class RoomExtendGold extends Room {
     public void init(int gameNumber, int multiple) throws DataNotFoundException {
         super.init(gameNumber, multiple);
         this.isRobotRoom = true;
+    }
+
+    @Override
+    public void pushScoreChange() {
+        if (isGoldRoom()) {
+            for(long userId : users){
+                userScores.put(userId, RedisManager.getUserRedisService().getUserGold(userId));
+            }
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userScores), this.getUsers());
     }
 
     @Override
