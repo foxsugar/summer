@@ -3,10 +3,13 @@ package com.code.server.login.service;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.db.dao.IUserDao;
 import com.code.server.db.model.User;
+import com.code.server.login.action.HomeAction;
 import com.code.server.login.vo.OneLevelInfoVo;
 import com.code.server.login.vo.ThreeLevelInfoVo;
 import com.code.server.login.vo.TwoLevelInfoVo;
 import com.code.server.redis.service.RedisManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +24,8 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
 
     @Autowired
     private IUserDao userDao;
+
+    protected static final Logger logger = LoggerFactory.getLogger(DelegateRelataionServiceImpl.class);
 
     @Override
     public List<OneLevelInfoVo> fetchSelfPlayerList(long agentId) {
@@ -56,6 +61,8 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
                 aList.add(uid);
             }
         }
+
+        logger.info("fetchTwoLevelDelegateList:agentBean{}",agentBean);
 
         List<TwoLevelInfoVo> result = new ArrayList<>();
         List<User> userList = this.userDao.findUsersByIdIn(aList);
