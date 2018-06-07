@@ -1,11 +1,13 @@
 package com.code.server.db.model;
 
 import com.code.server.constant.db.AgentChild;
+import com.code.server.constant.db.AgentInfo;
 import com.code.server.db.utils.BaseEntity;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by sunxianping on 2018/3/13.
@@ -34,6 +36,17 @@ public class GameAgent extends BaseEntity {
     private int isPartner;
 
     private String qrTicket;
+
+    private String name;
+    private String idCard;
+    private Date createDate;
+
+    private String phone;
+
+    @Type(type = "json")
+    @Lob
+    @Column(columnDefinition = "json")
+    private AgentInfo agentInfo  = new AgentInfo();
 
     @Type(type = "json")
     @Lob
@@ -118,6 +131,51 @@ public class GameAgent extends BaseEntity {
 
     public GameAgent setUnionId(String unionId) {
         this.unionId = unionId;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public GameAgent setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public GameAgent setIdCard(String idCard) {
+        this.idCard = idCard;
+        return this;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public GameAgent setCreateDate(Date createDate) {
+        this.createDate = createDate;
+        return this;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public GameAgent setPhone(String phone) {
+        this.phone = phone;
+        return this;
+    }
+
+    public AgentInfo getAgentInfo() {
+        return agentInfo;
+    }
+
+    public GameAgent setAgentInfo(AgentInfo agentInfo) {
+        this.agentInfo = agentInfo;
         return this;
     }
 }
