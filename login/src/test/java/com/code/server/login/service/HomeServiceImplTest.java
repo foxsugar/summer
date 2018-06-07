@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.HashSet;
-
 /**
  * Created by dajuejinxian on 2018/5/14.
  */
@@ -25,7 +23,7 @@ public class HomeServiceImplTest {
 
         GameAgent gameAgent = new GameAgent();
 
-        gameAgent.setChildList(new HashSet<>());
+//        gameAgent.setChildList(new HashSet<>());
         gameAgent.setParentId(99);
         gameAgent.setIsPartner(30);
         gameAgent.setPartnerId(49);

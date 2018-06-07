@@ -247,6 +247,7 @@ public class RoomHitGoldFlower extends Room {
         prepareRoom.caiFen = this.caiFen;
         prepareRoom.menPai = this.menPai;
         prepareRoom.cricleNumber = this.cricleNumber;
+        prepareRoom.goldRoomType = this.goldRoomType;
         return prepareRoom;
     }
 
