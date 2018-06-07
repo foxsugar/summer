@@ -227,6 +227,8 @@ object GameService {
       val userId = params.path("userId").asLong(0)
       val multiple = params.path("multiple").asInt()
       game.setMultiple(userId,multiple);
+    case "guo" =>
+      game.guo(userId);
     case "xuan" =>
       game.xuan(userId);
     case "kou" =>

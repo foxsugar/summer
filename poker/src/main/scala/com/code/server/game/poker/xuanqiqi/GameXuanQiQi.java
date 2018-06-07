@@ -46,7 +46,8 @@ public class GameXuanQiQi extends Game {
 
     //无状态    0
     //宣       1
-    //过       2
+    //扣       2
+    //
     protected Map<Long,Integer> xuanOrGuo = new HashMap<>();
 
 
@@ -71,8 +72,11 @@ public class GameXuanQiQi extends Game {
             playerCardInfo.userId = uid;
             playerCardInfo.canSetMultiple = "-1";
             playerCardInfo.canSendCard = "0";
+            playerCardInfo.canXuan = "0";
+            playerCardInfo.canKou = "0";
+            playerCardInfo.canGuo = "0";
             playerCardInfos.put(uid, playerCardInfo);
-            xuanOrGuo.put(uid,0);
+            //xuanOrGuo.put(uid,0);
             ifChuPai.put(uid,0);
             compareCard.put(uid,-1);
         }
@@ -209,17 +213,66 @@ public class GameXuanQiQi extends Game {
     public int setMultiple(long userId,int multiple){
         bankerMultiple = multiple;
         playerCardInfos.get(room.getBankerId()).setCanSetMultiple("0");
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChoose", room.getBankerId()), users);
+        playerCardInfos.get(userId).setCanKou("1");
+        playerCardInfos.get(userId).setCanGuo("1");
+        Map<String,Object> msg = new HashMap<>();
+        msg.put("bankerId",room.getBankerId());
+        msg.put("canKou",true);
+        msg.put("canSendCard",true);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChoose", msg), users);
+        MsgSender.sendMsg2Player("gameService", "setMultiple", 0, userId);
+        return 0;
+    }
+
+    //过牌
+    public int guo(long userId) {
+
+        if("1".equals(playerCardInfos.get(userId).canGuo) && chuPaiId ==userId){//庄过，直接通知出牌
+            //xuanOrGuo.put(userId,1);
+            playerCardInfos.get(userId).setCanGuo("0");
+            playerCardInfos.get(userId).setCanKou("0");
+            playerCardInfos.get(userId).setCanSendCard("1");
+            operatId = chuPaiId;
+            Map<String,Object> msg = new HashMap<>();
+            msg.put("userId",operatId);
+            msg.put("canSendCard",true);
+            MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", msg), users);
+        }else{
+            xuanOrGuo.put(userId,2);
+            boolean isAllKou = allKou();
+            //判断是不是全扣了
+            if(isAllKou){
+                if(playerCardInfos.get(room.getBankerId()).getHandCards().size()==8){
+                    MsgSender.sendMsg2Player(new ResponseVo("gameService", "dealAgain", null), users);
+                    room.clearReadyStatus(false);
+                }else{
+                    compute();
+                    sendResult();
+                    genRecord();
+                    room.clearReadyStatus(true);
+                    sendFinalResult();
+                }
+            }else {
+                long nextUserId = nextTurnId(userId);
+                playerCardInfos.get(nextUserId).setCanXuan("1");
+                playerCardInfos.get(nextUserId).setCanGuo("1");
+                operatId = nextUserId;
+                Map<String,Object> msg = new HashMap<>();
+                msg.put("userId",operatId);
+                msg.put("canXuan",true);
+                msg.put("canGuo",true);
+                MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChoose", msg), users);
+            }
+
+        }
+        MsgSender.sendMsg2Player("gameService", "guo", 0, userId);
         return 0;
     }
 
     //宣牌
     public int xuan(long userId) {
 
-        if(xuanOrGuo.get(userId)==0 && chuPaiId ==userId){//庄宣，直接通知出牌
-            xuanOrGuo.put(userId,1);
-            playerCardInfos.get(userId).setCanSendCard("1");
-        }else{
+        if("1".equals(playerCardInfos.get(userId).getCanXuan()) && operatId ==userId){
             //XuanParam参数设置
             XuanParam xuanParam = new XuanParam();
             xuanParam.setXuaned_UserId(chuPaiId);
@@ -227,45 +280,38 @@ public class GameXuanQiQi extends Game {
             xuanParam.setXuaned_UserId(playerCardInfos.get(chuPaiId).winCards.size()/3);
             xuanParam.setGotLuo(false);
             xuanList.put(userId,xuanParam);
+
+            operatId = chuPaiId;
+            playerCardInfos.get(userId).setCanXuan("0");
+            playerCardInfos.get(operatId).setCanSendCard("1");
+
+            Map<String,Object> msg = new HashMap<>();
+            msg.put("userId",operatId);
+            msg.put("canSendCard",true);
+            msg.put("xuanParam",xuanParam);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", msg), users);
         }
-        operatId = chuPaiId;
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", chuPaiId), users);
+        MsgSender.sendMsg2Player("gameService", "xuan", 0, userId);
         return 0;
     }
 
     //扣牌
     public int kou(long userId) {
         xuanOrGuo.put(userId,2);
-        boolean isAllKou = allKou();
-        //判断是不是全扣了
-        if(isAllKou){
-            if(playerCardInfos.get(room.getBankerId()).getHandCards().size()==8){
-                MsgSender.sendMsg2Player(new ResponseVo("gameService", "dealAgain", null), users);
-                room.clearReadyStatus(false);
-            }else{
-                compute();
-                sendResult();
-                genRecord();
-                room.clearReadyStatus(true);
-                sendFinalResult();
-            }
-        }else {
-            //判断下一个人
-            if(chuPaiId==userId){//出牌的就是他，通知下一个人是否宣
-                PlayerCardInfoXuanQiQi safer = playerCardInfos.get(userId);
-                safer.setSafeNum(safer.getWinCards().size()/3);
-                xuanOrGuo.put(userId,2);
-                long canXuanUserId = nextTurnId(userId);
-                operatId = canXuanUserId;
-                MsgSender.sendMsg2Player(new ResponseVo("gameService", "canXuan", canXuanUserId), users);
-            }else {
-                xuanOrGuo.put(userId,2);
-                long canXuanUserId = nextTurnId(userId);
-                operatId = canXuanUserId;
-                MsgSender.sendMsg2Player(new ResponseVo("gameService", "canXuan", canXuanUserId), users);
-            }
+        //判断下一个人
+        if(chuPaiId==userId){//出牌的就是他，通知下一个人是否宣
+            playerCardInfos.get(userId).setSafeNum(playerCardInfos.get(userId).getWinCards().size()/3);
+            long canXuanUserId = nextTurnId(userId);
+            operatId = canXuanUserId;
+            playerCardInfos.get(canXuanUserId).setCanXuan("1");
+            playerCardInfos.get(canXuanUserId).setCanGuo("1");
+            Map<String,Object> msg = new HashMap<>();
+            msg.put("userId",operatId);
+            msg.put("canXuan",true);
+            msg.put("canGuo",true);
+            MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChoose", msg), users);
         }
-
+        MsgSender.sendMsg2Player("gameService", "kou", 0, userId);
 
         return 0;
     }
@@ -328,7 +374,10 @@ public class GameXuanQiQi extends Game {
             operatId= nextTurnId(userId);
             playerCardInfos.get(userId).setCanSendCard("0");
             playerCardInfos.get(chuPaiId).setCanSendCard("1");
-            MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", chuPaiId), users);
+            Map<String,Object> msg = new HashMap<>();
+            msg.put("userId",operatId);
+            msg.put("canSendCard",true);
+            MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", msg), users);
         }else if(chuPaiCount ==2){//第二个人出牌，比牌，通知下家出
             PlayerCardInfoXuanQiQi p1 = null;
             PlayerCardInfoXuanQiQi p2 = null;
@@ -344,7 +393,10 @@ public class GameXuanQiQi extends Game {
             operatId= nextTurnId(userId);
             playerCardInfos.get(userId).setCanSendCard("0");
             playerCardInfos.get(chuPaiId).setCanSendCard("1");
-            MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", chuPaiId), users);
+            Map<String,Object> msg = new HashMap<>();
+            msg.put("userId",operatId);
+            msg.put("canSendCard",true);
+            MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", msg), users);
         }else if(chuPaiCount ==3){//第三个人出牌，存记录，分罗
             PlayerCardInfoXuanQiQi p2 = null;
             long winnerId = 0l;
@@ -363,10 +415,16 @@ public class GameXuanQiQi extends Game {
 
             setWinCardAndCardType();//存记录分罗
             playerCardInfos.get(userId).setCanSendCard("0");
-            if(playerCardInfos.get(0).getHandCards().size()>0){
+            if(playerCardInfos.get(userId).getHandCards().size()>0){
                 //清除所有状态,游戏继续
                 cleanRecord();
-                MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChoose", chuPaiId), users);
+                playerCardInfos.get(userId).setCanSendCard("1");
+                playerCardInfos.get(userId).setCanKou("1");
+                Map<String,Object> msg = new HashMap<>();
+                msg.put("userId",operatId);
+                msg.put("canSendCard",true);
+                msg.put("canKou",true);
+                MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChoose", msg), users);
             }else{
                 //游戏结算
                 compute();
@@ -376,6 +434,8 @@ public class GameXuanQiQi extends Game {
                 sendFinalResult();
             }
         }
+
+        MsgSender.sendMsg2Player("gameService", "play", 0, userId);
 
         return 0;
     }

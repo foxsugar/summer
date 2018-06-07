@@ -47,9 +47,9 @@ public class PlayerCardInfoXuanQiQiVo implements IfacePlayerInfoVo {
     protected String canChoose;//可选择操作
     protected String canSendCard;//可出牌
 
-    protected String fold;//弃牌
-    protected String kill;//比牌
-    protected String see;//看牌
+    protected String canXuan;//可选
+    protected String canKou;//可扣
+    protected String canGuo;//可过
     public int curRoundNumber;//当前轮数
 
     protected int cardNum;
