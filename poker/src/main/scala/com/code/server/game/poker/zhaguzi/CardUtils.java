@@ -140,6 +140,29 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
         }
     };
 
+    //3家能不能认输
+    public static boolean canGiveUp(PlayerZhaGuZi playerZhaGuZi){
+
+        Integer hongtao = 7;
+        Integer fangpian = 9;
+        Integer heitao = 6;
+
+        if (playerZhaGuZi.getRoomPersonNum() == 5){
+
+            if (playerZhaGuZi.getRetain3List().contains(hongtao) && playerZhaGuZi.getRetain3List().contains(fangpian)){
+                return true;
+            }
+
+        }else {
+
+            if (playerZhaGuZi.getRetain3List().contains(hongtao) && playerZhaGuZi.getRetain3List().contains(fangpian) && playerZhaGuZi.getRetain3List().contains(heitao)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /*
     * param1 player
     * param2 要出的牌
@@ -261,14 +284,16 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
                 if (typeA == SHUANG_SAN || typeB == WANG_ZHA){
                     return DRAW;
                 }
+                if (typeB == SHUANG_SAN || typeA == WANG_ZHA){
+                    return DRAW;
+                }
 
             }
 
-            //右边的人比牌比较大
             if (typeA > typeB){
 
-                if (typeB == Dui_ZI || typeB == DAN_ZI){
-                    return RIGHT_CARDS_ERROR;
+                if (typeA == Dui_ZI || typeA == DAN_ZI){
+                    return LEFT_CARDS_ERROR;
                 }
 
                 return LOSE;
@@ -280,7 +305,6 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
                 }
 
                 return WIN;
-
             }
 
         }else {
@@ -363,13 +387,24 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
                 case DAN_ZI:
 
+                    if (lList.get(0) == 0){
+                        a = -2;
+                    }else if(lList.get(0) == 1){
+                        a = -1;
+                    }
+
+                    if (rList.get(0) == 0){
+                        b = -2;
+                    }else if(bList.get(0) == 1){
+                        b = -1;
+                    }
+
                     ret = compareAB(a, b);
                     break;
             }
         }
 
         return ret;
-
     }
 
 

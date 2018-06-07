@@ -1,11 +1,13 @@
 package com.code.server.game.poker.tuitongzi;
 
+import com.code.server.util.DateUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -19,6 +21,13 @@ import static org.junit.Assert.*;
 public class TuiTongTongCardUtilsTest {
     @Test
     public void zhuangIsBiggerThanXian() throws Exception {
+
+
+//        Date startStr = DateUtil.convert2DayDate("2018-06-06");
+        Date startStr = DateUtil.convertDay2Date("2018-06-06");
+
+        String str = DateUtil.convert2DayString(startStr);
+//        System.out.println(startStr);
     }
 
     @Test
