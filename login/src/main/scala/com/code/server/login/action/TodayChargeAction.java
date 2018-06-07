@@ -67,8 +67,8 @@ public class TodayChargeAction {
         HttpServletRequest request = attributes.getRequest();
         long agentId = AgentUtil.getAgentByRequest(request);
 
-        Date startDate = DateUtil.convert2Date(start);
-        Date endDate = DateUtil.convert2Date(end);
+        Date startDate = DateUtil.convertDay2Date(start);
+        Date endDate = DateUtil.convertDay2Date(end);
         HomeChargeVo homeChargeVo = todayChargeService.showCharge(startDate, endDate, agentId);
         Map<String, Object> result = new HashMap<>();
         result.put("result", homeChargeVo);

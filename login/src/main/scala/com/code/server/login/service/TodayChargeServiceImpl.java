@@ -32,6 +32,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
     @Override
     public HomeChargeVo showCharge(Date start, Date end, long agentId) {
 
+        String startStr = DateUtil.convert2DayString(start);
+        String endStr = DateUtil.convert2DayString(end);
         OneLevelVo oneLevelVo = oneLevelCharges(start, end, agentId);
         TwoLevelVo twoLevelVo = twoLevelCharges(start, end, agentId);
         ThreeLevelVo threeLevelVo = threeLevelCharges(start, end, agentId);
@@ -41,6 +43,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         homeChargeVo.setThreeLevel("" + threeLevelVo.getMoney());
         double total = oneLevelVo.getMoney() + twoLevelVo.getMoney() + threeLevelVo.getMoney();
         homeChargeVo.setTotal("" + total);
+        homeChargeVo.setStart(startStr);
+        homeChargeVo.setEnd(endStr);
         return homeChargeVo;
     }
 

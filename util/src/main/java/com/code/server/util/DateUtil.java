@@ -71,6 +71,22 @@ public final class DateUtil {
         return date;
     }
 
+    public static Date convertDay2Date(String string){
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME_FORMAT_YYYY_MM_DD);
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse(string);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    public static String convert2DayString(Date date){
+        return convert2String(date, DATE_TIME_FORMAT_YYYY_MM_DD);
+    }
+
     public static String convert2String(Date date){
         return convert2String(date, DATE_TIME_FORMAT_YYYYMMDD_HH_MI);
     }
