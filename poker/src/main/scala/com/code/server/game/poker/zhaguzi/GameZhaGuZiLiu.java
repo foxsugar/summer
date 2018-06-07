@@ -126,23 +126,46 @@ public class GameZhaGuZiLiu extends GameZhaGuZi{
 
             base += count;
 
+            List<Integer> list = new ArrayList<>();
+            list.add(hongtaosan);
+            list.add(fangpiansan);
+            list.add(heitaosan);
+
             if (ret == 0) {
-                //三家赢
+
                 for (PlayerZhaGuZi playerZhaGuZi : aList) {
-
                     double score = 0;
-
-                    if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) {
-
-                        score += base;
-
-                    } else if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA) {
+                    if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA) {
+                        //股家一人输1
                         score -= base;
                     }
-
                     playerZhaGuZi.setScore(score);
-
                 }
+
+                for (PlayerZhaGuZi playerZhaGuZi : aList) {
+                    double score = 0;
+                    if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) {
+
+                        int has3Count = 0;
+                        for (Integer a : list){
+                            if (playerZhaGuZi.getRetain3List().contains(a)){
+                                has3Count++;
+                            }
+                        }
+
+                        if (has3Count == 1){
+                            //股家一人输1
+                            score += base;
+                        }else if(has3Count == 2){
+                            score += (2 * base);
+                        }else if(has3Count == 3){
+                            score += base * 5;
+                        }
+
+                    }
+                    playerZhaGuZi.setScore(score);
+                }
+
 
             } else if (ret == 2) {
                 //股家赢
@@ -151,7 +174,21 @@ public class GameZhaGuZiLiu extends GameZhaGuZi{
                     double score = 0;
 
                     if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) {
-                        score -= base;
+
+                        int has3Count = 0;
+                        for (Integer a : list){
+                            if (playerZhaGuZi.getRetain3List().contains(a)){
+                                has3Count++;
+                            }
+                        }
+                        if (has3Count == 1){
+                            //股家一人输1
+                            score -= base;
+                        }else if(has3Count == 2){
+                            score -= (2 * base);
+                        }else if(has3Count == 3){
+                            score -= base * 5;
+                        }
 
                     } else if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA) {
                         score += base;

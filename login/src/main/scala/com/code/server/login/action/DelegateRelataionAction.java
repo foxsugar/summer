@@ -1,11 +1,14 @@
 package com.code.server.login.action;
 
+import com.code.server.constant.db.UserInfo;
+import com.code.server.constant.game.AgentBean;
 import com.code.server.login.anotation.AuthChecker;
 import com.code.server.login.service.DelegateRelataionService;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.vo.OneLevelInfoVo;
 import com.code.server.login.vo.ThreeLevelInfoVo;
 import com.code.server.login.vo.TwoLevelInfoVo;
+import com.code.server.login.vo.UserInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,9 +78,32 @@ public class DelegateRelataionAction {
         return agentResponse;
     }
 
+    //检查用户
+    @AuthChecker
+    @RequestMapping("/findUserInfo")
     public AgentResponse findSelfPlayerOrDelegates(long userId){
 
-        return null;
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+//        long agentId = AgentUtil.getAgentByRequest(request);
+//        AgentBean
+        UserInfoVo userInfo = new UserInfoVo();
+        userInfo.setCanUseMoney(1);
+        userInfo.setUsername(" 张三");
+        userInfo.setDelegateCount(100);
+        userInfo.setCreateTime("20111111");
+        userInfo.setImage("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=253777390,947512827&fm=23&gp=0.jpg/96");
+        userInfo.setUserId(2l);
+        userInfo.setType(2);
+        userInfo.setUserCount(10);
+        userInfo.setReferee(123);
+        userInfo.setTotalMoney(133);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("result", userInfo);
+        AgentResponse agentResponse = new AgentResponse(200, result);
+
+        return agentResponse;
     }
 
 }

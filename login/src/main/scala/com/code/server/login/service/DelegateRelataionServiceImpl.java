@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -138,6 +139,7 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
                     if (bean.getChildList().contains(userId)){
                         //三级
                         type = 3;
+                        break;
                     }
                 }
             }
@@ -168,10 +170,14 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
                         userCount++;
                     }
                 }
+
+                String today = DateUtil.convert2DayString(new Date());
                 //可用金额
-                userInfo.setCanUseMoney(bean.getRebate());
+                userInfo.setRebate(bean.getRebate());
                 //今日收益
+                userInfo.setCanUseMoney(bean.getAgentInfo().getEveryDayRebate().get(today));
                 //累计收益
+                userInfo.setTotalMoney(bean.getAgentInfo().getAllRebate());
             }
         }
 
