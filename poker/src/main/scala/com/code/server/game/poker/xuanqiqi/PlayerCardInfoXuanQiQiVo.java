@@ -44,11 +44,15 @@ public class PlayerCardInfoXuanQiQiVo implements IfacePlayerInfoVo {
     //游戏状态
     //1表示显示
     protected String canSetMultiple;//庄可以加倍
-    protected String canChoose;//可出牌
+    protected String canChoose;//可选择操作
+    protected String canSendCard;//可出牌
+
     protected String fold;//弃牌
     protected String kill;//比牌
     protected String see;//看牌
     public int curRoundNumber;//当前轮数
+
+    protected int cardNum;
 
     public PlayerCardInfoXuanQiQiVo(){
 
