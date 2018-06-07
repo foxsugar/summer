@@ -70,6 +70,7 @@ public class GameXuanQiQi extends Game {
             PlayerCardInfoXuanQiQi playerCardInfo = getGameTypePlayerCardInfo();
             playerCardInfo.userId = uid;
             playerCardInfo.canSetMultiple = "-1";
+            playerCardInfo.canSendCard = "0";
             playerCardInfos.put(uid, playerCardInfo);
             xuanOrGuo.put(uid,0);
             ifChuPai.put(uid,0);
@@ -217,6 +218,7 @@ public class GameXuanQiQi extends Game {
 
         if(xuanOrGuo.get(userId)==0 && chuPaiId ==userId){//庄宣，直接通知出牌
             xuanOrGuo.put(userId,1);
+            playerCardInfos.get(userId).setCanSendCard("1");
         }else{
             //XuanParam参数设置
             XuanParam xuanParam = new XuanParam();
@@ -324,6 +326,8 @@ public class GameXuanQiQi extends Game {
         if(chuPaiCount ==1){//第一个出牌，通知下家出
             chuPaiId = nextTurnId(userId);
             operatId= nextTurnId(userId);
+            playerCardInfos.get(userId).setCanSendCard("0");
+            playerCardInfos.get(chuPaiId).setCanSendCard("1");
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", chuPaiId), users);
         }else if(chuPaiCount ==2){//第二个人出牌，比牌，通知下家出
             PlayerCardInfoXuanQiQi p1 = null;
@@ -338,6 +342,8 @@ public class GameXuanQiQi extends Game {
             compareCard(cardNumber,p1,p2);
             chuPaiId = nextTurnId(userId);
             operatId= nextTurnId(userId);
+            playerCardInfos.get(userId).setCanSendCard("0");
+            playerCardInfos.get(chuPaiId).setCanSendCard("1");
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", chuPaiId), users);
         }else if(chuPaiCount ==3){//第三个人出牌，存记录，分罗
             PlayerCardInfoXuanQiQi p2 = null;
@@ -356,7 +362,7 @@ public class GameXuanQiQi extends Game {
             compareCard(cardNumber,p1,p2);
 
             setWinCardAndCardType();//存记录分罗
-
+            playerCardInfos.get(userId).setCanSendCard("0");
             if(playerCardInfos.get(0).getHandCards().size()>0){
                 //清除所有状态,游戏继续
                 cleanRecord();
@@ -675,6 +681,15 @@ public class GameXuanQiQi extends Game {
         vo.ifChuPai = this.ifChuPai;
         vo.compareCard = this.compareCard;
         vo.xuanList = this.xuanList;
+
+        for (PlayerCardInfoXuanQiQi playerCardInfo : this.getPlayerCardInfos().values()) {
+            if(userId == playerCardInfo.getUserId()){
+                vo.playerCardInfos.put(playerCardInfo.userId, playerCardInfo.toVo(userId));
+            }else{
+                vo.playerCardInfos.put(playerCardInfo.userId, playerCardInfo.toVo());
+            }
+        }
+
         return vo;
     }
 

@@ -57,6 +57,7 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
     //1表示显示
     protected String canSetMultiple;//庄可以加倍 -1默认，0已设置，1未设置
     protected String canChoose;//可出牌
+    protected String canSendCard;//可出牌
     protected String fold;//弃牌
     protected String kill;//比牌
     protected String see;//看牌
@@ -219,13 +220,20 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
         this.allScore = allScore+addScore;
     }
 
+    public String getCanSendCard() {
+        return canSendCard;
+    }
+
+    public void setCanSendCard(String canSendCard) {
+        this.canSendCard = canSendCard;
+    }
 
     @Override
     public IfacePlayerInfoVo toVo() {
         PlayerCardInfoXuanQiQiVo vo = new PlayerCardInfoXuanQiQiVo();
         vo.userId =this.userId;
         vo.randomCard = this.randomCard;
-        vo.handCards = this.handCards;
+        //vo.handCards = this.handCards;
         vo.playCards = this.playCards;
         vo.winCards = this.winCards;
         vo.cardsType = this.cardsType;
@@ -240,10 +248,12 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
         vo.catchSix = this.catchSix;
         vo.canSetMultiple = this.canSetMultiple;
         vo.canChoose = this.canChoose;
-        vo.fold = this.fold;
+        vo.canSendCard = this.canSendCard;
+        /*vo.fold = this.fold;
         vo.kill = this.kill;
-        vo.see = this.see;
+        vo.see = this.see;*/
         vo.curRoundNumber = this.curRoundNumber;
+        vo.cardNum = this.handCards.size();
         return vo;
     }
 
@@ -267,10 +277,12 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
         vo.catchSix = this.catchSix;
         vo.canSetMultiple = this.canSetMultiple;
         vo.canChoose = this.canChoose;
-        vo.fold = this.fold;
+        vo.canSendCard = this.canSendCard;
+        /*vo.fold = this.fold;
         vo.kill = this.kill;
-        vo.see = this.see;
+        vo.see = this.see;*/
         vo.curRoundNumber = this.curRoundNumber;
+        vo.cardNum = this.handCards.size();
         return vo;
     }
 }
