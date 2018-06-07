@@ -30,7 +30,7 @@ public class GameXuanQiQiVO extends GameVo {
     protected Map<Long,Integer> xuanOrGuo = new HashMap<>();
     protected Map<Long,Integer> ifChuPai = new HashMap<>();
     protected Map<Long,Integer> compareCard = new HashMap<>();
-    protected Map<Long,XuanParam> xuanList = new HashMap<>();
+    protected List<XuanParam> xuanList = new ArrayList<>();
     protected RoomXuanQiQi room;
     public Map<Long, IfacePlayerInfoVo> playerCardInfos = new HashMap<>();
 

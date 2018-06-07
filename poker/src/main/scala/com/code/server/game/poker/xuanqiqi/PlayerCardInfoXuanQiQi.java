@@ -58,9 +58,9 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
     protected String canSetMultiple;//庄可以加倍 -1默认，0已设置，1未设置
     protected String canChoose;//可出牌
     protected String canSendCard;//可出牌
-    protected String fold;//弃牌
-    protected String kill;//比牌
-    protected String see;//看牌
+    protected String canXuan;//可选
+    protected String canKou;//可扣
+    protected String canGuo;//可过,不选
 
 
     public int curRoundNumber;//当前轮数
@@ -228,6 +228,30 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
         this.canSendCard = canSendCard;
     }
 
+    public String getCanXuan() {
+        return canXuan;
+    }
+
+    public void setCanXuan(String canXuan) {
+        this.canXuan = canXuan;
+    }
+
+    public String getCanKou() {
+        return canKou;
+    }
+
+    public void setCanKou(String canKou) {
+        this.canKou = canKou;
+    }
+
+    public String getCanGuo() {
+        return canGuo;
+    }
+
+    public void setCanGuo(String canGuo) {
+        this.canGuo = canGuo;
+    }
+
     @Override
     public IfacePlayerInfoVo toVo() {
         PlayerCardInfoXuanQiQiVo vo = new PlayerCardInfoXuanQiQiVo();
@@ -249,9 +273,9 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
         vo.canSetMultiple = this.canSetMultiple;
         vo.canChoose = this.canChoose;
         vo.canSendCard = this.canSendCard;
-        /*vo.fold = this.fold;
-        vo.kill = this.kill;
-        vo.see = this.see;*/
+        vo.canXuan = this.canXuan;
+        vo.canGuo = this.canGuo;
+        vo.canKou = this.canKou;
         vo.curRoundNumber = this.curRoundNumber;
         vo.cardNum = this.handCards.size();
         return vo;
@@ -278,9 +302,9 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
         vo.canSetMultiple = this.canSetMultiple;
         vo.canChoose = this.canChoose;
         vo.canSendCard = this.canSendCard;
-        /*vo.fold = this.fold;
-        vo.kill = this.kill;
-        vo.see = this.see;*/
+        vo.canXuan = this.canXuan;
+        vo.canGuo = this.canGuo;
+        vo.canKou = this.canKou;
         vo.curRoundNumber = this.curRoundNumber;
         vo.cardNum = this.handCards.size();
         return vo;

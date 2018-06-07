@@ -14,14 +14,20 @@ package com.code.server.game.poker.xuanqiqi;
  */
 public class XuanParam {
 
+    public long xuan_UserId;//宣的人的Id
     public long xuaned_UserId;//被宣的人
     public Integer xuan_LuoNum;//宣的人的罗数
     public Integer xuaned_LuoNum;//被宣的人的罗数
     public boolean gotLuo;//宣的人是否达到罗数
 
 
+    public long getXuan_UserId() {
+        return xuan_UserId;
+    }
 
-
+    public void setXuan_UserId(long xuan_UserId) {
+        this.xuan_UserId = xuan_UserId;
+    }
 
     public long getXuaned_UserId() {
         return xuaned_UserId;

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -37,13 +38,28 @@ public class AgentRedisService implements IAgentRedis, IConstant {
 
 
     @Override
-    public double addRebate(long agentId, double rebate) {
+    public double addRebate(long agentId, double rebate, String date,String deleteDay) {
         HashOperations<String, String, Double> agent_rebate = redisTemplate.opsForHash();
         // 把修改后的值放入userBean里
         double m = agent_rebate.increment(AGENT_REBATE, "" + agentId, rebate);
         AgentBean agentBean = getAgentBean(agentId);
         if (agentBean != null) {
             agentBean.setRebate(m);
+            if (rebate > 0) {
+                //历史总返利
+                double allRebate = agentBean.getAgentInfo().getAllRebate();
+                allRebate += rebate;
+                agentBean.getAgentInfo().setAllRebate(allRebate);
+                //每日返利
+                Map<String,Double> everyDayRebate = agentBean.getAgentInfo().getEveryDayRebate();
+
+                double todayRebate = everyDayRebate.getOrDefault(date, 0D);
+                todayRebate += rebate;
+                everyDayRebate.putIfAbsent(date, todayRebate);
+                //删除记录
+                everyDayRebate.remove(deleteDay);
+            }
+
             updateAgentBean(agentBean);
         }
         return m;
@@ -194,28 +210,30 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         int scala3 = getScala(type, 3);
 
 
+        String today = LocalDate.now().toString();
+        String deleteDay = LocalDate.now().minusDays(7).toString();
         double allRebate = 0;
         if (agentId1 != 0) {
-            double t = scala1 * num / 100;
-            allRebate += t;
-            addRebate(agentId1, t);
+            double n = scala1 * num / 100;
+            allRebate += n;
+            addRebate(agentId1, n,today,deleteDay);
         }
         if (agentId2 != 0) {
-            double t = scala2 * num / 100;
-            allRebate += t;
-            addRebate(agentId2, t);
+            double n = scala2 * num / 100;
+            allRebate += n;
+            addRebate(agentId2, n,today,deleteDay);
         }
         if (agentId3 != 0) {
-            double t = scala3 * num / 100;
-            allRebate += t;
-            addRebate(agentId3, t);
+            double n = scala3 * num / 100;
+            allRebate += n;
+            addRebate(agentId3, n,today,deleteDay);
         }
 
         //合伙人 10%
         if (partnerId != 0) {
-            double t = 10 * num / 100;
-            allRebate += t;
-            addRebate(partnerId, t);
+            double n = 10 * num / 100;
+            allRebate += n;
+            addRebate(partnerId, n,today,deleteDay);
         }
 
         if (type == 0) {

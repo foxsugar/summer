@@ -191,7 +191,8 @@ public class MenuHandler extends AbstractHandler {
                     this.logger.info("企业对个人付款成功！\n付款信息：\n" + wxEntPayResult.toString());
 
 
-                    RedisManager.getAgentRedisService().addRebate(agentId, -rebate);
+
+                    RedisManager.getAgentRedisService().addRebate(agentId, -rebate,null,null);
 
                     //充值记录
                     Charge charge = new Charge();
