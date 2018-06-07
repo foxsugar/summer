@@ -1,504 +1,172 @@
 
+
+26,19
+26,19	shortfive
+
+15,11
+15,11	longseven
 
-3,17
-3,17fieldtwo
-
-13,26
-13,26longtwo
-
-9,26
-9,26	longeight
-
-26,30
-26,30mixthree
-
-3,9
-3,9fieldtwo
-
-9,27
-9,27	longseven
-
-28,31
-28,31mixthree
-
-7,29
-7,29sumnine
-
-21,31
-21,31shorttwo
-
-3,29
-3,29
-fieldseven
-
-15,17
-15,17shortone
-
-7,19
-7,19sumone
-
-3,25
-3,25
-fieldstaff
+3,13
+3,13fieldsix
 
 17,25
 17,25
 shorteight
 
-3,23
-3,23fieldone
-
-23,26
-23,26mixseven
-
-19,31
-19,31
-shortthree
-
-17,30
-17,30	shortfive
-
-23,25
-23,25mixseven
-
-24,31
-24,31mixfive
-
-3,3
-3,3doublefield
-
-9,17
-9,17zero
-"
-19,19
-19,19doubleshortseven
-
-24,27
-24,27mixsix
-
-5,7
-5,7	peopletwo
-
-1,26
-1,26skystaff
-
-26,15
-26,15	shortnine
-
-7,30
-7,30sumnine
-
-1,13
-1,13skysix
-
 7,24
 7,24sumthree
 
-24,30
-24,30mixfour
+25,31
+25,31mixfour
 
-11,28
-11,28	longthree
-
-5,23
-5,23peopleseven
+1,23
+1,23skynineking
 
-1,15
-1,15skythree
-
-25,32
-25,32mixone
-!
-23,24
-23,24doublepointnine
-
-15,11
-15,11	longseven
-
-13,32
-13,32	longseven
+3,24
+3,24fieldone
 
-26,29
-26,29mixthree
-
-1,19
-1,19skynine
-
-24,25
-24,25mixseven
+5,31
+5,31
+peoplefour
 
-13,27
-13,27longone
-
-31,32
-31,32king
-
-1,9
-1,9skytwo
-
-7,28
-7,28sumone
-
-29,31
-29,31mixone
-
-26,27
-26,27mixfive
-
-11,25
-11,25longfour
-
-5,24
-5,24peopleseven
-
-11,27
-11,27	longthree
-
-7,31
-7,31zero
+9,28
+9,28	longseven
 
 24,17
 24,17	shortnine
+
+23,27
+23,27mixsix
 
-25,30
-25,30mixthree
-
-5,19
-5,19
-peoplefive
-
-30,19
-30,19shorttwo
+15,13
+15,13longfive
 
-5,26
-5,26	peoplesix
-
-11,30
-11,30longone
-
-9,21
-9,21longsix
+11,29
+11,29longone
 
-21,29
-21,29shortone
+26,30
+26,30mixthree
+
+3,3
+3,3doublefield
+
+1,30
+1,30skyseven
+
+5,13
+5,13	peopletwo
+
+3,32
+3,32	fieldfive
+
+13,29
+13,29longnine
+
+11,19
+11,19	longthree
+
+26,29
+26,29mixthree
 
 3,15
 3,15
 fieldthree
 
-27,29
-27,29mixtwo
-
-15,31
-15,31
-shortseven
-
-9,19
-9,19	longseven
-
-7,17
-7,17sumfour
-
-23,31
-23,31mixfive
-
-9,28
-9,28	longseven
-
-17,28
-17,28
-shortseven
+9,24
+9,24longnine
 
-5,11
-5,11
-peoplefour
+17,31
+17,31shortsix
+
+15,23
+15,23zero
+
+3,23
+3,23fieldone
 
-32,29
-32,29mixeight
-
-17,29
-17,29	shortfive
-
-7,21
-7,21zero
-
-11,32
-11,32longnine
-
-5,31
-5,31
-peoplefour
-
-32,30
-32,30mixeight
-
-25,19
-25,19	shortfive
-
-17,32
-17,32
-shortthree
-
-7,15
-7,15sumfive
-
-3,19
-3,19	fieldnine
-
-7,7
-7,7	doublesum
-
-3,30
-3,30
-fieldseven
-
-25,21
-25,21	shortfour
+11,26
+11,26longfour
 
 15,29
 15,29shortsix
+
+1,26
+1,26skystaff
+
+7,17
+7,17sumfour
  
-17,17
-17,17doubleshortten
-
-9,29
-9,29longfive
-
-26,32
-26,32mixone
-
-27,30
-27,30mixtwo
+21,21
+21,21doubleshortsix
+#
+15,15
+15,15doubleshorteleven
+
+23,19
+23,19shortsix
 
-9,32
-9,32	longthree
+9,25
+9,25	longeight
+
+3,28
+3,28	fieldnine
+
+25,28
+25,28mixfive
+
+28,32
+28,32zero
+
+1,24
+1,24skynineking
+
+24,32
+24,32mixtwo
+
+19,31
+19,31
+shortthree
+
+1,19
+1,19skynine
+
+3,19
+3,19	fieldnine
 
 3,21
 3,21
 fieldeight
 
-5,5
-5,5doublepeople
-
-9,31
-9,31longsix
-
-15,13
-15,13longfive
-
-24,21
-24,21	shortfive
-
-7,32
-7,32sumseven
-
-17,13
-17,13longfour
-
-1,21
-1,21skyeight
-
-23,28
-23,28mixsix
-
-5,17
-5,17peopleeight
-
-7,25
-7,25sumtwo
-
-1,31
-1,31skyeight
-
-17,31
-17,31shortsix
-
-9,13
-9,13longfour
-
-17,19
-17,19
-shortseven
-
-24,19
-24,19shortsix
-
-11,24
-11,24longfive
-
-27,31
-27,31mixthree
-
-15,27
-15,27
-shorteight
-
 17,21
 17,21shortsix
-
-26,19
-26,19	shortfive
-
-15,24
-15,24zero
-
-1,24
-1,24skynineking
-
-15,19
-15,19
-shorteight
-
-27,32
-27,32zero
-"
-25,26
-25,26doublepointeight
-
-19,32
-19,32zero
-
-3,5
-3,5
-fieldstaff
-
-11,23
-11,23longfive
-
-13,21
-13,21zero
-
-7,9
-7,9sumfour
-
-3,24
-3,24fieldone
-
-13,31
-13,31zero
-
-5,28
-5,28
-peoplefive
-
-5,9
-5,9peopleeight
-
-23,19
-23,19shortsix
-
-7,13
-7,13sumeight
-
-5,29
-5,29peoplethree
-
-7,26
-7,26sumtwo
-
-1,29
-1,29skyseven
-
-13,11
-13,11zero
-
-19,27
-19,27	shortfour
-
-1,28
-1,28skynine
-
-21,30
-21,30shortone
 
 24,26
 24,26mixseven
-
-13,28
-13,28longone
-
-1,25
-1,25skystaff
-
-13,25
-13,25longtwo
-
-26,31
-26,31mixfour
-
-23,21
-23,21	shortfive
-
-5,30
-5,30peoplethree
-
-11,19
-11,19	longthree
-
-25,31
-25,31mixfour
-
-15,28
-15,28
-shorteight
-
-23,13
-23,13	longthree
+
+7,31
+7,31zero
 
-3,11
-3,11
-fieldeight
-
-3,7
-3,7fieldsix
-"
-27,28
-27,28doublepointseven
+3,26
+3,26
+fieldstaff
+
+11,17
+11,17longsix
+
+25,15
+25,15	shortnine
+
+28,31
+28,31mixthree
+
+24,21
+24,21	shortfive
+
+5,17
+5,17peopleeight
 
-3,13
-3,13fieldsix
-
-9,25
-9,25	longeight
-
-7,27
-7,27sumone
-
-9,15
-9,15longone
-
-26,28
-26,28mixfive
- 
-21,21
-21,21doubleshortsix
-
-13,19
-13,19longone
-
-1,30
-1,30skyseven
-
-24,32
-24,32mixtwo
-
-24,29
-24,29mixfour
-
-28,30
-28,30mixtwo
-
-1,32
-1,32skyfive
-#
-15,15
-15,15doubleshorteleven
-
-11,29
-11,29longone
-
-23,30
-23,30mixfour
+23,32
+23,32mixtwo
 
 5,15
 5,15
@@ -506,1978 +174,2314 @@ peoplenine
 
 5,32
 5,32	peopleone
-
-23,32
-23,32mixtwo
-
-3,27
-3,27	fieldnine
-
-24,28
-24,28mixsix
 
-13,30
-13,30longnine
-
-3,31
-3,31
-fieldeight
-
-3,32
-3,32	fieldfive
-
-5,25
-5,25	peoplesix
-
-23,29
-23,29mixfour
+15,30
+15,30shortsix
+
+26,32
+26,32mixone
 
-9,9
-9,9doublelongten
-
-7,11
-7,11zero
+23,17
+23,17	shortnine
+
+27,31
+27,31mixthree
+
+7,23
+7,23sumthree
+
+9,31
+9,31longsix
+
+5,23
+5,23peopleseven
+
+5,24
+5,24peopleseven
+
+24,29
+24,29mixfour
+
+3,7
+3,7fieldsix
+
+11,24
+11,24longfive
+
+7,29
+7,29sumnine
+
+1,29
+1,29skyseven
+"
+25,26
+25,26doublepointeight
 
 19,28
 19,28	shortfour
 
+23,26
+23,26mixseven
+
+26,28
+26,28mixfive
+
+28,29
+28,29mixtwo
+
+29,19
+29,19shorttwo
+
+3,17
+3,17fieldtwo
+!
+23,24
+23,24doublepointnine
+
+5,28
+5,28
+peoplefive
+
+3,5
+3,5
+fieldstaff
+
+1,27
+1,27skynine
+
+1,25
+1,25skystaff
+
+15,28
+15,28
+shorteight
+
+5,5
+5,5doublepeople
+
+1,13
+1,13skysix
+
+15,27
+15,27
+shorteight
+
+13,28
+13,28longone
+
+17,26
+17,26
+shorteight
+
+13,11
+13,11zero
+
+23,30
+23,30mixfour
+
+1,9
+1,9skytwo
+
+13,21
+13,21zero
+
+1,15
+1,15skythree
+
+17,28
+17,28
+shortseven
+
+29,31
+29,31mixone
+
 25,29
 25,29mixthree
+
+1,11
+1,11skyeight
+
+13,32
+13,32	longseven
+
+7,32
+7,32sumseven
+
+25,19
+25,19	shortfive
+
+11,27
+11,27	longthree
+
+7,9
+7,9sumfour
+
+7,13
+7,13sumeight
+
+5,29
+5,29peoplethree
+
+7,15
+7,15sumfive
+
+7,26
+7,26sumtwo
+
+9,23
+9,23longnine
+
+24,13
+24,13	longthree
+
+30,19
+30,19shorttwo
+
+3,31
+3,31
+fieldeight
+"
+19,19
+19,19doubleshortseven
+
+17,13
+17,13longfour
+
+1,21
+1,21skyeight
+
+17,27
+17,27
+shortseven
 
-25,27
-25,27mixfive
+26,31
+26,31mixfour
+
+9,13
+9,13longfour
+
+5,30
+5,30peoplethree
 
-11,26
-11,26longfour
+5,21
+5,21
+peoplefour
 
-15,30
-15,30shortsix
+24,19
+24,19shortsix
+
+23,13
+23,13	longthree
+
+9,19
+9,19	longseven
+
+31,32
+31,32king
+
+7,11
+7,11zero
+
+3,9
+3,9fieldtwo
+
+17,30
+17,30	shortfive
+
+15,32
+15,32	shortfour
+
+11,25
+11,25longfour
+
+13,30
+13,30longnine
+
+5,25
+5,25	peoplesix
+
+32,30
+32,30mixeight
+
+21,29
+21,29shortone
 
 28,21
 28,21
 shortthree
 
-5,13
-5,13	peopletwo
-
-23,27
-23,27mixsix
-
-27,21
-27,21
-shortthree
-
-9,30
-9,30longfive
+26,27
+26,27mixfive
 
-1,5
-1,5skystaff
-
-5,21
-5,21
-peoplefour
-
-17,26
-17,26
-shorteight
-
-25,15
-25,15	shortnine
-
-1,3
-1,3skyfour
+13,31
+13,31zero
+
+24,30
+24,30mixfour
+
+27,32
+27,32zero
+
+3,27
+3,27	fieldnine
+
+15,24
+15,24zero
 
 26,21
 26,21	shortfour
-
-3,28
-3,28	fieldnine
-
-1,23
-1,23skynineking
-
-25,28
-25,28mixfive
-
-11,21
-11,21longtwo
-
-30,31
-30,31mixone
 
-15,21
-15,21
-shortseven
-
-11,9
-11,9longsix
-
-11,17
-11,17longsix
-
-17,27
-17,27
-shortseven
-
-3,26
-3,26
-fieldstaff
-
-29,19
-29,19shorttwo
-
-24,13
-24,13	longthree
+17,32
+17,32
+shortthree
 
 1,17
 1,17skytwo
 
-1,11
-1,11skyeight
-
-15,23
-15,23zero
-
-9,23
-9,23longnine
-
-9,24
-9,24longnine
-
-28,29
-28,29mixtwo
-
-1,1
-1,1	doublesky
-
-7,23
-7,23sumthree
-!
-29,30
-29,30doublepointfive
-
-1,7
-1,7skysix
-
-19,21
-19,21
-shortthree
- 
-13,13
-13,13doublelongfour
-
-15,32
-15,32	shortfour
-
-11,11
-11,11doublelongsix
-
-13,29
-13,29longnine
+9,30
+9,30longfive
 
 32,21
 32,21	shortnine
+
+23,21
+23,21	shortfive
+
+9,26
+9,26	longeight
+"
+27,28
+27,28doublepointseven
+
+23,28
+23,28mixsix
+
+21,31
+21,31shorttwo
+
+11,23
+11,23longfive
+
+9,9
+9,9doublelongten
+
+17,19
+17,19
+shortseven
+
+13,27
+13,27longone
+
+24,25
+24,25mixseven
+
+11,32
+11,32longnine
+
+5,19
+5,19
+peoplefive
+
+3,11
+3,11
+fieldeight
+
+26,15
+26,15	shortnine
 
-28,32
-28,32zero
-
-1,27
-1,27skynine
+7,19
+7,19sumone
+
+27,29
+27,29mixtwo
 
 5,27
 5,27
 peoplefive
-
-23,17
-23,17	shortnine
+
+9,21
+9,21longsix
+
+11,9
+11,9longsix
+
+25,30
+25,30mixthree
+!
+29,30
+29,30doublepointfive
 
 11,31
-11,31longtwo
-fieldtwo
-fieldtwo
-skyfour
-skyfour
-skystaff
-skystaff=
-skyseven
-skyseven.
-	doublesum
-	doublesum‚
+11,31longtwo
+
+17,29
+17,29	shortfive
+
+28,30
+28,30mixtwo
+
+24,28
+24,28mixsix
+
+19,27
+19,27	shortfour
+
+25,21
+25,21	shortfour
+
+11,28
+11,28	longthree
+
+24,27
+24,27mixsix
+
+1,28
+1,28skynine
+
+15,17
+15,17shortone
+
+24,31
+24,31mixfive
+ 
+13,13
+13,13doublelongfour
+
+1,7
+1,7skysix
+
+27,21
+27,21
+shortthree
+
+5,9
+5,9peopleeight
+
+3,25
+3,25
+fieldstaff
+
+9,27
+9,27	longseven
+
+7,30
+7,30sumnine
+
+3,29
+3,29
+fieldseven
+
+25,27
+25,27mixfive
+
+13,19
+13,19longone
+
+7,27
+7,27sumone
+
+19,21
+19,21
+shortthree
+
+1,31
+1,31skyeight
+
+1,5
+1,5skystaff
+
+19,32
+19,32zero
+
+1,1
+1,1	doublesky
+
+1,32
+1,32skyfive
+
+27,30
+27,30mixtwo
+
+30,31
+30,31mixone
+
+11,21
+11,21longtwo
+
+3,30
+3,30
+fieldseven
+
+5,11
+5,11
+peoplefour
+
+21,30
+21,30shortone
+
+15,19
+15,19
+shorteight
+
+23,25
+23,25mixseven
+
+13,26
+13,26longtwo
+
+7,25
+7,25sumtwo
+
+5,7
+5,7	peopletwo
+
+1,3
+1,3skyfour
+
+15,31
+15,31
+shortseven
+
+9,32
+9,32	longthree
+
+15,21
+15,21
+shortseven
+
+23,29
+23,29mixfour
+
+7,21
+7,21zero
+
+25,32
+25,32mixone
+
+23,31
+23,31mixfive
+
+7,7
+7,7	doublesum
+
+11,30
+11,30longone
+
+32,29
+32,29mixeight
+
+11,11
+11,11doublelongsix
+
+9,29
+9,29longfive
+
+5,26
+5,26	peoplesix
+
+7,28
+7,28sumone
+
+9,15
+9,15longone
+
+13,25
+13,25longtwo
+
+9,17
+9,17zero
+ 
+17,17
+17,17doubleshortten
+doublefield
+doublefield–
+sumfive
+sumfive
+mixfour
+mixfour(
+doubleshortseven
+doubleshortsevenn
+skytwo
 
-fieldstaff
-
-fieldstaff<
-	peopleone
-	peopleone
-mixthree
-mixthree
-	longthree
-	longthree
-fieldone
-fieldone
-sumone
-
-sumone
-skyfive
-skyfive!"
-doublelongten
-doublelongtenx
-peopleeight
-peopleeight3
-sumseven
-sumseven+
-skyeight
-skyeight5
-longsix
-longsix$
-sumeight
-sumeight2
-shortone
-shortone
-	shortfive
-	shortfive
-mixone
-
-mixone
-skynineking
-skynineking>
-shorttwo
-shorttwo
-longtwo
-longtwo	$
-doubleshortten
-doubleshorttenn
-longnine
-longnine7
-peopleseven
-peopleseven,
-	shortnine
-	shortnine6!
-doublepeople
-doublepeopleŒ
-skythree
-skythree
-skynine
-skynine;
-skysix
-
-skysix'
+skytwo
+	fieldnine
+	fieldnine:
+longone
+longone
+mixseven
+mixseven(
+	longeight
+	longeight1$
+doubleshortsix
+doubleshortsixn
 mixsix
 
 mixsix"
-sumthree
-sumthree(
-doublepointseven
-doublepointsevenP&
-doublepointfive
-doublepointfiveF(
-doublepointeight
-doublepointeightZ
-shortsix
-shortsix#"
-doublelongsix
-doublelongsixx
+longfive
+longfive!
+doublepeople
+doublepeopleŒ
+peopleseven
+peopleseven,
+fieldtwo
+fieldtwo
 
-fieldthree
+fieldstaff
 
-fieldthree
+fieldstaff<
+skynineking
+skynineking>
 	peopletwo
-	peopletwo
-longfour
-longfour
-skytwo
-
-skytwo
-mixfour
-mixfour
+	peopletwo
+skynine
+skynine;
 	fieldfive
-	fieldfive (
-doubleshortseven
-doubleshortsevenn
-mixfive
-mixfive$
-doublelongfour
-doublelongfourx
-
-shortthree
-
-shortthree
-
-peoplenine
-
-peoplenine9
-mixtwo
-
-mixtwo
-	doublesky
-	doublesky 
-doublefield
-doublefield–
-mixeight
-mixeight/
-	fieldnine
-	fieldnine:
-fieldsix
-fieldsix&
-sumfive
-sumfive
-
-peoplefive
-
-peoplefive
+	fieldfive 
+shorttwo
+shorttwo
+longtwo
+longtwo	
+skyfour
+skyfour
+skyfive
+skyfive!
+fieldone
+fieldone
+	doublesum
+	doublesum‚
 
 shorteight
 
-shorteight0
+shorteight0
+shortone
+shortone
+
+fieldeight
+
+fieldeight4
+mixthree
+mixthree
+longfour
+longfour$
+doubleshortten
+doubleshorttenn
+	shortfour
+	shortfour
+sumfour
+sumfour
+shortsix
+shortsix#
+mixone
+
+mixone
+
+peoplenine
+
+peoplenine9
+	peopleone
+	peopleone(
+doublepointeight
+doublepointeightZ"
+doublelongsix
+doublelongsixx"
+doublelongten
+doublelongtenx
+skyeight
+skyeight5
+sumthree
+sumthree
+sumseven
+sumseven+
+longnine
+longnine7
+
+shortseven
+
+shortseven)
 peoplethree
-peoplethree
-longfive
-longfive
+peoplethree
+peopleeight
+peopleeight3
+sumeight
+sumeight2
+mixfive
+mixfive
 king	
 king´
 sumtwo
 
 sumtwo
-
-zero
-zero$
-doubleshortsix
-doubleshortsixn
-longone
-longone
+
+	peoplesix
+	peoplesix%(
+doublepointseven
+doublepointsevenP*
+doubleshorteleven
+doubleshortelevenn
+sumone
+
+sumone
+	longseven
+	longseven*
+skystaff
+skystaff=
+skythree
+skythree
+mixtwo
+
+mixtwo
+skysix
+
+skysix'
+	shortfive
+	shortfive
+skyseven
+skyseven.
+fieldsix
+fieldsix&
 
 peoplefour
 
-peoplefour*
-doubleshorteleven
-doubleshortelevenn&
-doublepointnine
-doublepointnined
-	longseven
-	longseven*
-sumfour
-sumfour
-	peoplesix
-	peoplesix%
-mixseven
-mixseven(
+peoplefour
+
+fieldthree
+
+fieldthree
+	doublesky
+	doublesky 
 
 fieldseven
 
-fieldseven-
+fieldseven-&
+doublepointnine
+doublepointnined$
+doublelongfour
+doublelongfourx
 sumnine
-sumnine8
-	shortfour
-	shortfour
+sumnine8
 
-shortseven
+shortthree
 
-shortseven)
+shortthree
+zero
+zero
+mixeight
+mixeight/
+	shortnine
+	shortnine6
+	longthree
+	longthree
 
-fieldeight
+peoplefive
 
-fieldeight4
-	longeight
-	longeight1			
+peoplefive
+longsix
+longsix$&
+doublepointfive
+doublepointfiveF			
 
-	   "
-3,17
-3,17fieldtwo"
-13,26
-13,26longtwo"
-9,26
-9,26	longeight"
-26,30
-26,30mixthree"
-3,9
-3,9fieldtwo"
-9,27
-9,27	longseven"
-28,31
-28,31mixthree"
-7,29
-7,29sumnine"
-21,31
-21,31shorttwo"
-3,29
-3,29
-fieldseven"
-15,17
-15,17shortone"
-7,19
-7,19sumone"
-3,25
-3,25
-fieldstaff"
+	   "
+26,19
+26,19	shortfive"
+15,11
+15,11	longseven"
+3,13
+3,13fieldsix"
 17,25
 17,25
 shorteight"
-3,23
-3,23fieldone"
-23,26
-23,26mixseven"
-19,31
-19,31
-shortthree"
-17,30
-17,30	shortfive"
-23,25
-23,25mixseven"
-24,31
-24,31mixfive"
-3,3
-3,3doublefield"
-9,17
-9,17zero""
-19,19
-19,19doubleshortseven"
-24,27
-24,27mixsix"
-5,7
-5,7	peopletwo"
-1,26
-1,26skystaff"
-26,15
-26,15	shortnine"
-7,30
-7,30sumnine"
-1,13
-1,13skysix"
 7,24
 7,24sumthree"
-24,30
-24,30mixfour"
-11,28
-11,28	longthree"
-5,23
-5,23peopleseven"
-1,15
-1,15skythree"
-25,32
-25,32mixone"!
-23,24
-23,24doublepointnine"
-15,11
-15,11	longseven"
-13,32
-13,32	longseven"
-26,29
-26,29mixthree"
-1,19
-1,19skynine"
-24,25
-24,25mixseven"
-13,27
-13,27longone"
-31,32
-31,32king"
-1,9
-1,9skytwo"
-7,28
-7,28sumone"
-29,31
-29,31mixone"
-26,27
-26,27mixfive"
-11,25
-11,25longfour"
-11,27
-11,27	longthree"
-7,31
-7,31zero"
+25,31
+25,31mixfour"
+1,23
+1,23skynineking"
+3,24
+3,24fieldone"
+5,31
+5,31
+peoplefour"
+9,28
+9,28	longseven"
 24,17
-24,17	shortnine"
-5,24
-5,24peopleseven"
-5,19
-5,19
-peoplefive"
-30,19
-30,19shorttwo"
-5,26
-5,26	peoplesix"
-11,30
-11,30longone"
-9,21
-9,21longsix"
-21,29
-21,29shortone"
+24,17	shortnine"
+23,27
+23,27mixsix"
+15,13
+15,13longfive"
+11,29
+11,29longone"
+26,30
+26,30mixthree"
+3,3
+3,3doublefield"
+15,24
+15,24ghost"
+1,30
+1,30skyseven"
+5,13
+5,13	peopletwo"
+3,32
+3,32	fieldfive"
+13,29
+13,29longnine"
+11,19
+11,19	longthree"
+26,29
+26,29mixthree"
 3,15
 3,15
 fieldthree"
-27,29
-27,29mixtwo"
-15,31
-15,31
-shortseven"
-9,19
-9,19	longseven"
-7,17
-7,17sumfour"
-23,31
-23,31mixfive"
-9,28
-9,28	longseven"
-17,28
-17,28
-shortseven"
-5,11
-5,11
-peoplefour"
-32,29
-32,29mixeight"
-17,29
-17,29	shortfive"
-7,21
-7,21zero"
-11,32
-11,32longnine"
-5,31
-5,31
-peoplefour"
-32,30
-32,30mixeight"
-25,19
-25,19	shortfive"
-17,32
-17,32
-shortthree"
-7,15
-7,15sumfive"
-3,19
-3,19	fieldnine"
-7,7
-7,7	doublesum"
-3,30
-3,30
-fieldseven"
-25,21
-25,21	shortfour"
+9,24
+9,24longnine"
+17,31
+17,31shortsix"
+7,25
+7,25sumtwo"
+3,23
+3,23fieldone"
+11,26
+11,26longfour"
 15,29
-15,29shortsix" 
-17,17
-17,17doubleshortten"
-9,29
-9,29longfive"
-26,32
-26,32mixone"
-27,30
-27,30mixtwo"
-9,32
-9,32	longthree"
+15,29shortsix"
+1,26
+1,26skystaff"
+7,17
+7,17sumfour" 
+21,21
+21,21doubleshortsix"#
+15,15
+15,15doubleshorteleven"
+23,19
+23,19shortsix"
+9,25
+9,25	longeight"
+3,28
+3,28	fieldnine"
+25,28
+25,28mixfive"
+28,32
+28,32zero"
+1,24
+1,24skynineking"
+24,32
+24,32mixtwo"
+19,31
+19,31
+shortthree"
+1,19
+1,19skynine"
+3,19
+3,19	fieldnine"
 3,21
 3,21
 fieldeight"
-5,5
-5,5doublepeople"
-9,31
-9,31longsix"
-15,13
-15,13longfive"
-24,21
-24,21	shortfive"
-7,32
-7,32sumseven"
-17,13
-17,13longfour"
-1,21
-1,21skyeight"
-23,28
-23,28mixsix"
-5,17
-5,17peopleeight"
-7,25
-7,25sumtwo"
-1,31
-1,31skyeight"
-17,31
-17,31shortsix"
-9,13
-9,13longfour"
-17,19
-17,19
-shortseven"
-24,19
-24,19shortsix"
-11,24
-11,24longfive"
-27,31
-27,31mixthree"
-15,27
-15,27
-shorteight"
 17,21
-17,21shortsix"
-26,19
-26,19	shortfive"
-15,24
-15,24ghost"
-1,24
-1,24skynineking"
-15,19
-15,19
-shorteight"
-27,32
-27,32zero""
-25,26
-25,26doublepointeight"
-19,32
-19,32zero"
-3,5
-3,5
-fieldstaff"
-11,23
-11,23longfive"
-13,21
-13,21zero"
-7,9
-7,9sumfour"
-3,24
-3,24fieldone"
-13,31
-13,31zero"
-5,28
-5,28
-peoplefive"
-5,9
-5,9peopleeight"
-23,19
-23,19shortsix"
-7,13
-7,13sumeight"
-5,29
-5,29peoplethree"
-7,26
-7,26sumtwo"
-1,29
-1,29skyseven"
-13,11
-13,11zero"
-25,30
-25,30mixthree"
-19,27
-19,27	shortfour"
-1,28
-1,28skynine"
-21,30
-21,30shortone"
+17,21shortsix"
 24,26
-24,26mixseven"
-13,28
-13,28longone"
-1,25
-1,25skystaff"
-13,25
-13,25longtwo"
-26,31
-26,31mixfour"
-23,21
-23,21	shortfive"
-5,30
-5,30peoplethree"
-11,19
-11,19	longthree"
-25,31
-25,31mixfour"
-15,28
-15,28
-shorteight"
-23,13
-23,13	longthree"
-3,11
-3,11
-fieldeight"
-3,7
-3,7fieldsix""
-27,28
-27,28doublepointseven"
-3,13
-3,13fieldsix"
-9,25
-9,25	longeight"
-7,27
-7,27sumone"
-9,15
-9,15longone"
-26,28
-26,28mixfive" 
-21,21
-21,21doubleshortsix"
-13,19
-13,19longone"
-1,30
-1,30skyseven"
-24,32
-24,32mixtwo"
-24,29
-24,29mixfour"
-28,30
-28,30mixtwo"
-1,32
-1,32skyfive"#
-15,15
-15,15doubleshorteleven"
-11,29
-11,29longone"
-23,30
-23,30mixfour"
+24,26mixseven"
+7,31
+7,31zero"
+3,26
+3,26
+fieldstaff"
+11,17
+11,17longsix"
+25,15
+25,15	shortnine"
+28,31
+28,31mixthree"
+24,21
+24,21	shortfive"
+5,17
+5,17peopleeight"
+23,32
+23,32mixtwo"
 5,15
 5,15
 peoplenine"
 5,32
-5,32	peopleone"
-23,32
-23,32mixtwo"
-3,27
-3,27	fieldnine"
-24,28
-24,28mixsix"
-13,30
-13,30longnine"
-3,31
-3,31
-fieldeight"
-3,32
-3,32	fieldfive"
-5,25
-5,25	peoplesix"
-23,29
-23,29mixfour"
-9,9
-9,9doublelongten"
-7,11
-7,11zero"
+5,32	peopleone"
+15,30
+15,30shortsix"
+26,32
+26,32mixone"
+23,17
+23,17	shortnine"
+27,31
+27,31mixthree"
+7,23
+7,23sumthree"
+9,31
+9,31longsix"
+5,23
+5,23peopleseven"
+5,24
+5,24peopleseven"
+24,29
+24,29mixfour"
+3,7
+3,7fieldsix"
+11,24
+11,24longfive"
+7,29
+7,29sumnine"
+1,29
+1,29skyseven""
+25,26
+25,26doublepointeight"
 19,28
 19,28	shortfour"
+23,26
+23,26mixseven"
+26,28
+26,28mixfive"
+28,29
+28,29mixtwo"
+29,19
+29,19shorttwo"
+3,17
+3,17fieldtwo"!
+23,24
+23,24doublepointnine"
+5,28
+5,28
+peoplefive"
+3,5
+3,5
+fieldstaff"
+1,27
+1,27skynine"
+1,25
+1,25skystaff"
+15,28
+15,28
+shorteight"
+5,5
+5,5doublepeople"
+1,13
+1,13skysix"
+15,27
+15,27
+shorteight"
+13,28
+13,28longone"
+17,26
+17,26
+shorteight"
+13,11
+13,11zero"
+23,30
+23,30mixfour"
+1,9
+1,9skytwo"
+13,21
+13,21zero"
+1,15
+1,15skythree"
+17,28
+17,28
+shortseven"
+29,31
+29,31mixone"
 25,29
-25,29mixthree"
-25,27
-25,27mixfive"
-11,26
-11,26longfour"
-15,30
-15,30shortsix"
+25,29mixthree"
+1,11
+1,11skyeight"
+13,32
+13,32	longseven"
+7,32
+7,32sumseven"
+25,19
+25,19	shortfive"
+11,27
+11,27	longthree"
+7,9
+7,9sumfour"
+7,13
+7,13sumeight"
+5,29
+5,29peoplethree"
+7,15
+7,15sumfive"
+7,26
+7,26sumtwo"
+9,23
+9,23longnine"
+24,13
+24,13	longthree"
+30,19
+30,19shorttwo"
+3,31
+3,31
+fieldeight""
+19,19
+19,19doubleshortseven"
+17,13
+17,13longfour"
+1,21
+1,21skyeight"
+17,27
+17,27
+shortseven"
+26,31
+26,31mixfour"
+9,13
+9,13longfour"
+5,30
+5,30peoplethree"
+5,21
+5,21
+peoplefour"
+24,19
+24,19shortsix"
+23,13
+23,13	longthree"
+9,19
+9,19	longseven"
+31,32
+31,32king"
+7,11
+7,11zero"
+3,9
+3,9fieldtwo"
+17,30
+17,30	shortfive"
+15,32
+15,32	shortfour"
+11,25
+11,25longfour"
+13,30
+13,30longnine"
+5,25
+5,25	peoplesix"
+32,30
+32,30mixeight"
+21,29
+21,29shortone"
 28,21
 28,21
 shortthree"
-5,13
-5,13	peopletwo"
-23,27
-23,27mixsix"
-27,21
-27,21
-shortthree"
-9,30
-9,30longfive"
-1,5
-1,5skystaff"
-5,21
-5,21
-peoplefour"
-17,26
-17,26
-shorteight"
-25,15
-25,15	shortnine"
-1,3
-1,3skyfour"
+26,27
+26,27mixfive"
+13,31
+13,31zero"
+24,30
+24,30mixfour"
+27,32
+27,32zero"
+3,27
+3,27	fieldnine"
+5,26
+5,26	peoplesix"
 26,21
-26,21	shortfour"
-3,28
-3,28	fieldnine"
-1,23
-1,23skynineking"
-25,28
-25,28mixfive"
-11,21
-11,21longtwo"
-30,31
-30,31mixone"
-15,21
-15,21
-shortseven"
-11,9
-11,9longsix"
-11,17
-11,17longsix"
-17,27
-17,27
-shortseven"
-3,26
-3,26
-fieldstaff"
-29,19
-29,19shorttwo"
-24,13
-24,13	longthree"
+26,21	shortfour"
+17,32
+17,32
+shortthree"
 1,17
 1,17skytwo"
-1,11
-1,11skyeight"
-15,23
-15,23ghost"
-9,23
-9,23longnine"
-9,24
-9,24longnine"
-28,29
-28,29mixtwo"
-1,1
-1,1	doublesky"
-7,23
-7,23sumthree"!
-29,30
-29,30doublepointfive"
-1,7
-1,7skysix"
-19,21
-19,21
-shortthree" 
-13,13
-13,13doublelongfour"
-15,32
-15,32	shortfour"
-11,11
-11,11doublelongsix"
-13,29
-13,29longnine"
+9,30
+9,30longfive"
 32,21
-32,21	shortnine"
-28,32
-28,32zero"
-1,27
-1,27skynine"
+32,21	shortnine"
+23,21
+23,21	shortfive"
+9,26
+9,26	longeight""
+27,28
+27,28doublepointseven"
+23,28
+23,28mixsix"
+21,31
+21,31shorttwo"
+11,23
+11,23longfive"
+9,9
+9,9doublelongten"
+17,19
+17,19
+shortseven"
+13,27
+13,27longone"
+24,25
+24,25mixseven"
+11,32
+11,32longnine"
+5,19
+5,19
+peoplefive"
+3,11
+3,11
+fieldeight"
+26,15
+26,15	shortnine"
+7,19
+7,19sumone"
+27,29
+27,29mixtwo"
 5,27
 5,27
-peoplefive"
-23,17
-23,17	shortnine"
+peoplefive"
+9,21
+9,21longsix"
+11,9
+11,9longsix"
+25,30
+25,30mixthree"!
+29,30
+29,30doublepointfive"
 11,31
-11,31longtwo*
-fieldtwo
-fieldtwo*
-skyfour
-skyfour*
-skystaff
-skystaff=*
-skyseven
-skyseven.*
-	doublesum
-	doublesum‚*
+11,31longtwo"
+17,29
+17,29	shortfive"
+28,30
+28,30mixtwo"
+24,28
+24,28mixsix"
+19,27
+19,27	shortfour"
+25,21
+25,21	shortfour"
+11,28
+11,28	longthree"
+24,27
+24,27mixsix"
+1,28
+1,28skynine"
+15,17
+15,17shortone"
+24,31
+24,31mixfive" 
+13,13
+13,13doublelongfour"
+1,7
+1,7skysix"
+27,21
+27,21
+shortthree"
+5,9
+5,9peopleeight"
+3,25
+3,25
+fieldstaff"
+9,27
+9,27	longseven"
+7,30
+7,30sumnine"
+3,29
+3,29
+fieldseven"
+25,27
+25,27mixfive"
+13,19
+13,19longone"
+7,27
+7,27sumone"
+19,21
+19,21
+shortthree"
+1,31
+1,31skyeight"
+1,5
+1,5skystaff"
+19,32
+19,32zero"
+1,1
+1,1	doublesky"
+1,32
+1,32skyfive"
+27,30
+27,30mixtwo"
+30,31
+30,31mixone"
+11,21
+11,21longtwo"
+3,30
+3,30
+fieldseven"
+5,11
+5,11
+peoplefour"
+21,30
+21,30shortone"
+15,19
+15,19
+shorteight"
+23,25
+23,25mixseven"
+13,26
+13,26longtwo"
+15,23
+15,23ghost"
+5,7
+5,7	peopletwo"
+1,3
+1,3skyfour"
+15,31
+15,31
+shortseven"
+9,32
+9,32	longthree"
+15,21
+15,21
+shortseven"
+23,29
+23,29mixfour"
+7,21
+7,21zero"
+25,32
+25,32mixone"
+23,31
+23,31mixfive"
+7,7
+7,7	doublesum"
+11,30
+11,30longone"
+32,29
+32,29mixeight"
+11,11
+11,11doublelongsix"
+9,29
+9,29longfive"
+7,28
+7,28sumone"
+9,15
+9,15longone"
+13,25
+13,25longtwo"
+9,17
+9,17zero" 
+17,17
+17,17doubleshortten*
+doublefield
+doublefield–*
+sumfive
+sumfive*
+mixfour
+mixfour*(
+doubleshortseven
+doubleshortsevenn*
+skytwo
 
-fieldstaff
-
-fieldstaff<*
-	peopleone
-	peopleone*
-mixthree
-mixthree*
-	longthree
-	longthree*
-fieldone
-fieldone*
-sumone
-
-sumone*
-skyfive
-skyfive!*"
-doublelongten
-doublelongtenx*
-peopleeight
-peopleeight3*
-sumseven
-sumseven+*
-skyeight
-skyeight5*
-longsix
-longsix$*
-sumeight
-sumeight2*
-shortone
-shortone*
-	shortfive
-	shortfive*
-mixone
-
-mixone*
-skynineking
-skyninekingª*
-shorttwo
-shorttwo*
-longtwo
-longtwo	*$
-doubleshortten
-doubleshorttenn*
-longnine
-longnine7*
-peopleseven
-peopleseven,*
-	shortnine
-	shortnine6*!
-doublepeople
-doublepeopleŒ*
-skythree
-skythree*
-skynine
-skynine;*
-skysix
-
-skysix'*
+skytwo*
+	fieldnine
+	fieldnine:*
+longone
+longone*
+mixseven
+mixseven(*
+	longeight
+	longeight1*$
+doubleshortsix
+doubleshortsixn*
 mixsix
 
 mixsix"*
-sumthree
-sumthree*
-ghost
+longfive
+longfive*!
+doublepeople
+doublepeopleŒ*
+peopleseven
+peopleseven,*
+fieldtwo
+fieldtwo*
 
-ghost¾*(
-doublepointseven
-doublepointsevenP*&
-doublepointfive
-doublepointfiveF*(
-doublepointeight
-doublepointeightZ*
-shortsix
-shortsix#*"
-doublelongsix
-doublelongsixx*
+fieldstaff
 
-fieldthree
-
-fieldthree*
+fieldstaff<*
+skynineking
+skyninekingª*
 	peopletwo
-	peopletwo*
-longfour
-longfour*
-skytwo
-
-skytwo*
-mixfour
-mixfour*
+	peopletwo*
+skynine
+skynine;*
 	fieldfive
-	fieldfive *(
-doubleshortseven
-doubleshortsevenn*
-mixfive
-mixfive*$
-doublelongfour
-doublelongfourx*
-
-shortthree
-
-shortthree*
-
-peoplenine
-
-peoplenine9*
-mixtwo
-
-mixtwo*
-	doublesky
-	doublesky *
-doublefield
-doublefield–*
-mixeight
-mixeight/*
-	fieldnine
-	fieldnine:*
-fieldsix
-fieldsix&*
-sumfive
-sumfive*
-
-peoplefive
-
-peoplefive*
+	fieldfive *
+shorttwo
+shorttwo*
+longtwo
+longtwo	*
+skyfour
+skyfour*
+skyfive
+skyfive!*
+fieldone
+fieldone*
+	doublesum
+	doublesum‚*
 
 shorteight
 
-shorteight0*
+shorteight0*
+shortone
+shortone*
+
+fieldeight
+
+fieldeight4*
+mixthree
+mixthree*
+longfour
+longfour*$
+doubleshortten
+doubleshorttenn*
+	shortfour
+	shortfour*
+sumfour
+sumfour*
+shortsix
+shortsix#*
+mixone
+
+mixone*
+
+peoplenine
+
+peoplenine9*
+	peopleone
+	peopleone*(
+doublepointeight
+doublepointeightZ*"
+doublelongsix
+doublelongsixx*"
+doublelongten
+doublelongtenx*
+skyeight
+skyeight5*
+sumthree
+sumthree*
+sumseven
+sumseven+*
+longnine
+longnine7*
+
+shortseven
+
+shortseven)*
 peoplethree
-peoplethree*
-longfive
-longfive*
+peoplethree*
+peopleeight
+peopleeight3*
+sumeight
+sumeight2*
+mixfive
+mixfive*
 king	
 king´*
 sumtwo
 
 sumtwo
-*
-zero
-zero*$
-doubleshortsix
-doubleshortsixn*
-longone
-longone*
+*
+	peoplesix
+	peoplesix%*(
+doublepointseven
+doublepointsevenP**
+doubleshorteleven
+doubleshortelevenn*
+sumone
+
+sumone*
+	longseven
+	longseven**
+skystaff
+skystaff=*
+skythree
+skythree*
+mixtwo
+
+mixtwo*
+skysix
+
+skysix'*
+	shortfive
+	shortfive*
+skyseven
+skyseven.*
+fieldsix
+fieldsix&*
 
 peoplefour
 
-peoplefour**
-doubleshorteleven
-doubleshortelevenn*&
-doublepointnine
-doublepointnined*
-	longseven
-	longseven**
-sumfour
-sumfour*
-	peoplesix
-	peoplesix%*
-mixseven
-mixseven(*
+peoplefour*
+
+fieldthree
+
+fieldthree*
+	doublesky
+	doublesky *
 
 fieldseven
 
-fieldseven-*
+fieldseven-*&
+doublepointnine
+doublepointnined*$
+doublelongfour
+doublelongfourx*
 sumnine
-sumnine8*
-	shortfour
-	shortfour*
+sumnine8*
 
-shortseven
+shortthree
 
-shortseven)*
+shortthree*
+zero
+zero*
+mixeight
+mixeight/*
+ghost
 
-fieldeight
+ghost¾*
+	shortnine
+	shortnine6*
+	longthree
+	longthree*
 
-fieldeight4*
-	longeight
-	longeight12 2O
-228H
-228"Z5com.code.server.game.poker.tuitongzi.GameTuiTongZiBWZ2s
+peoplefive
+
+peoplefive*
+longsix
+longsix$*&
+doublepointfive
+doublepointfiveF2 2l
+34f
+34""""Z0com.code.server.game.poker.doudizhu.GameDouDiZhu2j
+210c
+210	("	
+""(Z6com.code.server.game.poker.doudizhu.GameDouDiZhuJixian2g
+213`
+213""":
+PaijiuCardZ7com.code.server.game.poker.paijiu.GamePaijiuEndless3Bet2q
+211j
+211	("	
+""(Z=com.code.server.game.poker.doudizhu.GameDouDiZhuJixianNoQiang2d
+180]
+180
+""
+"0Z0com.code.server.game.poker.doudizhu.GameDouDiZhu2u
+101n
+101
+"""
+"Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2s
 5n
 5	-<"	
 "
-""(Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2s
+""(Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2L
+200E
+200"Z2com.code.server.game.poker.tuitongzi.GameTuiTongZi2s
 30m
-30      Y@"""Z:com.code.server.game.poker.hitgoldflower.GameHitGoldFlower2ž
+30      Y@"""Z:com.code.server.game.poker.hitgoldflower.GameHitGoldFlower2f
+TJW_
+TJW"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2d
+TJ^
+TJ"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2s
+251l
+251	""""	Z5com.code.server.game.poker.doudizhu.GameMaoSanNoQiang2u
+222n
+222      Y@"""Z:com.code.server.game.poker.hitgoldflower.GameHitGoldFlower2q
+8l
+8
+"""
+"Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2u
+151n
+151		"	"""	Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2o
+308h
+308"""Z=com.code.server.game.poker.doudizhu.GameDouDiZhuMaoSanNoQiang2h
+252a
+252"""Z6com.code.server.game.poker.doudizhu.GameDouDiZhuMaoSan2^
+HSX
+HS"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2S
+15M
+15":
+PaijiuCardZ3com.code.server.game.poker.paijiu.GamePaijiuEndless2b
+220[
+220"""Z0com.code.server.game.poker.doudizhu.GameDouDiZhu2X
+305Q
+305
+"
+"Z2com.code.server.game.poker.cow.GameCowOfSetMutiple2¢
+285š
+285
+     ˆÃ@""
+"Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ)com.code.server.game.poker.zhaguz.GameYSZ2r
+HMl
+HM-""
+"(Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2ž
 280–
 280
 ""
-"Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ.com.code.server.game.poker.zhaguzi.GameZhaGuZi2d
-TC^
-TC""Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2¤
-291œ
-291
-"
-""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ4com.code.server.game.poker.cow.GameCowOfChangeBanker2d
-LQ^
-LQ<"
-"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2j
-230c
-230""":
-PaijiuCardZ,com.code.server.game.poker.paijiu.GamePaijiu2f
-BENGBU\
-BENGBU"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2v
-223o
-223""":LaotiePaijiuCardZ2com.code.server.game.poker.paijiu.GamePaijiu2Cards2¡
-281™
-281
-""
-"Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ1com.code.server.game.poker.zhaguzi.GameZhaGuZiLiu2³
+"Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ.com.code.server.game.poker.zhaguzi.GameZhaGuZi2V
+202O
+202
+"Z0com.code.server.game.poker.pullmice.GamePullMice2L
+227E
+227"Z2com.code.server.game.poker.tuitongzi.GameTuiTongZi2
+32y
+32		      $@"	"""	Z:com.code.server.game.poker.hitgoldflower.GameHitGoldFlower2Z
+226S
+226
+"
+"Z4com.code.server.game.poker.cow.GameCowOfChangeBanker2y
+4t
+4	-<"	
+"
+""(Z=com.code.server.game.poker.doudizhu.GameDouDiZhuLinFenNoQiang2l
+250e
+250	""""	Z.com.code.server.game.poker.doudizhu.GameMaoSan2s
+35m
+35""""Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2³
 302«
 302
      ˆÃ@"
 ""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ:com.code.server.game.poker.hitgoldflower.GameHitGoldFlower2U
 231N
 231":
-PaijiuCardZ3com.code.server.game.poker.paijiu.GamePaijiuEndless2L
-225E
-225
-"
-"Z&com.code.server.game.poker.cow.GameCow2p
-255i
-255     @Ÿ@""":
-PaijiuCardZ7com.code.server.game.poker.paijiu.GamePaijiuEndless3Bet2q
-6l
-6""""Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2l
-250e
-250	""""	Z.com.code.server.game.poker.doudizhu.GameMaoSan2V
-38P
-38
-"
-""Z&com.code.server.game.poker.cow.GameCow2n
-212g
-212""":
-PaijiuCardZ0com.code.server.game.poker.paijiu.GamePaijiu3Bet2k
-181d
-181
-""
-"0Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2§
-271Ÿ
-271
-"
-""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ7com.code.server.game.poker.tuitongzi.GameTuiTongTongBWZ2y
-4t
-4	-<"	
-"
-""(Z=com.code.server.game.poker.doudizhu.GameDouDiZhuLinFenNoQiang2¢
-285š
-285
-     ˆÃ@""
-"Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ)com.code.server.game.poker.zhaguz.GameYSZ2h
-BAIXING]
-BAIXING"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2
-32y
-32		      $@"	"""	Z:com.code.server.game.poker.hitgoldflower.GameHitGoldFlower2u
-36o
-36""":XiaoyaoPaijiuCardZ2com.code.server.game.poker.paijiu.GamePaijiu2Cards2q
-8l
-8
-"""
-"Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2^
-JCX
-JC"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2t
+PaijiuCardZ3com.code.server.game.poker.paijiu.GamePaijiuEndless2R
+1M
+1
+""2Z0com.code.server.game.poker.doudizhu.GameDouDiZhu2f
+TC1_
+TC1""Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2t
 NZZm
 NZZ-"
-""(Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2–
-290Ž
-290
-"
-""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ&com.code.server.game.poker.cow.GameCow2t
-KXHYl
-KXHY"""Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2u
-256n
-256      Y@"""Z:com.code.server.game.poker.hitgoldflower.GameHitGoldFlower2t
-12n
-12""":LaotiePaijiuCardZ2com.code.server.game.poker.paijiu.GamePaijiu2Cards2u
-222n
-222      Y@"""Z:com.code.server.game.poker.hitgoldflower.GameHitGoldFlower2b
-220[
-220"""Z0com.code.server.game.poker.doudizhu.GameDouDiZhu2b
-XXPBZ
-XXPB"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2d
+""(Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2d
 39^
 39
 "
-""Z4com.code.server.game.poker.cow.GameCowOfChangeBanker2¤
-270œ
-270
-"
-""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ4com.code.server.game.poker.tuitongzi.GameTuiTongTong2l
-2g
-2	-<"	
-"
-""(Z0com.code.server.game.poker.doudizhu.GameDouDiZhu2t
-KXKDl
-KXKD"""Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2^
-HSX
-HS"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2d
-HL^
-HL"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2q
-211j
-211	("	
-""(Z=com.code.server.game.poker.doudizhu.GameDouDiZhuJixianNoQiang2`
-37Z
-37":XiaoyaoPaijiuCardZ9com.code.server.game.poker.paijiu.GamePaijiu2CardsEndless2t
-306m
-306
-"
-"":LaotiePaijiuCardZ0com.code.server.game.poker.xuanqiqi.GameXuanQiQi2x
-3s
-3	-<"	
-"
-""(Z<com.code.server.game.poker.doudizhu.GameDouDiZhuLinFenLongQi2d
-TJ^
-TJ"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2U
-111N
-111":
-PaijiuCardZ3com.code.server.game.poker.paijiu.GamePaijiuEndless2t
-XYKDl
-XYKD"""Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2n
-CHUANQIc
-CHUANQI"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2R
-1M
-1
-""2Z0com.code.server.game.poker.doudizhu.GameDouDiZhu2L
-227E
-227"Z2com.code.server.game.poker.tuitongzi.GameTuiTongZi2S
-15M
-15":
-PaijiuCardZ3com.code.server.game.poker.paijiu.GamePaijiuEndless2l
-34f
-34""""Z0com.code.server.game.poker.doudizhu.GameDouDiZhu2o
-253h
-253"""Z=com.code.server.game.poker.doudizhu.GameDouDiZhuMaoSanNoQiang2¢
-303š
-303
-"
-""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ2com.code.server.game.poker.tuitongzi.GameTuiZiKXHY2n
-150g
-150		"	"""	Z0com.code.server.game.poker.doudizhu.GameDouDiZhu2^
+""Z4com.code.server.game.poker.cow.GameCowOfChangeBanker2^
 SSX
-SS"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2f
-TJW_
-TJW"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2j
-7e
-7
-"""
-"Z0com.code.server.game.poker.doudizhu.GameDouDiZhu2j
-110c
-110""":
-PaijiuCardZ,com.code.server.game.poker.paijiu.GamePaijiu2V
-202O
-202
-"Z0com.code.server.game.poker.pullmice.GamePullMice2`
-YSFY
-YSF"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2i
-221b
-221"""Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2O
-201H
-201"Z5com.code.server.game.poker.tuitongzi.GameTuiTongZiBWZ2_
-13Y
-13":LaotiePaijiuCardZ9com.code.server.game.poker.paijiu.GamePaijiu2CardsEndless2§
-301Ÿ
-301"""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2t
-14n
-14
-"""
-":
-PaijiuCardZ,com.code.server.game.poker.paijiu.GamePaijiu2|
-NIUYEZIq
-NIUYEZI-"
-""(Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2t
-HELEl
-HELE"""Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2d
-180]
-180
-""
-"0Z0com.code.server.game.poker.doudizhu.GameDouDiZhu2L
-200E
-200"Z2com.code.server.game.poker.tuitongzi.GameTuiTongZi2d
-DH^
-DH"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2f
-TC1_
-TC1""Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2w
-254p
-254     @Ÿ@""":
-PaijiuCardZ0com.code.server.game.poker.paijiu.GamePaijiu3Bet2 
-300˜
-300"""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ0com.code.server.game.poker.doudizhu.GameDouDiZhu2a
-224Z
-224":LaotiePaijiuCardZ9com.code.server.game.poker.paijiu.GamePaijiu2CardsEndless2f
-DFH_
-DFH"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2s
-251l
-251	""""	Z5com.code.server.game.poker.doudizhu.GameMaoSanNoQiang2
-33y
-33       @"	"""Z:com.code.server.game.poker.hitgoldflower.GameHitGoldFlower2Z
-226S
-226
-"
-"Z4com.code.server.game.poker.cow.GameCowOfChangeBanker2V
-203O
-203Ÿ"Ÿ:
-PaijiuCardZ0com.code.server.game.poker.paijiu.GameGoldPaijiu2h
-QUANMIN]
-QUANMIN"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2S
-11M
-11":
-PaijiuCardZ3com.code.server.game.poker.paijiu.GamePaijiuEndless2g
-213`
-213""":
-PaijiuCardZ7com.code.server.game.poker.paijiu.GamePaijiuEndless3Bet2u
-101n
-101
-"""
-"Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2¦
+SS"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2¡
+281™
+281
+""
+"Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ1com.code.server.game.poker.zhaguzi.GameZhaGuZiLiu2t
+KXKDl
+KXKD"""Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2¦
 304ž
 304
 "
-""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ6com.code.server.game.poker.tuitongzi.GameTuiZiKXHY_BWZ2u
-151n
-151		"	"""	Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2h
-10b
-10""":
-PaijiuCardZ,com.code.server.game.poker.paijiu.GamePaijiu2^
-SYX
-SY"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2X
-305Q
-305
-"
-"Z2com.code.server.game.poker.cow.GameCowOfSetMutiple2j
-210c
-210	("	
-""(Z6com.code.server.game.poker.doudizhu.GameDouDiZhuJixian2n
+""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ6com.code.server.game.poker.tuitongzi.GameTuiZiKXHY_BWZ2|
+NIUYEZIq
+NIUYEZI-"
+""(Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2t
+12n
+12""":LaotiePaijiuCardZ2com.code.server.game.poker.paijiu.GamePaijiu2Cards2d
+DH^
+DH"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2j
+7e
+7
+"""
+"Z0com.code.server.game.poker.doudizhu.GameDouDiZhu2n
+CHUANQIc
+CHUANQI"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2§
+301Ÿ
+301"""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2V
+38P
+38
+"
+""Z&com.code.server.game.poker.cow.GameCow2X
+0S
+0
+"
+"Z6com.code.server.game.poker.doudizhu.GameDouDiZhuLinFen2v
+223o
+223""":LaotiePaijiuCardZ2com.code.server.game.poker.paijiu.GamePaijiu2Cards2¤
+291œ
+291
+"
+""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ4com.code.server.game.poker.cow.GameCowOfChangeBanker2t
+306m
+306
+"
+"":LaotiePaijiuCardZ0com.code.server.game.poker.xuanqiqi.GameXuanQiQi2p
+255i
+255     @Ÿ@""":
+PaijiuCardZ7com.code.server.game.poker.paijiu.GamePaijiuEndless3Bet2l
+2g
+2	-<"	
+"
+""(Z0com.code.server.game.poker.doudizhu.GameDouDiZhu2d
+LQ^
+LQ<"
+"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2h
+QUANMIN]
+QUANMIN"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2a
+224Z
+224":LaotiePaijiuCardZ9com.code.server.game.poker.paijiu.GamePaijiu2CardsEndless2t
+XYKDl
+XYKD"""Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2n
 100g
 100
 """
 "Z0com.code.server.game.poker.doudizhu.GameDouDiZhu2h
-252a
-252"""Z6com.code.server.game.poker.doudizhu.GameDouDiZhuMaoSan2r
-HMl
-HM-""
-"(Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2s
-35m
-35""""Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2
+10b
+10""":
+PaijiuCardZ,com.code.server.game.poker.paijiu.GamePaijiu2h
+307a
+307"""Z6com.code.server.game.poker.doudizhu.GameDouDiZhuMaoSan2V
+203O
+203Ÿ"Ÿ:
+PaijiuCardZ0com.code.server.game.poker.paijiu.GameGoldPaijiu2^
+SYX
+SY"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2 
+300˜
+300"""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ0com.code.server.game.poker.doudizhu.GameDouDiZhu2u
+36o
+36""":XiaoyaoPaijiuCardZ2com.code.server.game.poker.paijiu.GamePaijiu2Cards2v
+KXZHZm
+KXZHZ"""Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2¢
+303š
+303
+"
+""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ2com.code.server.game.poker.tuitongzi.GameTuiZiKXHY2t
+HELEl
+HELE"""Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2§
+271Ÿ
+271
+"
+""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ7com.code.server.game.poker.tuitongzi.GameTuiTongTongBWZ2x
+3s
+3	-<"	
+"
+""(Z<com.code.server.game.poker.doudizhu.GameDouDiZhuLinFenLongQi2d
+TC^
+TC""Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2k
+181d
+181
+""
+"0Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2n
+150g
+150		"	"""	Z0com.code.server.game.poker.doudizhu.GameDouDiZhu2n
+212g
+212""":
+PaijiuCardZ0com.code.server.game.poker.paijiu.GamePaijiu3Bet2h
+BAIXING]
+BAIXING"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2u
+256n
+256      Y@"""Z:com.code.server.game.poker.hitgoldflower.GameHitGoldFlower2b
+XXPBZ
+XXPB"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2–
+290Ž
+290
+"
+""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ&com.code.server.game.poker.cow.GameCow2d
+HL^
+HL"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2`
+37Z
+37":XiaoyaoPaijiuCardZ9com.code.server.game.poker.paijiu.GamePaijiu2CardsEndless2o
+253h
+253"""Z=com.code.server.game.poker.doudizhu.GameDouDiZhuMaoSanNoQiang2
 31y
 31
       4@"""
-"Z:com.code.server.game.poker.hitgoldflower.GameHitGoldFlower2v
-KXZHZm
-KXZHZ"""Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2X
-0S
-0
-"
-"Z6com.code.server.game.poker.doudizhu.GameDouDiZhuLinFen:RNzjm"
+"Z:com.code.server.game.poker.hitgoldflower.GameHitGoldFlower2t
+14n
+14
+"""
+":
+PaijiuCardZ,com.code.server.game.poker.paijiu.GamePaijiu2f
+DFH_
+DFH"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2j
+110c
+110""":
+PaijiuCardZ,com.code.server.game.poker.paijiu.GamePaijiu2i
+221b
+221"""Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2U
+111N
+111":
+PaijiuCardZ3com.code.server.game.poker.paijiu.GamePaijiuEndless2f
+BENGBU\
+BENGBU"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2¤
+270œ
+270
+"
+""Bè œBôNB2èBdÐJèNJôˆ'J2ôJdèZ4com.code.server.game.poker.tuitongzi.GameTuiTongTong2t
+KXHYl
+KXHY"""Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2O
+228H
+228"Z5com.code.server.game.poker.tuitongzi.GameTuiTongZiBWZ2^
+JCX
+JC"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†2S
+11M
+11":
+PaijiuCardZ3com.code.server.game.poker.paijiu.GamePaijiuEndless2w
+254p
+254     @Ÿ@""":
+PaijiuCardZ0com.code.server.game.poker.paijiu.GamePaijiu3Bet2O
+201H
+201"Z5com.code.server.game.poker.tuitongzi.GameTuiTongZiBWZ2_
+13Y
+13":LaotiePaijiuCardZ9com.code.server.game.poker.paijiu.GamePaijiu2CardsEndless2L
+225E
+225
+"
+"Z&com.code.server.game.poker.cow.GameCow2
+33y
+33       @"	"""Z:com.code.server.game.poker.hitgoldflower.GameHitGoldFlower2j
+230c
+230""":
+PaijiuCardZ,com.code.server.game.poker.paijiu.GamePaijiu2q
+6l
+6""""Z7com.code.server.game.poker.doudizhu.GameDouDiZhuNoQiang2`
+YSFY
+YSF"Bè œBôNBdÐBÐÐ†Jè œJôNJdÐJÐÐ†:RNzjm"
 *10*2009š™™™™™ñ?Bš™™™™™ñ?š™™™™™@ffffff
-@J      @:C?zjm"*30*5009ö(\Âu$@B333333ó?J      @B
-3,17
-3,17fieldtwoB
-13,26
-13,26longtwoB
-9,26
-9,26	longeightB
-26,30
-26,30mixthreeB
-3,9
-3,9fieldtwoB
-9,27
-9,27	longsevenB
-28,31
-28,31mixthreeB
-7,29
-7,29sumnineB
-21,31
-21,31shorttwoB
-3,29
-3,29
-fieldsevenB
-15,17
-15,17shortoneB
-7,19
-7,19sumoneB
-3,25
-3,25
-fieldstaffB
+@J      @:C?zjm"*30*5009ö(\Âu$@B333333ó?J      @B
+26,19
+26,19	shortfiveB
+15,11
+15,11	longsevenB
+3,13
+3,13fieldsixB
 17,25
 17,25
 shorteightB
-3,23
-3,23fieldoneB
-23,26
-23,26mixsevenB
-19,31
-19,31
-shortthreeB
-17,30
-17,30	shortfiveB
-23,25
-23,25mixsevenB
-24,31
-24,31mixfiveB
-3,3
-3,3doublefieldB
-9,17
-9,17zeroB"
-19,19
-19,19doubleshortsevenB
-24,27
-24,27mixsixB
-5,7
-5,7	peopletwoB
-1,26
-1,26skystaffB
-26,15
-26,15	shortnineB
-7,30
-7,30sumnineB
-1,13
-1,13skysixB
 7,24
 7,24sumthreeB
-24,30
-24,30mixfourB
-11,28
-11,28	longthreeB
-5,23
-5,23peoplesevenB
-1,15
-1,15skythreeB
-25,32
-25,32mixoneB!
-23,24
-23,24doublepointnineB
-15,11
-15,11	longsevenB
-13,32
-13,32	longsevenB
-26,29
-26,29mixthreeB
-1,19
-1,19skynineB
-24,25
-24,25mixsevenB
-13,27
-13,27longoneB
-31,32
-31,32kingB
-1,9
-1,9skytwoB
-7,28
-7,28sumoneB
-29,31
-29,31mixoneB
-26,27
-26,27mixfiveB
-11,25
-11,25longfourB
-5,24
-5,24peoplesevenB
-11,27
-11,27	longthreeB
-7,31
-7,31zeroB
+25,31
+25,31mixfourB
+1,23
+1,23skyninekingB
+3,24
+3,24fieldoneB
+5,31
+5,31
+peoplefourB
+9,28
+9,28	longsevenB
 24,17
-24,17	shortnineB
-25,30
-25,30mixthreeB
-5,19
-5,19
-peoplefiveB
-30,19
-30,19shorttwoB
-5,26
-5,26	peoplesixB
-11,30
-11,30longoneB
-9,21
-9,21longsixB
-21,29
-21,29shortoneB
+24,17	shortnineB
+23,27
+23,27mixsixB
+15,13
+15,13longfiveB
+11,29
+11,29longoneB
+26,30
+26,30mixthreeB
+3,3
+3,3doublefieldB
+1,30
+1,30skysevenB
+5,13
+5,13	peopletwoB
+3,32
+3,32	fieldfiveB
+13,29
+13,29longnineB
+11,19
+11,19	longthreeB
+26,29
+26,29mixthreeB
 3,15
 3,15
 fieldthreeB
-27,29
-27,29mixtwoB
-15,31
-15,31
-shortsevenB
-9,19
-9,19	longsevenB
-7,17
-7,17sumfourB
-23,31
-23,31mixfiveB
-9,28
-9,28	longsevenB
-17,28
-17,28
-shortsevenB
-5,11
-5,11
-peoplefourB
-32,29
-32,29mixeightB
-17,29
-17,29	shortfiveB
-7,21
-7,21zeroB
-11,32
-11,32longnineB
-5,31
-5,31
-peoplefourB
-32,30
-32,30mixeightB
-25,19
-25,19	shortfiveB
-17,32
-17,32
-shortthreeB
-7,15
-7,15sumfiveB
-3,19
-3,19	fieldnineB
-7,7
-7,7	doublesumB
-3,30
-3,30
-fieldsevenB
-25,21
-25,21	shortfourB
+9,24
+9,24longnineB
+17,31
+17,31shortsixB
+15,23
+15,23zeroB
+3,23
+3,23fieldoneB
+11,26
+11,26longfourB
 15,29
-15,29shortsixB 
-17,17
-17,17doubleshorttenB
-9,29
-9,29longfiveB
-26,32
-26,32mixoneB
-27,30
-27,30mixtwoB
-9,32
-9,32	longthreeB
+15,29shortsixB
+1,26
+1,26skystaffB
+7,17
+7,17sumfourB 
+21,21
+21,21doubleshortsixB#
+15,15
+15,15doubleshortelevenB
+23,19
+23,19shortsixB
+9,25
+9,25	longeightB
+3,28
+3,28	fieldnineB
+25,28
+25,28mixfiveB
+28,32
+28,32zeroB
+1,24
+1,24skyninekingB
+24,32
+24,32mixtwoB
+19,31
+19,31
+shortthreeB
+1,19
+1,19skynineB
+3,19
+3,19	fieldnineB
 3,21
 3,21
 fieldeightB
-5,5
-5,5doublepeopleB
-9,31
-9,31longsixB
-15,13
-15,13longfiveB
-24,21
-24,21	shortfiveB
-7,32
-7,32sumsevenB
-17,13
-17,13longfourB
-1,21
-1,21skyeightB
-23,28
-23,28mixsixB
-5,17
-5,17peopleeightB
-7,25
-7,25sumtwoB
-1,31
-1,31skyeightB
-17,31
-17,31shortsixB
-9,13
-9,13longfourB
-17,19
-17,19
-shortsevenB
-24,19
-24,19shortsixB
-11,24
-11,24longfiveB
-27,31
-27,31mixthreeB
-15,27
-15,27
-shorteightB
 17,21
-17,21shortsixB
-26,19
-26,19	shortfiveB
-15,24
-15,24zeroB
-1,24
-1,24skyninekingB
-15,19
-15,19
-shorteightB
-27,32
-27,32zeroB"
-25,26
-25,26doublepointeightB
-19,32
-19,32zeroB
-3,5
-3,5
-fieldstaffB
-11,23
-11,23longfiveB
-13,21
-13,21zeroB
-7,9
-7,9sumfourB
-3,24
-3,24fieldoneB
-13,31
-13,31zeroB
-5,28
-5,28
-peoplefiveB
-5,9
-5,9peopleeightB
-23,19
-23,19shortsixB
-7,13
-7,13sumeightB
-5,29
-5,29peoplethreeB
-7,26
-7,26sumtwoB
-1,29
-1,29skysevenB
-13,11
-13,11zeroB
-19,27
-19,27	shortfourB
-1,28
-1,28skynineB
-21,30
-21,30shortoneB
+17,21shortsixB
 24,26
-24,26mixsevenB
-13,28
-13,28longoneB
-1,25
-1,25skystaffB
-13,25
-13,25longtwoB
-26,31
-26,31mixfourB
-23,21
-23,21	shortfiveB
-5,30
-5,30peoplethreeB
-11,19
-11,19	longthreeB
-25,31
-25,31mixfourB
-15,28
-15,28
-shorteightB
-23,13
-23,13	longthreeB
-3,11
-3,11
-fieldeightB
-3,7
-3,7fieldsixB"
-27,28
-27,28doublepointsevenB
-3,13
-3,13fieldsixB
-9,25
-9,25	longeightB
-7,27
-7,27sumoneB
-9,15
-9,15longoneB
-26,28
-26,28mixfiveB 
-21,21
-21,21doubleshortsixB
-13,19
-13,19longoneB
-1,30
-1,30skysevenB
-24,32
-24,32mixtwoB
-24,29
-24,29mixfourB
-28,30
-28,30mixtwoB
-1,32
-1,32skyfiveB#
-15,15
-15,15doubleshortelevenB
-11,29
-11,29longoneB
-23,30
-23,30mixfourB
+24,26mixsevenB
+7,31
+7,31zeroB
+3,26
+3,26
+fieldstaffB
+11,17
+11,17longsixB
+25,15
+25,15	shortnineB
+28,31
+28,31mixthreeB
+24,21
+24,21	shortfiveB
+5,17
+5,17peopleeightB
+23,32
+23,32mixtwoB
 5,15
 5,15
 peoplenineB
 5,32
-5,32	peopleoneB
-23,32
-23,32mixtwoB
-3,27
-3,27	fieldnineB
-24,28
-24,28mixsixB
-13,30
-13,30longnineB
-3,31
-3,31
-fieldeightB
-3,32
-3,32	fieldfiveB
-5,25
-5,25	peoplesixB
-23,29
-23,29mixfourB
-9,9
-9,9doublelongtenB
-7,11
-7,11zeroB
+5,32	peopleoneB
+15,30
+15,30shortsixB
+26,32
+26,32mixoneB
+23,17
+23,17	shortnineB
+27,31
+27,31mixthreeB
+7,23
+7,23sumthreeB
+9,31
+9,31longsixB
+5,23
+5,23peoplesevenB
+5,24
+5,24peoplesevenB
+24,29
+24,29mixfourB
+3,7
+3,7fieldsixB
+11,24
+11,24longfiveB
+7,29
+7,29sumnineB
+1,29
+1,29skysevenB"
+25,26
+25,26doublepointeightB
 19,28
 19,28	shortfourB
+23,26
+23,26mixsevenB
+26,28
+26,28mixfiveB
+28,29
+28,29mixtwoB
+29,19
+29,19shorttwoB
+3,17
+3,17fieldtwoB!
+23,24
+23,24doublepointnineB
+5,28
+5,28
+peoplefiveB
+3,5
+3,5
+fieldstaffB
+1,27
+1,27skynineB
+1,25
+1,25skystaffB
+15,28
+15,28
+shorteightB
+5,5
+5,5doublepeopleB
+1,13
+1,13skysixB
+15,27
+15,27
+shorteightB
+13,28
+13,28longoneB
+17,26
+17,26
+shorteightB
+13,11
+13,11zeroB
+23,30
+23,30mixfourB
+1,9
+1,9skytwoB
+13,21
+13,21zeroB
+1,15
+1,15skythreeB
+17,28
+17,28
+shortsevenB
+29,31
+29,31mixoneB
 25,29
-25,29mixthreeB
-25,27
-25,27mixfiveB
-11,26
-11,26longfourB
-15,30
-15,30shortsixB
+25,29mixthreeB
+1,11
+1,11skyeightB
+13,32
+13,32	longsevenB
+7,32
+7,32sumsevenB
+25,19
+25,19	shortfiveB
+11,27
+11,27	longthreeB
+7,9
+7,9sumfourB
+7,13
+7,13sumeightB
+5,29
+5,29peoplethreeB
+7,15
+7,15sumfiveB
+7,26
+7,26sumtwoB
+9,23
+9,23longnineB
+24,13
+24,13	longthreeB
+30,19
+30,19shorttwoB
+3,31
+3,31
+fieldeightB"
+19,19
+19,19doubleshortsevenB
+17,13
+17,13longfourB
+1,21
+1,21skyeightB
+17,27
+17,27
+shortsevenB
+26,31
+26,31mixfourB
+9,13
+9,13longfourB
+5,30
+5,30peoplethreeB
+5,21
+5,21
+peoplefourB
+24,19
+24,19shortsixB
+23,13
+23,13	longthreeB
+9,19
+9,19	longsevenB
+31,32
+31,32kingB
+7,11
+7,11zeroB
+3,9
+3,9fieldtwoB
+17,30
+17,30	shortfiveB
+15,32
+15,32	shortfourB
+11,25
+11,25longfourB
+13,30
+13,30longnineB
+5,25
+5,25	peoplesixB
+32,30
+32,30mixeightB
+21,29
+21,29shortoneB
 28,21
 28,21
 shortthreeB
-5,13
-5,13	peopletwoB
-23,27
-23,27mixsixB
-27,21
-27,21
-shortthreeB
-9,30
-9,30longfiveB
-1,5
-1,5skystaffB
-5,21
-5,21
-peoplefourB
-17,26
-17,26
-shorteightB
-25,15
-25,15	shortnineB
-1,3
-1,3skyfourB
+26,27
+26,27mixfiveB
+13,31
+13,31zeroB
+24,30
+24,30mixfourB
+27,32
+27,32zeroB
+3,27
+3,27	fieldnineB
+15,24
+15,24zeroB
 26,21
-26,21	shortfourB
-3,28
-3,28	fieldnineB
-1,23
-1,23skyninekingB
-25,28
-25,28mixfiveB
-11,21
-11,21longtwoB
-30,31
-30,31mixoneB
-15,21
-15,21
-shortsevenB
-11,9
-11,9longsixB
-11,17
-11,17longsixB
-17,27
-17,27
-shortsevenB
-3,26
-3,26
-fieldstaffB
-29,19
-29,19shorttwoB
-24,13
-24,13	longthreeB
+26,21	shortfourB
+17,32
+17,32
+shortthreeB
 1,17
 1,17skytwoB
-1,11
-1,11skyeightB
-15,23
-15,23zeroB
-9,23
-9,23longnineB
-9,24
-9,24longnineB
-28,29
-28,29mixtwoB
-1,1
-1,1	doubleskyB
-7,23
-7,23sumthreeB!
-29,30
-29,30doublepointfiveB
-1,7
-1,7skysixB
-19,21
-19,21
-shortthreeB 
-13,13
-13,13doublelongfourB
-15,32
-15,32	shortfourB
-11,11
-11,11doublelongsixB
-13,29
-13,29longnineB
+9,30
+9,30longfiveB
 32,21
-32,21	shortnineB
-28,32
-28,32zeroB
-1,27
-1,27skynineB
+32,21	shortnineB
+23,21
+23,21	shortfiveB
+9,26
+9,26	longeightB"
+27,28
+27,28doublepointsevenB
+23,28
+23,28mixsixB
+21,31
+21,31shorttwoB
+11,23
+11,23longfiveB
+9,9
+9,9doublelongtenB
+17,19
+17,19
+shortsevenB
+13,27
+13,27longoneB
+24,25
+24,25mixsevenB
+11,32
+11,32longnineB
+5,19
+5,19
+peoplefiveB
+3,11
+3,11
+fieldeightB
+26,15
+26,15	shortnineB
+7,19
+7,19sumoneB
+27,29
+27,29mixtwoB
 5,27
 5,27
-peoplefiveB
-23,17
-23,17	shortnineB
+peoplefiveB
+9,21
+9,21longsixB
+11,9
+11,9longsixB
+25,30
+25,30mixthreeB!
+29,30
+29,30doublepointfiveB
 11,31
-11,31longtwoJ
-fieldtwo
-fieldtwoJ
-skyfour
-skyfourJ
-skystaff
-skystaff=J
-skyseven
-skyseven.J
-	doublesum
-	doublesum‚J
+11,31longtwoB
+17,29
+17,29	shortfiveB
+28,30
+28,30mixtwoB
+24,28
+24,28mixsixB
+19,27
+19,27	shortfourB
+25,21
+25,21	shortfourB
+11,28
+11,28	longthreeB
+24,27
+24,27mixsixB
+1,28
+1,28skynineB
+15,17
+15,17shortoneB
+24,31
+24,31mixfiveB 
+13,13
+13,13doublelongfourB
+1,7
+1,7skysixB
+27,21
+27,21
+shortthreeB
+5,9
+5,9peopleeightB
+3,25
+3,25
+fieldstaffB
+9,27
+9,27	longsevenB
+7,30
+7,30sumnineB
+3,29
+3,29
+fieldsevenB
+25,27
+25,27mixfiveB
+13,19
+13,19longoneB
+7,27
+7,27sumoneB
+19,21
+19,21
+shortthreeB
+1,31
+1,31skyeightB
+1,5
+1,5skystaffB
+19,32
+19,32zeroB
+1,1
+1,1	doubleskyB
+1,32
+1,32skyfiveB
+27,30
+27,30mixtwoB
+30,31
+30,31mixoneB
+11,21
+11,21longtwoB
+3,30
+3,30
+fieldsevenB
+5,11
+5,11
+peoplefourB
+21,30
+21,30shortoneB
+15,19
+15,19
+shorteightB
+23,25
+23,25mixsevenB
+13,26
+13,26longtwoB
+7,25
+7,25sumtwoB
+5,7
+5,7	peopletwoB
+1,3
+1,3skyfourB
+15,31
+15,31
+shortsevenB
+9,32
+9,32	longthreeB
+15,21
+15,21
+shortsevenB
+23,29
+23,29mixfourB
+7,21
+7,21zeroB
+25,32
+25,32mixoneB
+23,31
+23,31mixfiveB
+7,7
+7,7	doublesumB
+11,30
+11,30longoneB
+32,29
+32,29mixeightB
+11,11
+11,11doublelongsixB
+9,29
+9,29longfiveB
+5,26
+5,26	peoplesixB
+7,28
+7,28sumoneB
+9,15
+9,15longoneB
+13,25
+13,25longtwoB
+9,17
+9,17zeroB 
+17,17
+17,17doubleshorttenJ
+doublefield
+doublefield–J
+sumfive
+sumfiveJ
+mixfour
+mixfourJ(
+doubleshortseven
+doubleshortsevennJ
+skytwo
 
-fieldstaff
-
-fieldstaff<J
-	peopleone
-	peopleoneJ
-mixthree
-mixthreeJ
-	longthree
-	longthreeJ
-fieldone
-fieldoneJ
-sumone
-
-sumoneJ
-skyfive
-skyfive!J"
-doublelongten
-doublelongtenxJ
-peopleeight
-peopleeight3J
-sumseven
-sumseven+J
-skyeight
-skyeight5J
-longsix
-longsix$J
-sumeight
-sumeight2J
-shortone
-shortoneJ
-	shortfive
-	shortfiveJ
-mixone
-
-mixoneJ
-skynineking
-skynineking¾J
-shorttwo
-shorttwoJ
-longtwo
-longtwo	J$
-doubleshortten
-doubleshorttennJ
-longnine
-longnine7J
-peopleseven
-peopleseven,J
-	shortnine
-	shortnine6J!
-doublepeople
-doublepeopleŒJ
-skythree
-skythreeJ
-skynine
-skynine;J
-skysix
-
-skysix'J
+skytwoJ
+	fieldnine
+	fieldnine:J
+longone
+longoneJ
+mixseven
+mixseven(J
+	longeight
+	longeight1J$
+doubleshortsix
+doubleshortsixnJ
 mixsix
 
 mixsix"J
-sumthree
-sumthreeJ(
-doublepointseven
-doublepointsevenPJ&
-doublepointfive
-doublepointfiveFJ(
-doublepointeight
-doublepointeightZJ
-shortsix
-shortsix#J"
-doublelongsix
-doublelongsixxJ
+longfive
+longfiveJ!
+doublepeople
+doublepeopleŒJ
+peopleseven
+peopleseven,J
+fieldtwo
+fieldtwoJ
 
-fieldthree
+fieldstaff
 
-fieldthreeJ
+fieldstaff<J
+skynineking
+skynineking¾J
 	peopletwo
-	peopletwoJ
-longfour
-longfourJ
-skytwo
-
-skytwoJ
-mixfour
-mixfourJ
+	peopletwoJ
+skynine
+skynine;J
 	fieldfive
-	fieldfive J(
-doubleshortseven
-doubleshortsevennJ
-mixfive
-mixfiveJ$
-doublelongfour
-doublelongfourxJ
-
-shortthree
-
-shortthreeJ
-
-peoplenine
-
-peoplenine9J
-mixtwo
-
-mixtwoJ
-	doublesky
-	doublesky J
-doublefield
-doublefield–J
-mixeight
-mixeight/J
-	fieldnine
-	fieldnine:J
-fieldsix
-fieldsix&J
-sumfive
-sumfiveJ
-
-peoplefive
-
-peoplefiveJ
+	fieldfive J
+shorttwo
+shorttwoJ
+longtwo
+longtwo	J
+skyfour
+skyfourJ
+skyfive
+skyfive!J
+fieldone
+fieldoneJ
+	doublesum
+	doublesum‚J
 
 shorteight
 
-shorteight0J
+shorteight0J
+shortone
+shortoneJ
+
+fieldeight
+
+fieldeight4J
+mixthree
+mixthreeJ
+longfour
+longfourJ$
+doubleshortten
+doubleshorttennJ
+	shortfour
+	shortfourJ
+sumfour
+sumfourJ
+shortsix
+shortsix#J
+mixone
+
+mixoneJ
+
+peoplenine
+
+peoplenine9J
+	peopleone
+	peopleoneJ(
+doublepointeight
+doublepointeightZJ"
+doublelongsix
+doublelongsixxJ"
+doublelongten
+doublelongtenxJ
+skyeight
+skyeight5J
+sumthree
+sumthreeJ
+sumseven
+sumseven+J
+longnine
+longnine7J
+
+shortseven
+
+shortseven)J
 peoplethree
-peoplethreeJ
-longfive
-longfiveJ
+peoplethreeJ
+peopleeight
+peopleeight3J
+sumeight
+sumeight2J
+mixfive
+mixfiveJ
 king	
 king´J
 sumtwo
 
 sumtwo
-J
-zero
-zeroJ$
-doubleshortsix
-doubleshortsixnJ
-longone
-longoneJ
+J
+	peoplesix
+	peoplesix%J(
+doublepointseven
+doublepointsevenPJ*
+doubleshorteleven
+doubleshortelevennJ
+sumone
+
+sumoneJ
+	longseven
+	longseven*J
+skystaff
+skystaff=J
+skythree
+skythreeJ
+mixtwo
+
+mixtwoJ
+skysix
+
+skysix'J
+	shortfive
+	shortfiveJ
+skyseven
+skyseven.J
+fieldsix
+fieldsix&J
 
 peoplefour
 
-peoplefourJ*
-doubleshorteleven
-doubleshortelevennJ&
-doublepointnine
-doublepointninedJ
-	longseven
-	longseven*J
-sumfour
-sumfourJ
-	peoplesix
-	peoplesix%J
-mixseven
-mixseven(J
+peoplefourJ
+
+fieldthree
+
+fieldthreeJ
+	doublesky
+	doublesky J
 
 fieldseven
 
-fieldseven-J
+fieldseven-J&
+doublepointnine
+doublepointninedJ$
+doublelongfour
+doublelongfourxJ
 sumnine
-sumnine8J
-	shortfour
-	shortfourJ
+sumnine8J
 
-shortseven
+shortthree
 
-shortseven)J
+shortthreeJ
+zero
+zeroJ
+mixeight
+mixeight/J
+	shortnine
+	shortnine6J
+	longthree
+	longthreeJ
 
-fieldeight
+peoplefive
 
-fieldeight4J
-	longeight
-	longeight1
+peoplefiveJ
+longsix
+longsix$J&
+doublepointfive
+doublepointfiveF

@@ -482,7 +482,6 @@ public class GameZhaGuZi extends Game {
 
     //出牌协议
     public int discard(long uid, int op, String li) {
-
         List<Integer> clientList = CardUtils.transfromStringToCards(li);
 
         Map<String, Object> result = new HashMap<>();
@@ -764,17 +763,17 @@ public class GameZhaGuZi extends Game {
             logger.warn("{}家没出完, base是{}" , count, base);
 
             base += count;
-
             if (ret == 0) {
                 //三家赢
                 for (PlayerZhaGuZi playerZhaGuZi : aList) {
-
                     double score = 0;
-
                     if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) {
-                        if (playerZhaGuZi.getRetain3List().contains(hongtaosan)) {
-                            score += base * 2;
-                        } else {
+
+                        if (playerZhaGuZi.getRetain3List().contains(hongtaosan) && playerZhaGuZi.getRetain3List().contains(fangpiansan)){
+                            score += (base * 4);
+                        }else if(playerZhaGuZi.getRetain3List().contains(hongtaosan)){
+                            score += (base * 2);
+                        }else if(playerZhaGuZi.getRetain3List().contains(fangpiansan)){
                             score += base;
                         }
 
@@ -794,9 +793,11 @@ public class GameZhaGuZi extends Game {
 
                     if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) {
 
-                        if (playerZhaGuZi.getRetain3List().contains(hongtaosan)) {
-                            score -= base * 2;
-                        } else {
+                        if (playerZhaGuZi.getRetain3List().contains(hongtaosan) && playerZhaGuZi.getRetain3List().contains(fangpiansan)){
+                            score -= (base * 4);
+                        }else if(playerZhaGuZi.getRetain3List().contains(hongtaosan)){
+                            score -= (base * 2);
+                        }else if(playerZhaGuZi.getRetain3List().contains(fangpiansan)){
                             score -= base;
                         }
 
