@@ -16,4 +16,6 @@ public interface DelegateRelataionService {
     List<TwoLevelInfoVo> fetchTwoLevelDelegateList(long agentId);
 
     List<ThreeLevelInfoVo> fetchThreeLevelDelegateList(long agentId);
+
+//    List<>
 }

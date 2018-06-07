@@ -56,7 +56,7 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
 
         logger.info("fetchTwoLevelDelegateList:agentBean{}",agentBean);
-        
+
         List<Long> aList = new ArrayList<>();
         for (long uid : agentBean.getChildList()){
             if (RedisManager.getAgentRedisService().isExit(uid)){

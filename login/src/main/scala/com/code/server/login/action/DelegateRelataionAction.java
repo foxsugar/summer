@@ -75,5 +75,9 @@ public class DelegateRelataionAction {
         return agentResponse;
     }
 
+    public AgentResponse findSelfPlayerOrDelegates(long userId){
+
+        return null;
+    }
 
 }
