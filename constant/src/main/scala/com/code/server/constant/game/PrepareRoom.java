@@ -19,4 +19,8 @@ public class PrepareRoom {
     public String clubId;
     public String clubRoomModel;
 
+    public int goldRoomType;
+
+    public int peopleNum;
+
 }

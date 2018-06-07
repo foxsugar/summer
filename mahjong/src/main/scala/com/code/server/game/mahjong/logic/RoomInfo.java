@@ -372,6 +372,7 @@ public class RoomInfo extends RoomExtendGold {
     public Map<String, Object> toJSONObject() {
         Map<String, Object> result = new HashMap<>();
         result.put("roomType", this.roomType);
+        result.put("gameType", this.gameType);
         result.put("roomId", this.roomId);
         result.put("modeTotal", this.modeTotal);
         result.put("mode", this.mode);
@@ -424,6 +425,7 @@ public class RoomInfo extends RoomExtendGold {
     public IfaceRoomVo toVo(long userId) {
         RoomInfoVo roomVo = new RoomInfoVo();
         roomVo.roomType = this.getRoomType();
+        roomVo.gameType = this.getGameType();
         roomVo.createType = this.getCreateType();
         roomVo.roomId = this.getRoomId();
         roomVo.multiple = this.getMultiple();
@@ -458,6 +460,7 @@ public class RoomInfo extends RoomExtendGold {
     @Override
     public PrepareRoom getPrepareRoomVo() {
         PrepareRoomMj prepareRoom = new PrepareRoomMj();
+        prepareRoom.goldRoomType = this.goldRoomType;
         prepareRoom.createTime = System.currentTimeMillis();
         prepareRoom.personNumber = this.personNumber;
         prepareRoom.gameType = this.getGameType();

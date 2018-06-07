@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -116,6 +117,7 @@ public class AgentService {
      */
     private AgentBean player2Agnet(long userId,String unionId){
         GameAgent gameAgent = new GameAgent();
+        gameAgent.setCreateDate(new Date());
         gameAgent.setId(userId);
         gameAgent.setUnionId(unionId);
         gameAgent.setIsPartner(0);

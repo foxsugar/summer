@@ -1,6 +1,7 @@
 package com.code.server.game.poker.xuanqiqi;
 
 import com.code.server.constant.response.GameVo;
+import com.code.server.constant.response.IfacePlayerInfoVo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,5 +32,6 @@ public class GameXuanQiQiVO extends GameVo {
     protected Map<Long,Integer> compareCard = new HashMap<>();
     protected Map<Long,XuanParam> xuanList = new HashMap<>();
     protected RoomXuanQiQi room;
-    public Map<Long, PlayerCardInfoXuanQiQi> playerCardInfos = new HashMap<>();
+    public Map<Long, IfacePlayerInfoVo> playerCardInfos = new HashMap<>();
+
 }

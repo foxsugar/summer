@@ -705,26 +705,23 @@ public class Room implements IfaceRoom {
         return roomVo;
     }
 
-    public RoomSimpleVo toSimpleVo() {
-        RoomSimpleVo roomVo = new RoomSimpleVo();
-
-        roomVo.setGoldRoomType(this.goldRoomType);
-        roomVo.setRoomId(this.roomId);
-        roomVo.setRoomType(this.roomType);
-        roomVo.setGameType(this.gameType);
-        roomVo.setPeople(this.users.size());
-        return roomVo;
-    }
 
     @Override
     public PrepareRoom getPrepareRoomVo() {
         PrepareRoom prepareRoom = new PrepareRoom();
+        prepareRoom.goldRoomType = this.goldRoomType;
         prepareRoom.createTime = System.currentTimeMillis();
         prepareRoom.gameType = this.getGameType();
         prepareRoom.roomType = this.getRoomType();
         prepareRoom.roomId = this.roomId;
         prepareRoom.multiple = this.multiple;
         prepareRoom.gameNumber = this.gameNumber;
+        return prepareRoom;
+    }
+
+    public PrepareRoom getSimpleVo(){
+        PrepareRoom prepareRoom = this.getPrepareRoomVo();
+        prepareRoom.peopleNum = this.users.size();
         return prepareRoom;
     }
 

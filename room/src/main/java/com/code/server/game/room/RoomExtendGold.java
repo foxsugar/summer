@@ -3,9 +3,9 @@ package com.code.server.game.room;
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.ResponseVo;
-import com.code.server.constant.response.RoomSimpleVo;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
@@ -218,12 +218,12 @@ public class RoomExtendGold extends Room {
      */
     public static Map<String, Object> getGoldRoomsVo(String gameType) {
         Map<String, Object> result = new HashMap<>();
-        List<RoomSimpleVo> list = new ArrayList<>();
+        List<PrepareRoom> list = new ArrayList<>();
         Map<Integer, List<Room>> map = RoomManager.getInstance().getPublicGoldRoom().get(gameType);
         if (map != null) {
             for (List<Room> l : map.values()) {
                 for (Room r : l) {
-                    list.add(r.toSimpleVo());
+                    list.add(r.getSimpleVo());
                 }
             }
         }

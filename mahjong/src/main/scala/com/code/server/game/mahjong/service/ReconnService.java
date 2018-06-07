@@ -41,6 +41,7 @@ public class ReconnService {
         result.put("createUser", roomInfo.getCreateUser());
         result.put("each", roomInfo.getEach());
         result.put("roomType", roomInfo.getRoomType());
+        result.put("gameType", roomInfo.getGameType());
         result.put("dissloutionUser", roomInfo.getDissloutionUser());//申请解散房间的人
         result.put("mustZimo",roomInfo.getMustZimo());
         result.put("yipaoduoxiang", roomInfo.isYipaoduoxiang());
@@ -48,6 +49,8 @@ public class ReconnService {
         result.put("haveTing", roomInfo.isHaveTing());
         result.put("clubId", roomInfo.getClubId());
         result.put("clubRoomModel", roomInfo.getClubRoomModel());
+        result.put("goldRoomType", roomInfo.getGoldRoomType());
+        result.put("goldRoomPermission", roomInfo.getGoldRoomPermission());
 
 
         return result;

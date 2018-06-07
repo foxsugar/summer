@@ -98,7 +98,7 @@ public class PlayerCardsInfoXXPB extends PlayerCardsInfoMj {
 
 		for (HuCardType huCardType : huList) {
 			//是否是三碰
-			boolean isSanPeng = (huCardType.peng.size()+huCardType.ke.size())>=3;
+			boolean isSanPeng = (huCardType.anGang.size()+huCardType.mingGang.size()+huCardType.peng.size()+huCardType.ke.size())>=3;
 			if (isSanPeng) this.winType.add(HuType.hu_三碰);
 
 			System.out.println("胡牌拥有的类型: " + huCardType.specialHuList);
