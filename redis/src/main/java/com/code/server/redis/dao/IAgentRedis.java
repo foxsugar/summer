@@ -12,7 +12,7 @@ public interface IAgentRedis {
 //    String getParentId(long agentId);
 
 
-    double addRebate(long agentId, double rebate);
+    double addRebate(long agentId, double rebate,String date,String deleteDay);
 
 
     AgentBean getAgentBean(long agentId);
