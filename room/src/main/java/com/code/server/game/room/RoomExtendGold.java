@@ -49,7 +49,7 @@ public class RoomExtendGold extends Room {
             if (!this.users.contains(this.bankerId)) {
                 this.bankerId = this.users.get(0);
             }
-            int cost = this.getGoldRoomType() / 10;
+            double cost = this.getGoldRoomType() / 10;
 
             for (long userId : users) {
                 //扣除费用

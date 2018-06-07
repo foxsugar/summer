@@ -45,18 +45,20 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         AgentBean agentBean = getAgentBean(agentId);
         if (agentBean != null) {
             agentBean.setRebate(m);
-            //历史总返利
-            double allRebate = agentBean.getAgentInfo().getAllRebate();
-            allRebate += rebate;
-            agentBean.getAgentInfo().setAllRebate(allRebate);
-            //每日返利
-            Map<String,Double> everyDayRebate = agentBean.getAgentInfo().getEveryDayRebate();
+            if (rebate > 0) {
+                //历史总返利
+                double allRebate = agentBean.getAgentInfo().getAllRebate();
+                allRebate += rebate;
+                agentBean.getAgentInfo().setAllRebate(allRebate);
+                //每日返利
+                Map<String,Double> everyDayRebate = agentBean.getAgentInfo().getEveryDayRebate();
 
-            double todayRebate = everyDayRebate.getOrDefault(date, 0D);
-            todayRebate += rebate;
-            everyDayRebate.putIfAbsent(date, todayRebate);
-            //删除记录
-            everyDayRebate.remove(deleteDay);
+                double todayRebate = everyDayRebate.getOrDefault(date, 0D);
+                todayRebate += rebate;
+                everyDayRebate.putIfAbsent(date, todayRebate);
+                //删除记录
+                everyDayRebate.remove(deleteDay);
+            }
 
             updateAgentBean(agentBean);
         }
