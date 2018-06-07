@@ -141,6 +141,7 @@ public class AgentAction {
         if (agentBean == null) {
             GameAgent gameAgent = new GameAgent();
             gameAgent.setId(userId);
+            gameAgent.setCreateDate(new Date());
 
             //推荐
             String openId = userService.getUserDao().getOpenIdById(userId);

@@ -1,5 +1,8 @@
 package com.code.server.constant.game;
 
+import com.code.server.constant.db.AgentInfo;
+
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +28,14 @@ public class AgentBean {
     private String qrTicket;
 
     private String image;
+
+    private String name;
+    private String idCard;
+    private Date createDate;
+
+    private String phone;
+
+    private AgentInfo agentInfo = new AgentInfo();
 
     private Set<Long> childList = new HashSet<>();
 
@@ -115,6 +126,51 @@ public class AgentBean {
 
     public AgentBean setImage(String image) {
         this.image = image;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public AgentBean setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public AgentBean setIdCard(String idCard) {
+        this.idCard = idCard;
+        return this;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public AgentBean setCreateDate(Date createDate) {
+        this.createDate = createDate;
+        return this;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public AgentBean setPhone(String phone) {
+        this.phone = phone;
+        return this;
+    }
+
+    public AgentInfo getAgentInfo() {
+        return agentInfo;
+    }
+
+    public AgentBean setAgentInfo(AgentInfo agentInfo) {
+        this.agentInfo = agentInfo;
         return this;
     }
 
