@@ -19,15 +19,22 @@ import static org.junit.Assert.*;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class TuiTongTongCardUtilsTest {
+
+
+
+
     @Test
     public void zhuangIsBiggerThanXian() throws Exception {
 
 
-//        Date startStr = DateUtil.convert2DayDate("2018-06-06");
-        Date startStr = DateUtil.convertDay2Date("2018-06-06");
-
-        String str = DateUtil.convert2DayString(startStr);
+////        Date startStr = DateUtil.convert2DayDate("2018-06-06");
+//        Date startStr = DateUtil.convertDay2Date("2018-06-06");
+//
+//        String str = DateUtil.convert2DayString(startStr);
 //        System.out.println(startStr);
+
+
+
     }
 
     @Test

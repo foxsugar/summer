@@ -45,25 +45,31 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
     @Override
     public RecommandUserVo findRecommandUser(long userId, long agentId) {
 
-        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-
-        logger.info("userBean:{}", userBean);
+        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(userId);
         RecommandUserVo recommandUserVo = new RecommandUserVo();
 
-        if (userBean != null) {
+        if (agentBean != null) {
+
             recommandUserVo.setUsername("用户不存在");
             recommandUserVo.setUserId(new Long(0));
             //空头像
             recommandUserVo.setImage("");
-        } else {
 
+        } else {
             //推荐代理
             User user = userDao.findOne(userId);
             logger.info("user:{}", user);
+            if (user == null){
+                recommandUserVo.setUsername("用户不存在");
+                recommandUserVo.setUserId(new Long(0));
+                //空头像
+                recommandUserVo.setImage("");
+            }else {
+                recommandUserVo.setImage(user.getImage());
+                recommandUserVo.setUserId(userId);
+                recommandUserVo.setUsername(user.getUsername());
+            }
 
-            recommandUserVo.setImage(user.getImage());
-            recommandUserVo.setUserId(userId);
-            recommandUserVo.setUsername(user.getUsername());
         }
 
         return recommandUserVo;
