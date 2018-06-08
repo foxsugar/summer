@@ -135,6 +135,14 @@ public class RoomMsgDispatch {
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 return room.getRoomClubByUser(userId);
             }
+            case "pushScoreChange":{
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                Room r = (Room)room;
+                if (r.isGoldRoom()) {
+                    r.pushScoreChange();
+                }
+                return 0;
+            }
 
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
