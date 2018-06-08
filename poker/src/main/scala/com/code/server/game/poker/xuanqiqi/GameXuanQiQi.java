@@ -216,10 +216,15 @@ public class GameXuanQiQi extends Game {
         playerCardInfos.get(userId).setCanKou("1");
         playerCardInfos.get(userId).setCanGuo("1");
         Map<String,Object> msg = new HashMap<>();
-        msg.put("bankerId",room.getBankerId());
+        msg.put("userId",room.getBankerId());
         msg.put("canKou",true);
         msg.put("canSendCard",true);
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChoose", msg), users);
+
+        Map<String,Object> multipleMsg = new HashMap<>();
+        multipleMsg.put("bankerId",room.getBankerId());
+        multipleMsg.put("multiple",multiple);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "multipleMsg", multipleMsg), users);
         MsgSender.sendMsg2Player("gameService", "setMultiple", 0, userId);
         return 0;
     }
@@ -346,22 +351,22 @@ public class GameXuanQiQi extends Game {
      * @param card3
      * @return
      */
-    public int play(long userId,int cardNumber,int card1,int card2,int card3){
+    public int play(long userId,int cardNumber,Integer card1,Integer card2,Integer card3){
 
         //存到player
         List<Integer> tempList = new ArrayList<>();
         if(cardNumber==1){
-            tempList.add(card1);
+            tempList.add(0,card1);
             playerCardInfos.get(userId).handCards.remove(card1);
         }else if(cardNumber==2){
-            tempList.add(card1);
-            tempList.add(card2);
+            tempList.add(0,card1);
+            tempList.add(1,card2);
             playerCardInfos.get(userId).handCards.remove(card1);
             playerCardInfos.get(userId).handCards.remove(card2);
         }else if(cardNumber==3){
-            tempList.add(card1);
-            tempList.add(card2);
-            tempList.add(card3);
+            tempList.add(0,card1);
+            tempList.add(1,card2);
+            tempList.add(2,card3);
             playerCardInfos.get(userId).handCards.remove(card1);
             playerCardInfos.get(userId).handCards.remove(card2);
             playerCardInfos.get(userId).handCards.remove(card3);
@@ -369,6 +374,8 @@ public class GameXuanQiQi extends Game {
         playerCardInfos.get(userId).setPlayCards(tempList);
         //手牌删除牌
 
+        Map<Long,List<Integer>> chuPaiList = new HashMap<>();
+        chuPaiList.put(userId,tempList);
 
         if(ifChuPai.values().contains(1) && !ifChuPai.values().contains(2) && !ifChuPai.values().contains(3)){
             ifChuPai.put(userId,2);
@@ -383,10 +390,13 @@ public class GameXuanQiQi extends Game {
             chuPaiId = nextTurnId(userId);
             operatId= nextTurnId(userId);
             playerCardInfos.get(userId).setCanSendCard("0");
+            playerCardInfos.get(userId).setCanKou("0");
+            playerCardInfos.get(userId).setCanGuo("0");
             playerCardInfos.get(chuPaiId).setCanSendCard("1");
             Map<String,Object> msg = new HashMap<>();
             msg.put("userId",operatId);
             msg.put("canSendCard",true);
+            msg.put("chuPaiList",chuPaiList);
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", msg), users);
         }else if(chuPaiCount ==2){//第二个人出牌，比牌，通知下家出
             PlayerCardInfoXuanQiQi p1 = null;
@@ -406,6 +416,7 @@ public class GameXuanQiQi extends Game {
             Map<String,Object> msg = new HashMap<>();
             msg.put("userId",operatId);
             msg.put("canSendCard",true);
+            msg.put("chuPaiList",chuPaiList);
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", msg), users);
         }else if(chuPaiCount ==3){//第三个人出牌，存记录，分罗
             PlayerCardInfoXuanQiQi p2 = null;
@@ -434,7 +445,8 @@ public class GameXuanQiQi extends Game {
                 msg.put("userId",operatId);
                 msg.put("canSendCard",true);
                 msg.put("canKou",true);
-                MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChoose", msg), users);
+                msg.put("chuPaiList",chuPaiList);
+                MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", msg), users);
             }else{
                 //游戏结算
                 compute();
@@ -627,6 +639,7 @@ public class GameXuanQiQi extends Game {
             xuanOrGuo.put(uid,0);
             ifChuPai.put(uid,0);
             compareCard.put(uid,-1);
+            playerCardInfos.get(uid).setPlayCards(null);
         }
     }
 

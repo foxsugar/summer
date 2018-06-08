@@ -206,10 +206,6 @@ public class RoomExtendGold extends Room {
     }
 
 
-    @Override
-    public boolean isRobotRoom() {
-        return true;
-    }
 
     /**
      * 获得类型下所有金币房

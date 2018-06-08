@@ -129,6 +129,7 @@ public class GameInfoNew extends GameInfo {
      * @param userId
      */
     protected void mopai(long userId, String... wz) {
+        logger.info("摸牌: " + userId);
         PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
         if (isHasGuoHu()) {
             playerCardsInfo.setGuoHu(false);
