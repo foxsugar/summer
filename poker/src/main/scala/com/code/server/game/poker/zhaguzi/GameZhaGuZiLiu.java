@@ -15,8 +15,8 @@ public class GameZhaGuZiLiu extends GameZhaGuZi{
         for (int i = 0; i < 54; i++) {
             this.cards.add(i);
         }
-        //洗牌
-//        Collections.shuffle(this.cards);
+//        洗牌
+        Collections.shuffle(this.cards);
     }
 
     //算分
@@ -131,41 +131,34 @@ public class GameZhaGuZiLiu extends GameZhaGuZi{
             list.add(fangpiansan);
             list.add(heitaosan);
 
-            if (ret == 0) {
-
-                for (PlayerZhaGuZi playerZhaGuZi : aList) {
-                    double score = 0;
-                    if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA) {
-                        //股家一人输1
-                        score -= base;
-                    }
-                    playerZhaGuZi.setScore(score);
+            int sanCount = 0;
+            for (PlayerZhaGuZi playerZhaGuZi1 : playerCardInfos.values()){
+                if (playerZhaGuZi1.getSanJia() == PlayerZhaGuZi.SAN_JIA){
+                    sanCount++;
                 }
+            }
+
+            if (ret == 0) {
 
                 for (PlayerZhaGuZi playerZhaGuZi : aList) {
                     double score = 0;
                     if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) {
 
-                        int has3Count = 0;
-                        for (Integer a : list){
-                            if (playerZhaGuZi.getRetain3List().contains(a)){
-                                has3Count++;
-                            }
+                        if (sanCount == 1){
+                            score = (base * 5);
+                        }else if(sanCount == 2){
+                            score = (base * 2);
+                        }else if (sanCount == 3){
+                            score = base;
                         }
+                        playerZhaGuZi.setScore(score);
 
-                        if (has3Count == 1){
-                            //股家一人输1
-                            score += base;
-                        }else if(has3Count == 2){
-                            score += (2 * base);
-                        }else if(has3Count == 3){
-                            score += base * 5;
-                        }
+                    }else if (playerZhaGuZi.getSanJia() == playerZhaGuZi.GU_JIA){
 
+                        score -= base;
+                        playerZhaGuZi.setScore(score);
                     }
-                    playerZhaGuZi.setScore(score);
                 }
-
 
             } else if (ret == 2) {
                 //股家赢
@@ -175,27 +168,18 @@ public class GameZhaGuZiLiu extends GameZhaGuZi{
 
                     if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) {
 
-                        int has3Count = 0;
-                        for (Integer a : list){
-                            if (playerZhaGuZi.getRetain3List().contains(a)){
-                                has3Count++;
-                            }
-                        }
-                        if (has3Count == 1){
-                            //股家一人输1
-                            score -= base;
-                        }else if(has3Count == 2){
-                            score -= (2 * base);
-                        }else if(has3Count == 3){
-                            score -= base * 5;
+                        if (sanCount == 1){
+                            score = -(base * 5);
+                        }else if(sanCount == 2){
+                            score = -(base * 2);
+                        }else if (sanCount == 3){
+                            score = -base;
                         }
 
                     } else if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA) {
-                        score += base;
+                        score = base;
                     }
-
                     playerZhaGuZi.setScore(score);
-
                 }
             }
 
