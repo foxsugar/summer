@@ -10,7 +10,7 @@ import com.code.server.game.poker.paijiu.{GameGoldPaijiu, GamePaijiu}
 import com.code.server.game.poker.pullmice.GamePullMice
 import com.code.server.game.poker.tuitongzi.GameTuiTongZi
 import com.code.server.game.poker.xuanqiqi.GameXuanQiQi
-import com.code.server.game.poker.zhaguzi.{GameYSZ, GameZhaGuZi}
+import com.code.server.game.poker.zhaguzi.{GameBaseYSZ, GameYSZ, GameZhaGuZi}
 import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
 import com.code.server.util.JsonUtil
@@ -278,27 +278,27 @@ object GameService {
       ErrorCode.REQUEST_PARAM_ERROR
   }
 
-  private def dispatchGameYSZService(userId:Long,method: String, game: GameYSZ, params: JsonNode):Int = method match {
-    case "raise" =>
-      val addChip = params.path("addChip").asLong(0)
-      game.raise(userId,addChip);
-    case "call"=>
-      game.call(userId);
-    case "fold" =>
-      game.fold(userId);
-    case "see" =>
-      game.see(userId);
-    case "kill" =>
-      val accepterId = params.path("accepterId").asLong(0)
-      game.kill(userId,accepterId);
-    case "perspective" =>
-      game.perspective(userId);
-    case "changeCard" =>
-      val userId = params.path("userId").asLong(0)
-      val cardType = params.path("type").asText()
-      game.changeCard(userId,cardType);
-    case _ =>
-      ErrorCode.REQUEST_PARAM_ERROR
+
+  private def dispatchGameYSZService(userId:Long,method: String, game: GameYSZ, params: JsonNode):Int =  {
+
+    val str = GameBaseYSZ.getStr(method)
+    str match {
+      case "seeCard" =>
+        game.see(userId);
+      case "jiao"=>
+        game.call(userId);
+      case "kill" =>
+        val accepterId = params.path("accepterId").asLong(0)
+        game.kill(userId,accepterId);
+      case "giveup" =>
+        game.fold(userId);
+      case "raise" =>
+        val addChip = params.path("addChip").asLong(0)
+        game.raise(userId,addChip);
+      case _ =>
+        ErrorCode.REQUEST_PARAM_ERROR
+    }
+
   }
 
   def getGame(roomId : String):IfaceGame = {
