@@ -10,7 +10,7 @@ import com.code.server.game.poker.paijiu.{RoomGoldPaijiu, RoomPaijiu}
 import com.code.server.game.poker.pullmice.RoomPullMice
 import com.code.server.game.poker.tuitongzi.RoomTuiTongZi
 import com.code.server.game.poker.xuanqiqi.RoomXuanQiQi
-import com.code.server.game.poker.zhaguzi.RoomZhaGuZi
+import com.code.server.game.poker.zhaguzi.{GameBaseYSZ, RoomYSZ, RoomZhaGuZi}
 import com.code.server.game.room.{Room, RoomExtendGold}
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
@@ -149,6 +149,23 @@ object PokerRoomService {
         val clubRoomModel = params.path("clubRoomModel").asText
         val isShowCard = params.path("showCard").asText
         return RoomZhaGuZi.createRoom(userId, roomType, gameType, gameNumber, personNumber, isJoin, multiple, clubId, clubRoomModel, isShowCard)
+
+
+      case "createYSZRoom" =>
+        val roomType = params.get("roomType").asText()
+        val gameNumber = params.get("gameNumber").asInt()
+        val personNumber = params.get("personNumber").asInt()
+        val cricleNumber = params.get("cricleNumber").asInt()
+        val multiple = params.get("multiple").asInt()
+        val caiFen = params.get("caiFen").asInt()
+        val menPai = params.get("menPai").asInt()
+
+        val gameType = params.path("gameType").asText("0")
+        val isAA = params.path("isAA").asBoolean(false)
+        val isJoin = params.path("isJoin").asBoolean(true)
+        val clubId = params.path("clubId").asText
+        val clubRoomModel = params.path("clubRoomModel").asText
+        return RoomYSZ.createYSZRoom(userId, gameNumber,personNumber,cricleNumber,multiple,caiFen,menPai,gameType, roomType,isAA,isJoin,clubId,clubRoomModel)
 
       case "createPullMiceRoom" =>
         val roomType = params.path("roomType").asText()
