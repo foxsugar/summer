@@ -119,7 +119,10 @@ public class WechatPayController {
         //元转成分
 
         Integer moneyPoint = getMoneyPoint(money, chargeType);
+        logger.info("充值金额: " + money);
         if (moneyPoint == null) return new AgentResponse().setCode(13);
+        logger.info("增加钱数: " + moneyPoint);
+
 
         AgentResponse agentResponse = new AgentResponse();
         int totalFee = money * 100;
