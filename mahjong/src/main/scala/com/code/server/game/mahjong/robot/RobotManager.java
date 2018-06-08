@@ -10,7 +10,7 @@ import com.code.server.game.room.service.RoomManager;
 public class RobotManager {
 
 
-    public void excute(){
+    public static void excute(){
         for (IfaceRoom room : RoomManager.getInstance().getRobotRoom()) {
             //game 为空 是否要准备
             RoomInfo roomInfo = (RoomInfo) room;

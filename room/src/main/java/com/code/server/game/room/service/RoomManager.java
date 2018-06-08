@@ -150,7 +150,7 @@ public class RoomManager {
             }
 
             //有托管功能的
-            if (rm.isRobotRoom) {
+            if (rm.isRobotRoom()) {
                 getInstance().robotRoom.remove(room);
             }
 
@@ -180,7 +180,7 @@ public class RoomManager {
     public static void addRoom(String roomId, String serverId, Room room) {
         getInstance().rooms.put(roomId, room);
         //加入机器人房
-        if (room.isRobotRoom) {
+        if (room.isRobotRoom()) {
             getInstance().robotRoom.add(room);
         }
         //加入公开金币房

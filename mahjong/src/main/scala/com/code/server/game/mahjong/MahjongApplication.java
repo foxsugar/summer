@@ -36,6 +36,7 @@ public class MahjongApplication {
         //机器人
 
 
+//        GameTimer.addTimerNode(serverConfig.getRobotExeCycle(),true, RobotManager::excute);
 //        MsgConsumer.startAConsumer("gameLogicService", serverConfig.getServerId(), MsgDispatch::dispatch);
 //        MsgConsumer.startAConsumer("reconnService", serverConfig.getServerId(), MsgDispatch::dispatch);
 //        MsgConsumer.startAConsumer("mahjongRoomService", serverConfig.getServerId(), MsgDispatch::dispatch);

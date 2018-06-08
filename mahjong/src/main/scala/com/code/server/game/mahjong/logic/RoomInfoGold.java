@@ -16,6 +16,7 @@ public class RoomInfoGold extends RoomInfo {
         this.modeTotal = "50";
 
         this.multiple = (int)goldRoomType;
+        this.isRobotRoom = true;
 
 
 
