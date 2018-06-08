@@ -68,13 +68,21 @@ public class WechatPayController {
 
 
     static {
-        moneyPointMap.put(1,100);
+        moneyPointMap.put(6,6);
+        moneyPointMap.put(18,18);
+        moneyPointMap.put(30,30);
+        moneyPointMap.put(68,68);
+        moneyPointMap.put(128,128);
 
 
 
 
         //金币
-        goldPointMap.put(1, 100);
+        goldPointMap.put(10, 1000);
+        goldPointMap.put(50, 5000);
+        goldPointMap.put(100, 10000);
+        goldPointMap.put(500, 50000);
+        goldPointMap.put(1000, 100000);
     }
 
     private long createOrderId() {
@@ -100,6 +108,7 @@ public class WechatPayController {
     public AgentResponse pay(HttpServletRequest request) throws Exception {
         int money = Integer.valueOf(request.getParameter("money"));
         int chargeType = Integer.valueOf(request.getParameter("chargeType"));
+        int platform = Integer.valueOf(request.getParameter("platform"));
 
         Map<String, String> agent = WechatAction.getAgentByToken(request);
         if (agent == null) return new AgentResponse().setCode(1000);
