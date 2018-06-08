@@ -11,8 +11,11 @@ import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.GameAgentWx;
 import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
+import com.code.server.login.action.RecommendDelegateAction;
 import com.code.server.login.vo.RecommandUserVo;
 import com.code.server.redis.service.RedisManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,11 +41,13 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
     @Autowired
     private GameAgentService gameAgentService;
 
+    private static final Logger logger = LoggerFactory.getLogger(RecommendDelegateServiceImpl.class);
     @Override
     public RecommandUserVo findRecommandUser(long userId, long agentId) {
 
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
 
+        logger.info("userBean:{}", userBean);
         RecommandUserVo recommandUserVo = new RecommandUserVo();
 
         if (userBean != null) {
@@ -54,6 +59,8 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
 
             //推荐代理
             User user = userDao.findOne(userId);
+            logger.info("user:{}", user);
+
             recommandUserVo.setImage(user.getImage());
             recommandUserVo.setUserId(userId);
             recommandUserVo.setUsername(user.getUsername());

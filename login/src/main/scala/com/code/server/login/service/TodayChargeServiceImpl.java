@@ -27,7 +27,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
     private IUserDao userDao;
 
     //提现
-    public static final String CHARGE_TYPE_CASH = "11";
+    public static final String CHARGE_TYPE_CASH = "1";
 
     @Override
     public HomeChargeVo showCharge(Date start, Date end, long agentId) {
@@ -85,7 +85,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         //查一下手下玩家
         for (Long uid : aList){
 
-            List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetween(Arrays.asList(uid), start, end);
+            List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetweenAAndStatusIsAAndRecharge_sourceIs(Arrays.asList(uid), start, end, 1, "0");
 
             double totalMoney = 0d;
             for (Charge charge : list){
@@ -145,7 +145,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         double total = 0d;
         //手下所有二级代理
         for (Long delegateId : aList){
-            List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetween(Arrays.asList(delegateId), start, end);
+            List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetweenAAndStatusIsAAndRecharge_sourceIs(Arrays.asList(delegateId), start, end, 1, "1");
             User user = userDao.getUserById(delegateId);
             TwoLevelInfoVo twoLevelInfoVo = new TwoLevelInfoVo();
 
@@ -168,7 +168,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
                 infoVo.setUsername(twoLevelUser.getUsername());
                 infoVo.setImage(twoLevelUser.getImage());
 
-                List<Charge> twoLevelChargeList = chargeDao.getChargesByUseridInAndCreatetimeBetween(Arrays.asList(uid), start, end);
+                List<Charge> twoLevelChargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAAndStatusIsAAndRecharge_sourceIs(Arrays.asList(uid), start, end, 1, "1");
 
                 double twoLevelUserTotal = 0;
                 for (Charge charge : twoLevelChargeList){
@@ -218,7 +218,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         for (Long uid : bList){
 
             User user = userDao.getUserById(uid);
-            List<Charge> chargeList = chargeDao.getChargesByUseridInAndCreatetimeBetween(Arrays.asList(uid), start, end);
+            List<Charge> chargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAAndStatusIsAAndRecharge_sourceIs(Arrays.asList(uid), start, end, 1, "1");
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
             threeLevelInfoVo.setUsername(user.getUsername());
             threeLevelInfoVo.setImage(user.getImage());
