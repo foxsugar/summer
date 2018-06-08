@@ -16,7 +16,7 @@ public class GameZhaGuZiLiu extends GameZhaGuZi{
             this.cards.add(i);
         }
         //洗牌
-        Collections.shuffle(this.cards);
+//        Collections.shuffle(this.cards);
     }
 
     //算分
