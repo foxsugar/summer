@@ -304,7 +304,7 @@ public class MenuHandler extends AbstractHandler {
         //todo 展示二维码 链接
 
         item1.setPicUrl("https://mmbiz.qpic.cn/mmbiz_png/wj1STzkg04h46BuribmuoJnsMQgc2m70558p3mE91j6zq4sph6RavCicfUiahTSRj4CVRSRN9ecdJKic6ysZeBCZiag/0?wx_fmt=png");
-        item1.setTitle("凤凰划水");
+        item1.setTitle("董小姐棋牌");
 //          item1.setDescription("点击进入专属界面");
 //        String url = "http://" + serverConfig.getDomain() + "/game/wechat/clickLink";
         String sid = "" + System.currentTimeMillis() + "_" + new Random().nextInt(999999);
@@ -323,7 +323,7 @@ public class MenuHandler extends AbstractHandler {
     private WxMpXmlOutMessage handle_kefu(WxMpXmlMessage wxMessage, WxMpService wxService){
 
         WxMpXmlOutNewsMessage.Item item = new WxMpXmlOutNewsMessage.Item();
-        item.setTitle("客服微信号:xxxxx");
+        item.setTitle("客服微信号:17189556611");
         item.setPicUrl("https://mmbiz.qpic.cn/mmbiz_png/wj1STzkg04h46BuribmuoJnsMQgc2m705YQuY91HglHYhZVzZs971Lb6HVfLHCweYc4QeddBAZVNdCAj5F86fog/0?wx_fmt=png");
 //        item.setDescription("点击进入专属界面");
 

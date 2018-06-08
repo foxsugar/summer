@@ -68,13 +68,21 @@ public class WechatPayController {
 
 
     static {
-        moneyPointMap.put(1,100);
+        moneyPointMap.put(6,6);
+        moneyPointMap.put(18,18);
+        moneyPointMap.put(30,30);
+        moneyPointMap.put(68,68);
+        moneyPointMap.put(128,128);
 
 
 
 
         //金币
-        goldPointMap.put(1, 100);
+        goldPointMap.put(10, 1000);
+        goldPointMap.put(50, 5000);
+        goldPointMap.put(100, 10000);
+        goldPointMap.put(500, 50000);
+        goldPointMap.put(1000, 100000);
     }
 
     private long createOrderId() {
@@ -110,7 +118,10 @@ public class WechatPayController {
         //元转成分
 
         Integer moneyPoint = getMoneyPoint(money, chargeType);
+        logger.info("充值金额: " + money);
         if (moneyPoint == null) return new AgentResponse().setCode(13);
+        logger.info("增加钱数: " + moneyPoint);
+
 
         AgentResponse agentResponse = new AgentResponse();
         int totalFee = money * 100;
