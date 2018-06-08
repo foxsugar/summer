@@ -108,7 +108,6 @@ public class WechatPayController {
     public AgentResponse pay(HttpServletRequest request) throws Exception {
         int money = Integer.valueOf(request.getParameter("money"));
         int chargeType = Integer.valueOf(request.getParameter("chargeType"));
-        int platform = Integer.valueOf(request.getParameter("platform"));
 
         Map<String, String> agent = WechatAction.getAgentByToken(request);
         if (agent == null) return new AgentResponse().setCode(1000);
