@@ -53,7 +53,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
         Date start = DateUtil.getThisYearStart();
         Date end = new Date();
-        List<Charge> list = chargeDao.getChargesByUserrAndRechargeSourceAndDate(agentId, CHARGE_TYPE_CASH, start, end);
+        List<Charge> list = chargeDao.getChargesByUseridAndRechargeSourceAndDate(agentId, CHARGE_TYPE_CASH, start, end);
 
         List<WaterRecordVo> voList = new ArrayList<>();
         for (Charge charge : list){

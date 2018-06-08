@@ -15,7 +15,7 @@ public class GameZhaGuZiLiu extends GameZhaGuZi{
         for (int i = 0; i < 54; i++) {
             this.cards.add(i);
         }
-        //洗牌
+//        洗牌
         Collections.shuffle(this.cards);
     }
 
@@ -126,22 +126,38 @@ public class GameZhaGuZiLiu extends GameZhaGuZi{
 
             base += count;
 
+            List<Integer> list = new ArrayList<>();
+            list.add(hongtaosan);
+            list.add(fangpiansan);
+            list.add(heitaosan);
+
+            int sanCount = 0;
+            for (PlayerZhaGuZi playerZhaGuZi1 : playerCardInfos.values()){
+                if (playerZhaGuZi1.getSanJia() == PlayerZhaGuZi.SAN_JIA){
+                    sanCount++;
+                }
+            }
+
             if (ret == 0) {
-                //三家赢
+
                 for (PlayerZhaGuZi playerZhaGuZi : aList) {
-
                     double score = 0;
-
                     if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) {
 
-                        score += base;
+                        if (sanCount == 1){
+                            score = (base * 5);
+                        }else if(sanCount == 2){
+                            score = (base * 2);
+                        }else if (sanCount == 3){
+                            score = base;
+                        }
+                        playerZhaGuZi.setScore(score);
 
-                    } else if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA) {
+                    }else if (playerZhaGuZi.getSanJia() == playerZhaGuZi.GU_JIA){
+
                         score -= base;
+                        playerZhaGuZi.setScore(score);
                     }
-
-                    playerZhaGuZi.setScore(score);
-
                 }
 
             } else if (ret == 2) {
@@ -151,14 +167,19 @@ public class GameZhaGuZiLiu extends GameZhaGuZi{
                     double score = 0;
 
                     if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) {
-                        score -= base;
+
+                        if (sanCount == 1){
+                            score = -(base * 5);
+                        }else if(sanCount == 2){
+                            score = -(base * 2);
+                        }else if (sanCount == 3){
+                            score = -base;
+                        }
 
                     } else if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA) {
-                        score += base;
+                        score = base;
                     }
-
                     playerZhaGuZi.setScore(score);
-
                 }
             }
 

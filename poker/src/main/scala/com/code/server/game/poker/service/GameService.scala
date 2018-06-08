@@ -10,7 +10,7 @@ import com.code.server.game.poker.paijiu.{GameGoldPaijiu, GamePaijiu}
 import com.code.server.game.poker.pullmice.GamePullMice
 import com.code.server.game.poker.tuitongzi.GameTuiTongZi
 import com.code.server.game.poker.xuanqiqi.GameXuanQiQi
-import com.code.server.game.poker.zhaguzi.GameZhaGuZi
+import com.code.server.game.poker.zhaguzi.{GameBaseYSZ, GameYSZ, GameZhaGuZi}
 import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
 import com.code.server.util.JsonUtil
@@ -24,6 +24,7 @@ object GameService {
   def dispatch(userId:Long, method:String, roomId:String, params:JsonNode):Int = {
     val game = getGame(roomId)
     game match {
+      case x:GameYSZ =>dispatchGameYSZService(userId,method,game.asInstanceOf[GameYSZ],params)
       case x:GameDouDiZhuGold =>dispatchGameDDZGoldService(userId,method,game.asInstanceOf[GameDouDiZhuGold],params)
       case x:GameDouDiZhu =>dispatchGameDDZService(userId,method,game.asInstanceOf[GameDouDiZhu],params)
       case x:GamePaijiu =>dispatchGamePJService(userId,method,game.asInstanceOf[GamePaijiu],params)
@@ -275,6 +276,29 @@ object GameService {
       game.change(userId,color)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
+  }
+
+
+  private def dispatchGameYSZService(userId:Long,method: String, game: GameYSZ, params: JsonNode):Int =  {
+
+    val str = GameBaseYSZ.getStr(method)
+    str match {
+      case "seeCard" =>
+        game.see(userId);
+      case "jiao"=>
+        game.call(userId);
+      case "kill" =>
+        val accepterId = params.path("accepterId").asLong(0)
+        game.kill(userId,accepterId);
+      case "giveup" =>
+        game.fold(userId);
+      case "raise" =>
+        val addChip = params.path("addChip").asLong(0)
+        game.raise(userId,addChip);
+      case _ =>
+        ErrorCode.REQUEST_PARAM_ERROR
+    }
+
   }
 
   def getGame(roomId : String):IfaceGame = {

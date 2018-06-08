@@ -482,7 +482,6 @@ public class GameZhaGuZi extends Game {
 
     //出牌协议
     public int discard(long uid, int op, String li) {
-
         List<Integer> clientList = CardUtils.transfromStringToCards(li);
 
         Map<String, Object> result = new HashMap<>();
@@ -765,25 +764,33 @@ public class GameZhaGuZi extends Game {
 
             base += count;
 
+            int sanCount = 0;
+            for (PlayerZhaGuZi playerZhaGuZi1 : playerCardInfos.values()){
+                if (playerZhaGuZi1.getSanJia() == PlayerZhaGuZi.SAN_JIA){
+                    sanCount++;
+                }
+            }
+
             if (ret == 0) {
                 //三家赢
                 for (PlayerZhaGuZi playerZhaGuZi : aList) {
-
                     double score = 0;
-
                     if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) {
-                        if (playerZhaGuZi.getRetain3List().contains(hongtaosan)) {
-                            score += base * 2;
-                        } else {
-                            score += base;
+
+                        if (sanCount == 1){
+                            score = 4 * base;
+                        }else if(sanCount == 2){
+                            if (playerZhaGuZi.getRetain3List().contains(hongtaosan)){
+                                score = (2 * score);
+                            }else {
+                                score = base;
+                            }
                         }
 
                     } else if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA) {
-                        score -= base;
+                        score = base;
                     }
-
                     playerZhaGuZi.setScore(score);
-
                 }
 
             } else if (ret == 2) {
@@ -794,18 +801,20 @@ public class GameZhaGuZi extends Game {
 
                     if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) {
 
-                        if (playerZhaGuZi.getRetain3List().contains(hongtaosan)) {
-                            score -= base * 2;
-                        } else {
-                            score -= base;
+                        if (sanCount == 1){
+                            score = - 4 * base;
+                        }else if(sanCount == 2){
+                            if (playerZhaGuZi.getRetain3List().contains(hongtaosan)){
+                                score = ( -2 * score);
+                            }else {
+                                score = -base;
+                            }
                         }
 
                     } else if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA) {
-                        score += base;
+                        score = base;
                     }
-
                     playerZhaGuZi.setScore(score);
-
                 }
             }
 

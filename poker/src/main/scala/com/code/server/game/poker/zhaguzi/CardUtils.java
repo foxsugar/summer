@@ -190,9 +190,8 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
             if (playerZhaGuZi.getRoomPersonNum() == 5){
 
                 if (playerZhaGuZi.getLiangList().size() > 0){
-                    Integer i = playerZhaGuZi.getLiangList().get(0);
 
-                    if ( i == 9){
+                    if (playerZhaGuZi.getLiangList().contains(7) && playerZhaGuZi.getLiangList().contains(9)){
                         if (a == 7 && b == 9){
                             return SHUANG_SAN;
                         }
@@ -281,10 +280,10 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
             //双三和王炸一样打
             if (player1.getRoomPersonNum() == 5){
 
-                if (typeA == SHUANG_SAN || typeB == WANG_ZHA){
+                if (typeA == SHUANG_SAN && typeB == WANG_ZHA){
                     return DRAW;
                 }
-                if (typeB == SHUANG_SAN || typeA == WANG_ZHA){
+                if (typeB == SHUANG_SAN && typeA == WANG_ZHA){
                     return DRAW;
                 }
 
@@ -346,21 +345,40 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
                         }
                     }
 
+                    Integer l = lList.get(0);
+                    Integer r = rList.get(0);
+
                     //红桃3和别的比
                     if (lList.contains(hongtaosan)){
+
+                        if (r == 0 || r == 1){
+                            return LOSE;
+                        }
                         return WIN;
                     }
 
                     if (rList.contains(hongtaosan)){
+
+                        if (l == 0 || l == 1){
+                            return WIN;
+                        }
                         return LOSE;
                     }
 
                     //方片3 和别的比
                     if (isLiang1 && lList.contains(fangpiansan)){
+
+                        if (r == 0 || r == 1){
+                            return LOSE;
+                        }
                         return WIN;
                     }
 
                     if (isLiang2 && rList.contains(fangpiansan)){
+
+                        if (r == 0 || r == 1){
+                            return WIN;
+                        }
                         return LOSE;
                     }
 

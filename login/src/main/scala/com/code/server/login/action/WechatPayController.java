@@ -2,11 +2,13 @@ package com.code.server.login.action;
 
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.UserBean;
+import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.ChargeService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.model.Charge;
 import com.code.server.db.model.User;
+import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.config.WechatConfig;
 import com.code.server.login.kafka.MsgSender;
@@ -14,6 +16,7 @@ import com.code.server.login.util.XMLUtil;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.IdWorker;
+import com.code.server.util.SpringUtil;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.util.SignUtils;
@@ -65,13 +68,21 @@ public class WechatPayController {
 
 
     static {
-        moneyPointMap.put(1,100);
+        moneyPointMap.put(6,6);
+        moneyPointMap.put(18,18);
+        moneyPointMap.put(30,30);
+        moneyPointMap.put(68,68);
+        moneyPointMap.put(128,128);
 
 
 
 
         //金币
-        goldPointMap.put(1, 100);
+        goldPointMap.put(10, 1000);
+        goldPointMap.put(50, 5000);
+        goldPointMap.put(100, 10000);
+        goldPointMap.put(500, 50000);
+        goldPointMap.put(1000, 100000);
     }
 
     private long createOrderId() {
@@ -107,7 +118,10 @@ public class WechatPayController {
         //元转成分
 
         Integer moneyPoint = getMoneyPoint(money, chargeType);
+        logger.info("充值金额: " + money);
         if (moneyPoint == null) return new AgentResponse().setCode(13);
+        logger.info("增加钱数: " + moneyPoint);
+
 
         AgentResponse agentResponse = new AgentResponse();
         int totalFee = money * 100;
@@ -221,6 +235,26 @@ public class WechatPayController {
 
                             Map<String, String> rs = new HashMap<>();
                             MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
+                            //如果在游戏中 刷新
+                            String roomId = RedisManager.getUserRedisService().getRoomId(userId);
+                            if (roomId != null) {
+                                String serverId = RedisManager.getRoomRedisService().getServerId(roomId);
+                                if (serverId != null) {
+
+                                    KafkaMsgKey msgKey = new KafkaMsgKey();
+                                    msgKey.setRoomId(roomId);
+                                    int partitionId = Integer.valueOf(serverId);
+                                    msgKey.setPartition(partitionId);
+                                    MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+
+                                    ResponseVo responseVo = new ResponseVo();
+                                    responseVo.setService("roomService");
+                                    responseVo.setMethod("pushScoreChange");
+                                    responseVo.setParams("inner");
+                                    msgProducer.send2Partition("roomService", partitionId, msgKey, responseVo);
+
+                                }
+                            }
 
                             //返利情况
 
