@@ -50,7 +50,10 @@ public class AgentService {
 //        userService.getUserDao().count();
         if (agentRedisService.getAgentNum() == 0) {
             gameAgentService.getGameAgentDao().findAll().forEach(gameAgent -> {
-                agentRedisService.setAgentBean(gameAgent2AgentBean(gameAgent));
+                if (gameAgent != null) {
+
+                    agentRedisService.setAgentBean(gameAgent2AgentBean(gameAgent));
+                }
             });
         }
     }
