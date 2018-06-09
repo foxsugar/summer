@@ -122,6 +122,7 @@ public class AgentService {
         gameAgent.setId(userId);
         gameAgent.setUnionId(unionId);
         gameAgent.setIsPartner(0);
+        gameAgent.setParentId(0);
 
         AgentBean agentBean = gameAgent2AgentBean(gameAgent);
         //保存到redis
