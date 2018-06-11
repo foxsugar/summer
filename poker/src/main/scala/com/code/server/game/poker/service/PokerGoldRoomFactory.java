@@ -2,6 +2,7 @@ package com.code.server.game.poker.service;
 
 import com.code.server.game.poker.doudizhu.RoomDouDiZhuGold;
 import com.code.server.game.poker.doudizhu.RoomDouDiZhuPlus;
+import com.code.server.game.poker.zhaguzi.RoomGoldYSZ;
 import com.code.server.game.room.Room;
 
 /**
@@ -28,6 +29,7 @@ public class PokerGoldRoomFactory {
 
         switch (gameType) {
             case "ysz":
+                room = new RoomGoldYSZ();
 
         }
 
