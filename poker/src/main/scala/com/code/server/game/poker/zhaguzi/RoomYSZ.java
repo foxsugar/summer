@@ -76,7 +76,9 @@ public class RoomYSZ extends Room {
 
     }
 
-    public static int createYSZRoom(long userId, int gameNumber, int personNumber,int cricleNumber,int multiple,int caiFen,int menPai, String gameType, String roomType, boolean isAA, boolean isJoin, String clubId, String clubRoomModel) throws DataNotFoundException {
+    public static int createYSZRoom(long userId, int gameNumber, int personNumber,int cricleNumber,int multiple,int caiFen,
+                                    int menPai, String gameType, String roomType, boolean isAA, boolean isJoin,
+                                    String clubId, String clubRoomModel,int goldRoomType, int goldRoomPermission) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
         RoomYSZ room = getRoomInstance(roomType);
@@ -96,6 +98,8 @@ public class RoomYSZ extends Room {
         room.setClubId(clubId);
         room.setClubRoomModel(clubRoomModel);
         room.isRobotRoom = true;
+        room.goldRoomType = goldRoomType;
+        room.goldRoomPermission = goldRoomPermission;
         room.init(gameNumber, multiple);
 
         int code = room.joinRoom(userId, isJoin);
