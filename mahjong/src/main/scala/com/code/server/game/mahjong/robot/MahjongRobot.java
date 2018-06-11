@@ -17,13 +17,13 @@ import java.util.Map;
  */
 public class MahjongRobot {
 
-    private static long INTERVAL_TIME = 30000L;
+    private static long INTERVAL_TIME = 2000L;
 
     public static void execute(RoomInfo roomInfo) {
         long now = System.currentTimeMillis();
         GameInfo gameInfo = (GameInfo) roomInfo.getGame();
         if (gameInfo != null) {
-            if (gameInfo.getLastOperateTime() - now > INTERVAL_TIME) {
+            if (now- gameInfo.getLastOperateTime()   > INTERVAL_TIME) {
                 if (gameInfo.getWaitingforList().size() > 0) {
                     GameInfo.WaitDetail waitDetail = gameInfo.getWaitingforList().get(0);
                     guo(roomInfo, waitDetail.myUserId);

@@ -3,6 +3,8 @@ import com.code.server.login.anotation.AuthChecker;
 import com.code.server.login.service.RecommendDelegateService;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.vo.RecommandUserVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +24,7 @@ public class RecommendDelegateAction {
 
     @Autowired
     private RecommendDelegateService recommendDelegateService;
+
 
     @AuthChecker
     @RequestMapping("/findUser")

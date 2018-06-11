@@ -55,6 +55,79 @@ public class GameMaoSan extends GameDouDiZhuMaoSan {
 
 
 
+    /**
+     * 叫地主
+     *
+     * @param userId
+     * @param isJiao
+     * @return
+     */
+    public int jiaoDizhu(long userId, boolean isJiao, int score) {
+
+        logger.info(userId + "  叫地主 " + isJiao);
+        if (canJiaoUser != userId) {
+            return ErrorCode.CAN_NOT_JIAO_TURN;
+        }
+        if (isJiao && score <= tableScore) {
+            return ErrorCode.CAN_NOT_JIAO_SCORE;
+        }
+        //叫地主列表
+        chooseJiaoSet.add(userId);
+
+        //不叫 下个人能叫
+        if (!isJiao) {
+            bujiaoSet.add(userId);
+            if (chooseJiaoSet.size() >= users.size()) {
+                //曾经有人叫过
+                if (dizhu != -1) {
+                    //推送选定地主
+//                    qiangStepStart();
+                    chooseDizhu();
+                    startPlay(dizhu);
+
+
+                } else {
+                    handleLiuju();
+                }
+            } else {
+                long nextJiao = nextTurnId(userId);
+                canJiaoUser = nextJiao;
+                noticeCanJiao(nextJiao);
+            }
+        } else {//叫了 开始抢
+            jiaoUser = userId;
+            dizhu = userId;
+            tableScore = score;
+            //第三个人叫的 直接开始游戏
+            RoomDouDiZhu r = (RoomDouDiZhu) this.room;
+            //已经叫到最大分(默认三分,毛三有选项)
+            if (score == r.jiaoScoreMax) {
+                //推送选定地主
+                qiangStepStart();
+            } else {
+                long nextJiao = nextTurnId(userId);
+                canJiaoUser = nextJiao;
+                noticeCanJiao(nextJiao);
+            }
+
+        }
+
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("userId", userId);
+        rs.put("isJiao", isJiao);
+        rs.put("score", score);
+        MsgSender.sendMsg2Player("gameService", "jiaoResponse", rs, users);
+
+        MsgSender.sendMsg2Player("gameService", "jiaoDizhu", 0, userId);
+
+        updateLastOperateTime();
+
+
+        //回放
+        replay.getOperate().add(Operate.getOperate_JDZ(userId, score, !isJiao));
+
+        return 0;
+    }
 
 
     /**

@@ -94,7 +94,7 @@ public class PlayerCardsInfoTcGangKai extends PlayerCardsInfoTDH {
                             room.setUserSocre(i, -MahjongCode.HUTOSCOREFORLQ.get("" + CardUtil.huForScores(cards, huCardType)) * room.getMultiple() * gangkaiScala);
                         }
                         //庄输2倍，在此多减一倍
-                        gameInfo.getPlayerCardsInfos().get(this.gameInfo.firstTurn).setScore(gameInfo.getPlayerCardsInfos().get(this.gameInfo.firstTurn).getScore() - MahjongCode.HUTOSCOREFORLQ.get("" + CardUtil.huForScores(cards, huCardType)) * room.getMultiple());
+                        gameInfo.getPlayerCardsInfos().get(this.gameInfo.firstTurn).setScore(gameInfo.getPlayerCardsInfos().get(this.gameInfo.firstTurn).getScore() - MahjongCode.HUTOSCOREFORLQ.get("" + CardUtil.huForScores(cards, huCardType)) * room.getMultiple() * gangkaiScala);
                         room.setUserSocre(this.gameInfo.firstTurn, -MahjongCode.HUTOSCOREFORLQ.get("" + CardUtil.huForScores(cards, huCardType)) * room.getMultiple() * gangkaiScala);
 
                         this.score = this.score + (room.getPersonNumber() + 1) * MahjongCode.HUTOSCOREFORLQ.get("" + CardUtil.huForScores(cards, huCardType)) * room.getMultiple() * gangkaiScala;

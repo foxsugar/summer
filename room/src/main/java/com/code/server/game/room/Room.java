@@ -595,7 +595,8 @@ public class Room implements IfaceRoom {
         List<UserOfResult> userOfResultList = getUserOfResult();
 
         //代开房 并且游戏未开始
-        if (!isCreaterJoin && !this.isInGame && this.curGameNumber == 1) {
+//        if (!isCreaterJoin && !this.isInGame && this.curGameNumber == 1) {
+        if (!isCreaterJoin && this.curGameNumber == 1) {
             drawBack();
             GameTimer.removeNode(this.prepareRoomTimerNode);
         }

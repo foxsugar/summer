@@ -208,7 +208,10 @@ public class RoomExtendGold extends Room {
 
     @Override
     public boolean isRobotRoom() {
-        return true;
+        if (isGoldRoom()) {
+            return true;
+        }
+        return false;
     }
 
     /**

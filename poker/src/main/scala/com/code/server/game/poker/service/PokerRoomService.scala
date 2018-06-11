@@ -1,6 +1,6 @@
 package com.code.server.game.poker.service
 
-import com.code.server.constant.response.{ErrorCode, ResponseVo}
+import com.code.server.constant.response.ErrorCode
 import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.poker.cow.RoomCow
 import com.code.server.game.poker.doudizhu.{RoomDouDiZhu, RoomDouDiZhuGold}
@@ -10,10 +10,10 @@ import com.code.server.game.poker.paijiu.{RoomGoldPaijiu, RoomPaijiu}
 import com.code.server.game.poker.pullmice.RoomPullMice
 import com.code.server.game.poker.tuitongzi.RoomTuiTongZi
 import com.code.server.game.poker.xuanqiqi.RoomXuanQiQi
-import com.code.server.game.poker.zhaguzi.{GameBaseYSZ, RoomYSZ, RoomZhaGuZi}
-import com.code.server.game.room.{Room, RoomExtendGold}
+import com.code.server.game.poker.zhaguzi.{RoomYSZ, RoomZhaGuZi}
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
+import com.code.server.game.room.{Room, RoomExtendGold}
 import com.code.server.util.SpringUtil
 import com.fasterxml.jackson.databind.JsonNode
 
@@ -71,7 +71,7 @@ object PokerRoomService {
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
 
-        return RoomXuanQiQi.createXuanQiQiRoom(userId, gameNumber,personNumber,cricleNumber,multiple,gameType, roomType,isAA,isJoin,clubId,clubRoomModel)
+        return RoomXuanQiQi.createXuanQiQiRoom(userId, gameNumber, personNumber, cricleNumber, multiple, gameType, roomType, isAA, isJoin, clubId, clubRoomModel)
 
       case "startGameByClient" =>
         val roomId = params.get("roomId").asText()
@@ -165,7 +165,7 @@ object PokerRoomService {
         val isJoin = params.path("isJoin").asBoolean(true)
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
-        return RoomYSZ.createYSZRoom(userId, gameNumber,personNumber,cricleNumber,multiple,caiFen,menPai,gameType, roomType,isAA,isJoin,clubId,clubRoomModel)
+        return RoomYSZ.createYSZRoom(userId, gameNumber, personNumber, cricleNumber, multiple, caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel)
 
       case "createPullMiceRoom" =>
         val roomType = params.path("roomType").asText()
@@ -213,40 +213,24 @@ object PokerRoomService {
       case "getAllGoldPaijiuRoom" =>
         return RoomGoldPaijiu.getAllRoom(userId);
 
-      case "joinGoldRoom" => {
+      case "joinGoldRoom" =>
 
         val roomType: String = params.get("roomType").asText
         val gameType: String = params.get("gameType").asText
         val goldRoomType = params.path("goldRoomType").asInt()
-        //        return joinGoldRoom(userId, roomType, gameType, goldRoomType)
 
-        val rooms = RoomManager.getInstance().getNotFullRoom(gameType, goldRoomType)
-        if (rooms.size() == 0) {
-          val room: Room = PokerGoldRoomFactory.create(userId, roomType, gameType, goldRoomType)
-          //获得一个默认房间
-
-          RoomManager.getInstance().addNotFullGoldRoom(room)
-
-          //加入房间列表
-          val serverId: Int = SpringUtil.getBean(classOf[ServerConfig]).getServerId
-          RoomManager.addRoom(room.getRoomId, "" + serverId, room)
-
-          MsgSender.sendMsg2Player(new ResponseVo("mahjongRoomService", "joinGoldRoom", room.toVo(userId)), userId)
+        joinGoldRoom(userId, roomType, gameType, goldRoomType)
 
 
-        }
-        return 0
-      }
-
-      case "getGoldRooms" => {
+      case "getGoldRooms" =>
         val roomType: String = params.get("roomType").asText
         val gameType: String = params.get("gameType").asText
         val goldRoomType = params.path("goldRoomType").asInt()
 
         val result = RoomExtendGold.getGoldRoomsVo(gameType)
-        MsgSender.sendMsg2Player("mahjongRoomService", "joinGoldRoom", result, userId)
+        MsgSender.sendMsg2Player("pokerRoomService", "getGoldRooms", result, userId)
         0
-      }
+
 
       case _ =>
         return -1
@@ -254,4 +238,25 @@ object PokerRoomService {
 
 
   }
+
+
+  def joinGoldRoom(userId: Long, roomType: String, gameType: String, goldRoomType: Int): Int = {
+    val rooms = RoomManager.getInstance().getNotFullRoom(gameType, goldRoomType)
+    var room: Room = null
+    if (rooms.size() > 0) {
+      room = rooms.get(0)
+    }
+    if (room == null) {
+      room = PokerGoldRoomFactory.create(userId, roomType, gameType, goldRoomType)
+      //获得一个默认房间
+      //加入房间列表
+      val serverId: Int = SpringUtil.getBean(classOf[ServerConfig]).getServerId
+      val roomId: String = Room.getRoomIdStr(Room.genRoomId(serverId))
+      room.setRoomId(roomId)
+      RoomManager.getInstance().addNotFullGoldRoom(room)
+      RoomManager.addRoom(room.getRoomId, "" + serverId, room)
+    }
+    0
+  }
+
 }

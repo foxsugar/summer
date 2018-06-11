@@ -180,7 +180,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 					}
 				}
 			}
-		else if(this.roomInfo.getGameType().equals("TC")){
+		else if(this.roomInfo.getGameType().equals("TC") || this.roomInfo.getGameType().equals("TC1")){
 			if(!isMing){//暗杠
 				for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
 					gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());

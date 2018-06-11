@@ -3,6 +3,7 @@ package com.code.server.game.mahjong;
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.exception.RegisterFailedException;
 import com.code.server.game.mahjong.config.ServerConfig;
+import com.code.server.game.mahjong.robot.RobotManager;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
@@ -36,6 +37,7 @@ public class MahjongApplication {
         //机器人
 
 
+        GameTimer.addTimerNode(serverConfig.getRobotExeCycle(),true, RobotManager::excute);
 //        MsgConsumer.startAConsumer("gameLogicService", serverConfig.getServerId(), MsgDispatch::dispatch);
 //        MsgConsumer.startAConsumer("reconnService", serverConfig.getServerId(), MsgDispatch::dispatch);
 //        MsgConsumer.startAConsumer("mahjongRoomService", serverConfig.getServerId(), MsgDispatch::dispatch);
