@@ -99,7 +99,7 @@ object MahjongRoomService {
         val goldRoomType = paramsjSONObject.path("goldRoomType").asInt()
 
         val result = RoomExtendGold.getGoldRoomsVo(gameType)
-        MsgSender.sendMsg2Player("mahjongRoomService", "joinGoldRoom", result, userId)
+        MsgSender.sendMsg2Player("mahjongRoomService", "getGoldRooms", result, userId)
         code = 0
       }
     }
