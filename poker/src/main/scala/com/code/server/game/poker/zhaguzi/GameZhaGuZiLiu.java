@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by dajuejinxian on 2018/6/6.
  */
-public class GameZhaGuZiLiu extends GameZhaGuZi{
+public class  GameZhaGuZiLiu extends GameZhaGuZi{
 
     @Override
     public void initCards() {

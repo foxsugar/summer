@@ -85,20 +85,9 @@ public class DelegateRelataionAction {
 
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-//        long agentId = AgentUtil.getAgentByRequest(request);
-//        AgentBean
-        UserInfoVo userInfo = new UserInfoVo();
-        userInfo.setCanUseMoney(1);
-        userInfo.setUsername(" 张三");
-        userInfo.setDelegateCount(100);
-        userInfo.setCreateTime("20111111");
-        userInfo.setImage("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=253777390,947512827&fm=23&gp=0.jpg/96");
-        userInfo.setUserId(2l);
-        userInfo.setType(2);
-        userInfo.setUserCount(10);
-        userInfo.setReferee(123);
-        userInfo.setTotalMoney(133);
+        long agentId = AgentUtil.getAgentByRequest(request);
 
+        UserInfoVo userInfo = delegateRelataionService.findUserInfo(agentId, userId);
         Map<String, Object> result = new HashMap<>();
         result.put("result", userInfo);
         AgentResponse agentResponse = new AgentResponse(200, result);
