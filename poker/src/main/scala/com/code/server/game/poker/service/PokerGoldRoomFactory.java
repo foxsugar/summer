@@ -26,6 +26,11 @@ public class PokerGoldRoomFactory {
                 break;
         }
 
+        switch (gameType) {
+            case "ysz":
+
+        }
+
         return room;
     }
 }
