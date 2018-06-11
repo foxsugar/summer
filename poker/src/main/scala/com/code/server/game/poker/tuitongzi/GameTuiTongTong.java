@@ -120,7 +120,7 @@ public class GameTuiTongTong extends GameTuiTongZi {
                 delta = currentGuoDi;
             }
             currentGuoDi = currentGuoDi - delta;
-//            playerZhuang.setScore(playerZhuang.getScore() + delta);
+            playerZhuang.setScore(playerZhuang.getScore() + delta);
             winner.setScore(winner.getScore() + delta);
             room.addUserSocre(winner.getUserId(), winner.getScore());
             //假如锅里没钱就跳出别的玩家喝水
