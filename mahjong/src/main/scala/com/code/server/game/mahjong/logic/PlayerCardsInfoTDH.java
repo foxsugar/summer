@@ -29,6 +29,12 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 		specialHuScore.put(hu_十三幺,1);
 		specialHuScore.put(hu_豪华七小对,1);
 		specialHuScore.put(hu_双豪七小对_山西,1);
+		if ("TC".equals(this.roomInfo.getGameType()) || "TC1".equals(this.roomInfo.getGameType())) {
+			this.roomInfo.setHasGangBlackList(false);
+			MahjongCode.HUTOSCOREFORLQ.put("254", 36);
+		}else{
+			MahjongCode.HUTOSCOREFORLQ.put("254", 18);
+		}
 	}
 
 	@Override
@@ -180,7 +186,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 					}
 				}
 			}
-		else if(this.roomInfo.getGameType().equals("TC")){
+		else if(this.roomInfo.getGameType().equals("TC") || this.roomInfo.getGameType().equals("TC1")){
 			if(!isMing){//暗杠
 				for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
 					gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * room.getMultiple());
