@@ -332,7 +332,7 @@ public class MenuHandler extends AbstractHandler {
         //todo 展示二维码 链接
 
         item1.setPicUrl("https://mmbiz.qpic.cn/mmbiz_png/wj1STzkg04h46BuribmuoJnsMQgc2m70558p3mE91j6zq4sph6RavCicfUiahTSRj4CVRSRN9ecdJKic6ysZeBCZiag/0?wx_fmt=png");
-        item1.setTitle("客服微信号");
+        item1.setTitle("客服微信号:17189556611");
 
 
         WxMpXmlOutNewsMessage m = WxMpXmlOutMessage.NEWS()
