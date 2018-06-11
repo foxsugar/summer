@@ -31,8 +31,7 @@ object PokerRoomService {
         val personNum = params.path("personNum").asInt(3)
         val jiaoScore = params.path("jiaoScoreMax").asInt(3)
 
-        val shuanglong = params.path("shuanglong").asInt(0
-        )
+        val shuanglong = params.path("shuanglong").asInt(0)
         val gameType = params.path("gameType").asText("0")
         val isAA = params.path("isAA").asBoolean(false)
         val isJoin = params.path("isJoin").asBoolean(true)
@@ -165,7 +164,9 @@ object PokerRoomService {
         val isJoin = params.path("isJoin").asBoolean(true)
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
-        return RoomYSZ.createYSZRoom(userId, gameNumber, personNumber, cricleNumber, multiple, caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel)
+        val goldRoomType = params.path("goldRoomType").asInt(0)
+        val goldRoomPermission = params.path("goldRoomPermission").asInt(0)
+        return RoomYSZ.createYSZRoom(userId, gameNumber, personNumber, cricleNumber, multiple, caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel,goldRoomType,goldRoomPermission)
 
       case "createPullMiceRoom" =>
         val roomType = params.path("roomType").asText()

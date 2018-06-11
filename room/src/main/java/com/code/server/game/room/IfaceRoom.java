@@ -17,6 +17,19 @@ public interface IfaceRoom extends IGameConstant {
     int GOLD_ROOM_PERMISSION_PUBLIC = 2;
     int GOLD_ROOM_PERMISSION_PRIVATE = 3;
 
+
+
+    int ROOMTYPE_麻将 = 1;
+    int ROOMTYPE_斗地主 = 2;
+    int ROOMTYPE_牌九 = 3;
+    int ROOMTYPE_扎金花 = 4;
+    int ROOMTYPE_牛牛 = 5;
+    int ROOMTYPE_推筒子 = 6;
+    int ROOMTYPE_拉老鼠 = 7;
+    int ROOMTYPE_毛三 = 8;
+    int ROOMTYPE_宣琪琪 = 9;
+    int ROOMTYPE_zhaguzi = 10;
+
     /**
      * 加入房间
      * @param userId
