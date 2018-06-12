@@ -28,6 +28,9 @@ public class UtilXuanQiQi {
     public static List<Integer> jqkBlackCard = new ArrayList<>();
     public static List<Integer> jqkRedCard = new ArrayList<>();
 
+    public static List<Integer> doubleWangList = new ArrayList<>();
+    public static List<Integer> redTenlist = new ArrayList<>();
+
     static {
         cards.put(25,7);
         cards.put(26,7);
@@ -105,6 +108,11 @@ public class UtilXuanQiQi {
         jqkBlackCard.add(45);
         jqkBlackCard.add(49);
 
+        doubleWangList.add(53);
+        doubleWangList.add(54);
+
+        redTenlist.add(38);
+        redTenlist.add(40);
     }
 
     public static boolean getOneCardWin(int a ,int b){
