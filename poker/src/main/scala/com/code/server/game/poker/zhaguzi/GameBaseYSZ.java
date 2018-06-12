@@ -76,7 +76,7 @@ public class GameBaseYSZ extends Game {
     }
 
     public boolean isYsz() {
-        return false;
+        return true;
     }
 
     public void startGame(List<Long> users, Room room) {

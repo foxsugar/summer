@@ -94,6 +94,10 @@ object PokerRoomService {
         val roomId = params.get("roomId").asText()
         return RoomCow.startGameByClient(userId, roomId);
 
+      case "startYSZGameByClient" =>
+        val roomId = params.get("roomId").asText()
+        return RoomYSZ.startGameByClient(userId, roomId);
+
       case "startTTZGameByClient" =>
         System.out.println("++++++++++---------------PokerRoomService+startTTZGameByClient")
         val roomId = params.get("roomId").asText()

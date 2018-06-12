@@ -21,6 +21,7 @@ import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
+import com.code.server.game.room.RoomExtendGold;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.config.IConstant;
@@ -36,7 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RoomYSZ extends Room {
+public class RoomYSZ extends RoomExtendGold {
 
     //扎金花专用
     protected double caiFen;
