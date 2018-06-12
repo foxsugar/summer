@@ -36,6 +36,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class RoomYSZ extends RoomExtendGold {
 
@@ -77,9 +81,19 @@ public class RoomYSZ extends RoomExtendGold {
 
     }
 
-    public static int createYSZRoom(long userId, int gameNumber, int personNumber,int cricleNumber,int multiple,int caiFen,
+    public static int createYSZRoom(long userId, int gameNumber, int personNumber, int cricleNumber, int multiple, int caiFen,
                                     int menPai, String gameType, String roomType, boolean isAA, boolean isJoin,
-                                    String clubId, String clubRoomModel,int goldRoomType, int goldRoomPermission) throws DataNotFoundException {
+                                    String clubId, String clubRoomModel, int goldRoomType, int goldRoomPermission) throws DataNotFoundException {
+
+       return  createYSZRoom(userId, gameNumber, personNumber, cricleNumber, multiple,caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel, goldRoomType, goldRoomPermission, null);
+    }
+
+
+
+
+    public static int createYSZRoom(long userId, int gameNumber, int personNumber, int cricleNumber, int multiple, int caiFen,
+                                    int menPai, String gameType, String roomType, boolean isAA, boolean isJoin,
+                                    String clubId, String clubRoomModel, int goldRoomType, int goldRoomPermission, UnaryOperator<RoomYSZ> operator) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
         RoomYSZ room = getRoomInstance(roomType);
@@ -129,6 +143,11 @@ public class RoomYSZ extends RoomExtendGold {
         room.setUuid(idWorker.nextId());
 
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createYSZRoom", room.toVo(userId)), userId);
+
+
+        if (operator != null){
+            operator.apply(room);
+        }
 
         return 0;
     }
