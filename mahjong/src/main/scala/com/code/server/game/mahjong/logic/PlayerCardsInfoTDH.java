@@ -31,6 +31,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 		specialHuScore.put(hu_双豪七小对_山西,1);
 		if ("TC".equals(this.roomInfo.getGameType()) || "TC1".equals(this.roomInfo.getGameType())) {
 			this.roomInfo.setHasGangBlackList(false);
+			this.setHasGangBlackList(false);
 			MahjongCode.HUTOSCOREFORLQ.put("254", 36);
 		}else{
 			MahjongCode.HUTOSCOREFORLQ.put("254", 18);

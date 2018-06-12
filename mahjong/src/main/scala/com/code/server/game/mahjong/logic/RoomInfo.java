@@ -37,6 +37,10 @@ public class RoomInfo extends RoomExtendGold {
     protected Map<Long, Integer> dianPaoNum = new HashMap<>();
     protected Map<Long, Integer> lianZhuangNum = new HashMap<>();
     protected Map<Long, Integer> moBaoNum = new HashMap<>();
+    protected Map<Long, Integer> mingGangNum = new HashMap<>();
+    protected Map<Long, Integer> anGangNum = new HashMap<>();
+    protected Map<Long, Integer> jiePaoNum = new HashMap<>();
+    protected Map<Long, Integer> zimoNum = new HashMap<>();
     //荒庄后是否换庄家
     private boolean isChangeBankerAfterHuangZhuang = false;
     protected boolean isYipaoduoxiang = false;
@@ -59,7 +63,6 @@ public class RoomInfo extends RoomExtendGold {
 
 
     /**
-     *
      * @param roomId
      * @param userId
      * @param modeTotal
@@ -97,7 +100,6 @@ public class RoomInfo extends RoomExtendGold {
     }
 
 
-
     protected boolean isHasMode(int type) {
         int c = Integer.parseInt(this.mode);
         return (c & (1 << type)) >> type == 1;
@@ -121,7 +123,7 @@ public class RoomInfo extends RoomExtendGold {
         for (Map.Entry<Long, Integer> entry : this.userStatus.entrySet()) {
             entry.setValue(STATUS_JOIN);
         }
-        if(isAddGameNum){
+        if (isAddGameNum) {
 
             this.curGameNumber += 1;
         }
@@ -202,12 +204,12 @@ public class RoomInfo extends RoomExtendGold {
             this.gameType = "124";
         } else if (this.gameType.equals("JC") && this.modeTotal.equals("13")) {
             this.gameType = "JCSS";
-        } else if(this.gameType.equals("CHUANQI")){
+        } else if (this.gameType.equals("CHUANQI")) {
             this.gameType = "LQ";
         }
         GameInfo gameInfo = getGameInfoInstance();
 
-        if(this.gameType.equals("HELE")){
+        if (this.gameType.equals("HELE")) {
             this.gameType = "LQ";
         }
 
@@ -268,18 +270,14 @@ public class RoomInfo extends RoomExtendGold {
 
             //设置胡牌次数
 
-            if (this.getHuNum().containsKey(eachUser.getId())) {
-                resultObj.setHuNum(this.getHuNum().get(eachUser.getId()));
-            }
-            if (this.getLianZhuangNum().containsKey(eachUser.getId())) {
-                resultObj.setLianZhuangNum(this.getLianZhuangNum().get(eachUser.getId()));
-            }
-            if (this.getDianPaoNum().containsKey(eachUser.getId())) {
-                resultObj.setDianPaoNum((this.getDianPaoNum().get(eachUser.getId())));
-            }
-            if (this.getMoBaoNum().containsKey(eachUser.getId())) {
-                resultObj.setMoBaoNum(this.getMoBaoNum().get(eachUser.getId()));
-            }
+            resultObj.setHuNum(this.getHuNum().getOrDefault(eachUser.getId(), 0));
+            resultObj.setLianZhuangNum(this.getLianZhuangNum().getOrDefault(eachUser.getId(), 0));
+            resultObj.setDianPaoNum(this.getDianPaoNum().getOrDefault(eachUser.getId(), 0));
+            resultObj.setMoBaoNum(this.getMoBaoNum().getOrDefault(eachUser.getId(), 0));
+            resultObj.setZimoNum(this.getZimoNum().getOrDefault(eachUser.getId(), 0));
+            resultObj.setMingGangNum(this.getMingGangNum().getOrDefault(eachUser.getId(), 0));
+            resultObj.setAnGangNum(this.getAnGangNum().getOrDefault(eachUser.getId(), 0));
+            resultObj.setJiePaoNum(this.getJiePaoNum().getOrDefault(eachUser.getId(), 0));
             userOfResultList.add(resultObj);
 
             //删除映射关系
@@ -303,7 +301,7 @@ public class RoomInfo extends RoomExtendGold {
 
 
         boolean isChange = scoreIsChange();
-        if ((this.isInGame||!isCreaterJoin) && this.curGameNumber == 1 && !isChange) {
+        if ((this.isInGame || !isCreaterJoin) && this.curGameNumber == 1 && !isChange) {
             drawBack();
             GameTimer.removeNode(this.prepareRoomTimerNode);
         }
@@ -327,13 +325,9 @@ public class RoomInfo extends RoomExtendGold {
     }
 
 
-
-    public  TimerNode getDissolutionRoomTimerNode(){
+    public TimerNode getDissolutionRoomTimerNode() {
         return new TimerNode(System.currentTimeMillis(), IGameConstant.ONE_HOUR, false, this::dissolutionRoom);
     }
-
-
-
 
 
     public void addHuNum(long userId) {
@@ -368,6 +362,21 @@ public class RoomInfo extends RoomExtendGold {
         }
     }
 
+    public void addMingGangNum(long userId) {
+        mingGangNum.put(userId, mingGangNum.getOrDefault(userId, 0) + 1);
+    }
+
+    public void addAnGangNum(long userId) {
+        anGangNum.put(userId, anGangNum.getOrDefault(userId, 0) + 1);
+    }
+
+    public void addJiePaoNum(long userId) {
+        jiePaoNum.put(userId, jiePaoNum.getOrDefault(userId, 0) + 1);
+    }
+
+    public void addZimoNum(long userId) {
+        zimoNum.put(userId, zimoNum.getOrDefault(userId, 0) + 1);
+    }
 
     public Map<String, Object> toJSONObject() {
         Map<String, Object> result = new HashMap<>();
@@ -481,7 +490,7 @@ public class RoomInfo extends RoomExtendGold {
 
     @Override
     public GameLogKey getGameLogKey() {
-        GameLogKey gameLogKey =  super.getGameLogKey();
+        GameLogKey gameLogKey = super.getGameLogKey();
         gameLogKey.getParams().put("mode", mode);
         gameLogKey.getParams().put("modeTotal", modeTotal);
         return gameLogKey;
@@ -648,7 +657,39 @@ public class RoomInfo extends RoomExtendGold {
         this.haveTing = haveTing;
     }
 
+    public Map<Long, Integer> getMingGangNum() {
+        return mingGangNum;
+    }
 
+    public RoomInfo setMingGangNum(Map<Long, Integer> mingGangNum) {
+        this.mingGangNum = mingGangNum;
+        return this;
+    }
 
+    public Map<Long, Integer> getAnGangNum() {
+        return anGangNum;
+    }
 
+    public RoomInfo setAnGangNum(Map<Long, Integer> anGangNum) {
+        this.anGangNum = anGangNum;
+        return this;
+    }
+
+    public Map<Long, Integer> getJiePaoNum() {
+        return jiePaoNum;
+    }
+
+    public RoomInfo setJiePaoNum(Map<Long, Integer> jiePaoNum) {
+        this.jiePaoNum = jiePaoNum;
+        return this;
+    }
+
+    public Map<Long, Integer> getZimoNum() {
+        return zimoNum;
+    }
+
+    public RoomInfo setZimoNum(Map<Long, Integer> zimoNum) {
+        this.zimoNum = zimoNum;
+        return this;
+    }
 }

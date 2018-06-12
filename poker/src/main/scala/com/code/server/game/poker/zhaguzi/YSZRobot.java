@@ -1,6 +1,6 @@
 package com.code.server.game.poker.zhaguzi;
 
-import com.code.server.constant.robot.IRobot;
+import com.code.server.game.room.service.IRobot;
 
 /**
  * Created by dajuejinxian on 2018/6/8.

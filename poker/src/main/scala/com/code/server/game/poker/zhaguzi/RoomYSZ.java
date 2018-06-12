@@ -20,7 +20,6 @@ import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
 import com.code.server.game.poker.config.ServerConfig;
-import com.code.server.game.room.Room;
 import com.code.server.game.room.RoomExtendGold;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
@@ -51,6 +50,7 @@ public class RoomYSZ extends RoomExtendGold {
     protected Map<Long, Integer> duiziNum = new HashMap<>();
     protected Map<Long, Integer> sanpaiNum = new HashMap<>();
 
+    protected long lastReadyTime;
 
 
 
@@ -312,6 +312,14 @@ public class RoomYSZ extends RoomExtendGold {
     }
 
 
+    @Override
+    public int getReady(long userId) {
+        int rtn = super.getReady(userId);
+        if (rtn == 0) {
+            this.lastReadyTime = System.currentTimeMillis();
+        }
+        return rtn;
+    }
 
     public Map<Long, Integer> getBaoziNum() {
         return baoziNum;
@@ -456,5 +464,14 @@ public class RoomYSZ extends RoomExtendGold {
 
     public void setCricleNumber(int cricleNumber) {
         this.cricleNumber = cricleNumber;
+    }
+
+    public long getLastReadyTime() {
+        return lastReadyTime;
+    }
+
+    public RoomYSZ setLastReadyTime(long lastReadyTime) {
+        this.lastReadyTime = lastReadyTime;
+        return this;
     }
 }

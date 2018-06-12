@@ -2,14 +2,8 @@ package com.code.server.game.poker.doudizhu;
 
 
 
-import com.code.server.constant.game.CardStruct;
 import com.code.server.constant.game.IGameConstant;
-import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.room.Room;
-import scala.tools.nsc.doc.html.page.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by sunxianping on 2017/5/16.
@@ -17,6 +11,11 @@ import java.util.Map;
 public class DouDiZhuLinfenRobot implements IDouDiZhuRobot,IGameConstant {
     @Override
     public void execute() {
+
+    }
+
+    @Override
+    public void doExecute(Room room) {
 
     }
 
