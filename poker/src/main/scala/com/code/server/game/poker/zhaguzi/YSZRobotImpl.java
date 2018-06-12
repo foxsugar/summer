@@ -46,7 +46,7 @@ public class YSZRobotImpl implements YSZRobot{
             return;
         }
 
-        if (room.getGame() != null && room.getGame() instanceof GameTuiTongZi) {
+        if (room.getGame() != null && room.getGame() instanceof GameYSZ) {
             GameYSZ game =  (GameYSZ) room.getGame();
             long now = System.currentTimeMillis();
             //执行
