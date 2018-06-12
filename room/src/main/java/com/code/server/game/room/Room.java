@@ -140,7 +140,7 @@ public class Room implements IfaceRoom {
         clubRoomSetId();
     }
 
-    public void getDefaultGoldRoomInstance(long userId, String roomType, String gameType, Integer goldRoomType ) {
+    public void getDefaultGoldRoomInstance(long userId, String roomType, String gameType, Integer goldRoomType) {
 
     }
 
@@ -551,6 +551,15 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
+    public boolean isAllReady() {
+        for (int status : this.getUserStatus().values()) {
+            if (status != STATUS_READY) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     public int getPrepareRoom(long userId) {
         List<IfaceRoomVo> result = new ArrayList<>();
@@ -720,7 +729,7 @@ public class Room implements IfaceRoom {
         return prepareRoom;
     }
 
-    public PrepareRoom getSimpleVo(){
+    public PrepareRoom getSimpleVo() {
         PrepareRoom prepareRoom = this.getPrepareRoomVo();
         prepareRoom.peopleNum = this.users.size();
         return prepareRoom;
@@ -1157,7 +1166,7 @@ public class Room implements IfaceRoom {
         return gameLogKey;
     }
 
-    public String getGameLogKeyStr(){
+    public String getGameLogKeyStr() {
         return JsonUtil.toJson(getGameLogKey());
     }
 
