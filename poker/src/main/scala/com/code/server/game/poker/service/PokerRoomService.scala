@@ -1,9 +1,9 @@
 package com.code.server.game.poker.service
 
-import com.code.server.constant.response.ErrorCode
+import com.code.server.constant.response.{ErrorCode, ResponseVo}
 import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.poker.cow.RoomCow
-import com.code.server.game.poker.doudizhu.{RoomDouDiZhu, RoomDouDiZhuGold}
+import com.code.server.game.poker.doudizhu.RoomDouDiZhu
 import com.code.server.game.poker.guess.RoomGuessCar
 import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower
 import com.code.server.game.poker.paijiu.{RoomGoldPaijiu, RoomPaijiu}
@@ -93,6 +93,10 @@ object PokerRoomService {
       case "startCowGameByClient" =>
         val roomId = params.get("roomId").asText()
         return RoomCow.startGameByClient(userId, roomId);
+
+      case "startYSZGameByClient" =>
+        val roomId = params.get("roomId").asText()
+        return RoomYSZ.startGameByClient(userId, roomId);
 
       case "startTTZGameByClient" =>
         System.out.println("++++++++++---------------PokerRoomService+startTTZGameByClient")
@@ -188,11 +192,6 @@ object PokerRoomService {
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
         return RoomPaijiu.createRoomNotInRoom(userId, roomType, gameType, gameNumber, isCreaterJoin, clubId, clubRoomModel)
-      case "joinGoldRoom" =>
-        val goldRoomType = params.get("goldRoomType").asInt()
-        val roomType = params.get("roomType").asText()
-        val gameType = params.get("gameType").asText()
-        return RoomDouDiZhuGold.joinGoldRoom(userId, goldRoomType, roomType, gameType);
 
       case "createGuessRoom" =>
         val roomType = params.path("roomType").asText()
@@ -254,8 +253,19 @@ object PokerRoomService {
       val serverId: Int = SpringUtil.getBean(classOf[ServerConfig]).getServerId
       val roomId: String = Room.getRoomIdStr(Room.genRoomId(serverId))
       room.setRoomId(roomId)
+      room.setGameType(gameType)
+      room.setRoomType(roomType)
+      room.setGoldRoomType(goldRoomType)
+      room.setGoldRoomPermission(1)
       RoomManager.getInstance().addNotFullGoldRoom(room)
       RoomManager.addRoom(room.getRoomId, "" + serverId, room)
+    }
+
+    val rtn:Int = room.joinRoom(userId,true)
+    if(rtn != 0) {
+      return rtn
+    }else{
+      MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "joinGoldRoom", room.toVo(userId)), userId)
     }
     0
   }

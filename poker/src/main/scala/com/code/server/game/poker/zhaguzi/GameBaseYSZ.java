@@ -3,6 +3,7 @@ package com.code.server.game.poker.zhaguzi;
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.response.*;
 import com.code.server.game.room.Game;
+import com.code.server.game.room.IfaceRoom;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 public class GameBaseYSZ extends Game {
     protected static final Logger logger = LoggerFactory.getLogger(GameBaseYSZ.class);
 
-    private static final Double INIT_BOTTOM_CHIP = 1.0;//底注
+    private static  Double INIT_BOTTOM_CHIP = 1.0;//底注
     private static final int INIT_CARD_NUM = 3;//玩家牌数3张
 
     protected List<Integer> cards = new ArrayList<>();//牌
@@ -31,13 +32,19 @@ public class GameBaseYSZ extends Game {
     protected List<Long> seeUser = new ArrayList<>();//看牌的人
     protected List<Long> loseUser = new ArrayList<>();//输牌的人
     protected Long curUserId;
-
-
     protected RoomYSZ room;
+    protected List<Integer> genZhuList = new ArrayList<>();
+
+    public List<Integer> getGenZhuList() {
+        return genZhuList;
+    }
+
+    public void setGenZhuList(List<Integer> genZhuList) {
+        this.genZhuList = genZhuList;
+    }
 
     //private Double MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();//最大下注数
     private Double MAX_BET_NUM = 0.0;
-
 
     public static String getStr(String str) {
 
@@ -56,6 +63,68 @@ public class GameBaseYSZ extends Game {
         return null;
     }
 
+    public void initDiZhu(){
+
+        //房卡场 暂定
+        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+            MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
+            INIT_BOTTOM_CHIP = 1d;
+            genZhuList.add(100);
+            genZhuList.add(150);
+            genZhuList.add(200);
+            genZhuList.add(250);
+            return;
+        }
+
+        double dizhu = 0d;
+        double max = 0;
+
+        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT){
+            dizhu = room.getGoldRoomType();
+            if (room.getGoldRoomType() == 50){
+                max = 500;
+                genZhuList.add(100);
+                genZhuList.add(150);
+                genZhuList.add(200);
+                genZhuList.add(250);
+            }else if (room.getGoldRoomType() == 100){
+                max = 1000;
+                genZhuList.add(200);
+                genZhuList.add(300);
+                genZhuList.add(400);
+                genZhuList.add(500);
+            }else if (room.getGoldRoomType() == 500){
+                max = 5000;
+                genZhuList.add(1000);
+                genZhuList.add(1500);
+                genZhuList.add(2000);
+                genZhuList.add(2500);
+            }else if (room.getGoldRoomType() == 1000){
+                max = 10000;
+                genZhuList.add(2000);
+                genZhuList.add(3000);
+                genZhuList.add(4000);
+                genZhuList.add(5000);
+            }
+            INIT_BOTTOM_CHIP = dizhu;
+            MAX_BET_NUM = max;
+
+        }else if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_PUBLIC || room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_PRIVATE){
+            dizhu = room.getGoldRoomType();
+            if (room.getGoldRoomType() == 50){
+                max = 0;
+
+            }else if (room.getGoldRoomType() == 100){
+
+            }else if (room.getGoldRoomType() == 10000){
+
+            }else if (room.getGoldRoomType() == 20000){
+
+            }
+        }
+
+    }
+
     public void init(List<Long> users) {
         //初始化玩家
         for (Long uid : users) {
@@ -68,6 +137,7 @@ public class GameBaseYSZ extends Game {
 
         shuffle();//洗牌
         deal();//发牌
+        initDiZhu();
         mustBet();
         curUserId = room.getBankerId();
 
@@ -76,7 +146,7 @@ public class GameBaseYSZ extends Game {
     }
 
     public boolean isYsz() {
-        return false;
+        return true;
     }
 
     public void startGame(List<Long> users, Room room) {
@@ -104,10 +174,11 @@ public class GameBaseYSZ extends Game {
 
         Map<String, Object> result = new HashMap<>();
         result.put("mustBet", chip);
+        result.put("zhuList", this.getGenZhuList());
+        result.put("maxBet", this.MAX_BET_NUM);
         ResponseVo vo = new ResponseVo("gameService", "mustBet", result);
         MsgSender.sendMsg2Player(vo, users);
     }
-
 
     /**
      * 加注
@@ -120,7 +191,7 @@ public class GameBaseYSZ extends Game {
         if (userId != curUserId) {//判断是否到顺序
             return ErrorCode.NOT_YOU_TURN;
         }
-        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
+//        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
         if (seeUser.contains(userId)) {
 //            if(addChip!=chip*2+2 && addChip!=chip*2*2 && addChip!=chip*2*4 && addChip!=MAX_BET_NUM){
 //                return ErrorCode.BET_WRONG;
@@ -538,7 +609,7 @@ public class GameBaseYSZ extends Game {
      */
     protected void noticeActionSelf(long userId) {
 
-        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
+//        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
 
         /**
          protected String call = "1";//跟注
@@ -583,7 +654,7 @@ public class GameBaseYSZ extends Game {
      * @param userId
      */
     protected void noticeAction(long userId) {
-        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
+//        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
         curUserId = nextActioner(userId);
         /**
          protected String call = "1";//跟注
@@ -629,7 +700,7 @@ public class GameBaseYSZ extends Game {
      * @param userId
      */
     protected void noticeActionByFold(long userId) {
-        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
+//        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
         int index = aliveUser.indexOf(userId);
 
         int nextId = index + 1;
@@ -881,7 +952,7 @@ public class GameBaseYSZ extends Game {
 
     @Override
     public IfaceGameVo toVo(long userId) {
-        GameHitGoldFlowerVo vo = new GameHitGoldFlowerVo();
+        GameYSZVo vo = new GameYSZVo();
         //vo.cards = this.getCards();
         vo.chip = this.getChip();
         //vo.leaveCards = this.getLeaveCards();
@@ -890,6 +961,7 @@ public class GameBaseYSZ extends Game {
         vo.curUserId = this.getCurUserId();
         vo.curRoundNumber = getMaxRoundNumber();
         vo.loseUser = this.getLoseUser();
+        vo.setZhuList(this.getGenZhuList());
 
         Double temp = 0.0;
         //玩家牌信息

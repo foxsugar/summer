@@ -1,6 +1,6 @@
 package com.code.server.game.poker.cow;
 
-import com.code.server.constant.robot.IRobot;
+import com.code.server.game.room.service.IRobot;
 
 /**
  * 项目名称：${project_name}

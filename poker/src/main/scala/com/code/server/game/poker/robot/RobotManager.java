@@ -1,8 +1,10 @@
 package com.code.server.game.poker.robot;
 
 
-import com.code.server.constant.robot.IRobot;
 import com.code.server.game.poker.config.ServerConfig;
+import com.code.server.game.room.Room;
+import com.code.server.game.room.service.IRobot;
+import com.code.server.game.room.service.RoomManager;
 import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +49,14 @@ public class RobotManager implements Runnable {
     public void run() {
         while (true) {
             try {
-                robots.forEach(IRobot::execute);
+                List<Room> rooms = RoomManager.getInstance().getRobotRoom();
+                for (Room room : rooms) {
+//                    robots.forEach(IRobot::execute());
+                    for (IRobot robot : robots) {
+                        robot.doExecute(room);
+                    }
+                }
+//                robots.forEach(IRobot::execute);
                 //休眠
                 Thread.sleep(serverConfig.getRobotExeCycle());
             } catch (Exception e) {

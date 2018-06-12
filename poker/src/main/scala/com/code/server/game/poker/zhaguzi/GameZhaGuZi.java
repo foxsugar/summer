@@ -781,14 +781,14 @@ public class GameZhaGuZi extends Game {
                             score = 4 * base;
                         }else if(sanCount == 2){
                             if (playerZhaGuZi.getRetain3List().contains(hongtaosan)){
-                                score = (2 * score);
+                                score = (2 * base);
                             }else {
                                 score = base;
                             }
                         }
 
                     } else if (playerZhaGuZi.getSanJia() == PlayerZhaGuZi.GU_JIA) {
-                        score = base;
+                        score = -base;
                     }
                     playerZhaGuZi.setScore(score);
                 }
@@ -805,7 +805,7 @@ public class GameZhaGuZi extends Game {
                             score = - 4 * base;
                         }else if(sanCount == 2){
                             if (playerZhaGuZi.getRetain3List().contains(hongtaosan)){
-                                score = ( -2 * score);
+                                score = ( -2 * base);
                             }else {
                                 score = -base;
                             }
@@ -871,7 +871,7 @@ public class GameZhaGuZi extends Game {
         for (PlayerZhaGuZi playerZhaGuZi : playerCardInfos.values()) {
 
             if (playerSanJia != playerZhaGuZi) {
-                playerSanJia.setScore(1d);
+                playerZhaGuZi.setScore(1d);
                 score += 1d;
             }
         }
@@ -894,7 +894,7 @@ public class GameZhaGuZi extends Game {
 
     public void sendFinalResult() {
 
-        if (this.room.curGameNumber == 6) {
+        if (this.room.curGameNumber >  this.room.getGameNumber()) {
             //因为是两圈，并且要求换zhu
             List<UserOfResult> userOfResult = this.room.getUserOfResult();
             GameOfResult gameOfResult = new GameOfResult();

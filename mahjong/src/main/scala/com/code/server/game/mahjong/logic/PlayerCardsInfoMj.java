@@ -643,9 +643,11 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
                 pengType.remove(cardType);//从碰中移除
                 mingGangType.put(cardType, diangang);
                 isMing = true;
+
             } else {
                 anGangType.add(cardType);
                 isMing = false;
+
             }
         }
 //        gangCompute(room, info, isMing, diangang,card);
@@ -676,6 +678,14 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
         operateList.add(type_gang);
         this.gameInfo.addUserOperate(this.userId, type_gang);
+
+
+        if (isMing) {
+            this.roomInfo.addMingGangNum(this.getUserId());
+        }else{
+            this.roomInfo.addAnGangNum(this.getUserId());
+        }
+
     }
 
     //胡牌分数计算
@@ -781,6 +791,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         this.isAlreadyHu = true;
         //胡牌次数
         room.addHuNum(this.userId);
+        room.addZimoNum(this.userId);
         //连庄次数
         if (gameInfo.getFirstTurn() == userId) {
             room.addLianZhuangNum(this.userId);
@@ -801,6 +812,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     public void hu_dianpao(RoomInfo room, GameInfo gameInfo, long dianpaoUser, String disCard) {
         //胡牌次数
         room.addHuNum(this.userId);
+        room.addJiePaoNum(this.userId);
         //连庄次数
         if (gameInfo.getFirstTurn() == userId) {
             room.addLianZhuangNum(this.userId);
@@ -928,8 +940,17 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 //        playerCardsInfo.init(playerCardsInfo.cards);
 ////        System.out.println(playerCardsInfo.getTingCardType(playerCardsInfo.cards,null));
 //        System.out.println(playerCardsInfo.isCanHu_zimo("033"));
-        System.out.println(isHasMode("2",1));
+        System.out.println(isHasMode("32",5));
+
+        System.out.println(getNum(5));
+
     }
+
+    private static int getNum(int weishu){
+        return 1 << weishu;
+    }
+
+
 
     public long getUserId() {
         return userId;

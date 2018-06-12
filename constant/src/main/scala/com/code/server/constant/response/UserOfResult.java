@@ -20,6 +20,10 @@ public class UserOfResult {
     private int dianPaoNum;
     private int moBaoNum;
     private int lianZhuangNum;
+    private int zimoNum;
+    private int jiePaoNum;
+    private int mingGangNum;
+    private int anGangNum;
     private long time;
 
     private int baoziNum;
@@ -270,5 +274,41 @@ public class UserOfResult {
 
     public void setNumSix(int numSix) {
         this.numSix = numSix;
+    }
+
+    public int getZimoNum() {
+        return zimoNum;
+    }
+
+    public UserOfResult setZimoNum(int zimoNum) {
+        this.zimoNum = zimoNum;
+        return this;
+    }
+
+    public int getJiePaoNum() {
+        return jiePaoNum;
+    }
+
+    public UserOfResult setJiePaoNum(int jiePaoNum) {
+        this.jiePaoNum = jiePaoNum;
+        return this;
+    }
+
+    public int getMingGangNum() {
+        return mingGangNum;
+    }
+
+    public UserOfResult setMingGangNum(int mingGangNum) {
+        this.mingGangNum = mingGangNum;
+        return this;
+    }
+
+    public int getAnGangNum() {
+        return anGangNum;
+    }
+
+    public UserOfResult setAnGangNum(int anGangNum) {
+        this.anGangNum = anGangNum;
+        return this;
     }
 }
