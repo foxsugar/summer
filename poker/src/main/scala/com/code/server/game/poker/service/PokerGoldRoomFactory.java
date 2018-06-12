@@ -46,12 +46,12 @@ public class PokerGoldRoomFactory {
 //        val goldRoomPermission = params.path("goldRoomPermission").asInt(0)
 
         switch (gameType) {
-            case "ysz":
+            case "285":
 
                 int gameNumber = 285;
                 int personNumber = 5;
                 int cricleNumber = 15;
-                int multiple = 1;
+                int multiple = goldRoomType;
                 int fen = 0;
                 int hidden = 0;
                 boolean isAA = true;
