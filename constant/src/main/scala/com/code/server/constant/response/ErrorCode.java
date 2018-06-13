@@ -127,6 +127,10 @@ public class ErrorCode {
 	public static final int OPERATOR_ERROR = 900004;//操作错误
 	public static final int MUST_HONGTAO_FIVE = 900005;//必须出红桃5
 
+	//宣起起
+	public static final int MUST_PLAY_MaxCard = 1000001;//有大的牌没出的错误码
+
+
 	static class ErrorCodeRepeatChecker {
     	public void check() {
     		Set<Integer> set = new HashSet<Integer>();
