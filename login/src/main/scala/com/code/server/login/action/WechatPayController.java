@@ -12,6 +12,8 @@ import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.config.WechatConfig;
 import com.code.server.login.kafka.MsgSender;
+import com.code.server.login.pay.UnifiedOrder;
+import com.code.server.login.util.PayUtil;
 import com.code.server.login.util.XMLUtil;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
@@ -21,6 +23,7 @@ import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.util.SignUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 /**
  * Created by sunxianping on 2018/5/14.
@@ -104,56 +106,79 @@ public class WechatPayController {
         return null;
     }
 
+
     @ResponseBody
     @RequestMapping(value = "preOrderApp")
-    public AgentResponse payApp(HttpServletRequest request) throws Exception {
-        int money = Integer.valueOf(request.getParameter("money"));
-        int chargeType = Integer.valueOf(request.getParameter("chargeType"));
-        long userId = Long.valueOf(request.getParameter("userId"));
-//        String openId = request.getParameter("openId");
+    public Map<String, Object> charge(HttpServletRequest request,String userId, String spIp, int chargeType, int money) throws Exception {
 
-//        Map<String, String> agent = WechatAction.getAgentByToken(request);
-//        if (agent == null) return new AgentResponse().setCode(1000);
-//        //todo 实现
-//        String openId = agent.get("openId");
-//        long userId = Long.valueOf(agent.get("agentId"));
+        Map<String, Object> result = new HashMap<>();
+
+        SortedMap<String, String> packageParams = new TreeMap<>();
+
         String ip = getIpAddr(request);
-        //元转成分
+        //微信
+
+        int money100 = money * 100;
 
         Integer moneyPoint = getMoneyPoint(money, chargeType);
         logger.info("充值金额: " + money);
-        if (moneyPoint == null) return new AgentResponse().setCode(13);
+        if (moneyPoint == null){
+            Map<String, Object> m = new HashMap<>();
+            m.put("code", 10);
+            m.put("params", "参数错误");
+            return m;
+        }
         logger.info("增加钱数: " + moneyPoint);
 
+        String body = "充值";
 
-        AgentResponse agentResponse = new AgentResponse();
-        int totalFee = money * 100;
-        String orderId = "" + createOrderId();
+        String bodyUTF8 = null;
         try {
-            WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
+            bodyUTF8 = new String(body.getBytes(), "UTF-8");
+        } catch (UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+        }
 
-            orderRequest.setBody("充值");
-            orderRequest.setAppid(serverConfig.getAppId());
-            orderRequest.setOutTradeNo(orderId);
-            orderRequest.setTotalFee(totalFee);//元转成分
-//            orderRequest.setOpenid(openId);
-            orderRequest.setSpbillCreateIp(ip);
-//            orderRequest.setTimeStart("yyyyMMddHHmmss");
-//            orderRequest.setTimeExpire("yyyyMMddHHmmss");
-            orderRequest.setTradeType("APP");
+        String orderId = PayUtil.getOrderIdByUUId();
+        packageParams.put("appid", serverConfig.getAppId());//appID       应用id
+        packageParams.put("mch_id", wechatConfig.getMchId());//appID       商户号
+        packageParams.put("nonce_str", PayUtil.getRandomStringByLength(32));//32位随机数
+        packageParams.put("body", bodyUTF8);//商品描述
+        packageParams.put("out_trade_no", orderId);
+        packageParams.put("total_fee", "" + money100);//充值金额
+        packageParams.put("spbill_create_ip", spIp);//终端IP
+        packageParams.put("trade_type", "APP");//支付类型
+        String url = "http://" + serverConfig.getDomain() + "/wechat/pay/pay";
+        packageParams.put("notify_url", url);//通知地址
 
-            //notify 地址
-            String url = "http://" + serverConfig.getDomain() + "/wechat/pay/pay";
+        String rtn = UnifiedOrder.postCharge(packageParams);
 
-            orderRequest.setNotifyUrl(url);
+        Element root = PayUtil.ParsingXML(rtn);//解析xmlString
 
-            //创建订单
-            agentResponse.data = wxPayService.createOrder(orderRequest);
+        SortedMap<String, String> secondParams = new TreeMap<>();
+
+        //成功
+//        if("SUCCESS".equals(root.elementText("return_code"))){
+        //业务成功
+        if ("SUCCESS".equals(root.elementText("result_code"))) {
+
+
+            secondParams.put("appid", serverConfig.getAppId());
+            secondParams.put("partnerid", serverConfig.getMchId());
+            secondParams.put("prepayid", root.elementText("prepay_id"));
+            secondParams.put("noncestr", root.elementText("nonce_str"));
+            secondParams.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
+            secondParams.put("package", "Sign=WXPay");
+
+            String paySign = PayUtil.createSign("UTF-8", serverConfig.getKey(), secondParams);
+
+            secondParams.put("sign", paySign);
+
 
             //充值记录
             Charge charge = new Charge();
             charge.setOrderId(orderId);
-            charge.setUserid(userId);
+            charge.setUserid(Long.valueOf(userId));
             charge.setMoney(money);
             charge.setMoney_point(moneyPoint);
 //            charge.setOrigin(origin);
@@ -167,14 +192,35 @@ public class WechatPayController {
 
             chargeService.save(charge);
 
-            return agentResponse;
-        } catch (Exception e) {
-            logger.error("微信支付失败！订单号：{},原因:{}", orderId, e.getMessage());
-            agentResponse.code = 12;
-            return agentResponse;
-        }
-    }
 
+        } else {
+            //余额不足
+            if ("NOTENOUGH".equals(root.elementText("err_code"))) {
+                secondParams.put("err_code", root.elementText("err_code"));
+                secondParams.put("err_code_des", root.elementText("err_code_des"));
+                result.put("code", 10000);
+                return result;
+                //订单已支付
+            } else if ("ORDERPAID".equals(root.elementText("err_code"))) {
+                secondParams.put("err_code", root.elementText("err_code"));
+                secondParams.put("err_code_des", root.elementText("err_code_des"));
+                result.put("code", 11111);
+                return result;
+                //订单已关闭
+            } else if ("ORDERCLOSED".equals(root.elementText("err_code"))) {
+                secondParams.put("err_code", root.elementText("err_code"));
+                secondParams.put("err_code_des", root.elementText("err_code_des"));
+                result.put("code", 10001);
+                return result;
+            }
+        }
+//        }
+
+        result.put("params", secondParams);
+        result.put("code", 0);
+
+        return result;
+    }
     @ResponseBody
     @RequestMapping(value = "preOrder")
     public AgentResponse pay(HttpServletRequest request) throws Exception {
