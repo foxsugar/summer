@@ -17,7 +17,7 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class RoomXuanQiQiVo extends RoomVo {
+public class  RoomXuanQiQiVo extends RoomVo {
 
     protected int cricleNumber;//轮数
     protected Map<Long, Integer> numThree = new HashMap<>();

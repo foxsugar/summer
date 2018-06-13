@@ -16,13 +16,13 @@ public class RoomXuanQiQiVo  extends RoomVo {
 
     public long bankerId = 0;
     protected int cricleNumber;//轮数
+
     public long getBankerId() {
         return bankerId;
     }
 
-    public RoomXuanQiQiVo setBankerId(long bankerId) {
+    public void setBankerId(long bankerId) {
         this.bankerId = bankerId;
-        return this;
     }
 
     public int getCricleNumber() {

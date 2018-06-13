@@ -52,6 +52,8 @@ public class PlayerCardInfoXuanQiQiVo implements IfacePlayerInfoVo {
     protected String canGuo;//可过
     public int curRoundNumber;//当前轮数
 
+    protected boolean display;
+
     protected int cardNum;
 
     public PlayerCardInfoXuanQiQiVo(){
