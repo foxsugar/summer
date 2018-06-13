@@ -154,7 +154,7 @@ public class WechatPayController {
         String rtn = UnifiedOrder.postCharge(packageParams);
 
         Element root = PayUtil.ParsingXML(rtn);//解析xmlString
-        System.out.println(root.toString());
+
 
         SortedMap<String, String> secondParams = new TreeMap<>();
 
@@ -163,6 +163,7 @@ public class WechatPayController {
 //        if("SUCCESS".equals(root.elementText("return_code"))){
         //业务成功
         if ("SUCCESS".equals(root.elementText("result_code"))) {
+            System.out.println("业务成功");
 
 
             secondParams.put("appid", serverConfig.getAppId());
@@ -196,6 +197,8 @@ public class WechatPayController {
 
 
         } else {
+            System.out.println("业务失败");
+            System.out.println(root.elementText("err_code"));
             //余额不足
             if ("NOTENOUGH".equals(root.elementText("err_code"))) {
                 secondParams.put("err_code", root.elementText("err_code"));
