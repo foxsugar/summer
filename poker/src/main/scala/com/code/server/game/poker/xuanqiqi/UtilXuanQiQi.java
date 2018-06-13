@@ -91,11 +91,11 @@ public class UtilXuanQiQi {
         singleCard.put(41,1);
         singleCard.put(42,2);
 
-        singleCard.put(45,3);
-        singleCard.put(46,4);
+        singleCard.put(45,1);
+        singleCard.put(46,2);
 
-        singleCard.put(49,5);
-        singleCard.put(50,6);
+        singleCard.put(49,1);
+        singleCard.put(50,2);
 
         //大小王
         singleCard.put(53,7);

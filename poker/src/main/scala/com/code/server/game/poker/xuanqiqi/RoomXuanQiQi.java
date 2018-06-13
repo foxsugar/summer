@@ -138,6 +138,7 @@ public class RoomXuanQiQi extends Room {
 
     public IfaceRoomVo toVo(long userId) {
         RoomXuanQiQiVo roomVo = new RoomXuanQiQiVo();
+
         BeanUtils.copyProperties(this, roomVo);
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.game != null) {

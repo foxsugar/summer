@@ -23,7 +23,6 @@ public class RoomVo implements IfaceRoomVo {
     public int goldRoomPermission;
     public String gameType;
 
-
     //填大坑专用
     public boolean isLastDraw;//是否平局
     public int drawForLeaveChip;//平局留下筹码
@@ -106,6 +105,7 @@ public class RoomVo implements IfaceRoomVo {
         this.createUser = createUser;
         return this;
     }
+
 
     public IfaceGameVo getGame() {
         return game;

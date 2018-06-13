@@ -376,7 +376,7 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
                     if (isLiang2 && rList.contains(fangpiansan)){
 
-                        if (r == 0 || r == 1){
+                        if (l == 0 || l == 1){
                             return WIN;
                         }
                         return LOSE;

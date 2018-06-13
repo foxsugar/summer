@@ -33,5 +33,5 @@ public class GameXuanQiQiVO extends GameVo {
     protected List<XuanParam> xuanList = new ArrayList<>();
     protected RoomXuanQiQi room;
     public Map<Long, IfacePlayerInfoVo> playerCardInfos = new HashMap<>();
-
+    public long bankerId = 0;
 }
