@@ -79,6 +79,7 @@ public class GameBaseYSZ extends Game {
         double dizhu = 0d;
         double max = 0;
 
+        //随机
         if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT){
             dizhu = room.getGoldRoomType();
             if (room.getGoldRoomType() == 50){
@@ -112,14 +113,32 @@ public class GameBaseYSZ extends Game {
         }else if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_PUBLIC || room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_PRIVATE){
             dizhu = room.getGoldRoomType();
             if (room.getGoldRoomType() == 50){
-                max = 0;
+                max = 500;
+                genZhuList.add(100);
+                genZhuList.add(150);
+                genZhuList.add(200);
+                genZhuList.add(250);
 
             }else if (room.getGoldRoomType() == 100){
+                max = 1000;
+                genZhuList.add(200);
+                genZhuList.add(300);
+                genZhuList.add(400);
+                genZhuList.add(500);
 
-            }else if (room.getGoldRoomType() == 10000){
+            }else if (room.getGoldRoomType() == 1000){
+                max = 10000;
+                genZhuList.add(2000);
+                genZhuList.add(3000);
+                genZhuList.add(4000);
+                genZhuList.add(5000);
 
-            }else if (room.getGoldRoomType() == 20000){
-
+            }else if (room.getGoldRoomType() == 2000){
+                max = 20000;
+                genZhuList.add(4000);
+                genZhuList.add(6000);
+                genZhuList.add(8000);
+                genZhuList.add(10000);
             }
         }
 
