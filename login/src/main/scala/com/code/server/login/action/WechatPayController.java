@@ -110,7 +110,7 @@ public class WechatPayController {
         int money = Integer.valueOf(request.getParameter("money"));
         int chargeType = Integer.valueOf(request.getParameter("chargeType"));
         long userId = Long.valueOf(request.getParameter("userId"));
-        String openId = request.getParameter("openId");
+//        String openId = request.getParameter("openId");
 
 //        Map<String, String> agent = WechatAction.getAgentByToken(request);
 //        if (agent == null) return new AgentResponse().setCode(1000);
@@ -131,10 +131,12 @@ public class WechatPayController {
         String orderId = "" + createOrderId();
         try {
             WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
+
             orderRequest.setBody("充值");
+            orderRequest.setAppid(serverConfig.getAppId());
             orderRequest.setOutTradeNo(orderId);
             orderRequest.setTotalFee(totalFee);//元转成分
-            orderRequest.setOpenid(openId);
+//            orderRequest.setOpenid(openId);
             orderRequest.setSpbillCreateIp(ip);
 //            orderRequest.setTimeStart("yyyyMMddHHmmss");
 //            orderRequest.setTimeExpire("yyyyMMddHHmmss");
