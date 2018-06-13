@@ -7,6 +7,10 @@ import com.code.server.game.poker.zhaguzi.RoomYSZ;
 import com.code.server.game.room.IfaceRoom;
 import com.code.server.game.room.Room;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
+
 /**
  * Created by sunxianping on 2018/6/5.
  */
@@ -57,13 +61,18 @@ public class PokerGoldRoomFactory {
                 boolean isAA = true;
                 boolean isJoin = true;
                 int goldRoomPermission = IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT;
+
+                RoomYSZ roomYSZ = null;
+
                 try {
-                     int ret  = RoomYSZ.createYSZRoom(userId,gameNumber, personNumber, cricleNumber, multiple, fen, hidden,
-                            gameType, roomType, isAA, isJoin, null, null, goldRoomType, goldRoomPermission, (RoomYSZ ro) -> ro);
+                    roomYSZ = RoomYSZ.createYSZRoom_(userId, gameNumber, personNumber, cricleNumber, multiple, fen, hidden,
+                            gameType, roomType, isAA, isJoin, null, null, goldRoomType, goldRoomPermission);
                 } catch (DataNotFoundException e) {
                     e.printStackTrace();
                 }
 
+
+                return roomYSZ;
         }
 
         return room;
