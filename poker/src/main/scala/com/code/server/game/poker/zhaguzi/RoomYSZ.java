@@ -35,6 +35,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class RoomYSZ extends RoomExtendGold {
 
@@ -77,9 +81,52 @@ public class RoomYSZ extends RoomExtendGold {
 
     }
 
-    public static int createYSZRoom(long userId, int gameNumber, int personNumber,int cricleNumber,int multiple,int caiFen,
+    public static int createYSZRoom(long userId, int gameNumber, int personNumber, int cricleNumber, int multiple, int caiFen,
                                     int menPai, String gameType, String roomType, boolean isAA, boolean isJoin,
-                                    String clubId, String clubRoomModel,int goldRoomType, int goldRoomPermission) throws DataNotFoundException {
+                                    String clubId, String clubRoomModel, int goldRoomType, int goldRoomPermission) throws DataNotFoundException {
+
+       return  createYSZRoom(userId, gameNumber, personNumber, cricleNumber, multiple,caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel, goldRoomType, goldRoomPermission, null);
+    }
+
+
+    public static RoomYSZ createYSZRoom_(long userId, int gameNumber, int personNumber, int cricleNumber, int multiple, int caiFen,
+                                    int menPai, String gameType, String roomType, boolean isAA, boolean isJoin,
+                                    String clubId, String clubRoomModel, int goldRoomType, int goldRoomPermission) throws DataNotFoundException {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
+        RoomYSZ room = getRoomInstance(roomType);
+
+        room.personNumber = personNumber;
+        room.roomId = getRoomIdStr(genRoomId(serverConfig.getServerId()));
+        room.createUser = userId;
+        room.gameType = gameType;
+        room.roomType = roomType;
+        room.isAA = isAA;
+        room.isCreaterJoin = isJoin;
+        room.multiple = multiple;
+        room.caiFen = caiFen;
+        room.menPai = menPai;
+        room.bankerId = userId;
+        room.cricleNumber = cricleNumber;
+        room.setClubId(clubId);
+        room.setClubRoomModel(clubRoomModel);
+        room.isRobotRoom = true;
+        room.goldRoomType = goldRoomType;
+        room.goldRoomPermission = goldRoomPermission;
+        room.init(gameNumber, multiple);
+
+//        RoomManager.addRoom(room.roomId, "" + serverConfig.getServerId(), room);
+        IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);
+        room.setUuid(idWorker.nextId());
+
+        return room;
+    }
+
+
+
+    public static int createYSZRoom(long userId, int gameNumber, int personNumber, int cricleNumber, int multiple, int caiFen,
+                                    int menPai, String gameType, String roomType, boolean isAA, boolean isJoin,
+                                    String clubId, String clubRoomModel, int goldRoomType, int goldRoomPermission, Supplier<RoomYSZ> supplier) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
         RoomYSZ room = getRoomInstance(roomType);
@@ -128,7 +175,12 @@ public class RoomYSZ extends RoomExtendGold {
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);
         room.setUuid(idWorker.nextId());
 
+        if (supplier != null){
+            supplier.get();
+        }
+
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createYSZRoom", room.toVo(userId)), userId);
+
 
         return 0;
     }

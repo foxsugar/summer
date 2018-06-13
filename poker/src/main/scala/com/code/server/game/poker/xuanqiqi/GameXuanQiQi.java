@@ -1,9 +1,6 @@
 package com.code.server.game.poker.xuanqiqi;
 
-import com.code.server.constant.response.GameOfResult;
-import com.code.server.constant.response.IfaceGameVo;
-import com.code.server.constant.response.ResponseVo;
-import com.code.server.constant.response.UserOfResult;
+import com.code.server.constant.response.*;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
@@ -76,7 +73,7 @@ public class GameXuanQiQi extends Game {
             playerCardInfo.canKou = "0";
             playerCardInfo.canGuo = "0";
             playerCardInfos.put(uid, playerCardInfo);
-            //xuanOrGuo.put(uid,0);
+            xuanOrGuo.put(uid,0);
             ifChuPai.put(uid,0);
             compareCard.put(uid,-1);
         }
@@ -364,6 +361,176 @@ public class GameXuanQiQi extends Game {
      */
     public int play(long userId,int cardNumber,Integer card1,Integer card2,Integer card3){
 
+        //TODO 牌型验证
+        boolean checkCard = false;//和出的牌比
+        boolean checkAllCard = false;//和所有牌比
+        if(ifChuPai.values().contains(1) && !ifChuPai.values().contains(2) && !ifChuPai.values().contains(3)){
+            //第二个人出牌
+            long temp = 0l;
+            for (long l:ifChuPai.keySet()) {
+                if(1==ifChuPai.get(l)){
+                    temp=l;
+                }
+            }
+            PlayerCardInfoXuanQiQi playerCardInfoXuanQiQi = new PlayerCardInfoXuanQiQi();
+            playerCardInfoXuanQiQi.setUserId(userId);
+            if(card1!=null){
+                playerCardInfoXuanQiQi.getPlayCards().add(card1);
+            }
+            if(card2!=null){
+                playerCardInfoXuanQiQi.getPlayCards().add(card2);
+            }
+            if(card3!=null){
+                playerCardInfoXuanQiQi.getPlayCards().add(card3);
+            }
+            checkCard = compareCardForCheck(playerCardInfos.get(temp).playCards.size(),playerCardInfos.get(temp),playerCardInfoXuanQiQi);
+            if(checkCard){//出的牌小，查找有没有大牌
+                if(1==cardNumber){
+                    a:for (Integer i:playerCardInfos.get(userId).handCards) {
+                        if(UtilXuanQiQi.getOneCardWin(i,playerCardInfos.get(temp).playCards.get(0))){
+                            if( UtilXuanQiQi.singleCard.get(i)!=UtilXuanQiQi.singleCard.get(playerCardInfos.get(temp).playCards.get(0))){
+                                checkAllCard = true;
+                                break a;
+                            }
+                        }
+                    }
+                }else if(2==cardNumber){
+                    int tempNum = playerCardInfos.get(userId).handCards.size();
+                    if(tempNum>=cardNumber){
+                        b:for (int i = 0; i < tempNum-1; i++) {
+                            for (int j = i+1; j < tempNum; j++) {
+                                if(UtilXuanQiQi.getTwoCardWin(
+                                        playerCardInfos.get(userId).handCards.get(i),
+                                        playerCardInfos.get(userId).handCards.get(j),
+                                        playerCardInfos.get(temp).playCards.get(0),
+                                        playerCardInfos.get(temp).playCards.get(1))){
+                                    boolean b1 = UtilXuanQiQi.doubleWangList.contains(playerCardInfos.get(userId).handCards.get(i))
+                                            && UtilXuanQiQi.doubleWangList.contains(playerCardInfos.get(userId).handCards.get(j))
+                                            && UtilXuanQiQi.redTenlist.contains(playerCardInfos.get(temp).playCards.get(0))
+                                            && UtilXuanQiQi.redTenlist.contains(playerCardInfos.get(temp).playCards.get(1));
+                                    boolean b2 = UtilXuanQiQi.doubleWangList.contains(playerCardInfos.get(userId).handCards.get(0))
+                                            && UtilXuanQiQi.doubleWangList.contains(playerCardInfos.get(userId).handCards.get(1))
+                                            && UtilXuanQiQi.redTenlist.contains(playerCardInfos.get(temp).playCards.get(i))
+                                            && UtilXuanQiQi.redTenlist.contains(playerCardInfos.get(temp).playCards.get(j));
+                                    if(!b1||!b2){
+                                        checkAllCard = true;
+                                        break b;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }else if(3==cardNumber){
+                    int tempNum = playerCardInfos.get(userId).handCards.size();
+                    if(tempNum>=cardNumber){
+                        c:for (int i = 0; i < tempNum-2; i++) {
+                            for (int j = i+1; j < tempNum-1; j++) {
+                                for (int k = j+1; k < tempNum; k++) {
+                                    if(UtilXuanQiQi.getThreeCardWin(
+                                            playerCardInfos.get(userId).handCards.get(i),
+                                            playerCardInfos.get(userId).handCards.get(j),
+                                            playerCardInfos.get(userId).handCards.get(k),
+                                            playerCardInfos.get(temp).playCards.get(0),
+                                            playerCardInfos.get(temp).playCards.get(1),
+                                            playerCardInfos.get(temp).playCards.get(2))){
+                                        checkAllCard = true;
+                                        break c;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }else if (ifChuPai.values().contains(2) && !ifChuPai.values().contains(3)){
+            //第三个人出牌
+            long temp = 0l;
+            for (long l:compareCard.keySet()) {
+                if(1==compareCard.get(l)){
+                    temp=l;
+                }
+            }
+            PlayerCardInfoXuanQiQi playerCardInfoXuanQiQi = new PlayerCardInfoXuanQiQi();
+            playerCardInfoXuanQiQi.setUserId(userId);
+            if(card1!=null){
+                playerCardInfoXuanQiQi.getPlayCards().add(card1);
+            }
+            if(card2!=null){
+                playerCardInfoXuanQiQi.getPlayCards().add(card2);
+            }
+            if(card3!=null){
+                playerCardInfoXuanQiQi.getPlayCards().add(card3);
+            }
+            checkCard = compareCardForCheck(playerCardInfos.get(temp).playCards.size(),playerCardInfos.get(temp),playerCardInfoXuanQiQi);
+            if(checkCard) {//出的牌小，查找有没有大牌
+                if (1 == cardNumber) {
+                    a:
+                    for (Integer i : playerCardInfos.get(userId).handCards) {
+                        if (UtilXuanQiQi.getOneCardWin(i, playerCardInfos.get(temp).playCards.get(0))) {
+                            if( UtilXuanQiQi.singleCard.get(i)!=UtilXuanQiQi.singleCard.get(playerCardInfos.get(temp).playCards.get(0))){
+                                checkAllCard = true;
+                                break a;
+                            }
+                        }
+                    }
+                } else if (2 == cardNumber) {
+                    int tempNum = playerCardInfos.get(userId).handCards.size();
+                    if (tempNum >= cardNumber) {
+                        b:
+                        for (int i = 0; i < tempNum - 1; i++) {
+                            for (int j = i + 1; j < tempNum; j++) {
+                                if (UtilXuanQiQi.getTwoCardWin(
+                                        playerCardInfos.get(userId).handCards.get(i),
+                                        playerCardInfos.get(userId).handCards.get(j),
+                                        playerCardInfos.get(temp).playCards.get(0),
+                                        playerCardInfos.get(temp).playCards.get(1))) {
+                                    boolean b1 = UtilXuanQiQi.doubleWangList.contains(playerCardInfos.get(userId).handCards.get(i))
+                                            && UtilXuanQiQi.doubleWangList.contains(playerCardInfos.get(userId).handCards.get(j))
+                                            && UtilXuanQiQi.redTenlist.contains(playerCardInfos.get(temp).playCards.get(0))
+                                            && UtilXuanQiQi.redTenlist.contains(playerCardInfos.get(temp).playCards.get(1));
+                                    boolean b2 = UtilXuanQiQi.doubleWangList.contains(playerCardInfos.get(userId).handCards.get(0))
+                                            && UtilXuanQiQi.doubleWangList.contains(playerCardInfos.get(userId).handCards.get(1))
+                                            && UtilXuanQiQi.redTenlist.contains(playerCardInfos.get(temp).playCards.get(i))
+                                            && UtilXuanQiQi.redTenlist.contains(playerCardInfos.get(temp).playCards.get(j));
+                                    if(!b1||!b2){
+                                        checkAllCard = true;
+                                        break b;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if (3 == cardNumber) {
+                    int tempNum = playerCardInfos.get(userId).handCards.size();
+                    if (tempNum >= cardNumber) {
+                        c:
+                        for (int i = 0; i < tempNum - 2; i++) {
+                            for (int j = i + 1; j < tempNum - 1; j++) {
+                                for (int k = j + 1; k < tempNum; k++) {
+                                    if (UtilXuanQiQi.getThreeCardWin(
+                                            playerCardInfos.get(userId).handCards.get(i),
+                                            playerCardInfos.get(userId).handCards.get(j),
+                                            playerCardInfos.get(userId).handCards.get(k),
+                                            playerCardInfos.get(temp).playCards.get(0),
+                                            playerCardInfos.get(temp).playCards.get(1),
+                                            playerCardInfos.get(temp).playCards.get(2))) {
+                                        checkAllCard = true;
+                                        break c;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }else if (!ifChuPai.values().contains(1) && !ifChuPai.values().contains(2) && !ifChuPai.values().contains(3)){
+            //第一个人出牌，不用判断
+        }
+        if(checkAllCard){
+            return ErrorCode.MUST_PLAY_MaxCard;
+        }
+
         //存到player
         List<Integer> tempList = new ArrayList<>();
         if(cardNumber==1){
@@ -560,6 +727,22 @@ public class GameXuanQiQi extends Game {
         }
     }
 
+    /**
+     * 比牌(判断必须出最大用的),比手牌
+     * @param cardNumber
+     * @param p1
+     * @param p2
+     */
+    private boolean compareCardForCheck(int cardNumber,PlayerCardInfoXuanQiQi p1,PlayerCardInfoXuanQiQi p2){
+        if(cardNumber==1){//比1张
+            return UtilXuanQiQi.getOneCardWin(p1.playCards.get(0),p2.playCards.get(0));
+        }else if(cardNumber==2){
+            return UtilXuanQiQi.getTwoCardWin(p1.playCards.get(0),p1.playCards.get(1),p2.playCards.get(0),p2.playCards.get(1));
+        }else if (cardNumber==3){
+            return UtilXuanQiQi.getThreeCardWin(p1.playCards.get(0),p1.playCards.get(1),p1.playCards.get(2),p2.playCards.get(0),p2.playCards.get(1),p2.playCards.get(2));
+        }
+        return true;
+    }
 
     /**
      * 存记录，分罗
@@ -574,7 +757,24 @@ public class GameXuanQiQi extends Game {
         }
         List<Integer> tempCards = new ArrayList<>();
         tempCards.addAll(playerCardInfos.get(finalWinnerId).getWinCards());
-        for (long l:playerCardInfos.keySet()) {
+        List<Long> list = new ArrayList<>();
+        for (long l :ifChuPai.keySet()){
+            if(ifChuPai.get(l)==1){
+                list.add(l);
+            }
+        }
+        for (long l :ifChuPai.keySet()){
+            if(ifChuPai.get(l)==2){
+                list.add(l);
+            }
+        }
+        for (long l :ifChuPai.keySet()){
+            if(ifChuPai.get(l)==3){
+                list.add(l);
+            }
+        }
+
+        for (long l:list) {
             tempCards.addAll(playerCardInfos.get(l).getPlayCards());
         }
         playerCardInfos.get(finalWinnerId).setWinCards(tempCards);//设置赢的
@@ -627,6 +827,15 @@ public class GameXuanQiQi extends Game {
         chuPaiId = finalWinnerId;//设置下一个出牌的人
         operatId = finalWinnerId;
 
+        Map<String, Object> result = new HashMap<>();
+        result.put("finalWinnerId",finalWinnerId);
+        result.put("winCards",playerCardInfos.get(finalWinnerId).winCards);
+        result.put("winCards",tempCardsType);
+        result.put("gotThree",playerCardInfos.get(finalWinnerId).winCards.size()/9>=1);
+        result.put("gotFive",playerCardInfos.get(finalWinnerId).winCards.size()/15>=1);
+        result.put("gotSix",playerCardInfos.get(finalWinnerId).winCards.size()/18>=1);
+        ResponseVo vo = new ResponseVo("gameService", "winResult", result);
+        MsgSender.sendMsg2Player(vo, users);
 
         for (long l :playerCardInfos.keySet()) {
             if(finalWinnerId == l){
@@ -643,14 +852,7 @@ public class GameXuanQiQi extends Game {
             }
         }
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("finalWinnerId",finalWinnerId);
-        result.put("cardsType",tempCardsType);
-        result.put("gotThree",playerCardInfos.get(finalWinnerId).winCards.size()/9>=1);
-        result.put("gotFive",playerCardInfos.get(finalWinnerId).winCards.size()/15>=1);
-        result.put("gotSix",playerCardInfos.get(finalWinnerId).winCards.size()/18>=1);
-        ResponseVo vo = new ResponseVo("gameService", "winResult", result);
-        MsgSender.sendMsg2Player(vo, users);
+
 
     }
 
