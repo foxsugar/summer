@@ -12,6 +12,8 @@ import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.config.WechatConfig;
 import com.code.server.login.kafka.MsgSender;
+import com.code.server.login.pay.UnifiedOrder;
+import com.code.server.login.util.PayUtil;
 import com.code.server.login.util.XMLUtil;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
@@ -21,6 +23,7 @@ import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.util.SignUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 /**
  * Created by sunxianping on 2018/5/14.
@@ -68,6 +70,7 @@ public class WechatPayController {
 
 
     static {
+        moneyPointMap.put(1,1);
         moneyPointMap.put(6,6);
         moneyPointMap.put(18,18);
         moneyPointMap.put(30,30);
@@ -78,6 +81,7 @@ public class WechatPayController {
 
 
         //金币
+        goldPointMap.put(1, 100);
         goldPointMap.put(10, 1000);
         goldPointMap.put(50, 5000);
         goldPointMap.put(100, 10000);
@@ -103,6 +107,127 @@ public class WechatPayController {
     }
 
 
+    @ResponseBody
+    @RequestMapping(value = "preOrderApp")
+    public Map<String, Object> charge(HttpServletRequest request,String userId, String spIp, int chargeType, int money) throws Exception {
+
+        Map<String, Object> result = new HashMap<>();
+
+        SortedMap<String, String> packageParams = new TreeMap<>();
+
+        String ip = getIpAddr(request);
+        //微信
+
+        int money100 = money * 100;
+
+        Integer moneyPoint = getMoneyPoint(money, chargeType);
+        logger.info("充值金额: " + money);
+        if (moneyPoint == null){
+            Map<String, Object> m = new HashMap<>();
+            m.put("code", 10);
+            m.put("params", "参数错误");
+            return m;
+        }
+        logger.info("增加钱数: " + moneyPoint);
+
+        String body = "充值";
+
+        String bodyUTF8 = null;
+        try {
+            bodyUTF8 = new String(body.getBytes(), "UTF-8");
+        } catch (UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+        }
+
+        String orderId = PayUtil.getOrderIdByUUId();
+        packageParams.put("appid", serverConfig.getAppId());//appID       应用id
+        packageParams.put("mch_id", wechatConfig.getMchId());//appID       商户号
+        packageParams.put("nonce_str", PayUtil.getRandomStringByLength(32));//32位随机数
+        packageParams.put("body", bodyUTF8);//商品描述
+        packageParams.put("out_trade_no", orderId);
+        packageParams.put("total_fee", "" + money100);//充值金额
+        packageParams.put("spbill_create_ip", spIp);//终端IP
+        packageParams.put("trade_type", "APP");//支付类型
+        String url = "http://" + serverConfig.getDomain() + "/wechat/pay/pay";
+        packageParams.put("notify_url", url);//通知地址
+
+        String rtn = UnifiedOrder.postCharge(packageParams);
+
+        Element root = PayUtil.ParsingXML(rtn);//解析xmlString
+
+
+        SortedMap<String, String> secondParams = new TreeMap<>();
+
+
+        //成功
+//        if("SUCCESS".equals(root.elementText("return_code"))){
+        //业务成功
+        if ("SUCCESS".equals(root.elementText("result_code"))) {
+            System.out.println("业务成功");
+
+
+            secondParams.put("appid", serverConfig.getAppId());
+            secondParams.put("partnerid", serverConfig.getMchId());
+            secondParams.put("prepayid", root.elementText("prepay_id"));
+            secondParams.put("noncestr", root.elementText("nonce_str"));
+            secondParams.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
+            secondParams.put("package", "Sign=WXPay");
+
+            String paySign = PayUtil.createSign("UTF-8", serverConfig.getKey(), secondParams);
+
+            secondParams.put("sign", paySign);
+
+
+            //充值记录
+            Charge charge = new Charge();
+            charge.setOrderId(orderId);
+            charge.setUserid(Long.valueOf(userId));
+            charge.setMoney(money);
+            charge.setMoney_point(moneyPoint);
+//            charge.setOrigin(origin);
+            charge.setStatus(0);
+//            charge.setSign(paySign);
+            charge.setSp_ip(ip);
+            charge.setRecharge_source("1");
+            //充值类型
+            charge.setChargeType(chargeType);
+            charge.setCreatetime(new Date());
+
+            chargeService.save(charge);
+
+
+        } else {
+            System.out.println("业务失败");
+            System.out.println(root.elementText("err_code"));
+            //余额不足
+            if ("NOTENOUGH".equals(root.elementText("err_code"))) {
+                secondParams.put("err_code", root.elementText("err_code"));
+                secondParams.put("err_code_des", root.elementText("err_code_des"));
+                result.put("code", 10000);
+                return result;
+                //订单已支付
+            } else if ("ORDERPAID".equals(root.elementText("err_code"))) {
+                secondParams.put("err_code", root.elementText("err_code"));
+                secondParams.put("err_code_des", root.elementText("err_code_des"));
+                result.put("code", 11111);
+                return result;
+                //订单已关闭
+            } else if ("ORDERCLOSED".equals(root.elementText("err_code"))) {
+                secondParams.put("err_code", root.elementText("err_code"));
+                secondParams.put("err_code_des", root.elementText("err_code_des"));
+                result.put("code", 10001);
+                return result;
+            }else{
+                result.put("code", 10002);
+            }
+        }
+//        }
+
+        result.put("params", secondParams);
+        result.put("code", 0);
+
+        return result;
+    }
     @ResponseBody
     @RequestMapping(value = "preOrder")
     public AgentResponse pay(HttpServletRequest request) throws Exception {

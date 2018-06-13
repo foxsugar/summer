@@ -40,6 +40,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
     }
 
 
+
     @Override
     public boolean isCanPengAddThisCard(String card) {
         int cardType = CardTypeUtil.getTypeByCard(card);
