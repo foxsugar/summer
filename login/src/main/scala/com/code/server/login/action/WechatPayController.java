@@ -154,8 +154,10 @@ public class WechatPayController {
         String rtn = UnifiedOrder.postCharge(packageParams);
 
         Element root = PayUtil.ParsingXML(rtn);//解析xmlString
+        System.out.println(root.toString());
 
         SortedMap<String, String> secondParams = new TreeMap<>();
+
 
         //成功
 //        if("SUCCESS".equals(root.elementText("return_code"))){
@@ -212,6 +214,8 @@ public class WechatPayController {
                 secondParams.put("err_code_des", root.elementText("err_code_des"));
                 result.put("code", 10001);
                 return result;
+            }else{
+                result.put("code", 10002);
             }
         }
 //        }
