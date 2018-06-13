@@ -67,4 +67,9 @@ public class GameInfoZhuohaozi extends GameInfoNew {
     }
 
 
+    @Override
+    protected void handleHuangzhuang(long userId) {
+        super.handleHuangzhuang(userId);
+        turnResultToZeroOnHuangZhuang();
+    }
 }

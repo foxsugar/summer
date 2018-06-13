@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by sunxianping on 2017/5/31.
@@ -24,7 +25,7 @@ public class RoomManager {
     private Map<Long, List<String>> prepareRoom = new HashMap<>();
 
 
-    private List<Room> robotRoom = new ArrayList<>();
+    private List<Room> robotRoom = new CopyOnWriteArrayList<>();
 
     private static RoomManager outInstance = new RoomManager();
 
