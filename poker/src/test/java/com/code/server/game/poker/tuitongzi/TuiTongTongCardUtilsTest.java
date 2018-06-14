@@ -1,6 +1,7 @@
 package com.code.server.game.poker.tuitongzi;
 
 import com.code.server.util.DateUtil;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,8 +20,22 @@ import static org.junit.Assert.*;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class TuiTongTongCardUtilsTest {
+    @Test
+    public void zhuangIsBiggerThanXian1() throws Exception {
 
+        PlayerTuiTongZi pA = new PlayerTuiTongZi(1, 8,12);
+        PlayerTuiTongZi pB = new PlayerTuiTongZi(2, 32, 28);
+        Boolean ret = TuiTongTongCardUtils.zhuangIsBiggerThanXian(pB, pA);
+        Assert.assertNotEquals(false, ret);
+    }
 
+    @Test
+    public void mAIsBiggerThanB2() throws Exception {
+    }
+
+    @Test
+    public void mAIsBiggerThanB3() throws Exception {
+    }
 
 
     @Test

@@ -743,6 +743,18 @@ public class GameZhaGuZi extends Game {
                 }
             }
 
+            if (ret == 2){
+                //算红桃3是不是憋手里
+                for (PlayerZhaGuZi player : playerCardInfos.values()){
+                    if (player.getRetain3List().contains(hongtaosan)){
+                        if (player.cards.contains(hongtaosan)){
+                            base++;
+                        }
+                        break;
+                    }
+                }
+            }
+
             int count = 0;
 
             if (ret == 0) {
