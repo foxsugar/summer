@@ -164,22 +164,33 @@ object HuWithHun {
       huList.add(isLong(huCardType, hun, lastCard))
     }
 
+    var l = huList.stream().filter(i => playerCardsInfoMj.isHasSpecialHu(i)).collect(Collectors.toList())
+    var t = getMaxHuType(l, playerCardsInfoMj)
+    if(t!=0) {
+
+      huCardType.specialHuList.add(t)
+    }
+
     if (playerCardsInfoMj.getSpecialHuScore.containsKey(HuType.hu_一条龙) && isYiTiaoLong(huCardType, hun, lastCard)) {
-      huList.add(playerCardsInfoMj.getSpecialHuScore.get(HuType.hu_一条龙))
+      huCardType.specialHuList.add(HuType.hu_一条龙)
+
+//      huList.add(playerCardsInfoMj.getSpecialHuScore.get(HuType.hu_一条龙))
     }
 
     if (playerCardsInfoMj.getSpecialHuScore.containsKey(HuType.hu_清一色) && isQingYiSe(huCardType,noHuncards, hun, lastCard)) {
-      huList.add(playerCardsInfoMj.getSpecialHuScore.get(HuType.hu_清一色))
+//      huList.add(playerCardsInfoMj.getSpecialHuScore.get(HuType.hu_清一色))
+      huCardType.specialHuList.add(HuType.hu_清一色)
     }
     if (playerCardsInfoMj.getSpecialHuScore.containsKey(HuType.hu_吊将) && isDiaoJiang(huCardType, hun, lastCard)) {
-      huList.add(playerCardsInfoMj.getSpecialHuScore.get(HuType.hu_吊将))
+//      huList.add(playerCardsInfoMj.getSpecialHuScore.get(HuType.hu_吊将))
+      huCardType.specialHuList.add(HuType.hu_吊将)
     }
 
 
-    var l = huList.stream().filter(i => playerCardsInfoMj.isHasSpecialHu(i)).collect(Collectors.toList())
-    var t = getMaxHuType(l, playerCardsInfoMj)
-    huCardType.specialHuList.add(t)
-    println("最大牌型: " + t)
+//    var l = huList.stream().filter(i => playerCardsInfoMj.isHasSpecialHu(i)).collect(Collectors.toList())
+//    var t = getMaxHuType(l, playerCardsInfoMj)
+//    huCardType.specialHuList.add(t)
+//    println("最大牌型: " + t)
     t
   }
 
