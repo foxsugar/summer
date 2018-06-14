@@ -24,7 +24,7 @@ public class GameBaseYSZ extends Game {
     public Map<Long, PlayerYSZ> playerCardInfos = new HashMap<>();
     protected Random rand = new Random();
 
-    private int curRoundNumber = 1;//当前轮数
+    protected int curRoundNumber = 1;//当前轮数
     protected Double chip = INIT_BOTTOM_CHIP;
 
     protected List<Integer> leaveCards = new ArrayList<>();//剩余的牌，暂时无用
@@ -170,11 +170,7 @@ public class GameBaseYSZ extends Game {
 
     public void startGame(List<Long> users, Room room) {
 
-        if (isYsz()) {
-            PokerItem.isYSZ = true;
-        } else {
-            PokerItem.isYSZ = false;
-        }
+        PokerItem.isYSZ = true;
 
         this.room = (RoomYSZ) room;
         init(users);
@@ -238,11 +234,6 @@ public class GameBaseYSZ extends Game {
         return 0;
     }
 
-    /**
-     * 跟注
-     *
-     * @return
-     */
     public int call(long userId) {
 
         logger.info(userId + "  跟注: " + chip);
@@ -256,6 +247,8 @@ public class GameBaseYSZ extends Game {
         } else {
             playerCardInfos.get(userId).setAllScore(playerCardInfos.get(userId).getAllScore() + chip);
         }
+
+        logger.info("{}", userId);
 
         Map<String, Object> result = new HashMap<>();
         result.put("userId", userId);
@@ -276,15 +269,9 @@ public class GameBaseYSZ extends Game {
         return 0;
     }
 
-
-    /**
-     * 弃牌
-     *
-     * @return
-     */
     public int fold(long userId) {
 
-        logger.info(userId + "  弃牌!!!");
+        logger.info(userId + "  foldddd!!!");
 
 
         Map<String, Object> result = new HashMap<>();
@@ -293,7 +280,12 @@ public class GameBaseYSZ extends Game {
         ResponseVo vo = new ResponseVo("gameService", "foldResponse", result);
         MsgSender.sendMsg2Player(vo, users);
 
+//        logger.info(userId + "  f!");
         if (aliveUser.size() == 2) {
+            logger.info("over");
+
+            curUserId = 0l;
+
             aliveUser.remove(userId);
             //处理结果
             compute(aliveUser);
@@ -304,6 +296,8 @@ public class GameBaseYSZ extends Game {
             room.clearReadyStatus(true);
             sendFinalResult();
         } else {
+
+            logger.info("conti");
             noticeActionByFold(userId);
             aliveUser.remove(userId);
         }
@@ -314,14 +308,9 @@ public class GameBaseYSZ extends Game {
         return 0;
     }
 
-    /**
-     * 看牌
-     *
-     * @return
-     */
     public int see(long userId) {
 
-        logger.info(userId + "  看牌" + playerCardInfos.get(userId).getHandcards());
+        logger.info(userId + "  ssss" + playerCardInfos.get(userId).getHandcards());
 
         if (playerCardInfos.get(userId).getCurRoundNumber() <= room.getMenPai()) {
             return ErrorCode.NOT_GET_MEMPAI;
@@ -381,6 +370,7 @@ public class GameBaseYSZ extends Game {
         if (seeUser.contains(askerId)) {
             playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore() + chip * 2);
             result.put("addChip", chip * 2);
+            logger.info("");
         } else {
             playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore() + chip);
             result.put("addChip", chip);
@@ -389,6 +379,7 @@ public class GameBaseYSZ extends Game {
         MsgSender.sendMsg2Player(vo, users);
 
         if (aliveUser.size() > 2) {
+            logger.info("");
             if (winnerId == askerId) {
                 aliveUser.remove(winnerId == askerId ? accepterId : askerId);
             }
@@ -396,6 +387,7 @@ public class GameBaseYSZ extends Game {
             if (aliveUser.size() > 1) {
                 noticeAction(curUserId);
             } else {
+                logger.info("");
                 //处理结果
                 List<Long> list = new ArrayList<>();
                 list.add(winnerId);
@@ -418,7 +410,7 @@ public class GameBaseYSZ extends Game {
             compute(list);
             sendResult();
             genRecord();
-
+            logger.info("");
             room.setBankerId(winnerId);
             room.clearReadyStatus(true);
             sendFinalResult();
@@ -431,20 +423,20 @@ public class GameBaseYSZ extends Game {
         return 0;
     }
 
-    /**
-     * 透视
-     *
-     * @return
-     */
-    public int perspective(long userId) {
-        Map<Long, Object> result = new HashMap<>();
-        for (Long l : playerCardInfos.keySet()) {
-            result.put(l, playerCardInfos.get(l).handcards);
-        }
-        ResponseVo vo = new ResponseVo("gameService", "perspective", result);
-        MsgSender.sendMsg2Player(vo, userId);
-        return 0;
-    }
+//    /**
+//     * 透视
+//     *
+//     * @return
+//     */
+//    public int perspective(long userId) {
+//        Map<Long, Object> result = new HashMap<>();
+//        for (Long l : playerCardInfos.keySet()) {
+//            result.put(l, playerCardInfos.get(l).handcards);
+//        }
+//        ResponseVo vo = new ResponseVo("gameService", "perspective", result);
+//        MsgSender.sendMsg2Player(vo, userId);
+//        return 0;
+//    }
 
     /**
      * 换牌
@@ -452,30 +444,30 @@ public class GameBaseYSZ extends Game {
      *
      * @return
      */
-    public int changeCard(long userId, String cardType) {
-        Map<Long, Object> result = new HashMap<>();
-        List<Integer> changeCards = new ArrayList<>();
-        if ("baoZi".equals(cardType)) {
-            changeCards = ArrUtils.getBaoZi(leaveCards);
-        } else if ("tongHuaShun".equals(cardType)) {
-            changeCards = ArrUtils.getTongHuaShun(leaveCards);
-        } else if ("tongHua".equals(cardType)) {
-            changeCards = ArrUtils.getTongHua(leaveCards);
-        } else if ("shunZi".equals(cardType)) {
-            changeCards = ArrUtils.getShunZi(leaveCards);
-        } else if ("duiZi".equals(cardType)) {
-            changeCards = ArrUtils.getDuiZi(leaveCards);
-        } else if ("erSanWu".equals(cardType)) {
-            changeCards = ArrUtils.getErSanWu(leaveCards);
-        } else if ("sanPai".equals(cardType)) {
-            changeCards = ArrUtils.getSanPai(leaveCards);
-        }
-        changeCard(userId, playerCardInfos.get(userId).getHandcards(), changeCards);
-        result.put(userId, changeCards);
-        ResponseVo vo = new ResponseVo("gameService", "changeCard", result);
-        MsgSender.sendMsg2Player(vo, userId);
-        return 0;
-    }
+//    public int changeCard(long userId, String cardType) {
+//        Map<Long, Object> result = new HashMap<>();
+//        List<Integer> changeCards = new ArrayList<>();
+//        if ("baoZi".equals(cardType)) {
+//            changeCards = ArrUtils.getBaoZi(leaveCards);
+//        } else if ("tongHuaShun".equals(cardType)) {
+//            changeCards = ArrUtils.getTongHuaShun(leaveCards);
+//        } else if ("tongHua".equals(cardType)) {
+//            changeCards = ArrUtils.getTongHua(leaveCards);
+//        } else if ("shunZi".equals(cardType)) {
+//            changeCards = ArrUtils.getShunZi(leaveCards);
+//        } else if ("duiZi".equals(cardType)) {
+//            changeCards = ArrUtils.getDuiZi(leaveCards);
+//        } else if ("erSanWu".equals(cardType)) {
+//            changeCards = ArrUtils.getErSanWu(leaveCards);
+//        } else if ("sanPai".equals(cardType)) {
+//            changeCards = ArrUtils.getSanPai(leaveCards);
+//        }
+//        changeCard(userId, playerCardInfos.get(userId).getHandcards(), changeCards);
+//        result.put(userId, changeCards);
+//        ResponseVo vo = new ResponseVo("gameService", "changeCard", result);
+//        MsgSender.sendMsg2Player(vo, userId);
+//        return 0;
+//    }
     //=====================================
     //==============结束操作================
     //=====================================
@@ -497,14 +489,19 @@ public class GameBaseYSZ extends Game {
             if (PokerItem.is235(p.getPokers())) {
                 playerCardInfo.setCardType("BaoZiShaShou");
             }
+
             //添加次数
             if ("BaoZi".equals(playerCardInfo.getCardType())) {
+                logger.info("");
                 roomYSZ.addBaoziNum(playerCardInfo.getUserId());
             } else if ("ShunJin".equals(playerCardInfo.getCardType())) {
+                logger.info("");
                 roomYSZ.addTonghuashunNum(playerCardInfo.getUserId());
             } else if ("JinHua".equals(playerCardInfo.getCardType())) {
+                logger.info("");
                 roomYSZ.addTonghuaNum(playerCardInfo.getUserId());
             } else if ("ShunZi".equals(playerCardInfo.getCardType())) {
+                logger.info("");
                 roomYSZ.addShunziNum(playerCardInfo.getUserId());
             } else if ("DuiZi".equals(playerCardInfo.getCardType())) {
                 roomYSZ.addDuiziNum(playerCardInfo.getUserId());
@@ -540,6 +537,7 @@ public class GameBaseYSZ extends Game {
         }
         for (PlayerYSZ playerCardInfo : playerCardInfos.values()) {
             if (winList.contains(playerCardInfo.getUserId())) {
+                logger.info("");
                 room.addUserSocre(playerCardInfo.getUserId(), playerCardInfo.getScore() - room.getMultiple() * playerCardInfo.getAllScore());
                 room.addUserSocre(playerCardInfo.getUserId(), playerCardInfo.getCaifen());
                 playerCardInfo.setFinalScore(playerCardInfo.getScore() - room.getMultiple() * playerCardInfo.getAllScore() + playerCardInfo.getCaifen());
@@ -603,6 +601,7 @@ public class GameBaseYSZ extends Game {
     protected void sendFinalResult() {
         //所有牌局都结束
         if (room.getCurGameNumber() > room.getGameNumber()) {
+            logger.info("");
             List<UserOfResult> userOfResultList = this.room.getUserOfResult();
             // 存储返回
             GameOfResult gameOfResult = new GameOfResult();
@@ -653,9 +652,11 @@ public class GameBaseYSZ extends Game {
             }
         } else {
             if (chip >= MAX_BET_NUM / 2) {
+                logger.info("");
                 playerCardInfo.setRaise("0");
             }
         }
+
         if (getMaxRoundNumber() <= room.getMenPai()) {
             playerCardInfo.setKill("0");
         }
@@ -696,10 +697,12 @@ public class GameBaseYSZ extends Game {
             playerCardInfo.setKill("0");
         }
         if (seeUser.contains(curUserId)) {
+            logger.info("");
             if (chip >= MAX_BET_NUM) {
                 playerCardInfo.setRaise("0");
             }
         } else {
+            logger.info("");
             if (chip >= MAX_BET_NUM / 2) {
                 playerCardInfo.setRaise("0");
             }
@@ -719,6 +722,7 @@ public class GameBaseYSZ extends Game {
      * @param userId
      */
     protected void noticeActionByFold(long userId) {
+        logger.info("");
 //        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
         int index = aliveUser.indexOf(userId);
 
@@ -751,7 +755,9 @@ public class GameBaseYSZ extends Game {
         if (getMaxRoundNumber() <= room.getMenPai()) {
             playerCardInfo.setKill("0");
         }
+
         if (seeUser.contains(curUserId)) {
+            logger.info("");
             if (chip >= MAX_BET_NUM) {
                 playerCardInfo.setRaise("0");
             }
@@ -816,6 +822,7 @@ public class GameBaseYSZ extends Game {
      * @return
      */
     protected Long nextActioner(long curId) {
+        logger.info("");
         int index = aliveUser.indexOf(curId);
 
         int nextId = index + 1;
@@ -836,6 +843,8 @@ public class GameBaseYSZ extends Game {
      * @return
      */
     protected void campareAllCards() {
+
+        logger.info("比较所有人牌型");
         ArrayList<Player> list = new ArrayList<>();
         ArrayList<Long> winList = new ArrayList<>();
         ArrayList<Player> winnerList = null;
@@ -843,6 +852,7 @@ public class GameBaseYSZ extends Game {
             Player p = new Player(l, ArrUtils.cardCode.get(playerCardInfos.get(l).getHandcards().get(0)), ArrUtils.cardCode.get(playerCardInfos.get(l).getHandcards().get(1)), ArrUtils.cardCode.get(playerCardInfos.get(l).getHandcards().get(2)));
             list.add(p);
         }
+
         if (list.size() == 5) {
             winnerList = Player.findWinners(list.get(0), list.get(1), list.get(2), list.get(3), list.get(4));
         } else if (list.size() == 4) {
@@ -851,9 +861,10 @@ public class GameBaseYSZ extends Game {
             winnerList = Player.findWinners(list.get(0), list.get(1), list.get(2));
         } else if (list.size() == 2) {
             winnerList = Player.findWinners(list.get(0), list.get(1));
-        } else {
+        } else if (list.size() == 1){
             winList.add(list.get(0).getUid());
         }
+
         for (Player p : winnerList) {
             winList.add(p.getUid());
         }
@@ -1021,6 +1032,7 @@ public class GameBaseYSZ extends Game {
                 tempCount += 1;
             }
         }
+        logger.info("");
         if (tempCount == aliveUser.size()) {
             maxRound = true;
         }

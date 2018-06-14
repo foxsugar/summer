@@ -7,6 +7,8 @@ import com.code.server.game.room.Room;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.util.SpringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,11 +18,13 @@ import java.util.Map;
  */
 public class YSZRobotImpl implements YSZRobot {
 
+    protected static final Logger logger = LoggerFactory.getLogger(YSZRobotImpl.class);
     public static final long SECOND = 1000L;//秒;
 
     @Override
     //自动过
     public void pass(GameYSZ game) {
+
         String roomId = game.getRoom().getRoomId();
         int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
         KafkaMsgKey msgKey = new KafkaMsgKey();
@@ -29,8 +33,52 @@ public class YSZRobotImpl implements YSZRobot {
         msgKey.setPartition(partition);
         Map<String, Object> put = new HashMap<>();
         put.put("userId", game.curUserId);
+        msgKey.setUserId(game.curUserId);
         ResponseRobotVo result = new ResponseRobotVo("gameService", "fold", put);
         SpringUtil.getBean(MsgProducer.class).send2Partition("gameService", partition, msgKey, result);
+    }
+
+    public void exe(GameYSZ game){
+
+        if (game == null || game.curUserId == 0){
+            logger.info("牌局结束");
+            return;
+        }
+
+        if (game.aliveUser.size() < 2){
+            logger.info("牌局结束");
+            return;
+        }
+
+        int round = 0;
+        for (PlayerYSZ playerYSZ : game.playerCardInfos.values()){
+
+            if (round < playerYSZ.getCurRoundNumber()){
+                round = playerYSZ.getCurRoundNumber();
+            }
+        }
+
+        if (round == 1){
+            bet(game);
+        }else {
+            pass(game);
+        }
+    }
+
+    @Override
+    public void bet(GameYSZ game){
+        String roomId = game.getRoom().getRoomId();
+        int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
+        KafkaMsgKey msgKey = new KafkaMsgKey();
+
+        msgKey.setRoomId(roomId);
+        msgKey.setPartition(partition);
+        Map<String, Object> put = new HashMap<>();
+        put.put("userId", game.curUserId);
+        msgKey.setUserId(game.curUserId);
+        ResponseRobotVo result = new ResponseRobotVo("gameService", "call", put);
+        SpringUtil.getBean(MsgProducer.class).send2Partition("gameService", partition, msgKey, result);
+
     }
 
     @Override
@@ -52,14 +100,15 @@ public class YSZRobotImpl implements YSZRobot {
         if (r.getGame() != null) {
             GameYSZ game = (GameYSZ) r.getGame();
             //执行
-            if (now > game.lastOperateTime + SECOND * 45) {
-                pass(game);
+            if (now > game.lastOperateTime + SECOND * 3) {
+//                pass(game);
+                exe(game);
             }
         } else {
             //如果没在游戏中
             if (r.getUsers().size() >= 2) {
                 long t = now - r.getLastReadyTime();
-                if (r.isAllReady() && t > SECOND * 30) {
+                if (r.isAllReady() && t > SECOND * 3) {
 
                     System.out.println("start=============");
                     r.startGame();
