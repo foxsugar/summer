@@ -260,6 +260,9 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
      * @return
      */
     private int getMaxPoint(HuCardType huCardType) {
+        if (huCardType.specialHuList.contains(hu_吊将)) {
+            return 10;
+        }
         boolean isHun = HuUtil.cardIsHun(this.gameInfo.hun, huCardType.tingCardType);
         if (!isHun) return CardTypeUtil.cardTingScore.get(huCardType.tingCardType);
         Set<Integer> cards = new HashSet<>();
@@ -272,9 +275,9 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
             }
         }
 
-        if (huCardType.specialHuList.contains(hu_吊将)) {
-            return 10;
-        }
+//        if (huCardType.specialHuList.contains(hu_吊将)) {
+//            return 10;
+//        }
         if (huCardType.hun3.size() > 0) {
             return 10;
         }
@@ -310,11 +313,11 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         playerCardsInfo.isHasFengShun = true;
 
 
-        String[] s = new String[]{"016", "020", "032", "048","056",  "072","076","080",  "084", "088", "092", "124", "125"};//092
+        String[] s = new String[]{"016", "020", "024", "036","037",  "038",    "048","052",  "056", "060", "064", "068", "112","076"};//092
 //        String[] s = new String[]{"112", "113", "114",   "024",   "028", "032",  "088", "092", "096",  "097",    "132", "133", "124", "120"};
 
         List<Integer> hun = new ArrayList<>();
-        hun.add(31);
+        hun.add(28);
 //        hun.add(1);
 //        hun.add(8);
 
@@ -342,7 +345,9 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 //        List<HuCardType> huList = HuUtil.isHu(playerCardsInfo,
 //                playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
 //                playerCardsInfo.getChiPengGangNum(), hun, 23);
-        boolean isCanHu = playerCardsInfo.isCanHu_dianpao("024");
+//        boolean isCanHu = playerCardsInfo.isCanHu_dianpao("024");
+        boolean isCanHu = playerCardsInfo.isCanHu_zimo("076");
+
 
 //        boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);
 //        System.out.println(isCanTing);

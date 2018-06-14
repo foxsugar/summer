@@ -41,6 +41,7 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
     public Map<Integer,Boolean> cardsType= new HashMap<>();//罗上牌明或扣的状态, true明 ，false扣
     protected double score;
     protected double allScore;
+    protected boolean display;
 
     public Integer safeNum = 0;//有效罗数
 
@@ -252,6 +253,14 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
         this.canGuo = canGuo;
     }
 
+    public boolean isDisplay() {
+        return display;
+    }
+
+    public void setDisplay(boolean display) {
+        this.display = display;
+    }
+
     @Override
     public IfacePlayerInfoVo toVo() {
         PlayerCardInfoXuanQiQiVo vo = new PlayerCardInfoXuanQiQiVo();
@@ -278,6 +287,7 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
         vo.canKou = this.canKou;
         vo.curRoundNumber = this.curRoundNumber;
         vo.cardNum = this.handCards.size();
+        vo.display = this.display;
         return vo;
     }
 
@@ -307,6 +317,7 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
         vo.canKou = this.canKou;
         vo.curRoundNumber = this.curRoundNumber;
         vo.cardNum = this.handCards.size();
+        vo.display = this.display;
         return vo;
     }
 }

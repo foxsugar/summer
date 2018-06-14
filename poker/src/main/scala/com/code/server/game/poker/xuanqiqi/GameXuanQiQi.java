@@ -246,7 +246,7 @@ public class GameXuanQiQi extends Game {
             if(isAllKou){
                 if(playerCardInfos.get(room.getBankerId()).getHandCards().size()==8){
                     MsgSender.sendMsg2Player(new ResponseVo("gameService", "dealAgain", null), users);
-                    room.clearReadyStatus(false);
+                    room.clearReadyStatus(true);
                 }else{
                     compute();
                     sendResult();
@@ -571,10 +571,12 @@ public class GameXuanQiQi extends Game {
             playerCardInfos.get(userId).setCanKou("0");
             playerCardInfos.get(userId).setCanGuo("0");
             playerCardInfos.get(chuPaiId).setCanSendCard("1");
+            playerCardInfos.get(userId).setDisplay(true);
             Map<String,Object> msg = new HashMap<>();
             msg.put("userId",operatId);
             msg.put("canSendCard",true);
             msg.put("chuPaiList",chuPaiList);
+            msg.put("display",true);
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", msg), users);
         }else if(chuPaiCount ==2){//第二个人出牌，比牌，通知下家出
             PlayerCardInfoXuanQiQi p1 = null;
@@ -595,6 +597,8 @@ public class GameXuanQiQi extends Game {
             msg.put("userId",operatId);
             msg.put("canSendCard",true);
             msg.put("chuPaiList",chuPaiList);
+            msg.put("display",compareCard.get(userId)==1);
+            playerCardInfos.get(userId).setDisplay(compareCard.get(userId)==1);
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", msg), users);
         }else if(chuPaiCount ==3){//第三个人出牌，存记录，分罗
             PlayerCardInfoXuanQiQi p2 = null;
@@ -631,6 +635,8 @@ public class GameXuanQiQi extends Game {
                 msg.put("canSendCard",true);
                 msg.put("canKou",true);
                 msg.put("chuPaiList",chuPaiList);
+                msg.put("display",compareCard.get(userId)==1);
+                playerCardInfos.get(userId).setDisplay(compareCard.get(userId)==1);
                 MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", msg), users);
                 setWinCardAndCardType();//存记录分罗
                 //清除所有状态,游戏继续
@@ -830,7 +836,7 @@ public class GameXuanQiQi extends Game {
         Map<String, Object> result = new HashMap<>();
         result.put("finalWinnerId",finalWinnerId);
         result.put("winCards",playerCardInfos.get(finalWinnerId).winCards);
-        result.put("winCards",tempCardsType);
+        result.put("cardsType",tempCardsType);
         result.put("gotThree",playerCardInfos.get(finalWinnerId).winCards.size()/9>=1);
         result.put("gotFive",playerCardInfos.get(finalWinnerId).winCards.size()/15>=1);
         result.put("gotSix",playerCardInfos.get(finalWinnerId).winCards.size()/18>=1);
@@ -896,43 +902,188 @@ public class GameXuanQiQi extends Game {
         for (PlayerCardInfoXuanQiQi playerCardInfo : playerCardInfos.values()) {
             for (PlayerCardInfoXuanQiQi p : playerCardInfos.values()) {
                 if(3==playerCardInfo.getSafeNum() || 4==playerCardInfo.getSafeNum()){
-                    roomXuanQiQi.addUserSocre(p.getUserId(),-1.0);
-                    p.addScore(-1);
-                    p.addAllScore(-1);
+                    if(room.getBankerId()==playerCardInfo.getUserId()){
+                        if(1==bankerMultiple){
+                            roomXuanQiQi.addUserSocre(p.getUserId(),-1.0);
+                            p.addScore(-1);
+                            p.addAllScore(-1);
+                        }else{
+                            roomXuanQiQi.addUserSocre(p.getUserId(),-2.0);
+                            p.addScore(-2);
+                            p.addAllScore(-2);
+                        }
+                    }else{
+                        if(1==bankerMultiple){
+                            roomXuanQiQi.addUserSocre(p.getUserId(),-1.0);
+                            p.addScore(-1);
+                            p.addAllScore(-1);
+                        }else{
+                            if(room.getBankerId()==p.getUserId()){
+                                roomXuanQiQi.addUserSocre(p.getUserId(),-2.0);
+                                p.addScore(-2);
+                                p.addAllScore(-2);
+                            }else{
+                                roomXuanQiQi.addUserSocre(p.getUserId(),-1.0);
+                                p.addScore(-1);
+                                p.addAllScore(-1);
+                            }
+                        }
+                    }
                 }else if(5==playerCardInfo.getSafeNum()){
-                    roomXuanQiQi.addUserSocre(p.getUserId(),-2.0);
-                    p.addScore(-2);
-                    p.addAllScore(-2);
+                    if(room.getBankerId()==playerCardInfo.getUserId()){
+                        if(1==bankerMultiple){
+                            roomXuanQiQi.addUserSocre(p.getUserId(),-2.0);
+                            p.addScore(-2);
+                            p.addAllScore(-2);
+                        }else{
+                            roomXuanQiQi.addUserSocre(p.getUserId(),-4.0);
+                            p.addScore(-4);
+                            p.addAllScore(-4);
+                        }
+                    }else{
+                        if(1==bankerMultiple){
+                            roomXuanQiQi.addUserSocre(p.getUserId(),-2.0);
+                            p.addScore(-2);
+                            p.addAllScore(-2);
+                        }else{
+                            if(room.getBankerId()==p.getUserId()){
+                                roomXuanQiQi.addUserSocre(p.getUserId(),-4.0);
+                                p.addScore(-4);
+                                p.addAllScore(-4);
+                            }else{
+                                roomXuanQiQi.addUserSocre(p.getUserId(),-2.0);
+                                p.addScore(-2);
+                                p.addAllScore(-2);
+                            }
+                        }
+                    }
                 }else if(playerCardInfo.getSafeNum()>5){
-                    roomXuanQiQi.addUserSocre(p.getUserId(),-3.0);
-                    p.addScore(-3);
-                    p.addAllScore(-3);
+                    if(room.getBankerId()==playerCardInfo.getUserId()){
+                        if(1==bankerMultiple){
+                            roomXuanQiQi.addUserSocre(p.getUserId(),-3.0);
+                            p.addScore(-3);
+                            p.addAllScore(-3);
+                        }else{
+                            roomXuanQiQi.addUserSocre(p.getUserId(),-6.0);
+                            p.addScore(-6);
+                            p.addAllScore(-6);
+                        }
+                    }else{
+                        if(1==bankerMultiple){
+                            roomXuanQiQi.addUserSocre(p.getUserId(),-3.0);
+                            p.addScore(-3);
+                            p.addAllScore(-3);
+                        }else{
+                            if(room.getBankerId()==p.getUserId()){
+                                roomXuanQiQi.addUserSocre(p.getUserId(),-6.0);
+                                p.addScore(-6);
+                                p.addAllScore(-6);
+                            }else{
+                                roomXuanQiQi.addUserSocre(p.getUserId(),-3.0);
+                                p.addScore(-3);
+                                p.addAllScore(-3);
+                            }
+                        }
+                    }
                 }
             }
             if(3==playerCardInfo.getSafeNum()|| 4==playerCardInfo.getSafeNum()){
-                roomXuanQiQi.addUserSocre(playerCardInfo.getUserId(),3);
-                playerCardInfo.addScore(3);
-                playerCardInfo.addAllScore(3);
+                if(room.getBankerId()==playerCardInfo.getUserId()){
+                    if(1==bankerMultiple){
+                        roomXuanQiQi.addUserSocre(playerCardInfo.getUserId(),3);
+                        playerCardInfo.addScore(3);
+                        playerCardInfo.addAllScore(3);
+                    }else{
+                        roomXuanQiQi.addUserSocre(playerCardInfo.getUserId(),6);
+                        playerCardInfo.addScore(6);
+                        playerCardInfo.addAllScore(6);
+                    }
+                }else{
+                    if(1==bankerMultiple){
+                        roomXuanQiQi.addUserSocre(playerCardInfo.getUserId(),3);
+                        playerCardInfo.addScore(3);
+                        playerCardInfo.addAllScore(3);
+                    }else{
+                        roomXuanQiQi.addUserSocre(playerCardInfo.getUserId(),4);
+                        playerCardInfo.addScore(4);
+                        playerCardInfo.addAllScore(4);
+                    }
+                }
             }else if(5==playerCardInfo.getSafeNum()){
-                roomXuanQiQi.addUserSocre(playerCardInfo.getUserId(),6);
-                playerCardInfo.addScore(6);
-                playerCardInfo.addAllScore(6);
+                if(room.getBankerId()==playerCardInfo.getUserId()){
+                    if(1==bankerMultiple){
+                        roomXuanQiQi.addUserSocre(playerCardInfo.getUserId(),6);
+                        playerCardInfo.addScore(6);
+                        playerCardInfo.addAllScore(6);
+                    }else{
+                        roomXuanQiQi.addUserSocre(playerCardInfo.getUserId(),12);
+                        playerCardInfo.addScore(12);
+                        playerCardInfo.addAllScore(12);
+                    }
+                }else{
+                    if(1==bankerMultiple){
+                        roomXuanQiQi.addUserSocre(playerCardInfo.getUserId(),6);
+                        playerCardInfo.addScore(6);
+                        playerCardInfo.addAllScore(6);
+                    }else{
+                        roomXuanQiQi.addUserSocre(playerCardInfo.getUserId(),8);
+                        playerCardInfo.addScore(8);
+                        playerCardInfo.addAllScore(8);
+                    }
+                }
             }else if(playerCardInfo.getSafeNum()>5){
-                roomXuanQiQi.addUserSocre(playerCardInfo.getUserId(),9);
-                playerCardInfo.addScore(9);
-                playerCardInfo.addAllScore(9);
+                if(room.getBankerId()==playerCardInfo.getUserId()){
+                    if(1==bankerMultiple){
+                        roomXuanQiQi.addUserSocre(playerCardInfo.getUserId(),9);
+                        playerCardInfo.addScore(9);
+                        playerCardInfo.addAllScore(9);
+                    }else{
+                        roomXuanQiQi.addUserSocre(playerCardInfo.getUserId(),18);
+                        playerCardInfo.addScore(18);
+                        playerCardInfo.addAllScore(18);
+                    }
+                }else{
+                    if(1==bankerMultiple){
+                        roomXuanQiQi.addUserSocre(playerCardInfo.getUserId(),9);
+                        playerCardInfo.addScore(9);
+                        playerCardInfo.addAllScore(9);
+                    }else{
+                        roomXuanQiQi.addUserSocre(playerCardInfo.getUserId(),12);
+                        playerCardInfo.addScore(12);
+                        playerCardInfo.addAllScore(12);
+                    }
+                }
             }
         }
 
+        long tempBankerId = room.getBankerId();
         //算分：宣起
         for (XuanParam x:xuanList) {
             if(!x.isGotLuo()){//宣之后未达到，扣分
-                roomXuanQiQi.addUserSocre(playerCardInfos.get(x.getXuan_UserId()).getUserId(),-x.getXuaned_LuoNum()*2);
-                roomXuanQiQi.addUserSocre(x.xuaned_UserId,x.getXuaned_LuoNum()*2);
-                playerCardInfos.get(x.getXuan_UserId()).addScore(-x.getXuaned_LuoNum()*2);
-                playerCardInfos.get(x.getXuan_UserId()).addAllScore(-x.getXuaned_LuoNum()*2);
-                playerCardInfos.get(x.xuaned_UserId).addScore(x.getXuaned_LuoNum()*2);
-                playerCardInfos.get(x.xuaned_UserId).addAllScore(x.getXuaned_LuoNum()*2);
+                if(2==bankerMultiple){
+                    if(tempBankerId!=x.getXuan_UserId() && tempBankerId!=x.xuaned_UserId){//两个人都是闲
+                        roomXuanQiQi.addUserSocre(playerCardInfos.get(x.getXuan_UserId()).getUserId(),-x.getXuaned_LuoNum()*2);
+                        roomXuanQiQi.addUserSocre(x.xuaned_UserId,x.getXuaned_LuoNum()*2);
+                        playerCardInfos.get(x.getXuan_UserId()).addScore(-x.getXuaned_LuoNum()*2);
+                        playerCardInfos.get(x.getXuan_UserId()).addAllScore(-x.getXuaned_LuoNum()*2);
+                        playerCardInfos.get(x.xuaned_UserId).addScore(x.getXuaned_LuoNum()*2);
+                        playerCardInfos.get(x.xuaned_UserId).addAllScore(x.getXuaned_LuoNum()*2);
+                    }else{
+                        roomXuanQiQi.addUserSocre(playerCardInfos.get(x.getXuan_UserId()).getUserId(),-x.getXuaned_LuoNum()*4);
+                        roomXuanQiQi.addUserSocre(x.xuaned_UserId,x.getXuaned_LuoNum()*4);
+                        playerCardInfos.get(x.getXuan_UserId()).addScore(-x.getXuaned_LuoNum()*4);
+                        playerCardInfos.get(x.getXuan_UserId()).addAllScore(-x.getXuaned_LuoNum()*4);
+                        playerCardInfos.get(x.xuaned_UserId).addScore(x.getXuaned_LuoNum()*4);
+                        playerCardInfos.get(x.xuaned_UserId).addAllScore(x.getXuaned_LuoNum()*4);
+                    }
+                }else{
+                        roomXuanQiQi.addUserSocre(playerCardInfos.get(x.getXuan_UserId()).getUserId(),-x.getXuaned_LuoNum()*2);
+                        roomXuanQiQi.addUserSocre(x.xuaned_UserId,x.getXuaned_LuoNum()*2);
+                        playerCardInfos.get(x.getXuan_UserId()).addScore(-x.getXuaned_LuoNum()*2);
+                        playerCardInfos.get(x.getXuan_UserId()).addAllScore(-x.getXuaned_LuoNum()*2);
+                        playerCardInfos.get(x.xuaned_UserId).addScore(x.getXuaned_LuoNum()*2);
+                        playerCardInfos.get(x.xuaned_UserId).addAllScore(x.getXuaned_LuoNum()*2);
+                }
             }
         }
 
@@ -1015,6 +1166,7 @@ public class GameXuanQiQi extends Game {
         vo.ifChuPai = this.ifChuPai;
         vo.compareCard = this.compareCard;
         vo.xuanList = this.xuanList;
+        vo.bankerId = room.getBankerId();
 
         for (PlayerCardInfoXuanQiQi playerCardInfo : this.getPlayerCardInfos().values()) {
             if(userId == playerCardInfo.getUserId()){
