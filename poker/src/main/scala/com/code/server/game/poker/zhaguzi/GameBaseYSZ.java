@@ -24,7 +24,7 @@ public class GameBaseYSZ extends Game {
     public Map<Long, PlayerYSZ> playerCardInfos = new HashMap<>();
     protected Random rand = new Random();
 
-    private int curRoundNumber = 1;//当前轮数
+    protected int curRoundNumber = 1;//当前轮数
     protected Double chip = INIT_BOTTOM_CHIP;
 
     protected List<Integer> leaveCards = new ArrayList<>();//剩余的牌，暂时无用
@@ -283,6 +283,8 @@ public class GameBaseYSZ extends Game {
 //        logger.info(userId + "  f!");
         if (aliveUser.size() == 2) {
             logger.info("over");
+
+            curUserId = 0l;
 
             aliveUser.remove(userId);
             //处理结果
