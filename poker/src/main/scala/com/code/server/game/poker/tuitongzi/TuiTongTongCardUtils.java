@@ -9,7 +9,6 @@ import java.util.List;
 
 public class TuiTongTongCardUtils extends TuiTongZiCardUtils{
 
-
     public static boolean zhuangIsBiggerThanXian(PlayerTuiTongZi pZhuang, PlayerTuiTongZi pXian) throws Exception {
 
         int type = cardsPatterns(pXian.getPlayerCards());
@@ -18,6 +17,13 @@ public class TuiTongTongCardUtils extends TuiTongZiCardUtils{
             return true;
         }
         return (TuiTongTongCardUtils.mAIsBiggerThanB(pZhuang, pXian) != 2);
+    }
+
+    public static int mAIsBiggerThanB(PlayerTuiTongZi pA, PlayerTuiTongZi pB) throws Exception {
+
+        List<Integer> listA = pA.getPlayerCards();
+        List<Integer> listB = pB.getPlayerCards();
+        return TuiTongTongCardUtils.mAIsBiggerThanB(listA, listB);
     }
 
     public static int mAIsBiggerThanB(List<Integer> listA, List<Integer> listB) throws Exception {
