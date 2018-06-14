@@ -1,5 +1,10 @@
 package com.code.server.game.mahjong.logic;
 
+import com.code.server.constant.response.GameOfResult;
+import com.code.server.constant.response.UserOfResult;
+import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.game.room.service.RoomManager;
+
 import java.util.List;
 
 /**
@@ -58,15 +63,34 @@ public class GameInfoXXPB extends GameInfo {
     protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
         isAlreadyHu = true;
         sendResult(true, playerCardsInfo.getUserId(), null);
-        noticeDissolutionResult();
+        noticeDissolutionResult(playerCardsInfo);
         //如果连庄 牌局数不增加
         boolean isLianZhuang = playerCardsInfo.getUserId() == this.getFirstTurn();
         if (isLianZhuang) {
 
             room.clearReadyStatus(false);
         } else {
-
             room.clearReadyStatus(true);
         }
+    }
+
+    public void noticeDissolutionResult(PlayerCardsInfoMj playerCardsInfo) {
+        if (isRoomOver(playerCardsInfo)) {
+            List<UserOfResult> userOfResultList = this.room.getUserOfResult();
+            // 存储返回
+            GameOfResult gameOfResult = new GameOfResult();
+            gameOfResult.setUserList(userOfResultList);
+            RoomManager.removeRoom(room.getRoomId());
+
+            MsgSender.sendMsg2Player("gameService", "noticeDissolutionResult", gameOfResult, users);
+
+            //战绩
+            this.room.genRoomRecord();
+
+        }
+    }
+
+    protected boolean isRoomOver(PlayerCardsInfoMj playerCardsInfo) {
+        return playerCardsInfo.getUserId() == this.getFirstTurn()?room.curGameNumber>room.getGameNumber():room.curGameNumber>=room.getGameNumber();
     }
 }
