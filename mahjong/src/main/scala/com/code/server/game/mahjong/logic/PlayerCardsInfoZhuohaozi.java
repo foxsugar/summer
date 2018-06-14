@@ -313,11 +313,11 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         playerCardsInfo.isHasFengShun = true;
 
 
-        String[] s = new String[]{"016", "020", "024", "036","037",  "038",    "048","052",  "056", "060", "064", "068", "112","076"};//092
+        String[] s = new String[]{"008", "009", "010", "048","049",  "064", "068",  "072",  "076", "080", "081", "084", "088","116"};//092
 //        String[] s = new String[]{"112", "113", "114",   "024",   "028", "032",  "088", "092", "096",  "097",    "132", "133", "124", "120"};
 
         List<Integer> hun = new ArrayList<>();
-        hun.add(28);
+        hun.add(29);
 //        hun.add(1);
 //        hun.add(8);
 
@@ -346,7 +346,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 //                playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
 //                playerCardsInfo.getChiPengGangNum(), hun, 23);
 //        boolean isCanHu = playerCardsInfo.isCanHu_dianpao("024");
-        boolean isCanHu = playerCardsInfo.isCanHu_zimo("076");
+        boolean isCanHu = playerCardsInfo.isCanHu_zimo("116");
 
 
 //        boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);

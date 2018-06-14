@@ -164,6 +164,7 @@ object HuWithHun {
       huList.add(isLong(huCardType, hun, lastCard))
     }
 
+    // 因为天津麻将 牌型取最大的一个
     var l = huList.stream().filter(i => playerCardsInfoMj.isHasSpecialHu(i)).collect(Collectors.toList())
     var t = getMaxHuType(l, playerCardsInfoMj)
     if(t!=0) {

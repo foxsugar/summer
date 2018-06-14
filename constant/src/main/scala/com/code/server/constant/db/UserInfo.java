@@ -10,6 +10,7 @@ public class UserInfo {
     private int shareWXCount = 0;
     private long lastShareTime = 0;
     private boolean isInputAccessCode = false;
+    private boolean isHasAppleCharge = false;
 
     public int getTotalPlayGameNumber() {
         return totalPlayGameNumber;
@@ -53,6 +54,15 @@ public class UserInfo {
 
     public UserInfo setInputAccessCode(boolean inputAccessCode) {
         isInputAccessCode = inputAccessCode;
+        return this;
+    }
+
+    public boolean isHasAppleCharge() {
+        return isHasAppleCharge;
+    }
+
+    public UserInfo setHasAppleCharge(boolean hasAppleCharge) {
+        isHasAppleCharge = hasAppleCharge;
         return this;
     }
 }
