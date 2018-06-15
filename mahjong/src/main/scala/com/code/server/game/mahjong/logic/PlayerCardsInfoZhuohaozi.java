@@ -129,10 +129,19 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
     @Override
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card) {
-        super.gangCompute(room, gameInfo, isMing, diangangUser, card);
+        this.lastOperate = type_gang;
+        operateList.add(type_gang);
+        this.gameInfo.addUserOperate(this.userId, type_gang);
+
+        if (isMing) {
+            this.roomInfo.addMingGangNum(this.getUserId());
+        }else{
+            this.roomInfo.addAnGangNum(this.getUserId());
+        }
+
         int gangType = CardTypeUtil.getTypeByCard(card);
         boolean isJinGang = this.gameInfo.hun.contains(gangType);
-        int score = CardTypeUtil.cardTingScore.get(gangType) * 2;
+        int score = CardTypeUtil.cardTingScore.get(gangType);
         if (isJinGang) score = 100;
         int allScore = 0;
 
@@ -313,11 +322,14 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         playerCardsInfo.isHasFengShun = true;
 
 
-        String[] s = new String[]{"016", "020", "024", "036","037",  "038",    "048","052",  "056", "060", "064", "068", "112","076"};//092
+//        String[] s = new String[]{"032", "033", "034", "036","040",  "044", "056",  "060",  "064",   "092", "093", "104", "105","135"};//092
+        String[] s = new String[]{"032", "033", "034", "036","040",  "044", "056",  "060",  "064",   "092", "093", "104", "105","035"};//092
 //        String[] s = new String[]{"112", "113", "114",   "024",   "028", "032",  "088", "092", "096",  "097",    "132", "133", "124", "120"};
 
+//        094, 038, 093, 063, 067, 044, 034, 106, 058, 035, 041, 104, 033, 032
+
         List<Integer> hun = new ArrayList<>();
-        hun.add(28);
+        hun.add(29);
 //        hun.add(1);
 //        hun.add(8);
 
@@ -332,7 +344,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         playerCardsInfo.init(playerCardsInfo.cards);
 
 
-//        playerCardsInfo.pengType.put(2,0L);
+        playerCardsInfo.pengType.put(8,0L);
 //        playerCardsInfo.pengType.put(6,0L);
 //        playerCardsInfo.anGangType.add(32);
 
@@ -346,12 +358,14 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 //                playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
 //                playerCardsInfo.getChiPengGangNum(), hun, 23);
 //        boolean isCanHu = playerCardsInfo.isCanHu_dianpao("024");
-        boolean isCanHu = playerCardsInfo.isCanHu_zimo("076");
+//        boolean isCanHu = playerCardsInfo.isCanHu_zimo("116");
+        boolean isGang = playerCardsInfo.isHasGang();
+        System.out.println(isGang);
 
 
 //        boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);
 //        System.out.println(isCanTing);
-        System.out.println("是否可以胡: " + isCanHu);
+//        System.out.println("是否可以胡: " + isCanHu);
 //        huList.forEach(h -> System.out.println(h.specialHuList));
 //        System.out.println(huList);
     }
