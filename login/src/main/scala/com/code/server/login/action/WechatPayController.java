@@ -74,16 +74,16 @@ public class WechatPayController {
     private static Map<Integer, Integer> moneyPointMap = new HashMap<>();
     private static Map<Integer, Integer> goldPointMap = new HashMap<>();
 
+    private final Object lock = new Object();
+
 
     static {
-        moneyPointMap.put(1,1);
-        moneyPointMap.put(6,6);
-        moneyPointMap.put(18,18);
-        moneyPointMap.put(30,30);
-        moneyPointMap.put(68,68);
-        moneyPointMap.put(128,128);
-
-
+        moneyPointMap.put(1, 1);
+        moneyPointMap.put(6, 6);
+        moneyPointMap.put(18, 18);
+        moneyPointMap.put(30, 30);
+        moneyPointMap.put(68, 68);
+        moneyPointMap.put(128, 128);
 
 
         //金币
@@ -114,21 +114,21 @@ public class WechatPayController {
 
 
     @ResponseBody
-    @RequestMapping(value = "preOrderApp")
-    public Map<String, Object> charge(HttpServletRequest request,String userId, int chargeType, int money) throws Exception {
+    @RequestMapping(value = "preOrderApp2")
+    public Map<String, Object> charge(HttpServletRequest request, String userId, int chargeType, int money,String spIp) throws Exception {
 
         Map<String, Object> result = new HashMap<>();
 
         SortedMap<String, String> packageParams = new TreeMap<>();
 
-        String ip = getIpAddr(request);
+        String ip = spIp;
         //微信
 
         int money100 = money * 100;
 
         Integer moneyPoint = getMoneyPoint(money, chargeType);
         logger.info("充值金额: " + money);
-        if (moneyPoint == null){
+        if (moneyPoint == null) {
             Map<String, Object> m = new HashMap<>();
             m.put("code", 10);
             m.put("params", "参数错误");
@@ -147,14 +147,14 @@ public class WechatPayController {
 
         String orderId = PayUtil.getOrderIdByUUId();
         packageParams.put("appid", serverConfig.getAppId());//appID       应用id
-        packageParams.put("mch_id", wechatConfig.getMchId());//appID       商户号
+        packageParams.put("mch_id", serverConfig.getMchId());//appID       商户号
         packageParams.put("nonce_str", PayUtil.getRandomStringByLength(32));//32位随机数
         packageParams.put("body", bodyUTF8);//商品描述
         packageParams.put("out_trade_no", orderId);
         packageParams.put("total_fee", "" + money100);//充值金额
         packageParams.put("spbill_create_ip", ip);//终端IP
         packageParams.put("trade_type", "APP");//支付类型
-        String url = "http://" + serverConfig.getDomain() + "/wechat/pay/pay";
+        String url = "http://" + serverConfig.getDomain() + "/wechat/pay/payApp";
         packageParams.put("notify_url", url);//通知地址
 
         String rtn = UnifiedOrder.postCharge(packageParams);
@@ -223,7 +223,7 @@ public class WechatPayController {
                 secondParams.put("err_code_des", root.elementText("err_code_des"));
                 result.put("code", 10001);
                 return result;
-            }else{
+            } else {
                 result.put("code", 10002);
             }
         }
@@ -237,21 +237,23 @@ public class WechatPayController {
 
 
     @ResponseBody
-    @RequestMapping(value = "preOrderApp1")
-    public Map<String,Object> pay_app(HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "preOrderApp")
+    public Map<String, Object> pay_app(HttpServletRequest request) throws Exception {
         int money = Integer.valueOf(request.getParameter("money"));
         int chargeType = Integer.valueOf(request.getParameter("chargeType"));
         long userId = Long.valueOf(request.getParameter("userId"));
+        String ip = request.getParameter("spIp");
 
 
-        String ip = getIpAddr(request);
+//        String ip = getIpAddr(request);
         //元转成分
 
         Integer moneyPoint = getMoneyPoint(money, chargeType);
         logger.info("充值金额: " + money);
 //        if (moneyPoint == null) return new AgentResponse().setCode(13);
         Map<String, Object> result = new HashMap<>();
-        if (moneyPoint == null){
+        result.put("code", 0);
+        if (moneyPoint == null) {
             result.put("code", 10);
             result.put("params", "参数错误");
             return result;
@@ -274,13 +276,13 @@ public class WechatPayController {
             orderRequest.setTradeType("APP");
 
             //notify 地址
-            String url = "http://" + serverConfig.getDomain() + "/wechat/pay/pay";
+            String url = "http://" + serverConfig.getDomain() + "/wechat/pay/payApp";
 
             orderRequest.setNotifyUrl(url);
 
             //创建订单
             Object rtn = wxAppPayService.createOrder(orderRequest);
-            result.put("params",rtn);
+            result.put("params", rtn);
 
             //充值记录
             Charge charge = new Charge();
@@ -298,6 +300,7 @@ public class WechatPayController {
             charge.setCreatetime(new Date());
 
             chargeService.save(charge);
+
 
             return result;
         } catch (Exception e) {
@@ -386,10 +389,28 @@ public class WechatPayController {
     @RequestMapping(value = "pay")
     public void getJSSDKCallbackData(HttpServletRequest request,
                                      HttpServletResponse response) {
+        pay(request, response, wechatConfig.getMchKey());
+    }
+
+    /**
+     * 微信通知支付结果的回调地址，notify_url
+     *
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "payApp")
+    public void payCallBack_app(HttpServletRequest request,
+                                HttpServletResponse response) {
+        pay(request, response, serverConfig.getKey());
+    }
+
+
+    private void pay(HttpServletRequest request,
+                     HttpServletResponse response, String mchKey) {
         try {
-            synchronized (this) {
+            synchronized (lock) {
                 Map<String, String> kvm = XMLUtil.parseRequestXmlToMap(request);
-                if (SignUtils.checkSign(kvm, null, this.wechatConfig.getMchKey())) {
+                if (SignUtils.checkSign(kvm, null, mchKey)) {
                     if (kvm.get("result_code").equals("SUCCESS")) {
                         String orderId = kvm.get("out_trade_no");
                         Charge charge = chargeService.getChargeByOrderid(orderId);
@@ -465,7 +486,7 @@ public class WechatPayController {
                             //返利情况
 
                             //扣6%的税
-                            double num = charge.getMoney() * 94 /100;
+                            double num = charge.getMoney() * 94 / 100;
                             RedisManager.getAgentRedisService().addRebate(userId, referee, 0, num);
                         }
 
@@ -486,17 +507,17 @@ public class WechatPayController {
         }
     }
 
-
-    private void agentRebate(long userId,long parentId){
+    private void agentRebate(long userId, long parentId) {
         //自己是否是代理
         AgentBean own = RedisManager.getAgentRedisService().getAgentBean(userId);
         //自己不是代理
         if (own == null) {
 
-        }else{//自己是代理
+        } else {//自己是代理
 
         }
     }
+
     /**
      * 获取访问者IP
      * <p>

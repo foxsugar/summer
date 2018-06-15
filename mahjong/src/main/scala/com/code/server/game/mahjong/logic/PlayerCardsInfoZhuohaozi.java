@@ -129,10 +129,19 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
     @Override
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card) {
-        super.gangCompute(room, gameInfo, isMing, diangangUser, card);
+        this.lastOperate = type_gang;
+        operateList.add(type_gang);
+        this.gameInfo.addUserOperate(this.userId, type_gang);
+
+        if (isMing) {
+            this.roomInfo.addMingGangNum(this.getUserId());
+        }else{
+            this.roomInfo.addAnGangNum(this.getUserId());
+        }
+
         int gangType = CardTypeUtil.getTypeByCard(card);
         boolean isJinGang = this.gameInfo.hun.contains(gangType);
-        int score = CardTypeUtil.cardTingScore.get(gangType) * 2;
+        int score = CardTypeUtil.cardTingScore.get(gangType);
         if (isJinGang) score = 100;
         int allScore = 0;
 

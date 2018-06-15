@@ -813,8 +813,13 @@ object HuWithHun {
 
     var result: util.List[util.List[Int]] = new util.ArrayList()
 
-    val div = remainCardsNum / needGroupNum
-    val rem = remainCardsNum % needGroupNum
+    var div = 0
+    var rem = remainCardsNum
+    if(needGroupNum !=0){
+
+       div = remainCardsNum / needGroupNum
+       rem = remainCardsNum % needGroupNum
+    }
     //剩余牌填充
     for (group <- 0 until needGroupNum) {
       val cardgroup: util.List[Int] = new util.ArrayList()

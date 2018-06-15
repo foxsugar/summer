@@ -60,8 +60,8 @@ public class WechatPayConfig {
         WxPayConfig wxPayConfig = new WxPayConfig();
 
         wxPayConfig.setAppId(serverConfig.getAppId());
-        wxPayConfig.setMchId(accountConfig.getMchId());
-        wxPayConfig.setMchKey(accountConfig.getMchKey());
+        wxPayConfig.setMchId(serverConfig.getMchId());
+        wxPayConfig.setMchKey(serverConfig.getKey());
 //        wxPayConfig.setSubAppId(accountConfig.getsubAppId);
 //        wxPayConfig.setSubMchId(this.subMchId);
         wxPayConfig.setKeyPath(accountConfig.getKeyPath());
