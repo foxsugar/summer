@@ -322,7 +322,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         playerCardsInfo.isHasFengShun = true;
 
 
-        String[] s = new String[]{"008", "009", "010", "048","049",  "064", "068",  "072",  "076", "080", "081", "084", "088","116"};//092
+        String[] s = new String[]{"032", "033", "034", "036","040",  "044", "056",  "060",  "064",   "092", "093", "104", "105","135"};//092
 //        String[] s = new String[]{"112", "113", "114",   "024",   "028", "032",  "088", "092", "096",  "097",    "132", "133", "124", "120"};
 
         List<Integer> hun = new ArrayList<>();
@@ -355,12 +355,13 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 //                playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
 //                playerCardsInfo.getChiPengGangNum(), hun, 23);
 //        boolean isCanHu = playerCardsInfo.isCanHu_dianpao("024");
-        boolean isCanHu = playerCardsInfo.isCanHu_zimo("116");
+//        boolean isCanHu = playerCardsInfo.isCanHu_zimo("116");
+        boolean isGang = playerCardsInfo.isCanGangThisCard("035");
 
 
 //        boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);
 //        System.out.println(isCanTing);
-        System.out.println("是否可以胡: " + isCanHu);
+//        System.out.println("是否可以胡: " + isCanHu);
 //        huList.forEach(h -> System.out.println(h.specialHuList));
 //        System.out.println(huList);
     }

@@ -19,6 +19,7 @@ import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
+import com.github.binarywang.wxpay.bean.order.WxPayAppOrderResult;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.util.SignUtils;
@@ -282,7 +283,18 @@ public class WechatPayController {
 
             //创建订单
             Object rtn = wxAppPayService.createOrder(orderRequest);
-            result.put("params", rtn);
+
+            WxPayAppOrderResult orderResult = wxAppPayService.createOrder(orderRequest);
+            Map<String, Object> o = new HashMap<>();
+
+            o.put("appid", orderResult.getAppId());
+            o.put("partnerid", orderResult.getPartnerId());
+            o.put("prepayid", orderResult.getPrepayId());
+            o.put("noncestr", orderResult.getNonceStr());
+            o.put("timestamp", orderResult.getTimeStamp());
+            o.put("package", "Sign=WXPay");
+
+            result.put("params", o);
 
             //充值记录
             Charge charge = new Charge();
