@@ -322,8 +322,11 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         playerCardsInfo.isHasFengShun = true;
 
 
-        String[] s = new String[]{"032", "033", "034", "036","040",  "044", "056",  "060",  "064",   "092", "093", "104", "105","135"};//092
+//        String[] s = new String[]{"032", "033", "034", "036","040",  "044", "056",  "060",  "064",   "092", "093", "104", "105","135"};//092
+        String[] s = new String[]{"032", "033", "034", "036","040",  "044", "056",  "060",  "064",   "092", "093", "104", "105","035"};//092
 //        String[] s = new String[]{"112", "113", "114",   "024",   "028", "032",  "088", "092", "096",  "097",    "132", "133", "124", "120"};
+
+//        094, 038, 093, 063, 067, 044, 034, 106, 058, 035, 041, 104, 033, 032
 
         List<Integer> hun = new ArrayList<>();
         hun.add(29);
@@ -341,7 +344,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         playerCardsInfo.init(playerCardsInfo.cards);
 
 
-//        playerCardsInfo.pengType.put(2,0L);
+        playerCardsInfo.pengType.put(8,0L);
 //        playerCardsInfo.pengType.put(6,0L);
 //        playerCardsInfo.anGangType.add(32);
 
@@ -356,7 +359,8 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 //                playerCardsInfo.getChiPengGangNum(), hun, 23);
 //        boolean isCanHu = playerCardsInfo.isCanHu_dianpao("024");
 //        boolean isCanHu = playerCardsInfo.isCanHu_zimo("116");
-        boolean isGang = playerCardsInfo.isCanGangThisCard("035");
+        boolean isGang = playerCardsInfo.isHasGang();
+        System.out.println(isGang);
 
 
 //        boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);
