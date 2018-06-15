@@ -55,10 +55,20 @@ public class GameTuiTongZi extends Game{
         return vo;
     }
 
-
     protected boolean isBaWangZhuang(){
         return false;
     }
+
+    //偏移量， 上来要在锅里放 多少钱
+    protected long offset(){
+        return 20;
+    };
+
+    //霸王庄的情况下是否强制下装
+    protected boolean isForceUpdateBanker(){
+        return !(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() >= 5);
+    }
+
     public void startGame(List<Long> users, Room room){
         this.room = (RoomTuiTongZi) room;
         this.users = users;
@@ -80,7 +90,7 @@ public class GameTuiTongZi extends Game{
                 this.bankerId = users.get(0);
                 PlayerTuiTongZi playerTuiTongZi = playerCardInfos.get(this.bankerId);
                 //设置锅底分数
-                ((RoomTuiTongZi) room).setPotBottom(20);
+                ((RoomTuiTongZi) room).setPotBottom(this.offset());
                 room.setBankerId(users.get(0));
                 this.state = TuiTongZiConstant.STATE_SELECT;
 
@@ -108,14 +118,14 @@ public class GameTuiTongZi extends Game{
                 this.bankerId = users.get(0);
                 PlayerTuiTongZi playerTuiTongZi = playerCardInfos.get(this.bankerId);
                 //设置锅底分数
-                ((RoomTuiTongZi) room).setPotBottom(20);
+                ((RoomTuiTongZi) room).setPotBottom(this.offset());
                 room.setBankerId(users.get(0));
             }
             //强制下庄
             if (this.room.getZhuangCount() == 9){
                 long nextBanker = nextTurnId(room.getBankerId());
                 room.setBankerId(nextBanker);
-                ((RoomTuiTongZi) room).setPotBottom(20);
+                ((RoomTuiTongZi) room).setPotBottom(this.offset());
                 this.bankerId = room.getBankerId();
                 createNewCards();
                 this.room.setZhuangCount(1);
@@ -124,7 +134,7 @@ public class GameTuiTongZi extends Game{
                 if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() >= 5)){
                     long nextBanker = nextTurnId(room.getBankerId());
                     room.setBankerId(nextBanker);
-                    ((RoomTuiTongZi) room).setPotBottom(20);
+                    ((RoomTuiTongZi) room).setPotBottom(this.offset());
                     this.bankerId = room.getBankerId();
                     createNewCards();
                     this.room.setZhuangCount(1);
@@ -191,7 +201,7 @@ public class GameTuiTongZi extends Game{
             }
 
             room.setBankerId(randomPlayer.getUserId());
-            ((RoomTuiTongZi) room).setPotBottom(20);
+            ((RoomTuiTongZi) room).setPotBottom(this.offset());
             this.bankerId = room.getBankerId();
             MsgSender.sendMsg2Player("gameTTZService", "endFightForBanker", this.bankerId, users);
 
@@ -249,12 +259,12 @@ public class GameTuiTongZi extends Game{
                     return 0;
                 }
 
-                this.room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom() - 20);
+                this.room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom() - this.offset());
 
                 this.room.setZhuangCount(1);
                 long nextBanker = nextTurnId(room.getBankerId());
                 room.setBankerId(nextBanker);
-                ((RoomTuiTongZi) room).setPotBottom(20);
+                ((RoomTuiTongZi) room).setPotBottom(this.offset());
                 this.bankerId = room.getBankerId();
                 createNewCards();
                 this.state = TuiTongZiConstant.STATE_SELECT;
@@ -342,7 +352,7 @@ public class GameTuiTongZi extends Game{
         userScores.putAll(this.room.userScores);
 
         Double zhuangScore = this.room.userScores.get(this.bankerId);
-        zhuangScore -= 20;
+        zhuangScore -= this.offset();
         userScores.put(this.bankerId, zhuangScore);
 
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChangeTTZ", userScores), this.getUsers());
@@ -574,7 +584,7 @@ public class GameTuiTongZi extends Game{
 
             if (isBaWangZhuang()){
                 //强制下装
-                if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() >= 5) || room.getZhuangCount() == 8){
+                if (isForceUpdateBanker() || room.getZhuangCount() == 8){
                     //退出游戏
                     sendFightFinalResult();
                 }
@@ -600,7 +610,7 @@ public class GameTuiTongZi extends Game{
     public void sendFightFinalResult(){
 
         if (this.room.getPotBottom() != 0){
-            room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom() - 20);
+            room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom() - this.offset());
         }
 
         List<UserOfResult>  userOfResult =  this.room.getUserOfResult();
@@ -617,7 +627,7 @@ public class GameTuiTongZi extends Game{
         if (firstBanerCount == 2 && this.room.getZhuangCount() == 0){
 
             if (this.room.getPotBottom() != 0){
-                room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom() - 20);
+                room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom() - this.offset());
             }
 
             List<UserOfResult>  userOfResult =  this.room.getUserOfResult();
@@ -771,12 +781,12 @@ public class GameTuiTongZi extends Game{
 
             boolean updateZhuang = false;
             //强制下装
-            if (!(((RoomTuiTongZi) room).getPotBottom() < 400 && ((RoomTuiTongZi) room).getPotBottom() >= 5)){
+            if (isForceUpdateBanker()){
                 updateZhuang = true;
             }
 
             if (updateZhuang){
-                this.room.addUserSocre(this.bankerId, - 20 + this.room.getPotBottom());
+                this.room.addUserSocre(this.bankerId, - this.offset() + this.room.getPotBottom());
                 this.room.setPotBottom(0);
                 this.room.setZhuangCount(0);
                 //强制下装
@@ -801,7 +811,7 @@ public class GameTuiTongZi extends Game{
             }
 
             if (updateZhuang){
-                this.room.addUserSocre(this.bankerId, - 20 + this.room.getPotBottom());
+                this.room.addUserSocre(this.bankerId, - this.offset() + this.room.getPotBottom());
                 this.room.setPotBottom(0);
                 this.room.setZhuangCount(0);
             }
