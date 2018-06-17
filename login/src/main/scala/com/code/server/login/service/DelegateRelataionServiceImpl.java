@@ -148,6 +148,11 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
             }
         }
 
+//        //表示用户和该代理没有关系
+//        if (type == 0){
+//            return null;
+//        }
+
         int userCount = 0;
         int delegateCount = 0;
         UserInfoVo userInfo = new UserInfoVo();
@@ -186,7 +191,7 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
 
         userInfo.setUserCount(userCount);
         userInfo.setDelegateCount(delegateCount);
-
+        userInfo.setUserId(userId);
         return userInfo;
     }
 }
