@@ -136,6 +136,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             }
         }
 
+        logger.info("aList:{}", aList);
+
         List<List<Long>> bList = new ArrayList<>();
 
         for (Long childId : aList){
