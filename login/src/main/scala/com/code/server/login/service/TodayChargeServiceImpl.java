@@ -145,6 +145,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             AgentBean child = RedisManager.getAgentRedisService().getAgentBean(childId);
             logger.info("二级：：child:", child);
             Set<Long> grandchild = child.getChildList();
+            if (grandchild == null) continue;
 
             List<Long> temp = new ArrayList<>();
             //刨除三级代理
