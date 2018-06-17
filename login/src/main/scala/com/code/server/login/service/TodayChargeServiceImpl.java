@@ -234,7 +234,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
                 bList.add(uid);
             }
             AgentBean bean = RedisManager.getAgentRedisService().getAgentBean(uid);
-
+            if (bean == null){
+                continue;
+            }
             logger.info("豆子:{}", bean);
             if (bean.getChildList() == null) continue;
 
