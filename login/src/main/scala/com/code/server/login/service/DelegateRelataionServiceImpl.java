@@ -120,6 +120,9 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
     public UserInfoVo findUserInfo(long agentId, long userId) {
 
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+
+        logger.info("agentBean:{}", agentBean);
+
         int type = 0;
 
         if (agentBean.getChildList().contains(userId)){
