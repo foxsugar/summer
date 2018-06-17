@@ -127,6 +127,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         TwoLevelVo twoLevelVo = new TwoLevelVo();
         twoLevelVo.setCategoryName("game name");
 
+
         //获取所有二级代理的id
         List<Long> aList = new ArrayList<>();
         for (Long id : agentBean.getChildList()){
@@ -140,6 +141,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         for (Long childId : aList){
 
             AgentBean child = RedisManager.getAgentRedisService().getAgentBean(childId);
+            logger.info("二级：：child:", child);
             Set<Long> grandchild = child.getChildList();
 
             List<Long> temp = new ArrayList<>();
