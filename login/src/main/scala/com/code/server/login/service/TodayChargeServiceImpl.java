@@ -81,7 +81,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         OneLevelVo oneLevelVo = new OneLevelVo();
         oneLevelVo.setCategoryName("game name");
 
-        logger.info("agentBean:{}", agentBean);
+//        logger.info("agentBean:{}", agentBean);
 
         double total = 0d;
         List<OneLevelInfoVo> oneLevelInfoVoList = new ArrayList<>();
@@ -105,7 +105,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             if (user == null){
                 continue;
             }
-            logger.info("User:{}", user);
+//            logger.info("User:{}", user);
 
             OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
             oneLevelInfoVo.setImage(user.getImage());
@@ -136,14 +136,14 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             }
         }
 
-        logger.info("aList:{}", aList);
+//        logger.info("aList:{}", aList);
 
         List<List<Long>> bList = new ArrayList<>();
 
         for (Long childId : aList){
 
             AgentBean child = RedisManager.getAgentRedisService().getAgentBean(childId);
-            logger.info("二级：：child:", child);
+//            logger.info("二级：：child:", child);
             if (child == null) continue;
             Set<Long> grandchild = child.getChildList();
             if (grandchild == null) continue;
@@ -234,6 +234,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
                 bList.add(uid);
             }
             AgentBean bean = RedisManager.getAgentRedisService().getAgentBean(uid);
+
+            if (bean.getChildList() == null) continue;
+
             for (Long id : bean.getChildList()){
                 if (RedisManager.getAgentRedisService().isExit(id)) continue;
                 bList.add(id);
