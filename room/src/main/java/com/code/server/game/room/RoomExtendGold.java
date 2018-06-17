@@ -5,6 +5,7 @@ import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.game.UserBean;
+import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
@@ -126,10 +127,22 @@ public class RoomExtendGold extends Room {
     @Override
     public int quitRoom(long userId) {
         if (isGoldRoom()) {
-            int rtn = super.quitRoom(userId);
-            if (rtn != 0) {
-                return rtn;
+            if (!this.users.contains(userId)) {
+                return ErrorCode.CANNOT_QUIT_ROOM_NOT_EXIST;
+
             }
+
+            if (isInGame) {
+                return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME;
+            }
+
+            List<Long> noticeList = new ArrayList<>();
+            noticeList.addAll(this.getUsers());
+
+            //删除玩家房间映射关系
+            roomRemoveUser(userId);
+
+
             if (goldRoomPermission == GOLD_ROOM_PERMISSION_DEFAULT) {
                 RoomManager.getInstance().moveFull2NotFullRoom(this);
             }
@@ -139,6 +152,7 @@ public class RoomExtendGold extends Room {
 
                 RoomManager.removeRoom(this.roomId);
             }
+            noticeQuitRoom(userId);
             return 0;
         } else return super.quitRoom(userId);
     }
