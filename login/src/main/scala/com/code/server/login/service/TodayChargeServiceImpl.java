@@ -106,8 +106,12 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             logger.info("User:{}", user);
 
             OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
-            oneLevelInfoVo.setImage(user.getImage());
-            oneLevelInfoVo.setUsername(user.getUsername());
+            if (user.getImage() != null){
+                oneLevelInfoVo.setImage(user.getImage());
+            }else {
+                oneLevelInfoVo.setImage("");
+            }
+
             oneLevelInfoVo.setMoney("" + totalMoney);
             oneLevelInfoVoList.add(oneLevelInfoVo);
         }
@@ -177,7 +181,13 @@ public class TodayChargeServiceImpl implements TodayChargeService {
                 TwoLevelInfoVo infoVo = new TwoLevelInfoVo();
                 User twoLevelUser = userDao.getUserById(uid);
                 infoVo.setUsername(twoLevelUser.getUsername());
-                infoVo.setImage(twoLevelUser.getImage());
+
+                OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
+                if (user.getImage() != null){
+                    infoVo.setImage(user.getImage());
+                }else {
+                    infoVo.setImage("");
+                }
 
                 List<Charge> twoLevelChargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAAndStatusIsAAndRecharge_sourceIs(Arrays.asList(uid), start, end, 1, "1");
 
@@ -232,7 +242,12 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             List<Charge> chargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAAndStatusIsAAndRecharge_sourceIs(Arrays.asList(uid), start, end, 1, "1");
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
             threeLevelInfoVo.setUsername(user.getUsername());
-            threeLevelInfoVo.setImage(user.getImage());
+            OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
+            if (user.getImage() != null){
+                threeLevelInfoVo.setImage(user.getImage());
+            }else {
+                threeLevelInfoVo.setImage("");
+            }
 
             double totalMoney = 0;
             for (Charge charge : chargeList){
