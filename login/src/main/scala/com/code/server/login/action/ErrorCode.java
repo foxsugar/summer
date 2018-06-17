@@ -11,6 +11,7 @@ public interface ErrorCode {
     int NOT_WX_USER = 101;//未关注
 
     int NOT_LOGIN = 1000;//未关注
+    int NOT_SELF_USER = 3000;//不是自己手下的用户
 
 
 }

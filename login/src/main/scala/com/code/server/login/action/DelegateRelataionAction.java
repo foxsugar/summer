@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/delegateRel")
-public class DelegateRelataionAction {
+public class DelegateRelataionAction implements ErrorCode{
 
     private static final Logger logger = LoggerFactory.getLogger(DelegateRelataionAction.class);
     @Autowired
@@ -88,9 +88,16 @@ public class DelegateRelataionAction {
         long agentId = AgentUtil.getAgentByRequest(request);
 
         UserInfoVo userInfo = delegateRelataionService.findUserInfo(agentId, userId);
-        Map<String, Object> result = new HashMap<>();
-        result.put("result", userInfo);
-        AgentResponse agentResponse = new AgentResponse(200, result);
+        AgentResponse agentResponse = null;
+        if (userInfo == null){
+            Map<String, Object> result = new HashMap<>();
+            result.put("result", userInfo);
+            agentResponse = new AgentResponse(NOT_SELF_USER, result);
+        }else {
+            Map<String, Object> result = new HashMap<>();
+            result.put("result", userInfo);
+            agentResponse = new AgentResponse(200, result);
+        }
 
         return agentResponse;
     }
