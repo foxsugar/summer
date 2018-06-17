@@ -102,16 +102,14 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
             total += totalMoney;
             User user = userDao.getUserById(uid);
-
+            if (user == null){
+                continue;
+            }
             logger.info("User:{}", user);
 
             OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
-            if (user.getImage() != null){
-                oneLevelInfoVo.setImage(user.getImage());
-            }else {
-                oneLevelInfoVo.setImage("");
-            }
-
+            oneLevelInfoVo.setImage(user.getImage());
+            oneLevelInfoVo.setUsername(user.getUsername());
             oneLevelInfoVo.setMoney("" + totalMoney);
             oneLevelInfoVoList.add(oneLevelInfoVo);
         }
@@ -162,6 +160,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         for (Long delegateId : aList){
             List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetweenAAndStatusIsAAndRecharge_sourceIs(Arrays.asList(delegateId), start, end, 1, "1");
             User user = userDao.getUserById(delegateId);
+            if (user == null) continue;
             TwoLevelInfoVo twoLevelInfoVo = new TwoLevelInfoVo();
 
             double totalMoney = 0;
@@ -180,14 +179,14 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
                 TwoLevelInfoVo infoVo = new TwoLevelInfoVo();
                 User twoLevelUser = userDao.getUserById(uid);
-                infoVo.setUsername(twoLevelUser.getUsername());
 
-                OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
-                if (user.getImage() != null){
-                    infoVo.setImage(user.getImage());
-                }else {
-                    infoVo.setImage("");
+
+                if (twoLevelUser == null){
+                    continue;
                 }
+
+                infoVo.setUsername(twoLevelUser.getUsername());
+                infoVo.setImage(twoLevelUser.getImage());
 
                 List<Charge> twoLevelChargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAAndStatusIsAAndRecharge_sourceIs(Arrays.asList(uid), start, end, 1, "1");
 
@@ -239,15 +238,11 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         for (Long uid : bList){
 
             User user = userDao.getUserById(uid);
+            if (user == null) continue;
             List<Charge> chargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAAndStatusIsAAndRecharge_sourceIs(Arrays.asList(uid), start, end, 1, "1");
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
             threeLevelInfoVo.setUsername(user.getUsername());
-            OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
-            if (user.getImage() != null){
-                threeLevelInfoVo.setImage(user.getImage());
-            }else {
-                threeLevelInfoVo.setImage("");
-            }
+            threeLevelInfoVo.setImage(user.getImage());
 
             double totalMoney = 0;
             for (Charge charge : chargeList){
