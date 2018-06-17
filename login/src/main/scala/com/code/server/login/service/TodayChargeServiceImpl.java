@@ -4,10 +4,13 @@ import com.code.server.db.dao.IChargeDao;
 import com.code.server.db.dao.IUserDao;
 import com.code.server.db.model.Charge;
 import com.code.server.db.model.User;
+import com.code.server.login.action.DelegateRelataionAction;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.vo.*;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +31,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
     //提现
     public static final String CHARGE_TYPE_CASH = "1";
+
+    private static final Logger logger = LoggerFactory.getLogger(TodayChargeServiceImpl.class);
+
 
     @Override
     public HomeChargeVo showCharge(Date start, Date end, long agentId) {
@@ -75,6 +81,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         OneLevelVo oneLevelVo = new OneLevelVo();
         oneLevelVo.setCategoryName("game name");
 
+        logger.info("agentBean:{}", agentBean);
+
         double total = 0d;
         List<OneLevelInfoVo> oneLevelInfoVoList = new ArrayList<>();
         //获取自己和自己直接玩家的所有list
@@ -94,6 +102,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
             total += totalMoney;
             User user = userDao.getUserById(uid);
+
+            logger.info("User:{}", user);
+
             OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
             oneLevelInfoVo.setImage(user.getImage());
             oneLevelInfoVo.setUsername(user.getUsername());
