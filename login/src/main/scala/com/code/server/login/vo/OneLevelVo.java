@@ -14,8 +14,20 @@ public class OneLevelVo {
 
     @JsonProperty("totalMoney")
     private double money;
+    @JsonProperty("totalGold")
+    private double gold;
+
+    public double getGold() {
+        return gold;
+    }
+
+    public void setGold(double gold) {
+        this.gold = gold;
+    }
 
     @JsonProperty("items")
+
+
     private List<OneLevelInfoVo> list = new ArrayList<>();
 
     public String getCategoryName() {

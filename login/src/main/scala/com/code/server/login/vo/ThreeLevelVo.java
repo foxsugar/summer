@@ -15,8 +15,18 @@ public class ThreeLevelVo {
     @JsonProperty("totalMoney")
     private double money;
 
+    private double gold;
+
     @JsonProperty("items")
     private List<ThreeLevelInfoVo> list = new ArrayList<>();
+
+    public double getGold() {
+        return gold;
+    }
+
+    public void setGold(double gold) {
+        this.gold = gold;
+    }
 
     public String getCategoryName() {
         return categoryName;

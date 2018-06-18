@@ -7,6 +7,8 @@ public class TwoLevelInfoVo {
 
     private long uid;
 
+    private String gold;
+
     public long getUid() {
         return uid;
     }
@@ -22,6 +24,14 @@ public class TwoLevelInfoVo {
     private String username;
 
     private String money;
+
+    public String getGold() {
+        return gold;
+    }
+
+    public void setGold(String gold) {
+        this.gold = gold;
+    }
 
     public String getImage() {
         return image;
