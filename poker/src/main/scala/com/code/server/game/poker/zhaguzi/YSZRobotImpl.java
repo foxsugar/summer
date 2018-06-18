@@ -20,6 +20,7 @@ public class YSZRobotImpl implements YSZRobot {
 
     protected static final Logger logger = LoggerFactory.getLogger(YSZRobotImpl.class);
     public static final long SECOND = 1000L;//秒;
+    public static final long COUNT = 90;
 
     @Override
     //自动过
@@ -100,7 +101,7 @@ public class YSZRobotImpl implements YSZRobot {
         if (r.getGame() != null) {
             GameYSZ game = (GameYSZ) r.getGame();
             //执行
-            if (now > game.lastOperateTime + SECOND * 3) {
+            if (now > game.lastOperateTime + SECOND * COUNT) {
 //                pass(game);
                 exe(game);
             }
@@ -108,7 +109,7 @@ public class YSZRobotImpl implements YSZRobot {
             //如果没在游戏中
             if (r.getUsers().size() >= 2) {
                 long t = now - r.getLastReadyTime();
-                if (r.isAllReady() && t > SECOND * 3) {
+                if (r.isAllReady() && t > SECOND * COUNT) {
 
                     System.out.println("start=============");
                     r.startGame();

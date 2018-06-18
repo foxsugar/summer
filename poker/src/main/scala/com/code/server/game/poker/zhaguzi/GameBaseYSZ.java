@@ -68,7 +68,7 @@ public class GameBaseYSZ extends Game {
         //房卡场 暂定
         if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
             MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
-            INIT_BOTTOM_CHIP = 1d;
+            INIT_BOTTOM_CHIP = 50d;
             genZhuList.add(100);
             genZhuList.add(150);
             genZhuList.add(200);
@@ -140,7 +140,11 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(8000);
                 genZhuList.add(10000);
             }
+
+            INIT_BOTTOM_CHIP = dizhu;
+            MAX_BET_NUM = max;
         }
+
 
     }
 
@@ -157,6 +161,7 @@ public class GameBaseYSZ extends Game {
         shuffle();//洗牌
         deal();//发牌
         initDiZhu();
+        chip = INIT_BOTTOM_CHIP;
         mustBet();
         curUserId = room.getBankerId();
 
@@ -191,8 +196,12 @@ public class GameBaseYSZ extends Game {
         result.put("mustBet", chip);
         result.put("zhuList", this.getGenZhuList());
         result.put("maxBet", this.MAX_BET_NUM);
+
+        logger.info("==============:{}", result);
+
         ResponseVo vo = new ResponseVo("gameService", "mustBet", result);
         MsgSender.sendMsg2Player(vo, users);
+
     }
 
     /**
