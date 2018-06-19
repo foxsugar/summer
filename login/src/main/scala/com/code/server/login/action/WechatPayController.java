@@ -293,6 +293,7 @@ public class WechatPayController {
             o.put("noncestr", orderResult.getNonceStr());
             o.put("timestamp", orderResult.getTimeStamp());
             o.put("package", "Sign=WXPay");
+            o.put("sign",  orderRequest.getSign());
 
             result.put("params", o);
 

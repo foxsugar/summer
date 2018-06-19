@@ -123,4 +123,13 @@ public class GameInfoHS extends GameInfoNew {
         //生成记录
         genRecord();
     }
+
+    @Override
+    public int chupai(long userId, String card) {
+        int rtn = super.chupai(userId, card);
+        if (rtn != 0) {
+            return rtn;
+        }
+        return 0;
+    }
 }
