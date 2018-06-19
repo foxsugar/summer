@@ -146,6 +146,10 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
                     }
                 }
             }
+
+            if (userId == agentId){
+                type = 1;
+            }
         }
 
 //        //表示用户和该代理没有关系
