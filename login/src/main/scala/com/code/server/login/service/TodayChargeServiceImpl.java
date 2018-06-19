@@ -33,9 +33,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
     //提现
     public static final String CHARGE_TYPE_CASH = "11";
     //金额
-    public static final String MONEY_TYPE = "0";
+    public static final int MONEY_TYPE = 0;
 
-    public static final String GOLD_TYPE = "1";
+    public static final int GOLD_TYPE = 1;
 
     private static final Logger logger = LoggerFactory.getLogger(TodayChargeServiceImpl.class);
 
@@ -120,7 +120,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             double totalMoney = 0d;
             double totalGold = 0d;
             for (Charge charge : list){
-                if (charge.getRecharge_source() == MONEY_TYPE){
+                if (charge.getChargeType() == MONEY_TYPE){
                     totalMoney += charge.getMoney();
                 }else {
                     totalGold += charge.getMoney();
@@ -176,7 +176,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             //计算金币
             double totalGold = 0d;
             for (Charge charge : list){
-                if (charge.getRecharge_source() == MONEY_TYPE){
+                if (charge.getChargeType() == MONEY_TYPE){
                     totalMoney += charge.getMoney();
                 }else {
                     totalGold += charge.getMoney();
@@ -210,7 +210,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
                 double twoLevelUserTotal = 0;
                 double twoLevelUserGoldTotal = 0;
                 for (Charge charge : twoLevelChargeList){
-                    if (charge.getRecharge_source() == MONEY_TYPE){
+                    if (charge.getChargeType() == MONEY_TYPE){
                         twoLevelUserTotal += charge.getMoney();
                     }else {
                         twoLevelUserGoldTotal += charge.getMoney();
@@ -268,7 +268,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             double totalMoney = 0;
             double totalGold = 0;
             for (Charge charge : chargeList){
-                if (charge.getRecharge_source() == MONEY_TYPE){
+                if (charge.getChargeType() == MONEY_TYPE){
                     totalMoney += charge.getMoney();
                 }else {
                     totalGold += charge.getMoney();
