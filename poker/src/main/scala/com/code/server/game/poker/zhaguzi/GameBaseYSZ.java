@@ -7,6 +7,7 @@ import com.code.server.game.room.IfaceRoom;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,12 +34,11 @@ public class GameBaseYSZ extends Game {
     protected List<Long> loseUser = new ArrayList<>();//输牌的人
     protected Long curUserId;
     protected RoomYSZ room;
+    protected  double minGold;
     protected List<Integer> genZhuList = new ArrayList<>();
-
     public List<Integer> getGenZhuList() {
         return genZhuList;
     }
-
     public void setGenZhuList(List<Integer> genZhuList) {
         this.genZhuList = genZhuList;
     }
@@ -84,24 +84,29 @@ public class GameBaseYSZ extends Game {
             dizhu = room.getGoldRoomType();
             if (room.getGoldRoomType() == 50){
                 max = 500;
+                minGold = 500;
                 genZhuList.add(100);
                 genZhuList.add(150);
                 genZhuList.add(200);
                 genZhuList.add(250);
+                minGold = 50;
             }else if (room.getGoldRoomType() == 100){
                 max = 1000;
+                minGold = 1000;
                 genZhuList.add(200);
                 genZhuList.add(300);
                 genZhuList.add(400);
                 genZhuList.add(500);
             }else if (room.getGoldRoomType() == 500){
                 max = 5000;
+                minGold = 5000;
                 genZhuList.add(1000);
                 genZhuList.add(1500);
                 genZhuList.add(2000);
                 genZhuList.add(2500);
             }else if (room.getGoldRoomType() == 1000){
                 max = 10000;
+                minGold = 10000;
                 genZhuList.add(2000);
                 genZhuList.add(3000);
                 genZhuList.add(4000);
@@ -114,6 +119,7 @@ public class GameBaseYSZ extends Game {
             dizhu = room.getGoldRoomType();
             if (room.getGoldRoomType() == 50){
                 max = 500;
+                minGold = 500;
                 genZhuList.add(100);
                 genZhuList.add(150);
                 genZhuList.add(200);
@@ -121,6 +127,7 @@ public class GameBaseYSZ extends Game {
 
             }else if (room.getGoldRoomType() == 100){
                 max = 1000;
+                minGold = 1000;
                 genZhuList.add(200);
                 genZhuList.add(300);
                 genZhuList.add(400);
@@ -128,6 +135,7 @@ public class GameBaseYSZ extends Game {
 
             }else if (room.getGoldRoomType() == 1000){
                 max = 10000;
+                minGold = 10000;
                 genZhuList.add(2000);
                 genZhuList.add(3000);
                 genZhuList.add(4000);
@@ -135,6 +143,7 @@ public class GameBaseYSZ extends Game {
 
             }else if (room.getGoldRoomType() == 2000){
                 max = 20000;
+                minGold = 20000;
                 genZhuList.add(4000);
                 genZhuList.add(6000);
                 genZhuList.add(8000);
@@ -215,6 +224,14 @@ public class GameBaseYSZ extends Game {
         if (userId != curUserId) {//判断是否到顺序
             return ErrorCode.NOT_YOU_TURN;
         }
+
+        if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+            double gold = RedisManager.getUserRedisService().getUserGold(userId);
+            if (gold - (playerCardInfos.get(userId).getAllScore() + addChip) < minGold){
+                return ErrorCode.GOLD_NOT_ENOUGH;
+            }
+        }
+
 //        MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
         if (seeUser.contains(userId)) {
 //            if(addChip!=chip*2+2 && addChip!=chip*2*2 && addChip!=chip*2*4 && addChip!=MAX_BET_NUM){
@@ -249,6 +266,18 @@ public class GameBaseYSZ extends Game {
 
         if (userId != curUserId) {//判断是否到顺序
             return ErrorCode.NOT_YOU_TURN;
+        }
+
+        if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+            double gold = RedisManager.getUserRedisService().getUserGold(userId);
+
+            double addChip = chip;
+            if (seeUser.contains(userId)){
+                addChip = chip * 2;
+            }
+            if (gold - (playerCardInfos.get(userId).getAllScore() + addChip) < minGold){
+                return ErrorCode.GOLD_NOT_ENOUGH;
+            }
         }
 
         if (seeUser.contains(userId)) {
@@ -357,6 +386,18 @@ public class GameBaseYSZ extends Game {
 
         if (!aliveUser.contains(askerId) || !aliveUser.contains(accepterId)) {
             return ErrorCode.NOT_KILL;
+        }
+
+        if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+            double gold = RedisManager.getUserRedisService().getUserGold(askerId);
+
+            double addChip = chip;
+            if (seeUser.contains(askerId)){
+                addChip = chip * 2;
+            }
+            if (gold - (playerCardInfos.get(askerId).getAllScore() + addChip) < minGold){
+                return ErrorCode.GOLD_NOT_ENOUGH;
+            }
         }
 
         Player asker = new Player(askerId, ArrUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(0)), ArrUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(1)), ArrUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(2)));
