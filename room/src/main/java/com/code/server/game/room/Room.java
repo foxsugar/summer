@@ -720,6 +720,7 @@ public class Room implements IfaceRoom {
     public PrepareRoom getPrepareRoomVo() {
         PrepareRoom prepareRoom = new PrepareRoom();
         prepareRoom.goldRoomType = this.goldRoomType;
+        prepareRoom.goldRoomPermission = this.goldRoomPermission;
         prepareRoom.createTime = System.currentTimeMillis();
         prepareRoom.gameType = this.getGameType();
         prepareRoom.roomType = this.getRoomType();
