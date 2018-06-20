@@ -12,6 +12,7 @@ import java.util.Map;
 public class PlayerCardsInfoKD_XY extends PlayerCardsInfoKD {
 
     private static final int ZIMO_MIN_SCORE = 4;
+    protected static final int DIANPAO_MIN_SCORE = 5;
 
     //创建房间mode：显庄 扣听 包杠 （1是0否）
 
@@ -327,4 +328,31 @@ public class PlayerCardsInfoKD_XY extends PlayerCardsInfoKD {
     public boolean isCanHu_zimo(String card) {
         return isTing && CardTypeUtil.getCardTingScore(card)>=ZIMO_MIN_SCORE && super.isCanHu_zimo(card);
     }
+
+    @Override
+    public boolean isCanHu_dianpao(String card) {
+        return isTing && CardTypeUtil.getCardTingScore(card)>=DIANPAO_MIN_SCORE && super.isCanHu_dianpao(card);
+    }
+
+    /**
+     * 听
+     */
+    @Override
+    public void ting(String card) {
+        //出牌 弃牌置为空(客户端扣牌)
+        this.cards.remove(card);
+        String ifAnKou = this.gameInfo.room.getMode();
+        if(!ifAnKou.isEmpty() && (ifAnKou.startsWith("1",1))){
+            this.disCards.add(null);
+        }else {
+            this.disCards.add(card);
+        }
+
+        this.isTing = true;
+        tingSet = getTingCardType(cards, null);
+        this.lastOperate = type_ting;
+        operateList.add(type_ting);
+        this.gameInfo.addUserOperate(this.userId, type_ting);
+    }
+
 }
