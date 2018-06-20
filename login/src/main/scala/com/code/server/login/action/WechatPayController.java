@@ -125,7 +125,7 @@ public class WechatPayController {
         String ip = spIp;
         //微信
 
-        money = 1;
+
         int money100 = money * 100;
 
         Integer moneyPoint = getMoneyPoint(money, chargeType);
