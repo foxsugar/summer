@@ -191,7 +191,7 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
 
                 if (playerZhaGuZi.getLiangList().size() > 0){
 
-                    if (playerZhaGuZi.getLiangList().contains(7) && playerZhaGuZi.getLiangList().contains(9)){
+                    if (playerZhaGuZi.getLiangList().contains(9)){
                         if (a == 7 && b == 9){
                             return SHUANG_SAN;
                         }

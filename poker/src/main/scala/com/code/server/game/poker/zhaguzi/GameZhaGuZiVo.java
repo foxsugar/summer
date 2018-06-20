@@ -40,6 +40,8 @@ public class GameZhaGuZiVo implements IfaceGameVo {
 
     protected Integer status = ZhaGuZiConstant.START_GAME;
 
+    protected int base;
+
     public Map<Long, PlayerZhaGuZiVo> getPlayerCardInfos() {
         return playerCardInfos;
     }
@@ -48,7 +50,13 @@ public class GameZhaGuZiVo implements IfaceGameVo {
         this.playerCardInfos = playerCardInfos;
     }
 
+    public int getBase() {
+        return base;
+    }
 
+    public void setBase(int base) {
+        this.base = base;
+    }
 
     public RoomZhaGuZi getRoom() {
         return room;

@@ -714,6 +714,15 @@ public class GameBaseYSZ extends Game {
         Map<String, Object> result = new HashMap<>();
         result.put("playerCardInfo", playerCardInfo);
         result.put("chip", chip);
+        List<Integer> list = new ArrayList<>();
+        for (Integer i : this.genZhuList){
+            if (this.seeUser.contains(userId)){
+                list.add(i * 2);
+            }else {
+                list.add(i);
+            }
+        }
+        result.put("zhuList", list);
         ResponseVo vo = new ResponseVo("gameService", "noticeActionSelf", result);
         MsgSender.sendMsg2Player(vo, users);
     }
@@ -761,6 +770,17 @@ public class GameBaseYSZ extends Game {
         Map<String, Object> result = new HashMap<>();
         result.put("playerCardInfo", playerCardInfo);
         result.put("chip", chip);
+
+        List<Integer> list = new ArrayList<>();
+        for (Integer i : this.genZhuList){
+            if (this.seeUser.contains(userId)){
+                list.add(i * 2);
+            }else {
+                list.add(i);
+            }
+        }
+        result.put("zhuList", list);
+
         ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
         MsgSender.sendMsg2Player(vo, users);
     }
@@ -820,6 +840,15 @@ public class GameBaseYSZ extends Game {
         Map<String, Object> result = new HashMap<>();
         result.put("playerCardInfo", playerCardInfo);
         result.put("chip", chip);
+        List<Integer> list = new ArrayList<>();
+        for (Integer i : this.genZhuList){
+            if (this.seeUser.contains(userId)){
+                list.add(i * 2);
+            }else {
+                list.add(i);
+            }
+        }
+        result.put("zhuList", list);
         ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
         MsgSender.sendMsg2Player(vo, users);
     }
@@ -1041,7 +1070,13 @@ public class GameBaseYSZ extends Game {
         vo.curUserId = this.getCurUserId();
         vo.curRoundNumber = getMaxRoundNumber();
         vo.loseUser = this.getLoseUser();
-        vo.setZhuList(this.getGenZhuList());
+        if (this.seeUser.contains(userId)){
+            for (int i : this.getGenZhuList()){
+                vo.getZhuList().add(i);
+            }
+        }else {
+            vo.setZhuList(this.getGenZhuList());
+        }
 
         Double temp = 0.0;
         //玩家牌信息
