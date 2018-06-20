@@ -27,7 +27,7 @@ public class RoomExtendGold extends Room {
         this.isRobotRoom = true;
 
         if (isGoldRoom()) {
-            this.multiple *= goldRoomType;
+            this.multiple = goldRoomType;
         }
     }
 
