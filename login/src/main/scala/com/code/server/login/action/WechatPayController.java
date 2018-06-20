@@ -115,7 +115,7 @@ public class WechatPayController {
 
 
     @ResponseBody
-    @RequestMapping(value = "preOrderApp2")
+    @RequestMapping(value = "preOrderApp")
     public Map<String, Object> charge(HttpServletRequest request, String userId, int chargeType, int money,String spIp) throws Exception {
 
         Map<String, Object> result = new HashMap<>();
@@ -124,6 +124,7 @@ public class WechatPayController {
 
         String ip = spIp;
         //微信
+
 
         int money100 = money * 100;
 
@@ -238,7 +239,7 @@ public class WechatPayController {
 
 
     @ResponseBody
-    @RequestMapping(value = "preOrderApp")
+    @RequestMapping(value = "preOrderApp1")
     public Map<String, Object> pay_app(HttpServletRequest request) throws Exception {
         int money = Integer.valueOf(request.getParameter("money"));
         int chargeType = Integer.valueOf(request.getParameter("chargeType"));

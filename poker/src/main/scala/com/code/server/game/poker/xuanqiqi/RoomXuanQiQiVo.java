@@ -24,4 +24,5 @@ public class  RoomXuanQiQiVo extends RoomVo {
     protected Map<Long, Integer> numFive = new HashMap<>();
     protected Map<Long, Integer> numSix = new HashMap<>();
 
+    protected Map<Long, Integer> winNumXQQ = new HashMap<>();
 }

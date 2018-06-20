@@ -45,6 +45,8 @@ public class UserOfResult {
     private int numFive;
     private int numSix;
 
+    private int winNumXQQ;
+
     private RoomStatistics roomStatistics;
 
     public long getUserId() {
@@ -310,5 +312,13 @@ public class UserOfResult {
     public UserOfResult setAnGangNum(int anGangNum) {
         this.anGangNum = anGangNum;
         return this;
+    }
+
+    public int getWinNumXQQ() {
+        return winNumXQQ;
+    }
+
+    public void setWinNumXQQ(int winNumXQQ) {
+        this.winNumXQQ = winNumXQQ;
     }
 }

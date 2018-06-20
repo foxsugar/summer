@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Set;
 
 public class PlayerCardsInfoKD extends PlayerCardsInfoMj {
-	protected static final int TING_MIN_SCORE = 6;
-	protected static final int ZIMO_MIN_SCORE = 3;
-	protected static final int DIANPAO_MIN_SCORE = 6;
+	protected int TING_MIN_SCORE = 6;
+	protected int ZIMO_MIN_SCORE = 3;
+	protected int DIANPAO_MIN_SCORE = 6;
 
 	@Override
 	public void init(List<String> cards) {
@@ -274,5 +274,5 @@ public class PlayerCardsInfoKD extends PlayerCardsInfoMj {
 
     }
 
-    
+
 }

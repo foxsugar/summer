@@ -3,6 +3,9 @@ package com.code.server.login.util;
 
 
 
+import com.code.server.login.config.ServerConfig;
+import com.code.server.util.SpringUtil;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -71,7 +74,8 @@ public class WxPayHelper {
         }
         
       //  String key="1Q2w3e4r5t6y7u8i9Oa1s2d3f4g5h6j7";
-        sb.append("key="+ PayUtil.Key);
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        sb.append("key="+ serverConfig.getKey());
      //  商户key即密钥： 
         return WXMD5.MD5Encode(sb.toString())
                 .toUpperCase();

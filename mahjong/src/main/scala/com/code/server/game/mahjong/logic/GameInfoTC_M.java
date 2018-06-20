@@ -13,9 +13,11 @@ public class GameInfoTC_M extends GameInfo {
     protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
         isAlreadyHu = true;
         sendResult(true, playerCardsInfo.getUserId(), null);
-        noticeDissolutionResult();
         //如果连庄 牌局数不增加
         boolean isLianZhuang = playerCardsInfo.getUserId() == this.getFirstTurn();
+        if (!isLianZhuang) {
+            noticeDissolutionResult();
+        }
         if (isLianZhuang) {
 
             room.clearReadyStatus(false);
@@ -61,8 +63,12 @@ public class GameInfoTC_M extends GameInfo {
 
         isAlreadyHu = true;
         sendResult(true, -1L, yipaoduoxiang);
-        noticeDissolutionResult();
+        if (!isLianZhuang[0]) {
+            noticeDissolutionResult();
+        }
         boolean isAdd = !isLianZhuang[0];
         room.clearReadyStatus(isAdd);
     }
+
+
 }

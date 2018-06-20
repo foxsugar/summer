@@ -25,6 +25,10 @@ public class RoomExtendGold extends Room {
     public void init(int gameNumber, int multiple) throws DataNotFoundException {
         super.init(gameNumber, multiple);
         this.isRobotRoom = true;
+
+        if (isGoldRoom()) {
+            this.multiple = goldRoomType;
+        }
     }
 
     @Override
@@ -129,7 +133,6 @@ public class RoomExtendGold extends Room {
         if (isGoldRoom()) {
             if (!this.users.contains(userId)) {
                 return ErrorCode.CANNOT_QUIT_ROOM_NOT_EXIST;
-
             }
 
             if (isInGame) {
