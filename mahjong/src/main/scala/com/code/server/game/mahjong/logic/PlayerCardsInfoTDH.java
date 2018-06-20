@@ -491,7 +491,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 				}
 			}
 		}
-		else if(this.roomInfo.getGameType().equals("TC")){
+		else if(this.roomInfo.getGameType().equals("TC") || this.roomInfo.getGameType().equals("TC1")){
 			if(isZimo){
 				if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3")||room.getMode().equals("11")||room.getMode().equals("13"))){//平胡
 					if (this.userId == this.gameInfo.firstTurn) {//庄赢
@@ -908,7 +908,7 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
     	}
 
 
-    	if(!this.roomInfo.getGameType().equals("LQ") && !this.roomInfo.getGameType().equals("BAIXING") && !this.roomInfo.getGameType().equals("QUANMIN") && !this.roomInfo.getGameType().equals("HT") && !this.roomInfo.getGameType().equals("JL") && !this.roomInfo.getGameType().equals("DS") && !this.roomInfo.getGameType().equals("HL") && !this.roomInfo.getGameType().equals("TC")&& !this.roomInfo.getGameType().equals("XXPB")){
+    	if(!this.roomInfo.getGameType().equals("LQ") && !this.roomInfo.getGameType().equals("BAIXING") && !this.roomInfo.getGameType().equals("QUANMIN") && !this.roomInfo.getGameType().equals("HT") && !this.roomInfo.getGameType().equals("JL") && !this.roomInfo.getGameType().equals("DS") && !this.roomInfo.getGameType().equals("HL") && !this.roomInfo.getGameType().equals("TC") && !this.roomInfo.getGameType().equals("TC1")&& !this.roomInfo.getGameType().equals("XXPB")){
     		if(this.anGangType.size()>0){
     			for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
             		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * this.anGangType.size() * room.getMultiple());
