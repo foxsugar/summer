@@ -278,7 +278,7 @@ public class RoomTuiTongZi extends Room{
 
     @Override
     protected void dissolutionRoom() {
-        this.addUserSocre(this.getBankerId(), this.getPotBottom() - 20);
+        this.addUserSocre(this.getBankerId(), this.getPotBottom() - ((GameTuiTongZi)this.game).offset());
         super.dissolutionRoom();
     }
 
