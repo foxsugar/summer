@@ -120,6 +120,9 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
     public UserInfoVo findUserInfo(long agentId, long userId) {
 
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+
+        logger.info("agentBean:{}", agentBean);
+
         int type = 0;
 
         if (agentBean.getChildList().contains(userId)){
@@ -143,7 +146,16 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
                     }
                 }
             }
+
+            if (userId == agentId){
+                type = 1;
+            }
         }
+
+//        //表示用户和该代理没有关系
+//        if (type == 0){
+//            return null;
+//        }
 
         int userCount = 0;
         int delegateCount = 0;
@@ -183,7 +195,7 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
 
         userInfo.setUserCount(userCount);
         userInfo.setDelegateCount(delegateCount);
-
+        userInfo.setUserId(userId);
         return userInfo;
     }
 }

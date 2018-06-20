@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class MahjongRobot {
 
-    private static long INTERVAL_TIME = 2000L;
+    private static long INTERVAL_TIME = 1000L * 30;
 
     public static void execute(RoomInfo roomInfo) {
         long now = System.currentTimeMillis();

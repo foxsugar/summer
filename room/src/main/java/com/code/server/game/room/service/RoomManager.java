@@ -156,7 +156,7 @@ public class RoomManager {
             }
 
             //金币房
-            if (rm.isGoldRoom() && rm.isDefaultGoldRoom()) {
+            if (rm.isGoldRoom()) {
                 //默认金币房
                 if (rm.isDefaultGoldRoom()) {
                     getInstance().getNotFullRoom(rm.getGameType(), rm.getGoldRoomType()).remove(room);
@@ -185,7 +185,7 @@ public class RoomManager {
             getInstance().robotRoom.add(room);
         }
         //加入公开金币房
-        if (room.isGoldRoom() && room.getGoldRoomType() != RoomExtendGold.GOLD_ROOM_PERMISSION_DEFAULT) {
+        if (room.isGoldRoom() && room.getGoldRoomPermission() != RoomExtendGold.GOLD_ROOM_PERMISSION_DEFAULT) {
             getInstance().getPublicGoldRoom(room.getGameType(), room.getGoldRoomType()).add(room);
         }
         //加入redis server-room 列表

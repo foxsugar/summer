@@ -81,7 +81,7 @@ public class TuiTongZiCardUtils {
 
         List<Integer> listA = pA.getPlayerCards();
         List<Integer> listB = pB.getPlayerCards();
-        return TuiTongTongCardUtils.mAIsBiggerThanB(listA, listB);
+        return TuiTongZiCardUtils.mAIsBiggerThanB(listA, listB);
     }
 
     /**

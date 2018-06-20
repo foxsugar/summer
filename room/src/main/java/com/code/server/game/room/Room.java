@@ -335,7 +335,7 @@ public class Room implements IfaceRoom {
             n.setMessage("roomNum " + this.getRoomId() + " :has destroy success!");
             MsgSender.sendMsg2Player(new ResponseVo("roomService", "destroyRoom", n), noticeList);
             //代开房 并且游戏未开始
-            if (!isCreaterJoin && !this.isInGame && this.curGameNumber == 1) {
+            if (!isCreaterJoin  && this.curGameNumber == 1) {
                 dissolutionRoom();
             }
 
@@ -720,6 +720,7 @@ public class Room implements IfaceRoom {
     public PrepareRoom getPrepareRoomVo() {
         PrepareRoom prepareRoom = new PrepareRoom();
         prepareRoom.goldRoomType = this.goldRoomType;
+        prepareRoom.goldRoomPermission = this.goldRoomPermission;
         prepareRoom.createTime = System.currentTimeMillis();
         prepareRoom.gameType = this.getGameType();
         prepareRoom.roomType = this.getRoomType();

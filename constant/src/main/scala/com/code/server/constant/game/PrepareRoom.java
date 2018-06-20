@@ -20,6 +20,7 @@ public class PrepareRoom {
     public String clubRoomModel;
 
     public int goldRoomType;
+    public int goldRoomPermission;
 
     public int peopleNum;
 

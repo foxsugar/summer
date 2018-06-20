@@ -3,7 +3,6 @@ package com.code.server.login.action;
 
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.UserBean;
-import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.db.Service.ConstantService;
 import com.code.server.db.Service.GameRecordService;
@@ -12,7 +11,6 @@ import com.code.server.db.Service.UserService;
 import com.code.server.db.model.Constant;
 import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
-import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.LoginService;
@@ -23,11 +21,19 @@ import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import scala.tools.nsc.doc.html.page.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -45,8 +51,6 @@ import java.util.Map;
 @EnableAutoConfiguration
 public class LoginAction {
 
-    @Autowired
-    private RedisTemplate redisTemplate;
 
     @Autowired
     private UserService userService;
@@ -348,7 +352,7 @@ public class LoginAction {
         newUser.setPassword(password);
         newUser.setOpenId("" + new IdWorker(serverConfig.getServerId(), 1).nextId());
         newUser.setUsername(decodeStr(account));
-        newUser.setImage("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=253777390,947512827&fm=23&gp=0.jpg/96");
+        newUser.setImage("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=253777390,947512827&fm=23&gp=0.jpg");
         newUser.setSex(1);
         newUser.setVip(0);
         newUser.setUuid("0");
@@ -399,4 +403,73 @@ public class LoginAction {
         }
         return result;
     }
+
+
+
+    public static JSONObject verify(long userId, String url, String receipt) {
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(url);
+        try {
+
+//            JSONObject data = new JSONObject();
+//            data.put("receipt-data", receipt);
+            Map<String, Object> data = new HashMap<>();
+            data.put("receipt-data", receipt);
+            StringEntity entity = new StringEntity(JsonUtil.toJson(data));
+            entity.setContentEncoding("utf-8");
+            entity.setContentType("application/json");
+            httpPost.setEntity(entity);
+            HttpResponse response = httpClient.execute(httpPost);
+            HttpEntity httpEntity = response.getEntity();
+            String resultStr = EntityUtils.toString(httpEntity);
+            JsonNode result = JsonUtil.readTree(resultStr);
+//            if (result == null) {
+//                return
+//            }
+            if (result.path("status").asInt() == 21007) {
+                return verify(userId,"https://sandbox.itunes.apple.com/verifyReceipt", receipt);
+            }
+
+
+            JsonNode receiptNode = JsonUtil.readTree(result.path("receipt").asText());
+            int itemId = receiptNode.path("app_item_id").asInt();
+//
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            httpPost.releaseConnection();
+        }
+        return null;
+    }
+
+
+
+/*
+
+{
+  "status": 0,
+  "environment": "Sandbox",
+  "receipt": {
+    "receipt_type": "ProductionSandbox",
+    "adam_id": 0,
+    "app_item_id": 0,
+    "bundle_id": "com.platomix.MicroBusinessManage",
+    "application_version": "2.0.0",
+    "download_id": 0,
+    "version_external_identifier": 0,
+    "receipt_creation_date": "2017-06-06 06:35:27 Etc/GMT",
+    "receipt_creation_date_ms": "1496730927000",
+    "receipt_creation_date_pst": "2017-06-05 23:35:27 America/Los_Angeles",
+    "request_date": "2017-06-06 07:13:26 Etc/GMT",
+    "request_date_ms": "1496733206549",
+    "request_date_pst": "2017-06-06 00:13:26 America/Los_Angeles",
+    "original_purchase_date": "2013-08-01 07:00:00 Etc/GMT",
+    "original_purchase_date_ms": "1375340400000",
+    "original_purchase_date_pst": "2013-08-01 00:00:00 America/Los_Angeles",
+    "original_application_version": "1.0",
+    "in_app": []
+  }
+}
+ */
 }

@@ -13,6 +13,12 @@ public class HomeChargeVo {
     private String onelevel;
     private String twoLevel;
     private String threeLevel;
+
+    private String oneLevelGold;
+    private String twoLevelGold;
+    private String threeLevelGold;
+
+    private String totalGold;
     private String total;
     private String start;
     private String end;
@@ -23,6 +29,39 @@ public class HomeChargeVo {
     private List<TwoLevelInfoVo> twoLevelInfoVoList = new ArrayList<>();
     @JsonProperty("list3")
     private List<ThreeLevelInfoVo> threeLevelInfoVoList = new ArrayList<>();
+
+
+    public String getTotalGold() {
+        return totalGold;
+    }
+
+    public void setTotalGold(String totalGold) {
+        this.totalGold = totalGold;
+    }
+
+    public String getOneLevelGold() {
+        return oneLevelGold;
+    }
+
+    public void setOneLevelGold(String oneLevelGold) {
+        this.oneLevelGold = oneLevelGold;
+    }
+
+    public String getTwoLevelGold() {
+        return twoLevelGold;
+    }
+
+    public void setTwoLevelGold(String twoLevelGold) {
+        this.twoLevelGold = twoLevelGold;
+    }
+
+    public String getThreeLevelGold() {
+        return threeLevelGold;
+    }
+
+    public void setThreeLevelGold(String threeLevelGold) {
+        this.threeLevelGold = threeLevelGold;
+    }
 
     public List<OneLevelInfoVo> getOneLevelVoList() {
         return oneLevelVoList;

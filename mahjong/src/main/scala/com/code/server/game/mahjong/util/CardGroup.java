@@ -27,6 +27,7 @@ public class CardGroup {
         this.huType = huType;
         this.card = card;
         this.shunHaveHun = shunHaveHun;
+        this.hunNum = 1;
     }
 
     @Override

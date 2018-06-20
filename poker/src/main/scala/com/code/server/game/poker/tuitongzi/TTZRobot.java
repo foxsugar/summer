@@ -4,6 +4,7 @@ import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.robot.ResponseRobotVo;
+import com.code.server.game.poker.zhaguzi.GameBaseYSZ;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
@@ -96,7 +97,12 @@ public class TTZRobot implements IGameConstant,ITTZRobot {
         msgKey.setPartition(partition);
 
         Map<String, Object> put = new HashMap();
-        put.put("zhu",1);
+
+        if (game instanceof GameTuiZiKXHY_BWZ){
+            put.put("zhu",1 + 1000);
+        }else {
+            put.put("zhu",1);
+        }
 
         for (PlayerTuiTongZi p : game.getPlayerCardInfos().values()) {
             if(p.getUserId()!=game.room.getBankerId() && p.getBet()==null){

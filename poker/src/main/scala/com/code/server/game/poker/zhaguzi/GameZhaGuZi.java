@@ -133,16 +133,18 @@ public class GameZhaGuZi extends Game {
 
         deal();
 
-        //第一局 红桃5 先说话
+        //第一局 红桃A 先说话
         if (this.room.curGameNumber == 1) {
 
             PlayerZhaGuZi player = null;
 
+            Integer hongtaoA = CardUtils.string2Local("红桃-A", () -> CardUtils.getCardDict());
+
             for (PlayerZhaGuZi playerZhaGuZi : playerCardInfos.values()) {
 
                 for (Integer card : playerZhaGuZi.cards) {
-                    //红桃五
-                    if (card == 50) {
+                    //红桃A
+                    if (card == hongtaoA) {
                         player = playerZhaGuZi;
                         break;
                     }
@@ -380,24 +382,16 @@ public class GameZhaGuZi extends Game {
 
         PlayerZhaGuZi player = null;
         //有红桃5的先出
-        if (this.room.curGameNumber == 1) {
+        for (PlayerZhaGuZi playerZhaGuZi : playerCardInfos.values()) {
 
-            for (PlayerZhaGuZi playerZhaGuZi : playerCardInfos.values()) {
-
-                for (Integer card : playerZhaGuZi.cards) {
-                    //红桃五
-                    if (card == 51) {
-                        player = playerZhaGuZi;
-                        break;
-                    }
+            for (Integer card : playerZhaGuZi.cards) {
+                //红桃五
+                if (card == 51) {
+                    player = playerZhaGuZi;
+                    break;
                 }
             }
-
-        } else {
-
-            player = playerCardInfos.get(this.room.lastWinnderId);
         }
-
 
         for (PlayerZhaGuZi playerZhaGuZi : playerCardInfos.values()) {
 
@@ -553,7 +547,10 @@ public class GameZhaGuZi extends Game {
 
                 Integer local8 = CardUtils.string2Local("红桃-5", ifCard);
                 //第一把第一个人必须出红桃5
-                if (!list.contains(local8) && this.room.curGameNumber == 1) {
+//                if (!list.contains(local8) && this.room.curGameNumber == 1) {
+//                    return MUST_HONGTAO_FIVE;
+//                }
+                if (!list.contains(local8)) {
                     return MUST_HONGTAO_FIVE;
                 }
 
@@ -743,6 +740,18 @@ public class GameZhaGuZi extends Game {
                 }
             }
 
+            if (ret == 2){
+                //算红桃3是不是憋手里
+                for (PlayerZhaGuZi player : playerCardInfos.values()){
+                    if (player.getRetain3List().contains(hongtaosan)){
+                        if (player.cards.contains(hongtaosan)){
+                            base++;
+                        }
+                        break;
+                    }
+                }
+            }
+
             int count = 0;
 
             if (ret == 0) {
@@ -877,6 +886,8 @@ public class GameZhaGuZi extends Game {
         }
 
         playerSanJia.setScore(playerSanJia.getScore() - score);
+        //认输的人 就是下次说话的人
+        this.room.lastWinnderId = uid;
 
         sendGameResult(2);
     }

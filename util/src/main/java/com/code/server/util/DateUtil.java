@@ -16,6 +16,7 @@ public final class DateUtil {
 
     public static final String DATE_TIME_FORMAT_YYYYMMDD_HH_MI = "yyyyMMdd HH:mm";
 
+    public static final String DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI = "yyyy-MM-dd HH:mm";
     //年月日
     public static final String DATE_TIME_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
     public static boolean isSameDate(long time1, long time2) {
@@ -87,8 +88,12 @@ public final class DateUtil {
         return convert2String(date, DATE_TIME_FORMAT_YYYY_MM_DD);
     }
 
+//    public static String convert2String(Date date){
+//        return convert2String(date, DATE_TIME_FORMAT_YYYYMMDD_HH_MI);
+//    }
+
     public static String convert2String(Date date){
-        return convert2String(date, DATE_TIME_FORMAT_YYYYMMDD_HH_MI);
+        return convert2String(date, DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI);
     }
 
     public static String convert2String(Date date, String format) {

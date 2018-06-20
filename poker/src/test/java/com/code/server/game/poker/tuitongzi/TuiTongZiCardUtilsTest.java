@@ -12,6 +12,14 @@ import java.util.Date;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TuiTongZiCardUtilsTest {
+    @Test
+    public void zhuangIsBiggerThanXian1() throws Exception {
+
+        PlayerTuiTongZi pA = new PlayerTuiTongZi(1, 8,12);
+        PlayerTuiTongZi pB = new PlayerTuiTongZi(2, 32, 28);
+        Boolean ret = TuiTongZiCardUtils.zhuangIsBiggerThanXian(pA, pB);
+        Assert.assertNotEquals(false, ret);
+    }
 
     @Test
     public void text1() throws Exception {

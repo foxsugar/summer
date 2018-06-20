@@ -4,12 +4,16 @@ import com.code.server.db.dao.IChargeDao;
 import com.code.server.db.dao.IUserDao;
 import com.code.server.db.model.Charge;
 import com.code.server.db.model.User;
+import com.code.server.login.action.DelegateRelataionAction;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.vo.*;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import scala.Char;
 
 import java.util.*;
 
@@ -27,7 +31,13 @@ public class TodayChargeServiceImpl implements TodayChargeService {
     private IUserDao userDao;
 
     //提现
-    public static final String CHARGE_TYPE_CASH = "1";
+    public static final String CHARGE_TYPE_CASH = "11";
+    //金额
+    public static final int MONEY_TYPE = 0;
+
+    public static final int GOLD_TYPE = 1;
+
+    private static final Logger logger = LoggerFactory.getLogger(TodayChargeServiceImpl.class);
 
     @Override
     public HomeChargeVo showCharge(Date start, Date end, long agentId) {
@@ -41,8 +51,18 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         homeChargeVo.setOnelevel("" + oneLevelVo.getMoney());
         homeChargeVo.setTwoLevel("" + twoLevelVo.getMoney());
         homeChargeVo.setThreeLevel("" + threeLevelVo.getMoney());
+
+        homeChargeVo.setOneLevelGold("" + oneLevelVo.getGold());
+        homeChargeVo.setTwoLevelGold("" + twoLevelVo.getGold());
+        homeChargeVo.setThreeLevelGold("" + threeLevelVo.getGold());
+
+
         double total = oneLevelVo.getMoney() + twoLevelVo.getMoney() + threeLevelVo.getMoney();
         homeChargeVo.setTotal("" + total);
+
+        double totalGold = oneLevelVo.getGold() + twoLevelVo.getGold() + threeLevelVo.getGold();
+        homeChargeVo.setTotalGold("" + totalGold);
+
         homeChargeVo.setStart(startStr);
         homeChargeVo.setEnd(endStr);
         return homeChargeVo;
@@ -53,7 +73,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
         Date start = DateUtil.getThisYearStart();
         Date end = new Date();
-        List<Charge> list = chargeDao.getChargesByUseridAndRechargeSourceAndDate(agentId, CHARGE_TYPE_CASH, start, end);
+        List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndRecharge_sourceIs(Arrays.asList(agentId),start, end, 1, CHARGE_TYPE_CASH);
 
         List<WaterRecordVo> voList = new ArrayList<>();
         for (Charge charge : list){
@@ -73,9 +93,11 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         OneLevelVo oneLevelVo = new OneLevelVo();
-        oneLevelVo.setCategoryName("game name");
 
+        //金额
         double total = 0d;
+        //金币
+        double goldTotal = 0d;
         List<OneLevelInfoVo> oneLevelInfoVoList = new ArrayList<>();
         //获取自己和自己直接玩家的所有list
         List<Long> aList = new ArrayList<>();
@@ -85,16 +107,31 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         //查一下手下玩家
         for (Long uid : aList){
 
-            List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetweenAAndStatusIsAAndRecharge_sourceIs(Arrays.asList(uid), start, end, 1, "0");
+            //不要代理 只要玩家
+            if (uid != agentId && RedisManager.getAgentRedisService().isExit(uid)) continue;
+
+            User user = userDao.getUserById(uid);
+            if (user == null){
+                continue;
+            }
+
+            List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
 
             double totalMoney = 0d;
+            double totalGold = 0d;
             for (Charge charge : list){
-                totalMoney += charge.getMoney();
+                if (charge.getChargeType() == MONEY_TYPE){
+                    totalMoney += charge.getMoney();
+                }else {
+                    totalGold += charge.getMoney();
+                }
             }
 
             total += totalMoney;
-            User user = userDao.getUserById(uid);
+            goldTotal += totalGold;
+
             OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
+            oneLevelInfoVo.setGold(goldTotal +"");
             oneLevelInfoVo.setImage(user.getImage());
             oneLevelInfoVo.setUsername(user.getUsername());
             oneLevelInfoVo.setMoney("" + totalMoney);
@@ -102,6 +139,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         }
 
         oneLevelVo.setMoney(total);
+        oneLevelVo.setGold(goldTotal);
         oneLevelVo.setList(oneLevelInfoVoList);
 
         return oneLevelVo;
@@ -112,7 +150,6 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         TwoLevelVo twoLevelVo = new TwoLevelVo();
-        twoLevelVo.setCategoryName("game name");
 
         //获取所有二级代理的id
         List<Long> aList = new ArrayList<>();
@@ -122,66 +159,75 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             }
         }
 
-        List<List<Long>> bList = new ArrayList<>();
-
-        for (Long childId : aList){
-
-            AgentBean child = RedisManager.getAgentRedisService().getAgentBean(childId);
-            Set<Long> grandchild = child.getChildList();
-
-            List<Long> temp = new ArrayList<>();
-            //刨除三级代理
-            for (Long grandChildId : grandchild){
-                //三级代理
-                if (RedisManager.getAgentRedisService().isExit(grandChildId)){
-                    continue;
-                }
-                temp.add(grandChildId);
-            }
-            bList.add(temp);
-        }
-
-        // bList + aList
         double total = 0d;
+        double goldTotal = 0d;
+
         //手下所有二级代理
         for (Long delegateId : aList){
-            List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetweenAAndStatusIsAAndRecharge_sourceIs(Arrays.asList(delegateId), start, end, 1, "1");
+
             User user = userDao.getUserById(delegateId);
+            if (user == null) continue;
+
+            List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(delegateId), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
             TwoLevelInfoVo twoLevelInfoVo = new TwoLevelInfoVo();
 
-            double totalMoney = 0;
+            //计算金额
+            double totalMoney = 0d;
+            //计算金币
+            double totalGold = 0d;
             for (Charge charge : list){
-                totalMoney += charge.getMoney();
+                if (charge.getChargeType() == MONEY_TYPE){
+                    totalMoney += charge.getMoney();
+                }else {
+                    totalGold += charge.getMoney();
+                }
             }
+
+            twoLevelInfoVo.setMoney("" + totalMoney);
+            twoLevelInfoVo.setGold("" + totalGold);
+
             twoLevelInfoVo.setImage(user.getImage());
             twoLevelInfoVo.setUsername(user.getUsername());
-            twoLevelInfoVo.setMoney("" + totalMoney);
-            total += totalMoney;
             twoLevelVo.getList().add(twoLevelInfoVo);
+
+            total += totalMoney;
+            goldTotal += totalGold;
 
             //二级代理手下直接用户
             AgentBean twoLevelAgentBean = RedisManager.getAgentRedisService().getAgentBean(delegateId);
             for (Long uid : twoLevelAgentBean.getChildList()){
 
-                TwoLevelInfoVo infoVo = new TwoLevelInfoVo();
+                if (RedisManager.getAgentRedisService().isExit(uid)) continue;
+
                 User twoLevelUser = userDao.getUserById(uid);
+                if (twoLevelUser == null) continue;
+
+                TwoLevelInfoVo infoVo = new TwoLevelInfoVo();
                 infoVo.setUsername(twoLevelUser.getUsername());
                 infoVo.setImage(twoLevelUser.getImage());
 
-                List<Charge> twoLevelChargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAAndStatusIsAAndRecharge_sourceIs(Arrays.asList(uid), start, end, 1, "1");
-
+                List<Charge> twoLevelChargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
                 double twoLevelUserTotal = 0;
+                double twoLevelUserGoldTotal = 0;
                 for (Charge charge : twoLevelChargeList){
-                    twoLevelUserTotal += charge.getMoney();
+                    if (charge.getChargeType() == MONEY_TYPE){
+                        twoLevelUserTotal += charge.getMoney();
+                    }else {
+                        twoLevelUserGoldTotal += charge.getMoney();
+                    }
                 }
-                total += twoLevelUserTotal;
                 infoVo.setMoney("" + twoLevelUserTotal);
                 twoLevelVo.getList().add(infoVo);
-            }
 
-            twoLevelVo.setMoney(total);
+                total += twoLevelUserTotal;
+                goldTotal += twoLevelUserGoldTotal;
+
+
+            }
         }
 
+        twoLevelVo.setMoney(total);
+        twoLevelVo.setGold(goldTotal);
         return twoLevelVo;
     }
 
@@ -190,8 +236,6 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         ThreeLevelVo threeLevelVo = new ThreeLevelVo();
-        threeLevelVo.setCategoryName("game name");
-
 
         //所有的二级代理
         List<Long> aList = new ArrayList<>();
@@ -205,36 +249,41 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         List<Long> bList = new ArrayList<>();
         for (Long uid : aList){
             if (RedisManager.getAgentRedisService().isExit(uid)){
-                bList.add(uid);
-            }
-            AgentBean bean = RedisManager.getAgentRedisService().getAgentBean(uid);
-            for (Long id : bean.getChildList()){
-                if (RedisManager.getAgentRedisService().isExit(id)) continue;
-                bList.add(id);
+                AgentBean agent3Bean = RedisManager.getAgentRedisService().getAgentBean(uid);
+                bList.addAll(agent3Bean.getChildList());
             }
         }
 
-        double total = 0;
+        double total = 0d;
+        double goldTotal = 0d;
         for (Long uid : bList){
 
             User user = userDao.getUserById(uid);
-            List<Charge> chargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAAndStatusIsAAndRecharge_sourceIs(Arrays.asList(uid), start, end, 1, "1");
+            if (user == null) continue;
+            List<Charge> chargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
             threeLevelInfoVo.setUsername(user.getUsername());
             threeLevelInfoVo.setImage(user.getImage());
 
             double totalMoney = 0;
+            double totalGold = 0;
             for (Charge charge : chargeList){
-                totalMoney += charge.getMoney();
+                if (charge.getChargeType() == MONEY_TYPE){
+                    totalMoney += charge.getMoney();
+                }else {
+                    totalGold += charge.getMoney();
+                }
             }
             threeLevelInfoVo.setMoney("" + totalMoney);
-            total += totalMoney;
+            threeLevelInfoVo.setGold("" + totalGold);
             threeLevelVo.getList().add(threeLevelInfoVo);
+
+            goldTotal += totalGold;
+            total += totalMoney;
         }
 
-        threeLevelVo.setCategoryName("game name");
         threeLevelVo.setMoney(total);
-
+        threeLevelVo.setGold(goldTotal);
         return threeLevelVo;
     }
 
@@ -245,6 +294,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         Date end = new Date();
         return showCharge(start, end, agentId);
     }
+
     @Override
     public OneLevelVo oneLevelCharges(long agentId) {
         //今日
