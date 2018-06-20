@@ -46,6 +46,8 @@ public class RoomXuanQiQi extends Room {
     protected Map<Long, Integer> numFive = new HashMap<>();
     protected Map<Long, Integer> numSix = new HashMap<>();
 
+    protected Map<Long, Integer> winNumXQQ = new HashMap<>();
+
 
     public static RoomXuanQiQi getRoomInstance(String roomType){
         switch (roomType) {
@@ -129,7 +131,9 @@ public class RoomXuanQiQi extends Room {
             if (this.getNumSix().containsKey(eachUser.getId())) {
                 resultObj.setNumSix(this.getNumSix().get(eachUser.getId()));
             }
-
+            if (this.getWinNumXQQ().containsKey(eachUser.getId())) {
+                resultObj.setWinNumXQQ(this.getWinNumXQQ().get(eachUser.getId()));
+            }
 
             userOfResultList.add(resultObj);
         }
@@ -165,7 +169,13 @@ public class RoomXuanQiQi extends Room {
 
 
 
-
+    public void addWinNumXQQ(long userId) {
+        if (winNumXQQ.containsKey(userId)) {
+            winNumXQQ.put(userId, winNumXQQ.get(userId) + 1);
+        } else {
+            winNumXQQ.put(userId, 1);
+        }
+    }
 
 
     public void addNumThree(long userId) {
@@ -222,5 +232,13 @@ public class RoomXuanQiQi extends Room {
 
     public void setNumSix(Map<Long, Integer> numSix) {
         this.numSix = numSix;
+    }
+
+    public Map<Long, Integer> getWinNumXQQ() {
+        return winNumXQQ;
+    }
+
+    public void setWinNumXQQ(Map<Long, Integer> winNumXQQ) {
+        this.winNumXQQ = winNumXQQ;
     }
 }
