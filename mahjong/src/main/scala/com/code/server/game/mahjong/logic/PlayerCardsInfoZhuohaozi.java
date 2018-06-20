@@ -17,6 +17,25 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         specialHuScore.put(hu_吊将, 1);
         specialHuScore.put(hu_七小对, 1);
         specialHuScore.put(hu_豪华七小对, 1);
+
+
+        if(isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_摸三胡六)){
+            this.TING_MIN_SCORE = 6;
+            this.ZIMO_MIN_SCORE = 3;
+            this.DIANPAO_MIN_SCORE = 6;
+        }
+
+        if(isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_摸四胡五)){
+            this.TING_MIN_SCORE = 5;
+            this.ZIMO_MIN_SCORE = 4;
+            this.DIANPAO_MIN_SCORE = 5;
+        }
+
+        if(isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_摸一胡五)){
+            this.TING_MIN_SCORE = 5;
+            this.ZIMO_MIN_SCORE = 1;
+            this.DIANPAO_MIN_SCORE = 5;
+        }
     }
 
 

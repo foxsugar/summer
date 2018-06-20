@@ -10,7 +10,7 @@ import com.code.server.game.poker.paijiu.{RoomGoldPaijiu, RoomPaijiu}
 import com.code.server.game.poker.pullmice.RoomPullMice
 import com.code.server.game.poker.tuitongzi.RoomTuiTongZi
 import com.code.server.game.poker.xuanqiqi.RoomXuanQiQi
-import com.code.server.game.poker.zhaguzi.{RoomYSZ, RoomZhaGuZi}
+import com.code.server.game.poker.zhaguzi.{RoomWzq, RoomYSZ, RoomZhaGuZi}
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
 import com.code.server.game.room.{Room, RoomExtendGold}
@@ -207,6 +207,14 @@ object PokerRoomService {
           return ErrorCode.CAN_NOT_NO_ROOM
         }
         return roomGuessCar.asInstanceOf[RoomGuessCar].guessCar(userId, redOrGreen)
+
+      case "createWZQRoom"=>
+        val roomType = params.path("roomType").asText()
+        val gameType = params.path("gameType").asText()
+        val personNumber = params.get("personNumber").asInt()
+        val multiple = params.get("multiple").asInt()
+        return RoomWzq.createRoom(userId,roomType,gameType,multiple,personNumber)
+
       case "getAllRoom" =>
         return RoomGuessCar.getAllRoom(userId);
 
@@ -223,7 +231,7 @@ object PokerRoomService {
 
 
       case "getGoldRooms" =>
-        val roomType: String = params.get("roomType").asText
+
         val gameType: String = params.get("gameType").asText
         val goldRoomType = params.path("goldRoomType").asInt()
 

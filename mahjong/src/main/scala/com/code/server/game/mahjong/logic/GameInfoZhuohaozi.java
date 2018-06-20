@@ -17,6 +17,9 @@ public class GameInfoZhuohaozi extends GameInfoNew {
     public static final int mode_双耗子 = 4;
     public static final int mode_显庄 = 5;
     public static final int mode_扛耗子 = 6;
+    public static final int mode_摸三胡六 = 7;
+    public static final int mode_摸四胡五 = 8;
+    public static final int mode_摸一胡五 = 9;
 
     /**
      * 初始化方法
