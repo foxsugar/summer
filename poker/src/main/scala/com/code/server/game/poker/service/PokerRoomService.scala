@@ -265,6 +265,8 @@ object PokerRoomService {
       room.setRoomType(roomType)
       room.setGoldRoomType(goldRoomType)
       room.setGoldRoomPermission(1)
+      room.setMultiple(goldRoomType)
+
       RoomManager.getInstance().addNotFullGoldRoom(room)
       RoomManager.addRoom(room.getRoomId, "" + serverId, room)
     }
