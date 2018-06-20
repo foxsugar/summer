@@ -39,7 +39,7 @@ public class PlayerCardInfoXuanQiQi  implements IfacePlayerInfo{
     public List<Integer> playCards = new ArrayList<>();//当前出的牌
     public List<Integer> winCards = new ArrayList<>();//罗上的牌
     public Map<Integer,Boolean> cardsType= new HashMap<>();//罗上牌明或扣的状态, true明 ，false扣
-    protected double score;
+    protected double score;//罗分
     protected double allScore;
     protected boolean display;
 
