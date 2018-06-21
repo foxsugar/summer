@@ -189,10 +189,10 @@ public class RoomExtendGold extends Room {
 
     @Override
     public void clearReadyStatus(boolean isAddGameNum) {
-        //todo 如果 金币不够 退出
-        clearReadyStatusGoldRoom(isAddGameNum);
 
         super.clearReadyStatus(isAddGameNum);
+        //todo 如果 金币不够 退出
+        clearReadyStatusGoldRoom(isAddGameNum);
     }
 
 
