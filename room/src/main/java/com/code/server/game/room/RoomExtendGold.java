@@ -199,11 +199,16 @@ public class RoomExtendGold extends Room {
     public void clearReadyStatusGoldRoom(boolean isAddGameNum) {
         if (isGoldRoom()) {
             int minGold = getOutGold();
+            List<Long> removeList = new ArrayList<>();
             for (long userId : this.users) {
                 double gold = RedisManager.getUserRedisService().getUserGold(userId);
                 if (gold < minGold) {
-                    this.quitRoom(userId);
+                    removeList.add(userId);
                 }
+            }
+
+            for (long userId : removeList) {
+                this.quitRoom(userId);
             }
 
             //

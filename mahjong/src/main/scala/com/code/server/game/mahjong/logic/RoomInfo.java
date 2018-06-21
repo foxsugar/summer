@@ -117,7 +117,7 @@ public class RoomInfo extends RoomExtendGold {
     public void clearReadyStatus(boolean isAddGameNum) {
 //        GameManager.getInstance().remove(game);
         this.setGame(null);
-        clearReadyStatusGoldRoom(isAddGameNum);
+
 
         this.setInGame(false);
         for (Map.Entry<Long, Integer> entry : this.userStatus.entrySet()) {
@@ -137,6 +137,7 @@ public class RoomInfo extends RoomExtendGold {
             }
         });
 
+        clearReadyStatusGoldRoom(isAddGameNum);
 
     }
 
