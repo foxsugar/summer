@@ -128,6 +128,7 @@ public class ErrorCode {
 	public static final int OPERATOR_ERROR = 900004;//操作错误
 	public static final int MUST_HONGTAO_FIVE = 900005;//必须出红桃5
 	public static final int GOLD_NOT_ENOUGH = 900006;//必须出红桃5
+	public static final int BET_ERR = 900007;
 	//宣起起
 	public static final int MUST_PLAY_MaxCard = 1000001;//有大的牌没出的错误码
 
