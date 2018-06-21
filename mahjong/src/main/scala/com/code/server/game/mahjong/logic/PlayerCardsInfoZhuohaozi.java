@@ -342,13 +342,14 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
 
 //        String[] s = new String[]{"032", "033", "034", "036","040",  "044", "056",  "060",  "064",   "092", "093", "104", "105","135"};//092
-        String[] s = new String[]{"032", "033", "034", "036","040",  "044", "056",  "060",  "064",   "092", "093", "104", "105","035"};//092
+        String[] s = new String[]{"012", "016", "024", "025","044",  "060", "064",     "084",  "092",   "100", "108", "116", "120","056"};//092
 //        String[] s = new String[]{"112", "113", "114",   "024",   "028", "032",  "088", "092", "096",  "097",    "132", "133", "124", "120"};
 
 //        094, 038, 093, 063, 067, 044, 034, 106, 058, 035, 041, 104, 033, 032
 
         List<Integer> hun = new ArrayList<>();
         hun.add(29);
+        hun.add(30);
 //        hun.add(1);
 //        hun.add(8);
 
@@ -363,11 +364,11 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         playerCardsInfo.init(playerCardsInfo.cards);
 
 
-        playerCardsInfo.pengType.put(8,0L);
+//        playerCardsInfo.pengType.put(8,0L);
 //        playerCardsInfo.pengType.put(6,0L);
 //        playerCardsInfo.anGangType.add(32);
 
-        playerCardsInfo.isTing = true;
+//        playerCardsInfo.isTing = true;
 //        playerCardsInfo.pengType.put(30,0L);
 
         List<String> list = Arrays.asList(s);
@@ -382,8 +383,8 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         System.out.println(isGang);
 
 
-//        boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);
-//        System.out.println(isCanTing);
+        boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);
+        System.out.println(isCanTing);
 //        System.out.println("是否可以胡: " + isCanHu);
 //        huList.forEach(h -> System.out.println(h.specialHuList));
 //        System.out.println(huList);

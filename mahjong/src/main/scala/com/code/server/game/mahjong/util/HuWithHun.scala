@@ -104,7 +104,7 @@ object HuWithHun {
     println("==================================hun==============")
     println(" 不是5 个附子的数量 = " + complete.stream().filter(l => l.size() != 5).count())
     println(complete.size())
-    // println(complete)
+     println(complete)
 
     var huCardTypeList: util.List[HuCardType] = new util.ArrayList[HuCardType]()
     //转换成hucardtype
@@ -917,7 +917,7 @@ object HuWithHun {
       }
 
       //凑顺 后
-      if (hunNum > 0 && isHasShun(i) && cards(i) >= 1 && cards(i + 1) >= 1) {
+      if (hunNum > 0 && isHasShun(i) && cards(i) >= 1 && cards(i + 1) >= 1 && i!=7 && i!=16 && i!=25) {
         var newCardGroupList = new util.ArrayList(cardGroupList)
         newCardGroupList.add(new CardGroup(Hu.CARD_GROUP_TYPE_SHUN, i, 1))
 
@@ -942,7 +942,7 @@ object HuWithHun {
       }
 
       //凑顺 中间
-      if (hunNum > 0 && isHasShun(i) && cards(i) >= 1 && cards(i + 2) >= 1) {
+      if (hunNum > 0 && isHasShun(i) && cards(i) >= 1 && cards(i + 2) >= 1 && i!=7 && i!=16 && i!=25) {
         var newCardGroupList = new util.ArrayList(cardGroupList)
         newCardGroupList.add(new CardGroup(Hu.CARD_GROUP_TYPE_SHUN, i, 1))
 
