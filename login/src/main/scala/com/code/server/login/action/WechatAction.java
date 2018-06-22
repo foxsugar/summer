@@ -203,13 +203,17 @@ public class WechatAction extends Cors {
             //这个人是否已经点过
 
             //通知 代理 有人绑定他
+            boolean isSelf = agentBean.getUnionId().equals(unionId);
             String name = wxMpUser.getNickname();
-            wxMpService.getKefuService().sendKefuMessage(
-                    WxMpKefuMessage
-                            .TEXT()
-                            .toUser(agentBean.getOpenId())
-                            .content(name+"已点击您的专属链接")
-                            .build());
+            if (!isSelf) {
+
+                wxMpService.getKefuService().sendKefuMessage(
+                        WxMpKefuMessage
+                                .TEXT()
+                                .toUser(agentBean.getOpenId())
+                                .content(name+"已点击您的专属链接")
+                                .build());
+            }
 
             //这个人如果已经是玩家 并且玩家没有上级 那么成为这个人的下级
             Integer refereeId = userService.getUserDao().getRefereeByOpenId(unionId);
@@ -248,7 +252,7 @@ public class WechatAction extends Cors {
 
             }else{
                 Recommend recommend = recommendService.getRecommendDao().getByUnionId(unionId);
-                boolean isSelf = agentBean.getUnionId().equals(unionId);
+
 
 
                 if (recommend == null && !isSelf) {
