@@ -20,4 +20,13 @@ import java.util.Map;
 public class GameCowVo extends GameVo {
 
     public Map<Long, PlayerCowVo> playerCardInfos = new HashMap<>();
+    public Map<Long, Double> setMultipleForGetBankers = new HashMap<>();
+
+    public Map<Long, Double> getSetMultipleForGetBankers() {
+        return setMultipleForGetBankers;
+    }
+
+    public void setSetMultipleForGetBankers(Map<Long, Double> setMultipleForGetBankers) {
+        this.setMultipleForGetBankers = setMultipleForGetBankers;
+    }
 }

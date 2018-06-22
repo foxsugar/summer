@@ -58,6 +58,8 @@ public class CowRobot implements ICowRobot,IGameConstant {
                         compare(game);
                         break;
                     case STEP_MULTIPLE:
+                        setMultipleForGetBanker(game);
+                        break;
                 }
             }
         }
