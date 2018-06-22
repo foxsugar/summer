@@ -18,6 +18,8 @@ public class PlayerYSZ implements IfacePlayerInfo {
     protected double allScore;//总下注
     protected double finalScore;//单局输赢，用于判断谁赢了
 
+    //真实分数
+    protected double realScore;
 
     //1表示显示
     protected String call;//跟注
@@ -43,7 +45,7 @@ public class PlayerYSZ implements IfacePlayerInfo {
         vo.fold = this.getFold();//弃牌
         vo.kill = this.getKill();//比牌
         vo.see = this.getSee();//看牌
-
+        vo.setRealScore(this.realScore);
         return vo;
     }
 
@@ -57,7 +59,7 @@ public class PlayerYSZ implements IfacePlayerInfo {
         vo.cardType = this.cardType;
         vo.allScore = this.allScore;
         vo.finalScore = this.finalScore;
-
+        vo.setRealScore(this.realScore);
         vo.call = this.getCall();//跟注
         vo.raise = this.getRaise();//加注
         vo.fold = this.getFold();//弃牌
@@ -74,7 +76,7 @@ public class PlayerYSZ implements IfacePlayerInfo {
         vo.caifen = this.caifen;
         vo.cardType = this.cardType;
         vo.finalScore = this.finalScore;
-
+        vo.setRealScore(this.realScore);
         vo.call = this.getCall();//跟注
         vo.raise = this.getRaise();//加注
         vo.fold = this.getFold();//弃牌
@@ -84,6 +86,14 @@ public class PlayerYSZ implements IfacePlayerInfo {
         vo.handcards = this.getHandcards();
 
         return vo;
+    }
+
+    public double getRealScore() {
+        return realScore;
+    }
+
+    public void setRealScore(double realScore) {
+        this.realScore = realScore;
     }
 
     public long getUserId() {

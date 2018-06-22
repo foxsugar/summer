@@ -213,6 +213,11 @@ public class GameBaseYSZ extends Game {
 
     }
 
+    public double getUserScores(long userId){
+        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE) return 0;
+        return RedisManager.getUserRedisService().getUserGold(userId);
+    }
+
     /**
      * 加注
      *
@@ -253,6 +258,9 @@ public class GameBaseYSZ extends Game {
         }
 
         playerCardInfos.get(userId).setAllScore(playerCardInfos.get(userId).getAllScore() + addChip);
+
+        this.room.addUserSocre(userId, addChip);
+
         Map<String, Object> result = new HashMap<>();
         result.put("userId", userId);
         result.put("addChip", addChip);
@@ -295,8 +303,10 @@ public class GameBaseYSZ extends Game {
 
         if (seeUser.contains(userId)) {
             playerCardInfos.get(userId).setAllScore(playerCardInfos.get(userId).getAllScore() + chip * 2);
+            this.room.addUserSocre(userId, chip * 2);
         } else {
             playerCardInfos.get(userId).setAllScore(playerCardInfos.get(userId).getAllScore() + chip);
+            this.room.addUserSocre(userId, chip);
         }
 
         logger.info("{}", userId);
@@ -432,10 +442,12 @@ public class GameBaseYSZ extends Game {
         result.put("loserId", winnerId == askerId ? accepterId : askerId);
         if (seeUser.contains(askerId)) {
             playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore() + chip * 2);
+            this.room.addUserSocre(askerId, chip * 2);
             result.put("addChip", chip * 2);
             logger.info("");
         } else {
             playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore() + chip);
+            this.room.addUserSocre(askerId, chip);
             result.put("addChip", chip);
         }
         ResponseVo vo = new ResponseVo("gameService", "killResponse", result);

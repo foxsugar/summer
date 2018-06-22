@@ -9,8 +9,22 @@ import java.util.Map;
  */
 public class AgentResponse implements ErrorCode{
     public int code;
+    public String msg;
     public Object data = new HashMap<>();
 
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public AgentResponse(int code, String msg, Object data) {
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
+    }
 
     public AgentResponse(int code, List<?> list) {
         this.code = code;

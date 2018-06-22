@@ -15,9 +15,9 @@ import java.util.Map;
  */
 public class AgentUtil {
 
-    public static Map<String, Object> yy_Caches = null;
+    public static Map<String, Object> caches = null;
     static {
-        yy_Caches = new HashMap<>();
+        caches = new HashMap<>();
     }
 
     private static final String AGENT_COOKIE_NAME = "AGENT_TOKEN";

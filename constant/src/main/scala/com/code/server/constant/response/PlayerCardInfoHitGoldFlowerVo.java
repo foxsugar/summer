@@ -22,9 +22,19 @@ public class PlayerCardInfoHitGoldFlowerVo implements IfacePlayerInfoVo {
     public String see;//看牌
     public double allScore;
     public int curRoundNumber;//当前轮数
+    //真实分数
+    protected double realScore;
 
     public PlayerCardInfoHitGoldFlowerVo() {
 
+    }
+
+    public double getRealScore() {
+        return realScore;
+    }
+
+    public void setRealScore(double realScore) {
+        this.realScore = realScore;
     }
 
     public long getUserId() {
