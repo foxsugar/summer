@@ -8,6 +8,9 @@ import java.util.*;
 /**
  * Created by dajuejinxian on 2018/5/24.
  */
+/*
+* 推筒筒 同点庄赢
+* */
 public class GameTuiZiKXHY_BWZ extends GameTuiZiKXHY{
 
     protected boolean isBaWangZhuang(){
@@ -21,6 +24,11 @@ public class GameTuiZiKXHY_BWZ extends GameTuiZiKXHY{
 
     //霸王庄的情况下是否强制下装
     protected boolean isForceUpdateBanker(){
+        return false;
+    }
+
+    //到了固定局数是否要提示换庄
+    protected boolean isNoticeUpdateBWZhuang(){
         return false;
     }
 
@@ -82,7 +90,7 @@ public class GameTuiZiKXHY_BWZ extends GameTuiZiKXHY{
         for (int j = 0; j < users.size(); j++){
             PlayerTuiTongZi player = playerCardInfos.get(users.get(j));
             if (player.getUserId() != bankerId){
-                if (!TuiTongTongCardUtils.zhuangIsBiggerThanXian(playerZhuang, player)){
+                if (!TuiTongZiCardUtils.zhuangIsBiggerThanXian(playerZhuang, player)){
                     player.setWinner(true);
                 }
             }
@@ -102,10 +110,10 @@ public class GameTuiZiKXHY_BWZ extends GameTuiZiKXHY{
 
             for (int w = j + 1; w < players.size(); w++){
 
-                if (TuiTongTongCardUtils.mAIsBiggerThanB(players.get(j), players.get(w)) == 2){
+                if (TuiTongZiCardUtils.mAIsBiggerThanB(players.get(j), players.get(w)) == 2){
 
                     Collections.swap(players, j, w);
-                }else if(TuiTongTongCardUtils.mAIsBiggerThanB(players.get(j), players.get(w)) == 1){
+                }else if(TuiTongZiCardUtils.mAIsBiggerThanB(players.get(j), players.get(w)) == 1){
 
                     if (players.get(j).getPxId() > players.get(w).getPxId()){
                         Collections.swap(players, j, w);

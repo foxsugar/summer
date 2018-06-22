@@ -15,6 +15,11 @@ import java.util.Map;
  */
 public class AgentUtil {
 
+    public static Map<String, Object> yy_Caches = null;
+    static {
+        yy_Caches = new HashMap<>();
+    }
+
     private static final String AGENT_COOKIE_NAME = "AGENT_TOKEN";
     protected static final Logger logger = LoggerFactory.getLogger(AgentUtil.class);
     //暂时这么命名 根据token取 agentId

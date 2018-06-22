@@ -37,6 +37,16 @@ public class RoomTuiTongZi extends Room{
 
     protected long roomLastTime;
 
+    protected int quan;
+
+    public int getQuan() {
+        return quan;
+    }
+
+    public void setQuan(int quan) {
+        this.quan = quan;
+    }
+
     //作弊的那个人info
     protected Map<String, Object> cheatInfo = new HashMap<>();
 
@@ -154,11 +164,11 @@ public class RoomTuiTongZi extends Room{
         return roomVo;
     }
 
-    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, String clubId, String clubRoomModel) throws DataNotFoundException {
+    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, String clubId, String clubRoomModel, int quan) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
         RoomTuiTongZi room = getRoomInstance(roomType);
-
+        room.quan = quan;
         room.personNumber = personNumber;
         room.roomId = getRoomIdStr(genRoomId(serverConfig.getServerId()));
         room.createUser = userId;
@@ -278,7 +288,7 @@ public class RoomTuiTongZi extends Room{
 
     @Override
     protected void dissolutionRoom() {
-        this.addUserSocre(this.getBankerId(), this.getPotBottom() - 20);
+        this.addUserSocre(this.getBankerId(), this.getPotBottom() - ((GameTuiTongZi)this.game).offset());
         super.dissolutionRoom();
     }
 

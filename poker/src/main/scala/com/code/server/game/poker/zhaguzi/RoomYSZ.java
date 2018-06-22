@@ -316,6 +316,9 @@ public class RoomYSZ extends RoomExtendGold {
         }else{
             this.userScores.put(userId, 0.0);
         }
+        if (isGoldRoom()) {
+            this.userScores.put(userId, RedisManager.getUserRedisService().getUserGold(userId));
+        }
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         this.canStartUserId = users.get(0);
         addUser2RoomRedis(userId);

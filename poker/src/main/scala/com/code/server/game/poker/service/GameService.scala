@@ -10,7 +10,7 @@ import com.code.server.game.poker.paijiu.{GameGoldPaijiu, GamePaijiu}
 import com.code.server.game.poker.pullmice.GamePullMice
 import com.code.server.game.poker.tuitongzi.GameTuiTongZi
 import com.code.server.game.poker.xuanqiqi.GameXuanQiQi
-import com.code.server.game.poker.zhaguzi.{GameBaseYSZ, GameYSZ, GameZhaGuZi}
+import com.code.server.game.poker.zhaguzi.{GameBaseYSZ, GameWzq, GameYSZ, GameZhaGuZi}
 import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
 import com.code.server.util.JsonUtil
@@ -30,6 +30,7 @@ object GameService {
       case x:GamePaijiu =>dispatchGamePJService(userId,method,game.asInstanceOf[GamePaijiu],params)
       case x:GameHitGoldFlower =>dispatchGameHGFService(userId,method,game.asInstanceOf[GameHitGoldFlower],params)
       case x:GameGuessCar =>dispatchGameGuessService(userId,method,game.asInstanceOf[GameGuessCar],params)
+      case x:GameWzq=>dispatchGameWzqService(userId,method,game.asInstanceOf[GameWzq], params)
       case x:GameCow =>dispatchGameCowService(userId,method,game.asInstanceOf[GameCow],params)
       case x:GameTuiTongZi =>dispatchGameTTZService(userId,method,game.asInstanceOf[GameTuiTongZi],params)
       case x:GamePullMice =>dispatchGamePullMiceService(userId,method,game.asInstanceOf[GamePullMice],params)
@@ -277,6 +278,14 @@ object GameService {
     case "change"=>
       val color = params.path("color").asInt()
       game.change(userId,color)
+    case _ =>
+      ErrorCode.REQUEST_PARAM_ERROR
+  }
+
+  private def dispatchGameWzqService(userId:Long,method: String, game: GameWzq, params: JsonNode):Int = method match {
+    case "admitDefeat" =>
+      val userId = params.path("userId").asLong(0)
+      game.admitDefeat(userId);
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

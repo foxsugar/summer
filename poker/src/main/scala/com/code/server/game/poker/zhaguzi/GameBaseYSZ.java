@@ -225,8 +225,15 @@ public class GameBaseYSZ extends Game {
             return ErrorCode.NOT_YOU_TURN;
         }
 
+//        for (Integer i : genZhuList){
+//            if (addChip > i){
+//                return ErrorCode.BET_ERR;
+//            }
+//        }
+
         if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
             double gold = RedisManager.getUserRedisService().getUserGold(userId);
+            logger.info(userId + "  金币: " + gold);
             if (gold - (playerCardInfos.get(userId).getAllScore() + addChip) < minGold){
                 return ErrorCode.GOLD_NOT_ENOUGH;
             }
@@ -268,9 +275,15 @@ public class GameBaseYSZ extends Game {
             return ErrorCode.NOT_YOU_TURN;
         }
 
+//        for (Integer i : genZhuList){
+//            if (chip > i){
+//                return ErrorCode.BET_ERR;
+//            }
+//        }
+
         if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
             double gold = RedisManager.getUserRedisService().getUserGold(userId);
-
+            logger.info(userId + "  金币: " + gold);
             double addChip = chip;
             if (seeUser.contains(userId)){
                 addChip = chip * 2;
@@ -390,7 +403,7 @@ public class GameBaseYSZ extends Game {
 
         if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
             double gold = RedisManager.getUserRedisService().getUserGold(askerId);
-
+            logger.info(askerId + "  金币: " + gold);
             double addChip = chip;
             if (seeUser.contains(askerId)){
                 addChip = chip * 2;
@@ -559,19 +572,19 @@ public class GameBaseYSZ extends Game {
                 roomYSZ.addSanpaiNum(playerCardInfo.getUserId());
             }
         }
-        //添加彩分
-        for (PlayerYSZ playerCardInfo : playerCardInfos.values()) {
-            if ("BaoZi".equals(playerCardInfo.getCardType())) {
-                double tempCaifen = 0.0;
-                for (PlayerYSZ p : playerCardInfos.values()) {
-                    if (playerCardInfo.getUserId() != p.getUserId()) {
-                        tempCaifen += room.getCaiFen();
-                        p.setCaifen(p.getCaifen() - room.getCaiFen());
-                    }
-                }
-                playerCardInfo.setCaifen(playerCardInfo.getCaifen() + tempCaifen);
-            }
-        }
+//        //添加彩分
+//        for (PlayerYSZ playerCardInfo : playerCardInfos.values()) {
+//            if ("BaoZi".equals(playerCardInfo.getCardType())) {
+//                double tempCaifen = 0.0;
+//                for (PlayerYSZ p : playerCardInfos.values()) {
+//                    if (playerCardInfo.getUserId() != p.getUserId()) {
+//                        tempCaifen += room.getCaiFen();
+//                        p.setCaifen(p.getCaifen() - room.getCaiFen());
+//                    }
+//                }
+//                playerCardInfo.setCaifen(playerCardInfo.getCaifen() + tempCaifen);
+//            }
+//        }
 
         //算分
         double totalChip = 0.0;
@@ -580,21 +593,21 @@ public class GameBaseYSZ extends Game {
         }
         for (PlayerYSZ playerCardInfo : playerCardInfos.values()) {
             if (winList.contains(playerCardInfo.getUserId())) {
-                playerCardInfo.setScore(room.getMultiple() * totalChip / winList.size());
+                playerCardInfo.setScore(1 * totalChip / winList.size());
             } else {
-                playerCardInfo.setScore(-room.getMultiple() * playerCardInfo.getAllScore());
+                playerCardInfo.setScore(-1 * playerCardInfo.getAllScore());
             }
         }
         for (PlayerYSZ playerCardInfo : playerCardInfos.values()) {
             if (winList.contains(playerCardInfo.getUserId())) {
                 logger.info("");
-                room.addUserSocre(playerCardInfo.getUserId(), playerCardInfo.getScore() - room.getMultiple() * playerCardInfo.getAllScore());
+                room.addUserSocre(playerCardInfo.getUserId(), playerCardInfo.getScore() - 1 * playerCardInfo.getAllScore());
                 room.addUserSocre(playerCardInfo.getUserId(), playerCardInfo.getCaifen());
-                playerCardInfo.setFinalScore(playerCardInfo.getScore() - room.getMultiple() * playerCardInfo.getAllScore() + playerCardInfo.getCaifen());
+                playerCardInfo.setFinalScore(playerCardInfo.getScore() - 1 * playerCardInfo.getAllScore() + playerCardInfo.getCaifen());
             } else {
-                room.addUserSocre(playerCardInfo.getUserId(), -room.getMultiple() * playerCardInfo.getAllScore());
+                room.addUserSocre(playerCardInfo.getUserId(), -1 * playerCardInfo.getAllScore());
                 room.addUserSocre(playerCardInfo.getUserId(), playerCardInfo.getCaifen());
-                playerCardInfo.setFinalScore(-room.getMultiple() * playerCardInfo.getAllScore() + playerCardInfo.getCaifen());
+                playerCardInfo.setFinalScore(-1 * playerCardInfo.getAllScore() + playerCardInfo.getCaifen());
             }
         }
     }
@@ -714,6 +727,15 @@ public class GameBaseYSZ extends Game {
         Map<String, Object> result = new HashMap<>();
         result.put("playerCardInfo", playerCardInfo);
         result.put("chip", chip);
+        List<Integer> list = new ArrayList<>();
+        for (Integer i : this.genZhuList){
+            if (this.seeUser.contains(userId)){
+                list.add(i * 2);
+            }else {
+                list.add(i);
+            }
+        }
+        result.put("zhuList", list);
         ResponseVo vo = new ResponseVo("gameService", "noticeActionSelf", result);
         MsgSender.sendMsg2Player(vo, users);
     }
@@ -761,6 +783,17 @@ public class GameBaseYSZ extends Game {
         Map<String, Object> result = new HashMap<>();
         result.put("playerCardInfo", playerCardInfo);
         result.put("chip", chip);
+
+        List<Integer> list = new ArrayList<>();
+        for (Integer i : this.genZhuList){
+            if (this.seeUser.contains(userId)){
+                list.add(i * 2);
+            }else {
+                list.add(i);
+            }
+        }
+        result.put("zhuList", list);
+
         ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
         MsgSender.sendMsg2Player(vo, users);
     }
@@ -820,6 +853,15 @@ public class GameBaseYSZ extends Game {
         Map<String, Object> result = new HashMap<>();
         result.put("playerCardInfo", playerCardInfo);
         result.put("chip", chip);
+        List<Integer> list = new ArrayList<>();
+        for (Integer i : this.genZhuList){
+            if (this.seeUser.contains(userId)){
+                list.add(i * 2);
+            }else {
+                list.add(i);
+            }
+        }
+        result.put("zhuList", list);
         ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
         MsgSender.sendMsg2Player(vo, users);
     }
@@ -1041,7 +1083,13 @@ public class GameBaseYSZ extends Game {
         vo.curUserId = this.getCurUserId();
         vo.curRoundNumber = getMaxRoundNumber();
         vo.loseUser = this.getLoseUser();
-        vo.setZhuList(this.getGenZhuList());
+        if (this.seeUser.contains(userId)){
+            for (int i : this.getGenZhuList()){
+                vo.getZhuList().add(i);
+            }
+        }else {
+            vo.setZhuList(this.getGenZhuList());
+        }
 
         Double temp = 0.0;
         //玩家牌信息

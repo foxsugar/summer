@@ -116,8 +116,8 @@ public class RoomInfo extends RoomExtendGold {
 
     public void clearReadyStatus(boolean isAddGameNum) {
 //        GameManager.getInstance().remove(game);
-        clearReadyStatusGoldRoom(isAddGameNum);
         this.setGame(null);
+
 
         this.setInGame(false);
         for (Map.Entry<Long, Integer> entry : this.userStatus.entrySet()) {
@@ -137,6 +137,7 @@ public class RoomInfo extends RoomExtendGold {
             }
         });
 
+        clearReadyStatusGoldRoom(isAddGameNum);
 
     }
 
@@ -401,7 +402,8 @@ public class RoomInfo extends RoomExtendGold {
         result.put("haveTing", this.haveTing);
         result.put("clubId", this.getClubId());
         result.put("clubRoomModel", this.getClubRoomModel());
-
+        result.put("goldRoomType", this.getGoldRoomType());
+        result.put("goldRoomPermission", this.getGoldRoomPermission());
 
         return result;
     }
@@ -474,6 +476,7 @@ public class RoomInfo extends RoomExtendGold {
     public PrepareRoom getPrepareRoomVo() {
         PrepareRoomMj prepareRoom = new PrepareRoomMj();
         prepareRoom.goldRoomType = this.goldRoomType;
+        prepareRoom.goldRoomPermission = this.goldRoomPermission;
         prepareRoom.createTime = System.currentTimeMillis();
         prepareRoom.personNumber = this.personNumber;
         prepareRoom.gameType = this.getGameType();

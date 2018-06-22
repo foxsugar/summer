@@ -8,6 +8,9 @@ import java.util.*;
 /**
  * Created by dajuejinxian on 2018/5/16.
  */
+/*
+* 推筒筒 同点比大小
+* */
 // 271 GameTuiTongTong
 public class GameTuiTongTongBWZ extends GameTuiTongTong {
 
@@ -22,6 +25,11 @@ public class GameTuiTongTongBWZ extends GameTuiTongTong {
 
     //霸王庄的情况下是否强制下装
     protected boolean isForceUpdateBanker(){
+        return false;
+    }
+
+    //到了固定局数是否要提示换庄
+    protected boolean isNoticeUpdateBWZhuang(){
         return false;
     }
 
@@ -157,5 +165,4 @@ public class GameTuiTongTongBWZ extends GameTuiTongTong {
         }
 
     }
-
 }

@@ -139,7 +139,8 @@ object PokerRoomService {
         val multiple = params.path("multiple").asInt()
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
-        return RoomTuiTongZi.createRoom(userId, roomType, gameType, gameNumber, personNumber, isJoin, multiple, clubId, clubRoomModel)
+        var quan = params.path("quan").asInt(1)
+        return RoomTuiTongZi.createRoom(userId, roomType, gameType, gameNumber, personNumber, isJoin, multiple, clubId, clubRoomModel, quan)
 
       case "createZGZRoom" =>
         val roomType = params.path("roomType").asText()
@@ -213,6 +214,7 @@ object PokerRoomService {
         val gameType = params.path("gameType").asText()
         val personNumber = params.get("personNumber").asInt()
         val multiple = params.get("multiple").asInt()
+        if(multiple <=0 ) return ErrorCode.REQUEST_PARAM_ERROR
         return RoomWzq.createRoom(userId,roomType,gameType,multiple,personNumber)
 
       case "getAllRoom" =>

@@ -60,6 +60,16 @@ public class GameZhaGuZi extends Game {
 
     protected  PlayerZhaGuZi lastOverPlayer = null;
 
+    protected int base;
+
+    public int getBase() {
+        return base;
+    }
+
+    public void setBase(int base) {
+        this.base = base;
+    }
+
     //第一个出牌人的Id
     protected  long firstDiscardId;
 
@@ -74,6 +84,7 @@ public class GameZhaGuZi extends Game {
 
         GameZhaGuZiVo vo = new GameZhaGuZiVo();
         BeanUtils.copyProperties(this, vo);
+        vo.setBase(this.base);
 //        vo.cards.clear();
 
         List<Integer> aList = new ArrayList<>();
@@ -335,9 +346,45 @@ public class GameZhaGuZi extends Game {
         playerZhaGuZi.setOp(op);
         playerZhaGuZi.getLiangList().addAll(bList);
 
+        int base = 0;
+
+        int heitao3 = CardUtils.string2Local("黑桃-3", ()-> CardUtils.getCardDict());
+        int hongtao3 = CardUtils.string2Local("红桃-3", ()-> CardUtils.getCardDict());
+        int meihua3 = CardUtils.string2Local("梅花-3", ()-> CardUtils.getCardDict());
+        int fangpian3 = CardUtils.string2Local("方片-3", ()-> CardUtils.getCardDict());
+
+        for (PlayerZhaGuZi player : playerCardInfos.values()){
+
+            if (player.getOp() == Operator.ZHA_GU){
+                base++;
+            }
+
+            if (player.getLiangList().contains(heitao3)){
+                base++;
+            }
+
+            if (player.getLiangList().contains(hongtao3)){
+                if (this.room.getPersonNumber() == 5){
+                    base += 2;
+                }else {
+                    base++;
+                }
+            }
+
+            if (player.getLiangList().contains(meihua3)){
+                base++;
+            }
+
+            if (player.getLiangList().contains(fangpian3)){
+                base++;
+            }
+        }
+
+        this.base = base;
         Map<String, Object> result = new HashMap<>();
         result.put("uid", userId);
         result.put("op", op);
+        result.put("base", base);
         result.put("cards", aList);
         MsgSender.sendMsg2Player(serviceName, "talkResult", result, users);
         MsgSender.sendMsg2Player(serviceName, "talk", "0", userId);
@@ -1089,6 +1136,7 @@ public class GameZhaGuZi extends Game {
 
             this.cards.add(i);
         }
+
         //洗牌
         Collections.shuffle(this.cards);
     }

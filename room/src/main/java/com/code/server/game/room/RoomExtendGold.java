@@ -4,6 +4,7 @@ import com.code.server.constant.data.DataManager;
 import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.PrepareRoom;
+import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
@@ -29,6 +30,21 @@ public class RoomExtendGold extends Room {
         if (isGoldRoom()) {
             this.multiple = goldRoomType;
         }
+    }
+
+
+    protected void roomAddUser(long userId) {
+
+        this.users.add(userId);
+        this.userStatus.put(userId, 0);
+        this.userScores.put(userId, 0D);
+        if (isGoldRoom()) {
+            this.userScores.put(userId, RedisManager.getUserRedisService().getUserGold(userId));
+        }
+        this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
+        this.canStartUserId = users.get(0);
+
+        addUser2RoomRedis(userId);
     }
 
     @Override
@@ -173,21 +189,26 @@ public class RoomExtendGold extends Room {
 
     @Override
     public void clearReadyStatus(boolean isAddGameNum) {
-        //todo 如果 金币不够 退出
-        clearReadyStatusGoldRoom(isAddGameNum);
 
         super.clearReadyStatus(isAddGameNum);
+        //todo 如果 金币不够 退出
+        clearReadyStatusGoldRoom(isAddGameNum);
     }
 
 
     public void clearReadyStatusGoldRoom(boolean isAddGameNum) {
         if (isGoldRoom()) {
             int minGold = getOutGold();
+            List<Long> removeList = new ArrayList<>();
             for (long userId : this.users) {
                 double gold = RedisManager.getUserRedisService().getUserGold(userId);
                 if (gold < minGold) {
-                    this.quitRoom(userId);
+                    removeList.add(userId);
                 }
+            }
+
+            for (long userId : removeList) {
+                this.quitRoom(userId);
             }
 
             //

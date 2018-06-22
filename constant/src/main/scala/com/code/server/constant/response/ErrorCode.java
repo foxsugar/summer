@@ -79,6 +79,7 @@ public class ErrorCode {
 	public static final int CAN_NOT_JOIN_PARAM_ERROR = 200020;
 
 
+
 	public static final int REFERRER_NOT_EXIST = 250000;
 	public static final int REFERRER_ALERADY_BIND = 250001;
 	public static final int CHARGE_NO_BIND = 250002;
@@ -127,6 +128,7 @@ public class ErrorCode {
 	public static final int OPERATOR_ERROR = 900004;//操作错误
 	public static final int MUST_HONGTAO_FIVE = 900005;//必须出红桃5
 	public static final int GOLD_NOT_ENOUGH = 900006;//必须出红桃5
+	public static final int BET_ERR = 900007;
 	//宣起起
 	public static final int MUST_PLAY_MaxCard = 1000001;//有大的牌没出的错误码
 

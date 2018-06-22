@@ -12,6 +12,31 @@ import java.util.List;
 // 270 GameTuiTongTong
 public class GameTuiTongTong extends GameTuiTongZi {
 
+    //轮庄到了固定局数是否要提示换庄
+    protected boolean isNoticeUpdateLunZhuang(){
+        return this.room.getZhuangCount() == 3 || this.room.getZhuangCount() == 4;
+    }
+
+    //霸王庄的情况下是否强制下装
+    protected boolean isForceUpdateBanker(){
+        return false;
+    }
+
+    //到了第四局强制换
+    protected int lzForceUpdateZhuang(){
+        return  4;
+    }
+
+    protected boolean isBaWangZhuang(){
+        return false;
+    }
+
+    //偏移量， 上来要在锅里放 多少钱
+    protected long offset(){
+        return 0;
+    };
+
+
     //推筒筒 算分
     public void compute(Long firstId) throws Exception {
 
