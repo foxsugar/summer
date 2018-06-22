@@ -104,20 +104,30 @@ public class SubscribeHandler extends AbstractHandler {
 
 
             boolean isSelf = referrerUnionId.equals(unionId);
+
+
+            //通知 代理 有人绑定他
+            String name = wxMpUser.getNickname();
+
+            wxMpService.getKefuService().sendKefuMessage(
+                    WxMpKefuMessage
+                            .TEXT()
+                            .toUser(agentBean.getOpenId())
+                            .content(name + "扫您的专属二维码")
+                            .build());
+
             if (recommend == null && !isSelf) {
                 recommend = new Recommend();
                 recommend.setUnionId(unionId).setAgentId(agentId);
                 //保存
                 recommendService.getRecommendDao().save(recommend);
 
-                //通知 代理 有人绑定他
-                String name = wxMpUser.getNickname();
 
                 wxMpService.getKefuService().sendKefuMessage(
                         WxMpKefuMessage
                                 .TEXT()
                                 .toUser(agentBean.getOpenId())
-                                .content(name + "扫您的专属二维码,成功绑定")
+                                .content(name + " 成功绑定")
                                 .build());
 
             }
