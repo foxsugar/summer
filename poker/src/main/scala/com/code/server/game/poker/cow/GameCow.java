@@ -61,6 +61,7 @@ public class GameCow extends Game {
             noticePlayerBet();
         }else{
             noticeAllSetMutiple();
+            room.setBankerId(0l);
         }
         this.step = IGameConstant.STEP_RAISE;
         updateLastOperateTime();
@@ -151,6 +152,7 @@ public class GameCow extends Game {
         for (Long l :playerCardInfos.keySet()) {
             playerCardInfos.get(l).setSetMultipleForGetBanker(1);
         }
+        this.step = IGameConstant.STEP_MULTIPLE;
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "noticeAllSetMutiple", "noticeAllSetMutiple"),users);
     }
 
@@ -412,6 +414,7 @@ public class GameCow extends Game {
         for (Long l:playerCardInfos.keySet()) {
             vo.playerCardInfos.put(l,(PlayerCowVo) playerCardInfos.get(l).toVo());
         }
+        vo.setSetMultipleForGetBankers(setMultipleForGetBankers);
         return vo;
     }
 

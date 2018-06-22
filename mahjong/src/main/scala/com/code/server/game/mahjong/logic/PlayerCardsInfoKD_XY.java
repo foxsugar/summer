@@ -69,6 +69,10 @@ public class PlayerCardsInfoKD_XY extends PlayerCardsInfoKD {
 
     public void computeALLGangBG(long dianpaoUser){
 
+        if(0==dianpaoUser){
+            return;
+        }
+
         Map<Long,Integer> scores = new HashMap<>();//分数计算key:use,value:score
         for (long i : gameInfo.users) {
             scores.put(i, 0);
@@ -105,7 +109,7 @@ public class PlayerCardsInfoKD_XY extends PlayerCardsInfoKD {
                             }
                             scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId()) + CardTypeUtil.cardTingScore.get(ii)*4);
                         }else{//未听一家出
-                            scores.put(playerCardsInfo.getMingGangType().get(ii), scores.get(playerCardsInfo.getUserId()) - CardTypeUtil.cardTingScore.get(ii)*3);
+                            scores.put(playerCardsInfo.getMingGangType().get(ii), scores.get(ii) - CardTypeUtil.cardTingScore.get(ii)*3);
                             scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId()) + CardTypeUtil.cardTingScore.get(ii)*3);
                         }
                     }else{//自摸明杠
@@ -117,7 +121,7 @@ public class PlayerCardsInfoKD_XY extends PlayerCardsInfoKD {
                 }
             }else{
                 for (Integer ii : playerCardsInfo.getMingGangType().keySet()) {
-                    scores.put(dianpaoUser, scores.get(playerCardsInfo.getUserId()) - CardTypeUtil.cardTingScore.get(ii)*3);
+                    scores.put(dianpaoUser, scores.get(dianpaoUser) - CardTypeUtil.cardTingScore.get(ii)*3);
                     scores.put(playerCardsInfo.getUserId(), scores.get(playerCardsInfo.getUserId()) + CardTypeUtil.cardTingScore.get(ii)*3);
                 }
             }

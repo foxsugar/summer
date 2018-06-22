@@ -30,10 +30,11 @@ public class GameCowOfSetMutiple extends GameCow {
         MsgSender.sendMsg2Player("gameService", "setMultipleForGetBanker", setMultipleForGetBankers, users);
         if(canSetRoomMultiple()){//设置roomMultiple
             room.setBankerId(maxMultiple());
+            MsgSender.sendMsg2Player("gameService", "tellBankerId", room.getBankerId(), users);
+            noticePlayerBet();//继续原来的步骤
+            updateLastOperateTime();
         }
-        MsgSender.sendMsg2Player("gameService", "tellBankerId", room.getBankerId(), users);
-        noticePlayerBet();//继续原来的步骤
-        updateLastOperateTime();
+
         return 0;
     }
 
@@ -106,13 +107,78 @@ public class GameCowOfSetMutiple extends GameCow {
                 three++;
             }
         }
-        if (one>0){
-            banker = users.get(random%one);
+        if(three>0){
+            banker = users.get(random%three);
+            room.setMultiple(3);
         }else if(two>0){
             banker = users.get(random%two);
-        }else if(three>0){
-            banker = users.get(random%three);
+            room.setMultiple(2);
+        }else if (one>0){
+            banker = users.get(random%one);
+            room.setMultiple(1);
         }
         return banker;
+    }
+
+    @Override
+    protected void compute() {
+        RoomCow roomCom = null;
+        if(room instanceof RoomCow){
+            roomCom = (RoomCow)room;
+        }
+
+        //算分
+        List<PlayerCow> tempList = new ArrayList<>();
+        tempList.addAll(playerCardInfos.values());
+        tempList.remove(playerCardInfos.get(room.getBankerId()));
+        for (PlayerCow p :tempList){
+            CowPlayer c = CardUtils.findWinner(playerCardInfos.get(room.getBankerId()).getPlayer(), p.getPlayer());
+            if(room.getBankerId()!=c.getId()){//庄输
+                int tempGrade = playerCardInfos.get(p.getUserId()).getPlayer().getGrade();
+                double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CardUtils.multipleMap.get(tempGrade);
+                tempScore *= room.getMultiple();
+                playerCardInfos.get(p.getUserId()).setFinalScore(tempScore);
+                playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()-tempScore);
+            }else{//庄赢
+                int tempGrade = playerCardInfos.get(room.getBankerId()).getPlayer().getGrade();
+                double tempScore =  playerCardInfos.get(p.getUserId()).getScore() * CardUtils.multipleMap.get(tempGrade);
+                tempScore *= room.getMultiple();
+                playerCardInfos.get(p.getUserId()).setFinalScore(-tempScore);
+                playerCardInfos.get(room.getBankerId()).setFinalScore(playerCardInfos.get(room.getBankerId()).getFinalScore()+tempScore);
+            }
+        }
+
+        //设置每个人的统计
+        boolean tempWin = true;
+        boolean tempLost = true;
+        for (PlayerCow playerCardInfo : playerCardInfos.values()) {
+            if(room.getBankerId()!=playerCardInfo.userId){
+                if(playerCardInfo.getFinalScore()>0){
+                    tempWin = false;
+                    this.room.addWinNum(playerCardInfo.getUserId());
+                }
+                if(playerCardInfo.getFinalScore()<0){
+                    tempLost = false;
+                }
+            }
+            if(8==playerCardInfo.getPlayer().getGrade()){//牛牛
+                this.room.addCowCowNum(playerCardInfo.getUserId());
+            }else if(18==playerCardInfo.getPlayer().getGrade()){//无牛
+                this.room.addNullCowNum(playerCardInfo.getUserId());
+            }
+        }
+        if(tempWin){
+            this.room.addAllWinNum(room.getBankerId());
+        }
+        if(tempLost){
+            this.room.addAllLoseNum(room.getBankerId());
+        }
+        if(playerCardInfos.get(room.getBankerId()).getFinalScore()>0){
+            this.room.addWinNum(room.getBankerId());
+        }
+
+        for (PlayerCow playerCardInfo : playerCardInfos.values()) {
+            room.addUserSocre(playerCardInfo.getUserId(),playerCardInfo.getFinalScore());
+        }
     }
 }

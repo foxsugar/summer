@@ -881,9 +881,9 @@ public class GameXuanQiQi extends Game {
                 long two = 0l;
                 for (long ll : ifChuPai.keySet()) {
                     if (1 == ifChuPai.get(ll)) {
-                        one = l;
+                        one = ll;
                     } else if (2 == ifChuPai.get(ll)) {
-                        two = l;
+                        two = ll;
                     }
                 }
 

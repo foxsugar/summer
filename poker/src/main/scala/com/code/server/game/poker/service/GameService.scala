@@ -246,6 +246,9 @@ object GameService {
   }
 
   private def dispatchGameCowService(userId:Long,method: String, game: GameCow, params: JsonNode):Int = method match {
+    case "setMultipleForGetBanker" =>
+      val multiple = params.path("multiple").asLong(0)
+      game.setMultipleForGetBanker(userId,multiple);
     case "raise" =>
       val addChip = params.path("addChip").asLong(0)
       game.raise(userId,addChip);
