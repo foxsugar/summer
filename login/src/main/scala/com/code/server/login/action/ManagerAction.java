@@ -73,4 +73,16 @@ public class ManagerAction extends Cors{
         return result;
 
     }
+
+    @RequestMapping("/user/login")
+    public AgentResponse test(String username, String password) {
+        Map<String, Object> result = new HashMap<>();
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.code = 20000;
+        agentResponse.setData(result);
+
+        result.put("token", "1");
+        return agentResponse;
+
+    }
 }
