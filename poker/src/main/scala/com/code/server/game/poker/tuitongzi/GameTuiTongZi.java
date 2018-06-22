@@ -27,7 +27,7 @@ public class GameTuiTongZi extends Game{
     protected long bankerId = -1L;
 
     protected Integer state = TuiTongZiConstant.STATE_START;
-
+    //第一次坐庄人的ID
     protected long firstBankerId = -1;
 
     protected long firstBanerCount = 0;
@@ -279,7 +279,9 @@ public class GameTuiTongZi extends Game{
         }
 
         long id = nextTurnId(bankerId);
+
         if (id == firstBankerId && this.room.getZhuangCount() == 1){
+            //圈数
             firstBanerCount++;
             this.room.firstBanerCount = firstBanerCount;
         }
