@@ -199,6 +199,16 @@ public class WechatAction extends Cors {
             if (agentBean == null) return;
 
 
+            //通知 代理 有人绑定他
+            String name = wxMpUser.getNickname();
+
+            wxMpService.getKefuService().sendKefuMessage(
+                    WxMpKefuMessage
+                            .TEXT()
+                            .toUser(agentBean.getOpenId())
+                            .content(name+"已点击您的专属链接")
+                            .build());
+
             String unionId = wxMpUser.getUnionId();
             //这个人是否已经点过
 
@@ -246,14 +256,13 @@ public class WechatAction extends Cors {
                     //保存
                     recommendService.getRecommendDao().save(recommend);
 
-                    //通知 代理 有人绑定他
-                    String name = wxMpUser.getNickname();
+
 
                     wxMpService.getKefuService().sendKefuMessage(
                             WxMpKefuMessage
                                     .TEXT()
                                     .toUser(agentBean.getOpenId())
-                                    .content(name+"已点击您的专属链接,成功绑定")
+                                    .content(name+"成功绑定")
                                     .build());
 
                 }
