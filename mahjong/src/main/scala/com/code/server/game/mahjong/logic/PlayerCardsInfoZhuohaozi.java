@@ -251,7 +251,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
                 int tempScore = maxPoint;
                 //庄家多输
-                if (playerCardsInfoMj.getUserId() == this.gameInfo.getFirstTurn()) {
+                if (playerCardsInfoMj.getUserId() == this.gameInfo.getFirstTurn() && isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_显庄)) {
                     if(isZimo) {
                         tempScore += 20;
                     }else{
