@@ -27,13 +27,14 @@ public class GameCowOfSetMutiple extends GameCow {
         if(-1.0==setMultipleForGetBankers.get(userId)){
             setMultipleForGetBankers.put(userId,multiple);
         }
-        MsgSender.sendMsg2Player("gameService", "setMultipleForGetBanker", setMultipleForGetBankers, users);
+        MsgSender.sendMsg2Player("gameService", "setMultipleForGetBankerToAll", setMultipleForGetBankers, users);
         if(canSetRoomMultiple()){//设置roomMultiple
             room.setBankerId(maxMultiple());
             MsgSender.sendMsg2Player("gameService", "tellBankerId", room.getBankerId(), users);
             noticePlayerBet();//继续原来的步骤
             updateLastOperateTime();
         }
+        MsgSender.sendMsg2Player("gameService", "setMultipleForGetBanker", 0, userId);
 
         return 0;
     }
