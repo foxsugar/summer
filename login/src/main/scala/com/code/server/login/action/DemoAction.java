@@ -2,10 +2,13 @@ package com.code.server.login.action;
 
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.db.dao.IAgentUserDao;
+import com.code.server.db.dao.ILogRecordDao;
 import com.code.server.db.dao.IUserDao;
 import com.code.server.db.model.AgentUser;
+import com.code.server.db.model.LogRecord;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.util.MD5Util;
+import com.code.server.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +29,9 @@ public class DemoAction{
 
     @Autowired
     private IAgentUserDao agentUserDao;
+
+    @Autowired
+    private ILogRecordDao logRecordDao;
 
     public static String getToken(long userId) {
         return MD5Util.MD5Encode("salt," + userId + System.currentTimeMillis(), "UTF-8");
@@ -62,5 +68,15 @@ public class DemoAction{
         r.put("userId", 1);
         r.put("roles", roles);
         return new AgentResponse(0, r);
+    }
+
+
+
+    @RequestMapping("/onlineInfo")
+    public AgentResponse onlineInfo(String date){
+        //todo token 验证
+        LogRecord logRecord = logRecordDao.findOne(date);
+        return new AgentResponse(0, JsonUtil.toJson(logRecord));
+
     }
 }
