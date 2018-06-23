@@ -197,9 +197,27 @@ public class WechatAction extends Cors {
             //代理不存在 直接退出
             AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
             if (agentBean == null) return;
-
-
             String unionId = wxMpUser.getUnionId();
+
+            boolean isSelf = agentBean.getUnionId().equals(unionId);
+
+            if (isSelf) {
+                //处理跳转
+                handle_link_redirect(agentId, response);
+                return;
+            }
+
+            //通知 代理 有人绑定他
+            String name = wxMpUser.getNickname();
+
+            wxMpService.getKefuService().sendKefuMessage(
+                    WxMpKefuMessage
+                            .TEXT()
+                            .toUser(agentBean.getOpenId())
+                            .content(name+"已点击您的专属链接")
+                            .build());
+
+
             //这个人是否已经点过
 
             //这个人如果已经是玩家 并且玩家没有上级 那么成为这个人的下级
@@ -239,27 +257,19 @@ public class WechatAction extends Cors {
 
             }else{
                 Recommend recommend = recommendService.getRecommendDao().getByUnionId(unionId);
-                boolean isSelf = agentBean.getUnionId().equals(unionId);
-                //通知 代理 有人绑定他
-                String name = wxMpUser.getNickname();
-                wxMpService.getKefuService().sendKefuMessage(
-                        WxMpKefuMessage
-                                .TEXT()
-                                .toUser(agentBean.getOpenId())
-                                .content(name+"已点击您的专属链接")
-                                .build());
-
                 if (recommend == null && !isSelf) {
                     recommend = new Recommend();
                     recommend.setUnionId(unionId).setAgentId(agentId);
                     //保存
                     recommendService.getRecommendDao().save(recommend);
 
+
+
                     wxMpService.getKefuService().sendKefuMessage(
                             WxMpKefuMessage
                                     .TEXT()
                                     .toUser(agentBean.getOpenId())
-                                    .content(name+" 成功绑定")
+                                    .content(name+"成功绑定")
                                     .build());
 
                 }

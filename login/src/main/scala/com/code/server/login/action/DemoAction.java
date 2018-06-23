@@ -1,15 +1,16 @@
 package com.code.server.login.action;
 
-import com.code.server.constant.response.*;
 import com.code.server.constant.response.ErrorCode;
+import com.code.server.db.dao.IAgentUserDao;
 import com.code.server.db.dao.IUserDao;
-import com.code.server.db.model.User;
+import com.code.server.db.model.AgentUser;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,20 +24,24 @@ public class DemoAction{
     @Autowired
     private IUserDao userDao;
 
+    @Autowired
+    private IAgentUserDao agentUserDao;
+
     public static String getToken(long userId) {
         return MD5Util.MD5Encode("salt," + userId + System.currentTimeMillis(), "UTF-8");
     }
 
     @RequestMapping("/login")
-    public AgentResponse agentLogin(String username, String password){
+    public AgentResponse agentLogin(HttpServletRequest request, String username, String password){
 
-        User user = userDao.getUserByAccountAndPassword(username, password);
+        AgentUser agentUser = agentUserDao.findAgentUserByUsernameAndPassword(username, password);
         AgentResponse agentResponse = null;
         Map<String, Object> result = new HashMap<>();
-        if (user != null){
-            AgentUtil.caches.put("id", user.getId());
-            AgentUtil.caches.put("username", user.getUsername());
-            String token = getToken(user.getId());
+        if (agentUser != null){
+            //todo token 和 玩家的关联
+            AgentUtil.caches.put("id", agentUser.getId());
+            AgentUtil.caches.put("username", agentUser.getUsername());
+            String token = getToken(agentUser.getId());
             AgentUtil.caches.put("token", token);
             result.put("token", token);
             agentResponse = new AgentResponse(0, result);
@@ -48,8 +53,14 @@ public class DemoAction{
     }
 
 
-//    @RequestMapping("/info")
-//    public AgentResponse userInfo(){
-//
-//    }
+    @RequestMapping("/info")
+    public AgentResponse userInfo(String token){
+        //todo token 验证
+        AgentUtil.caches.get(token);
+        Map<String, Object> r = new HashMap<>();
+        int[] roles = new int[]{1};
+        r.put("userId", 1);
+        r.put("roles", roles);
+        return new AgentResponse(0, r);
+    }
 }
