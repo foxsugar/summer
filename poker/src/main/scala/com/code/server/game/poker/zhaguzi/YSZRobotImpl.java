@@ -51,19 +51,20 @@ public class YSZRobotImpl implements YSZRobot {
             return;
         }
 
-        int round = 0;
-        for (PlayerYSZ playerYSZ : game.playerCardInfos.values()){
-
-            if (round < playerYSZ.getCurRoundNumber()){
-                round = playerYSZ.getCurRoundNumber();
-            }
-        }
-
-        if (round == 1){
-            bet(game);
-        }else {
-            pass(game);
-        }
+//        int round = 0;
+//        for (PlayerYSZ playerYSZ : game.playerCardInfos.values()){
+//
+//            if (round < playerYSZ.getCurRoundNumber()){
+//                round = playerYSZ.getCurRoundNumber();
+//            }
+//        }
+//
+//        if (round == 1){
+//            bet(game);
+//        }else {
+//            pass(game);
+//        }
+        pass(game);
     }
 
     @Override

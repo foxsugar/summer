@@ -199,10 +199,17 @@ public class GameBaseYSZ extends Game {
     private void mustBet() {
         for (Long l : playerCardInfos.keySet()) {
             playerCardInfos.get(l).setAllScore(INIT_BOTTOM_CHIP);
+            this.room.addUserSocre(playerCardInfos.get(l).userId, -playerCardInfos.get(l).allScore);
         }
 
         Map<String, Object> result = new HashMap<>();
-        result.put("mustBet", chip);
+        if (this.room.isGoldRoom()){
+            result.put("mustBet", -chip);
+        }else {
+            result.put("mustBert", chip);
+        }
+//        result.put("mustBet", chip);
+
         result.put("zhuList", this.getGenZhuList());
         result.put("maxBet", this.MAX_BET_NUM);
 
@@ -211,12 +218,14 @@ public class GameBaseYSZ extends Game {
         ResponseVo vo = new ResponseVo("gameService", "mustBet", result);
         MsgSender.sendMsg2Player(vo, users);
 
+        this.pushGoldScore();
+
     }
 
-    public double getUserScores(long userId){
-        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE) return 0;
-        return RedisManager.getUserRedisService().getUserGold(userId);
-    }
+//    public double getUserScores(long userId){
+//        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE) return 0;
+//        return RedisManager.getUserRedisService().getUserGold(userId);
+//    }
 
     /**
      * 加注
@@ -259,17 +268,21 @@ public class GameBaseYSZ extends Game {
 
         playerCardInfos.get(userId).setAllScore(playerCardInfos.get(userId).getAllScore() + addChip);
 
-        this.room.addUserSocre(userId, addChip);
+        this.room.addUserSocre(userId, -addChip);
 
         Map<String, Object> result = new HashMap<>();
         result.put("userId", userId);
+
         result.put("addChip", addChip);
+
         ResponseVo vo = new ResponseVo("gameService", "raiseResponse", result);
         MsgSender.sendMsg2Player(vo, users);
 
         noticeAction(curUserId);
 
         MsgSender.sendMsg2Player("gameService", "raise", 0, userId);
+
+        this.pushGoldScore();
         updateLastOperateTime();
 
         return 0;
@@ -303,10 +316,10 @@ public class GameBaseYSZ extends Game {
 
         if (seeUser.contains(userId)) {
             playerCardInfos.get(userId).setAllScore(playerCardInfos.get(userId).getAllScore() + chip * 2);
-            this.room.addUserSocre(userId, chip * 2);
+            this.room.addUserSocre(userId, -chip * 2);
         } else {
             playerCardInfos.get(userId).setAllScore(playerCardInfos.get(userId).getAllScore() + chip);
-            this.room.addUserSocre(userId, chip);
+            this.room.addUserSocre(userId, -chip);
         }
 
         logger.info("{}", userId);
@@ -315,8 +328,10 @@ public class GameBaseYSZ extends Game {
         result.put("userId", userId);
         if (seeUser.contains(userId)) {
             result.put("addChip", chip * 2);
+
         } else {
             result.put("addChip", chip);
+
         }
 
         ResponseVo vo = new ResponseVo("gameService", "callResponse", result);
@@ -325,8 +340,8 @@ public class GameBaseYSZ extends Game {
         noticeAction(curUserId);
 
         MsgSender.sendMsg2Player("gameService", "call", 0, userId);
+        this.pushGoldScore();
         updateLastOperateTime();
-
         return 0;
     }
 
@@ -371,7 +386,7 @@ public class GameBaseYSZ extends Game {
 
     public int see(long userId) {
 
-        logger.info(userId + "  ssss" + playerCardInfos.get(userId).getHandcards());
+        logger.info(userId + "  看 牌" + playerCardInfos.get(userId).getHandcards());
 
         if (playerCardInfos.get(userId).getCurRoundNumber() <= room.getMenPai()) {
             return ErrorCode.NOT_GET_MEMPAI;
@@ -405,7 +420,7 @@ public class GameBaseYSZ extends Game {
      */
     public int kill(long askerId, long accepterId) {
 
-        logger.info(askerId + "  比牌: " + chip);
+        logger.info(askerId + "  比 牌: " + chip);
 
         if (!aliveUser.contains(askerId) || !aliveUser.contains(accepterId)) {
             return ErrorCode.NOT_KILL;
@@ -413,7 +428,7 @@ public class GameBaseYSZ extends Game {
 
         if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
             double gold = RedisManager.getUserRedisService().getUserGold(askerId);
-            logger.info(askerId + "  金币: " + gold);
+            logger.info(askerId + "  金 币: " + gold);
             double addChip = chip;
             if (seeUser.contains(askerId)){
                 addChip = chip * 2;
@@ -442,13 +457,17 @@ public class GameBaseYSZ extends Game {
         result.put("loserId", winnerId == askerId ? accepterId : askerId);
         if (seeUser.contains(askerId)) {
             playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore() + chip * 2);
-            this.room.addUserSocre(askerId, chip * 2);
+            this.room.addUserSocre(askerId, -chip * 2);
+
             result.put("addChip", chip * 2);
+
             logger.info("");
         } else {
             playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore() + chip);
-            this.room.addUserSocre(askerId, chip);
+            this.room.addUserSocre(askerId, -chip);
+
             result.put("addChip", chip);
+
         }
         ResponseVo vo = new ResponseVo("gameService", "killResponse", result);
         MsgSender.sendMsg2Player(vo, users);
@@ -492,7 +511,7 @@ public class GameBaseYSZ extends Game {
         }
 
         MsgSender.sendMsg2Player("gameService", "kill", 0, askerId);
-
+        this.pushGoldScore();
         updateLastOperateTime();
 
         return 0;
@@ -607,20 +626,26 @@ public class GameBaseYSZ extends Game {
             if (winList.contains(playerCardInfo.getUserId())) {
                 playerCardInfo.setScore(1 * totalChip / winList.size());
             } else {
-                playerCardInfo.setScore(-1 * playerCardInfo.getAllScore());
+//                playerCardInfo.setScore(-1 * playerCardInfo.getAllScore());
             }
         }
         for (PlayerYSZ playerCardInfo : playerCardInfos.values()) {
             if (winList.contains(playerCardInfo.getUserId())) {
                 logger.info("");
-                room.addUserSocre(playerCardInfo.getUserId(), playerCardInfo.getScore() - 1 * playerCardInfo.getAllScore());
-                room.addUserSocre(playerCardInfo.getUserId(), playerCardInfo.getCaifen());
-                playerCardInfo.setFinalScore(playerCardInfo.getScore() - 1 * playerCardInfo.getAllScore() + playerCardInfo.getCaifen());
+                room.addUserSocre(playerCardInfo.getUserId(), playerCardInfo.getScore());
+//                room.addUserSocre(playerCardInfo.getUserId(), playerCardInfo.getCaifen());
+                playerCardInfo.setFinalScore(playerCardInfo.getScore());
             } else {
-                room.addUserSocre(playerCardInfo.getUserId(), -1 * playerCardInfo.getAllScore());
-                room.addUserSocre(playerCardInfo.getUserId(), playerCardInfo.getCaifen());
-                playerCardInfo.setFinalScore(-1 * playerCardInfo.getAllScore() + playerCardInfo.getCaifen());
+//                room.addUserSocre(playerCardInfo.getUserId(), -1 * playerCardInfo.getAllScore());
+//                room.addUserSocre(playerCardInfo.getUserId(), playerCardInfo.getCaifen());
+                playerCardInfo.setFinalScore(-1 * playerCardInfo.getAllScore());
             }
+        }
+    }
+
+    public void pushGoldScore(){
+        if (this.room.isGoldRoom()){
+            this.room.pushScoreChange();
         }
     }
 
@@ -659,6 +684,7 @@ public class GameBaseYSZ extends Game {
         gameResultHitGoldFlower.setWinnerList(winnerList);
         gameResultHitGoldFlower.setBankerId(winnerList.get(0));
         MsgSender.sendMsg2Player("gameService", "gameResult", gameResultHitGoldFlower, users);
+        this.pushGoldScore();
     }
 
     /**
@@ -986,7 +1012,6 @@ public class GameBaseYSZ extends Game {
         room.clearReadyStatus(true);
         sendFinalResult();
     }
-
 
     //===========================================
     //==============get，set================
