@@ -37,6 +37,8 @@ public class GameAgent extends BaseEntity {
 
     private String qrTicket;
 
+    private String image;
+
     private String name;
     private String idCard;
     private Date createDate;
@@ -176,6 +178,15 @@ public class GameAgent extends BaseEntity {
 
     public GameAgent setAgentInfo(AgentInfo agentInfo) {
         this.agentInfo = agentInfo;
+        return this;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public GameAgent setImage(String image) {
+        this.image = image;
         return this;
     }
 }
