@@ -12,4 +12,7 @@ public interface IAgentUserDao extends PagingAndSortingRepository<AgentUser, Int
 
     @Query(value = "select * from agent_user where invite_code=?1 limit 1", nativeQuery = true)
     AgentUser findAgentUserByInvite_code(String invite_code);
+
+
+    AgentUser findAgentUserByUsernameAndPassword(String userName, String password);
 }
