@@ -203,12 +203,7 @@ public class GameBaseYSZ extends Game {
         }
 
         Map<String, Object> result = new HashMap<>();
-        if (this.room.isGoldRoom()){
-            result.put("mustBet", -chip);
-        }else {
-            result.put("mustBert", chip);
-        }
-//        result.put("mustBet", chip);
+        result.put("mustBet", chip);
 
         result.put("zhuList", this.getGenZhuList());
         result.put("maxBet", this.MAX_BET_NUM);
