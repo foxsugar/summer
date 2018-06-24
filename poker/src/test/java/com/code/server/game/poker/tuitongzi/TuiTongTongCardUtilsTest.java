@@ -1,5 +1,6 @@
 package com.code.server.game.poker.tuitongzi;
 
+import com.code.server.game.poker.zhaguzi.CardUtils;
 import com.code.server.util.DateUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -31,6 +33,11 @@ public class TuiTongTongCardUtilsTest {
 
     @Test
     public void mAIsBiggerThanB2() throws Exception {
+
+//        CardUtils.string2Local("'",)
+        HashMap map = new HashMap();
+
+
     }
 
     @Test
@@ -74,7 +81,7 @@ public class TuiTongTongCardUtilsTest {
         boolean  rrr =  TuiTongTongCardUtils.zhuangIsBiggerThanXian(playerZ, playerX);
 
         System.out.println(rrr);
-
+        Math.sin(1);
 
     }
 

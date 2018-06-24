@@ -22,9 +22,6 @@ import java.util.Map;
 public class DemoAction{
 
     @Autowired
-    private IUserDao userDao;
-
-    @Autowired
     private IAgentUserDao agentUserDao;
 
     public static String getToken(long userId) {
