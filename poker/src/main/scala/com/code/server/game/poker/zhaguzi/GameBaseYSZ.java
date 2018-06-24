@@ -621,7 +621,7 @@ public class GameBaseYSZ extends Game {
             if (winList.contains(playerCardInfo.getUserId())) {
                 playerCardInfo.setScore(1 * totalChip / winList.size());
             } else {
-//                playerCardInfo.setScore(-1 * playerCardInfo.getAllScore());
+                playerCardInfo.setScore(-1 * playerCardInfo.getAllScore());
             }
         }
         for (PlayerYSZ playerCardInfo : playerCardInfos.values()) {
