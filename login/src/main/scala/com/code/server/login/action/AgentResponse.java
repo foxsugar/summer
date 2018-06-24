@@ -10,7 +10,7 @@ import java.util.Map;
 public class AgentResponse implements ErrorCode{
     public int code;
     public String msg;
-    public Object data = new HashMap<>();
+    public Object data;
 
     public String getMsg() {
         return msg;
@@ -34,7 +34,7 @@ public class AgentResponse implements ErrorCode{
 
     }
 
-    public AgentResponse(int code, Map<String, Object> data) {
+    public AgentResponse(int code, Object data) {
         this.code = code;
         this.data = data;
 
