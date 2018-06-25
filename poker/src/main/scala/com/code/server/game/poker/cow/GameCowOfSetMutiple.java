@@ -99,24 +99,33 @@ public class GameCowOfSetMutiple extends GameCow {
         int three = 0;
         long banker = 0l;
         int random = Math.abs((int)System.currentTimeMillis());
+        List<Long> tmpList1 = new ArrayList<>();
+        List<Long> tmpList2 = new ArrayList<>();
+        List<Long> tmpList3 = new ArrayList<>();
         for (Long l:setMultipleForGetBankers.keySet()) {
             if(setMultipleForGetBankers.get(l)==1.0){
+                tmpList1.add(l);
                 one++;
             }else if(setMultipleForGetBankers.get(l)==2.0){
+                tmpList2.add(l);
                 two++;
             }else if(setMultipleForGetBankers.get(l)==3.0){
+                tmpList3.add(l);
                 three++;
             }
         }
         if(three>0){
-            banker = users.get(random%three);
+            banker = tmpList3.get(random%three);
             room.setMultiple(3);
         }else if(two>0){
-            banker = users.get(random%two);
+            banker = tmpList2.get(random%two);
             room.setMultiple(2);
         }else if (one>0){
-            banker = users.get(random%one);
+            banker = tmpList1.get(random%one);
             room.setMultiple(1);
+        }
+        if(banker==0l){
+            banker=users.get(0);
         }
         return banker;
     }
