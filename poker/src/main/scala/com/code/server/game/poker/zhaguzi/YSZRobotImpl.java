@@ -110,7 +110,7 @@ public class YSZRobotImpl implements YSZRobot {
             //如果没在游戏中
             if (r.getUsers().size() >= 2) {
                 long t = now - r.getLastReadyTime();
-                if (r.isAllReady() && t > SECOND * COUNT) {
+                if (r.isAllReady() && t > SECOND * 30) {
 
                     System.out.println("start=============");
                     r.startGame();

@@ -55,7 +55,6 @@ public class DemoAction{
         return agentResponse;
     }
 
-
     @RequestMapping("/info")
     public AgentResponse userInfo(String token){
         //todo token 验证
@@ -66,8 +65,6 @@ public class DemoAction{
         r.put("roles", roles);
         return new AgentResponse(0, r);
     }
-
-
 
     @RequestMapping("/onlineInfo")
     public AgentResponse onlineInfo(String date){

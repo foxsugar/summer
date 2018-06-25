@@ -20,6 +20,7 @@ import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
 import com.code.server.game.poker.config.ServerConfig;
+import com.code.server.game.room.Room;
 import com.code.server.game.room.RoomExtendGold;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
@@ -52,7 +53,7 @@ public class RoomYSZ extends RoomExtendGold {
     protected Map<Long, Integer> sanpaiNum = new HashMap<>();
 
     protected long lastReadyTime;
-
+    protected int timerTick;
 
 
 
@@ -282,6 +283,7 @@ public class RoomYSZ extends RoomExtendGold {
 
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "roomNotice", userOfRoom), this.getUsers());
 
+        isTickTimer();
 
     }
 
@@ -372,7 +374,38 @@ public class RoomYSZ extends RoomExtendGold {
         if (rtn == 0) {
             this.lastReadyTime = System.currentTimeMillis();
         }
+        isTickTimer();
         return rtn;
+    }
+
+    public void isTickTimer(){
+
+        int lastTimerTick = timerTick;
+        if (this.users.size() < 2){
+            timerTick = 0;
+        }else {
+            boolean ret = this.userStatus.values()
+                    .stream()
+                    .allMatch( (x) -> x == STATUS_READY);
+
+            if (ret){
+                timerTick = 1;
+            }else {
+                timerTick = 0;
+            }
+        }
+
+        if (timerTick != lastTimerTick){
+            Map<String, Integer> result = new HashMap<>();
+            result.put("second", 30);
+            result.put("timerTick", timerTick);
+            MsgSender.sendMsg2Player(new ResponseVo("roomService", "tickTimer", result), this.users);
+        }
+    }
+
+    protected void noticeQuitRoom(long userId) {
+        super.noticeQuitRoom(userId);
+        this.isTickTimer();
     }
 
     public Map<Long, Integer> getBaoziNum() {
