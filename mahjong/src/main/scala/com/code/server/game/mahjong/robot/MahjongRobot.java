@@ -57,6 +57,8 @@ public class MahjongRobot {
             params.put("userId", userId);
             params.put("card", cards);
             ResponseVo vo = new ResponseVo("gameLogicService", "playCard", params);
+
+            gameInfo.autoPlay = true;
             sendRobotRequest(roomInfo, userId, vo);
         }
 

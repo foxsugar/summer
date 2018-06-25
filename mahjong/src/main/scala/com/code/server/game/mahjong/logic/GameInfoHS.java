@@ -147,8 +147,8 @@ public class GameInfoHS extends GameInfoNew {
                 playerCardsInfoMj.tingWhatInfo.removeAll(removeList);
 
 
-                MsgSender.sendMsg2Player(ResponseType.SERVICE_TYPE_GAMELOGIC,"isContinueTing",playerCardsInfoMj.tingWhatInfo.size()>0, userId);
             }
+            MsgSender.sendMsg2Player(ResponseType.SERVICE_TYPE_GAMELOGIC,"isContinueTing",playerCardsInfoMj.tingWhatInfo.size()>0, userId);
         }
         return 0;
     }
