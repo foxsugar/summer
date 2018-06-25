@@ -160,7 +160,7 @@ public class GameInfoHS extends GameInfoNew {
         playerCardsInfo.setCanBeGang(false);
         playerCardsInfo.setCanBePeng(false);
         playerCardsInfo.setCanBeHu(false);
-        playerCardsInfo.setCanBeTing(false);
+//        playerCardsInfo.setCanBeTing(false);
         playerCardsInfo.setCanBeChiTing(false);
         playerCardsInfo.setCanBePengTing(false);
         playerCardsInfo.setCanBeXuanfeng(false);
