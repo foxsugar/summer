@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class GameHitGoldFlower extends Game {
     protected static final Logger logger = LoggerFactory.getLogger(GameHitGoldFlower.class);
 
-    private Double init_bottom_chip = 1.0;//底注
+    private Double init_bottom_chip;//底注
     private static final int INIT_CARD_NUM = 3;//玩家牌数3张
 
     protected List<Integer> cards = new ArrayList<>();//牌
@@ -26,7 +26,7 @@ public class GameHitGoldFlower extends Game {
     protected Random rand = new Random();
 
     private int curRoundNumber=1;//当前轮数
-    protected Double chip = init_bottom_chip;
+    protected Double chip;
 
     protected List<Integer> leaveCards = new ArrayList<>();//剩余的牌，暂时无用
     protected List<Long> aliveUser = new ArrayList<>();//存活的人
@@ -49,6 +49,7 @@ public class GameHitGoldFlower extends Game {
         }
         this.users.addAll(users);
         this.aliveUser.addAll(users);
+        chip = room.getMultiple()+0.0;
         init_bottom_chip = room.getMultiple()+0.0;
 
         shuffle();//洗牌

@@ -60,7 +60,11 @@ public class GameZhaGuZi extends Game {
 
     protected  PlayerZhaGuZi lastOverPlayer = null;
 
+    //说话时候的倍率
     protected int base;
+
+    //总倍率
+    protected int totalBase;
 
     public int getBase() {
         return base;
@@ -68,6 +72,14 @@ public class GameZhaGuZi extends Game {
 
     public void setBase(int base) {
         this.base = base;
+    }
+
+    public int getTotalBase() {
+        return totalBase;
+    }
+
+    public void setTotalBase(int totalBase) {
+        this.totalBase = totalBase;
     }
 
     //第一个出牌人的Id
@@ -787,17 +799,17 @@ public class GameZhaGuZi extends Game {
                 }
             }
 
-            if (ret == 2){
-                //算红桃3是不是憋手里
-                for (PlayerZhaGuZi player : playerCardInfos.values()){
-                    if (player.getRetain3List().contains(hongtaosan)){
-                        if (player.cards.contains(hongtaosan)){
-                            base++;
-                        }
-                        break;
-                    }
-                }
-            }
+//            if (ret == 2){
+//                //算红桃3是不是憋手里
+//                for (PlayerZhaGuZi player : playerCardInfos.values()){
+//                    if (player.getRetain3List().contains(hongtaosan)){
+//                        if (player.cards.contains(hongtaosan)){
+//                            base++;
+//                        }
+//                        break;
+//                    }
+//                }
+//            }
 
             int count = 0;
 
@@ -811,7 +823,13 @@ public class GameZhaGuZi extends Game {
             } else {
                 for (PlayerZhaGuZi playerZhaGuZi : aList) {
                     if ((playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) && (!playerZhaGuZi.isOver())) {
-                        count++;
+//                        count++;
+                        if (playerZhaGuZi.getRetain3List().contains(hongtaosan)){
+                            count +=2;
+                        }
+                        if (playerZhaGuZi.getRetain3List().contains(fangpiansan)){
+                            count++;
+                        }
                     }
                 }
             }
@@ -878,6 +896,8 @@ public class GameZhaGuZi extends Game {
             logger.info("平局 不计算输赢");
         }
 
+        this.setTotalBase((int)(base + 0.0d));
+
         sendGameResult(ret);
     }
 
@@ -893,6 +913,7 @@ public class GameZhaGuZi extends Game {
 
         result.put("winCode", winCode);
         result.put("players", list);
+        result.put("totalBase", this.totalBase);
 
         //发送结算结果
         MsgSender.sendMsg2Player(serviceName, "gameResult", result, users);

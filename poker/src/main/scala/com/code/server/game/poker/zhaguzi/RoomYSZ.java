@@ -20,6 +20,7 @@ import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.*;
 import com.code.server.game.poker.config.ServerConfig;
+import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.RoomExtendGold;
 import com.code.server.game.room.kafka.MsgSender;
@@ -53,7 +54,8 @@ public class RoomYSZ extends RoomExtendGold {
     protected Map<Long, Integer> sanpaiNum = new HashMap<>();
 
     protected long lastReadyTime;
-    protected int timerTick;
+    protected long timerTick;
+    protected long leaveSecond;
 
 
 
@@ -380,7 +382,7 @@ public class RoomYSZ extends RoomExtendGold {
 
     public void isTickTimer(){
 
-        int lastTimerTick = timerTick;
+        long lastTimerTick = timerTick;
         if (this.users.size() < 2){
             timerTick = 0;
         }else {
@@ -396,9 +398,12 @@ public class RoomYSZ extends RoomExtendGold {
         }
 
         if (timerTick != lastTimerTick){
-            Map<String, Integer> result = new HashMap<>();
+            long deta = (System.currentTimeMillis() - this.lastReadyTime) / ((long)(10 * Math.pow(10, 9)));
+            this.leaveSecond = 30l - deta;
+            Map<String, Object> result = new HashMap<>();
             result.put("second", 30);
             result.put("timerTick", timerTick);
+            result.put("leaveSecond", this.leaveSecond);
             MsgSender.sendMsg2Player(new ResponseVo("roomService", "tickTimer", result), this.users);
         }
     }
@@ -504,9 +509,8 @@ public class RoomYSZ extends RoomExtendGold {
         }
     }
 
-
     public IfaceRoomVo toVo(long userId) {
-        RoomHitGoldFlowerVo roomVo = new RoomHitGoldFlowerVo();
+        RoomYSZVo roomVo = new RoomYSZVo();
         BeanUtils.copyProperties(this, roomVo);
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.game != null) {
@@ -525,9 +529,11 @@ public class RoomYSZ extends RoomExtendGold {
             roomVo.setRemainTime(time);
         }
 
+        if (this.game != null){
+            this.timerTick = 0;
+        }
         return roomVo;
     }
-
 
     public double getCaiFen() {
         return caiFen;

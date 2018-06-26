@@ -117,7 +117,16 @@ public class  GameZhaGuZiLiu extends GameZhaGuZi{
             } else {
                 for (PlayerZhaGuZi playerZhaGuZi : aList) {
                     if ((playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) && (!playerZhaGuZi.isOver())) {
-                        count++;
+                        if (playerZhaGuZi.getRetain3List().contains(heitaosan)){
+                            count++;
+                        }
+                        if (playerZhaGuZi.getRetain3List().contains(heitaosan)){
+                            count++;
+                        }
+                        if (playerZhaGuZi.getRetain3List().contains(fangpiansan)){
+                            count++;
+                        }
+
                     }
                 }
             }
