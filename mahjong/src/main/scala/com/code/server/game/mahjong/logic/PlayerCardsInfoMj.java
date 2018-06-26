@@ -866,7 +866,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         }
     }
 
-    public double addScore(int s) {
+    public double addScore(double s) {
         this.score = this.score + s;
         return this.score;
     }

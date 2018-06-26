@@ -82,6 +82,8 @@ public class GameInfoNew extends GameInfo {
 
 
     protected void computeAllGang() {
+        if(this.isAlreadyComputeGang) return;
+        this.isAlreadyComputeGang = true;
         for (PlayerCardsInfoMj player : this.getPlayerCardsInfos().values()) {
             player.computeALLGang();
         }

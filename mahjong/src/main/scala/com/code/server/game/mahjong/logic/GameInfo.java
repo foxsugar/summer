@@ -79,6 +79,8 @@ public class GameInfo extends Game {
     protected boolean yiPaoDuoXiangAppear = false;
 
     public boolean autoPlay = false;
+
+    protected boolean isAlreadyComputeGang = false;
 //    private Set<Long> noCanHuList = new HashSet<>();//本轮不能胡的人
 
     /**
@@ -198,6 +200,8 @@ public class GameInfo extends Game {
     }
 
     protected void computeAllGang() {
+        if(this.isAlreadyComputeGang) return;
+        this.isAlreadyComputeGang = true;
         for (PlayerCardsInfoMj player : this.getPlayerCardsInfos().values()) {
             player.computeALLGang();
         }
