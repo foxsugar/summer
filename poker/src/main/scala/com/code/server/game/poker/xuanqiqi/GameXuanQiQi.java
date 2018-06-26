@@ -82,7 +82,6 @@ public class GameXuanQiQi extends Game {
         operatId = room.getBankerId();
 
         shuffle();
-        deal();
         tellBanker();
         updateLastOperateTime();
     }
@@ -207,6 +206,7 @@ public class GameXuanQiQi extends Game {
     //庄设置双倍
     public int setMultiple(long userId, int multiple) {
         bankerMultiple = multiple;
+        deal();
         playerCardInfos.get(room.getBankerId()).setCanSetMultiple("0");
         playerCardInfos.get(userId).setCanKou("1");
         playerCardInfos.get(userId).setCanGuo("1");
