@@ -60,7 +60,11 @@ public class GameZhaGuZi extends Game {
 
     protected  PlayerZhaGuZi lastOverPlayer = null;
 
+    //说话时候的倍率
     protected int base;
+
+    //总倍率
+    protected int totalBase;
 
     public int getBase() {
         return base;
@@ -68,6 +72,14 @@ public class GameZhaGuZi extends Game {
 
     public void setBase(int base) {
         this.base = base;
+    }
+
+    public int getTotalBase() {
+        return totalBase;
+    }
+
+    public void setTotalBase(int totalBase) {
+        this.totalBase = totalBase;
     }
 
     //第一个出牌人的Id
@@ -878,6 +890,8 @@ public class GameZhaGuZi extends Game {
             logger.info("平局 不计算输赢");
         }
 
+        this.setTotalBase((int)(base + 0.0d));
+
         sendGameResult(ret);
     }
 
@@ -893,6 +907,7 @@ public class GameZhaGuZi extends Game {
 
         result.put("winCode", winCode);
         result.put("players", list);
+        result.put("totalBase", this.totalBase);
 
         //发送结算结果
         MsgSender.sendMsg2Player(serviceName, "gameResult", result, users);

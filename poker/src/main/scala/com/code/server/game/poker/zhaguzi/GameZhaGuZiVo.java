@@ -40,7 +40,18 @@ public class GameZhaGuZiVo implements IfaceGameVo {
 
     protected Integer status = ZhaGuZiConstant.START_GAME;
 
+    //说话时候的倍率
     protected int base;
+    //总倍率
+    protected int totalBase;
+
+    public int getTotalBase() {
+        return totalBase;
+    }
+
+    public void setTotalBase(int totalBase) {
+        this.totalBase = totalBase;
+    }
 
     public Map<Long, PlayerZhaGuZiVo> getPlayerCardInfos() {
         return playerCardInfos;
