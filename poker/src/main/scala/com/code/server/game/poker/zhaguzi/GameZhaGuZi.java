@@ -799,17 +799,17 @@ public class GameZhaGuZi extends Game {
                 }
             }
 
-            if (ret == 2){
-                //算红桃3是不是憋手里
-                for (PlayerZhaGuZi player : playerCardInfos.values()){
-                    if (player.getRetain3List().contains(hongtaosan)){
-                        if (player.cards.contains(hongtaosan)){
-                            base++;
-                        }
-                        break;
-                    }
-                }
-            }
+//            if (ret == 2){
+//                //算红桃3是不是憋手里
+//                for (PlayerZhaGuZi player : playerCardInfos.values()){
+//                    if (player.getRetain3List().contains(hongtaosan)){
+//                        if (player.cards.contains(hongtaosan)){
+//                            base++;
+//                        }
+//                        break;
+//                    }
+//                }
+//            }
 
             int count = 0;
 
@@ -823,7 +823,13 @@ public class GameZhaGuZi extends Game {
             } else {
                 for (PlayerZhaGuZi playerZhaGuZi : aList) {
                     if ((playerZhaGuZi.getSanJia() == PlayerZhaGuZi.SAN_JIA) && (!playerZhaGuZi.isOver())) {
-                        count++;
+//                        count++;
+                        if (playerZhaGuZi.getRetain3List().contains(hongtaosan)){
+                            count +=2;
+                        }
+                        if (playerZhaGuZi.getRetain3List().contains(fangpiansan)){
+                            count++;
+                        }
                     }
                 }
             }
