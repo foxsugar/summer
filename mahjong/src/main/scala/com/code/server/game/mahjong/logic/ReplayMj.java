@@ -20,7 +20,6 @@ public class ReplayMj {
     private List<OperateReqResp> operate = new ArrayList<>();
     private ResultResp result;
     private Map<String, Object> roomInfo = new HashMap<>();
-    private GameInfo gameInfo = new GameInfo();
 
     public Map<Long, List<String>> getCards() {
         return cards;
