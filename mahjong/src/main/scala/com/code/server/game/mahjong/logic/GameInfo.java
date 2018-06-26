@@ -77,6 +77,8 @@ public class GameInfo extends Game {
     protected boolean afterTingShowCard = false;//听牌后是否扣牌
 
     protected boolean yiPaoDuoXiangAppear = false;
+
+    public boolean autoPlay = false;
 //    private Set<Long> noCanHuList = new HashSet<>();//本轮不能胡的人
 
     /**

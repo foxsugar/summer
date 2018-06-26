@@ -6,6 +6,7 @@ package com.code.server.game.mahjong.response;
 public class PlayCardResp {
     private long userId;
     private String card;
+    private boolean isAuto;
 
     public long getUserId() {
         return userId;
@@ -22,5 +23,14 @@ public class PlayCardResp {
 
     public void setCard(String card) {
         this.card = card;
+    }
+
+    public boolean isAuto() {
+        return isAuto;
+    }
+
+    public PlayCardResp setAuto(boolean auto) {
+        isAuto = auto;
+        return this;
     }
 }

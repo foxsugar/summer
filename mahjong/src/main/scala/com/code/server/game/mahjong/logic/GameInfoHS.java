@@ -147,8 +147,8 @@ public class GameInfoHS extends GameInfoNew {
                 playerCardsInfoMj.tingWhatInfo.removeAll(removeList);
 
 
-                MsgSender.sendMsg2Player(ResponseType.SERVICE_TYPE_GAMELOGIC,"isContinueTing",playerCardsInfoMj.tingWhatInfo.size()>0, userId);
             }
+            MsgSender.sendMsg2Player(ResponseType.SERVICE_TYPE_GAMELOGIC,"isContinueTing",playerCardsInfoMj.tingWhatInfo.size()>0, userId);
         }
         return 0;
     }
@@ -160,7 +160,7 @@ public class GameInfoHS extends GameInfoNew {
         playerCardsInfo.setCanBeGang(false);
         playerCardsInfo.setCanBePeng(false);
         playerCardsInfo.setCanBeHu(false);
-        playerCardsInfo.setCanBeTing(false);
+//        playerCardsInfo.setCanBeTing(false);
         playerCardsInfo.setCanBeChiTing(false);
         playerCardsInfo.setCanBePengTing(false);
         playerCardsInfo.setCanBeXuanfeng(false);
