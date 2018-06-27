@@ -21,6 +21,8 @@ public class ReplayMj {
     private ResultResp result;
     private Map<String, Object> roomInfo = new HashMap<>();
 
+    // 不能加gameInfo进来 会循环引用
+
     public Map<Long, List<String>> getCards() {
         return cards;
     }

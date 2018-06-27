@@ -188,6 +188,9 @@ public class RoomInfo extends RoomExtendGold {
                 return new GameInfoZhuohaozi().setHasJieGangHu(true);
             case "TC1":
                 return new GameInfoTC_M();
+            case "HELEGOLD":
+            case "HELEKD":
+                return new GameInfoHeleKD();
             default:
                 return new GameInfo();
         }

@@ -287,7 +287,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
      * @param huCardType
      * @return
      */
-    private int getMaxPoint(HuCardType huCardType) {
+    protected int getMaxPoint(HuCardType huCardType) {
         if (huCardType.specialHuList.contains(hu_吊将)) {
             return 10;
         }
