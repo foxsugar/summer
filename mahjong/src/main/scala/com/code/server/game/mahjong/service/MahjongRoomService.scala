@@ -221,13 +221,16 @@ object MahjongRoomService {
     roomInfo.setEach(each)
     roomInfo.setClubId(clubId)
     roomInfo.setClubRoomModel(clubRoomModel)
-    roomInfo.init(roomId, userId, modeTotal, mode, multiple, gameNumber, personNumber, userId, 0, mustZimo)
     roomInfo.setCreaterJoin(isJoin)
     roomInfo.setYipaoduoxiang(yipaoduoxiang)
     roomInfo.setCanChi(canChi)
     roomInfo.setHaveTing(haveTing)
     roomInfo.setGoldRoomType(goldRoomType)
     roomInfo.setGoldRoomPermission(goldRoomPermission)
+    roomInfo.init(roomId, userId, modeTotal, mode, multiple, gameNumber, personNumber, userId, 0, mustZimo)
+    if(goldRoomPermission!=0) {
+      roomInfo.setMultiple(goldRoomType)
+    }
     var code = 0
     if (isJoin) {
       code = roomInfo.joinRoom(userId, true)

@@ -20,6 +20,9 @@ public class GameInfoZhuohaozi extends GameInfoNew {
     public static final int mode_摸三胡六 = 7;
     public static final int mode_摸四胡五 = 8;
     public static final int mode_摸一胡五 = 9;
+    public static final int mode_明听 = 10;
+    public static final int mode_大包 = 11;
+    public static final int mode_不带耗子 = 12;
 
     /**
      * 初始化方法
@@ -49,6 +52,9 @@ public class GameInfoZhuohaozi extends GameInfoNew {
      */
     public void initHun() {
 
+        if (room.isHasMode(mode_不带耗子)) {
+            return;
+        }
         //随机混
         Random rand = new Random();
         int hunIndex = 0;

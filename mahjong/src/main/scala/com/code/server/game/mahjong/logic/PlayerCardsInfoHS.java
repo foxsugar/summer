@@ -62,7 +62,6 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
     @Override
     public void computeALLGang() {
 
-
         //明杠1分
 
         int sub = 0;
@@ -111,9 +110,7 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
 
 
         //算杠
-        for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.getPlayerCardsInfos().values()) {
-            playerCardsInfoMj.computeALLGang();
-        }
+        gameInfo.computeAllGang();
 
         List<String> cs = getCardsNoChiPengGang(cards);
         List<HuCardType> huList = HuUtil.isHu(cs, this, CardTypeUtil.cardType.get(card), new HuLimit(0));
