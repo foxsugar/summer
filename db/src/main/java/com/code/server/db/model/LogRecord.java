@@ -2,6 +2,7 @@ package com.code.server.db.model;
 
 import com.code.server.constant.db.GameNumData;
 import com.code.server.constant.db.GoldRoomIncomeData;
+import com.code.server.constant.db.LogInfo;
 import com.code.server.constant.db.OnlineData;
 import com.code.server.db.utils.BaseEntity;
 import org.hibernate.annotations.DynamicUpdate;
@@ -37,6 +38,13 @@ public class LogRecord extends BaseEntity {
     private GoldRoomIncomeData goldRoomIncomeData = new GoldRoomIncomeData();
 
     private double chargeRebate;
+
+    @Type(type = "json")
+    @Lob
+    @Column(columnDefinition = "json")
+    private LogInfo logInfo = new LogInfo();
+
+
 
     public String getId() {
         return id;
@@ -80,6 +88,15 @@ public class LogRecord extends BaseEntity {
 
     public LogRecord setChargeRebate(double chargeRebate) {
         this.chargeRebate = chargeRebate;
+        return this;
+    }
+
+    public LogInfo getLogInfo() {
+        return logInfo;
+    }
+
+    public LogRecord setLogInfo(LogInfo logInfo) {
+        this.logInfo = logInfo;
         return this;
     }
 }

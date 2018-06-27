@@ -82,6 +82,8 @@ public class LoginAction {
             if (getConstant().getAppleCheck() != 0) {
                 user = createUser(account, password);
                 userService.save(user);
+                //reids 记录新增玩家
+                RedisManager.getLogRedisService().logRegisterUser();
             } else {
                 return ErrorCode.ROLE_ACCOUNT_OR_PASSWORD_ERROR;
             }
@@ -111,6 +113,9 @@ public class LoginAction {
 
             //保存
             userService.save(user);
+
+            //reids 记录新增玩家
+            RedisManager.getLogRedisService().logRegisterUser();
 
             if (recommend != null) {
                 //代理多了一个玩家
