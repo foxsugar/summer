@@ -120,7 +120,7 @@ public class  GameZhaGuZiLiu extends GameZhaGuZi{
                         if (playerZhaGuZi.getRetain3List().contains(heitaosan)){
                             count++;
                         }
-                        if (playerZhaGuZi.getRetain3List().contains(heitaosan)){
+                        if (playerZhaGuZi.getRetain3List().contains(hongtaosan)){
                             count++;
                         }
                         if (playerZhaGuZi.getRetain3List().contains(fangpiansan)){

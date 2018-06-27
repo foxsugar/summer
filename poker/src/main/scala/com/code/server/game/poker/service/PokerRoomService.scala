@@ -139,8 +139,8 @@ object PokerRoomService {
         val multiple = params.path("multiple").asInt()
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
-        var quan = params.path("quan").asInt(1)
-        return RoomTuiTongZi.createRoom(userId, roomType, gameType, gameNumber, personNumber, isJoin, multiple, clubId, clubRoomModel, quan)
+//        var quan = params.path("quan").asInt(1)
+        return RoomTuiTongZi.createRoom(userId, roomType, gameType, gameNumber, personNumber, isJoin, multiple, clubId, clubRoomModel)
 
       case "createZGZRoom" =>
         val roomType = params.path("roomType").asText()
