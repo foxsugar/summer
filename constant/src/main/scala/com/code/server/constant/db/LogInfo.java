@@ -14,6 +14,8 @@ public class LogInfo {
 
     private int registerAgent = 0;
 
+    private double takeOutNum = 0;
+
     public Map<String, Double> getChargeInfo() {
         return chargeInfo;
     }
@@ -38,6 +40,15 @@ public class LogInfo {
 
     public LogInfo setRegisterAgent(int registerAgent) {
         this.registerAgent = registerAgent;
+        return this;
+    }
+
+    public double getTakeOutNum() {
+        return takeOutNum;
+    }
+
+    public LogInfo setTakeOutNum(double takeOutNum) {
+        this.takeOutNum = takeOutNum;
         return this;
     }
 }

@@ -124,6 +124,12 @@ public class LogRedisService implements IConstant {
         logInfo.setRegisterUser(logInfo.getRegisterUser() + 1);
         setLogInfo(logInfo);
     }
+    public void logTakeOutNum(double num) {
+        LogInfo logInfo = getLogInfo();
+        logInfo.setTakeOutNum(logInfo.getTakeOutNum() + num);
+        setLogInfo(logInfo);
+    }
+
 
     private String getKayAddDateStr(String key) {
         return key + getTodayStr();
