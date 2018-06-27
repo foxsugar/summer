@@ -1,5 +1,6 @@
 package com.code.server.game.poker.cow;
 
+import com.code.server.constant.game.IGameConstant;
 import com.code.server.game.room.kafka.MsgSender;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class GameCowOfSetMutiple extends GameCow {
             room.setBankerId(maxMultiple());
             MsgSender.sendMsg2Player("gameService", "tellBankerId", room.getBankerId(), users);
             noticePlayerBet();//继续原来的步骤
+            this.step = IGameConstant.STEP_RAISE;
             updateLastOperateTime();
         }
         MsgSender.sendMsg2Player("gameService", "setMultipleForGetBanker", 0, userId);

@@ -128,7 +128,7 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
         if (isZimo) {
 
             if (isGangKai()) {
-                score *= 3;
+                score *= 6;
                 this.winType.add(hu_杠上开花);
             } else {
                 score *= 2;

@@ -58,7 +58,9 @@ public class CowRobot implements ICowRobot,IGameConstant {
                         compare(game);
                         break;
                     case STEP_MULTIPLE:
-                        setMultipleForGetBanker(game);
+                        if(!allSetRoomMultiple(game)){
+                            setMultipleForGetBanker(game);
+                        }
                         break;
                 }
             }
@@ -122,10 +124,10 @@ public class CowRobot implements ICowRobot,IGameConstant {
         Map<String, Object> put = new HashMap();
 
         for (PlayerCow p : game.getPlayerCardInfos().values()) {
-            if(0==p.getKill()){
+            if(1 == p.getSetMultipleForGetBanker()){
                 msgKey.setUserId(p.getUserId());
                 put.put("userId",p.getUserId());
-                put.put("multiple",1);
+                put.put("multiple",0);
             }
         }
 
@@ -155,5 +157,17 @@ public class CowRobot implements ICowRobot,IGameConstant {
         ResponseRobotVo result = new ResponseRobotVo("roomService", "getReady",put);
         SpringUtil.getBean(MsgProducer.class).send2Partition("roomService",partition, msgKey, result);
 
+    }
+
+    //是否全设置过倍数
+    private boolean allSetRoomMultiple(GameCow game){
+        boolean b = true;
+        a:for (PlayerCow p : game.getPlayerCardInfos().values()) {
+            if(1==p.setMultipleForGetBanker){
+                b=false;
+                break a;
+            }
+        }
+        return b;
     }
 }

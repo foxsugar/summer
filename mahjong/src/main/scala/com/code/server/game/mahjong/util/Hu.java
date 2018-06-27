@@ -435,7 +435,7 @@ public class Hu {
                 if(cardGroup.huType == CARD_GROUP_TYPE_KE
                         || cardGroup.huType == CARD_GROUP_TYPE_ONE_HUN_JIANG
                         || cardGroup.huType == CARD_GROUP_TYPE_SHUN_ONE_HUN){
-                    huCardType.hunReplaceCard.add(cardGroup.card);
+                    huCardType.hunReplaceCard.add(cardGroup.getHunReplaceCard());
                 }
             }
             switch (cardGroup.huType) {
