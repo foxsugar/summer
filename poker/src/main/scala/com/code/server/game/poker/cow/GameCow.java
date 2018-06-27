@@ -59,11 +59,11 @@ public class GameCow extends Game {
         deal();//发牌
         if(!"305".equals(this.room.getGameType())){
             noticePlayerBet();
+            this.step = IGameConstant.STEP_RAISE;
         }else{
             noticeAllSetMutiple();
             room.setBankerId(0l);
         }
-        this.step = IGameConstant.STEP_RAISE;
         updateLastOperateTime();
     }
 
