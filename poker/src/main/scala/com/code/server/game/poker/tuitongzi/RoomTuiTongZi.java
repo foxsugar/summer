@@ -164,11 +164,11 @@ public class RoomTuiTongZi extends Room{
         return roomVo;
     }
 
-    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, String clubId, String clubRoomModel, int quan) throws DataNotFoundException {
+    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, String clubId, String clubRoomModel) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
         RoomTuiTongZi room = getRoomInstance(roomType);
-        room.quan = quan;
+        room.quan = gameNumber;
         room.personNumber = personNumber;
         room.roomId = getRoomIdStr(genRoomId(serverConfig.getServerId()));
         room.createUser = userId;

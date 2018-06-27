@@ -705,6 +705,7 @@ public class GameTuiTongZi extends Game{
                 this.room.addUserSocre(this.bankerId, - this.offset() + this.room.getPotBottom());
                 this.room.setPotBottom(0);
                 this.room.setZhuangCount(0);
+                this.room.setBankerId(nextTurnId(this.room.getBankerId()));
             }
         }
 
