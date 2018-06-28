@@ -47,7 +47,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
         List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(getCardsNoChiPengGang(cards), this.gameInfo.hun, this.getChiPengGangNum());
         for (HuCardType huCardType : huCardTypes) {
-            int point = getMaxPoint(huCardType);
+            int point = getMaxPoint(huCardType, false);
             if (point >= TING_MIN_SCORE) {
                 return true;
             }
@@ -96,7 +96,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(cards, this.gameInfo.hun, chipenggangNum);
 
         for (HuCardType huCardType : huCardTypes) {
-            int point = getMaxPoint(huCardType);
+            int point = getMaxPoint(huCardType, false);
             if (point >= TING_MIN_SCORE) {
                 return true;
             }
@@ -119,7 +119,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         int lastCard = CardTypeUtil.getTypeByCard(card);
         List<HuCardType> huList = HuUtil.isHu(this, noPengAndGang, getChiPengGangNum(), this.gameInfo.hun, lastCard);
         for (HuCardType huCardType : huList) {
-            if (getMaxPoint(huCardType) >= DIANPAO_MIN_SCORE) {
+            if (getMaxPoint(huCardType, true) >= DIANPAO_MIN_SCORE) {
                 return true;
             }
         }
@@ -134,7 +134,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
         List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), getChiPengGangNum(), this.gameInfo.hun, lastCard);
         for (HuCardType huCardType : huList) {
-            if (getMaxPoint(huCardType) >= ZIMO_MIN_SCORE) {
+            if (getMaxPoint(huCardType, false) >= ZIMO_MIN_SCORE) {
                 return true;
             }
         }
@@ -228,7 +228,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         int maxPoint = 0;
         for (HuCardType huCardType : huList) {
 
-            int temp = getMaxPoint(huCardType);
+            int temp = getMaxPoint(huCardType, !isZimo);
             if(temp > maxPoint){
                 maxPoint = temp;
             }
@@ -285,10 +285,11 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
      * 得到最大听的点数
      *
      * @param huCardType
+     * @param isDianPao
      * @return
      */
-    protected int getMaxPoint(HuCardType huCardType) {
-        if (huCardType.specialHuList.contains(hu_吊将)) {
+    protected int getMaxPoint(HuCardType huCardType, boolean isDianPao) {
+        if (!isDianPao && huCardType.specialHuList.contains(hu_吊将)) {
             return 10;
         }
         boolean isHun = HuUtil.cardIsHun(this.gameInfo.hun, huCardType.tingCardType);

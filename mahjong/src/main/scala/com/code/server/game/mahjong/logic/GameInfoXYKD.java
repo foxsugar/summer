@@ -108,7 +108,7 @@ public class GameInfoXYKD extends GameInfo {
             return ErrorCode.CAN_NOT_TING;
         }
 
-        PlayerCardsInfoKD_XY playerCardsInfo = (PlayerCardsInfoKD_XY)playerCardsInfos.get(userId);
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
         if (playerCardsInfo == null) {
             return ErrorCode.USER_ERROR;
         }
@@ -153,7 +153,7 @@ public class GameInfoXYKD extends GameInfo {
 
     private int chuPai_ting(long userId, String card) {
         //出牌的玩家
-        PlayerCardsInfoKD_XY chupaiPlayerCardsInfo = (PlayerCardsInfoKD_XY)playerCardsInfos.get(userId);
+        PlayerCardsInfoMj chupaiPlayerCardsInfo = playerCardsInfos.get(userId);
         if (this.turnId != userId||isAlreadyHu) {
             return ErrorCode.CAN_NOT_PLAYCARD;
         }

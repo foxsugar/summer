@@ -284,8 +284,10 @@ object GameService {
 
   private def dispatchGameWzqService(userId:Long,method: String, game: GameWzq, params: JsonNode):Int = method match {
     case "admitDefeat" =>
-      val userId = params.path("userId").asLong(0)
       game.admitDefeat(userId);
+    case "setScore"=>
+      val score = params.path("score").asInt(0)
+      game.setScore(userId, score)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

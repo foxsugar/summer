@@ -41,6 +41,12 @@ public class GameInfoHS extends GameInfoNew {
     }
 
 
+    @Override
+    protected void handleHuangzhuang(long userId) {
+        turnResultToZeroOnHuangZhuang();
+        super.handleHuangzhuang(userId);
+    }
+
     protected void handleYiPaoDuoXiang() {
 
         List<Long> yipaoduoxiang = new ArrayList<>();
