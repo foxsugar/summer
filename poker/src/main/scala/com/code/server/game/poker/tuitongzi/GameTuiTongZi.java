@@ -140,7 +140,7 @@ public class GameTuiTongZi extends Game{
                 }
             }
 
-            System.out.println("==============zhuangCount" + this.room.getZhuangCount());
+            System.out.println("==============坐庄次数" + this.room.getZhuangCount());
             //是否继续坐庄
             if (isNoticeUpdateLunZhuang()){
                 continueBankerStart();
@@ -243,7 +243,7 @@ public class GameTuiTongZi extends Game{
         }else {
 
             if (isZhuang == false){
-                if (this.room.firstBanerCount == 2){
+                if (this.room.firstBanerCount == this.room.quan){
                     this.room.setZhuangCount(0);
                     sendFinalResult();
                     return 0;
@@ -286,6 +286,8 @@ public class GameTuiTongZi extends Game{
             this.room.firstBanerCount = firstBanerCount;
         }
 
+        logger.info("----当前圈:{}", this.room.firstBanerCount);
+
         betStart();
     }
 
@@ -300,7 +302,7 @@ public class GameTuiTongZi extends Game{
 
         param.put("bankerId", this.bankerId);
 
-        param.put("curGameNumber", this.room.getGameNumber());
+        param.put("curGameNumber", this.room.getCurGameNumber());
 
         param.put("panBottom", this.room.getPotBottom());
 
@@ -704,8 +706,11 @@ public class GameTuiTongZi extends Game{
             if (updateZhuang){
                 this.room.addUserSocre(this.bankerId, - this.offset() + this.room.getPotBottom());
                 this.room.setPotBottom(0);
-                this.room.setZhuangCount(0);
-                this.room.setBankerId(nextTurnId(this.room.getBankerId()));
+
+                if (this.room.quan == firstBanerCount){
+                    this.room.setZhuangCount(0);
+                }
+
             }
         }
 
@@ -727,7 +732,7 @@ public class GameTuiTongZi extends Game{
     public void sendFinalResult(){
 
         //因为是两圈，并且要求换zhu
-        if (firstBanerCount == this.room.quan + 1 && this.room.getZhuangCount() == 0){
+        if (firstBanerCount == this.room.quan  && this.room.getZhuangCount() == 0){
 
             if (this.room.getPotBottom() != 0){
                 room.addUserSocre(this.room.getBankerId(), this.room.getPotBottom() - this.offset());

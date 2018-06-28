@@ -3,7 +3,9 @@ package com.code.server.game.poker.cow;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CowPlayerTest {
 
@@ -28,6 +30,21 @@ public class CowPlayerTest {
 
     @Test
     public void compareWithOtherPlayer() {
+
+
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(3);
+        list.add(2);
+
+        list.sort((o1, o2) -> o1 - o2);
+
+        System.out.println(list);
+//        Optional<Integer> optional = list.stream()
+//                .max((o1, o2) -> o1 - o2);
+//
+//        Integer a = optional.get();
+//        System.out.println("aaa");
     }
 
     @Test

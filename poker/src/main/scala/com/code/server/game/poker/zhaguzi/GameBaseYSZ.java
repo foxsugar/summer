@@ -68,11 +68,11 @@ public class GameBaseYSZ extends Game {
         //房卡场 暂定
         if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
             MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
-            INIT_BOTTOM_CHIP = 50d;
-            genZhuList.add(100);
-            genZhuList.add(150);
-            genZhuList.add(200);
-            genZhuList.add(250);
+            INIT_BOTTOM_CHIP = 1d;
+            genZhuList.add(2);
+            genZhuList.add(3);
+//            genZhuList.add(200);
+//            genZhuList.add(250);
             return;
         }
 
@@ -170,6 +170,7 @@ public class GameBaseYSZ extends Game {
         shuffle();//洗牌
         deal();//发牌
         initDiZhu();
+        computeCardType();
         chip = INIT_BOTTOM_CHIP;
         mustBet();
         curUserId = room.getBankerId();
@@ -510,6 +511,18 @@ public class GameBaseYSZ extends Game {
         updateLastOperateTime();
 
         return 0;
+    }
+
+
+    protected void computeCardType(){
+
+        for (PlayerYSZ playerCardInfo : playerCardInfos.values()){
+            Player p = new Player(playerCardInfo.getUserId(), ArrUtils.cardCode.get(playerCardInfo.getHandcards().get(0)), ArrUtils.cardCode.get(playerCardInfo.getHandcards().get(1)), ArrUtils.cardCode.get(playerCardInfo.getHandcards().get(2)));
+            playerCardInfo.setCardType(p.getCategory().toString());
+            if (PokerItem.is235(p.getPokers())) {
+                playerCardInfo.setCardType("BaoZiShaShou");
+            }
+        }
     }
 
 //    /**
