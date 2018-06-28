@@ -1,6 +1,8 @@
 package com.code.server.redis.service;
 
+import com.code.server.constant.db.LogInfo;
 import com.code.server.redis.config.IConstant;
+import com.code.server.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.HashOperations;
@@ -32,6 +34,34 @@ public class LogRedisService implements IConstant {
         HashOperations<String, String, String> gameNum = redisTemplate.opsForHash();
 
         return gameNum.entries(getKayAddDateStr(LOG_GOLDINCOME,date));
+    }
+
+
+    public LogInfo getLogInfo(String... date){
+        String d = null;
+        if (date == null || date.length == 0) {
+            d = getTodayStr();
+        } else {
+            d = date[0];
+        }
+
+        HashOperations<String, String, String> logInfo = redisTemplate.opsForHash();
+
+        String json =  logInfo.get(LOG_OTHER_INFO,d);
+        if (json == null) {
+            return new LogInfo();
+        }
+        return JsonUtil.readValue(json, LogInfo.class);
+    }
+
+
+    public void setLogInfo(LogInfo logInfo) {
+        if (logInfo == null) {
+            logInfo = new LogInfo();
+        }
+        HashOperations<String, String, String> info = redisTemplate.opsForHash();
+        info.put(LOG_OTHER_INFO, getTodayStr(), JsonUtil.toJson(logInfo));
+
     }
 
     public double getChargeRebate(String date){
@@ -80,6 +110,27 @@ public class LogRedisService implements IConstant {
         gameNum.putIfAbsent(LOG_CHARGE_REBATE, getTodayStr(), ""+num);
     }
 
+
+    public void logCharge(int orign, double chargeType, double money) {
+        LogInfo logInfo = getLogInfo();
+        String key = orign +"|"+chargeType;
+        double old = logInfo.getChargeInfo().getOrDefault(key, 0D);
+        logInfo.getChargeInfo().put(key, money + old);
+        setLogInfo(logInfo);
+    }
+
+    public void logRegisterUser() {
+        LogInfo logInfo = getLogInfo();
+        logInfo.setRegisterUser(logInfo.getRegisterUser() + 1);
+        setLogInfo(logInfo);
+    }
+    public void logTakeOutNum(double num) {
+        LogInfo logInfo = getLogInfo();
+        logInfo.setTakeOutNum(logInfo.getTakeOutNum() + num);
+        setLogInfo(logInfo);
+    }
+
+
     private String getKayAddDateStr(String key) {
         return key + getTodayStr();
     }
@@ -91,6 +142,9 @@ public class LogRedisService implements IConstant {
     private String getTodayStr() {
         return LocalDate.now().toString();
     }
+
+
+
 
     public static void main(String[] args) {
         System.out.println(LocalDate.now().toString());

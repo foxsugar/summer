@@ -1,5 +1,6 @@
 package com.code.server.game.mahjong.logic;
 
+import com.code.server.constant.data.DataManager;
 import com.code.server.constant.game.RoomStatistics;
 import com.code.server.redis.service.RedisManager;
 
@@ -23,6 +24,28 @@ public class RoomInfoGoldHeLe extends RoomInfo {
         addUser2RoomRedis(userId);
     }
 
+
+    public void init(String roomId, long userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, long createUser, long bankerId, int mustZimo) {
+        this.roomId = roomId;
+        this.modeTotal = modeTotal;
+        this.mode = mode;
+        this.multiple = multiple;
+        this.gameNumber = gameNumber;
+        this.personNumber = personNumber;
+        this.createUser = createUser;
+        this.bankerId = bankerId;
+        this.isInGame = false;
+        this.bankerMap.put(1, bankerId);
+        this.maxCircle = gameNumber;
+        this.circleNumber.put(1, 1);
+        this.mustZimo = mustZimo;
+
+        this.createNeedMoney = 0;
+        this.goldRoomType = 100;
+        this.multiple = goldRoomType;
+        this.isAddGold = DataManager.data.getRoomDataMap().get(this.gameType).getIsAddGold() == 1;
+        clubRoomSetId();
+    }
 
     @Override
     public void addUserSocre(long userId, double score) {
@@ -66,6 +89,16 @@ public class RoomInfoGoldHeLe extends RoomInfo {
     @Override
     public void clearReadyStatus(boolean isAddGameNum) {
 
+        //抽水
+        GameInfo gameInfo = (GameInfo)this.game;
+        for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
+            if (playerCardsInfoMj.getScore() > 0) {
+                double g = 3 * playerCardsInfoMj.getScore() / 100;
+                RedisManager.getUserRedisService().addUserGold(playerCardsInfoMj.getUserId(), -g);
+                //返利
+
+            }
+        }
         super.clearReadyStatus(isAddGameNum);
         //todo 如果 金币不够 退出
         int minGold = getOutGold();

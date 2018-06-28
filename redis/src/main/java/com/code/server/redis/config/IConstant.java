@@ -64,6 +64,7 @@ public interface IConstant {
     String LOG_GAMENUM = "log_gameNum:";
     String LOG_GOLDINCOME = "log_goldIncome:";
     String LOG_CHARGE_REBATE = "log_chargeRebate";
+    String LOG_OTHER_INFO = "log_otherInfo";
 
 
 }

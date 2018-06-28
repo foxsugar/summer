@@ -456,7 +456,7 @@ public class WechatPayController {
                                 //查询玩家
                                 User user = userService.getUserByUserId(userId);
                                 referee = user.getReferee();
-                                //修改玩家豆豆
+                                //修改玩家货币
                                 if (charge.getChargeType() == 0) {
                                     before = user.getMoney();
                                     user.setMoney(user.getMoney() + addMoney);
@@ -473,6 +473,9 @@ public class WechatPayController {
                             charge.setCharge_before_money(before);
                             charge.setCharge_after_money(after);
                             chargeService.save(charge);
+
+                            //记录到reids
+                            RedisManager.getLogRedisService().logCharge(1,charge.getChargeType(), charge.getMoney());
 
                             Map<String, String> rs = new HashMap<>();
                             MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());

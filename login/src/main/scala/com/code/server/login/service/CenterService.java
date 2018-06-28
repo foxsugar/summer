@@ -156,6 +156,9 @@ public class CenterService {
         logRecord.getGoldRoomIncomeData().getInfo().putAll(RedisManager.getLogRedisService().getGoldIncomeInfo(date));
         //返利数据
         logRecord.setChargeRebate(RedisManager.getLogRedisService().getChargeRebate(date));
+
+        //其他信息
+        logRecord.setLogInfo(RedisManager.getLogRedisService().getLogInfo(date));
     }
 
 
@@ -180,6 +183,7 @@ public class CenterService {
                 RedisManager.getLogRedisService().addChargeRebate(data.getChargeRebate());
                 RedisManager.getLogRedisService().putGameNum(data.getGameNumData().getInfo());
                 RedisManager.getLogRedisService().putGoldIncome(data.getGoldRoomIncomeData().getInfo());
+                RedisManager.getLogRedisService().setLogInfo(data.getLogInfo());
             }
         }
     }

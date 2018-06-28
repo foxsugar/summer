@@ -209,6 +209,8 @@ public class MenuHandler extends AbstractHandler {
 
                     chargeService.save(charge);
 
+                    //redis 提现记录
+                    RedisManager.getLogRedisService().logTakeOutNum(rebate);
 
                     SimpleDateFormat dateFormat = new SimpleDateFormat(
                             "yyyy-MM-dd HH:mm:ss.SSS");
