@@ -48,73 +48,73 @@ public class CardUtils {
         cardsDict.put(3, 2);
         cardsDict.put(4, 3);
 
-        //2
+        //K
         cardsDict.put(5, 48);
         cardsDict.put(6, 49);
         cardsDict.put(7, 50);
         cardsDict.put(8, 51);
 
-        //3
+        //Q
         cardsDict.put(9, 44);
         cardsDict.put(10, 45);
         cardsDict.put(11, 46);
         cardsDict.put(12, 47);
 
-        //4
+        //J
         cardsDict.put(13, 40);
         cardsDict.put(14, 41);
         cardsDict.put(15, 42);
         cardsDict.put(16, 43);
 
-        //5
+        //10
         cardsDict.put(17, 36);
         cardsDict.put(18, 37);
         cardsDict.put(19, 38);
         cardsDict.put(20, 39);
 
-        //6
+        //9
         cardsDict.put(21, 32);
         cardsDict.put(22, 33);
         cardsDict.put(23, 34);
         cardsDict.put(24, 35);
 
-        //7
+        //8
         cardsDict.put(25, 28);
         cardsDict.put(26, 29);
         cardsDict.put(27, 30);
         cardsDict.put(28, 31);
 
-        //8
+        //7
         cardsDict.put(29, 24);
         cardsDict.put(30, 25);
         cardsDict.put(31, 26);
         cardsDict.put(32, 27);
 
-        //9
+        //6
         cardsDict.put(33, 20);
         cardsDict.put(34, 21);
         cardsDict.put(35, 22);
         cardsDict.put(36, 23);
 
-        //10
+        //5
         cardsDict.put(37, 16);
         cardsDict.put(38, 17);
         cardsDict.put(39, 18);
         cardsDict.put(40, 19);
 
-        //J
+        //4
         cardsDict.put(41, 12);
         cardsDict.put(42, 13);
         cardsDict.put(43, 14);
         cardsDict.put(44, 15);
 
-        //Q
+        //3
         cardsDict.put(45, 8);
         cardsDict.put(46, 9);
         cardsDict.put(47, 10);
         cardsDict.put(48, 11);
 
-        //K
+        //2
         cardsDict.put(49, 4);
         cardsDict.put(50, 5);
         cardsDict.put(51, 6);

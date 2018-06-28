@@ -1,7 +1,13 @@
 package com.code.server.game.poker.cow;
 
+import org.springframework.util.CollectionUtils;
+
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class
 CowPlayer {
@@ -99,6 +105,7 @@ CowPlayer {
         Integer grade = CardUtils.getPaiXing(this.pokers);
         this.grade = grade;
         this.id = id;
+        this.pokers.sort((x, y) -> x - y);
     }
 
     public CowPlayer(Long id, Integer card1, Integer card2, Integer card3, Integer card4, Integer card5, boolean localRule) throws Exception {
@@ -123,6 +130,7 @@ CowPlayer {
         Integer grade = CardUtils.getPaiXing(this.pokers);
         this.grade = grade;
         this.id = id;
+        this.pokers.sort((x, y) -> x - y);
     }
 
     public CowPlayer compare(CowPlayer player1, CowPlayer player2){
@@ -298,17 +306,33 @@ CowPlayer {
         Integer a = player1.getPokers().get(0);
         Integer b = player2.getPokers().get(0);
 
-        if (a / 4 == 0){
-            a = player1.getPokers().get(1);
-        }
+//        if (a / 4 == 0){
+//            a = player1.getPokers().get(1);
+//        }
+//
+//        if (b / 4 == 0){
+//            b = player2.getPokers().get(1);
+//        }
+//
+//        if (a < b){
+//            return player1;
+//        }
 
-        if (b / 4 == 0){
-            b = player2.getPokers().get(1);
-        }
+        //过滤掉A然后找到点数最大的一种牌
 
-        if (a < b){
-            return player1;
-        }
+       Optional<Integer> optionalA= player1.getPokers()
+                .stream()
+                .filter(x -> x / 4 == 0)
+                .max( (x1, x2) -> x1 - x2);
+
+       Optional<Integer> optionalB = player2.getPokers()
+               .stream()
+               .filter(x -> x / 4 == 0)
+               .max((x1, x2) -> x1 - x2);
+
+       if (optionalA.get() < optionalB.get()){
+           return player1;
+       }
 
         return player2;
     }
