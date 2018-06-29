@@ -114,7 +114,7 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
         int maxPoint = 0;
         for (HuCardType huCardType : huList) {
 
-            int temp = getMaxPoint(huCardType);
+            int temp = getMaxPoint(huCardType, !isZimo);
             if(temp > maxPoint){
                 maxPoint = temp;
             }

@@ -10,19 +10,6 @@ import com.code.server.redis.service.RedisManager;
 public class RoomInfoGoldHeLe extends RoomInfo {
 
 
-    protected void roomAddUser(long userId) {
-
-        this.users.add(userId);
-        this.userStatus.put(userId, 0);
-        this.userScores.put(userId, 0D);
-        if (isGoldRoom()) {
-            this.userScores.put(userId, RedisManager.getUserRedisService().getUserGold(userId));
-        }
-        this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
-        this.canStartUserId = users.get(0);
-
-        addUser2RoomRedis(userId);
-    }
 
 
     public void init(String roomId, long userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, long createUser, long bankerId, int mustZimo) {
@@ -73,6 +60,20 @@ public class RoomInfoGoldHeLe extends RoomInfo {
     }
 
 
+    protected void roomAddUser(long userId) {
+
+        this.users.add(userId);
+        this.userStatus.put(userId, 0);
+        this.userScores.put(userId, 0D);
+
+        this.userScores.put(userId, RedisManager.getUserRedisService().getUserGold(userId));
+
+        this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
+        this.canStartUserId = users.get(0);
+
+        addUser2RoomRedis(userId);
+    }
+
     @Override
     protected boolean isCanJoinCheckMoney(long userId) {
         //todo 检验金币
@@ -90,7 +91,7 @@ public class RoomInfoGoldHeLe extends RoomInfo {
     public void clearReadyStatus(boolean isAddGameNum) {
 
         //抽水
-        GameInfo gameInfo = (GameInfo)this.game;
+        GameInfo gameInfo = (GameInfo) this.game;
         for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
             if (playerCardsInfoMj.getScore() > 0) {
                 double g = 3 * playerCardsInfoMj.getScore() / 100;

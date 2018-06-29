@@ -14,7 +14,7 @@ import com.code.server.util.SpringUtil;
 public class RoomWzq extends Room {
 
 
-    public static int createRoom(long userId , String roomType,String gameType,int multiple,int personNumber)  {
+    public static int createRoom(long userId , String roomType,String gameType,int multiple,int personNumber,int gameNumber)  {
         //身上的钱够不够
 //        if(RedisManager.getUserRedisService().getUserGold(userId) < multiple){
 //            return ErrorCode.NOT_HAVE_MORE_MONEY;
@@ -31,6 +31,7 @@ public class RoomWzq extends Room {
         room.roomType = roomType;
         room.bankerId = userId;
         room.multiple = multiple;
+        room.gameNumber = gameNumber;
 
 
         RoomManager.addRoom(room.roomId, "" + serverConfig.getServerId(), room);

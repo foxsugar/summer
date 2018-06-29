@@ -11,4 +11,5 @@ public interface IChargeType {
     int CHARGE_CARD = 4;
     int BIND_REFERRER = 5;
     int AGENT = 7;
+    int APPLE = 8;
 }

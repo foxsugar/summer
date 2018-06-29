@@ -57,6 +57,14 @@ public class GameWzq extends Game {
     }
 
 
+    public int setScore(long userId, int score) {
+        if (roomWzq.getMultiple() != 0 || score < 0) {
+            return ErrorCode.SET_SCORE_ERROR;
+        }
+        this.roomWzq.setMultiple(score);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "setScore", score), this.getUsers());
+        return 0;
+    }
 
     protected void sendFinalResult() {
         //所有牌局都结束
