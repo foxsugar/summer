@@ -303,32 +303,13 @@ CowPlayer {
 
     //不加扎金花算法的标准比较
     public CowPlayer standardCompare(CowPlayer player1, CowPlayer player2){
-        Integer a = player1.getPokers().get(0);
-        Integer b = player2.getPokers().get(0);
 
-//        if (a / 4 == 0){
-//            a = player1.getPokers().get(1);
-//        }
-//
-//        if (b / 4 == 0){
-//            b = player2.getPokers().get(1);
-//        }
-//
-//        if (a < b){
-//            return player1;
-//        }
-
-        //过滤掉A然后找到点数最大的一种牌
-
-       Optional<Integer> optionalA= player1.getPokers()
-                .stream()
-                .filter(x -> x / 4 == 0)
-                .max( (x1, x2) -> x1 - x2);
-
-       Optional<Integer> optionalB = player2.getPokers()
-               .stream()
-               .filter(x -> x / 4 == 0)
-               .max((x1, x2) -> x1 - x2);
+        Optional<Integer> optionalA = player1.getPokers().stream()
+                .filter(x -> ( x >= 4))
+                .min(Integer::compare);
+        Optional<Integer> optionalB = player2.getPokers().stream()
+                .filter(x -> (x >= 4))
+                .min(Integer::compare);
 
        if (optionalA.get() < optionalB.get()){
            return player1;
