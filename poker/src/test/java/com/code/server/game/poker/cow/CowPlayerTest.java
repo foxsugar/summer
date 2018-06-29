@@ -155,6 +155,8 @@ public class CowPlayerTest {
 
         List<Integer> list = CardUtils.separateNiuX(p1.getPokers());
 
+        p1.compareWithOtherPlayer(p2);
+
         System.out.println(list);
 
 
