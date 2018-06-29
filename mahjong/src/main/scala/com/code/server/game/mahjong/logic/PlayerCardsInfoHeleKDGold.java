@@ -76,7 +76,7 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
                 double t = score * 3;
                 PlayerCardsInfoMj dianGangUser = this.gameInfo.getPlayerCardsInfos().get(diangangUser);
                 dianGangUser.addGangScore(-(int)t);
-                double realScore = dianGangUser.addScore(-t);
+                double realScore = -dianGangUser.addScore(-t);
                 this.roomInfo.addUserSocre(dianGangUser.getUserId(), -t);
                 allScore += realScore;
                 allGangScore += t;
@@ -86,7 +86,7 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
             for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
                 if (playerCardsInfoMj.getUserId() != this.userId) {
                     playerCardsInfoMj.addGangScore(-score);
-                    double realScote = playerCardsInfoMj.addScore(-score);
+                    double realScote = -playerCardsInfoMj.addScore(-score);
                     allScore += realScote;
                     this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -score);
                     allGangScore += score;
@@ -115,11 +115,11 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
         if (isDabao) {
             PlayerCardsInfoMj dabaoUser = gameInfo.getPlayerCardsInfos().get(dianpaoUser);
             for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
-                if (playerCardsInfoMj.getUserId() != this.userId) {
+                if (playerCardsInfoMj.getUserId() != dianpaoUser) {
                     playerCardsInfoMj.addScore(-playerCardsInfoMj.getScore());
                     room.addUserSocre(playerCardsInfoMj.getUserId(), -playerCardsInfoMj.getScore());
 
-                    double realScore = dabaoUser.addScore(playerCardsInfoMj.getGangScore());
+                    double realScore = -dabaoUser.addScore(playerCardsInfoMj.getGangScore());
                     room.addUserSocre(dianpaoUser, playerCardsInfoMj.getGangScore());
 
                     playerCardsInfoMj.addScore(realScore);
@@ -167,15 +167,15 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
                     }
                 }
                 tempScore *= room.getMultiple();
-                allScore += tempScore;
+//                allScore += tempScore;
 
                 double realScore = 0;
                 if(!isBaoAll){
-                    realScore = playerCardsInfoMj.addScore(-tempScore);
+                    realScore = -playerCardsInfoMj.addScore(-tempScore);
                     this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -tempScore);
                 }else{
                     PlayerCardsInfoMj dpUser = this.gameInfo.getPlayerCardsInfos().get(dianpaoUser);
-                    realScore = dpUser.addScore(-tempScore);
+                    realScore = -dpUser.addScore(-tempScore);
                     this.roomInfo.addUserSocre(dpUser.getUserId(), -tempScore);
                 }
                 allScore += realScore;
