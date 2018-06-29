@@ -3,25 +3,29 @@ package com.code.server.login.action;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.db.dao.IAgentUserDao;
+import com.code.server.db.dao.IChargeDao;
 import com.code.server.db.dao.ILogRecordDao;
 import com.code.server.db.dao.IUserDao;
 import com.code.server.db.model.AgentUser;
+import com.code.server.db.model.Charge;
 import com.code.server.db.model.LogRecord;
 import com.code.server.db.model.User;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.util.MD5Util;
+import com.code.server.login.vo.DChargeAdminVo;
 import com.code.server.login.vo.OneLevelInfoVo;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.JsonUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import scala.Char;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by dajuejinxian on 2018/6/22.
@@ -39,12 +43,28 @@ public class DemoAction{
     @Autowired
     private IUserDao userDao;
 
+    @Autowired
+    private IChargeDao chargeDao;
+
+    public static final int MONEY_TYPE = 0;
+
+    public static final int GOLD_TYPE = 1;
+
     public static String getToken(long userId) {
         return MD5Util.MD5Encode("salt," + userId + System.currentTimeMillis(), "UTF-8");
     }
 
     public static Map<String, Object> getUserInfo(HttpServletRequest request){
         return (Map<String, Object>)AgentUtil.caches.get("a");
+    }
+
+    @RequestMapping("/fetchAllPlayers")
+    public AgentResponse fetchAllPlayers(int pageSize, int curPage){
+        Page page =  userDao.findAll(new PageRequest(curPage, pageSize));
+        List<User> list = page.getContent();
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(list);
+        return agentResponse;
     }
 
     @RequestMapping("/fetchPlayer")
@@ -73,6 +93,32 @@ public class DemoAction{
     public AgentResponse upwardDelegates(HttpServletRequest request, long userId){
 
         return null;
+    }
+
+    @RequestMapping("/charges")
+    public AgentResponse chargeRecord(HttpServletRequest request, long userId){
+
+        List<Integer> list = Arrays.asList(MONEY_TYPE, GOLD_TYPE);
+        List<Charge> chargeList = null;
+
+        if (userId == 0){
+            chargeList = chargeDao.getChargesByChargeTypeIn(list);
+        }else {
+            chargeList = chargeDao.getChargesByChargeTypeInAndUseridIs(list, userId);
+        }
+
+        List<DChargeAdminVo> result = new ArrayList<>();
+        for (Charge charge : chargeList){
+            DChargeAdminVo chargeAdminVo = new DChargeAdminVo();
+            BeanUtils.copyProperties(charge, chargeAdminVo);
+            result.add(chargeAdminVo);
+        }
+
+        Map<String, Object> res = new HashMap<>();
+        res.put("result", result);
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(res);
+        return agentResponse;
     }
 
     @RequestMapping("/downward")
