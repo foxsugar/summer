@@ -195,7 +195,7 @@ public class  GameZhaGuZiLiu extends GameZhaGuZi{
         }else {
             logger.info("平局 不计算输赢");
         }
-
+        this.setTotalBase((int)(base + 0.0d));
         sendGameResult(ret);
     }
 

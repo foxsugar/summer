@@ -18,6 +18,16 @@ public class GameZhaGuZiVo implements IfaceGameVo {
 
     protected long currentTalkId;
 
+    protected boolean restart = false;
+
+    public boolean isRestart() {
+        return restart;
+    }
+
+    public void setRestart(boolean restart) {
+        this.restart = restart;
+    }
+
     public long getCurrentTalkId() {
         return currentTalkId;
     }

@@ -60,11 +60,21 @@ public class GameZhaGuZi extends Game {
 
     protected  PlayerZhaGuZi lastOverPlayer = null;
 
+    protected boolean restart = false;
+
     //说话时候的倍率
     protected int base;
 
     //总倍率
     protected int totalBase;
+
+    public boolean isRestart() {
+        return restart;
+    }
+
+    public void setRestart(boolean restart) {
+        this.restart = restart;
+    }
 
     public int getBase() {
         return base;
@@ -97,6 +107,7 @@ public class GameZhaGuZi extends Game {
         GameZhaGuZiVo vo = new GameZhaGuZiVo();
         BeanUtils.copyProperties(this, vo);
         vo.setBase(this.base);
+        vo.setRestart(this.restart);
 //        vo.cards.clear();
 
         List<Integer> aList = new ArrayList<>();
@@ -144,15 +155,19 @@ public class GameZhaGuZi extends Game {
     }
 
     public void startGame(List<Long> users, Room room) {
-
         this.room = (RoomZhaGuZi) room;
         this.users = users;
+        init();
+    }
 
+    public void init(){
         initPlayer();
         initCards();
-
         //通知其他人游戏已经开始
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameZhaGuZiBegin", "ok"), this.getUsers());
+
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("restart", this.restart);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameZhaGuZiBegin", rs), this.getUsers());
 
         deal();
 
@@ -177,7 +192,6 @@ public class GameZhaGuZi extends Game {
         }
 
         talkStart(this.room.lastWinnderId);
-
     }
 
     //发牌
@@ -425,11 +439,11 @@ public class GameZhaGuZi extends Game {
 
         //没人亮牌
         if (count == 0) {
-
+            this.restart = true;
             computeShuffle();
 
         } else {
-
+            this.restart = false;
             continuePlay();
         }
     }
@@ -927,13 +941,12 @@ public class GameZhaGuZi extends Game {
         this.sendFinalResult();
     }
 
-    //重新洗牌算分
+    //重新洗牌 不算分
     public void computeShuffle() {
 
-        status = ZhaGuZiConstant.COMPUTE;
-
-        sendGameResult(1);
-
+        status = ZhaGuZiConstant.RESTART;
+//        sendGameResult(1);
+        this.init();
     }
 
     //认输了
@@ -1149,6 +1162,7 @@ public class GameZhaGuZi extends Game {
 
     public void initCards() {
 
+        this.cards.clear();
         for (int i = 0; i < 54; i++) {
 
             if (i > 45 && i < 50) {
