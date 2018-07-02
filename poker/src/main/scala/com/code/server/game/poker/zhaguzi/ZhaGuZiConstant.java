@@ -11,8 +11,8 @@ public class ZhaGuZiConstant {
     public static final Integer START_GAME = 1;
     //说话完毕
     public static final Integer TALK = 2;
-    //提示认输
-    public static final Integer GIVE_UP = 3;
+    //如果没人亮3和扎股
+    public static final Integer RESTART = 3;
     //刚开是出牌
     public static final Integer BEING_DISCARD = 4;
     //算分
