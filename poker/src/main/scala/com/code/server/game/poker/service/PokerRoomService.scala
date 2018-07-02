@@ -213,10 +213,10 @@ object PokerRoomService {
       case "createWZQRoom"=>
         val roomType = params.path("roomType").asText()
         val gameType = params.path("gameType").asText()
-        val personNumber = params.get("personNumber").asInt()
-        val multiple = params.get("multiple").asInt()
-        val gameNumber = params.get("gameNumber").asInt()
-        if(multiple <=0 ) return ErrorCode.REQUEST_PARAM_ERROR
+        val personNumber = params.path("personNumber").asInt()
+        val multiple = params.path("multiple").asInt()
+        val gameNumber = params.path("gameNumber").asInt()
+//        if(multiple <=0 ) return ErrorCode.REQUEST_PARAM_ERROR
         return RoomWzq.createRoom(userId,roomType,gameType,multiple,personNumber,gameNumber)
 
       case "getAllRoom" =>

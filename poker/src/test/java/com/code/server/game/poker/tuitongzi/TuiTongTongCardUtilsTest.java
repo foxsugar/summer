@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
@@ -38,6 +40,22 @@ public class TuiTongTongCardUtilsTest {
         HashMap map = new HashMap();
 
 
+    }
+
+    public static boolean isNumber(String str) {
+        //采用正则表达式的方式来判断一个字符串是否为数字，这种方式判断面比较全
+        //可以判断正负、整数小数
+        boolean isInt = Pattern.compile("^-?[1-9]\\d*$").matcher(str).find();
+        boolean isDouble = Pattern.compile("^-?([1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*|0?\\.0+|0)$").matcher(str).find();
+
+        return isInt || isDouble;
+    }
+
+    @Test
+    public void ttt(){
+        String str = "-11111";
+        boolean isNumber = isNumber(str);
+        System.out.println(isNumber);
     }
 
     @Test

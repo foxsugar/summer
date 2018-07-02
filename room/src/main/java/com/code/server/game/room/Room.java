@@ -77,6 +77,8 @@ public class Room implements IfaceRoom {
 
     public boolean isRobotRoom;
 
+    protected long lastOperateTime;
+
 
     public static String getRoomIdStr(int roomId) {
         String s = "000000" + roomId;
@@ -632,6 +634,7 @@ public class Room implements IfaceRoom {
         if (isAddGameNum) {
             this.curGameNumber += 1;
         }
+        lastOperateTime = System.currentTimeMillis();
     }
 
     public void addUserSocre(long userId, double score) {
@@ -1173,6 +1176,15 @@ public class Room implements IfaceRoom {
 
     public Room setRobotRoom(boolean robotRoom) {
         isRobotRoom = robotRoom;
+        return this;
+    }
+
+    public long getLastOperateTime() {
+        return lastOperateTime;
+    }
+
+    public Room setLastOperateTime(long lastOperateTime) {
+        this.lastOperateTime = lastOperateTime;
         return this;
     }
 }
