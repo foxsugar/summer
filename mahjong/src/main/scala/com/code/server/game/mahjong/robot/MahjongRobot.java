@@ -40,7 +40,7 @@ public class MahjongRobot {
             if(roomInfo.getCurGameNumber()>1 && now - roomInfo.getLastOperateTime() > READY_TIME)
             roomInfo.getUserStatus().forEach((uid,status)->{
                 if (status != Room.STATUS_READY) {
-                    getReady(roomInfo, uid);
+                    quitRoom(roomInfo, uid);
                 }
             });
         }
@@ -61,6 +61,25 @@ public class MahjongRobot {
         SpringUtil.getBean(MsgProducer.class).send2Partition("roomService", partition, msgKey, result);
 
     }
+
+
+    public static void quitRoom(Room room, long userId) {
+        String roomId = room.getRoomId();
+        int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
+        KafkaMsgKey msgKey = new KafkaMsgKey();
+
+        msgKey.setRoomId(roomId);
+        msgKey.setPartition(partition);
+        msgKey.setUserId(userId);
+
+        Map<String, Object> put = new HashMap();
+
+
+        ResponseVo result = new ResponseVo("roomService", "quitRoom", put);
+        SpringUtil.getBean(MsgProducer.class).send2Partition("roomService", partition, msgKey, result);
+
+    }
+
     public static void guo(RoomInfo roomInfo, long userId) {
         Map<String, Object> params = new HashMap<>();
         params.put("userId", userId);
