@@ -20,10 +20,12 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
             if (nowGold < temp) {
                 this.score = this.score - nowGold;
                 return -nowGold;
+            }else{
+                this.score = this.score + s;
             }
-
+        }else{
+            this.score = this.score + s;
         }
-        this.score = this.score + s;
         return s;
 
     }

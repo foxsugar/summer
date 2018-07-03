@@ -194,7 +194,7 @@ public class CenterMsgService implements IkafkaMsgId {
             int bindUser1 = own.getReferee();
 
 
-            double addGold = gold * 4;
+            double addGold = gold;
 
             AgentUser agentUser = agentUserService.getAgentUserDao().findAgentUserByInvite_code(""+bindUser1);
             if (agentUser != null) {
