@@ -14,14 +14,9 @@ package com.code.server.game.poker.zhaguzi;
  */
 
 import com.code.server.constant.exception.DataNotFoundException;
-import com.code.server.constant.game.IGameConstant;
-import com.code.server.constant.game.PrepareRoom;
-import com.code.server.constant.game.RoomStatistics;
-import com.code.server.constant.game.UserBean;
+import com.code.server.constant.game.*;
 import com.code.server.constant.response.*;
 import com.code.server.game.poker.config.ServerConfig;
-import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower;
-import com.code.server.game.room.Room;
 import com.code.server.game.room.RoomExtendGold;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
@@ -308,6 +303,15 @@ public class RoomYSZ extends RoomExtendGold {
         prepareRoom.goldRoomType = this.goldRoomType;
         prepareRoom.goldRoomPermission = this.goldRoomPermission;
         return prepareRoom;
+    }
+
+
+    @Override
+    public GameLogKey getGameLogKey() {
+        GameLogKey gameLogKey = super.getGameLogKey();
+        gameLogKey.getParams().put("menpai", "" + this.menPai);
+
+        return gameLogKey;
     }
 
     protected void roomAddUser(long userId) {

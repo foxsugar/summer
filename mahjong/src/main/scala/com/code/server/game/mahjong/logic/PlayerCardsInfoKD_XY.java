@@ -12,11 +12,16 @@ import java.util.Map;
 public class PlayerCardsInfoKD_XY extends PlayerCardsInfoKD {
 
     private static final int ZIMO_MIN_SCORE = 4;
-    protected static final int DIANPAO_MIN_SCORE = 5;
 
     //创建房间mode：显庄 扣听 包杠 （1是0否）
 
 
+    @Override
+    public void init(List<String> cards) {
+        super.init(cards);
+        TING_MIN_SCORE = 5;
+        DIANPAO_MIN_SCORE = 5;
+    }
 
     @Override
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card){
@@ -146,6 +151,7 @@ public class PlayerCardsInfoKD_XY extends PlayerCardsInfoKD {
         //super.huCompute(room, gameInfo, isZimo, dianpaoUser, card);
         String ifXianZhuang = room.getMode();
         if(!ifXianZhuang.isEmpty() && (ifXianZhuang.startsWith("1"))){
+            super.huCompute(room, gameInfo, isZimo, dianpaoUser, card);
             huComputeXZ( room,  gameInfo,  isZimo,  dianpaoUser,  card);
         }else {
             huComputePT( room,  gameInfo,  isZimo,  dianpaoUser,  card);
@@ -304,8 +310,10 @@ public class PlayerCardsInfoKD_XY extends PlayerCardsInfoKD {
             PlayerCardsInfoMj dianpaoPlayer = this.getGameInfo().getPlayerCardsInfos().get(dianpaoUser);
             //庄平胡
             if (isBankerWin) {
-                dianpaoPlayer.addScore(-5);
-                room.addUserSocre(dianpaoUser, -5);
+                dianpaoPlayer.addScore(-15);
+                room.addUserSocre(dianpaoUser, -15);
+                this.addScore(15);
+                room.addUserSocre(this.userId, 15);
             } else {//闲家胡
                 //boolean isBaoHu = !dianpaoPlayer.isTing;
                 //包胡
@@ -316,10 +324,11 @@ public class PlayerCardsInfoKD_XY extends PlayerCardsInfoKD {
                     bankerUser.addScore(-5);
                     room.addUserSocre(bankerUserId, -5);
                 }
+                this.addScore(5);
+                room.addUserSocre(this.userId, 5);
             }
 
-            this.addScore(5);
-            room.addUserSocre(this.userId, 5);
+
         }
     }
 

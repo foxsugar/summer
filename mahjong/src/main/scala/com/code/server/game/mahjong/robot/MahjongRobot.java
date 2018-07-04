@@ -6,6 +6,7 @@ import com.code.server.game.mahjong.config.ServerConfig;
 import com.code.server.game.mahjong.logic.GameInfo;
 import com.code.server.game.mahjong.logic.PlayerCardsInfoMj;
 import com.code.server.game.mahjong.logic.RoomInfo;
+import com.code.server.game.room.Room;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.util.SpringUtil;
 
@@ -18,6 +19,7 @@ import java.util.Map;
 public class MahjongRobot {
 
     private static long INTERVAL_TIME = 1000L * 30;
+    private static long READY_TIME = 1000L * 10;
 
     public static void execute(RoomInfo roomInfo) {
         long now = System.currentTimeMillis();
@@ -35,7 +37,47 @@ public class MahjongRobot {
             }
         } else {//在准备状态
 
+            if(roomInfo.getCurGameNumber()>1 && now - roomInfo.getLastOperateTime() > READY_TIME)
+            roomInfo.getUserStatus().forEach((uid,status)->{
+                if (status != Room.STATUS_READY) {
+                    quitRoom(roomInfo, uid);
+                }
+            });
         }
+    }
+
+    public static void getReady(Room room, long userId) {
+        String roomId = room.getRoomId();
+        int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
+        KafkaMsgKey msgKey = new KafkaMsgKey();
+
+        msgKey.setRoomId(roomId);
+        msgKey.setPartition(partition);
+        msgKey.setUserId(userId);
+
+        Map<String, Object> put = new HashMap();
+
+        ResponseVo result = new ResponseVo("roomService", "getReady", put);
+        SpringUtil.getBean(MsgProducer.class).send2Partition("roomService", partition, msgKey, result);
+
+    }
+
+
+    public static void quitRoom(Room room, long userId) {
+        String roomId = room.getRoomId();
+        int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
+        KafkaMsgKey msgKey = new KafkaMsgKey();
+
+        msgKey.setRoomId(roomId);
+        msgKey.setPartition(partition);
+        msgKey.setUserId(userId);
+
+        Map<String, Object> put = new HashMap();
+
+
+        ResponseVo result = new ResponseVo("roomService", "quitRoom", put);
+        SpringUtil.getBean(MsgProducer.class).send2Partition("roomService", partition, msgKey, result);
+
     }
 
     public static void guo(RoomInfo roomInfo, long userId) {

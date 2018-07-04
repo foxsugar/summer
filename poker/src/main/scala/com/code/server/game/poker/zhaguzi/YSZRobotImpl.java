@@ -1,6 +1,7 @@
 package com.code.server.game.poker.zhaguzi;
 
 import com.code.server.constant.kafka.KafkaMsgKey;
+import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.robot.ResponseRobotVo;
 import com.code.server.game.room.Room;
@@ -39,14 +40,14 @@ public class YSZRobotImpl implements YSZRobot {
         SpringUtil.getBean(MsgProducer.class).send2Partition("gameService", partition, msgKey, result);
     }
 
-    public void exe(GameYSZ game){
+    public void exe(GameYSZ game) {
 
-        if (game == null || game.curUserId == 0){
+        if (game == null || game.curUserId == 0) {
             logger.info("牌局结束");
             return;
         }
 
-        if (game.aliveUser.size() < 2){
+        if (game.aliveUser.size() < 2) {
             logger.info("牌局结束");
             return;
         }
@@ -68,7 +69,7 @@ public class YSZRobotImpl implements YSZRobot {
     }
 
     @Override
-    public void bet(GameYSZ game){
+    public void bet(GameYSZ game) {
         String roomId = game.getRoom().getRoomId();
         int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
         KafkaMsgKey msgKey = new KafkaMsgKey();
@@ -80,6 +81,41 @@ public class YSZRobotImpl implements YSZRobot {
         msgKey.setUserId(game.curUserId);
         ResponseRobotVo result = new ResponseRobotVo("gameService", "call", put);
         SpringUtil.getBean(MsgProducer.class).send2Partition("gameService", partition, msgKey, result);
+
+    }
+
+
+    public void getReady(Room room, long userId) {
+        String roomId = room.getRoomId();
+        int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
+        KafkaMsgKey msgKey = new KafkaMsgKey();
+
+        msgKey.setRoomId(roomId);
+        msgKey.setPartition(partition);
+        msgKey.setUserId(userId);
+
+        Map<String, Object> put = new HashMap();
+
+
+        ResponseVo result = new ResponseVo("roomService", "getReady", put);
+        SpringUtil.getBean(MsgProducer.class).send2Partition("roomService", partition, msgKey, result);
+
+    }
+
+    public void quitRoom(Room room, long userId) {
+        String roomId = room.getRoomId();
+        int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
+        KafkaMsgKey msgKey = new KafkaMsgKey();
+
+        msgKey.setRoomId(roomId);
+        msgKey.setPartition(partition);
+        msgKey.setUserId(userId);
+
+        Map<String, Object> put = new HashMap();
+
+
+        ResponseVo result = new ResponseVo("roomService", "quitRoom", put);
+        SpringUtil.getBean(MsgProducer.class).send2Partition("roomService", partition, msgKey, result);
 
     }
 
@@ -108,13 +144,17 @@ public class YSZRobotImpl implements YSZRobot {
             }
         } else {
             //如果没在游戏中
+            if (room.getCurGameNumber() > 1 && now - ((RoomYSZ) room).getLastReadyTime() > 1000* 10) {
+                room.getUserStatus().forEach((k,v) ->{
+                    if (v != Room.STATUS_READY) {
+                        quitRoom(room,k);
+                    }
+                });
+            }
             if (r.getUsers().size() >= 2) {
                 long t = now - r.getLastReadyTime();
                 if (r.isAllReady() && t > SECOND * 30) {
-
-                    System.out.println("start=============");
                     r.startGame();
-
                 }
             }
 
