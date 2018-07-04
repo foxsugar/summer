@@ -86,7 +86,7 @@ public class GameInfoHeleKD extends GameInfoXYKD {
 
 //        room.isHasMode(mode_明听);
 //        String ifAnKou = room.getMode();
-        if(room.isHasMode(mode_明听)){
+        if(!room.isHasMode(mode_明听)){
             tingAT(userId,card);
         }else {
             tingMT(userId,card);

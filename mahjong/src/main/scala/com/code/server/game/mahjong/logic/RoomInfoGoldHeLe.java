@@ -2,7 +2,14 @@ package com.code.server.game.mahjong.logic;
 
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.game.RoomStatistics;
+import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.KafkaMsgKey;
+import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.SpringUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2018/6/23.
@@ -43,8 +50,9 @@ public class RoomInfoGoldHeLe extends RoomInfo {
             double temp = -score;
             double nowGold = RedisManager.getUserRedisService().getUserGold(userId);
             if (nowGold < temp) {
-                score = -temp;
+                score = -nowGold;
             }
+
 
         }
 
@@ -97,6 +105,13 @@ public class RoomInfoGoldHeLe extends RoomInfo {
                 double g = 3 * playerCardsInfoMj.getScore() / 100;
                 RedisManager.getUserRedisService().addUserGold(playerCardsInfoMj.getUserId(), -g);
                 //返利
+
+                Map<String, Object> addGold = new HashMap<>();
+                addGold.put("userId", playerCardsInfoMj.getUserId());
+                addGold.put("gold",g);
+                KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_GUESS_ADD_GOLD);
+                MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+                msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addGold);
 
             }
         }

@@ -102,6 +102,23 @@ public class YSZRobotImpl implements YSZRobot {
 
     }
 
+    public void quitRoom(Room room, long userId) {
+        String roomId = room.getRoomId();
+        int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
+        KafkaMsgKey msgKey = new KafkaMsgKey();
+
+        msgKey.setRoomId(roomId);
+        msgKey.setPartition(partition);
+        msgKey.setUserId(userId);
+
+        Map<String, Object> put = new HashMap();
+
+
+        ResponseVo result = new ResponseVo("roomService", "quitRoom", put);
+        SpringUtil.getBean(MsgProducer.class).send2Partition("roomService", partition, msgKey, result);
+
+    }
+
     @Override
     public void execute() {
         RoomManager.getInstance().getRobotRoom().forEach(this::doExecute);
@@ -127,10 +144,10 @@ public class YSZRobotImpl implements YSZRobot {
             }
         } else {
             //如果没在游戏中
-            if (room.getCurGameNumber() > 1 && now - ((RoomYSZ) room).getLastReadyTime() > 1000* 5) {
+            if (room.getCurGameNumber() > 1 && now - ((RoomYSZ) room).getLastReadyTime() > 1000* 10) {
                 room.getUserStatus().forEach((k,v) ->{
                     if (v != Room.STATUS_READY) {
-                        getReady(room,k);
+                        quitRoom(room,k);
                     }
                 });
             }
