@@ -111,7 +111,16 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(3000);
                 genZhuList.add(4000);
                 genZhuList.add(5000);
+            }else if (room.getGoldRoomType() == 200){
+                //new
+                max = 2000;
+                minGold = 2000;
+                genZhuList.add(400);
+                genZhuList.add(600);
+                genZhuList.add(800);
+                genZhuList.add(1000);
             }
+
             INIT_BOTTOM_CHIP = dizhu;
             MAX_BET_NUM = max;
 
@@ -142,12 +151,12 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(5000);
 
             }else if (room.getGoldRoomType() == 2000){
-                max = 20000;
-                minGold = 20000;
-                genZhuList.add(4000);
-                genZhuList.add(6000);
-                genZhuList.add(8000);
-                genZhuList.add(10000);
+                max = 2000;
+                minGold = 2000;
+                genZhuList.add(400);
+                genZhuList.add(600);
+                genZhuList.add(800);
+                genZhuList.add(1000);
             }
 
             INIT_BOTTOM_CHIP = dizhu;
@@ -1073,7 +1082,6 @@ public class GameBaseYSZ extends Game {
     public void setSeeUser(List<Long> seeUser) {
         this.seeUser = seeUser;
     }
-
 
     public RoomYSZ getRoom() {
         return room;
