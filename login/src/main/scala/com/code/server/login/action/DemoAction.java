@@ -26,7 +26,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
-
 /**
  * Created by dajuejinxian on 2018/6/22.
  */
@@ -260,7 +259,8 @@ public class DemoAction{
         if (userId == 0){
             return fetchDelegates(1);
         }
-        GameAgent gameAgent = gameAgentDao.findOne(userId);
+//        GameAgent gameAgent = gameAgentDao.findOne(userId);
+        GameAgent gameAgent = homeService.findOneDelegate(userId);
         List<GameAgentVo> list = new ArrayList<>();
         AgentResponse agentResponse = new AgentResponse();
         if (gameAgent == null){
@@ -305,7 +305,65 @@ public class DemoAction{
             voList.add(gameAgentVo);
         }
 
-        long count = gameAgentDao.count();
+        long count = homeService.delegatesCount();
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("total", count);
+        rs.put("list", voList);
+
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(rs);
+        return agentResponse;
+    }
+
+    @RequestMapping("/fetchPartner")
+    public AgentResponse fetchPartner(long userId){
+        if (userId == 0){
+            return fetchPartners(1);
+        }
+//        GameAgent gameAgent = gameAgentDao.findOne(userId);
+        GameAgent gameAgent = homeService.findOnePartner(userId);
+        List<GameAgentVo> list = new ArrayList<>();
+        AgentResponse agentResponse = new AgentResponse();
+        if (gameAgent == null){
+            agentResponse.setData(list);
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+            Map<String, Object> result = new HashMap<>();
+            agentResponse.setMsg(" 没有记录 ");
+            result.put("total", 0);
+            result.put("list", list);
+            agentResponse.setData(result);
+        }else {
+            GameAgentVo gameAgentVo = new GameAgentVo();
+            BeanUtils.copyProperties(gameAgent, gameAgentVo);
+            gameAgentVo.setIsPartnerDes(gameAgent.getIsPartner() == 1 ? "合伙人" : "代理");
+            list.add(gameAgentVo);
+            Map<String, Object> result = new HashMap<>();
+            result.put("total", 1);
+            result.put("list", list);
+            agentResponse.setData(result);
+        }
+        return agentResponse;
+    }
+
+    @RequestMapping("/fetchPartners")
+    public AgentResponse fetchPartners(int curPage){
+        if (curPage > 0){
+            curPage--;
+        }
+        int pageSize = 20;
+        Page<GameAgent> page = homeService.findPartner(new PageRequest(curPage,pageSize));
+        List<GameAgent> list = page.getContent();
+
+        List<GameAgentVo> voList = new ArrayList<>();
+        for (GameAgent gameAgent : list){
+            GameAgentVo gameAgentVo = new GameAgentVo();
+            BeanUtils.copyProperties(gameAgent, gameAgentVo);
+            User user = userDao.findOne(gameAgent.getId());
+            gameAgentVo.setName(user.getUsername());
+            voList.add(gameAgentVo);
+        }
+
+        long count = homeService.partnerCount();
         Map<String, Object> rs = new HashMap<>();
         rs.put("total", count);
         rs.put("list", voList);
@@ -325,7 +383,7 @@ public class DemoAction{
     @RequestMapping("/doCharge")
     public AgentResponse doCharge(HttpServletRequest request, long userId, @RequestParam(value = "money", required = true) long money){
 
-        org.springframework.util.Assert.isTrue(isNumber(money +""), "是数字");
+//        org.springframework.util.Assert.isTrue(isNumber(money +""), "是数字");
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         UserService userService = SpringUtil.getBean(UserService.class);
         User user = userService.getUserByUserId(userId);

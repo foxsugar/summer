@@ -90,6 +90,66 @@ public class HomeServiceImpl implements HomeService{
         return page;
     }
 
+    public Long  delegatesCount() {
+
+        Specification<GameAgent> specification = new Specification<GameAgent>() {
+            @Override
+            public Predicate toPredicate(Root<GameAgent> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                Path path = root.get("isPartner");
+                Predicate predicate = cb.equal(path, 0);
+                return predicate;
+            }
+        };
+
+        return gameAgentDao.count(specification);
+    }
+
+    @Override
+    public Long partnerCount() {
+        Specification<GameAgent> specification = new Specification<GameAgent>() {
+            @Override
+            public Predicate toPredicate(Root<GameAgent> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                Path path = root.get("isPartner");
+                Predicate predicate = cb.equal(path, 1);
+                return predicate;
+            }
+        };
+
+        return gameAgentDao.count(specification);
+    }
+
+    @Override
+    public GameAgent findOneDelegate(long userId) {
+
+        Specification<GameAgent> specification = new Specification<GameAgent>() {
+            @Override
+            public Predicate toPredicate(Root<GameAgent> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                Path path = root.get("isPartner");
+                Predicate predicate = cb.equal(path, 0);
+                return predicate;
+            }
+        };
+        return gameAgentDao.findOne(userId);
+    }
+
+    @Override
+    public GameAgent findOnePartner(long userId) {
+
+        Specification<GameAgent> specification = new Specification<GameAgent>() {
+            @Override
+            public Predicate toPredicate(Root<GameAgent> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                Path path = root.get("isPartner");
+                Predicate predicate = cb.equal(path, 1);
+                return predicate;
+            }
+        };
+        return gameAgentDao.findOne(userId);
+    }
+
     @Override
     public Page<GameAgent> findPartner(org.springframework.data.domain.Pageable pageable) {
 
