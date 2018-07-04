@@ -1432,6 +1432,20 @@ public class GameXuanQiQi extends Game {
         playerCardInfos.get(p2.getUserId()).addScore(score2);
 
         //算分：宣起
+
+        for (XuanParam x:xuanList) {
+            int lastWinLuo = playerCardInfos.get(x.xuan_UserId).winCards.size();
+            if(x.xuan_LuoNum<3 && lastWinLuo>=3){
+                x.setGotLuo(true);
+            }
+            else if(x.xuan_LuoNum<=4 && x.xuan_LuoNum>=3 && lastWinLuo>=5){
+                x.setGotLuo(true);
+            }
+            else if(x.xuan_LuoNum==5 && lastWinLuo>=6){
+                x.setGotLuo(true);
+            }
+        }
+
         for (XuanParam x : xuanList) {
             if (!x.isGotLuo()) {//宣之后未达到，扣分
                 roomXuanQiQi.addUserSocre(playerCardInfos.get(x.getXuan_UserId()).getUserId(), -2);
