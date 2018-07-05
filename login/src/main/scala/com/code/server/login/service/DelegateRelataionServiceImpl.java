@@ -43,6 +43,11 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
 
         List<OneLevelInfoVo> result = new ArrayList<>();
         List<User> userList = this.userDao.findUsersByIdIn(aList);
+
+        System.out.println("===========++++aList:" + aList);
+        System.out.println("===========++++aList:" + userList);
+
+
         for (User user : userList){
             OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
             oneLevelInfoVo.setImage(user.getImage() + "/96");

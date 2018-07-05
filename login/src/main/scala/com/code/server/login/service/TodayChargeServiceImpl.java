@@ -192,7 +192,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             twoLevelInfoVo.setMoney("" + totalMoney);
             twoLevelInfoVo.setGold("" + totalGold);
 
-            twoLevelInfoVo.setImage(user.getImage() + "、96");
+            twoLevelInfoVo.setImage(user.getImage() + "/96");
             twoLevelInfoVo.setUsername(user.getUsername());
             twoLevelVo.getList().add(twoLevelInfoVo);
 
