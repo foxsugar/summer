@@ -21,6 +21,13 @@ import java.util.*;
  */
 public class GamePlaySeven extends Game{
 
+    public boolean shouQiDouble = false;//首七
+
+    public boolean shuangLiangDouble = false;//双亮
+
+
+
+
     protected List<Integer> cards = new ArrayList<>();//牌
     protected List<Integer> tableCards = new ArrayList<>();//底牌
 
@@ -69,19 +76,71 @@ public class GamePlaySeven extends Game{
         Collections.shuffle(cards);
     }
 
-    protected void deal() {
+    protected void deal(){
+        //发所有
         for (PlayerCardInfoPlaySeven playerCardInfo : playerCardInfos.values()) {
             if(4==room.getPersonNumber()){
                 for (int i = 0; i < 25; i++) {
                     playerCardInfo.handCards.add(cards.remove(0));
                 }
-            }else{
+            }else if(5==room.getPersonNumber()){
                 for (int i = 0; i < 20; i++) {
                     playerCardInfo.handCards.add(cards.remove(0));
                 }
             }
-            //通知发牌
-            MsgSender.sendMsg2Player(new ResponseVo("gameService", "deal", playerCardInfo.handCards), playerCardInfo.userId);
+        }
+        this.tableCards.addAll(cards);
+        //定时
+        int timer = 0;
+        if(4==room.getPersonNumber()){
+            while(timer<25){
+                for (int i = 0; i < 25; i++) {
+                    sendSingleCardAndWait500s(i);
+                }
+                timer++;
+            }
+        }else if(5==room.getPersonNumber()){
+            while(timer<20){
+                for (int i = 0; i < 20; i++) {
+                    sendSingleCardAndWait500s(i);
+                }
+                timer++;
+            }
+        }
+
+
+    }
+
+    //单张发并且等待500s
+    private void sendSingleCardAndWait500s(int i) {
+        for (Long l:playerCardInfos.keySet()) {
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("userId", l);
+            int tempcardNum = playerCardInfos.get(l).handCards.get(i);
+            if(i==0){
+                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
+                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54){
+                    playerCardInfos.get(l).setShouQi("1");
+                    playerCardInfos.get(l).setDanLiang("1");
+                }
+            }else{
+                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
+                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54){
+                    playerCardInfos.get(l).setDanLiang("1");
+                }
+            }
+            if("1".equals(playerCardInfos.get(l).getDanLiang())){
+                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
+                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54){
+                    playerCardInfos.get(l).setShuangLiang("1");
+                }
+            }
+            MsgSender.sendMsg2Player(new ResponseVo("gameService", "cardAndCanOperate", msg), l);
+        }
+        try {
+            Thread.sleep(500);//发牌停顿
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

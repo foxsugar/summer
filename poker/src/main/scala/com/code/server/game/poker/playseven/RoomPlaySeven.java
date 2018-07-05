@@ -29,10 +29,13 @@ import com.code.server.util.timer.TimerNode;
 public class RoomPlaySeven extends Room {
 
     public Integer fengDing;//封顶
-    public boolean kouDiJiaJi;//扣底加级
+    public boolean kouDiJiaJi;//抠底加级
     public boolean zhuangDanDaJiaBei;//庄单打加倍
 
     public long fanZhuUserId=0l;
+
+
+
 
     public static RoomPlaySeven getRoomInstance(String roomType){
         switch (roomType) {

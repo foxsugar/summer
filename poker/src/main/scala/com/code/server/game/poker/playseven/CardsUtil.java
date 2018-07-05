@@ -1,6 +1,8 @@
 package com.code.server.game.poker.playseven;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +24,9 @@ public class CardsUtil {
             System.out.println("CardId:"+integer+" ==== CardNum:"+CardsUtil.cardsOf108.get(integer));
         }
         System.out.println(cardsOf108.size());
+        for (Integer i :hei){
+            System.out.println(i);
+        }
     }
 
     /*
@@ -31,10 +36,14 @@ public class CardsUtil {
            49-52    7
            45-48    2
            41-44    A
-           17-40    K-8
-           1-46     6-3
+           17-40    8-K
+           1-16     3-6
      */
     public static Map<Integer,Integer> cardsOf108 = new HashMap<>();
+    public static List<Integer> hei = new ArrayList<>();
+    public static List<Integer> hong = new ArrayList<>();
+    public static List<Integer> hua = new ArrayList<>();
+    public static List<Integer> pian = new ArrayList<>();
 
     static {
 
@@ -81,8 +90,25 @@ public class CardsUtil {
         cardsOf108.putAll(tempMap);
 
         //=========================================================================================
+        //黑红花片分组
+        List<Integer> tempList = new ArrayList<>();
+        tempList.addAll(cardsOf108.keySet());
+        tempList.remove((Integer)54);
+        tempList.remove((Integer)53);
+        tempList.remove((Integer)(-54));
+        tempList.remove((Integer)(-53));
 
-
+        for (Integer i:tempList) {
+            if(i%4==1){
+                hei.add(i);
+            }else if(i%4==2){
+                hong.add(i);
+            }else if(i%4==3){
+                hua.add(i);
+            }else if(i%4==0){
+                pian.add(i);
+            }
+        }
 
     }
 
