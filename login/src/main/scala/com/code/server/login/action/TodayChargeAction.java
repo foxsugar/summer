@@ -188,4 +188,12 @@ public class TodayChargeAction {
         agentResponse.setData(re);
         return agentResponse;
     }
+
+    @RequestMapping("/testb")
+    public AgentResponse testBlance(long agentId){
+        AgentResponse agentResponse = new AgentResponse();
+        double re = todayChargeService.canBlance(agentId);
+        agentResponse.setData(re);
+        return agentResponse;
+    }
 }
