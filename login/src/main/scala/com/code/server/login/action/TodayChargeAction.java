@@ -194,7 +194,9 @@ public class TodayChargeAction {
     public AgentResponse testBlance(long agentId){
         AgentResponse agentResponse = new AgentResponse();
         double re = todayChargeService.canBlance(agentId);
-        agentResponse.setData(re);
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("result", re);
+        agentResponse.setData(rs);
         return agentResponse;
     }
 }
