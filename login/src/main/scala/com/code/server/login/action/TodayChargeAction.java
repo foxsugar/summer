@@ -177,10 +177,14 @@ public class TodayChargeAction {
         return agentResponse;
     }
 
+    @AuthChecker
     @RequestMapping("/canBlance")
-    public AgentResponse canBlance(long userId){
+    public AgentResponse canBlance(){
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        long agentId = AgentUtil.getAgentByRequest(request);
         AgentResponse agentResponse = new AgentResponse();
-        double re = todayChargeService.canBlance(userId);
+        double re = todayChargeService.canBlance(agentId);
         agentResponse.setData(re);
         return agentResponse;
     }
