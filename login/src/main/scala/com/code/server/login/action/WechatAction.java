@@ -230,6 +230,12 @@ public class WechatAction extends Cors {
             if (refereeId != null) {
 
 
+                //没绑定过其他人
+                if (refereeId == 0) {
+
+                }else{
+
+                }
 
                 long userId = 0;
                 String uid = RedisManager.getUserRedisService().getUserIdByOpenId(unionId);

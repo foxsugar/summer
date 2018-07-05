@@ -239,6 +239,17 @@ public class AgentService {
             gameAgentService.getGameAgentDao().delete(userId);
         }
 
+        //删除玩家自己的代理信息
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+            userBean.setReferee(0);
+            RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
+        }else{
+            User user = userService.getUserByUserId(userId);
+            user.setReferee(0);
+            userService.save(user);
+        }
+
     }
 
     /**
