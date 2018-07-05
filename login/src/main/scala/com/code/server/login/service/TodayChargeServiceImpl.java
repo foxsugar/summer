@@ -201,8 +201,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
             //二级代理手下直接用户
             AgentBean twoLevelAgentBean = RedisManager.getAgentRedisService().getAgentBean(delegateId);
-            if (twoLevelAgentBean == null) continue;
-
+//            if (twoLevelAgentBean == null) continue;
+            System.out.println("=========" + delegateId);
             for (Long uid : twoLevelAgentBean.getChildList()){
 
                 if (RedisManager.getAgentRedisService().isExit(uid)) continue;
