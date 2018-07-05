@@ -394,31 +394,31 @@ public class DemoAction{
         return agentResponse;
     }
 
-    @RequestMapping("/charges")
-    public AgentResponse chargeRecord(HttpServletRequest request, long userId){
-
-        List<Integer> list = Arrays.asList(MONEY_TYPE, GOLD_TYPE);
-        List<Charge> chargeList = null;
-
-        if (userId == 0){
-            chargeList = chargeDao.getChargesByChargeTypeIn(list);
-        }else {
-            chargeList = chargeDao.getChargesByChargeTypeInAndUseridIs(list, userId);
-        }
-
-        List<DChargeAdminVo> result = new ArrayList<>();
-        for (Charge charge : chargeList){
-            DChargeAdminVo chargeAdminVo = new DChargeAdminVo();
-            BeanUtils.copyProperties(charge, chargeAdminVo);
-            result.add(chargeAdminVo);
-        }
-
-        Map<String, Object> res = new HashMap<>();
-        res.put("result", result);
-        AgentResponse agentResponse = new AgentResponse();
-        agentResponse.setData(res);
-        return agentResponse;
-    }
+//    @RequestMapping("/charges")
+//    public AgentResponse chargeRecord(HttpServletRequest request, long userId){
+//
+//        List<Integer> list = Arrays.asList(MONEY_TYPE, GOLD_TYPE);
+//        List<Charge> chargeList = null;
+//
+//        if (userId == 0){
+//            chargeList = chargeDao.getChargesByChargeTypeIn(list);
+//        }else {
+//            chargeList = chargeDao.getChargesByChargeTypeInAndUseridIs(list, userId);
+//        }
+//
+//        List<DChargeAdminVo> result = new ArrayList<>();
+//        for (Charge charge : chargeList){
+//            DChargeAdminVo chargeAdminVo = new DChargeAdminVo();
+//            BeanUtils.copyProperties(charge, chargeAdminVo);
+//            result.add(chargeAdminVo);
+//        }
+//
+//        Map<String, Object> res = new HashMap<>();
+//        res.put("result", result);
+//        AgentResponse agentResponse = new AgentResponse();
+//        agentResponse.setData(res);
+//        return agentResponse;
+//    }
 
     @RequestMapping("/downward")
     public AgentResponse downwardDelegate(HttpServletRequest request, long agentId){

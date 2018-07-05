@@ -30,5 +30,5 @@ public interface TodayChargeService {
    //待机代理充值记录
    ThreeLevelVo threeLevelCharges(long agentId);
 
-   public double canBlance(long agentId);
+   double canBlance(long agentId);
 }
