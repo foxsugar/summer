@@ -12,9 +12,15 @@ import com.code.server.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import scala.Char;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -73,7 +79,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
         Date start = DateUtil.getThisYearStart();
         Date end = new Date();
-        List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndRecharge_sourceIs(Arrays.asList(agentId),start, end, 1, CHARGE_TYPE_CASH);
+        List<Charge> list = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndRecharge_sourceIs(Arrays.asList(agentId),start, end, 1, CHARGE_TYPE_CASH);
 
         List<WaterRecordVo> voList = new ArrayList<>();
         for (Charge charge : list){
@@ -115,7 +121,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
                 continue;
             }
 
-            List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
+            List<Charge> list = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
 
             double totalMoney = 0d;
             double totalGold = 0d;
@@ -168,7 +174,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             User user = userDao.getUserById(delegateId);
             if (user == null) continue;
 
-            List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(delegateId), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
+            List<Charge> list = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(delegateId), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
             TwoLevelInfoVo twoLevelInfoVo = new TwoLevelInfoVo();
 
             //计算金额
@@ -206,7 +212,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
                 infoVo.setUsername(twoLevelUser.getUsername());
                 infoVo.setImage(twoLevelUser.getImage() + "/96");
 
-                List<Charge> twoLevelChargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
+                List<Charge> twoLevelChargeList = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
                 double twoLevelUserTotal = 0;
                 double twoLevelUserGoldTotal = 0;
                 for (Charge charge : twoLevelChargeList){
@@ -260,7 +266,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
             User user = userDao.getUserById(uid);
             if (user == null) continue;
-            List<Charge> chargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
+            List<Charge> chargeList = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
             threeLevelInfoVo.setUsername(user.getUsername());
             threeLevelInfoVo.setImage(user.getImage() + "/96");
@@ -322,5 +328,47 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         return agentBean.getRebate();
     }
+
+    public List<Charge> getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(List<Long> users, Date start, Date end, int status, List<Integer> list){
+
+        Specification<Charge> specification = new Specification<Charge>() {
+            @Override
+            public Predicate toPredicate(Root<Charge> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                List<Predicate> predicateList = new ArrayList<>();
+                predicateList.add(cb.between(root.get("createtime").as(Date.class), start, end));
+                predicateList.add(cb.equal(root.get("status").as(Integer.class), status));
+                predicateList.add(root.get("chargeType").as(Integer.class).in(list));
+                predicateList.add(root.get("userid").as(Integer.class).in(users));
+                Predicate[] p = new Predicate[predicateList.size()];
+                query.where(cb.and(predicateList.toArray(p)));
+                return query.getRestriction();
+            }
+        };
+        List<Charge> chargeList = chargeDao.findAll(specification);
+        return chargeList;
+    }
+
+    public List<Charge> getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndRecharge_sourceIs(List<Long> users, Date start, Date end, int status, String sourceType){
+
+        Specification<Charge> specification = new Specification<Charge>() {
+            @Override
+            public Predicate toPredicate(Root<Charge> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                List<Predicate> predicateList = new ArrayList<>();
+                predicateList.add(cb.between(root.get("createtime").as(Date.class), start, end));
+                predicateList.add(cb.equal(root.get("status").as(Integer.class), status));
+                predicateList.add(cb.equal(root.get("recharge_source").as(String.class), sourceType));
+                predicateList.add(root.get("userid").as(Integer.class).in(users));
+                Predicate[] p = new Predicate[predicateList.size()];
+                query.where(cb.and(predicateList.toArray(p)));
+                return query.getRestriction();
+            }
+        };
+        List<Charge> chargeList = chargeDao.findAll(specification);
+        return chargeList;
+    }
+
+
 
 }
