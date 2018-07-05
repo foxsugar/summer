@@ -176,4 +176,12 @@ public class TodayChargeAction {
         AgentResponse agentResponse = new AgentResponse(200, result);
         return agentResponse;
     }
+
+    @RequestMapping("/canBlance")
+    public AgentResponse canBlance(long userId){
+        AgentResponse agentResponse = new AgentResponse();
+        double re = todayChargeService.canBlance(userId);
+        agentResponse.setData(re);
+        return agentResponse;
+    }
 }
