@@ -232,6 +232,10 @@ public class RoomInfo extends RoomExtendGold {
             GameTimer.removeNode(prepareRoomTimerNode);
         }
 
+        Map<String, Object> r = new HashMap<>();
+        r.put("banker", this.bankerId);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "whoIsBanker", r), this.getUsers());
+
         gameInfo.init(0, this.bankerId, this.users, this);
 //        gameInfo.fapai();
         this.game = gameInfo;

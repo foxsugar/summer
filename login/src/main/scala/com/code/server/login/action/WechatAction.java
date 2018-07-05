@@ -219,7 +219,7 @@ public class WechatAction extends Cors {
 
 
             StringBuilder sb = new StringBuilder();
-            sb.append(name).append("已点击您的专属链接,");
+            sb.append(name).append(" 已点击您的专属链接,");
             //这个人是否已经点过
 
             //这个人如果已经是玩家 并且玩家没有上级 那么成为这个人的下级
@@ -227,15 +227,11 @@ public class WechatAction extends Cors {
             //这个人已经绑定代理
             if (refereeId != null) {
 
-                if(refereeId == agentId){
-                    sb.append("已经和您建立过绑定关系");
-                }else{
-                    sb.append("但已绑定其他代理");
-                }
+
 
                 long userId = 0;
                 String uid = RedisManager.getUserRedisService().getUserIdByOpenId(unionId);
-                //玩家是不是代理
+                //点击者是不是代理
                 boolean userIsAgnet = true;
                 //玩家在内存里
                 if (uid != null) {
@@ -263,6 +259,14 @@ public class WechatAction extends Cors {
                     agentBean.getChildList().add(userId);
                     //加入保存队列
                     RedisManager.getAgentRedisService().updateAgentBean(agentBean);
+
+                    if(refereeId == agentId){
+                        sb.append("已经和您建立过绑定关系");
+                    }else{
+                        sb.append("但已绑定其他代理");
+                    }
+                }else{ //点击者是代理
+                    sb.append("但已成为代理");
                 }
 
             } else {
