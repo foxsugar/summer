@@ -132,7 +132,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
             OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
             oneLevelInfoVo.setGold(goldTotal +"");
-            oneLevelInfoVo.setImage(user.getImage());
+            oneLevelInfoVo.setImage(user.getImage() + "/96");
             oneLevelInfoVo.setUsername(user.getUsername());
             oneLevelInfoVo.setMoney("" + totalMoney);
             oneLevelInfoVoList.add(oneLevelInfoVo);
@@ -186,7 +186,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             twoLevelInfoVo.setMoney("" + totalMoney);
             twoLevelInfoVo.setGold("" + totalGold);
 
-            twoLevelInfoVo.setImage(user.getImage());
+            twoLevelInfoVo.setImage(user.getImage() + "、96");
             twoLevelInfoVo.setUsername(user.getUsername());
             twoLevelVo.getList().add(twoLevelInfoVo);
 
@@ -204,7 +204,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
                 TwoLevelInfoVo infoVo = new TwoLevelInfoVo();
                 infoVo.setUsername(twoLevelUser.getUsername());
-                infoVo.setImage(twoLevelUser.getImage());
+                infoVo.setImage(twoLevelUser.getImage() + "/96");
 
                 List<Charge> twoLevelChargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
                 double twoLevelUserTotal = 0;
@@ -263,7 +263,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             List<Charge> chargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
             threeLevelInfoVo.setUsername(user.getUsername());
-            threeLevelInfoVo.setImage(user.getImage());
+            threeLevelInfoVo.setImage(user.getImage() + "/96");
 
             double totalMoney = 0;
             double totalGold = 0;

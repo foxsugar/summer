@@ -1,20 +1,19 @@
 package com.code.server.login.action;
 import com.code.server.constant.game.AgentBean;
+import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.ErrorCode;
-import com.code.server.db.dao.IAgentUserDao;
-import com.code.server.db.dao.IChargeDao;
-import com.code.server.db.dao.ILogRecordDao;
-import com.code.server.db.dao.IUserDao;
-import com.code.server.db.model.AgentUser;
-import com.code.server.db.model.Charge;
-import com.code.server.db.model.LogRecord;
-import com.code.server.db.model.User;
+import com.code.server.db.Service.UserService;
+import com.code.server.db.dao.*;
+import com.code.server.db.model.*;
+import com.code.server.login.service.AgentService;
 import com.code.server.login.service.HomeService;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.util.MD5Util;
 import com.code.server.login.vo.DChargeAdminVo;
+import com.code.server.login.vo.GameAgentVo;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.JsonUtil;
+import com.code.server.util.SpringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,14 +21,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Pattern;
-
 /**
  * Created by dajuejinxian on 2018/6/22.
  */
@@ -50,7 +47,13 @@ public class DemoAction{
     private IChargeDao chargeDao;
 
     @Autowired
+    private IGameAgentDao gameAgentDao;
+
+    @Autowired
     private HomeService homeService;
+
+    @Autowired
+    private AgentService agentService;
 
     public static final int MONEY_TYPE = 0;
 
@@ -73,9 +76,25 @@ public class DemoAction{
         return (Map<String, Object>)AgentUtil.caches.get("a");
     }
 
-    @RequestMapping("/timeSearch")
-    public AgentResponse doSearch(String t1, String t2, int curPage, int pageSize){
+    public static int getRole(long userId){
+        int role = 1;
+        if (RedisManager.getAgentRedisService().isExit(userId)){
+            AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(userId);
+            if (agentBean.getIsPartner() == 1){
+                role = 3;
+            }else {
+                role = 2;
+            }
+        }
+        return role;
+    }
 
+    @RequestMapping("/timeSearch")
+    public AgentResponse doSearch(String t1, String t2, int curPage){
+
+        if (curPage > 0){
+            curPage--;
+        }
         String[] sA = null;
         if (t1.contains(",")){
             sA = t1.split(",", 1000);
@@ -112,6 +131,7 @@ public class DemoAction{
             }
         }
 
+        int pageSize = 20;
         List<User> list = null;
         long count = 0;
         AgentResponse agentResponse = new AgentResponse();
@@ -124,7 +144,7 @@ public class DemoAction{
             count = homeService.timeQueryCount(listA, listB);
         }else if (sA != null && sB != null){
 //            list = userDao.findUsersByRegistDateBetweenAndLastLoginDateBetween(listA.get(0), listA.get(1), listB.get(0), listB.get(1));
-            homeService.timeQuery(listA, listB, new PageRequest(curPage, pageSize)).getContent();
+            list =  homeService.timeQuery(listA, listB, new PageRequest(curPage, pageSize)).getContent();
             count = homeService.timeQueryCount(listA, listB);
         }else {
             agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
@@ -140,8 +160,63 @@ public class DemoAction{
         return agentResponse;
     }
 
+    @RequestMapping("/roleInfo")
+    public AgentResponse roleInfo(long userId){
+        long role = getRole(userId);
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(role);
+        return agentResponse;
+    }
+
+    @RequestMapping("/toAgent")
+    public AgentResponse toAgent(long userId) {
+        AgentResponse agentResponse = new AgentResponse();
+        long role = getRole(userId);
+        if (role == 2){
+            agentResponse.setMsg("设置失败!");
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+            return agentResponse;
+        }
+
+        agentService.change2Agent(userId);
+        return agentResponse;
+    }
+
+    @RequestMapping("/toUser")
+    public AgentResponse toUser(long userId) {
+
+        AgentResponse agentResponse = new AgentResponse();
+        long role = getRole(userId);
+        if (role == 1){
+            agentResponse.setMsg("设置失败!");
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+            return agentResponse;
+        }
+
+        agentService.change2Player(userId);
+        return agentResponse;
+    }
+
+    @RequestMapping("/toPartner")
+    public AgentResponse toPartner(long userId) {
+
+        AgentResponse agentResponse = new AgentResponse();
+        long role = getRole(userId);
+        if (role == 3){
+            agentResponse.setMsg("设置失败!");
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+            return agentResponse;
+        }
+        agentService.change2Partner(userId);
+        return agentResponse;
+    }
+
     @RequestMapping("/fetchAllPlayers")
     public AgentResponse fetchAllPlayers(int pageSize, int curPage){
+
+        if (curPage > 0){
+            curPage--;
+        }
         Page page =  userDao.findAll(new PageRequest(curPage, pageSize));
         List<User> list = page.getContent();
         Map<String, Object> result = new HashMap<>();
@@ -157,7 +232,7 @@ public class DemoAction{
     public AgentResponse fetchPlayer(long userId){
 
         if (userId == 0){
-            return fetchAllPlayers(20, 0);
+            return fetchAllPlayers(20, 1);
         }
         User user =  userDao.findOne(userId);
         List<User> list = new ArrayList<>();
@@ -180,6 +255,125 @@ public class DemoAction{
         return agentResponse;
     };
 
+    @RequestMapping("/fetchDelegate")
+    public AgentResponse fetchDelegate(long userId){
+        if (userId == 0){
+            return fetchDelegates(1);
+        }
+//        GameAgent gameAgent = gameAgentDao.findOne(userId);
+        GameAgent gameAgent = homeService.findOneDelegate(userId);
+        List<GameAgentVo> list = new ArrayList<>();
+        AgentResponse agentResponse = new AgentResponse();
+        if (gameAgent == null){
+            agentResponse.setData(list);
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+            Map<String, Object> result = new HashMap<>();
+            agentResponse.setMsg(" 没有记录 ");
+            result.put("total", 0);
+            result.put("list", list);
+            agentResponse.setData(result);
+        }else {
+            GameAgentVo gameAgentVo = new GameAgentVo();
+            BeanUtils.copyProperties(gameAgent, gameAgentVo);
+            gameAgentVo.setIsPartnerDes(gameAgent.getIsPartner() == 1 ? "合伙人" : "代理");
+            list.add(gameAgentVo);
+            Map<String, Object> result = new HashMap<>();
+            result.put("total", 1);
+            result.put("list", list);
+            agentResponse.setData(result);
+        }
+
+        return agentResponse;
+    }
+
+    @RequestMapping("/fetchDelegates")
+    public AgentResponse fetchDelegates(int curPage){
+
+        if (curPage > 0){
+            curPage--;
+        }
+        int pageSize = 20;
+//        Page<GameAgent> page = gameAgentDao.findAll(new PageRequest(curPage, pageSize));
+        Page<GameAgent> page = homeService.findDelegates(new PageRequest(curPage, pageSize));
+        List<GameAgent> list = page.getContent();
+
+        List<GameAgentVo> voList = new ArrayList<>();
+        for (GameAgent gameAgent : list){
+            GameAgentVo gameAgentVo = new GameAgentVo();
+            BeanUtils.copyProperties(gameAgent, gameAgentVo);
+            User user = userDao.findOne(gameAgent.getId());
+            gameAgentVo.setName(user.getUsername());
+            voList.add(gameAgentVo);
+        }
+
+        long count = homeService.delegatesCount();
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("total", count);
+        rs.put("list", voList);
+
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(rs);
+        return agentResponse;
+    }
+
+    @RequestMapping("/fetchPartner")
+    public AgentResponse fetchPartner(long userId){
+        if (userId == 0){
+            return fetchPartners(1);
+        }
+//        GameAgent gameAgent = gameAgentDao.findOne(userId);
+        GameAgent gameAgent = homeService.findOnePartner(userId);
+        List<GameAgentVo> list = new ArrayList<>();
+        AgentResponse agentResponse = new AgentResponse();
+        if (gameAgent == null){
+            agentResponse.setData(list);
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+            Map<String, Object> result = new HashMap<>();
+            agentResponse.setMsg(" 没有记录 ");
+            result.put("total", 0);
+            result.put("list", list);
+            agentResponse.setData(result);
+        }else {
+            GameAgentVo gameAgentVo = new GameAgentVo();
+            BeanUtils.copyProperties(gameAgent, gameAgentVo);
+            gameAgentVo.setIsPartnerDes(gameAgent.getIsPartner() == 1 ? "合伙人" : "代理");
+            list.add(gameAgentVo);
+            Map<String, Object> result = new HashMap<>();
+            result.put("total", 1);
+            result.put("list", list);
+            agentResponse.setData(result);
+        }
+        return agentResponse;
+    }
+
+    @RequestMapping("/fetchPartners")
+    public AgentResponse fetchPartners(int curPage){
+        if (curPage > 0){
+            curPage--;
+        }
+        int pageSize = 20;
+        Page<GameAgent> page = homeService.findPartner(new PageRequest(curPage,pageSize));
+        List<GameAgent> list = page.getContent();
+
+        List<GameAgentVo> voList = new ArrayList<>();
+        for (GameAgent gameAgent : list){
+            GameAgentVo gameAgentVo = new GameAgentVo();
+            BeanUtils.copyProperties(gameAgent, gameAgentVo);
+            User user = userDao.findOne(gameAgent.getId());
+            gameAgentVo.setName(user.getUsername());
+            voList.add(gameAgentVo);
+        }
+
+        long count = homeService.partnerCount();
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("total", count);
+        rs.put("list", voList);
+
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(rs);
+        return agentResponse;
+    }
+
     @RequestMapping("/logout")
     public AgentResponse logout(){
         AgentUtil.caches.clear();
@@ -187,20 +381,16 @@ public class DemoAction{
         return agentResponse;
     }
 
-    @RequestMapping("/upward")
-    public AgentResponse upwardDelegates(HttpServletRequest request, long userId){
-
-        return null;
-    }
-
     @RequestMapping("/doCharge")
     public AgentResponse doCharge(HttpServletRequest request, long userId, @RequestParam(value = "money", required = true) long money){
 
-        org.springframework.util.Assert.isTrue(isNumber(money +""), "是数字");
-         double curMoney = RedisManager.getUserRedisService().addUserMoney(userId, money);
-
-         AgentResponse agentResponse = new AgentResponse();
-         agentResponse.setData(curMoney);
+//        org.springframework.util.Assert.isTrue(isNumber(money +""), "是数字");
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        UserService userService = SpringUtil.getBean(UserService.class);
+        User user = userService.getUserByUserId(userId);
+        double curMoney = RedisManager.getUserRedisService().addUserMoney(userId, money);
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(curMoney);
         return agentResponse;
     }
 
@@ -231,15 +421,15 @@ public class DemoAction{
     }
 
     @RequestMapping("/downward")
-    public AgentResponse downwardDelegate(HttpServletRequest request, long userId){
+    public AgentResponse downwardDelegate(HttpServletRequest request, long agentId){
 
-        Map<String, Object> userInfo =  getUserInfo(request);
-        int agentId = (int) userInfo.get("id");
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
 
         //直接玩家
         List<Long> aList = new ArrayList<>();
+        //二级代理
         List<Long> bList = new ArrayList<>();
+        //三级代理
         List<Long> cList = new ArrayList<>();
 
         agentBean.getChildList().stream()
@@ -263,7 +453,35 @@ public class DemoAction{
         List<User> bUsers = userDao.findUsersByIdIn(bList);
         List<User> cUsers = userDao.findUsersByIdIn(cList);
 
+//        long id = agentBean.getParentId();
+//                  agentBean.getPartnerId();
+
         return null;
+    }
+
+    @RequestMapping("/findCharges")
+    public AgentResponse findCharges(int curPage){
+        if (curPage > 0){
+            curPage--;
+        }
+        Page<Charge> page = homeService.findCharges(new PageRequest(curPage, 20));
+        List<DChargeAdminVo> list = new ArrayList<>();
+        page.getContent().stream()
+                .forEach(x -> {
+                    DChargeAdminVo dChargeAdminVo = new DChargeAdminVo();
+                    BeanUtils.copyProperties(x , dChargeAdminVo);
+                    list.add(dChargeAdminVo);
+                });
+        Long count = homeService.chargesCount();
+
+        AgentResponse agentResponse = new AgentResponse();
+
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("list", list);
+        rs.put("total", count);
+        agentResponse.setData(rs);
+
+        return agentResponse;
     }
 
     @RequestMapping("/login")

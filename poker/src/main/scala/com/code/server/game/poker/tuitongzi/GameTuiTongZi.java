@@ -191,7 +191,7 @@ public class GameTuiTongZi extends Game{
 
             List<PlayerTuiTongZi> aList = new ArrayList<>();
             for (PlayerTuiTongZi playerTuiTongZi1 : playerCardInfos.values()){
-                if (playerTuiTongZi.getGrab() == 1){
+                if (playerTuiTongZi1.getGrab() == 1){
                     aList.add(playerTuiTongZi1);
                 }
             }
@@ -230,13 +230,13 @@ public class GameTuiTongZi extends Game{
 
     //是否继续坐庄
     public int continueBanker(boolean isZhuang, long userId){
+        MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
         if (isBaWangZhuang()){
-
             if (isZhuang == false){
+
                 sendFightFinalResult();
             }else {
                 this.state = TuiTongZiConstant.STATE_SELECT;
-                MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
                 betStart();
             }
 
@@ -258,11 +258,10 @@ public class GameTuiTongZi extends Game{
                 this.bankerId = room.getBankerId();
                 createNewCards();
                 this.state = TuiTongZiConstant.STATE_SELECT;
-                MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
+
                 conti();
             }else {
                 this.state = TuiTongZiConstant.STATE_SELECT;
-                MsgSender.sendMsg2Player(serviceName, "continueBanker","0", userId);
                 conti();
             }
         }

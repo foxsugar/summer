@@ -65,7 +65,7 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
                 //空头像
                 recommandUserVo.setImage("");
             }else {
-                recommandUserVo.setImage(user.getImage());
+                recommandUserVo.setImage(user.getImage() + "/96");
                 recommandUserVo.setUserId(userId);
                 recommandUserVo.setUsername(user.getUsername());
             }
