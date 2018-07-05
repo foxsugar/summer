@@ -176,4 +176,29 @@ public class TodayChargeAction {
         AgentResponse agentResponse = new AgentResponse(200, result);
         return agentResponse;
     }
+
+    @AuthChecker
+    @RequestMapping("/canBlance")
+    public AgentResponse canBlance(){
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        long agentId = AgentUtil.getAgentByRequest(request);
+        AgentResponse agentResponse = new AgentResponse();
+        double re = todayChargeService.canBlance(agentId);
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("result", re);
+        System.out.println("---------|||||" + re);
+        agentResponse.setData(rs);
+        return agentResponse;
+    }
+
+    @RequestMapping("/testb")
+    public AgentResponse testBlance(long agentId){
+        AgentResponse agentResponse = new AgentResponse();
+        double re = todayChargeService.canBlance(agentId);
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("result", re);
+        agentResponse.setData(rs);
+        return agentResponse;
+    }
 }
