@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Pattern;
 /**
@@ -522,4 +523,23 @@ public class DemoAction{
         return new AgentResponse(0, JsonUtil.toJson(logRecord));
     }
 
+    @RequestMapping("/getLogByDates")
+    public AgentResponse getLogByDates(int num) {
+        LocalDate today = LocalDate.now();
+        List<String> days = new ArrayList<>();
+        for(int i=0;i<num;i++) {
+            LocalDate temp = today.minusDays(i + 1);
+            days.add(temp.toString());
+        }
+
+        return new AgentResponse(0, logRecordDao.findByIdIn(days));
+    }
+
+    public static void main(String[] args) {
+        LocalDate today = LocalDate.now();
+        for(int i=0;i<7;i++) {
+            LocalDate temp = today.minusDays(i + 1);
+            System.out.println(temp.toString());
+        }
+    }
 }
