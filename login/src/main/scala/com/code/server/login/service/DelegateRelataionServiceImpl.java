@@ -164,7 +164,7 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
         if (type != 0){
             User user = userDao.findOne(userId);
             userInfo.setReferee(user.getReferee());
-            userInfo.setImage(user.getImage());
+            userInfo.setImage(user.getImage() + "/96");
             userInfo.setUsername(user.getUsername());
             userInfo.setCreateTime(DateUtil.convert2String(user.getRegistDate()));
             AgentBean bean = RedisManager.getAgentRedisService().getAgentBean(userId);
