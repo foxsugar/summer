@@ -45,7 +45,7 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
         List<User> userList = this.userDao.findUsersByIdIn(aList);
         for (User user : userList){
             OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
-            oneLevelInfoVo.setImage(user.getImage());
+            oneLevelInfoVo.setImage(user.getImage() + "/96");
             oneLevelInfoVo.setUsername(user.getUsername());
             oneLevelInfoVo.setUid(user.getId() );
             result.add(oneLevelInfoVo);
@@ -74,7 +74,7 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
         List<User> userList = this.userDao.findUsersByIdIn(aList);
         for (User user : userList){
             TwoLevelInfoVo twoLevelInfoVo = new TwoLevelInfoVo();
-            twoLevelInfoVo.setImage(user.getImage());
+            twoLevelInfoVo.setImage(user.getImage() + "/96");
             twoLevelInfoVo.setUsername(user.getUsername());
             twoLevelInfoVo.setUid(user.getId() );
             result.add(twoLevelInfoVo);
@@ -108,7 +108,7 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
         List<ThreeLevelInfoVo> resultList = new ArrayList<>();
         for (User user : cList){
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
-            threeLevelInfoVo.setImage(user.getImage());
+            threeLevelInfoVo.setImage(user.getImage() + "/96");
             threeLevelInfoVo.setUsername(user.getUsername());
             threeLevelInfoVo.setUid(user.getId());
             resultList.add(threeLevelInfoVo);

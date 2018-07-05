@@ -1,8 +1,10 @@
 package com.code.server.login.service;
 
 import com.code.server.constant.game.AgentBean;
+import com.code.server.db.dao.IChargeDao;
 import com.code.server.db.dao.IGameAgentDao;
 import com.code.server.db.dao.IUserDao;
+import com.code.server.db.model.Charge;
 import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.User;
 import com.code.server.login.action.AgentAction;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.*;
 import java.awt.print.Pageable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +30,10 @@ import java.util.List;
 @Service
 public class HomeServiceImpl implements HomeService{
 
+    public static final int MONEY_TYPE = 0;
+
+    public static final int GOLD_TYPE = 1;
+
     @Autowired
     private TodayChargeService todayChargeService;
 
@@ -35,6 +42,9 @@ public class HomeServiceImpl implements HomeService{
 
     @Autowired
     private IGameAgentDao gameAgentDao;
+
+    @Autowired
+    private IChargeDao chargeDao;
 
     private static final Logger logger = LoggerFactory.getLogger(HomeServiceImpl.class);
     @Override
@@ -168,12 +178,41 @@ public class HomeServiceImpl implements HomeService{
     }
 
     @Override
+    public Page<Charge> findCharges(org.springframework.data.domain.Pageable pageable) {
+
+        Specification<Charge> specification = new Specification<Charge>() {
+            @Override
+            public Predicate toPredicate(Root<Charge> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                Path path = root.get("chargeType");
+                Predicate predicate = path.as(Integer.class).in(Arrays.asList(MONEY_TYPE, GOLD_TYPE));
+                return predicate;
+            }
+        };
+        return chargeDao.findAll(specification ,pageable);
+    }
+
+    @Override
+    public Long chargesCount() {
+
+        Specification<Charge> specification = new Specification<Charge>() {
+            @Override
+            public Predicate toPredicate(Root<Charge> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                Path path = root.get("chargeType");
+                Predicate predicate = path.as(Integer.class).in(Arrays.asList(MONEY_TYPE, GOLD_TYPE));
+                return predicate;
+            }
+        };
+
+        return chargeDao.count(specification);
+    }
+
+    @Override
     public Page<User> timeQuery(List<Date> listA, List<Date> listB, org.springframework.data.domain.Pageable pageable) {
         Specification<com.code.server.db.model.User> specification = new Specification<User>() {
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-//                Expression<Date> registerTimeCol = root.get("registDate");
-//                Expression<Date> lastLoginDateCol = root.get("lastLoginDate");
                 List<Predicate> predicates = new ArrayList<>();
                 if (listA != null && listA.size() != 0){
                     predicates.add(cb.between(root.get("registDate"), listA.get(0), listA.get(1)));
@@ -181,7 +220,6 @@ public class HomeServiceImpl implements HomeService{
                 if (listB != null && listB.size() != 0){
                     predicates.add(cb.between(root.get("lastLoginDate"), listB.get(0), listB.get(1)));
                 }
-//                return query.where(predicate.toArray(pre)).getRestriction();
                 return query.where(predicates.toArray(new Predicate[0])).getRestriction();
             }
         };

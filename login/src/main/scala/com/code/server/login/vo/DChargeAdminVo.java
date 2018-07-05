@@ -1,18 +1,34 @@
 package com.code.server.login.vo;
 
+import com.code.server.db.model.Charge;
+
+import java.util.Date;
+
 /**
  * Created by dajuejinxian on 2018/6/28.
  */
 public class DChargeAdminVo {
 
     private String orderId;
-    private String createtime;
-    private String money;
-    private String money_point;
-    private long status;
-    private String username;
-    private long chargeType;
-    private long recharge_source;
+    private String transaction_id;
+    private long userid;
+    private Date createtime;
+    private Date callbacktime;
+    private double money;//人民币
+    private int origin;
+    private int status;
+    private String sign;
+    private String sp_ip;
+    private int shareid;//分享ID
+    private String share_content;//分享内容
+    private String share_area;//分享区域
+    private double money_point;//房卡
+    private int chargeType;//充值类型
+    private String username;//玩家名称
+    private String recharge_source;//1 微信  2 支付宝  3 分享赠送  4 充值卡  5绑定赠送  11.提现
+    private double charge_before_money;
+    private double charge_after_money;;
+
 
     public String getOrderId() {
         return orderId;
@@ -22,36 +38,116 @@ public class DChargeAdminVo {
         this.orderId = orderId;
     }
 
-    public String getCreatetime() {
+    public String getTransaction_id() {
+        return transaction_id;
+    }
+
+    public void setTransaction_id(String transaction_id) {
+        this.transaction_id = transaction_id;
+    }
+
+    public long getUserid() {
+        return userid;
+    }
+
+    public void setUserid(long userid) {
+        this.userid = userid;
+    }
+
+    public Date getCreatetime() {
         return createtime;
     }
 
-    public void setCreatetime(String createtime) {
+    public void setCreatetime(Date createtime) {
         this.createtime = createtime;
     }
 
-    public String getMoney() {
+    public Date getCallbacktime() {
+        return callbacktime;
+    }
+
+    public void setCallbacktime(Date callbacktime) {
+        this.callbacktime = callbacktime;
+    }
+
+    public double getMoney() {
         return money;
     }
 
-    public void setMoney(String money) {
+    public void setMoney(double money) {
         this.money = money;
     }
 
-    public String getMoney_point() {
-        return money_point;
+    public int getOrigin() {
+        return origin;
     }
 
-    public void setMoney_point(String money_point) {
-        this.money_point = money_point;
+    public void setOrigin(int origin) {
+        this.origin = origin;
     }
 
-    public long getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(long status) {
+    public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public String getSp_ip() {
+        return sp_ip;
+    }
+
+    public void setSp_ip(String sp_ip) {
+        this.sp_ip = sp_ip;
+    }
+
+    public int getShareid() {
+        return shareid;
+    }
+
+    public void setShareid(int shareid) {
+        this.shareid = shareid;
+    }
+
+    public String getShare_content() {
+        return share_content;
+    }
+
+    public void setShare_content(String share_content) {
+        this.share_content = share_content;
+    }
+
+    public String getShare_area() {
+        return share_area;
+    }
+
+    public void setShare_area(String share_area) {
+        this.share_area = share_area;
+    }
+
+    public double getMoney_point() {
+        return money_point;
+    }
+
+    public void setMoney_point(double money_point) {
+        this.money_point = money_point;
+    }
+
+    public int getChargeType() {
+        return chargeType;
+    }
+
+    public void setChargeType(int chargeType) {
+        this.chargeType = chargeType;
     }
 
     public String getUsername() {
@@ -62,19 +158,27 @@ public class DChargeAdminVo {
         this.username = username;
     }
 
-    public long getChargeType() {
-        return chargeType;
-    }
-
-    public void setChargeType(long chargeType) {
-        this.chargeType = chargeType;
-    }
-
-    public long getRecharge_source() {
+    public String getRecharge_source() {
         return recharge_source;
     }
 
-    public void setRecharge_source(long recharge_source) {
+    public void setRecharge_source(String recharge_source) {
         this.recharge_source = recharge_source;
+    }
+
+    public double getCharge_before_money() {
+        return charge_before_money;
+    }
+
+    public void setCharge_before_money(double charge_before_money) {
+        this.charge_before_money = charge_before_money;
+    }
+
+    public double getCharge_after_money() {
+        return charge_after_money;
+    }
+
+    public void setCharge_after_money(double charge_after_money) {
+        this.charge_after_money = charge_after_money;
     }
 }

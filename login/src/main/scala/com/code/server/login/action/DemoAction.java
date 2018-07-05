@@ -458,6 +458,31 @@ public class DemoAction{
         return null;
     }
 
+    @RequestMapping("/findCharges")
+    public AgentResponse findCharges(int curPage){
+        if (curPage > 0){
+            curPage--;
+        }
+        Page<Charge> page = homeService.findCharges(new PageRequest(curPage, 20));
+        List<DChargeAdminVo> list = new ArrayList<>();
+        page.getContent().stream()
+                .forEach(x -> {
+                    DChargeAdminVo dChargeAdminVo = new DChargeAdminVo();
+                    BeanUtils.copyProperties(x , dChargeAdminVo);
+                    list.add(dChargeAdminVo);
+                });
+        Long count = homeService.chargesCount();
+
+        AgentResponse agentResponse = new AgentResponse();
+
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("list", list);
+        rs.put("total", count);
+        agentResponse.setData(rs);
+
+        return agentResponse;
+    }
+
     @RequestMapping("/login")
     public AgentResponse agentLogin(HttpServletRequest request, String username, String password){
 

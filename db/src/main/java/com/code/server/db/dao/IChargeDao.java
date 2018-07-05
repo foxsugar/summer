@@ -1,6 +1,7 @@
 package com.code.server.db.dao;
 
 import com.code.server.db.model.Charge;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import scala.Char;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * Created by win7 on 2017/3/13.
  */
-public interface IChargeDao extends PagingAndSortingRepository<Charge, Long> {
+public interface IChargeDao extends PagingAndSortingRepository<Charge, Long>, JpaSpecificationExecutor<Charge> {
 
     Charge getChargeByOrderId(String orderId);
 

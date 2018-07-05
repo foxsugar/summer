@@ -191,7 +191,7 @@ public class GameTuiTongZi extends Game{
 
             List<PlayerTuiTongZi> aList = new ArrayList<>();
             for (PlayerTuiTongZi playerTuiTongZi1 : playerCardInfos.values()){
-                if (playerTuiTongZi.getGrab() == 1){
+                if (playerTuiTongZi1.getGrab() == 1){
                     aList.add(playerTuiTongZi1);
                 }
             }

@@ -1,5 +1,6 @@
 package com.code.server.login.service;
 
+import com.code.server.db.model.Charge;
 import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.User;
 import com.code.server.grpc.idl.Game;
@@ -32,4 +33,9 @@ public interface HomeService {
     GameAgent findOnePartner(long userId);
 
     Page<GameAgent> findPartner(Pageable pageable);
+
+    Page<Charge> findCharges(Pageable pageable);
+
+    Long chargesCount();
+
 }
