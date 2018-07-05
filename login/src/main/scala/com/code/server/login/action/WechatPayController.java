@@ -147,7 +147,7 @@ public class WechatPayController {
             e1.printStackTrace();
         }
 
-        String orderId = PayUtil.getOrderIdByUUId();
+        String orderId = "" + createOrderId();
         packageParams.put("appid", serverConfig.getAppId());//appID       应用id
         packageParams.put("mch_id", serverConfig.getMchId());//appID       商户号
         packageParams.put("nonce_str", PayUtil.getRandomStringByLength(32));//32位随机数
@@ -188,6 +188,7 @@ public class WechatPayController {
 
             //充值记录
             Charge charge = new Charge();
+
             charge.setOrderId(orderId);
             charge.setUserid(Long.valueOf(userId));
             charge.setMoney(money);
