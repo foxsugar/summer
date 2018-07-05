@@ -156,7 +156,7 @@ public class WechatPayController {
         packageParams.put("total_fee", "" + money100);//充值金额
         packageParams.put("spbill_create_ip", ip);//终端IP
         packageParams.put("trade_type", "APP");//支付类型
-        String url = "http://" + serverConfig.getDomain() + "/wechat/pay/payApp";
+        String url = "http://" + serverConfig.getDomain() + "/game/wechat/pay/payApp";
         packageParams.put("notify_url", url);//通知地址
 
         String rtn = UnifiedOrder.postCharge(packageParams);
@@ -278,7 +278,7 @@ public class WechatPayController {
             orderRequest.setTradeType("APP");
 
             //notify 地址
-            String url = "http://" + serverConfig.getDomain() + "/wechat/pay/payApp";
+            String url = "http://" + serverConfig.getDomain() + "/game/wechat/pay/payApp";
 
             orderRequest.setNotifyUrl(url);
 
@@ -361,7 +361,7 @@ public class WechatPayController {
             orderRequest.setTradeType("JSAPI");
 
             //notify 地址
-            String url = "http://" + serverConfig.getDomain() + "/wechat/pay/pay";
+            String url = "http://" + serverConfig.getDomain() + "/game/wechat/pay/pay";
 
             orderRequest.setNotifyUrl(url);
 
