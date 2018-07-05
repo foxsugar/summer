@@ -185,6 +185,7 @@ public class TodayChargeAction {
         long agentId = AgentUtil.getAgentByRequest(request);
         AgentResponse agentResponse = new AgentResponse();
         double re = todayChargeService.canBlance(agentId);
+        System.out.println("---------|||||" + re);
         agentResponse.setData(re);
         return agentResponse;
     }
