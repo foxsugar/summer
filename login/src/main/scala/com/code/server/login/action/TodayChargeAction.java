@@ -185,8 +185,10 @@ public class TodayChargeAction {
         long agentId = AgentUtil.getAgentByRequest(request);
         AgentResponse agentResponse = new AgentResponse();
         double re = todayChargeService.canBlance(agentId);
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("result", re);
         System.out.println("---------|||||" + re);
-        agentResponse.setData(re);
+        agentResponse.setData(rs);
         return agentResponse;
     }
 
