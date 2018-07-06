@@ -1,11 +1,13 @@
 package com.code.server.login.wechat.handler;
 
 import com.code.server.constant.game.AgentBean;
+import com.code.server.constant.game.UserBean;
 import com.code.server.db.Service.GameAgentWxService;
 import com.code.server.db.Service.RecommendService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.model.GameAgentWx;
 import com.code.server.db.model.Recommend;
+import com.code.server.db.model.User;
 import com.code.server.login.wechat.builder.TextBuilder;
 import com.code.server.redis.service.RedisManager;
 import me.chanjar.weixin.common.exception.WxErrorException;
@@ -57,7 +59,7 @@ public class SubscribeHandler extends AbstractHandler {
 
         WxMpXmlOutMessage responseResult = null;
         try {
-            responseResult = handleSpecial(wxMessage,userWxInfo,weixinService);
+            responseResult = handleSpecial(wxMessage, userWxInfo, weixinService);
         } catch (Exception e) {
             this.logger.error(e.getMessage(), e);
         }
@@ -78,7 +80,7 @@ public class SubscribeHandler extends AbstractHandler {
     /**
      * 处理特殊请求，比如如果是扫码进来的，可以做相应处理
      */
-    private WxMpXmlOutMessage handleSpecial(WxMpXmlMessage wxMessage, WxMpUser wxMpUser,WxMpService wxMpService) throws Exception {
+    private WxMpXmlOutMessage handleSpecial(WxMpXmlMessage wxMessage, WxMpUser wxMpUser, WxMpService wxMpService) throws Exception {
 
         //如果是扫码登录
         String eventKey = wxMessage.getEventKey();
@@ -104,23 +106,61 @@ public class SubscribeHandler extends AbstractHandler {
 
 
             boolean isSelf = referrerUnionId.equals(unionId);
+
+            StringBuilder sb = new StringBuilder(wxMpUser.getNickname() + "扫您的专属二维码,");
+
             if (recommend == null && !isSelf) {
                 recommend = new Recommend();
                 recommend.setUnionId(unionId).setAgentId(agentId);
                 //保存
                 recommendService.getRecommendDao().save(recommend);
 
+                sb.append("成功绑定");
+            } else {
                 //通知 代理 有人绑定他
-                String name = wxMpUser.getNickname();
+//                String name = wxMpUser.getNickname();
 
-                wxMpService.getKefuService().sendKefuMessage(
-                        WxMpKefuMessage
-                                .TEXT()
-                                .toUser(agentBean.getOpenId())
-                                .content(name + "扫您的专属二维码,成功绑定")
-                                .build());
 
+//                sb.append(name).append(" 已点击您的专属链接,");
+                //这个人是否已经点过
+
+
+                //这个人如果已经是玩家 并且玩家没有上级 那么成为这个人的下级
+                User user = userService.getUserDao().getUserByOpenId(unionId);
+                if (user != null) {
+                    long userId = user.getId();
+                    boolean userIsAgnet = RedisManager.getAgentRedisService().isExit(userId);
+                    //点击者已经是代理
+                    if (userIsAgnet) {
+                        sb.append("但已成为代理");
+                    } else {
+                        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+                        if (userBean != null) {
+                            if (userBean.getReferee() == agentId) {
+                                sb.append("已经和您建立过绑定关系");
+                            } else {
+                                userBean.setReferee((int) agentId);
+                                RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
+                                sb.append("已和您成功绑定");
+                            }
+                        } else {
+                            if (user.getReferee() == agentId) {
+                                sb.append("已经和您建立过绑定关系");
+                            } else {
+                                user.setReferee((int) agentId);
+                                userService.save(user);
+                                sb.append("已和您成功绑定");
+                            }
+                        }
+                    }
+                }
             }
+            wxMpService.getKefuService().sendKefuMessage(
+                    WxMpKefuMessage
+                            .TEXT()
+                            .toUser(agentBean.getOpenId())
+                            .content(sb.toString())
+                            .build());
 
         }
 
