@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import scala.Char;
+
 import javax.persistence.criteria.*;
 import java.awt.print.Pageable;
 import java.util.ArrayList;
@@ -193,6 +195,62 @@ public class HomeServiceImpl implements HomeService{
     }
 
     @Override
+    public Charge findChargeByUserId(long userId) {
+
+        Specification<Charge> specification = new Specification<Charge>() {
+            @Override
+            public Predicate toPredicate(Root<Charge> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path path = root.get("userid");
+                Predicate predicate = path.as(Long.class).in(Arrays.asList(userId));
+                return predicate;
+            }
+        };
+
+       Charge charge = chargeDao.findOne(specification);
+
+        return charge;
+    }
+
+    @Override
+    public Charge findChargeByOrderId(long oId) {
+
+        Specification<Charge> specification = new Specification<Charge>() {
+            @Override
+            public Predicate toPredicate(Root<Charge> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path path = root.get("orderId");
+                Predicate predicate = path.as(Long.class).in(Arrays.asList(oId));
+                return predicate;
+            }
+        };
+
+        Charge charge = chargeDao.findOne(specification);
+
+        return charge;
+    }
+
+    @Override
+    public Page<Charge> timeSearchCharges(List<Date> listA, org.springframework.data.domain.Pageable pageable) {
+
+        Specification<Charge> specification = new Specification<Charge>() {
+            @Override
+            public Predicate toPredicate(Root<Charge> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                List<Predicate> predicates = new ArrayList<>();
+
+                if (listA != null && listA.size() != 0){
+                    predicates.add(cb.between(root.get("createtime"), listA.get(0), listA.get(1)));
+                }
+
+                Predicate[] pre = new Predicate[predicates.size()];
+                return query.where(predicates.toArray(pre)).getRestriction();
+            }
+        };
+
+        Page<Charge> page = chargeDao.findAll(specification, pageable);
+        return page;
+    }
+
+    @Override
     public Long chargesCount() {
 
         Specification<Charge> specification = new Specification<Charge>() {
@@ -202,6 +260,27 @@ public class HomeServiceImpl implements HomeService{
                 Path path = root.get("chargeType");
                 Predicate predicate = path.as(Integer.class).in(Arrays.asList(MONEY_TYPE, GOLD_TYPE));
                 return predicate;
+            }
+        };
+
+        return chargeDao.count(specification);
+    }
+
+    @Override
+    public Long timeSearchChargesCount(List<Date> listA) {
+
+        Specification<Charge> specification = new Specification<Charge>() {
+            @Override
+            public Predicate toPredicate(Root<Charge> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                List<Predicate> predicates = new ArrayList<>();
+
+                if (listA != null && listA.size() != 0){
+                    predicates.add(cb.between(root.get("createtime"), listA.get(0), listA.get(1)));
+                }
+
+                Predicate[] pre = new Predicate[predicates.size()];
+                return query.where(predicates.toArray(pre)).getRestriction();
             }
         };
 

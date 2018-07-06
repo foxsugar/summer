@@ -1,24 +1,31 @@
 package com.code.server.login.action;
 import com.code.server.constant.game.AgentBean;
+import com.code.server.constant.game.IChargeType;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.ErrorCode;
+import com.code.server.db.Service.ChargeService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.dao.*;
 import com.code.server.db.model.*;
 import com.code.server.login.service.AgentService;
+import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.HomeService;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.util.MD5Util;
 import com.code.server.login.vo.DChargeAdminVo;
 import com.code.server.login.vo.GameAgentVo;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.rpc.idl.ChargeType;
+import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
@@ -381,44 +388,59 @@ public class DemoAction{
         return agentResponse;
     }
 
-    @RequestMapping("/doCharge")
-    public AgentResponse doCharge(HttpServletRequest request, long userId, @RequestParam(value = "money", required = true) long money){
+    @RequestMapping(value = "/doChargeNew", method = RequestMethod.POST)
+    public AgentResponse doChargeNew(HttpServletRequest request, long userId, @RequestParam(value = "money", required = true) long money, String type){
 
-//        org.springframework.util.Assert.isTrue(isNumber(money +""), "是数字");
+        AgentResponse agentResponse = new AgentResponse();
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         UserService userService = SpringUtil.getBean(UserService.class);
         User user = userService.getUserByUserId(userId);
-        double curMoney = RedisManager.getUserRedisService().addUserMoney(userId, money);
-        AgentResponse agentResponse = new AgentResponse();
-        agentResponse.setData(curMoney);
+        String name = "";
+        if (userBean == null) {
+            if (user != null) {
+                if (type.equals("1")) {
+                    user.setMoney(user.getMoney() + money);
+                } else if (type.equals("2")) {
+                    user.setGold(user.getGold() + money);
+                }
+                userService.save(user);
+                name = user.getUsername();
+            } else {
+               agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+               return agentResponse;
+            }
+
+        } else {//在redis里
+            name = userBean.getUsername();
+            if (type.equals("1")) {
+                RedisManager.getUserRedisService().addUserMoney(userId, money);
+                GameUserService.saveUserBean(userId);
+            } else if (type.equals("2")) {
+                RedisManager.getUserRedisService().addUserGold(userId, money);
+                GameUserService.saveUserBean(userId);
+            }
+        }
+
+        Charge charge = new Charge();
+        charge.setOrderId("" + IdWorker.getDefaultInstance().nextId());
+        charge.setUserid(userId);
+        charge.setUsername(name);
+        charge.setCreatetime(new Date());
+        charge.setCallbacktime(new Date());
+        charge.setOrigin(1);
+        charge.setMoney(money);
+        charge.setMoney_point(0);
+        charge.setRecharge_source("" + IChargeType.AGENT);
+        charge.setStatus(1);
+        charge.setChargeType(type == "1" ? 0 : 1);
+        SpringUtil.getBean(ChargeService.class).save(charge);
+
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("money", money);
+        rs.put("type", type);
+        agentResponse.setData(rs);
         return agentResponse;
     }
-
-//    @RequestMapping("/charges")
-//    public AgentResponse chargeRecord(HttpServletRequest request, long userId){
-//
-//        List<Integer> list = Arrays.asList(MONEY_TYPE, GOLD_TYPE);
-//        List<Charge> chargeList = null;
-//
-//        if (userId == 0){
-//            chargeList = chargeDao.getChargesByChargeTypeIn(list);
-//        }else {
-//            chargeList = chargeDao.getChargesByChargeTypeInAndUseridIs(list, userId);
-//        }
-//
-//        List<DChargeAdminVo> result = new ArrayList<>();
-//        for (Charge charge : chargeList){
-//            DChargeAdminVo chargeAdminVo = new DChargeAdminVo();
-//            BeanUtils.copyProperties(charge, chargeAdminVo);
-//            result.add(chargeAdminVo);
-//        }
-//
-//        Map<String, Object> res = new HashMap<>();
-//        res.put("result", result);
-//        AgentResponse agentResponse = new AgentResponse();
-//        agentResponse.setData(res);
-//        return agentResponse;
-//    }
 
     @RequestMapping("/downward")
     public AgentResponse downwardDelegate(HttpServletRequest request, long agentId){
@@ -457,6 +479,86 @@ public class DemoAction{
 //                  agentBean.getPartnerId();
 
         return null;
+    }
+    @RequestMapping("/oFindCharge")
+    public AgentResponse findChargeByOrderId(long orderId){
+        Charge charge =  homeService.findChargeByOrderId(orderId);
+        List<Charge> list = new ArrayList<>();
+
+        AgentResponse agentResponse = new AgentResponse();
+        if (charge == null){
+            Map<String, Object> rs = new HashMap<>();
+            rs.put("list", list);
+            rs.put("total", 0);
+            agentResponse.setData(rs);
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+        }else {
+            list.add(charge);
+            Map<String, Object> rs = new HashMap<>();
+            rs.put("list", list);
+            rs.put("total", 1);
+            agentResponse.setData(rs);
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+        }
+        return agentResponse;
+    }
+
+    @RequestMapping("/uFindCharge")
+    public AgentResponse findChargeByUserId(long userId){
+
+        Charge charge =  homeService.findChargeByUserId(userId);
+        List<Charge> list = new ArrayList<>();
+
+        AgentResponse agentResponse = new AgentResponse();
+        if (charge == null){
+            Map<String, Object> rs = new HashMap<>();
+            rs.put("list", list);
+            rs.put("total", 0);
+            agentResponse.setData(rs);
+            agentResponse.setMsg("没有记录");
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+        }else {
+            list.add(charge);
+            Map<String, Object> rs = new HashMap<>();
+            rs.put("list", list);
+            rs.put("total", 1);
+            agentResponse.setData(rs);
+        }
+        return agentResponse;
+    }
+
+    @RequestMapping("/chargeTimeSearch")
+    public AgentResponse chargeTimerSearch(String time, int curPage){
+
+        if (curPage > 0){
+            curPage--;
+        }
+        String[] sA = null;
+        if (time.contains(",")){
+            sA = time.split(",", 1000);
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        List<Date> list = new ArrayList<>();
+
+        Arrays.stream(sA)
+                .forEach(x ->{
+                    try {
+                         list.add(simpleDateFormat.parse(x));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+        Page<Charge> page = homeService.timeSearchCharges(list, new PageRequest(curPage, 20));
+
+        AgentResponse agentResponse = new AgentResponse();
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("list", page.getContent());
+        rs.put("total", page.getTotalElements());
+        agentResponse.setData(rs);
+
+        return agentResponse;
     }
 
     @RequestMapping("/findCharges")
