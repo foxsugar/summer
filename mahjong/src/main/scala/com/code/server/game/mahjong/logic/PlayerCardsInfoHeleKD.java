@@ -61,8 +61,8 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
             for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
                 if (playerCardsInfoMj.getUserId() != this.userId) {
                     playerCardsInfoMj.addGangScore(-score);
-                    double realScote = playerCardsInfoMj.addScore(-score);
-                    allScore += realScote;
+                    playerCardsInfoMj.addScore(-score);
+                    allScore += score;
                     this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -score);
                 }
             }
@@ -91,7 +91,7 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
 
             PlayerCardsInfoMj dabaoUser = gameInfo.getPlayerCardsInfos().get(dianpaoUser);
             for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
-                if (playerCardsInfoMj.getUserId() != this.userId) {
+                if (playerCardsInfoMj.getUserId() != dianpaoUser) {
                     if (playerCardsInfoMj.getScore() < 0) {
 
                         double s = playerCardsInfoMj.getScore();

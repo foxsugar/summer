@@ -233,6 +233,7 @@ public class WechatAction extends Cors {
                         }else{
                             userBean.setReferee((int) agentId);
                             RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
+                            sb.append("已和您成功绑定");
                         }
                     }else{
                         if (user.getReferee() == agentId) {
@@ -240,6 +241,7 @@ public class WechatAction extends Cors {
                         } else {
                             user.setReferee((int) agentId);
                             userService.save(user);
+                            sb.append("已和您成功绑定");
                         }
                     }
                 }
