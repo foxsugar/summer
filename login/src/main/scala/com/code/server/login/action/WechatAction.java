@@ -229,55 +229,56 @@ public class WechatAction extends Cors {
             //这个人已经绑定代理
             if (refereeId != null) {
 
-
                 //没绑定过其他人
                 if (refereeId == 0) {
+                    long userId = 0;
+                    String uid = RedisManager.getUserRedisService().getUserIdByOpenId(unionId);
+                    //点击者是不是代理
+                    boolean userIsAgnet = true;
+                    //玩家在内存里
+                    if (uid != null) {
+                        userId = Long.valueOf(uid);
+                        if (!RedisManager.getAgentRedisService().isExit(userId)) {
+                            userIsAgnet = false;
+                            UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+                            //绑定代理
+                            userBean.setReferee((int) agentId);
+                            RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
+//                        GameUserService.saveUserBean(userId);
+                        }
+
+                    } else {
+
+                        //玩家在数据库
+                        User user = userService.getUserByOpenId(unionId);
+                        if (!RedisManager.getAgentRedisService().isExit(user.getId())) {
+                            userIsAgnet = false;
+                            user.setReferee((int) agentId);
+                            userService.save(user);
+                        }
+                    }
+                    //玩家不是代理
+                    if (!userIsAgnet) {
+                        //代理添加下级
+                        agentBean.getChildList().add(userId);
+                        //加入保存队列
+                        RedisManager.getAgentRedisService().updateAgentBean(agentBean);
+
+
+                    }else{ //点击者是代理
+                        sb.append("但已成为代理");
+                    }
 
                 }else{
-
-                }
-
-                long userId = 0;
-                String uid = RedisManager.getUserRedisService().getUserIdByOpenId(unionId);
-                //点击者是不是代理
-                boolean userIsAgnet = true;
-                //玩家在内存里
-                if (uid != null) {
-                    userId = Long.valueOf(uid);
-                    if (!RedisManager.getAgentRedisService().isExit(userId)) {
-                        userIsAgnet = false;
-                        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-                        //绑定代理
-                        userBean.setReferee((int) agentId);
-                        RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
-//                        GameUserService.saveUserBean(userId);
-                    }
-
-                } else {
-
-                    //玩家在数据库
-                    User user = userService.getUserByOpenId(unionId);
-                    if (!RedisManager.getAgentRedisService().isExit(user.getId())) {
-                        userIsAgnet = false;
-                        user.setReferee((int) agentId);
-                        userService.save(user);
-                    }
-                }
-                //玩家不是代理
-                if (!userIsAgnet) {
-                    //代理添加下级
-                    agentBean.getChildList().add(userId);
-                    //加入保存队列
-                    RedisManager.getAgentRedisService().updateAgentBean(agentBean);
 
                     if(refereeId == agentId){
                         sb.append("已经和您建立过绑定关系");
                     }else{
                         sb.append("但已绑定其他代理");
                     }
-                }else{ //点击者是代理
-                    sb.append("但已成为代理");
                 }
+
+
 
             } else {
                 Recommend recommend = recommendService.getRecommendDao().getByUnionId(unionId);
