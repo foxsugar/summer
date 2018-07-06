@@ -212,91 +212,45 @@ public class WechatAction extends Cors {
             //通知 代理 有人绑定他
             String name = wxMpUser.getNickname();
 
-//            wxMpService.getKefuService().sendKefuMessage(
-//                    WxMpKefuMessage
-//                            .TEXT()
-//                            .toUser(agentBean.getOpenId())
-//                            .content(name + "已点击您的专属链接")
-//                            .build());
-
-
             StringBuilder sb = new StringBuilder();
             sb.append(name).append(" 已点击您的专属链接,");
             //这个人是否已经点过
 
-            //这个人如果已经是玩家 并且玩家没有上级 那么成为这个人的下级
-            Integer refereeId = userService.getUserDao().getRefereeByOpenId(unionId);
-            //这个人已经绑定代理
-            if (refereeId != null) {
 
-                //没绑定过其他人
-                if (refereeId == 0) {
-                    long userId = 0;
-                    String uid = RedisManager.getUserRedisService().getUserIdByOpenId(unionId);
-                    //点击者是不是代理
-                    boolean userIsAgnet = true;
-                    //玩家在内存里
-                    if (uid != null) {
-                        userId = Long.valueOf(uid);
-                        if (!RedisManager.getAgentRedisService().isExit(userId)) {
-                            userIsAgnet = false;
-                            UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-                            //绑定代理
+            //这个人如果已经是玩家 并且玩家没有上级 那么成为这个人的下级
+           User user = userService.getUserDao().getUserByOpenId(unionId);
+            if (user != null) {
+                long userId = user.getId();
+                boolean userIsAgnet = RedisManager.getAgentRedisService().isExit(userId);
+                //点击者已经是代理
+                if (userIsAgnet) {
+                    sb.append("但已成为代理");
+                }else{
+                    UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+                    if (userBean != null) {
+                        if (userBean.getReferee() == agentId) {
+                            sb.append("已经和您建立过绑定关系");
+                        }else{
                             userBean.setReferee((int) agentId);
                             RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
-//                        GameUserService.saveUserBean(userId);
                         }
-
-                    } else {
-
-                        //玩家在数据库
-                        User user = userService.getUserByOpenId(unionId);
-                        if (!RedisManager.getAgentRedisService().isExit(user.getId())) {
-                            userIsAgnet = false;
+                    }else{
+                        if (user.getReferee() == agentId) {
+                            sb.append("已经和您建立过绑定关系");
+                        } else {
                             user.setReferee((int) agentId);
                             userService.save(user);
                         }
                     }
-                    //玩家不是代理
-                    if (!userIsAgnet) {
-                        //代理添加下级
-                        agentBean.getChildList().add(userId);
-                        //加入保存队列
-                        RedisManager.getAgentRedisService().updateAgentBean(agentBean);
-
-
-                    }else{ //点击者是代理
-                        sb.append("但已成为代理");
-                    }
-
-                }else{
-
-                    if(refereeId == agentId){
-                        sb.append("已经和您建立过绑定关系");
-                    }else{
-                        sb.append("但已绑定其他代理");
-                    }
                 }
-
-
-
-            } else {
+            }else{
                 Recommend recommend = recommendService.getRecommendDao().getByUnionId(unionId);
                 if (recommend == null) {
                     recommend = new Recommend();
                     recommend.setUnionId(unionId).setAgentId(agentId);
                     //保存
                     recommendService.getRecommendDao().save(recommend);
-
-
                     sb.append("已和您成功绑定");
-//                    wxMpService.getKefuService().sendKefuMessage(
-//                            WxMpKefuMessage
-//                                    .TEXT()
-//                                    .toUser(agentBean.getOpenId())
-//                                    .content(name + "成功绑定")
-//                                    .build());
-
                 }
             }
 
