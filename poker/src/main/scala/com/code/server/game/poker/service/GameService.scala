@@ -7,6 +7,7 @@ import com.code.server.game.poker.doudizhu.{GameDouDiZhu, GameDouDiZhuGold}
 import com.code.server.game.poker.guess.GameGuessCar
 import com.code.server.game.poker.hitgoldflower.GameHitGoldFlower
 import com.code.server.game.poker.paijiu.{GameGoldPaijiu, GamePaijiu}
+import com.code.server.game.poker.playseven.GamePlaySeven
 import com.code.server.game.poker.pullmice.GamePullMice
 import com.code.server.game.poker.tuitongzi.GameTuiTongZi
 import com.code.server.game.poker.xuanqiqi.GameXuanQiQi
@@ -36,8 +37,37 @@ object GameService {
       case x:GamePullMice =>dispatchGamePullMiceService(userId,method,game.asInstanceOf[GamePullMice],params)
       case x:GameZhaGuZi =>dispatchGameZhaGuZiService(userId,method,game.asInstanceOf[GameZhaGuZi],params)
       case x:GameXuanQiQi =>dispatchGameXQQService(userId,method,game.asInstanceOf[GameXuanQiQi],params)
-    }
+      case x:GamePlaySeven =>dispatchGamePlaySevenService(userId,method,game.asInstanceOf[GamePlaySeven],params)
 
+    }
+  }
+
+  private def dispatchGamePlaySevenService(userId:Long,method: String, game: GamePlaySeven, params: JsonNode) = method match {
+    case "shouQi" =>
+      val card = params.path("card").asInt(0)
+      game.shouQi(userId,card)
+    case "danLiang" =>
+      val card = params.path("card").asInt(0)
+      game.danLiang(userId,card)
+    case "shuangLiang" =>
+      val card = params.path("card").asInt(0)
+      game.shuangLiang(userId,card)
+    case "fanZhu" =>
+      val card = params.path("card").asInt(0)
+      val fan = params.get("fan").asBoolean()
+      game.fanZhu(userId,fan,card)
+    case "renShu" =>
+      val renShu = params.get("renShu").asBoolean()
+      game.renShu(userId,renShu)
+    case "changeTableCards" =>
+      val tableDelete = params.path("tableDelete").asText()
+      val tableAdd = params.path("tableAdd").asText()
+      game.changeTableCards(userId,tableDelete,tableAdd)
+    case "play" =>
+      val playCard = params.path("card").asText()
+      game.play(userId,playCard)
+    case _ =>
+      ErrorCode.REQUEST_PARAM_ERROR
   }
 
   private def dispatchGameDDZService(userId:Long,method: String, game: GameDouDiZhu, params: JsonNode) = method match {

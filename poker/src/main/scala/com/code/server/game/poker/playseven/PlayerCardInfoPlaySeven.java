@@ -25,12 +25,15 @@ public class PlayerCardInfoPlaySeven implements IfacePlayerInfo {
     public List<Integer> playCards = new ArrayList<>();//当前出的牌
 
 
-    public String shouQi = "0";//首七     0默认，1提示可操作，2已操作，3过期
+    public String shouQi = "0";//首七     0默认，1提示可操作，2已操作，3过期，4之后可以操作
     public String danLiang = "0";//单亮
     public String shuangLiang = "0";//双亮
     public String fanZhu = "0";//反主
     public String renShu = "0";//认输
 
+    public int fen = 0;//得分 5，10，K
+
+    protected double score;
 
 
     @Override
@@ -107,5 +110,25 @@ public class PlayerCardInfoPlaySeven implements IfacePlayerInfo {
 
     public void setRenShu(String renShu) {
         this.renShu = renShu;
+    }
+
+    public double getScore() {
+        return score;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
+    }
+
+    public int getFen() {
+        return fen;
+    }
+
+    public void setFen(int fen) {
+        this.fen = fen;
+    }
+
+    public void addScore(int addScore){
+        this.score = score+addScore;
     }
 }

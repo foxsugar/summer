@@ -45,6 +45,8 @@ public class CardsUtil {
     public static List<Integer> hua = new ArrayList<>();
     public static List<Integer> pian = new ArrayList<>();
 
+    public static Map<Integer,Integer> cardsOfScore = new HashMap<>();
+
     static {
 
         //大王，小王，7,2,1
@@ -110,10 +112,40 @@ public class CardsUtil {
             }
         }
 
+        for (Integer integer:cardsOf108.keySet()) {
+            cardsOfScore.put(integer,0);
+        }
+        cardsOfScore.put(37,10);cardsOfScore.put(38,10);cardsOfScore.put(39,10);cardsOfScore.put(40,10);
+        cardsOfScore.put(28,10);cardsOfScore.put(26,10);cardsOfScore.put(27,10);cardsOfScore.put(28,10);
+        cardsOfScore.put(9,5);cardsOfScore.put(10,5);cardsOfScore.put(11,5);cardsOfScore.put(12,5);
+        cardsOfScore.put(-37,10);cardsOfScore.put(-38,10);cardsOfScore.put(-39,10);cardsOfScore.put(-40,10);
+        cardsOfScore.put(-28,10);cardsOfScore.put(-26,10);cardsOfScore.put(-27,10);cardsOfScore.put(-28,10);
+        cardsOfScore.put(-9,5);cardsOfScore.put(-10,5);cardsOfScore.put(-11,5);cardsOfScore.put(-12,5);
+    }
+
+
+    public static boolean compareCards(List<Integer> before,List<Integer> after){
+
+        return true;
     }
 
 
 
 
 
+    //把字符串转化为数组
+    public static List<Integer> transfromStringToCards(String str){
+
+        int maxSplit = 1000;
+        String[] cards = str.split("_", maxSplit);
+        List<Integer> list = new ArrayList<>();
+
+        for (String string : cards){
+            if (string.equals("")){
+                continue;
+            }
+            list.add(Integer.valueOf(string));
+        }
+        return list;
+    }
 }
