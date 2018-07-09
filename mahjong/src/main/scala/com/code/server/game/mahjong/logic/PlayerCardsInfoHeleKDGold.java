@@ -165,7 +165,7 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
                     if(isZimo) {
                         tempScore += 20;
                     }else{
-                        tempScore += 10;
+                        tempScore += 30;
                     }
                 }
                 tempScore *= room.getMultiple();
