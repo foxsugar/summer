@@ -145,7 +145,9 @@ public class YSZRobotImpl implements YSZRobot {
         } else {
             //如果没在游戏中
             if (room.getCurGameNumber() > 1 && now - ((RoomYSZ) room).getLastReadyTime() > 1000* 10) {
-                room.getUserStatus().forEach((k,v) ->{
+                Map<Long, Integer> map = new HashMap<>();
+                map.putAll(room.getUserStatus());
+                map.forEach((k,v) ->{
                     if (v != Room.STATUS_READY) {
                         quitRoom(room,k);
                     }

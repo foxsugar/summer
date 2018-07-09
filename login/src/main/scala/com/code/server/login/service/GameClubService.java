@@ -802,7 +802,8 @@ public class GameClubService {
      * @return
      */
     public int getClubRecord(KafkaMsgKey msgKey, long userId, String clubId) {
-        Club club = ClubManager.getInstance().getClubById(clubId);
+        String unionId = clubId +"|" +LocalDate.now().toString();
+        Club club = ClubManager.getInstance().getClubById(unionId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
         }
@@ -811,7 +812,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
 
-        ClubRecord clubRecord = clubRecordService.getClubRecordDao().getClubRecordById(clubId);
+        ClubRecord clubRecord = clubRecordService.getClubRecordDao().getClubRecordById(unionId);
 
         sendMsg(msgKey, new ResponseVo("clubService", "getClubRecord", clubRecord));
         return 0;
