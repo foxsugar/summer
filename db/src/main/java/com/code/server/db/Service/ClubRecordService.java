@@ -6,6 +6,7 @@ import com.code.server.db.model.ClubRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,10 +31,14 @@ public class ClubRecordService {
 
 
     public void addRecord(String clubId, RoomRecord roomRecord) {
-        ClubRecord clubRecord = clubRecordDao.getClubRecordById(clubId);
+        String date = LocalDate.now().toString();
+        String unionId = clubId + "|" + date;
+        ClubRecord clubRecord = clubRecordDao.getClubRecordById(unionId);
         if (clubRecord == null) {
             clubRecord = new ClubRecord();
-            clubRecord.setId(clubId);
+            clubRecord.setId(unionId);
+            clubRecord.setClubId(clubId);
+            clubRecord.setDate(date);
         }
         List<RoomRecord> rc = clubRecord.getRecords();
         //有删除的战绩
@@ -44,10 +49,15 @@ public class ClubRecordService {
             rc.add(roomRecord);
         }
         //过长 删除第一个
-        if (rc.size() >= 20) {
-            rc.remove(0);
-        }
+//        if (rc.size() >= 20) {
+//            rc.remove(0);
+//        }
+
+        //数据统计
+//        Club club = ClubManager.getInstance().getClubById(clubId);
+
         clubRecordDao.save(clubRecord);
+
 
 //        return userRecordDao.save(userRecords);
     }

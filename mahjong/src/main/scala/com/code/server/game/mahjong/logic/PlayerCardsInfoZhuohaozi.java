@@ -319,6 +319,8 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
                 }
                 if (point == 7 || point == 8 || point == 9) {
                     result.add(9);
+                }else{
+                    result.add(point + 2);
                 }
             }
         }

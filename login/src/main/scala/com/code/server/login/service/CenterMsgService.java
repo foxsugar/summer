@@ -179,6 +179,9 @@ public class CenterMsgService implements IkafkaMsgId {
                 String roomModel = roomRecord.getClubRoomModel();
                 RoomModel rm = GameClubService.getRoomModel(club, roomModel);
                 roomRecord.setName(rm.getDesc());
+
+                //数据统计
+
             }
             clubRecordService.addRecord(clubId, roomRecord);
         }

@@ -37,12 +37,16 @@ public class MahjongRobot {
             }
         } else {//在准备状态
 
-            if(roomInfo.getCurGameNumber()>1 && now - roomInfo.getLastOperateTime() > READY_TIME)
-            roomInfo.getUserStatus().forEach((uid,status)->{
-                if (status != Room.STATUS_READY) {
-                    quitRoom(roomInfo, uid);
-                }
-            });
+            if(roomInfo.getCurGameNumber()>1 && now - roomInfo.getLastOperateTime() > READY_TIME){
+                Map<Long, Integer> map = new HashMap<>();
+                map.putAll(roomInfo.getUserStatus());
+                map.forEach((k,v) ->{
+                    if (v != Room.STATUS_READY) {
+                        quitRoom(roomInfo,k);
+                    }
+                });
+            }
+
         }
     }
 

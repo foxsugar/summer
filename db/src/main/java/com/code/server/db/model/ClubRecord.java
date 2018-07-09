@@ -28,6 +28,10 @@ public class ClubRecord {
     @Column(columnDefinition = "json")
     private List<RoomRecord> records= new ArrayList<>();
 
+    private String date;
+
+    private String clubId;
+
     public String getId() {
         return id;
     }
@@ -43,6 +47,24 @@ public class ClubRecord {
 
     public ClubRecord setRecords(List<RoomRecord> records) {
         this.records = records;
+        return this;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public ClubRecord setDate(String date) {
+        this.date = date;
+        return this;
+    }
+
+    public String getClubId() {
+        return clubId;
+    }
+
+    public ClubRecord setClubId(String clubId) {
+        this.clubId = clubId;
         return this;
     }
 }

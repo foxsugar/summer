@@ -17,8 +17,6 @@ import java.util.Map;
 public class RoomInfoGoldHeLe extends RoomInfo {
 
 
-
-
     public void init(String roomId, long userId, String modeTotal, String mode, int multiple, int gameNumber, int personNumber, long createUser, long bankerId, int mustZimo) {
         this.roomId = roomId;
         this.modeTotal = modeTotal;
@@ -33,10 +31,11 @@ public class RoomInfoGoldHeLe extends RoomInfo {
         this.maxCircle = gameNumber;
         this.circleNumber.put(1, 1);
         this.mustZimo = mustZimo;
-
+        
         this.createNeedMoney = 0;
-        this.goldRoomType = 100;
-        this.multiple = goldRoomType;
+        this.goldRoomType = this.multiple;
+
+
         this.isAddGold = DataManager.data.getRoomDataMap().get(this.gameType).getIsAddGold() == 1;
         clubRoomSetId();
     }
@@ -67,20 +66,20 @@ public class RoomInfoGoldHeLe extends RoomInfo {
 
     }
 
-
     protected void roomAddUser(long userId) {
 
         this.users.add(userId);
         this.userStatus.put(userId, 0);
-        this.userScores.put(userId, 0D);
-
+//        this.userScores.put(userId, 0D);
+//        if (isGoldRoom()) {
         this.userScores.put(userId, RedisManager.getUserRedisService().getUserGold(userId));
-
+//        }
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         this.canStartUserId = users.get(0);
 
         addUser2RoomRedis(userId);
     }
+
 
     @Override
     protected boolean isCanJoinCheckMoney(long userId) {
@@ -108,7 +107,7 @@ public class RoomInfoGoldHeLe extends RoomInfo {
 
                 Map<String, Object> addGold = new HashMap<>();
                 addGold.put("userId", playerCardsInfoMj.getUserId());
-                addGold.put("gold",g);
+                addGold.put("gold", g);
                 KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_GUESS_ADD_GOLD);
                 MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
                 msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addGold);

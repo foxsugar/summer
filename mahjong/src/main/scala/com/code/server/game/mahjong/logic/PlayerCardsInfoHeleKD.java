@@ -141,7 +141,7 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
                     if(isZimo) {
                         tempScore += 20;
                     }else{
-                        tempScore += 10;
+                        tempScore += 30;
                     }
                 }
                 allScore += tempScore;
