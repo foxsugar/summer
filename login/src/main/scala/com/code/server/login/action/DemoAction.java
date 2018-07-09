@@ -7,12 +7,14 @@ import com.code.server.db.Service.ChargeService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.dao.*;
 import com.code.server.db.model.*;
+import com.code.server.login.anotation.DemoChecker;
 import com.code.server.login.service.AgentService;
 import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.HomeService;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.util.MD5Util;
 import com.code.server.login.vo.DChargeAdminVo;
+import com.code.server.login.vo.DChildVo;
 import com.code.server.login.vo.GameAgentVo;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.rpc.idl.ChargeType;
@@ -28,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -218,6 +222,7 @@ public class DemoAction{
         return agentResponse;
     }
 
+    @DemoChecker
     @RequestMapping("/fetchAllPlayers")
     public AgentResponse fetchAllPlayers(int pageSize, int curPage){
 
@@ -446,7 +451,6 @@ public class DemoAction{
     public AgentResponse downwardDelegate(HttpServletRequest request, long agentId){
 
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
-
         //直接玩家
         List<Long> aList = new ArrayList<>();
         //二级代理
@@ -475,11 +479,38 @@ public class DemoAction{
         List<User> bUsers = userDao.findUsersByIdIn(bList);
         List<User> cUsers = userDao.findUsersByIdIn(cList);
 
-//        long id = agentBean.getParentId();
-//                  agentBean.getPartnerId();
+        //直接
+        Map<String, Object> rs = new HashMap<>();
+        List<Object> rsList = new ArrayList();
+        rs.put("children", rsList);
 
-        return null;
+        Map<String, Object> players = new HashMap<>();
+        rsList.add(players);
+        players.put("name", "直接玩家");
+        List<Object> playerList = new ArrayList<>();
+        players.put("children", playerList);
+
+//        for (User u : aUsers){
+//            DChildVo childVo = new DChildVo();
+//            childVo.setName(u.getId() + ":" + u.getUsername());
+//            childVo.setValue(1);
+//            playerList.add(childVo);
+//        }
+        for (int i = 0; i < 10; i++){
+            DChildVo childVo = new DChildVo();
+            childVo.setName(i + "");
+            childVo.setValue(i);
+            playerList.add(childVo);
+        }
+
+        rs.put("name", "root");
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(rs);
+        return agentResponse;
     }
+
+
+
     @RequestMapping("/oFindCharge")
     public AgentResponse findChargeByOrderId(long orderId){
         Charge charge =  homeService.findChargeByOrderId(orderId);
@@ -600,6 +631,7 @@ public class DemoAction{
             String token = getToken(agentUser.getId());
             AgentUtil.caches.put(token, rs);
             agentResponse = new AgentResponse(0, result);
+
         }else {
             agentResponse = new AgentResponse(ErrorCode.ROLE_ACCOUNT_OR_PASSWORD_ERROR,result);
             agentResponse.msg = "用户不存在";

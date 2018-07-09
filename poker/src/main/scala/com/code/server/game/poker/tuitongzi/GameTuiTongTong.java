@@ -1,10 +1,10 @@
 package com.code.server.game.poker.tuitongzi;
 
+import com.code.server.constant.response.ErrorCode;
 import com.code.server.game.room.Game;
+import com.code.server.game.room.kafka.MsgSender;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by dajuejinxian on 2018/5/16.
@@ -36,6 +36,48 @@ public class GameTuiTongTong extends GameTuiTongZi {
         return 0;
     };
 
+    /*
+ * 下注
+ * */
+    public int bet(Long userId, Integer zhu){
+        PlayerTuiTongZi playerTuiTongZi1 = playerCardInfos.get(userId);
+        //玩家不存在
+        if (playerTuiTongZi1 == null) return ErrorCode.NO_USER;
+        //已经下过注
+        if (playerTuiTongZi1.getBet() != null) return ErrorCode.ALREADY_BET;
+
+        Bet bet = new Bet();
+        bet.setZhu(zhu);
+        playerTuiTongZi1.setBet(bet);
+
+        Map result = new HashMap();
+        result.put("userId", userId);
+
+        long ret = zhu - Bet.STATE_FREE_BET;
+
+        Map<String, Long> res = new HashMap<>();
+        res.put("userId", userId);
+        res.put("ret", ret);
+
+        MsgSender.sendMsg2Player(serviceName, "betResult", res, users);
+        MsgSender.sendMsg2Player(serviceName, "bet", "0" , userId);
+
+        int count = 0;
+        for (Long l : users){
+            if (l != this.bankerId){
+                PlayerTuiTongZi p = playerCardInfos.get(l);
+                if (p.getBet() != null){
+                    count++;
+                }
+            }
+        }
+
+        if (count == (users.size() - 1)){
+            crapStart();
+        }
+        updateLastOperateTime();
+        return 0;
+    }
 
     //推筒筒 算分
     public void compute(Long firstId) throws Exception {
