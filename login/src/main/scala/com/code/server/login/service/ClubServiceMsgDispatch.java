@@ -81,7 +81,8 @@ public class ClubServiceMsgDispatch {
                 int money = params.get("money").asInt();
                 return gameClubService.charge(msgKey, userId, clubId, money);
 
-            case "createRoomModel":
+            case "createRoomModel":{
+
                 String createCommand = params.get("createCommand").asText();
                 String gameType = params.get("gameType").asText();
                 int gameNumber = params.get("gameNumber").asInt();
@@ -89,17 +90,30 @@ public class ClubServiceMsgDispatch {
                 List<Integer> indexs = JsonUtil.readValue(params.path("indexs").toString(),new TypeReference<List<Integer>>() {});
 
                 return gameClubService.createRoomModel(msgKey,  userId, clubId, createCommand,gameType, gameNumber, desc1, indexs.toArray());
+            }
 
             case "removeRoomModel":
                 String roomModelId = params.get("roomModelId").asText();
                 return gameClubService.removeRoomModel(msgKey, userId, clubId, roomModelId);
-            case "setRoomModel":
+            case "setRoomModel":{
+
                 String createCommand_set = params.get("createCommand").asText();
                 String gameType_set = params.get("gameType").asText();
                 int gameNumber_set = params.get("gameNumber").asInt();
                 String desc1_set = params.get("desc").asText();
                 String roomModelId_set = params.get("roomModelId").asText();
                 return gameClubService.setRoomModel(msgKey,  userId, clubId,roomModelId_set,createCommand_set, gameType_set, gameNumber_set, desc1_set);
+            }
+
+            case "setRoomModelBatch":{
+                String createCommand_set = params.get("createCommand").asText();
+                String gameType_set = params.get("gameType").asText();
+                int gameNumber_set = params.get("gameNumber").asInt();
+                String desc1_set = params.get("desc").asText();
+                List<Integer> indexs = JsonUtil.readValue(params.path("indexs").toString(),new TypeReference<List<Integer>>() {});
+                return gameClubService.setRoomModelBatch(msgKey,  userId, clubId,createCommand_set, gameType_set, gameNumber_set, desc1_set,indexs);
+            }
+
             case "clubRoomSetId":
 
                 String clubModelId = params.get("clubModelId").asText();
@@ -130,6 +144,14 @@ public class ClubServiceMsgDispatch {
 
             case "getChargeRecord":
                 return gameClubService.getChargeRecord(msgKey, userId, clubId);
+
+            case "setFloorDesc":{
+
+                int floor = params.get("floor").asInt();
+                String desc1 = params.get("desc").asText();
+                return gameClubService.setFloor(msgKey, userId, clubId, floor, desc1);
+            }
+
         }
         return 0;
     }

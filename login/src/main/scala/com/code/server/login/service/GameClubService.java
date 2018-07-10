@@ -508,6 +508,28 @@ public class GameClubService {
         return 0;
     }
 
+    public int setFloor(KafkaMsgKey msgKey, long userId, String clubId, int floor,String desc) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        for (int i = 0; i < 5; i++) {
+            if (club.getClubInfo().getFloorDesc().size() > i) {
+
+//                if(club.getClubInfo().getFloorDesc().get(i).equals())
+//                club.getClubInfo().getFloorDesc().add("");
+            } else{
+                club.getClubInfo().getFloorDesc().add("");
+            }
+        }
+        for (int i = 0; i < floor; i++) {
+          club.getClubInfo().getFloorDesc().add(floor, desc);
+        }
+
+        return 0;
+    }
+
+
     /**
      * 初始化数据 懒加载
      */
@@ -580,7 +602,7 @@ public class GameClubService {
             club.getClubInfo().getRoomModels().add(roomModel);
 
         }
-        sendMsg(msgKey, new ResponseVo("clubService", "createRoomModel",  club.getClubInfo().getRoomModels().get(0)));
+        sendMsg(msgKey, new ResponseVo("clubService", "createRoomModel", club.getClubInfo().getRoomModels().get(0)));
 
         //实例化房间
         initRoomInstance(club);
@@ -671,6 +693,66 @@ public class GameClubService {
         return 0;
     }
 
+
+    /**
+     * 修改房间模式
+     *
+     * @param msgKey
+     * @param userId
+     * @param clubId
+     * @param createCommand
+     * @param gameType
+     * @param gameNumber
+     * @param desc
+     * @return
+     */
+    public int setRoomModelBatch(KafkaMsgKey msgKey, long userId, String clubId, String createCommand, String gameType, int gameNumber, String desc, List<Integer> indexs) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+
+        if (club.getPresident() != userId) {
+            return ErrorCode.CLUB_NOT_PRESIDENT;
+        }
+
+
+        //初始化 房间数据
+        initRoomData();
+
+        StaticDataProto.RoomData roomData = DataManager.data.getRoomDataMap().get(gameType);
+        if (roomData == null || !roomData.getMoneyMap().containsKey(gameNumber)) {
+            return ErrorCode.REQUEST_PARAM_ERROR;
+        }
+
+
+        JsonNode jsonNode = JsonUtil.readTree(createCommand);
+        String serviceName = jsonNode.path("service").asText();
+        //设置创建命令
+
+        for (int index : indexs) {
+            if (club.getClubInfo().getRoomModels().size() > index) {
+
+                RoomModel roomModel = club.getClubInfo().getRoomModels().get(index);
+                if (roomModel == null) {
+                    return ErrorCode.REQUEST_PARAM_ERROR;
+                }
+                createCommand = setRoomModelCommand(createCommand, clubId, roomModel.getId());
+                roomModel.setCreateCommand(createCommand);
+                roomModel.setDesc(desc);
+                roomModel.setTime(System.currentTimeMillis());
+                roomModel.setMoney(roomData.getMoneyMap().get(gameNumber));
+                roomModel.setServiceName(serviceName);
+            }
+
+        }
+
+
+        sendMsg(msgKey, new ResponseVo("clubService", "setRoomModel", "ok"));
+        //实例化房间
+        initRoomInstance(club);
+        return 0;
+    }
 
     /**
      * 俱乐部设置id
@@ -1008,6 +1090,9 @@ public class GameClubService {
         // setRoomModelCommand(s, "1","2");
         System.out.println(LocalTime.now());
         System.out.println(LocalDate.now().toString());
+        List<Integer> list = new ArrayList<>();
+        list.add(2, 1);
+        System.out.println(list);
 
     }
 
