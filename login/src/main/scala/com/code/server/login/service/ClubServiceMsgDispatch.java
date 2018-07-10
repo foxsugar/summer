@@ -4,9 +4,13 @@ import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.kafka.MsgProducer;
+import com.code.server.util.JsonUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by sunxianping on 2018/1/15.
@@ -82,7 +86,9 @@ public class ClubServiceMsgDispatch {
                 String gameType = params.get("gameType").asText();
                 int gameNumber = params.get("gameNumber").asInt();
                 String desc1 = params.get("desc").asText();
-                return gameClubService.createRoomModel(msgKey,  userId, clubId, createCommand,gameType, gameNumber, desc1);
+                List<Integer> indexs = JsonUtil.readValue(params.path("indexs").toString(),new TypeReference<List<Integer>>() {});
+
+                return gameClubService.createRoomModel(msgKey,  userId, clubId, createCommand,gameType, gameNumber, desc1, indexs.toArray());
 
             case "removeRoomModel":
                 String roomModelId = params.get("roomModelId").asText();

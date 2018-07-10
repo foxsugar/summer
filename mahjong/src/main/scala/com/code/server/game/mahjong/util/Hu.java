@@ -487,7 +487,7 @@ public class Hu {
 
     public static boolean isHasJiang(List<CardGroup> list) {
         for (CardGroup cardGroup : list) {
-            if (cardGroup.huType == CARD_GROUP_TYPE_JIANG || cardGroup.huType == CARD_GROUP_TYPE_TWO_HUN_JIANG) {
+            if (cardGroup.huType == CARD_GROUP_TYPE_JIANG || cardGroup.huType == CARD_GROUP_TYPE_TWO_HUN_JIANG || cardGroup.huType == CARD_GROUP_TYPE_ONE_HUN_JIANG) {
                 return true;
             }
         }
