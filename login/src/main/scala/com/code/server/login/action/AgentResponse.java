@@ -60,4 +60,13 @@ public class AgentResponse implements ErrorCode{
         this.data = data;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "AgentResponse{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

@@ -89,7 +89,6 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(150);
                 genZhuList.add(200);
                 genZhuList.add(250);
-                minGold = 50;
             }else if (room.getGoldRoomType() == 100){
                 max = 1000;
                 minGold = 1000;
@@ -97,30 +96,21 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(300);
                 genZhuList.add(400);
                 genZhuList.add(500);
-            }else if (room.getGoldRoomType() == 500){
-                max = 5000;
-                minGold = 5000;
-                genZhuList.add(1000);
-                genZhuList.add(1500);
-                genZhuList.add(2000);
-                genZhuList.add(2500);
-            }else if (room.getGoldRoomType() == 1000){
-                max = 10000;
-                minGold = 10000;
-                genZhuList.add(2000);
-                genZhuList.add(3000);
-                genZhuList.add(4000);
-                genZhuList.add(5000);
             }else if (room.getGoldRoomType() == 200){
-                //new
                 max = 2000;
                 minGold = 2000;
                 genZhuList.add(400);
                 genZhuList.add(600);
                 genZhuList.add(800);
                 genZhuList.add(1000);
+            }else if (room.getGoldRoomType() == 500){
+                max = 4000;
+                minGold = 4000;
+                genZhuList.add(800);
+                genZhuList.add(1200);
+                genZhuList.add(1600);
+                genZhuList.add(2000);
             }
-
             INIT_BOTTOM_CHIP = dizhu;
             MAX_BET_NUM = max;
 
@@ -142,21 +132,21 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(400);
                 genZhuList.add(500);
 
-            }else if (room.getGoldRoomType() == 1000){
-                max = 10000;
-                minGold = 10000;
-                genZhuList.add(2000);
-                genZhuList.add(3000);
-                genZhuList.add(4000);
-                genZhuList.add(5000);
-
-            }else if (room.getGoldRoomType() == 2000){
+            }else if (room.getGoldRoomType() == 200){
                 max = 2000;
                 minGold = 2000;
                 genZhuList.add(400);
                 genZhuList.add(600);
                 genZhuList.add(800);
                 genZhuList.add(1000);
+
+            }else if (room.getGoldRoomType() == 500){
+                max = 4000;
+                minGold = 4000;
+                genZhuList.add(800);
+                genZhuList.add(1200);
+                genZhuList.add(1600);
+                genZhuList.add(2000);
             }
 
             INIT_BOTTOM_CHIP = dizhu;
