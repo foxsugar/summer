@@ -145,6 +145,10 @@ public class GameTuiZiKXHY_BWZ extends GameTuiZiKXHY{
         for (PlayerTuiTongZi winner : winnerList){
 
             long delta = winner.getBet().getZhu() - Bet.STATE_FREE_BET;
+            boolean isQiDui = TuiTongZiCardUtils.isDuiZi(winner.getPlayerCards());
+            if (isQiDui){
+                delta = delta * 2;
+            }
             currentGuoDi = currentGuoDi - delta;
             playerZhuang.setScore(playerZhuang.getScore() + delta);
             winner.setScore(winner.getScore() + delta);

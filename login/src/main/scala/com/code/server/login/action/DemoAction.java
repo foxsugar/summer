@@ -7,18 +7,22 @@ import com.code.server.db.Service.ChargeService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.dao.*;
 import com.code.server.db.model.*;
+import com.code.server.login.anotation.DemoChecker;
 import com.code.server.login.service.AgentService;
 import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.HomeService;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.util.MD5Util;
 import com.code.server.login.vo.DChargeAdminVo;
+import com.code.server.login.vo.DChildVo;
 import com.code.server.login.vo.GameAgentVo;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.rpc.idl.ChargeType;
 import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
+import javafx.scene.chart.Chart;
+import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -218,6 +224,7 @@ public class DemoAction{
         return agentResponse;
     }
 
+    @DemoChecker
     @RequestMapping("/fetchAllPlayers")
     public AgentResponse fetchAllPlayers(int pageSize, int curPage){
 
@@ -445,8 +452,24 @@ public class DemoAction{
     @RequestMapping("/downward")
     public AgentResponse downwardDelegate(HttpServletRequest request, long agentId){
 
-        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+        //先给个demo
+        if (agentId == 0){
+            Map<String, Object> rrss = assDemo();
 
+            AgentResponse agentResponse = new AgentResponse();
+            agentResponse.setData(rrss);
+            return agentResponse;
+        }
+
+        //如果代理是空的
+        if (RedisManager.getAgentRedisService().getAgentBean(agentId) == null){
+            AgentResponse agentResponse = new AgentResponse();
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+            agentResponse.setMsg("代理不存在");
+            return agentResponse;
+        }
+
+        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         //直接玩家
         List<Long> aList = new ArrayList<>();
         //二级代理
@@ -473,13 +496,234 @@ public class DemoAction{
 
         List<User> aUsers = userDao.findUsersByIdIn(aList);
         List<User> bUsers = userDao.findUsersByIdIn(bList);
-        List<User> cUsers = userDao.findUsersByIdIn(cList);
+//        List<User> cUsers = userDao.findUsersByIdIn(cList);
 
-//        long id = agentBean.getParentId();
-//                  agentBean.getPartnerId();
+        Map<String, Object> rs =  assembleDelegateRelationship(agentId, aUsers, bUsers);
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(rs);
+        System.out.println("====");
+        System.out.println(agentResponse);
+        return agentResponse;
 
-        return null;
+//        //直接
+//        Map<String, Object> rs = new HashMap<>();
+//        List<Object> rsList = new ArrayList();
+//        rs.put("children", rsList);
+//
+//        Map<String, Object> players = new HashMap<>();
+//        rsList.add(players);
+//        players.put("name", "直接玩家");
+//        List<Object> playerList = new ArrayList<>();
+//        players.put("children", playerList);
+//
+//        for (int i = 0; i < 10; i++){
+//            DChildVo childVo = new DChildVo();
+//            childVo.setName(i + "");
+//            childVo.setValue(i);
+//            playerList.add(childVo);
+//        }
+//
+//        rs.put("name", "root");
+//
+//        Map<String, Object> rrss = ass();
+//
+//        AgentResponse agentResponse = new AgentResponse();
+//        agentResponse.setData(rrss);
+//        return agentResponse;
     }
+
+    public String transformStr(long uid){
+        User user = userDao.findOne(uid);
+        String str ="ID:" + user.getId() + "名:" + user.getUsername();
+        return str;
+    }
+
+    public String transformStr(User user){
+        String str ="ID:" + user.getId() + "名:" + user.getUsername();
+        return str;
+    }
+
+    public Map<String, Object> assembleDelegateRelationship(long agentId, List<User> aList, List<User> bList){
+
+        Map<String, Object> nodeRoot = new HashMap<>();
+        nodeRoot.put("name", transformStr(agentId));
+
+        List<Object> childrenRoot = new ArrayList<>();
+        nodeRoot.put("children", childrenRoot);
+
+        Map<String, Object> node1_1 = new HashMap<>();
+        childrenRoot.add(node1_1);
+        node1_1.put("name", "直接玩家");
+
+        List<Object> children1_1 = new ArrayList<>();
+        node1_1.put("children", children1_1);
+
+        //直接玩家
+        for (User user : aList){
+            DChildVo childVo = new DChildVo();
+            childVo.setName(transformStr(user));
+            childVo.setValue((int) user.getId());
+            children1_1.add(childVo);
+        }
+
+        Map<String, Object> node1_2 = new HashMap<>();
+        childrenRoot.add(node1_2);
+        node1_2.put("name", "二级代理");
+
+        List<Object> children1_2 = new ArrayList<>();
+        node1_2.put("children", children1_2);
+
+//        for (int i = 10; i < 20; i++){
+//
+//            Map<String, Object> node2_x = new HashMap<>();
+//            node2_x.put("name", i);
+//            children1_2.add(node2_x);
+//
+//            List<Object> child2_x = new ArrayList<>();
+//            node2_x.put("children", child2_x);
+//
+//            for (int j = 100; j < 110; j++){
+//                DChildVo childVo = new DChildVo();
+//                childVo.setValue(j);
+//                childVo.setName("三级代理" + j);
+//                child2_x.add(childVo);
+//            }
+//        }
+
+        //二级代理
+        for (User user : bList){
+
+            Map<String, Object> node2_x = new HashMap<>();
+            node2_x.put("name", transformStr(user));
+            children1_2.add(node2_x);
+
+            List<Object> child2_x = new ArrayList<>();
+            node2_x.put("children", child2_x);
+
+//            //三级代理
+//            for (int j = 100; j < 110; j++){
+//                DChildVo childVo = new DChildVo();
+//                childVo.setValue(j);
+//                childVo.setName("三级代理" + j);
+//                child2_x.add(childVo);
+//            }
+
+            AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(user.getId());
+            if (agentBean == null) continue;
+            for (Long id : agentBean.getChildList()){
+                DChildVo dChildVo = new DChildVo();
+                dChildVo.setName(transformStr(id));
+                child2_x.add(dChildVo);
+            }
+
+        }
+
+        return nodeRoot;
+    }
+
+    public Map<String, Object> assDemo(){
+
+        Map<String, Object> nodeRoot = new HashMap<>();
+        nodeRoot.put("name", "self");
+
+        List<Object> childrenRoot = new ArrayList<>();
+        nodeRoot.put("children", childrenRoot);
+
+        Map<String, Object> node1_1 = new HashMap<>();
+        childrenRoot.add(node1_1);
+        node1_1.put("name", "直接玩家");
+
+        List<Object> children1_1 = new ArrayList<>();
+        node1_1.put("children", children1_1);
+
+        //直接玩家
+        for (int i = 0; i < 5; i++){
+            DChildVo childVo = new DChildVo();
+            childVo.setName(i + "");
+            childVo.setValue(i);
+            children1_1.add(childVo);
+        }
+
+        Map<String, Object> node1_2 = new HashMap<>();
+        childrenRoot.add(node1_2);
+        node1_2.put("name", "二级代理");
+
+        List<Object> children1_2 = new ArrayList<>();
+        node1_2.put("children", children1_2);
+
+        for (int i = 10; i < 20; i++){
+
+            Map<String, Object> node2_x = new HashMap<>();
+            node2_x.put("name", i);
+            children1_2.add(node2_x);
+
+            List<Object> child2_x = new ArrayList<>();
+            node2_x.put("children", child2_x);
+
+            for (int j = 100; j < 110; j++){
+                DChildVo childVo = new DChildVo();
+                childVo.setValue(j);
+                childVo.setName("三级代理" + j);
+                child2_x.add(childVo);
+            }
+        }
+
+        //二级代理
+        for (int i = 5; i < 10; i++){
+
+            Map<String, Object> node2_x = new HashMap<>();
+            node2_x.put("name", i + "");
+            children1_2.add(node2_x);
+
+            List<Object> child2_x = new ArrayList<>();
+            node2_x.put("children", child2_x);
+
+            //三级代理
+            for (int j = 100; j < 110; j++){
+                DChildVo childVo = new DChildVo();
+                childVo.setValue(j);
+                childVo.setName("三级代理" + j);
+                child2_x.add(childVo);
+            }
+        }
+
+        return nodeRoot;
+
+    }
+
+    public  Map<String, Object> ass(){
+
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("name", "flare");
+
+        List<Object> list = new ArrayList<>();
+        rs.put("children", list);
+
+        Map<String, Object> inner = new HashMap<>();
+        list.add(inner);
+        inner.put("name", "analytics");
+
+        List<Object> analytics = new ArrayList<>();
+        inner.put("children", analytics);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("name","cluster");
+
+        analytics.add(map);
+
+        List<Object> cluster = new ArrayList<>();
+        map.put("children", cluster);
+
+        for (int i = 0; i < 35; i++){
+            DChildVo childVo = new DChildVo();
+            childVo.setName(i + "");
+            childVo.setValue(i);
+            cluster.add(childVo);
+        }
+
+        return rs;
+    }
+
     @RequestMapping("/oFindCharge")
     public AgentResponse findChargeByOrderId(long orderId){
         Charge charge =  homeService.findChargeByOrderId(orderId);
@@ -498,7 +742,7 @@ public class DemoAction{
             rs.put("list", list);
             rs.put("total", 1);
             agentResponse.setData(rs);
-            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+//            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
         }
         return agentResponse;
     }
@@ -600,6 +844,7 @@ public class DemoAction{
             String token = getToken(agentUser.getId());
             AgentUtil.caches.put(token, rs);
             agentResponse = new AgentResponse(0, result);
+
         }else {
             agentResponse = new AgentResponse(ErrorCode.ROLE_ACCOUNT_OR_PASSWORD_ERROR,result);
             agentResponse.msg = "用户不存在";
@@ -637,11 +882,19 @@ public class DemoAction{
         return new AgentResponse(0, logRecordDao.findByIdIn(days));
     }
 
+    @RequestMapping("/test")
+    public Map<String, Object> test(){
+
+        return ass();
+    }
+
     public static void main(String[] args) {
-        LocalDate today = LocalDate.now();
-        for(int i=0;i<7;i++) {
-            LocalDate temp = today.minusDays(i + 1);
-            System.out.println(temp.toString());
-        }
+//        LocalDate today = LocalDate.now();
+//        for(int i=0;i<7;i++) {
+//            LocalDate temp = today.minusDays(i + 1);
+//            System.out.println(temp.toString());
+//        }
+//        Map<String, Object> oo = ass();
+//        System.out.println(oo);
     }
 }
