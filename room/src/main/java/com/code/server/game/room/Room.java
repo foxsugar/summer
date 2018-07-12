@@ -518,11 +518,11 @@ public class Room implements IfaceRoom {
         }
 
         //同意解散
-        if (agreeNum >= personNumber - 1 && agreeNum >= 2) {
+        if (isCanAgreeDissloution(agreeNum)) {
             GameTimer.removeNode(timerNode);
             dissolutionRoom();
         }
-        //不同意的人数大于2 解散取消
+        //不同意的人数大于等于1 解散取消
         if (disAgreeNum >= 1) {
             for (Map.Entry<Long, Integer> entry : userStatus.entrySet()) {
                 //回到游戏状态
@@ -542,6 +542,10 @@ public class Room implements IfaceRoom {
         MsgSender.sendMsg2Player("roomService", methodName, send, userId);
 
         return 0;
+    }
+
+    protected boolean isCanAgreeDissloution(int agreeNum){
+        return agreeNum >= personNumber - 1 && agreeNum >= 2;
     }
 
     public boolean isRoomOver() {

@@ -568,7 +568,7 @@ public class GameClubService {
      * @param desc
      * @return
      */
-    public int createRoomModel(KafkaMsgKey msgKey, long userId, String clubId, String createCommand, String gameType, int gameNumber, String desc, Object... indexs) {
+    public int createRoomModel(KafkaMsgKey msgKey, long userId, String clubId, String createCommand, String gameType, int gameNumber, String desc, List<Integer> indexs) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
@@ -593,7 +593,7 @@ public class GameClubService {
         }
 
 
-        int length = indexs.length == 0 ? 1 : indexs.length;
+        int length = indexs == null ? 1 : indexs.size();
 
         for (int i = 0; i < length; i++) {
 
@@ -613,7 +613,8 @@ public class GameClubService {
             club.getClubInfo().getRoomModels().add(roomModel);
 
         }
-        sendMsg(msgKey, new ResponseVo("clubService", "createRoomModel", club.getClubInfo().getRoomModels().get(0)));
+        RoomModel roomModel = club.getClubInfo().getRoomModels().get(club.getClubInfo().getRoomModels().size() - 1);
+        sendMsg(msgKey, new ResponseVo("clubService", "createRoomModel",roomModel));
 
         //实例化房间
         initRoomInstance(club);

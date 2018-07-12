@@ -87,9 +87,13 @@ public class ClubServiceMsgDispatch {
                 String gameType = params.get("gameType").asText();
                 int gameNumber = params.get("gameNumber").asInt();
                 String desc1 = params.get("desc").asText();
-                List<Integer> indexs = JsonUtil.readValue(params.path("indexs").toString(),new TypeReference<List<Integer>>() {});
+                String str = params.path("indexs").toString();
+                List<Integer> indexs = null;
+                if(str != null && !str.equals("")){
+                    indexs = JsonUtil.readValue(params.path("indexs").toString(),new TypeReference<List<Integer>>() {});
+                }
 
-                return gameClubService.createRoomModel(msgKey,  userId, clubId, createCommand,gameType, gameNumber, desc1, indexs.toArray());
+                return gameClubService.createRoomModel(msgKey,  userId, clubId, createCommand,gameType, gameNumber, desc1, indexs);
             }
 
             case "removeRoomModel":
