@@ -142,6 +142,8 @@ public class SubscribeHandler extends AbstractHandler {
                                 userBean.setReferee((int) agentId);
                                 RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
                                 sb.append("已和您成功绑定");
+                                agentBean.getChildList().add(userId);
+                                RedisManager.getAgentRedisService().updateAgentBean(agentBean);
                             }
                         } else {
                             if (user.getReferee() == agentId) {
@@ -150,6 +152,8 @@ public class SubscribeHandler extends AbstractHandler {
                                 user.setReferee((int) agentId);
                                 userService.save(user);
                                 sb.append("已和您成功绑定");
+                                agentBean.getChildList().add(userId);
+                                RedisManager.getAgentRedisService().updateAgentBean(agentBean);
                             }
                         }
                     }

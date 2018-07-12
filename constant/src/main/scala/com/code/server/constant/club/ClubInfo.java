@@ -17,6 +17,7 @@ public class ClubInfo {
     private Map<String, RoomInstance> roomInstance = new HashMap<>();//房间实例
     private List<RoomInstance> playingRoom = new CopyOnWriteArrayList<>();
     private List<String> floorDesc = new ArrayList<>();
+    private List<Long> admin = new ArrayList<>();
 
     public Map<String, ClubMember> getMember() {
         return member;
@@ -69,6 +70,15 @@ public class ClubInfo {
 
     public ClubInfo setFloorDesc(List<String> floorDesc) {
         this.floorDesc = floorDesc;
+        return this;
+    }
+
+    public List<Long> getAdmin() {
+        return admin;
+    }
+
+    public ClubInfo setAdmin(List<Long> admin) {
+        this.admin = admin;
         return this;
     }
 }

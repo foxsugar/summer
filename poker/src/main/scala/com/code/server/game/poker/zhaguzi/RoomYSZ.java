@@ -403,7 +403,7 @@ public class RoomYSZ extends RoomExtendGold {
 
         if (timerTick != lastTimerTick){
             long deta = (System.currentTimeMillis() - this.lastReadyTime) / ((long)(10 * Math.pow(10, 9)));
-            this.leaveSecond = 30l - deta;
+            this.leaveSecond = 30L - deta;
             Map<String, Object> result = new HashMap<>();
             result.put("second", 30);
             result.put("timerTick", timerTick);

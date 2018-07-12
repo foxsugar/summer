@@ -307,6 +307,15 @@ public class WechatAction extends Cors {
 
     }
 
+
+
+    @GetMapping("/showLink")
+    public void userInfo(@RequestParam("agentId") String agentId,
+                        HttpServletResponse response) throws IOException {
+        long aid = Long.valueOf(agentId);
+        handle_link_redirect(aid, response);
+    }
+
     @GetMapping("/userInfo")
     public void userInfo(@RequestParam("code") String code,
                          @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {

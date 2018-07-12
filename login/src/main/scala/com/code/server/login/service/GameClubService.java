@@ -172,6 +172,7 @@ public class GameClubService {
 
                 player.put("username", userBean.getUsername());
                 player.put("image", userBean.getImage());
+                player.put("id", userBean.getId());
                 vo.getPlayers().add(player);
             }
 
@@ -530,6 +531,16 @@ public class GameClubService {
     }
 
 
+    public int setAdmin(KafkaMsgKey msgKey, long userId, String clubId, long adminUser, boolean isAdd) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+
+        return 0;
+    }
+
+
     /**
      * 初始化数据 懒加载
      */
@@ -748,7 +759,7 @@ public class GameClubService {
         }
 
 
-        sendMsg(msgKey, new ResponseVo("clubService", "setRoomModel", "ok"));
+        sendMsg(msgKey, new ResponseVo("clubService", "setRoomModelBatch", "ok"));
         //实例化房间
         initRoomInstance(club);
         return 0;
