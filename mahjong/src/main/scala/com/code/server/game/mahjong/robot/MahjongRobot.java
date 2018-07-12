@@ -28,7 +28,11 @@ public class MahjongRobot {
             if (now- gameInfo.getLastOperateTime()   > INTERVAL_TIME) {
                 if (gameInfo.getWaitingforList().size() > 0) {
                     GameInfo.WaitDetail waitDetail = gameInfo.getWaitingforList().get(0);
-                    guo(roomInfo, waitDetail.myUserId);
+                    if (waitDetail.isHu) {
+                        hu(roomInfo, waitDetail.myUserId);
+                    } else {
+                        guo(roomInfo, waitDetail.myUserId);
+                    }
                 } else {
                     if (gameInfo.getTurnId() != 0) {
                         playCard(roomInfo);
@@ -88,6 +92,14 @@ public class MahjongRobot {
         Map<String, Object> params = new HashMap<>();
         params.put("userId", userId);
         ResponseVo vo = new ResponseVo("gameLogicService", "next",params);
+        sendRobotRequest(roomInfo, userId, vo);
+
+    }
+
+    public static void hu(RoomInfo roomInfo, long userId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        ResponseVo vo = new ResponseVo("gameLogicService", "hu",params);
         sendRobotRequest(roomInfo, userId, vo);
 
     }

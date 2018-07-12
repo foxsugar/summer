@@ -411,6 +411,7 @@ public class RoomInfo extends RoomExtendGold {
         result.put("clubRoomModel", this.getClubRoomModel());
         result.put("goldRoomType", this.getGoldRoomType());
         result.put("goldRoomPermission", this.getGoldRoomPermission());
+        result.put("showChat", this.showChat);
 
         return result;
     }
@@ -472,6 +473,7 @@ public class RoomInfo extends RoomExtendGold {
         roomVo.setModeTotal(this.getModeTotal());
         roomVo.setEach(this.getEach());
         roomVo.setMustZimo(this.mustZimo);
+        roomVo.setShowChat(this.showChat);
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.getGame() != null) {
             roomVo.game = this.game.toVo(userId);

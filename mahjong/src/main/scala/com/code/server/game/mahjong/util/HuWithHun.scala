@@ -21,7 +21,7 @@ object HuWithHun {
 
     val (noHunCards, hunNum) = getNoHunCardsAndHunNum(cardArray, hun)
 
-    println("混的数量 : " + hunNum)
+//    println("混的数量 : " + hunNum)
     //    for(c<- noHunCards if c !=0) println(c)
 
     var completeList: util.List[util.List[CardGroup]] = new util.ArrayList()
@@ -29,8 +29,8 @@ object HuWithHun {
     var groups: util.List[CardGroup] = new util.ArrayList()
     Hu.testHun(true, noHunCards, completeList, allList, groups)
 
-    System.out.println("配好的 : " + completeList)
-    System.out.println("没配好的 : " + allList)
+//    System.out.println("配好的 : " + completeList)
+//    System.out.println("没配好的 : " + allList)
 
     var finalResult: util.List[HuCardType] = new util.ArrayList[HuCardType]()
     //全都是混
@@ -55,19 +55,19 @@ object HuWithHun {
       }
 
       //      list
-      println(completeList.size())
-      println(completeList)
+//      println(completeList.size())
+//      println(completeList)
     }
 
     var complete: util.List[util.List[CardGroup]] = new util.ArrayList(completeList)
 
-    println("去重的 : " + allList)
+//    println("去重的 : " + allList)
 
 
     var temp: util.List[CardGroup] = new util.ArrayList()
     //没有凑成附子
     if (allList.size() == 0) {
-      println("没有凑成附子")
+//      println("没有凑成附子")
 
       if (hunIsEnough(noHunCards, temp, hunNum)) {
         val remainCardNum = getCardNum(noHunCards)
@@ -90,26 +90,26 @@ object HuWithHun {
           val isHasJiang = Hu.isHasJiang(cdl)
           val needGroupSize = 5 - chiPengGangNum - cdl.size
           var need2HunNum = getNeed2HunNum(remainCardNum, hunNum, needGroupSize, isHasJiang)
-          println("两个混的数量 = " + need2HunNum)
+//          println("两个混的数量 = " + need2HunNum)
           //          need2HunNum = 7
           getKaoPai(cs, complete, cardGroupList, hunNum, need2HunNum)
           //          getKaoPai1(cs, complete, cardGroupList, hunNum)
-          println("组成的一半: " + cardGroupList)
+//          println("组成的一半: " + cardGroupList)
           //          println("带混的最终牌型: " + complete)
         }
       }
     }
     //todo 去掉去重
     //      complete = Hu.removeRepeat(complete)
-    println("==================================hun==============")
-    println(" 不是5 个附子的数量 = " + complete.stream().filter(l => l.size() != 5).count())
-    println(complete.size())
-     println(complete)
+//    println("==================================hun==============")
+//    println(" 不是5 个附子的数量 = " + complete.stream().filter(l => l.size() != 5).count())
+//    println(complete.size())
+//     println(complete)
 
     var huCardTypeList: util.List[HuCardType] = new util.ArrayList[HuCardType]()
     //转换成hucardtype
     complete.forEach(cardGroups => huCardTypeList.add(Hu.convert2HuCardType(cardGroups)))
-    huCardTypeList.forEach(huType => println(huType))
+//    huCardTypeList.forEach(huType => println(huType))
 
 
     huCardTypeList.forEach(huCardType => getHuType(playerCardsInfo, cardArray, noHunCards, huCardType, hun, lastCard, hunNum))
@@ -862,6 +862,7 @@ object HuWithHun {
 
       //凑将
       if (hunNum > 0 && cards(i) >= 1 && !Hu.isHasJiang(cardGroupList)) {
+
         var newCardGroupList = new util.ArrayList(cardGroupList)
         newCardGroupList.add(new CardGroup(Hu.CARD_GROUP_TYPE_ONE_HUN_JIANG, i, 1))
         var newCards = for (c <- cards) yield c

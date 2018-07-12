@@ -127,6 +127,7 @@ public class LoginAction {
                 if (agentBean != null) {
                     if (!agentBean.getChildList().contains(user.getId())) {
                         agentBean.getChildList().add(user.getId());
+                        RedisManager.getAgentRedisService().updateAgentBean(agentBean);
                     }
                     //通知
                     try {

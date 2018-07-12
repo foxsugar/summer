@@ -182,6 +182,7 @@ public class CenterMsgService implements IkafkaMsgId {
 
                 //数据统计
 
+
             }
             clubRecordService.addRecord(clubId, roomRecord);
         }

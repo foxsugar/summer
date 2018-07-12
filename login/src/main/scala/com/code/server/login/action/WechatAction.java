@@ -233,6 +233,9 @@ public class WechatAction extends Cors {
                         }else{
                             userBean.setReferee((int) agentId);
                             RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
+
+                            agentBean.getChildList().add(userId);
+                            RedisManager.getAgentRedisService().updateAgentBean(agentBean);
                             sb.append("已和您成功绑定");
                         }
                     }else{
@@ -241,6 +244,9 @@ public class WechatAction extends Cors {
                         } else {
                             user.setReferee((int) agentId);
                             userService.save(user);
+
+                            agentBean.getChildList().add(userId);
+                            RedisManager.getAgentRedisService().updateAgentBean(agentBean);
                             sb.append("已和您成功绑定");
                         }
                     }
@@ -299,6 +305,15 @@ public class WechatAction extends Cors {
         response.sendRedirect(url);
 
 
+    }
+
+
+
+    @GetMapping("/showLink")
+    public void userInfo(@RequestParam("agentId") String agentId,
+                        HttpServletResponse response) throws IOException {
+        long aid = Long.valueOf(agentId);
+        handle_link_redirect(aid, response);
     }
 
     @GetMapping("/userInfo")
