@@ -58,7 +58,6 @@ public class GameClubService {
     private ClubChargeService clubChargeService;
 
     private static final int JOIN_LIMIT = 5;
-    private static final int ROOM_LIMIT = 3;
 
     /**
      * 查看俱乐部
@@ -73,7 +72,9 @@ public class GameClubService {
         List<String> clubs = ClubManager.getInstance().getUserClubs(userId);
 
         for (String clubId : clubs) {
-            list.add(getClubVo_simple(ClubManager.getInstance().getClubById(clubId)));
+            Club club = ClubManager.getInstance().getClubById(clubId);
+            club.getClubInfo().getMember().get("" + userId).setLastLoginTime("" + System.currentTimeMillis());
+            list.add(getClubVo_simple(club));
         }
 
         sendMsg(msgKey, new ResponseVo("clubService", "lookClub", list));
