@@ -34,7 +34,7 @@ public class PlayerYSZ implements IfacePlayerInfo {
     public IfacePlayerInfoVo toVo() {
         PlayerCardInfoHitGoldFlowerVo vo = new PlayerCardInfoHitGoldFlowerVo();
         vo.userId = this.userId;
-        vo.handcards = this.handcards;
+//        vo.handcards = this.handcards;
         vo.score = this.score;
         vo.caifen = this.caifen;
         vo.cardType = this.cardType;
@@ -46,6 +46,7 @@ public class PlayerYSZ implements IfacePlayerInfo {
         vo.fold = this.getFold();//弃牌
         vo.kill = this.getKill();//比牌
         vo.see = this.getSee();//看牌
+        vo.setRealScore(this.realScore);
         return vo;
     }
 
