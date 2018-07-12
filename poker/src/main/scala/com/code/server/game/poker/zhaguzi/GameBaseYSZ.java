@@ -11,6 +11,7 @@ import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -1130,6 +1131,9 @@ public class GameBaseYSZ extends Game {
     @Override
     public IfaceGameVo toVo(long userId) {
         GameYSZVo vo = new GameYSZVo();
+//        BeanUtils.copyProperties(this, vo);
+        vo.cards = this.cards;
+        vo.leaveCards = this.leaveCards;
         //vo.cards = this.getCards();
         vo.chip = this.getChip();
         //vo.leaveCards = this.getLeaveCards();
