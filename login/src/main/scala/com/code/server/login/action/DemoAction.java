@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -226,7 +227,7 @@ public class DemoAction{
 
     @DemoChecker
     @RequestMapping("/fetchAllPlayers")
-    public AgentResponse fetchAllPlayers(int pageSize, int curPage){
+    public AgentResponse fetchAllPlayers(int pageSize, int curPage, HttpServletRequest request){
 
         if (curPage > 0){
             curPage--;
@@ -243,10 +244,10 @@ public class DemoAction{
     }
 
     @RequestMapping("/fetchPlayer")
-    public AgentResponse fetchPlayer(long userId){
+    public AgentResponse fetchPlayer(long userId, HttpServletRequest request){
 
         if (userId == 0){
-            return fetchAllPlayers(20, 1);
+            return fetchAllPlayers(20, 1, request);
         }
         User user =  userDao.findOne(userId);
         List<User> list = new ArrayList<>();
@@ -831,7 +832,7 @@ public class DemoAction{
     }
 
     @RequestMapping("/login")
-    public AgentResponse agentLogin(HttpServletRequest request, String username, String password){
+    public AgentResponse agentLogin(HttpServletRequest request, HttpServletResponse response, String username, String password){
 
         AgentUser agentUser = agentUserDao.findAgentUserByUsernameAndPassword(username, password);
         AgentResponse agentResponse = null;
@@ -843,7 +844,12 @@ public class DemoAction{
             rs.put("username", agentUser.getUsername());
             String token = getToken(agentUser.getId());
             AgentUtil.caches.put(token, rs);
+
+//            Cookie cookie1 = new Cookie("X-Token",token);
+//            response.addCookie(cookie1);
+
             agentResponse = new AgentResponse(0, result);
+            agentResponse.setData(token);
 
         }else {
             agentResponse = new AgentResponse(ErrorCode.ROLE_ACCOUNT_OR_PASSWORD_ERROR,result);

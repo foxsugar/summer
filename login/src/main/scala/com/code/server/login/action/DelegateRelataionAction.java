@@ -65,12 +65,13 @@ public class DelegateRelataionAction implements ErrorCode{
 
     @AuthChecker
     @RequestMapping("/fetch3Delegate")
-    public AgentResponse fetchTwoLevelDelegate(){
+    public AgentResponse fetchTwoLevelDelegate(int agentId){
 
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
-        long agentId = AgentUtil.getAgentByRequest(request);
+//        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//        HttpServletRequest request = attributes.getRequest();
+//        long agentId = AgentUtil.getAgentByRequest(request);
 
+        logger.info("==============agentId={}", agentId);
         List<ThreeLevelInfoVo> list = delegateRelataionService.fetchThreeLevelDelegateList(agentId);
         Map<String, Object> result = new HashMap<>();
         result.put("result", list);

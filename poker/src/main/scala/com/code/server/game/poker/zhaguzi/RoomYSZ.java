@@ -206,6 +206,9 @@ public class RoomYSZ extends RoomExtendGold {
             return ErrorCode.ROOM_START_CAN_NOT;
         }
 
+        //防止多次点开始
+        if(room.game != null) return ErrorCode.ROOM_START_CAN_NOT;
+
         //准备的人数大于2
         int readyCount = 0;
         ArrayList<Long> removeList = new ArrayList();
