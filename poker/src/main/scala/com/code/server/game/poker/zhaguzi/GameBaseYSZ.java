@@ -67,12 +67,14 @@ public class GameBaseYSZ extends Game {
 
         //房卡场 暂定
         if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
-            MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
+//            MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
+            MAX_BET_NUM = 10d;
             INIT_BOTTOM_CHIP = 1d;
             genZhuList.add(2);
             genZhuList.add(3);
-//            genZhuList.add(200);
-//            genZhuList.add(250);
+            genZhuList.add(4);
+            genZhuList.add(5);
+
             return;
         }
 
@@ -754,15 +756,18 @@ public class GameBaseYSZ extends Game {
         if (seeUser.contains(userId) || getMaxRoundNumber() <= room.getMenPai()) {
             playerCardInfo.setSee("0");
         }
-        if (seeUser.contains(userId)) {
-            if (chip >= MAX_BET_NUM) {
-                playerCardInfo.setRaise("0");
-            }
-        } else {
-            if (chip >= MAX_BET_NUM / 2) {
-                logger.info("");
-                playerCardInfo.setRaise("0");
-            }
+//        if (seeUser.contains(userId)) {
+//            if (chip >= MAX_BET_NUM) {
+//                playerCardInfo.setRaise("0");
+//            }
+//        } else {
+//            if (chip >= MAX_BET_NUM / 2) {
+//                logger.info("");
+//                playerCardInfo.setRaise("0");
+//            }
+//        }
+        if (chip >= MAX_BET_NUM / 2) {
+            playerCardInfo.setRaise("0");
         }
 
         if (getMaxRoundNumber() <= room.getMenPai()) {
@@ -813,16 +818,19 @@ public class GameBaseYSZ extends Game {
         if (getMaxRoundNumber() <= room.getMenPai()) {
             playerCardInfo.setKill("0");
         }
-        if (seeUser.contains(curUserId)) {
-            logger.info("");
-            if (chip >= MAX_BET_NUM) {
-                playerCardInfo.setRaise("0");
-            }
-        } else {
-            logger.info("");
-            if (chip >= MAX_BET_NUM / 2) {
-                playerCardInfo.setRaise("0");
-            }
+//        if (seeUser.contains(curUserId)) {
+//            logger.info("");
+//            if (chip >= MAX_BET_NUM) {
+//                playerCardInfo.setRaise("0");
+//            }
+//        } else {
+//            logger.info("");
+//            if (chip >= MAX_BET_NUM / 2) {
+//                playerCardInfo.setRaise("0");
+//            }
+//        }
+        if (chip >= MAX_BET_NUM / 2) {
+            playerCardInfo.setRaise("0");
         }
 
         Map<String, Object> result = new HashMap<>();
@@ -831,12 +839,13 @@ public class GameBaseYSZ extends Game {
 
         List<Integer> list = new ArrayList<>();
         for (Integer i : this.genZhuList){
-            if (this.seeUser.contains(userId)){
+            if (this.seeUser.contains(curUserId)){
                 list.add(i * 2);
             }else {
                 list.add(i);
             }
         }
+
         result.put("zhuList", list);
 
         ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
@@ -884,15 +893,18 @@ public class GameBaseYSZ extends Game {
             playerCardInfo.setKill("0");
         }
 
-        if (seeUser.contains(curUserId)) {
-            logger.info("");
-            if (chip >= MAX_BET_NUM) {
-                playerCardInfo.setRaise("0");
-            }
-        } else {
-            if (chip >= MAX_BET_NUM / 2) {
-                playerCardInfo.setRaise("0");
-            }
+//        if (seeUser.contains(curUserId)) {
+//            logger.info("");
+//            if (chip >= MAX_BET_NUM) {
+//                playerCardInfo.setRaise("0");
+//            }
+//        } else {
+//            if (chip >= MAX_BET_NUM / 2) {
+//                playerCardInfo.setRaise("0");
+//            }
+//        }
+        if (chip >= MAX_BET_NUM / 2) {
+            playerCardInfo.setRaise("0");
         }
 
         Map<String, Object> result = new HashMap<>();
@@ -900,7 +912,7 @@ public class GameBaseYSZ extends Game {
         result.put("chip", chip);
         List<Integer> list = new ArrayList<>();
         for (Integer i : this.genZhuList){
-            if (this.seeUser.contains(userId)){
+            if (this.seeUser.contains(curUserId)){
                 list.add(i * 2);
             }else {
                 list.add(i);

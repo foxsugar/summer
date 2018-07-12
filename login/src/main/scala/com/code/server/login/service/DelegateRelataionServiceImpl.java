@@ -92,6 +92,7 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
     public List<ThreeLevelInfoVo> fetchThreeLevelDelegateList(long agentId) {
 
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+        logger.info("》》》》》》》》》》》》》{}", agentBean);
         List<Long> aList = new ArrayList<>();
         for (long uid : agentBean.getChildList()){
             if (RedisManager.getAgentRedisService().isExit(uid)){
@@ -99,17 +100,27 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
             }
         }
 
-        List<Long> bList = new ArrayList<>();
-        for (Long id : aList){
-            AgentBean bean = RedisManager.getAgentRedisService().getAgentBean(id);
-            for (Long uid : bean.getChildList()){
-                if (RedisManager.getAgentRedisService().isExit(uid)){
-                    bList.add(uid);
-                }
-            }
-        }
+//        List<Long> bList = new ArrayList<>();
+//        for (Long id : aList){
+//            AgentBean bean = RedisManager.getAgentRedisService().getAgentBean(id);
+//            for (Long uid : bean.getChildList()){
+//                if (RedisManager.getAgentRedisService().isExit(uid)){
+//                    bList.add(uid);
+//                }
+//            }
+//        }
 
-        List<User> cList = userDao.findUsersByIdIn(bList);
+//        List<User> cList = userDao.findUsersByIdIn(bList);
+//        List<ThreeLevelInfoVo> resultList = new ArrayList<>();
+//        for (User user : cList){
+//            ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
+//            threeLevelInfoVo.setImage(user.getImage() + "/96");
+//            threeLevelInfoVo.setUsername(user.getUsername());
+//            threeLevelInfoVo.setUid(user.getId());
+//            resultList.add(threeLevelInfoVo);
+//        }
+
+        List<User> cList = userDao.findUsersByIdIn(aList);
         List<ThreeLevelInfoVo> resultList = new ArrayList<>();
         for (User user : cList){
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
