@@ -92,6 +92,11 @@ public class UserServiceMsgDispatch {
             case "accessCode":
                 String code = params.get("accessCode").asText();
                 return gameUserService.accessCode(msgKey, code);
+
+            case "getUserSimpleInfo":
+                long userId = params.get("userId").asLong();
+                return gameUserService.getUserSimpleInfo(msgKey, userId);
+
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }
