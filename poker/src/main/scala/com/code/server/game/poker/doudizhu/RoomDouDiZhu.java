@@ -32,7 +32,9 @@ public class RoomDouDiZhu extends Room {
     protected long testUserId;
 
 
-
+    protected boolean isCanAgreeDissloution(int agreeNum){
+        return agreeNum >= 3;
+    }
 
     public static RoomDouDiZhu getRoomInstance(String roomType) {
         switch (roomType) {

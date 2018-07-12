@@ -58,7 +58,6 @@ public class GameClubService {
     private ClubChargeService clubChargeService;
 
     private static final int JOIN_LIMIT = 5;
-    private static final int ROOM_LIMIT = 3;
 
     /**
      * 查看俱乐部
@@ -73,7 +72,9 @@ public class GameClubService {
         List<String> clubs = ClubManager.getInstance().getUserClubs(userId);
 
         for (String clubId : clubs) {
-            list.add(getClubVo_simple(ClubManager.getInstance().getClubById(clubId)));
+            Club club = ClubManager.getInstance().getClubById(clubId);
+            club.getClubInfo().getMember().get("" + userId).setLastLoginTime("" + System.currentTimeMillis());
+            list.add(getClubVo_simple(club));
         }
 
         sendMsg(msgKey, new ResponseVo("clubService", "lookClub", list));
@@ -207,7 +208,8 @@ public class GameClubService {
         }
         //多于5个俱乐部 不可以创建
         int num = ClubManager.getInstance().getUserClubNum(userId);
-        if (num >= JOIN_LIMIT) {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        if (num >= serverConfig.getClubLimit()) {
             return ErrorCode.CLUB_CANNOT_NUM;
         }
 
@@ -568,7 +570,7 @@ public class GameClubService {
      * @param desc
      * @return
      */
-    public int createRoomModel(KafkaMsgKey msgKey, long userId, String clubId, String createCommand, String gameType, int gameNumber, String desc, Object... indexs) {
+    public int createRoomModel(KafkaMsgKey msgKey, long userId, String clubId, String createCommand, String gameType, int gameNumber, String desc, List<Integer> indexs) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
@@ -593,7 +595,7 @@ public class GameClubService {
         }
 
 
-        int length = indexs.length == 0 ? 1 : indexs.length;
+        int length = indexs == null ? 1 : indexs.size();
 
         for (int i = 0; i < length; i++) {
 
@@ -613,7 +615,8 @@ public class GameClubService {
             club.getClubInfo().getRoomModels().add(roomModel);
 
         }
-        sendMsg(msgKey, new ResponseVo("clubService", "createRoomModel", club.getClubInfo().getRoomModels().get(0)));
+        RoomModel roomModel = club.getClubInfo().getRoomModels().get(club.getClubInfo().getRoomModels().size() - 1);
+        sendMsg(msgKey, new ResponseVo("clubService", "createRoomModel",roomModel));
 
         //实例化房间
         initRoomInstance(club);
