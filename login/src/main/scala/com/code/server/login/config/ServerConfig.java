@@ -32,6 +32,8 @@ public class ServerConfig {
 
     private int clubRoomModelLimit = 3;
 
+    private int clubLimit = 5;
+
     private String domain = "";
 
 
@@ -172,6 +174,15 @@ public class ServerConfig {
 
     public ServerConfig setClubRoomModelLimit(int clubRoomModelLimit) {
         this.clubRoomModelLimit = clubRoomModelLimit;
+        return this;
+    }
+
+    public int getClubLimit() {
+        return clubLimit;
+    }
+
+    public ServerConfig setClubLimit(int clubLimit) {
+        this.clubLimit = clubLimit;
         return this;
     }
 }

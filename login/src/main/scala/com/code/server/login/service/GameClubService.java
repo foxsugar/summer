@@ -207,7 +207,8 @@ public class GameClubService {
         }
         //多于5个俱乐部 不可以创建
         int num = ClubManager.getInstance().getUserClubNum(userId);
-        if (num >= JOIN_LIMIT) {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        if (num >= serverConfig.getClubLimit()) {
             return ErrorCode.CLUB_CANNOT_NUM;
         }
 
