@@ -552,6 +552,8 @@ public class RoomYSZ extends RoomExtendGold {
             this.leaveSecond = 0;
         }
 
+        roomVo.timerTick = this.timerTick;
+        roomVo.leaveSecond = this.leaveSecond;
         return roomVo;
     }
 
