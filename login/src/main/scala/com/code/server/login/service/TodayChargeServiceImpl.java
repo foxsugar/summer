@@ -341,7 +341,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
                 List<Predicate> predicateList = new ArrayList<>();
                 predicateList.add(cb.between(root.get("createtime").as(Date.class), start, end));
-                predicateList.add(cb.equal(root.get("status").as(Integer.class), status));
+//                predicateList.add(cb.equal(root.get("status").as(Integer.class), status));
                 predicateList.add(root.get("chargeType").as(Integer.class).in(list));
                 predicateList.add(root.get("userid").as(Integer.class).in(users));
                 Predicate[] p = new Predicate[predicateList.size()];
