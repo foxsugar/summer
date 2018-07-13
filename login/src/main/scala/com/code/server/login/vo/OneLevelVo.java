@@ -53,4 +53,14 @@ public class OneLevelVo {
     public void setList(List<OneLevelInfoVo> list) {
         this.list = list;
     }
+
+    @Override
+    public String toString() {
+        return "OneLevelVo{" +
+                "categoryName='" + categoryName + '\'' +
+                ", money=" + money +
+                ", gold=" + gold +
+                ", list=" + list +
+                '}';
+    }
 }
