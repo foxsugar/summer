@@ -52,6 +52,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         String endStr = DateUtil.convert2DayString(end);
         OneLevelVo oneLevelVo = oneLevelCharges(start, end, agentId);
         TwoLevelVo twoLevelVo = twoLevelCharges(start, end, agentId);
+
+        logger.info("===start:{}end:{}agentId:{}:oneLevelVo:{}twoLevelVo:{}", start, end, agentId, oneLevelVo, twoLevelVo);
+
         ThreeLevelVo threeLevelVo = threeLevelCharges(start, end, agentId);
         HomeChargeVo homeChargeVo = new HomeChargeVo();
         homeChargeVo.setOnelevel("" + oneLevelVo.getMoney());
