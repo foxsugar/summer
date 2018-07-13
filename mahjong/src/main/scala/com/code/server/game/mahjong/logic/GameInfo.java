@@ -556,7 +556,7 @@ public class GameInfo extends Game {
         static final int chiPoint = 1 << 1;
 
         public long myUserId;
-        boolean isHu;
+        public boolean isHu;
         boolean isGang;
         boolean isPeng;
         boolean isChi;

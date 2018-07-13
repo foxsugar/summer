@@ -52,6 +52,7 @@ public class RoomYSZ extends RoomExtendGold {
     protected long timerTick;
     protected long leaveSecond;
 
+    public static int BASE_TIME = 10;
 
 
 //    @Override
@@ -205,6 +206,9 @@ public class RoomYSZ extends RoomExtendGold {
         if (room.userStatus.get(userId) != IGameConstant.STATUS_READY){
             return ErrorCode.ROOM_START_CAN_NOT;
         }
+
+        //防止多次点开始
+        if(room.game != null) return ErrorCode.ROOM_START_CAN_NOT;
 
         //准备的人数大于2
         int readyCount = 0;
@@ -403,11 +407,16 @@ public class RoomYSZ extends RoomExtendGold {
 
         if (timerTick != lastTimerTick){
             long deta = (System.currentTimeMillis() - this.lastReadyTime) / ((long)(10 * Math.pow(10, 9)));
-            this.leaveSecond = 30l - deta;
+            this.leaveSecond = BASE_TIME - deta;
             Map<String, Object> result = new HashMap<>();
-            result.put("second", 30);
+//            result.put("second", base);
+//            result.put("timerTick", timerTick);
+//            result.put("leaveSecond", this.leaveSecond);
+            result.put("second", this.leaveSecond);
+            if (timerTick == 0){
+                result.put("second", 0);
+            }
             result.put("timerTick", timerTick);
-            result.put("leaveSecond", this.leaveSecond);
             MsgSender.sendMsg2Player(new ResponseVo("roomService", "tickTimer", result), this.users);
         }
     }
@@ -536,6 +545,15 @@ public class RoomYSZ extends RoomExtendGold {
         if (this.game != null){
             this.timerTick = 0;
         }
+
+        long deta = (System.currentTimeMillis() - this.lastReadyTime) / ((long)(10 * Math.pow(10, 9)));
+        this.leaveSecond = BASE_TIME - deta;
+        if (this.timerTick == 0){
+            this.leaveSecond = 0;
+        }
+
+        roomVo.timerTick = this.timerTick;
+        roomVo.leaveSecond = this.leaveSecond;
         return roomVo;
     }
 

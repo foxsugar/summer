@@ -16,9 +16,11 @@ import com.code.server.constant.response.RoomInstanceVo;
 import com.code.server.db.Service.ClubChargeService;
 import com.code.server.db.Service.ClubRecordService;
 import com.code.server.db.Service.ClubService;
+import com.code.server.db.Service.UserService;
 import com.code.server.db.model.Club;
 import com.code.server.db.model.ClubCharge;
 import com.code.server.db.model.ClubRecord;
+import com.code.server.db.model.User;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.redis.service.RedisManager;
@@ -57,8 +59,10 @@ public class GameClubService {
     @Autowired
     private ClubChargeService clubChargeService;
 
+    @Autowired
+    private UserService userService;
+
     private static final int JOIN_LIMIT = 5;
-    private static final int ROOM_LIMIT = 3;
 
     /**
      * 查看俱乐部
@@ -73,7 +77,9 @@ public class GameClubService {
         List<String> clubs = ClubManager.getInstance().getUserClubs(userId);
 
         for (String clubId : clubs) {
-            list.add(getClubVo_simple(ClubManager.getInstance().getClubById(clubId)));
+            Club club = ClubManager.getInstance().getClubById(clubId);
+            club.getClubInfo().getMember().get("" + userId).setLastLoginTime("" + System.currentTimeMillis());
+            list.add(getClubVo_simple(club));
         }
 
         sendMsg(msgKey, new ResponseVo("clubService", "lookClub", list));
@@ -101,6 +107,7 @@ public class GameClubService {
         boolean isPresident = club.getPresident() == userId;
         ClubVo clubVo = getClubVo_simple(club);
         clubVo.getRoomModels().addAll(club.getClubInfo().getRoomModels());
+        clubVo.getFloorDesc().addAll(club.getClubInfo().getFloorDesc());
         //玩家在线情况
         clubVo.getMember().addAll(club.getClubInfo().getMember().values());
         clubVo.getMember().forEach(clubMember -> {
@@ -123,13 +130,13 @@ public class GameClubService {
         //正在玩的房间
 
         List<RoomInstance> removeList = new ArrayList<>();
-        club.getClubInfo().getPlayingRoom().forEach(ri->{
+        club.getClubInfo().getPlayingRoom().forEach(ri -> {
             String roomId = ri.getRoomId();
             if (roomId != null) {
 
                 if (RedisManager.getRoomRedisService().getServerId(roomId) == null) {
                     removeList.add(ri);
-                }else{
+                } else {
                     clubVo.getPlayingRoom().add(getRoomInstanceVo(ri));
                 }
             }
@@ -165,13 +172,14 @@ public class GameClubService {
         String roomId = roomInstance.getRoomId();
         vo.setRoomId(roomId);
         vo.setClubRoomModel(roomInstance.getRoomModelId());
-        RedisManager.getRoomRedisService().getUsers(roomId).forEach(uid->{
+        RedisManager.getRoomRedisService().getUsers(roomId).forEach(uid -> {
             Map<String, Object> player = new HashMap<>();
             UserBean userBean = RedisManager.getUserRedisService().getUserBean(uid);
             if (userBean != null) {
 
                 player.put("username", userBean.getUsername());
                 player.put("image", userBean.getImage());
+                player.put("id", userBean.getId());
                 vo.getPlayers().add(player);
             }
 
@@ -181,10 +189,11 @@ public class GameClubService {
         return vo;
     }
 
-    private int getCreateMoney(){
+    private int getCreateMoney() {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         return serverConfig.getClubCreateMoney();
     }
+
     /**
      * 创建俱乐部
      *
@@ -205,7 +214,8 @@ public class GameClubService {
         }
         //多于5个俱乐部 不可以创建
         int num = ClubManager.getInstance().getUserClubNum(userId);
-        if (num >= JOIN_LIMIT) {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        if (num >= serverConfig.getClubLimit()) {
             return ErrorCode.CLUB_CANNOT_NUM;
         }
 
@@ -224,6 +234,7 @@ public class GameClubService {
         club.setMoney(getCreateMoney());
         club.setClubDesc(desc);
 
+        club.setImage(userBean.getImage());
         clubAddMember(club, userBean);
 
         clubService.getClubDao().save(club);
@@ -376,7 +387,8 @@ public class GameClubService {
 
         String name = userBean.getUsername();
         String image = userBean.getImage();
-        ClubMember apply = new ClubMember().setTime(System.currentTimeMillis()).setUserId(userId).setMark(mark).setName(name).setImage(image);
+        int sex = userBean.getSex();
+        ClubMember apply = new ClubMember().setTime(System.currentTimeMillis()).setUserId(userId).setMark(mark).setName(name).setImage(image).setSex(sex);
         club.getClubInfo().getApplyList().add(apply);
 
         Map<String, Object> result = new HashMap<>();
@@ -492,7 +504,7 @@ public class GameClubService {
     }
 
 
-    public int getChargeRecord(KafkaMsgKey msgKey, long userId, String clubId){
+    public int getChargeRecord(KafkaMsgKey msgKey, long userId, String clubId) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
@@ -503,6 +515,96 @@ public class GameClubService {
         }
         List<ClubCharge> list = clubChargeService.getClubChargeDao().getClubChargesByClubId(clubId);
         sendMsg(msgKey, new ResponseVo("clubService", "getChargeRecord", list));
+        return 0;
+    }
+
+    public int setFloor(KafkaMsgKey msgKey, long userId, String clubId, int floor,String desc) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        for (int i = 0; i < 5; i++) {
+            if (club.getClubInfo().getFloorDesc().size() > i) {
+
+//                if(club.getClubInfo().getFloorDesc().get(i).equals())
+//                club.getClubInfo().getFloorDesc().add("");
+            } else{
+                club.getClubInfo().getFloorDesc().add("");
+            }
+        }
+//        for (int i = 0; i < floor; i++) {
+//          club.getClubInfo().getFloorDesc().add(floor, desc);
+//        }
+
+        club.getClubInfo().getFloorDesc().set(floor, desc);
+        sendMsg(msgKey, new ResponseVo("clubService", "setFloorDesc", "ok"));
+
+        return 0;
+    }
+
+
+    public int setAdmin(KafkaMsgKey msgKey, long userId, String clubId, long adminUser, boolean isAdd) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+
+        return 0;
+    }
+
+    public int addUser(KafkaMsgKey msgKey, String clubId, long userId) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+
+        boolean isHas = userService.getUserDao().exists(userId);
+        if (!isHas) {
+            return ErrorCode.USERID_ERROR;
+        }
+        List<String> clubs = ClubManager.getInstance().getUserClubs(userId);
+        if (clubs.size() >= JOIN_LIMIT) {
+            return ErrorCode.CLUB_CANNOT_NUM;
+        }
+        if (clubs.contains(clubId)) {
+            return ErrorCode.CLUB_CANNOT_JOIN;
+        }
+        ClubManager.getInstance().userAddClub(userId, clubId);
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+
+            clubAddMember(club,userBean);
+        }else{
+            User user = userService.getUserByUserId(userId);
+
+            ClubMember clubMember = new ClubMember();
+            clubMember.setSex(user.getSex()).setImage(user.getImage()).setName(user.getUsername()).setUserId(user.getId()).setTime(System.currentTimeMillis());
+            clubAddMember(club, clubMember);
+
+        }
+        //
+        sendMsg(msgKey, new ResponseVo("clubService", "addUser","ok"));
+        return 0;
+    }
+
+
+    public int removeFloor(KafkaMsgKey msgKey, String clubId, long userId,int floor){
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        if (club.getClubInfo().getRoomModels().size() < floor * 10) {
+            return ErrorCode.CLUB_PARAM_ERROR;
+        }
+        for(int i=0;i<10;i++) {
+            club.getClubInfo().getRoomModels().remove(floor * 10);
+        }
+        if (club.getClubInfo().getFloorDesc().size() > 0) {
+
+            club.getClubInfo().getFloorDesc().remove(floor);
+        }
+        sendMsg(msgKey, new ResponseVo("clubService", "removeFloor","ok"));
         return 0;
     }
 
@@ -533,7 +635,7 @@ public class GameClubService {
      * @param desc
      * @return
      */
-    public int createRoomModel(KafkaMsgKey msgKey, long userId, String clubId, String createCommand, String gameType, int gameNumber, String desc) {
+    public int createRoomModel(KafkaMsgKey msgKey, long userId, String clubId, String createCommand, String gameType, int gameNumber, String desc, List<Integer> indexs) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
@@ -558,22 +660,28 @@ public class GameClubService {
         }
 
 
-        RoomModel roomModel = new RoomModel();
-        String id = "" + IdWorker.getDefaultInstance().nextId();
-        roomModel.setId(id);
-        JsonNode jsonNode = JsonUtil.readTree(createCommand);
-        String serviceName = jsonNode.path("service").asText();
-        //设置创建命令
-        createCommand = setRoomModelCommand(createCommand, clubId, id);
-        roomModel.setCreateCommand(createCommand);
-        roomModel.setDesc(desc);
-        roomModel.setTime(System.currentTimeMillis());
-        roomModel.setMoney(roomData.getMoneyMap().get(gameNumber));
-        roomModel.setServiceName(serviceName);
+        int length = indexs == null ? 1 : indexs.size();
 
-        club.getClubInfo().getRoomModels().add(roomModel);
+        for (int i = 0; i < length; i++) {
 
-        sendMsg(msgKey, new ResponseVo("clubService", "createRoomModel", roomModel));
+            RoomModel roomModel = new RoomModel();
+            String id = "" + IdWorker.getDefaultInstance().nextId();
+            roomModel.setId(id);
+            JsonNode jsonNode = JsonUtil.readTree(createCommand);
+            String serviceName = jsonNode.path("service").asText();
+            //设置创建命令
+            createCommand = setRoomModelCommand(createCommand, clubId, id);
+            roomModel.setCreateCommand(createCommand);
+            roomModel.setDesc(desc);
+            roomModel.setTime(System.currentTimeMillis());
+            roomModel.setMoney(roomData.getMoneyMap().get(gameNumber));
+            roomModel.setServiceName(serviceName);
+
+            club.getClubInfo().getRoomModels().add(roomModel);
+
+        }
+        RoomModel roomModel = club.getClubInfo().getRoomModels().get(club.getClubInfo().getRoomModels().size() - 1);
+        sendMsg(msgKey, new ResponseVo("clubService", "createRoomModel",roomModel));
 
         //实例化房间
         initRoomInstance(club);
@@ -666,6 +774,66 @@ public class GameClubService {
 
 
     /**
+     * 修改房间模式
+     *
+     * @param msgKey
+     * @param userId
+     * @param clubId
+     * @param createCommand
+     * @param gameType
+     * @param gameNumber
+     * @param desc
+     * @return
+     */
+    public int setRoomModelBatch(KafkaMsgKey msgKey, long userId, String clubId, String createCommand, String gameType, int gameNumber, String desc, List<Integer> indexs) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+
+        if (club.getPresident() != userId) {
+            return ErrorCode.CLUB_NOT_PRESIDENT;
+        }
+
+
+        //初始化 房间数据
+        initRoomData();
+
+        StaticDataProto.RoomData roomData = DataManager.data.getRoomDataMap().get(gameType);
+        if (roomData == null || !roomData.getMoneyMap().containsKey(gameNumber)) {
+            return ErrorCode.REQUEST_PARAM_ERROR;
+        }
+
+
+        JsonNode jsonNode = JsonUtil.readTree(createCommand);
+        String serviceName = jsonNode.path("service").asText();
+        //设置创建命令
+
+        for (int index : indexs) {
+            if (club.getClubInfo().getRoomModels().size() > index) {
+
+                RoomModel roomModel = club.getClubInfo().getRoomModels().get(index);
+                if (roomModel == null) {
+                    return ErrorCode.REQUEST_PARAM_ERROR;
+                }
+                createCommand = setRoomModelCommand(createCommand, clubId, roomModel.getId());
+                roomModel.setCreateCommand(createCommand);
+                roomModel.setDesc(desc);
+                roomModel.setTime(System.currentTimeMillis());
+                roomModel.setMoney(roomData.getMoneyMap().get(gameNumber));
+                roomModel.setServiceName(serviceName);
+            }
+
+        }
+
+
+        sendMsg(msgKey, new ResponseVo("clubService", "setRoomModelBatch", "ok"));
+        //实例化房间
+        initRoomInstance(club);
+        return 0;
+    }
+
+    /**
      * 俱乐部设置id
      *
      * @param clubId
@@ -724,13 +892,14 @@ public class GameClubService {
         return 0;
     }
 
-    public void addPlayingRoom(Club club, RoomInstance roomInstance){
-        if(roomInstance == null) return;
+    public void addPlayingRoom(Club club, RoomInstance roomInstance) {
+        if (roomInstance == null) return;
         if (club.getClubInfo().getPlayingRoom() == null) {
             club.getClubInfo().setPlayingRoom(new CopyOnWriteArrayList<>());
         }
         club.getClubInfo().getPlayingRoom().add(roomInstance);
     }
+
     private String getDateStr(long time) {
         long day = 1000L * 60 * 60 * 24;
         return "";
@@ -802,6 +971,7 @@ public class GameClubService {
      * @return
      */
     public int getClubRecord(KafkaMsgKey msgKey, long userId, String clubId) {
+        String unionId = clubId + "|" + LocalDate.now().toString();
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
@@ -811,7 +981,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
 
-        ClubRecord clubRecord = clubRecordService.getClubRecordDao().getClubRecordById(clubId);
+        ClubRecord clubRecord = clubRecordService.getClubRecordDao().getClubRecordById(unionId);
 
         sendMsg(msgKey, new ResponseVo("clubService", "getClubRecord", clubRecord));
         return 0;
@@ -858,7 +1028,6 @@ public class GameClubService {
         sendMsg(msgKey, new ResponseVo("clubService", "kickUser", "ok"));
         return 0;
     }
-
 
 
     public static void sendMsg2Player(Object msg, long userId) {
@@ -1000,6 +1169,9 @@ public class GameClubService {
         // setRoomModelCommand(s, "1","2");
         System.out.println(LocalTime.now());
         System.out.println(LocalDate.now().toString());
+        List<Integer> list = new ArrayList<>();
+        list.add(2, 1);
+        System.out.println(list);
 
     }
 
@@ -1024,6 +1196,8 @@ public class GameClubService {
         clubVo.setArea(club.getArea());
         clubVo.setPresidentWx(club.getPresidentWx());
         clubVo.setApplyNum(club.getClubInfo().getApplyList().size());
+        clubVo.setImage(club.getImage());
+
 
         return clubVo;
     }
@@ -1083,6 +1257,7 @@ public class GameClubService {
         member.setTime(System.currentTimeMillis());
         member.setImage(apply.getImage());
         member.setName(apply.getName());
+        member.setSex(apply.getSex());
 
         club.getClubInfo().getMember().put("" + apply.getUserId(), member);
 
@@ -1103,6 +1278,7 @@ public class GameClubService {
         member.setTime(System.currentTimeMillis());
         member.setImage(userBean.getImage());
         member.setName(userBean.getUsername());
+        member.setSex(userBean.getSex());
 
         club.getClubInfo().getMember().put("" + userBean.getId(), member);
 

@@ -536,6 +536,27 @@ public class GameUserService {
         return 0;
     }
 
+    public int getUserSimpleInfo(KafkaMsgKey msgKey, long userId) {
+
+        Map<String, Object> result = new HashMap<>();
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean == null) {
+            User user = userService.getUserByUserId(userId);
+            if (user == null) {
+                result.put("isHas", false);
+            }else{
+                result.put("name", user.getUsername());
+                result.put("image", user.getImage());
+            }
+        }else{
+            result.put("name", userBean.getUsername());
+            result.put("image", userBean.getImage());
+        }
+        ResponseVo vo = new ResponseVo("userService", "getUserSimpleInfo", result);
+        sendMsg(msgKey, vo);
+        return 0;
+    }
+
     public int getRecordsByRoom(KafkaMsgKey msgKey, long roomUid) {
         List<com.code.server.db.model.GameRecord> list = gameRecordService.gameRecordDao.getGameRecordByUuid(roomUid);
 

@@ -43,9 +43,14 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
 
         List<OneLevelInfoVo> result = new ArrayList<>();
         List<User> userList = this.userDao.findUsersByIdIn(aList);
+
+        System.out.println("===========++++aList:" + aList);
+        System.out.println("===========++++aList:" + userList);
+
+
         for (User user : userList){
             OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
-            oneLevelInfoVo.setImage(user.getImage());
+            oneLevelInfoVo.setImage(user.getImage() + "/96");
             oneLevelInfoVo.setUsername(user.getUsername());
             oneLevelInfoVo.setUid(user.getId() );
             result.add(oneLevelInfoVo);
@@ -74,7 +79,7 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
         List<User> userList = this.userDao.findUsersByIdIn(aList);
         for (User user : userList){
             TwoLevelInfoVo twoLevelInfoVo = new TwoLevelInfoVo();
-            twoLevelInfoVo.setImage(user.getImage());
+            twoLevelInfoVo.setImage(user.getImage() + "/96");
             twoLevelInfoVo.setUsername(user.getUsername());
             twoLevelInfoVo.setUid(user.getId() );
             result.add(twoLevelInfoVo);
@@ -87,6 +92,7 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
     public List<ThreeLevelInfoVo> fetchThreeLevelDelegateList(long agentId) {
 
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+        logger.info("》》》》》》》》》》》》》{}", agentBean);
         List<Long> aList = new ArrayList<>();
         for (long uid : agentBean.getChildList()){
             if (RedisManager.getAgentRedisService().isExit(uid)){
@@ -94,21 +100,31 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
             }
         }
 
-        List<Long> bList = new ArrayList<>();
-        for (Long id : aList){
-            AgentBean bean = RedisManager.getAgentRedisService().getAgentBean(id);
-            for (Long uid : bean.getChildList()){
-                if (RedisManager.getAgentRedisService().isExit(uid)){
-                    bList.add(uid);
-                }
-            }
-        }
+//        List<Long> bList = new ArrayList<>();
+//        for (Long id : aList){
+//            AgentBean bean = RedisManager.getAgentRedisService().getAgentBean(id);
+//            for (Long uid : bean.getChildList()){
+//                if (RedisManager.getAgentRedisService().isExit(uid)){
+//                    bList.add(uid);
+//                }
+//            }
+//        }
 
-        List<User> cList = userDao.findUsersByIdIn(bList);
+//        List<User> cList = userDao.findUsersByIdIn(bList);
+//        List<ThreeLevelInfoVo> resultList = new ArrayList<>();
+//        for (User user : cList){
+//            ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
+//            threeLevelInfoVo.setImage(user.getImage() + "/96");
+//            threeLevelInfoVo.setUsername(user.getUsername());
+//            threeLevelInfoVo.setUid(user.getId());
+//            resultList.add(threeLevelInfoVo);
+//        }
+
+        List<User> cList = userDao.findUsersByIdIn(aList);
         List<ThreeLevelInfoVo> resultList = new ArrayList<>();
         for (User user : cList){
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
-            threeLevelInfoVo.setImage(user.getImage());
+            threeLevelInfoVo.setImage(user.getImage() + "/96");
             threeLevelInfoVo.setUsername(user.getUsername());
             threeLevelInfoVo.setUid(user.getId());
             resultList.add(threeLevelInfoVo);
@@ -164,7 +180,7 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
         if (type != 0){
             User user = userDao.findOne(userId);
             userInfo.setReferee(user.getReferee());
-            userInfo.setImage(user.getImage());
+            userInfo.setImage(user.getImage() + "/96");
             userInfo.setUsername(user.getUsername());
             userInfo.setCreateTime(DateUtil.convert2String(user.getRegistDate()));
             AgentBean bean = RedisManager.getAgentRedisService().getAgentBean(userId);

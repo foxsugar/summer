@@ -1,11 +1,12 @@
 package com.code.server.login.service;
 
+import com.code.server.db.model.Charge;
 import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.User;
+import com.code.server.grpc.idl.Game;
 import com.code.server.login.vo.HomePageVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import java.util.Date;
 import java.util.List;
 
@@ -23,5 +24,26 @@ public interface HomeService {
 
     Page<GameAgent> findDelegates(Pageable pageable);
 
+    Long delegatesCount();
+
+    Long partnerCount();
+
+    GameAgent findOneDelegate(long userId);
+
+    GameAgent findOnePartner(long userId);
+
     Page<GameAgent> findPartner(Pageable pageable);
+
+    Page<Charge> findCharges(Pageable pageable);
+
+    Charge findChargeByUserId(long userId);
+
+    Charge findChargeByOrderId(long oId);
+
+    Page<Charge> timeSearchCharges(List<Date> listA, org.springframework.data.domain.Pageable pageable);
+
+    Long chargesCount();
+
+    Long timeSearchChargesCount(List<Date> listA);
+
 }

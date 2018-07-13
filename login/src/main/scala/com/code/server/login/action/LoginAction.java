@@ -22,6 +22,9 @@ import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.kefu.WxMpKefuMessage;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -37,10 +40,7 @@ import scala.tools.nsc.doc.html.page.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -65,9 +65,10 @@ public class LoginAction {
     @Autowired
     private RecommendService recommendService;
 
+    @Autowired
+    private WxMpService wxMpService;
+
     //    @Value("serverConfig.serverId")
-
-
 
 
     public static String getToken(long userId) {
@@ -107,7 +108,7 @@ public class LoginAction {
             Recommend recommend = recommendService.getRecommendDao().getByUnionId(openId);
             if (recommend != null) {
                 //玩家设置代理
-                user.setReferee((int)recommend.getAgentId());
+                user.setReferee((int) recommend.getAgentId());
 
             }
 
@@ -121,8 +122,20 @@ public class LoginAction {
                 //代理多了一个玩家
                 AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(recommend.getAgentId());
                 if (agentBean != null) {
-                    if(!agentBean.getChildList().contains(user.getId())){
+                    if (!agentBean.getChildList().contains(user.getId())) {
                         agentBean.getChildList().add(user.getId());
+                        RedisManager.getAgentRedisService().updateAgentBean(agentBean);
+                    }
+                    //通知
+                    try {
+                        wxMpService.getKefuService().sendKefuMessage(
+                                WxMpKefuMessage
+                                        .TEXT()
+                                        .toUser(agentBean.getOpenId())
+                                        .content(userName + " 下载并进入游戏,和您成功绑定")
+                                        .build());
+                    } catch (WxErrorException e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -132,7 +145,7 @@ public class LoginAction {
         saveUser2Redis(user, token);
 
         params.put("token", token);
-        params.put("userId", ""+user.getId());
+        params.put("userId", "" + user.getId());
         return 0;
     }
 
@@ -180,11 +193,11 @@ public class LoginAction {
         }
 
         //黑名单
-        boolean isInBlackList = ServerManager.constant.getBlackList()!=null && ServerManager.constant.getBlackList().contains(userId);
-        if(isInBlackList){
+        boolean isInBlackList = ServerManager.constant.getBlackList() != null && ServerManager.constant.getBlackList().contains(userId);
+        if (isInBlackList) {
             code = ErrorCode.BLACK_LIST;
-        }else {
-            setHostAndPort(userId,params, code == 0);
+        } else {
+            setHostAndPort(userId, params, code == 0);
         }
 
 
@@ -193,7 +206,7 @@ public class LoginAction {
     }
 
     private void setHostAndPort(String userId, Map<String, Object> params, boolean isSet) {
-        if(isSet){
+        if (isSet) {
 
             String gateId = RedisManager.getUserRedisService().getGateId(Long.valueOf(userId));
             com.code.server.redis.config.ServerInfo serverInfo = null;
@@ -203,7 +216,7 @@ public class LoginAction {
             if (serverInfo == null) {
                 serverInfo = LoginService.getSortedServer("GATE");
             }
-            if (serverInfo != null && isSet) {
+            if (serverInfo != null) {
                 params.put("port", serverInfo.getPort());
                 params.put("ip", serverInfo.getHost());
                 params.put("domain", serverInfo.getDomain());
@@ -225,7 +238,7 @@ public class LoginAction {
 
         if (userId == null) {
             code = login4sqlByOpenId(openId, username, image, sex, params);
-            userId = (String)params.get("userId");
+            userId = (String) params.get("userId");
         } else {
             //刷新redis数据
             UserBean userBean = userRedisService.getUserBean(Long.valueOf(userId));
@@ -236,7 +249,7 @@ public class LoginAction {
                 userBean.setLastLoginDate(new Date());
                 userRedisService.updateUserBean(Long.valueOf(userId), userBean);
             }
-            String redisToken =  getToken(Long.valueOf(userId));
+            String redisToken = getToken(Long.valueOf(userId));
             userRedisService.setToken(Long.valueOf(userId), redisToken);
             params.put("token", redisToken);
             params.put("userId", userId);
@@ -244,10 +257,10 @@ public class LoginAction {
 
         //黑名单
         boolean isInBlackList = ServerManager.constant.getBlackList() != null && ServerManager.constant.getBlackList().contains(userId);
-        if(isInBlackList){
+        if (isInBlackList) {
             code = ErrorCode.BLACK_LIST;
-        }else {
-            setHostAndPort(userId,params, code == 0);
+        } else {
+            setHostAndPort(userId, params, code == 0);
         }
 
 
@@ -275,10 +288,10 @@ public class LoginAction {
     }
 
     private Constant getConstant() {
-        if (ServerManager.constant  == null) {
-            ServerManager.constant  = constantService.constantDao.findOne(1L);
+        if (ServerManager.constant == null) {
+            ServerManager.constant = constantService.constantDao.findOne(1L);
         }
-        return ServerManager.constant ;
+        return ServerManager.constant;
     }
 
 
@@ -358,7 +371,8 @@ public class LoginAction {
         newUser.setOpenId("" + new IdWorker(serverConfig.getServerId(), 1).nextId());
         newUser.setUsername(decodeStr(account));
         newUser.setImage("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=253777390,947512827&fm=23&gp=0.jpg");
-        newUser.setSex(1);
+        int sex = new Random().nextInt(2) + 1;
+        newUser.setSex(sex);
         newUser.setVip(0);
         newUser.setUuid("0");
         newUser.setMoney(getConstant().getInitMoney());
@@ -368,6 +382,10 @@ public class LoginAction {
         return newUser;
     }
 
+    public static void main(String[] args) {
+        int sex = new Random().nextInt(2) + 1;
+        System.out.println(sex);
+    }
     /**
      * 创建玩家
      *
@@ -410,7 +428,6 @@ public class LoginAction {
     }
 
 
-
     public static JSONObject verify(long userId, String url, String receipt) {
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(url);
@@ -432,7 +449,7 @@ public class LoginAction {
 //                return
 //            }
             if (result.path("status").asInt() == 21007) {
-                return verify(userId,"https://sandbox.itunes.apple.com/verifyReceipt", receipt);
+                return verify(userId, "https://sandbox.itunes.apple.com/verifyReceipt", receipt);
             }
 
 
@@ -442,7 +459,7 @@ public class LoginAction {
             return null;
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             httpPost.releaseConnection();
         }
         return null;

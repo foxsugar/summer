@@ -19,19 +19,19 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         specialHuScore.put(hu_豪华七小对, 1);
 
 
-        if(isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_摸三胡六)){
+        if (isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_摸三胡六)) {
             this.TING_MIN_SCORE = 6;
             this.ZIMO_MIN_SCORE = 3;
             this.DIANPAO_MIN_SCORE = 6;
         }
 
-        if(isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_摸四胡五)){
+        if (isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_摸四胡五)) {
             this.TING_MIN_SCORE = 5;
             this.ZIMO_MIN_SCORE = 4;
             this.DIANPAO_MIN_SCORE = 5;
         }
 
-        if(isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_摸一胡五)){
+        if (isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_摸一胡五)) {
             this.TING_MIN_SCORE = 5;
             this.ZIMO_MIN_SCORE = 1;
             this.DIANPAO_MIN_SCORE = 5;
@@ -57,7 +57,6 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
         return false;
     }
-
 
 
     @Override
@@ -154,7 +153,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
         if (isMing) {
             this.roomInfo.addMingGangNum(this.getUserId());
-        }else{
+        } else {
             this.roomInfo.addAnGangNum(this.getUserId());
         }
 
@@ -204,11 +203,8 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         this.roomInfo.addUserSocre(this.getUserId(), allScore);
 
 
-
         room.pushScoreChange();
     }
-
-
 
 
     @Override
@@ -229,7 +225,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         for (HuCardType huCardType : huList) {
 
             int temp = getMaxPoint(huCardType, !isZimo);
-            if(temp > maxPoint){
+            if (temp > maxPoint) {
                 maxPoint = temp;
             }
 
@@ -238,9 +234,9 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
         //显庄 并且 赢得人是庄家
         boolean isBankerWinMore = bankerIsZhuang && isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_显庄);
-        if(isBankerWinMore) maxPoint += 10;
+        if (isBankerWinMore) maxPoint += 10;
 
-        if(isZimo) maxPoint *= 2;
+        if (isZimo) maxPoint *= 2;
 
         boolean isBaoAll = !isZimo && !this.gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing;
 
@@ -252,15 +248,15 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
                 int tempScore = maxPoint;
                 //庄家多输
                 if (playerCardsInfoMj.getUserId() == this.gameInfo.getFirstTurn() && isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_显庄)) {
-                    if(isZimo) {
+                    if (isZimo) {
                         tempScore += 20;
-                    }else{
+                    } else {
                         tempScore += 10;
                     }
                 }
                 allScore += tempScore;
 
-                if(!isBaoAll){
+                if (!isBaoAll) {
                     playerCardsInfoMj.addScore(-tempScore);
                     this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -tempScore);
                 }
@@ -319,6 +315,8 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
                 }
                 if (point == 7 || point == 8 || point == 9) {
                     result.add(9);
+                } else {
+                    result.add(point + 2);
                 }
             }
         }
@@ -338,19 +336,31 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 //        change();
 
 
-
         playerCardsInfo.isHasFengShun = true;
 
 
 //        String[] s = new String[]{"032", "033", "034", "036","040",  "044", "056",  "060",  "064",   "092", "093", "104", "105","135"};//092
-        String[] s = new String[]{"012", "016", "024", "025","044",  "060", "064",     "084",  "092",   "100", "108", "116", "120","056"};//092
+        String[] s = new String[]{"090",
+                "127",
+                "009",
+                "011",
+                "010",
+                "020",
+                "024",
+                "026",
+                "028",
+                "035",
+                "045",
+                "132",
+                "092",
+                "133"};//092
 //        String[] s = new String[]{"112", "113", "114",   "024",   "028", "032",  "088", "092", "096",  "097",    "132", "133", "124", "120"};
 
 //        094, 038, 093, 063, 067, 044, 034, 106, 058, 035, 041, 104, 033, 032
 
         List<Integer> hun = new ArrayList<>();
-        hun.add(29);
-        hun.add(30);
+        hun.add(33);
+        hun.add(31);
 //        hun.add(1);
 //        hun.add(8);
 
@@ -386,6 +396,9 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
         boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);
         System.out.println(isCanTing);
+
+//        playerCardsInfo.hu_zm(roomInfo,gameInfoTJ,"133");
+        playerCardsInfo.huCompute( roomInfo,  gameInfoTJ, true, 0, "133");
 //        System.out.println("是否可以胡: " + isCanHu);
 //        huList.forEach(h -> System.out.println(h.specialHuList));
 //        System.out.println(huList);

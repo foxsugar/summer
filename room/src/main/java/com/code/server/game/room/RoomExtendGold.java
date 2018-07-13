@@ -264,7 +264,9 @@ public class RoomExtendGold extends Room {
         if (map != null) {
             for (List<Room> l : map.values()) {
                 for (Room r : l) {
-                    list.add(r.getSimpleVo());
+                    if (r.getGoldRoomPermission() == Room.GOLD_ROOM_PERMISSION_PUBLIC) {
+                        list.add(r.getSimpleVo());
+                    }
                 }
             }
         }

@@ -11,6 +11,7 @@ import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -67,12 +68,14 @@ public class GameBaseYSZ extends Game {
 
         //房卡场 暂定
         if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
-            MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
+//            MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
+            MAX_BET_NUM = 10d;
             INIT_BOTTOM_CHIP = 1d;
             genZhuList.add(2);
             genZhuList.add(3);
-//            genZhuList.add(200);
-//            genZhuList.add(250);
+            genZhuList.add(4);
+            genZhuList.add(5);
+
             return;
         }
 
@@ -89,7 +92,6 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(150);
                 genZhuList.add(200);
                 genZhuList.add(250);
-                minGold = 50;
             }else if (room.getGoldRoomType() == 100){
                 max = 1000;
                 minGold = 1000;
@@ -97,30 +99,21 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(300);
                 genZhuList.add(400);
                 genZhuList.add(500);
-            }else if (room.getGoldRoomType() == 500){
-                max = 5000;
-                minGold = 5000;
-                genZhuList.add(1000);
-                genZhuList.add(1500);
-                genZhuList.add(2000);
-                genZhuList.add(2500);
-            }else if (room.getGoldRoomType() == 1000){
-                max = 10000;
-                minGold = 10000;
-                genZhuList.add(2000);
-                genZhuList.add(3000);
-                genZhuList.add(4000);
-                genZhuList.add(5000);
             }else if (room.getGoldRoomType() == 200){
-                //new
                 max = 2000;
                 minGold = 2000;
                 genZhuList.add(400);
                 genZhuList.add(600);
                 genZhuList.add(800);
                 genZhuList.add(1000);
+            }else if (room.getGoldRoomType() == 500){
+                max = 4000;
+                minGold = 4000;
+                genZhuList.add(800);
+                genZhuList.add(1200);
+                genZhuList.add(1600);
+                genZhuList.add(2000);
             }
-
             INIT_BOTTOM_CHIP = dizhu;
             MAX_BET_NUM = max;
 
@@ -142,21 +135,21 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(400);
                 genZhuList.add(500);
 
-            }else if (room.getGoldRoomType() == 1000){
-                max = 10000;
-                minGold = 10000;
-                genZhuList.add(2000);
-                genZhuList.add(3000);
-                genZhuList.add(4000);
-                genZhuList.add(5000);
-
-            }else if (room.getGoldRoomType() == 2000){
+            }else if (room.getGoldRoomType() == 200){
                 max = 2000;
                 minGold = 2000;
                 genZhuList.add(400);
                 genZhuList.add(600);
                 genZhuList.add(800);
                 genZhuList.add(1000);
+
+            }else if (room.getGoldRoomType() == 500){
+                max = 4000;
+                minGold = 4000;
+                genZhuList.add(800);
+                genZhuList.add(1200);
+                genZhuList.add(1600);
+                genZhuList.add(2000);
             }
 
             INIT_BOTTOM_CHIP = dizhu;
@@ -764,15 +757,18 @@ public class GameBaseYSZ extends Game {
         if (seeUser.contains(userId) || getMaxRoundNumber() <= room.getMenPai()) {
             playerCardInfo.setSee("0");
         }
-        if (seeUser.contains(userId)) {
-            if (chip >= MAX_BET_NUM) {
-                playerCardInfo.setRaise("0");
-            }
-        } else {
-            if (chip >= MAX_BET_NUM / 2) {
-                logger.info("");
-                playerCardInfo.setRaise("0");
-            }
+//        if (seeUser.contains(userId)) {
+//            if (chip >= MAX_BET_NUM) {
+//                playerCardInfo.setRaise("0");
+//            }
+//        } else {
+//            if (chip >= MAX_BET_NUM / 2) {
+//                logger.info("");
+//                playerCardInfo.setRaise("0");
+//            }
+//        }
+        if (chip >= MAX_BET_NUM / 2) {
+            playerCardInfo.setRaise("0");
         }
 
         if (getMaxRoundNumber() <= room.getMenPai()) {
@@ -823,16 +819,19 @@ public class GameBaseYSZ extends Game {
         if (getMaxRoundNumber() <= room.getMenPai()) {
             playerCardInfo.setKill("0");
         }
-        if (seeUser.contains(curUserId)) {
-            logger.info("");
-            if (chip >= MAX_BET_NUM) {
-                playerCardInfo.setRaise("0");
-            }
-        } else {
-            logger.info("");
-            if (chip >= MAX_BET_NUM / 2) {
-                playerCardInfo.setRaise("0");
-            }
+//        if (seeUser.contains(curUserId)) {
+//            logger.info("");
+//            if (chip >= MAX_BET_NUM) {
+//                playerCardInfo.setRaise("0");
+//            }
+//        } else {
+//            logger.info("");
+//            if (chip >= MAX_BET_NUM / 2) {
+//                playerCardInfo.setRaise("0");
+//            }
+//        }
+        if (chip >= MAX_BET_NUM / 2) {
+            playerCardInfo.setRaise("0");
         }
 
         Map<String, Object> result = new HashMap<>();
@@ -841,12 +840,13 @@ public class GameBaseYSZ extends Game {
 
         List<Integer> list = new ArrayList<>();
         for (Integer i : this.genZhuList){
-            if (this.seeUser.contains(userId)){
+            if (this.seeUser.contains(curUserId)){
                 list.add(i * 2);
             }else {
                 list.add(i);
             }
         }
+
         result.put("zhuList", list);
 
         ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
@@ -894,15 +894,18 @@ public class GameBaseYSZ extends Game {
             playerCardInfo.setKill("0");
         }
 
-        if (seeUser.contains(curUserId)) {
-            logger.info("");
-            if (chip >= MAX_BET_NUM) {
-                playerCardInfo.setRaise("0");
-            }
-        } else {
-            if (chip >= MAX_BET_NUM / 2) {
-                playerCardInfo.setRaise("0");
-            }
+//        if (seeUser.contains(curUserId)) {
+//            logger.info("");
+//            if (chip >= MAX_BET_NUM) {
+//                playerCardInfo.setRaise("0");
+//            }
+//        } else {
+//            if (chip >= MAX_BET_NUM / 2) {
+//                playerCardInfo.setRaise("0");
+//            }
+//        }
+        if (chip >= MAX_BET_NUM / 2) {
+            playerCardInfo.setRaise("0");
         }
 
         Map<String, Object> result = new HashMap<>();
@@ -910,7 +913,7 @@ public class GameBaseYSZ extends Game {
         result.put("chip", chip);
         List<Integer> list = new ArrayList<>();
         for (Integer i : this.genZhuList){
-            if (this.seeUser.contains(userId)){
+            if (this.seeUser.contains(curUserId)){
                 list.add(i * 2);
             }else {
                 list.add(i);
@@ -1128,6 +1131,9 @@ public class GameBaseYSZ extends Game {
     @Override
     public IfaceGameVo toVo(long userId) {
         GameYSZVo vo = new GameYSZVo();
+//        BeanUtils.copyProperties(this, vo);
+        vo.cards = this.cards;
+        vo.leaveCards = this.leaveCards;
         //vo.cards = this.getCards();
         vo.chip = this.getChip();
         //vo.leaveCards = this.getLeaveCards();

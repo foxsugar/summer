@@ -9,6 +9,7 @@ public class ClubStatistics {
     private int completeNum;
     private int winnerNum;
     private int consumeNum;
+    private double allScore;
 
     public int getOpenNum() {
         return openNum;
@@ -43,6 +44,15 @@ public class ClubStatistics {
 
     public ClubStatistics setConsumeNum(int consumeNum) {
         this.consumeNum = consumeNum;
+        return this;
+    }
+
+    public double getAllScore() {
+        return allScore;
+    }
+
+    public ClubStatistics setAllScore(double allScore) {
+        this.allScore = allScore;
         return this;
     }
 }

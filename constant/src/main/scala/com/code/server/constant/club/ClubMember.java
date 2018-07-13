@@ -1,5 +1,8 @@
 package com.code.server.constant.club;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by sunxianping on 2018/1/15.
  */
@@ -10,6 +13,9 @@ public class ClubMember {
     private String mark;
     private String image;
     private boolean online;
+    private Map<String,ClubStatistics> statistics= new HashMap<>();
+    private String lastLoginTime;
+    private int sex;
 
     public long getUserId() {
         return userId;
@@ -62,6 +68,33 @@ public class ClubMember {
 
     public ClubMember setOnline(boolean online) {
         this.online = online;
+        return this;
+    }
+
+    public Map<String, ClubStatistics> getStatistics() {
+        return statistics;
+    }
+
+    public ClubMember setStatistics(Map<String, ClubStatistics> statistics) {
+        this.statistics = statistics;
+        return this;
+    }
+
+    public String getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public ClubMember setLastLoginTime(String lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+        return this;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public ClubMember setSex(int sex) {
+        this.sex = sex;
         return this;
     }
 }

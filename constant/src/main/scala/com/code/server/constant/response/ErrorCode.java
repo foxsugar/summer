@@ -63,6 +63,7 @@ public class ErrorCode {
 	public static final int CLUB_CANNOT_NO_PRESIDENT = 1500005;
 	public static final int CLUB_NOT_PRESIDENT = 1500006;
 	public static final int CLUB_NOT_MODEL_LIMIT = 1500007;
+	public static final int CLUB_PARAM_ERROR = 1500008;
 
 
 	public static final int REQUEST_PARAM_ERROR = 190000;

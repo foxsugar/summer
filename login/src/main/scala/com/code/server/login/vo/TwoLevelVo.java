@@ -53,4 +53,14 @@ public class TwoLevelVo {
     public void setList(List<TwoLevelInfoVo> list) {
         this.list = list;
     }
+
+    @Override
+    public String toString() {
+        return "TwoLevelVo{" +
+                "categoryName='" + categoryName + '\'' +
+                ", money=" + money +
+                ", gold=" + gold +
+                ", list=" + list +
+                '}';
+    }
 }

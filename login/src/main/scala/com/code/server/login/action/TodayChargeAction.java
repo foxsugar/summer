@@ -76,6 +76,22 @@ public class TodayChargeAction {
         return agentResponse;
     }
 
+    @RequestMapping("/tesst")
+    public AgentResponse demohomeCharge(String start, String end){
+
+//        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//        HttpServletRequest request = attributes.getRequest();
+//        long agentId = AgentUtil.getAgentByRequest(request);
+        long agentId = 100017;
+        Date startDate = DateUtil.convertDay2Date(start);
+        Date endDate = DateUtil.convertDay2Date(end);
+        HomeChargeVo homeChargeVo = todayChargeService.showCharge(startDate, endDate, agentId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("result", homeChargeVo);
+        AgentResponse agentResponse = new AgentResponse(200, result);
+        return agentResponse;
+    }
+
     @AuthChecker
     //直接玩家
     @RequestMapping("/level1Charges")
@@ -174,6 +190,31 @@ public class TodayChargeAction {
         Map<String, Object> result = new HashMap<>();
         result.put("result", threeLevelVo);
         AgentResponse agentResponse = new AgentResponse(200, result);
+        return agentResponse;
+    }
+
+    @AuthChecker
+    @RequestMapping("/canBlance")
+    public AgentResponse canBlance(){
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        long agentId = AgentUtil.getAgentByRequest(request);
+        AgentResponse agentResponse = new AgentResponse();
+        double re = todayChargeService.canBlance(agentId);
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("result", re);
+        System.out.println("---------|||||" + re);
+        agentResponse.setData(rs);
+        return agentResponse;
+    }
+
+    @RequestMapping("/testb")
+    public AgentResponse testBlance(long agentId){
+        AgentResponse agentResponse = new AgentResponse();
+        double re = todayChargeService.canBlance(agentId);
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("result", re);
+        agentResponse.setData(rs);
         return agentResponse;
     }
 }

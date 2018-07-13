@@ -232,6 +232,10 @@ public class RoomInfo extends RoomExtendGold {
             GameTimer.removeNode(prepareRoomTimerNode);
         }
 
+        Map<String, Object> r = new HashMap<>();
+        r.put("banker", this.bankerId);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "whoIsBanker", r), this.getUsers());
+
         gameInfo.init(0, this.bankerId, this.users, this);
 //        gameInfo.fapai();
         this.game = gameInfo;
@@ -407,6 +411,7 @@ public class RoomInfo extends RoomExtendGold {
         result.put("clubRoomModel", this.getClubRoomModel());
         result.put("goldRoomType", this.getGoldRoomType());
         result.put("goldRoomPermission", this.getGoldRoomPermission());
+        result.put("showChat", this.showChat);
 
         return result;
     }
@@ -468,6 +473,7 @@ public class RoomInfo extends RoomExtendGold {
         roomVo.setModeTotal(this.getModeTotal());
         roomVo.setEach(this.getEach());
         roomVo.setMustZimo(this.mustZimo);
+        roomVo.setShowChat(this.showChat);
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.getGame() != null) {
             roomVo.game = this.game.toVo(userId);

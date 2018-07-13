@@ -12,9 +12,15 @@ import com.code.server.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import scala.Char;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -46,6 +52,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         String endStr = DateUtil.convert2DayString(end);
         OneLevelVo oneLevelVo = oneLevelCharges(start, end, agentId);
         TwoLevelVo twoLevelVo = twoLevelCharges(start, end, agentId);
+
+        logger.info("===start:{}end:{}agentId:{}:oneLevelVo:{}twoLevelVo:{}", start, end, agentId, oneLevelVo, twoLevelVo);
+
         ThreeLevelVo threeLevelVo = threeLevelCharges(start, end, agentId);
         HomeChargeVo homeChargeVo = new HomeChargeVo();
         homeChargeVo.setOnelevel("" + oneLevelVo.getMoney());
@@ -56,6 +65,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         homeChargeVo.setTwoLevelGold("" + twoLevelVo.getGold());
         homeChargeVo.setThreeLevelGold("" + threeLevelVo.getGold());
 
+        homeChargeVo.setOneLevelVoList(oneLevelVo.getList());
+        homeChargeVo.setTwoLevelInfoVoList(twoLevelVo.getList());
+        homeChargeVo.setThreeLevelInfoVoList(threeLevelVo.getList());
 
         double total = oneLevelVo.getMoney() + twoLevelVo.getMoney() + threeLevelVo.getMoney();
         homeChargeVo.setTotal("" + total);
@@ -73,7 +85,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
         Date start = DateUtil.getThisYearStart();
         Date end = new Date();
-        List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndRecharge_sourceIs(Arrays.asList(agentId),start, end, 1, CHARGE_TYPE_CASH);
+        List<Charge> list = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndRecharge_sourceIs(Arrays.asList(agentId),start, end, 1, CHARGE_TYPE_CASH);
 
         List<WaterRecordVo> voList = new ArrayList<>();
         for (Charge charge : list){
@@ -104,18 +116,27 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         aList.add(agentBean.getId());
         aList.addAll(agentBean.getChildList());
 
+        logger.info("<=====>{}==={}",agentBean, aList);
+
         //查一下手下玩家
         for (Long uid : aList){
 
             //不要代理 只要玩家
-            if (uid != agentId && RedisManager.getAgentRedisService().isExit(uid)) continue;
+//            if (uid != agentId && RedisManager.getAgentRedisService().isExit(uid)) continue;
+            if ( RedisManager.getAgentRedisService().isExit(uid)){
+                if (uid != agentId){
+                    continue;
+                }
+            }
 
             User user = userDao.getUserById(uid);
             if (user == null){
                 continue;
             }
 
-            List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
+            List<Charge> list = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
+
+            logger.info("777777=====>{}=====start:{}end:{}==rs={}", uid, start, end, list);
 
             double totalMoney = 0d;
             double totalGold = 0d;
@@ -131,8 +152,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             goldTotal += totalGold;
 
             OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
+            oneLevelInfoVo.setUid(user.getId());
             oneLevelInfoVo.setGold(goldTotal +"");
-            oneLevelInfoVo.setImage(user.getImage());
+            oneLevelInfoVo.setImage(user.getImage() + "/96");
             oneLevelInfoVo.setUsername(user.getUsername());
             oneLevelInfoVo.setMoney("" + totalMoney);
             oneLevelInfoVoList.add(oneLevelInfoVo);
@@ -142,6 +164,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         oneLevelVo.setGold(goldTotal);
         oneLevelVo.setList(oneLevelInfoVoList);
 
+        logger.info("777777=====>rss{}", oneLevelVo);
         return oneLevelVo;
     }
 
@@ -159,6 +182,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             }
         }
 
+        logger.info("<=====>{}==={}",agentBean, aList);
+
         double total = 0d;
         double goldTotal = 0d;
 
@@ -168,7 +193,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             User user = userDao.getUserById(delegateId);
             if (user == null) continue;
 
-            List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(delegateId), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
+            List<Charge> list = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(delegateId), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
             TwoLevelInfoVo twoLevelInfoVo = new TwoLevelInfoVo();
 
             //计算金额
@@ -185,8 +210,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
             twoLevelInfoVo.setMoney("" + totalMoney);
             twoLevelInfoVo.setGold("" + totalGold);
-
-            twoLevelInfoVo.setImage(user.getImage());
+            twoLevelInfoVo.setUid(user.getId());
+            twoLevelInfoVo.setImage(user.getImage() + "/96");
             twoLevelInfoVo.setUsername(user.getUsername());
             twoLevelVo.getList().add(twoLevelInfoVo);
 
@@ -195,6 +220,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
             //二级代理手下直接用户
             AgentBean twoLevelAgentBean = RedisManager.getAgentRedisService().getAgentBean(delegateId);
+//            if (twoLevelAgentBean == null) continue;
+            System.out.println("=========" + delegateId);
             for (Long uid : twoLevelAgentBean.getChildList()){
 
                 if (RedisManager.getAgentRedisService().isExit(uid)) continue;
@@ -204,9 +231,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
                 TwoLevelInfoVo infoVo = new TwoLevelInfoVo();
                 infoVo.setUsername(twoLevelUser.getUsername());
-                infoVo.setImage(twoLevelUser.getImage());
+                infoVo.setImage(twoLevelUser.getImage() + "/96");
 
-                List<Charge> twoLevelChargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
+                List<Charge> twoLevelChargeList = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
                 double twoLevelUserTotal = 0;
                 double twoLevelUserGoldTotal = 0;
                 for (Charge charge : twoLevelChargeList){
@@ -260,10 +287,11 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
             User user = userDao.getUserById(uid);
             if (user == null) continue;
-            List<Charge> chargeList = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
+            List<Charge> chargeList = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
             threeLevelInfoVo.setUsername(user.getUsername());
-            threeLevelInfoVo.setImage(user.getImage());
+            threeLevelInfoVo.setImage(user.getImage() + "/96");
+            threeLevelInfoVo.setUid(user.getId());
 
             double totalMoney = 0;
             double totalGold = 0;
@@ -322,5 +350,47 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         return agentBean.getRebate();
     }
+
+    public List<Charge> getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(List<Long> users, Date start, Date end, int status, List<Integer> list){
+
+        Specification<Charge> specification = new Specification<Charge>() {
+            @Override
+            public Predicate toPredicate(Root<Charge> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                List<Predicate> predicateList = new ArrayList<>();
+                predicateList.add(cb.between(root.get("createtime").as(Date.class), start, end));
+                predicateList.add(cb.equal(root.get("status").as(Integer.class), status));
+                predicateList.add(root.get("chargeType").as(Integer.class).in(list));
+                predicateList.add(root.get("userid").as(Integer.class).in(users));
+                Predicate[] p = new Predicate[predicateList.size()];
+                query.where(cb.and(predicateList.toArray(p)));
+                return query.getRestriction();
+            }
+        };
+        List<Charge> chargeList = chargeDao.findAll(specification);
+        return chargeList;
+    }
+
+    public List<Charge> getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndRecharge_sourceIs(List<Long> users, Date start, Date end, int status, String sourceType){
+
+        Specification<Charge> specification = new Specification<Charge>() {
+            @Override
+            public Predicate toPredicate(Root<Charge> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                List<Predicate> predicateList = new ArrayList<>();
+                predicateList.add(cb.between(root.get("createtime").as(Date.class), start, end));
+                predicateList.add(cb.equal(root.get("status").as(Integer.class), status));
+                predicateList.add(cb.equal(root.get("recharge_source").as(String.class), sourceType));
+                predicateList.add(root.get("userid").as(Integer.class).in(users));
+                Predicate[] p = new Predicate[predicateList.size()];
+                query.where(cb.and(predicateList.toArray(p)));
+                return query.getRestriction();
+            }
+        };
+        List<Charge> chargeList = chargeDao.findAll(specification);
+        return chargeList;
+    }
+
+
 
 }

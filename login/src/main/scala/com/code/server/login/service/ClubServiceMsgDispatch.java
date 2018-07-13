@@ -4,9 +4,13 @@ import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.kafka.MsgProducer;
+import com.code.server.util.JsonUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by sunxianping on 2018/1/15.
@@ -77,23 +81,43 @@ public class ClubServiceMsgDispatch {
                 int money = params.get("money").asInt();
                 return gameClubService.charge(msgKey, userId, clubId, money);
 
-            case "createRoomModel":
+            case "createRoomModel":{
+
                 String createCommand = params.get("createCommand").asText();
                 String gameType = params.get("gameType").asText();
                 int gameNumber = params.get("gameNumber").asInt();
                 String desc1 = params.get("desc").asText();
-                return gameClubService.createRoomModel(msgKey,  userId, clubId, createCommand,gameType, gameNumber, desc1);
+                String str = params.path("indexs").toString();
+                List<Integer> indexs = null;
+                if(str != null && !str.equals("")){
+                    indexs = JsonUtil.readValue(params.path("indexs").toString(),new TypeReference<List<Integer>>() {});
+                }
+
+                return gameClubService.createRoomModel(msgKey,  userId, clubId, createCommand,gameType, gameNumber, desc1, indexs);
+            }
 
             case "removeRoomModel":
                 String roomModelId = params.get("roomModelId").asText();
                 return gameClubService.removeRoomModel(msgKey, userId, clubId, roomModelId);
-            case "setRoomModel":
+            case "setRoomModel":{
+
                 String createCommand_set = params.get("createCommand").asText();
                 String gameType_set = params.get("gameType").asText();
                 int gameNumber_set = params.get("gameNumber").asInt();
                 String desc1_set = params.get("desc").asText();
                 String roomModelId_set = params.get("roomModelId").asText();
                 return gameClubService.setRoomModel(msgKey,  userId, clubId,roomModelId_set,createCommand_set, gameType_set, gameNumber_set, desc1_set);
+            }
+
+            case "setRoomModelBatch":{
+                String createCommand_set = params.get("createCommand").asText();
+                String gameType_set = params.get("gameType").asText();
+                int gameNumber_set = params.get("gameNumber").asInt();
+                String desc1_set = params.get("desc").asText();
+                List<Integer> indexs = JsonUtil.readValue(params.path("indexs").toString(),new TypeReference<List<Integer>>() {});
+                return gameClubService.setRoomModelBatch(msgKey,  userId, clubId,createCommand_set, gameType_set, gameNumber_set, desc1_set,indexs);
+            }
+
             case "clubRoomSetId":
 
                 String clubModelId = params.get("clubModelId").asText();
@@ -124,6 +148,28 @@ public class ClubServiceMsgDispatch {
 
             case "getChargeRecord":
                 return gameClubService.getChargeRecord(msgKey, userId, clubId);
+
+            case "setFloorDesc":{
+
+                int floor = params.get("floor").asInt();
+                String desc1 = params.get("desc").asText();
+                return gameClubService.setFloor(msgKey, userId, clubId, floor, desc1);
+            }
+
+            case "setAdmin":{
+                long adminUser = params.get("adminUser").asLong();
+                boolean isAdd = params.get("isAdd").asBoolean();
+                return gameClubService.setAdmin(msgKey, userId, clubId, adminUser, isAdd);
+            }
+            case "addUser":{
+                long user = params.get("userId").asLong();
+                return gameClubService.addUser(msgKey,clubId,user);
+            }
+            case "removeFloor":{
+                int floor = params.get("floor").asInt();
+                return gameClubService.removeFloor(msgKey, clubId,userId,floor);
+            }
+
         }
         return 0;
     }

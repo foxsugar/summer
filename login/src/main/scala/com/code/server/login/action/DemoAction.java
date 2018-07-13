@@ -1,32 +1,46 @@
 package com.code.server.login.action;
 import com.code.server.constant.game.AgentBean;
+import com.code.server.constant.game.IChargeType;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.ErrorCode;
+import com.code.server.db.Service.ChargeService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.dao.*;
 import com.code.server.db.model.*;
+import com.code.server.login.anotation.DemoChecker;
 import com.code.server.login.service.AgentService;
+import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.HomeService;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.util.MD5Util;
 import com.code.server.login.vo.DChargeAdminVo;
+import com.code.server.login.vo.DChildVo;
 import com.code.server.login.vo.GameAgentVo;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.rpc.idl.ChargeType;
+import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
+import javafx.scene.chart.Chart;
+import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Pattern;
-
 /**
  * Created by dajuejinxian on 2018/6/22.
  */
@@ -211,8 +225,9 @@ public class DemoAction{
         return agentResponse;
     }
 
+    @DemoChecker
     @RequestMapping("/fetchAllPlayers")
-    public AgentResponse fetchAllPlayers(int pageSize, int curPage){
+    public AgentResponse fetchAllPlayers(int pageSize, int curPage, HttpServletRequest request){
 
         if (curPage > 0){
             curPage--;
@@ -229,10 +244,10 @@ public class DemoAction{
     }
 
     @RequestMapping("/fetchPlayer")
-    public AgentResponse fetchPlayer(long userId){
+    public AgentResponse fetchPlayer(long userId, HttpServletRequest request){
 
         if (userId == 0){
-            return fetchAllPlayers(20, 1);
+            return fetchAllPlayers(20, 1, request);
         }
         User user =  userDao.findOne(userId);
         List<User> list = new ArrayList<>();
@@ -260,7 +275,8 @@ public class DemoAction{
         if (userId == 0){
             return fetchDelegates(1);
         }
-        GameAgent gameAgent = gameAgentDao.findOne(userId);
+//        GameAgent gameAgent = gameAgentDao.findOne(userId);
+        GameAgent gameAgent = homeService.findOneDelegate(userId);
         List<GameAgentVo> list = new ArrayList<>();
         AgentResponse agentResponse = new AgentResponse();
         if (gameAgent == null){
@@ -305,7 +321,65 @@ public class DemoAction{
             voList.add(gameAgentVo);
         }
 
-        long count = gameAgentDao.count();
+        long count = homeService.delegatesCount();
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("total", count);
+        rs.put("list", voList);
+
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(rs);
+        return agentResponse;
+    }
+
+    @RequestMapping("/fetchPartner")
+    public AgentResponse fetchPartner(long userId){
+        if (userId == 0){
+            return fetchPartners(1);
+        }
+//        GameAgent gameAgent = gameAgentDao.findOne(userId);
+        GameAgent gameAgent = homeService.findOnePartner(userId);
+        List<GameAgentVo> list = new ArrayList<>();
+        AgentResponse agentResponse = new AgentResponse();
+        if (gameAgent == null){
+            agentResponse.setData(list);
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+            Map<String, Object> result = new HashMap<>();
+            agentResponse.setMsg(" 没有记录 ");
+            result.put("total", 0);
+            result.put("list", list);
+            agentResponse.setData(result);
+        }else {
+            GameAgentVo gameAgentVo = new GameAgentVo();
+            BeanUtils.copyProperties(gameAgent, gameAgentVo);
+            gameAgentVo.setIsPartnerDes(gameAgent.getIsPartner() == 1 ? "合伙人" : "代理");
+            list.add(gameAgentVo);
+            Map<String, Object> result = new HashMap<>();
+            result.put("total", 1);
+            result.put("list", list);
+            agentResponse.setData(result);
+        }
+        return agentResponse;
+    }
+
+    @RequestMapping("/fetchPartners")
+    public AgentResponse fetchPartners(int curPage){
+        if (curPage > 0){
+            curPage--;
+        }
+        int pageSize = 20;
+        Page<GameAgent> page = homeService.findPartner(new PageRequest(curPage,pageSize));
+        List<GameAgent> list = page.getContent();
+
+        List<GameAgentVo> voList = new ArrayList<>();
+        for (GameAgent gameAgent : list){
+            GameAgentVo gameAgentVo = new GameAgentVo();
+            BeanUtils.copyProperties(gameAgent, gameAgentVo);
+            User user = userDao.findOne(gameAgent.getId());
+            gameAgentVo.setName(user.getUsername());
+            voList.add(gameAgentVo);
+        }
+
+        long count = homeService.partnerCount();
         Map<String, Object> rs = new HashMap<>();
         rs.put("total", count);
         rs.put("list", voList);
@@ -322,50 +396,81 @@ public class DemoAction{
         return agentResponse;
     }
 
-    @RequestMapping("/doCharge")
-    public AgentResponse doCharge(HttpServletRequest request, long userId, @RequestParam(value = "money", required = true) long money){
+    @RequestMapping(value = "/doChargeNew", method = RequestMethod.POST)
+    public AgentResponse doChargeNew(HttpServletRequest request, long userId, @RequestParam(value = "money", required = true) long money, String type){
 
-        org.springframework.util.Assert.isTrue(isNumber(money +""), "是数字");
+        AgentResponse agentResponse = new AgentResponse();
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         UserService userService = SpringUtil.getBean(UserService.class);
         User user = userService.getUserByUserId(userId);
-        double curMoney = RedisManager.getUserRedisService().addUserMoney(userId, money);
-        AgentResponse agentResponse = new AgentResponse();
-        agentResponse.setData(curMoney);
-        return agentResponse;
-    }
+        String name = "";
+        if (userBean == null) {
+            if (user != null) {
+                if (type.equals("1")) {
+                    user.setMoney(user.getMoney() + money);
+                } else if (type.equals("2")) {
+                    user.setGold(user.getGold() + money);
+                }
+                userService.save(user);
+                name = user.getUsername();
+            } else {
+               agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+               return agentResponse;
+            }
 
-    @RequestMapping("/charges")
-    public AgentResponse chargeRecord(HttpServletRequest request, long userId){
-
-        List<Integer> list = Arrays.asList(MONEY_TYPE, GOLD_TYPE);
-        List<Charge> chargeList = null;
-
-        if (userId == 0){
-            chargeList = chargeDao.getChargesByChargeTypeIn(list);
-        }else {
-            chargeList = chargeDao.getChargesByChargeTypeInAndUseridIs(list, userId);
+        } else {//在redis里
+            name = userBean.getUsername();
+            if (type.equals("1")) {
+                RedisManager.getUserRedisService().addUserMoney(userId, money);
+                GameUserService.saveUserBean(userId);
+            } else if (type.equals("2")) {
+                RedisManager.getUserRedisService().addUserGold(userId, money);
+                GameUserService.saveUserBean(userId);
+            }
         }
 
-        List<DChargeAdminVo> result = new ArrayList<>();
-        for (Charge charge : chargeList){
-            DChargeAdminVo chargeAdminVo = new DChargeAdminVo();
-            BeanUtils.copyProperties(charge, chargeAdminVo);
-            result.add(chargeAdminVo);
-        }
+        Charge charge = new Charge();
+        charge.setOrderId("" + IdWorker.getDefaultInstance().nextId());
+        charge.setUserid(userId);
+        charge.setUsername(name);
+        charge.setCreatetime(new Date());
+        charge.setCallbacktime(new Date());
+        charge.setOrigin(1);
+        charge.setMoney(money);
+        charge.setMoney_point(0);
+        charge.setRecharge_source("" + IChargeType.AGENT);
+        charge.setStatus(1);
+        charge.setChargeType(type == "1" ? 0 : 1);
+        SpringUtil.getBean(ChargeService.class).save(charge);
 
-        Map<String, Object> res = new HashMap<>();
-        res.put("result", result);
-        AgentResponse agentResponse = new AgentResponse();
-        agentResponse.setData(res);
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("money", money);
+        rs.put("type", type);
+        agentResponse.setData(rs);
         return agentResponse;
     }
 
     @RequestMapping("/downward")
     public AgentResponse downwardDelegate(HttpServletRequest request, long agentId){
 
-        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+        //先给个demo
+        if (agentId == 0){
+            Map<String, Object> rrss = assDemo();
 
+            AgentResponse agentResponse = new AgentResponse();
+            agentResponse.setData(rrss);
+            return agentResponse;
+        }
+
+        //如果代理是空的
+        if (RedisManager.getAgentRedisService().getAgentBean(agentId) == null){
+            AgentResponse agentResponse = new AgentResponse();
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+            agentResponse.setMsg("代理不存在");
+            return agentResponse;
+        }
+
+        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         //直接玩家
         List<Long> aList = new ArrayList<>();
         //二级代理
@@ -392,16 +497,342 @@ public class DemoAction{
 
         List<User> aUsers = userDao.findUsersByIdIn(aList);
         List<User> bUsers = userDao.findUsersByIdIn(bList);
-        List<User> cUsers = userDao.findUsersByIdIn(cList);
+//        List<User> cUsers = userDao.findUsersByIdIn(cList);
 
-//        long id = agentBean.getParentId();
-//                  agentBean.getPartnerId();
+        Map<String, Object> rs =  assembleDelegateRelationship(agentId, aUsers, bUsers);
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(rs);
+        System.out.println("====");
+        System.out.println(agentResponse);
+        return agentResponse;
 
-        return null;
+//        //直接
+//        Map<String, Object> rs = new HashMap<>();
+//        List<Object> rsList = new ArrayList();
+//        rs.put("children", rsList);
+//
+//        Map<String, Object> players = new HashMap<>();
+//        rsList.add(players);
+//        players.put("name", "直接玩家");
+//        List<Object> playerList = new ArrayList<>();
+//        players.put("children", playerList);
+//
+//        for (int i = 0; i < 10; i++){
+//            DChildVo childVo = new DChildVo();
+//            childVo.setName(i + "");
+//            childVo.setValue(i);
+//            playerList.add(childVo);
+//        }
+//
+//        rs.put("name", "root");
+//
+//        Map<String, Object> rrss = ass();
+//
+//        AgentResponse agentResponse = new AgentResponse();
+//        agentResponse.setData(rrss);
+//        return agentResponse;
+    }
+
+    public String transformStr(long uid){
+        User user = userDao.findOne(uid);
+        String str ="ID:" + user.getId() + "名:" + user.getUsername();
+        return str;
+    }
+
+    public String transformStr(User user){
+        String str ="ID:" + user.getId() + "名:" + user.getUsername();
+        return str;
+    }
+
+    public Map<String, Object> assembleDelegateRelationship(long agentId, List<User> aList, List<User> bList){
+
+        Map<String, Object> nodeRoot = new HashMap<>();
+        nodeRoot.put("name", transformStr(agentId));
+
+        List<Object> childrenRoot = new ArrayList<>();
+        nodeRoot.put("children", childrenRoot);
+
+        Map<String, Object> node1_1 = new HashMap<>();
+        childrenRoot.add(node1_1);
+        node1_1.put("name", "直接玩家");
+
+        List<Object> children1_1 = new ArrayList<>();
+        node1_1.put("children", children1_1);
+
+        //直接玩家
+        for (User user : aList){
+            DChildVo childVo = new DChildVo();
+            childVo.setName(transformStr(user));
+            childVo.setValue((int) user.getId());
+            children1_1.add(childVo);
+        }
+
+        Map<String, Object> node1_2 = new HashMap<>();
+        childrenRoot.add(node1_2);
+        node1_2.put("name", "二级代理");
+
+        List<Object> children1_2 = new ArrayList<>();
+        node1_2.put("children", children1_2);
+
+//        for (int i = 10; i < 20; i++){
+//
+//            Map<String, Object> node2_x = new HashMap<>();
+//            node2_x.put("name", i);
+//            children1_2.add(node2_x);
+//
+//            List<Object> child2_x = new ArrayList<>();
+//            node2_x.put("children", child2_x);
+//
+//            for (int j = 100; j < 110; j++){
+//                DChildVo childVo = new DChildVo();
+//                childVo.setValue(j);
+//                childVo.setName("三级代理" + j);
+//                child2_x.add(childVo);
+//            }
+//        }
+
+        //二级代理
+        for (User user : bList){
+
+            Map<String, Object> node2_x = new HashMap<>();
+            node2_x.put("name", transformStr(user));
+            children1_2.add(node2_x);
+
+            List<Object> child2_x = new ArrayList<>();
+            node2_x.put("children", child2_x);
+
+//            //三级代理
+//            for (int j = 100; j < 110; j++){
+//                DChildVo childVo = new DChildVo();
+//                childVo.setValue(j);
+//                childVo.setName("三级代理" + j);
+//                child2_x.add(childVo);
+//            }
+
+            AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(user.getId());
+            if (agentBean == null) continue;
+            for (Long id : agentBean.getChildList()){
+                DChildVo dChildVo = new DChildVo();
+                dChildVo.setName(transformStr(id));
+                child2_x.add(dChildVo);
+            }
+
+        }
+
+        return nodeRoot;
+    }
+
+    public Map<String, Object> assDemo(){
+
+        Map<String, Object> nodeRoot = new HashMap<>();
+        nodeRoot.put("name", "self");
+
+        List<Object> childrenRoot = new ArrayList<>();
+        nodeRoot.put("children", childrenRoot);
+
+        Map<String, Object> node1_1 = new HashMap<>();
+        childrenRoot.add(node1_1);
+        node1_1.put("name", "直接玩家");
+
+        List<Object> children1_1 = new ArrayList<>();
+        node1_1.put("children", children1_1);
+
+        //直接玩家
+        for (int i = 0; i < 5; i++){
+            DChildVo childVo = new DChildVo();
+            childVo.setName(i + "");
+            childVo.setValue(i);
+            children1_1.add(childVo);
+        }
+
+        Map<String, Object> node1_2 = new HashMap<>();
+        childrenRoot.add(node1_2);
+        node1_2.put("name", "二级代理");
+
+        List<Object> children1_2 = new ArrayList<>();
+        node1_2.put("children", children1_2);
+
+        for (int i = 10; i < 20; i++){
+
+            Map<String, Object> node2_x = new HashMap<>();
+            node2_x.put("name", i);
+            children1_2.add(node2_x);
+
+            List<Object> child2_x = new ArrayList<>();
+            node2_x.put("children", child2_x);
+
+            for (int j = 100; j < 110; j++){
+                DChildVo childVo = new DChildVo();
+                childVo.setValue(j);
+                childVo.setName("三级代理" + j);
+                child2_x.add(childVo);
+            }
+        }
+
+        //二级代理
+        for (int i = 5; i < 10; i++){
+
+            Map<String, Object> node2_x = new HashMap<>();
+            node2_x.put("name", i + "");
+            children1_2.add(node2_x);
+
+            List<Object> child2_x = new ArrayList<>();
+            node2_x.put("children", child2_x);
+
+            //三级代理
+            for (int j = 100; j < 110; j++){
+                DChildVo childVo = new DChildVo();
+                childVo.setValue(j);
+                childVo.setName("三级代理" + j);
+                child2_x.add(childVo);
+            }
+        }
+
+        return nodeRoot;
+
+    }
+
+    public  Map<String, Object> ass(){
+
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("name", "flare");
+
+        List<Object> list = new ArrayList<>();
+        rs.put("children", list);
+
+        Map<String, Object> inner = new HashMap<>();
+        list.add(inner);
+        inner.put("name", "analytics");
+
+        List<Object> analytics = new ArrayList<>();
+        inner.put("children", analytics);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("name","cluster");
+
+        analytics.add(map);
+
+        List<Object> cluster = new ArrayList<>();
+        map.put("children", cluster);
+
+        for (int i = 0; i < 35; i++){
+            DChildVo childVo = new DChildVo();
+            childVo.setName(i + "");
+            childVo.setValue(i);
+            cluster.add(childVo);
+        }
+
+        return rs;
+    }
+
+    @RequestMapping("/oFindCharge")
+    public AgentResponse findChargeByOrderId(long orderId){
+        Charge charge =  homeService.findChargeByOrderId(orderId);
+        List<Charge> list = new ArrayList<>();
+
+        AgentResponse agentResponse = new AgentResponse();
+        if (charge == null){
+            Map<String, Object> rs = new HashMap<>();
+            rs.put("list", list);
+            rs.put("total", 0);
+            agentResponse.setData(rs);
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+        }else {
+            list.add(charge);
+            Map<String, Object> rs = new HashMap<>();
+            rs.put("list", list);
+            rs.put("total", 1);
+            agentResponse.setData(rs);
+//            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+        }
+        return agentResponse;
+    }
+
+    @RequestMapping("/uFindCharge")
+    public AgentResponse findChargeByUserId(long userId){
+
+        Charge charge =  homeService.findChargeByUserId(userId);
+        List<Charge> list = new ArrayList<>();
+
+        AgentResponse agentResponse = new AgentResponse();
+        if (charge == null){
+            Map<String, Object> rs = new HashMap<>();
+            rs.put("list", list);
+            rs.put("total", 0);
+            agentResponse.setData(rs);
+            agentResponse.setMsg("没有记录");
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+        }else {
+            list.add(charge);
+            Map<String, Object> rs = new HashMap<>();
+            rs.put("list", list);
+            rs.put("total", 1);
+            agentResponse.setData(rs);
+        }
+        return agentResponse;
+    }
+
+    @RequestMapping("/chargeTimeSearch")
+    public AgentResponse chargeTimerSearch(String time, int curPage){
+
+        if (curPage > 0){
+            curPage--;
+        }
+        String[] sA = null;
+        if (time.contains(",")){
+            sA = time.split(",", 1000);
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        List<Date> list = new ArrayList<>();
+
+        Arrays.stream(sA)
+                .forEach(x ->{
+                    try {
+                         list.add(simpleDateFormat.parse(x));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+        Page<Charge> page = homeService.timeSearchCharges(list, new PageRequest(curPage, 20));
+
+        AgentResponse agentResponse = new AgentResponse();
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("list", page.getContent());
+        rs.put("total", page.getTotalElements());
+        agentResponse.setData(rs);
+
+        return agentResponse;
+    }
+
+    @RequestMapping("/findCharges")
+    public AgentResponse findCharges(int curPage){
+        if (curPage > 0){
+            curPage--;
+        }
+        Page<Charge> page = homeService.findCharges(new PageRequest(curPage, 20));
+        List<DChargeAdminVo> list = new ArrayList<>();
+        page.getContent().stream()
+                .forEach(x -> {
+                    DChargeAdminVo dChargeAdminVo = new DChargeAdminVo();
+                    BeanUtils.copyProperties(x , dChargeAdminVo);
+                    list.add(dChargeAdminVo);
+                });
+        Long count = homeService.chargesCount();
+
+        AgentResponse agentResponse = new AgentResponse();
+
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("list", list);
+        rs.put("total", count);
+        agentResponse.setData(rs);
+
+        return agentResponse;
     }
 
     @RequestMapping("/login")
-    public AgentResponse agentLogin(HttpServletRequest request, String username, String password){
+    public AgentResponse agentLogin(HttpServletRequest request, HttpServletResponse response, String username, String password){
 
         AgentUser agentUser = agentUserDao.findAgentUserByUsernameAndPassword(username, password);
         AgentResponse agentResponse = null;
@@ -413,7 +844,13 @@ public class DemoAction{
             rs.put("username", agentUser.getUsername());
             String token = getToken(agentUser.getId());
             AgentUtil.caches.put(token, rs);
+
+//            Cookie cookie1 = new Cookie("X-Token",token);
+//            response.addCookie(cookie1);
+
             agentResponse = new AgentResponse(0, result);
+            agentResponse.setData(token);
+
         }else {
             agentResponse = new AgentResponse(ErrorCode.ROLE_ACCOUNT_OR_PASSWORD_ERROR,result);
             agentResponse.msg = "用户不存在";
@@ -439,4 +876,31 @@ public class DemoAction{
         return new AgentResponse(0, JsonUtil.toJson(logRecord));
     }
 
+    @RequestMapping("/getLogByDates")
+    public AgentResponse getLogByDates(int num) {
+        LocalDate today = LocalDate.now();
+        List<String> days = new ArrayList<>();
+        for(int i=0;i<num;i++) {
+            LocalDate temp = today.minusDays(i + 1);
+            days.add(temp.toString());
+        }
+
+        return new AgentResponse(0, logRecordDao.findByIdIn(days));
+    }
+
+    @RequestMapping("/test")
+    public Map<String, Object> test(){
+
+        return ass();
+    }
+
+    public static void main(String[] args) {
+//        LocalDate today = LocalDate.now();
+//        for(int i=0;i<7;i++) {
+//            LocalDate temp = today.minusDays(i + 1);
+//            System.out.println(temp.toString());
+//        }
+//        Map<String, Object> oo = ass();
+//        System.out.println(oo);
+    }
 }
