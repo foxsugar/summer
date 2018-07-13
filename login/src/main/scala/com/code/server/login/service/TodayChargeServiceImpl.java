@@ -125,7 +125,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
             List<Charge> list = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
 
-            logger.info("777777=====>{}=====start:{}end:{}", uid, start, end);
+            logger.info("777777=====>{}=====start:{}end:{}==rs={}", uid, start, end, list);
 
             double totalMoney = 0d;
             double totalGold = 0d;
