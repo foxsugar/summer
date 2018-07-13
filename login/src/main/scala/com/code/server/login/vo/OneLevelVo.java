@@ -26,8 +26,6 @@ public class OneLevelVo {
     }
 
     @JsonProperty("items")
-
-
     private List<OneLevelInfoVo> list = new ArrayList<>();
 
     public String getCategoryName() {

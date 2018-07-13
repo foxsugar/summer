@@ -68,7 +68,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         homeChargeVo.setOneLevelVoList(oneLevelVo.getList());
         homeChargeVo.setTwoLevelInfoVoList(twoLevelVo.getList());
         homeChargeVo.setThreeLevelInfoVoList(threeLevelVo.getList());
-        
+
         double total = oneLevelVo.getMoney() + twoLevelVo.getMoney() + threeLevelVo.getMoney();
         homeChargeVo.setTotal("" + total);
 
@@ -122,7 +122,12 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         for (Long uid : aList){
 
             //不要代理 只要玩家
-            if (uid != agentId && RedisManager.getAgentRedisService().isExit(uid)) continue;
+//            if (uid != agentId && RedisManager.getAgentRedisService().isExit(uid)) continue;
+            if ( RedisManager.getAgentRedisService().isExit(uid)){
+                if (uid != agentId){
+                    continue;
+                }
+            }
 
             User user = userDao.getUserById(uid);
             if (user == null){
@@ -147,6 +152,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             goldTotal += totalGold;
 
             OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
+            oneLevelInfoVo.setUid(user.getId());
             oneLevelInfoVo.setGold(goldTotal +"");
             oneLevelInfoVo.setImage(user.getImage() + "/96");
             oneLevelInfoVo.setUsername(user.getUsername());
@@ -204,7 +210,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
             twoLevelInfoVo.setMoney("" + totalMoney);
             twoLevelInfoVo.setGold("" + totalGold);
-
+            twoLevelInfoVo.setUid(user.getId());
             twoLevelInfoVo.setImage(user.getImage() + "/96");
             twoLevelInfoVo.setUsername(user.getUsername());
             twoLevelVo.getList().add(twoLevelInfoVo);
@@ -285,6 +291,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
             threeLevelInfoVo.setUsername(user.getUsername());
             threeLevelInfoVo.setImage(user.getImage() + "/96");
+            threeLevelInfoVo.setUid(user.getId());
 
             double totalMoney = 0;
             double totalGold = 0;
