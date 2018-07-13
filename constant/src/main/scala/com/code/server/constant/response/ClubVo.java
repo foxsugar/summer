@@ -19,6 +19,7 @@ public class ClubVo {
     private String area;
     private String presidentWx;
     private int applyNum;
+    private List<String> floorDesc = new ArrayList<>();
 
     private List<ClubMember> member = new ArrayList<>();//成员
 
@@ -158,6 +159,15 @@ public class ClubVo {
 
     public ClubVo setPlayingRoom(List<RoomInstanceVo> playingRoom) {
         this.playingRoom = playingRoom;
+        return this;
+    }
+
+    public List<String> getFloorDesc() {
+        return floorDesc;
+    }
+
+    public ClubVo setFloorDesc(List<String> floorDesc) {
+        this.floorDesc = floorDesc;
         return this;
     }
 }

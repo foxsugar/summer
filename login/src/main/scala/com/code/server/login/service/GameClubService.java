@@ -16,9 +16,11 @@ import com.code.server.constant.response.RoomInstanceVo;
 import com.code.server.db.Service.ClubChargeService;
 import com.code.server.db.Service.ClubRecordService;
 import com.code.server.db.Service.ClubService;
+import com.code.server.db.Service.UserService;
 import com.code.server.db.model.Club;
 import com.code.server.db.model.ClubCharge;
 import com.code.server.db.model.ClubRecord;
+import com.code.server.db.model.User;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.redis.service.RedisManager;
@@ -56,6 +58,9 @@ public class GameClubService {
 
     @Autowired
     private ClubChargeService clubChargeService;
+
+    @Autowired
+    private UserService userService;
 
     private static final int JOIN_LIMIT = 5;
 
@@ -102,6 +107,7 @@ public class GameClubService {
         boolean isPresident = club.getPresident() == userId;
         ClubVo clubVo = getClubVo_simple(club);
         clubVo.getRoomModels().addAll(club.getClubInfo().getRoomModels());
+        clubVo.getFloorDesc().addAll(club.getClubInfo().getFloorDesc());
         //玩家在线情况
         clubVo.getMember().addAll(club.getClubInfo().getMember().values());
         clubVo.getMember().forEach(clubMember -> {
@@ -525,9 +531,12 @@ public class GameClubService {
                 club.getClubInfo().getFloorDesc().add("");
             }
         }
-        for (int i = 0; i < floor; i++) {
-          club.getClubInfo().getFloorDesc().add(floor, desc);
-        }
+//        for (int i = 0; i < floor; i++) {
+//          club.getClubInfo().getFloorDesc().add(floor, desc);
+//        }
+
+        club.getClubInfo().getFloorDesc().set(floor, desc);
+        sendMsg(msgKey, new ResponseVo("clubService", "setFloorDesc", "ok"));
 
         return 0;
     }
@@ -539,6 +548,42 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
+        return 0;
+    }
+
+    public int addUser(KafkaMsgKey msgKey, String clubId, long userId) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+
+        boolean isHas = userService.getUserDao().exists(userId);
+        if (!isHas) {
+            return ErrorCode.USERID_ERROR;
+        }
+        List<String> clubs = ClubManager.getInstance().getUserClubs(userId);
+        if (clubs.size() >= JOIN_LIMIT) {
+            return ErrorCode.CLUB_CANNOT_NUM;
+        }
+        if (clubs.contains(clubId)) {
+            return ErrorCode.CLUB_CANNOT_JOIN;
+        }
+        ClubManager.getInstance().userAddClub(userId, clubId);
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+
+            clubAddMember(club,userBean);
+        }else{
+            User user = userService.getUserByUserId(userId);
+
+            ClubMember clubMember = new ClubMember();
+            clubMember.setSex(user.getSex()).setImage(user.getImage()).setName(user.getUsername()).setUserId(user.getId()).setTime(System.currentTimeMillis());
+            clubAddMember(club, clubMember);
+
+        }
+        //
+        sendMsg(msgKey, new ResponseVo("clubService", "addUser","ok"));
         return 0;
     }
 

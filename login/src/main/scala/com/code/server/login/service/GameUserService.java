@@ -542,8 +542,12 @@ public class GameUserService {
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         if (userBean == null) {
             User user = userService.getUserByUserId(userId);
-            result.put("name", user.getUsername());
-            result.put("image", user.getImage());
+            if (user == null) {
+                result.put("isHas", false);
+            }else{
+                result.put("name", user.getUsername());
+                result.put("image", user.getImage());
+            }
         }else{
             result.put("name", userBean.getUsername());
             result.put("image", userBean.getImage());

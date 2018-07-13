@@ -161,6 +161,10 @@ public class ClubServiceMsgDispatch {
                 boolean isAdd = params.get("isAdd").asBoolean();
                 return gameClubService.setAdmin(msgKey, userId, clubId, adminUser, isAdd);
             }
+            case "addUser":{
+                long user = params.get("userId").asLong();
+                return gameClubService.addUser(msgKey,clubId,user);
+            }
 
         }
         return 0;
