@@ -165,6 +165,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             }
         }
 
+        logger.info("<=====>{}==={}",agentBean, aList);
+
         double total = 0d;
         double goldTotal = 0d;
 
