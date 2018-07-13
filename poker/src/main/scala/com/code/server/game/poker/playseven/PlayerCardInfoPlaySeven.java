@@ -30,8 +30,10 @@ public class PlayerCardInfoPlaySeven implements IfacePlayerInfo {
     public String shuangLiang = "0";//双亮
     public String fanZhu = "0";//反主
     public String renShu = "0";//认输
+    public String seeTableCard = "0";//看底牌
 
     public int fen = 0;//得分 5，10，K
+
 
     protected double score;
 
@@ -39,12 +41,36 @@ public class PlayerCardInfoPlaySeven implements IfacePlayerInfo {
     @Override
     public IfacePlayerInfoVo toVo() {
         PlayerCardInfoPlaySevenVo vo = new PlayerCardInfoPlaySevenVo();
+        vo.userId=this.userId;
+        //vo.handCards = this.handCards;//手上的牌
+        vo.playCards = this.playCards;//当前出的牌
+        vo.shouQi = this.shouQi;//首七     0默认，1提示可操作，2已操作，3过期，4之后可以操作
+        vo.danLiang = this.danLiang;//单亮
+        vo.shuangLiang = this.shuangLiang;//双亮
+        vo.fanZhu = this.fanZhu;//反主
+        vo.renShu = this.renShu;//认输
+        vo.seeTableCard = this.seeTableCard;
+        vo.fen = this.fen;//得分 5，10，K
+
+        vo.score = this.score;
         return vo;
     }
 
     @Override
     public IfacePlayerInfoVo toVo(long watchUser) {
         PlayerCardInfoPlaySevenVo vo = new PlayerCardInfoPlaySevenVo();
+        vo.userId=this.userId;
+        vo.handCards = this.handCards;//手上的牌
+        vo.playCards = this.playCards;//当前出的牌
+        vo.shouQi = this.shouQi;//首七     0默认，1提示可操作，2已操作，3过期，4之后可以操作
+        vo.danLiang = this.danLiang;//单亮
+        vo.shuangLiang = this.shuangLiang;//双亮
+        vo.fanZhu = this.fanZhu;//反主
+        vo.renShu = this.renShu;//认输
+        vo.seeTableCard = this.seeTableCard;
+        vo.fen = this.fen;//得分 5，10，K
+
+        vo.score = this.score;
         return vo;
     }
 
@@ -130,5 +156,13 @@ public class PlayerCardInfoPlaySeven implements IfacePlayerInfo {
 
     public void addScore(int addScore){
         this.score = score+addScore;
+    }
+
+    public String getSeeTableCard() {
+        return seeTableCard;
+    }
+
+    public void setSeeTableCard(String seeTableCard) {
+        this.seeTableCard = seeTableCard;
     }
 }

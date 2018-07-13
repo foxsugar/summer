@@ -43,6 +43,11 @@ object GameService {
   }
 
   private def dispatchGamePlaySevenService(userId:Long,method: String, game: GamePlaySeven, params: JsonNode) = method match {
+    case "getCard" =>
+      val number = params.path("number").asInt(0)
+      game.getCard(userId,number)
+    case "getTableCard" =>
+      game.getTableCard(userId)
     case "shouQi" =>
       val card = params.path("card").asInt(0)
       game.shouQi(userId,card)

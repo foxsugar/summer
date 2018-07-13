@@ -1,9 +1,6 @@
 package com.code.server.game.poker.playseven;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 项目名称：${project_name}
@@ -124,14 +121,120 @@ public class CardsUtil {
     }
 
 
-    public static boolean compareCards(List<Integer> before,List<Integer> after){
+    public static boolean compareCards(int huase,List<Integer> before,List<Integer> after){
 
+        if(1==before.size() && 1==after.size()){
+            return compareOneCard(huase, before, after);
+        }else if(2==before.size() && 2==after.size()){
+            return compareOneCard(huase, before, after);
+        }else if(before.size()>=4 && after.size()>=4){
+            return compareTuoLaJi(before, after);
+        }
         return true;
     }
 
+    private static Boolean compareTuoLaJi(List<Integer> before, List<Integer> after) {
+        if(isTuoLaJi(before) && !isTuoLaJi(after)){
+            return true;
+        }else{
+            Collections.sort(before);
+            Collections.sort(after);
+            return before.get(before.size()-1) > after.get(after.size()-1);
+        }
+    }
+
+    private static Boolean compareOneCard(int huase, List<Integer> before, List<Integer> after) {
+        int a = Math.abs(before.get(0));
+        int b = Math.abs(after.get(0));
+        if(a==b){//大小王
+            return true;
+        }else if(a==54 && b==53){
+            return true;
+        }else if(a==54 && b!=53 && b!=54){
+            return true;
+        }else if(a==53 && b!=53 && b!=54){
+            return true;
+        }else if(a==53 && b==54){
+            return false;
+        }else if(a!=54 && a!=53 && (b==53||b==54)){
+            return false;
+        }else{//主牌
+            if(a>40&&b<=40){
+                return true;
+            }else if(a<=40&&b>40){
+                return false;
+            }else if(a>40&&b>40){
+                if(cardsOf108.get(a)!=cardsOf108.get(b)){
+                    return a>b;
+                }else {
+                    if(huase==a%4 && huase==b%4){
+                        return true;
+                    }else if(huase==a%4 && huase!=b%4){
+                        return true;
+                    }else if(huase!=a%4 && huase==b%4){
+                        return false;
+                    }else if(huase!=a%4 && huase!=b%4){
+                        return true;
+                    }
+                }
+            }else {
+                if(huase==a%4 && huase==b%4){
+                    return a>=b;
+                }else if(huase==a%4 && huase!=b%4){
+                    return true;
+                }else if(huase!=a%4 && huase==b%4){
+                    return false;
+                }else if(huase!=a%4 && huase!=b%4){
+                    if(cardsOf108.get(a)>=cardsOf108.get(b)){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
 
+    private static Boolean isTuoLaJi(List<Integer> list){
+        boolean b0;
+        boolean b1 = true;
+        boolean b2 = true;
+        int temp0 = 0;
+        for (Integer integer:list) {//判断是否两个一对
+            temp0+=integer;
+        }
+        b0 = temp0==0;
 
+        int temp1 = Math.abs(list.get(0))%4;
+        a:for (Integer integer:list) {//判断是否同花色
+            if(temp1!=integer%4){
+                b1 = false;
+                break a;
+            }
+        }
+
+        List<Integer> sortList = new ArrayList<>();
+        for (Integer integer:list) {
+            if(integer>0){
+                sortList.add((integer-temp1)/4);
+            }
+        }
+        Collections.sort(sortList);
+        a:for (int i = 0; i < sortList.size()-1; i++) {
+            b:for (int j = i+1; j < sortList.size(); j++) {
+                if(sortList.get(i)+1==sortList.get(j)){
+                    break b;
+                }else {
+                    b2 = false;
+                    break a;
+                }
+            }
+        }
+
+        return b0 && b1 && b2;
+    }
 
     //把字符串转化为数组
     public static List<Integer> transfromStringToCards(String str){
