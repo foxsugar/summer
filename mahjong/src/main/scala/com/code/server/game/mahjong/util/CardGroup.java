@@ -46,7 +46,7 @@ public class CardGroup {
             shun.add(card + 1);
             shun.add(card + 2);
             shun.removeAll(shunHaveHun.getOther());
-            return shunHaveHun.getOther().get(0);
+            return shun.get(0);
         }
         return 0;
     }

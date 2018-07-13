@@ -600,7 +600,10 @@ public class GameClubService {
         for(int i=0;i<10;i++) {
             club.getClubInfo().getRoomModels().remove(floor * 10);
         }
-        club.getClubInfo().getFloorDesc().remove(floor);
+        if (club.getClubInfo().getFloorDesc().size() > 0) {
+
+            club.getClubInfo().getFloorDesc().remove(floor);
+        }
         sendMsg(msgKey, new ResponseVo("clubService", "removeFloor","ok"));
         return 0;
     }
@@ -969,7 +972,7 @@ public class GameClubService {
      */
     public int getClubRecord(KafkaMsgKey msgKey, long userId, String clubId) {
         String unionId = clubId + "|" + LocalDate.now().toString();
-        Club club = ClubManager.getInstance().getClubById(unionId);
+        Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
         }
