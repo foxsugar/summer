@@ -64,4 +64,16 @@ public class OneLevelInfoVo {
     public void setMoney(String money) {
         this.money = money;
     }
+
+    @Override
+    public String toString() {
+        return "OneLevelInfoVo{" +
+                "uid=" + uid +
+                ", categoryName='" + categoryName + '\'' +
+                ", image='" + image + '\'' +
+                ", username='" + username + '\'' +
+                ", money='" + money + '\'' +
+                ", gold='" + gold + '\'' +
+                '}';
+    }
 }

@@ -52,6 +52,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         String endStr = DateUtil.convert2DayString(end);
         OneLevelVo oneLevelVo = oneLevelCharges(start, end, agentId);
         TwoLevelVo twoLevelVo = twoLevelCharges(start, end, agentId);
+
+        logger.info("===start:{}end:{}agentId:{}:oneLevelVo:{}twoLevelVo:{}", start, end, agentId, oneLevelVo, twoLevelVo);
+
         ThreeLevelVo threeLevelVo = threeLevelCharges(start, end, agentId);
         HomeChargeVo homeChargeVo = new HomeChargeVo();
         homeChargeVo.setOnelevel("" + oneLevelVo.getMoney());
@@ -62,6 +65,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         homeChargeVo.setTwoLevelGold("" + twoLevelVo.getGold());
         homeChargeVo.setThreeLevelGold("" + threeLevelVo.getGold());
 
+        homeChargeVo.setOneLevelVoList(oneLevelVo.getList());
+        homeChargeVo.setTwoLevelInfoVoList(twoLevelVo.getList());
+        homeChargeVo.setThreeLevelInfoVoList(threeLevelVo.getList());
 
         double total = oneLevelVo.getMoney() + twoLevelVo.getMoney() + threeLevelVo.getMoney();
         homeChargeVo.setTotal("" + total);
@@ -110,11 +116,18 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         aList.add(agentBean.getId());
         aList.addAll(agentBean.getChildList());
 
+        logger.info("<=====>{}==={}",agentBean, aList);
+
         //查一下手下玩家
         for (Long uid : aList){
 
             //不要代理 只要玩家
-            if (uid != agentId && RedisManager.getAgentRedisService().isExit(uid)) continue;
+//            if (uid != agentId && RedisManager.getAgentRedisService().isExit(uid)) continue;
+            if ( RedisManager.getAgentRedisService().isExit(uid)){
+                if (uid != agentId){
+                    continue;
+                }
+            }
 
             User user = userDao.getUserById(uid);
             if (user == null){
@@ -122,6 +135,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             }
 
             List<Charge> list = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
+
+            logger.info("777777=====>{}=====start:{}end:{}==rs={}", uid, start, end, list);
 
             double totalMoney = 0d;
             double totalGold = 0d;
@@ -137,6 +152,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             goldTotal += totalGold;
 
             OneLevelInfoVo oneLevelInfoVo = new OneLevelInfoVo();
+            oneLevelInfoVo.setUid(user.getId());
             oneLevelInfoVo.setGold(goldTotal +"");
             oneLevelInfoVo.setImage(user.getImage() + "/96");
             oneLevelInfoVo.setUsername(user.getUsername());
@@ -148,6 +164,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         oneLevelVo.setGold(goldTotal);
         oneLevelVo.setList(oneLevelInfoVoList);
 
+        logger.info("777777=====>rss{}", oneLevelVo);
         return oneLevelVo;
     }
 
@@ -164,6 +181,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
                 aList.add(id);
             }
         }
+
+        logger.info("<=====>{}==={}",agentBean, aList);
 
         double total = 0d;
         double goldTotal = 0d;
@@ -191,7 +210,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
             twoLevelInfoVo.setMoney("" + totalMoney);
             twoLevelInfoVo.setGold("" + totalGold);
-
+            twoLevelInfoVo.setUid(user.getId());
             twoLevelInfoVo.setImage(user.getImage() + "/96");
             twoLevelInfoVo.setUsername(user.getUsername());
             twoLevelVo.getList().add(twoLevelInfoVo);
@@ -272,6 +291,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
             threeLevelInfoVo.setUsername(user.getUsername());
             threeLevelInfoVo.setImage(user.getImage() + "/96");
+            threeLevelInfoVo.setUid(user.getId());
 
             double totalMoney = 0;
             double totalGold = 0;
