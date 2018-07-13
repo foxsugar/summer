@@ -76,6 +76,22 @@ public class TodayChargeAction {
         return agentResponse;
     }
 
+    @RequestMapping("/tesst")
+    public AgentResponse demohomeCharge(String start, String end){
+
+//        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//        HttpServletRequest request = attributes.getRequest();
+//        long agentId = AgentUtil.getAgentByRequest(request);
+        long agentId = 100017;
+        Date startDate = DateUtil.convertDay2Date(start);
+        Date endDate = DateUtil.convertDay2Date(end);
+        HomeChargeVo homeChargeVo = todayChargeService.showCharge(startDate, endDate, agentId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("result", homeChargeVo);
+        AgentResponse agentResponse = new AgentResponse(200, result);
+        return agentResponse;
+    }
+
     @AuthChecker
     //直接玩家
     @RequestMapping("/level1Charges")
