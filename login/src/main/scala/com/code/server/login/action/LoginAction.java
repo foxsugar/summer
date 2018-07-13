@@ -40,10 +40,7 @@ import scala.tools.nsc.doc.html.page.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -374,7 +371,8 @@ public class LoginAction {
         newUser.setOpenId("" + new IdWorker(serverConfig.getServerId(), 1).nextId());
         newUser.setUsername(decodeStr(account));
         newUser.setImage("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=253777390,947512827&fm=23&gp=0.jpg");
-        newUser.setSex(1);
+        int sex = new Random().nextInt(2) + 1;
+        newUser.setSex(sex);
         newUser.setVip(0);
         newUser.setUuid("0");
         newUser.setMoney(getConstant().getInitMoney());
@@ -384,6 +382,10 @@ public class LoginAction {
         return newUser;
     }
 
+    public static void main(String[] args) {
+        int sex = new Random().nextInt(2) + 1;
+        System.out.println(sex);
+    }
     /**
      * 创建玩家
      *

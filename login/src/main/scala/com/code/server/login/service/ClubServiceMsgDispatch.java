@@ -165,6 +165,10 @@ public class ClubServiceMsgDispatch {
                 long user = params.get("userId").asLong();
                 return gameClubService.addUser(msgKey,clubId,user);
             }
+            case "removeFloor":{
+                int floor = params.get("floor").asInt();
+                return gameClubService.removeFloor(msgKey, clubId,userId,floor);
+            }
 
         }
         return 0;

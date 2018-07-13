@@ -234,6 +234,7 @@ public class GameClubService {
         club.setMoney(getCreateMoney());
         club.setClubDesc(desc);
 
+        club.setImage(userBean.getImage());
         clubAddMember(club, userBean);
 
         clubService.getClubDao().save(club);
@@ -587,6 +588,22 @@ public class GameClubService {
         return 0;
     }
 
+
+    public int removeFloor(KafkaMsgKey msgKey, String clubId, long userId,int floor){
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        if (club.getClubInfo().getRoomModels().size() < floor * 10) {
+            return ErrorCode.CLUB_PARAM_ERROR;
+        }
+        for(int i=0;i<10;i++) {
+            club.getClubInfo().getRoomModels().remove(floor * 10);
+        }
+        club.getClubInfo().getFloorDesc().remove(floor);
+        sendMsg(msgKey, new ResponseVo("clubService", "removeFloor","ok"));
+        return 0;
+    }
 
     /**
      * 初始化数据 懒加载
@@ -1176,6 +1193,8 @@ public class GameClubService {
         clubVo.setArea(club.getArea());
         clubVo.setPresidentWx(club.getPresidentWx());
         clubVo.setApplyNum(club.getClubInfo().getApplyList().size());
+        clubVo.setImage(club.getImage());
+
 
         return clubVo;
     }
