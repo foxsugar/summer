@@ -53,8 +53,6 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         OneLevelVo oneLevelVo = oneLevelCharges(start, end, agentId);
         TwoLevelVo twoLevelVo = twoLevelCharges(start, end, agentId);
 
-        logger.info("===start:{}end:{}agentId:{}:oneLevelVo:{}twoLevelVo:{}", start, end, agentId, oneLevelVo, twoLevelVo);
-
         ThreeLevelVo threeLevelVo = threeLevelCharges(start, end, agentId);
         HomeChargeVo homeChargeVo = new HomeChargeVo();
         homeChargeVo.setOnelevel("" + oneLevelVo.getMoney());
@@ -116,8 +114,6 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         aList.add(agentBean.getId());
         aList.addAll(agentBean.getChildList());
 
-        logger.info("<=====>{}==={}",agentBean, aList);
-
         //查一下手下玩家
         for (Long uid : aList){
 
@@ -135,8 +131,6 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             }
 
             List<Charge> list = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
-
-            logger.info("777777=====>{}=====start:{}end:{}==rs={}", uid, start, end, list);
 
             double totalMoney = 0d;
             double totalGold = 0d;
@@ -164,7 +158,6 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         oneLevelVo.setGold(goldTotal);
         oneLevelVo.setList(oneLevelInfoVoList);
 
-        logger.info("777777=====>rss{}", oneLevelVo);
         return oneLevelVo;
     }
 
@@ -181,8 +174,6 @@ public class TodayChargeServiceImpl implements TodayChargeService {
                 aList.add(id);
             }
         }
-
-        logger.info("<=====>{}==={}",agentBean, aList);
 
         double total = 0d;
         double goldTotal = 0d;
@@ -359,7 +350,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
                 List<Predicate> predicateList = new ArrayList<>();
                 predicateList.add(cb.between(root.get("createtime").as(Date.class), start, end));
-//                predicateList.add(cb.equal(root.get("status").as(Integer.class), status));
+                predicateList.add(cb.equal(root.get("status").as(Integer.class), status));
                 predicateList.add(root.get("chargeType").as(Integer.class).in(list));
                 predicateList.add(root.get("userid").as(Integer.class).in(users));
                 Predicate[] p = new Predicate[predicateList.size()];
