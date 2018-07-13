@@ -65,7 +65,10 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         homeChargeVo.setTwoLevelGold("" + twoLevelVo.getGold());
         homeChargeVo.setThreeLevelGold("" + threeLevelVo.getGold());
 
-
+        homeChargeVo.setOneLevelVoList(oneLevelVo.getList());
+        homeChargeVo.setTwoLevelInfoVoList(twoLevelVo.getList());
+        homeChargeVo.setThreeLevelInfoVoList(threeLevelVo.getList());
+        
         double total = oneLevelVo.getMoney() + twoLevelVo.getMoney() + threeLevelVo.getMoney();
         homeChargeVo.setTotal("" + total);
 
