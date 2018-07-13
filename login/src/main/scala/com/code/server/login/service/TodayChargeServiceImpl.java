@@ -152,6 +152,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         oneLevelVo.setGold(goldTotal);
         oneLevelVo.setList(oneLevelInfoVoList);
 
+        logger.info("777777=====>rss{}", oneLevelVo);
         return oneLevelVo;
     }
 
