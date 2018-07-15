@@ -143,20 +143,21 @@ public class YSZRobotImpl implements YSZRobot {
                 exe(game);
             }
         } else {
-            logger.info("xxxxxxx:now{}:getLastReadyTime{}", now, ((RoomYSZ) room).getLastReadyTime());
+
             //如果没在游戏中
-            if (room.getCurGameNumber() > 1 && now - ((RoomYSZ) room).getLastReadyTime() > 1000* 150) {
-                Map<Long, Integer> map = new HashMap<>();
-                map.putAll(room.getUserStatus());
-                map.forEach((k,v) ->{
-                    if (v != Room.STATUS_READY) {
-                        quitRoom(room,k);
-                    }
-                });
+            if (room.getCurGameNumber() > 1 && now - ((RoomYSZ) room).getLastReadyTime() > 1000* 15) {
+                logger.info("xxxxxxx:now{}:getLastReadyTime{}==inter:{}", now, ((RoomYSZ) room).getLastReadyTime(), (now - ((RoomYSZ) room).getLastReadyTime())/ 1000.0);
+//                Map<Long, Integer> map = new HashMap<>();
+//                map.putAll(room.getUserStatus());
+//                map.forEach((k,v) ->{
+//                    if (v != Room.STATUS_READY) {
+//                        quitRoom(room,k);
+//                    }
+//                });
             }
             if (r.getUsers().size() >= 2) {
                 long t = now - r.getLastReadyTime();
-                if (r.isAllReady() && t > SECOND * 150) {
+                if (r.isAllReady() && t > SECOND * 10) {
                     r.startGame();
                 }
             }
