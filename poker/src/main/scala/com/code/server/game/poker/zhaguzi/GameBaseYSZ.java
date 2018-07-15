@@ -1029,6 +1029,7 @@ public class GameBaseYSZ extends Game {
         genRecord();
 
         room.setBankerId(winList.get(0));
+        this.room.lastOverTime = System.currentTimeMillis();
         room.clearReadyStatus(true);
         sendFinalResult();
     }
