@@ -155,7 +155,7 @@ public class YSZRobotImpl implements YSZRobot {
             }
             if (r.getUsers().size() >= 2) {
                 long t = now - r.getLastReadyTime();
-                if (r.isAllReady() && t > SECOND * 10) {
+                if (r.isAllReady() && t > SECOND * 15) {
                     r.startGame();
                 }
             }
