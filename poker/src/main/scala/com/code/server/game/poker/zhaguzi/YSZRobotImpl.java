@@ -144,7 +144,7 @@ public class YSZRobotImpl implements YSZRobot {
             }
         } else {
             //如果没在游戏中
-            if (room.getCurGameNumber() > 1 && now - ((RoomYSZ) room).getLastReadyTime() > 1000* 10) {
+            if (room.getCurGameNumber() > 1 && now - ((RoomYSZ) room).getLastReadyTime() > 1000* 15) {
                 Map<Long, Integer> map = new HashMap<>();
                 map.putAll(room.getUserStatus());
                 map.forEach((k,v) ->{
@@ -155,7 +155,7 @@ public class YSZRobotImpl implements YSZRobot {
             }
             if (r.getUsers().size() >= 2) {
                 long t = now - r.getLastReadyTime();
-                if (r.isAllReady() && t > SECOND * 15) {
+                if (r.isAllReady() && t > SECOND * 10) {
                     r.startGame();
                 }
             }
