@@ -2,6 +2,7 @@ package com.code.server.game.poker.playseven;
 
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.response.ErrorCode;
+import com.code.server.constant.response.IfaceRoomVo;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
@@ -13,6 +14,10 @@ import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
+import org.springframework.beans.BeanUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 项目名称：${project_name}
@@ -29,10 +34,13 @@ import com.code.server.util.timer.TimerNode;
 public class RoomPlaySeven extends Room {
 
     public Integer fengDing;//封顶
-    public boolean kouDiJiaJi;//扣底加级
+    public boolean kouDiJiaJi;//抠底加级
     public boolean zhuangDanDaJiaBei;//庄单打加倍
 
     public long fanZhuUserId=0l;
+
+
+
 
     public static RoomPlaySeven getRoomInstance(String roomType){
         switch (roomType) {
@@ -123,5 +131,29 @@ public class RoomPlaySeven extends Room {
 
     public void setFanZhuUserId(long fanZhuUserId) {
         this.fanZhuUserId = fanZhuUserId;
+    }
+
+    public IfaceRoomVo toVo(long userId) {
+        RoomPlaySevenVo roomVo = new RoomPlaySevenVo();
+
+        BeanUtils.copyProperties(this, roomVo);
+        RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
+        if (this.game != null) {
+            Map<Long,Double> userScoresTemp = new HashMap<>();
+            GamePlaySeven gameTemp = (GamePlaySeven)this.getGame();
+            if(gameTemp!=null){
+                for (Long l: gameTemp.getPlayerCardInfos().keySet()){
+                    userScoresTemp.put(l,this.userScores.get(l)-gameTemp.getPlayerCardInfos().get(l).getScore());
+                }
+            }
+            roomVo.setUserScores(userScoresTemp);
+            roomVo.game = this.game.toVo(userId);
+        }
+        if (this.getTimerNode() != null) {
+            long time = this.getTimerNode().getStart() + this.getTimerNode().getInterval() - System.currentTimeMillis();
+            roomVo.setRemainTime(time);
+        }
+
+        return roomVo;
     }
 }

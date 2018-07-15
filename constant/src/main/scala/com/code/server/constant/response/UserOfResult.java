@@ -47,6 +47,8 @@ public class UserOfResult {
 
     private int winNumXQQ;
 
+
+
     private RoomStatistics roomStatistics;
 
     public long getUserId() {

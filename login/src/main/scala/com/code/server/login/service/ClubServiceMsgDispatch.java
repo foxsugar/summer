@@ -161,6 +161,14 @@ public class ClubServiceMsgDispatch {
                 boolean isAdd = params.get("isAdd").asBoolean();
                 return gameClubService.setAdmin(msgKey, userId, clubId, adminUser, isAdd);
             }
+            case "addUser":{
+                long user = params.get("userId").asLong();
+                return gameClubService.addUser(msgKey,clubId,user);
+            }
+            case "removeFloor":{
+                int floor = params.get("floor").asInt();
+                return gameClubService.removeFloor(msgKey, clubId,userId,floor);
+            }
 
         }
         return 0;
