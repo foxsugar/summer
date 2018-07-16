@@ -20,16 +20,42 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
             if (nowGold < temp) {
                 this.score = this.score - nowGold;
                 return -nowGold;
-            }else{
+            } else {
                 this.score = this.score + s;
             }
-        }else{
+        } else {
             this.score = this.score + s;
         }
         return s;
 
     }
 
+
+    private int getGangScore(int cardType, boolean isMing, GameInfo gameInfo, RoomInfo room) {
+        boolean isJinGang = this.gameInfo.hun.contains(cardType);
+        int score = CardTypeUtil.cardTingScore.get(cardType);
+
+        if (isHasMode(room.getMode(), GameInfoZhuohaozi.mode_摸四胡五)) {
+            score = 5;
+        }
+        if (isJinGang) score = 100;
+        score *= room.getMultiple();
+        if (!isMing) {
+            score *= 2;
+        }
+        return score;
+    }
+
+    private int getAllGangScore(PlayerCardsInfoMj playerCardsInfoMj, GameInfo gameInfo, RoomInfo roomInfo) {
+        int all = 0;
+        for (int ct : playerCardsInfoMj.getMingGangType().keySet()) {
+            all += getGangScore(ct, true, gameInfo, roomInfo);
+        }
+        for (int ct : playerCardsInfoMj.getAnGangType()) {
+            all += getGangScore(ct, false, gameInfo, roomInfo);
+        }
+        return all;
+    }
 
     @Override
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card) {
@@ -39,7 +65,7 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
 
         if (isMing) {
             this.roomInfo.addMingGangNum(this.getUserId());
-        }else{
+        } else {
             this.roomInfo.addAnGangNum(this.getUserId());
         }
 
@@ -65,7 +91,7 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
                     if (!isBaoAll) {
                         playerCardsInfoMj.addGangScore(-score);
                         double realScore = playerCardsInfoMj.addScore(-score);
-                        allScore += realScore;
+                        allScore += -realScore;
                         allGangScore += score;
                         this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -score);
                     }
@@ -77,10 +103,10 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
             if (isBaoAll) {
                 double t = score * 3;
                 PlayerCardsInfoMj dianGangUser = this.gameInfo.getPlayerCardsInfos().get(diangangUser);
-                dianGangUser.addGangScore(-(int)t);
-                double realScore = -dianGangUser.addScore(-t);
+                dianGangUser.addGangScore(-(int) t);
+                double realScore = dianGangUser.addScore(-t);
                 this.roomInfo.addUserSocre(dianGangUser.getUserId(), -t);
-                allScore += realScore;
+                allScore += -realScore;
                 allGangScore += t;
             }
         } else {
@@ -88,10 +114,10 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
             for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
                 if (playerCardsInfoMj.getUserId() != this.userId) {
                     playerCardsInfoMj.addGangScore(-score);
-                    double realScote = -playerCardsInfoMj.addScore(-score);
-                    allScore += realScote;
+                    double realScore = playerCardsInfoMj.addScore(-score);
+                    allScore += -realScore;
                     this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -score);
-                    allGangScore += score;
+                    allGangScore += -score;
                 }
             }
         }
@@ -99,7 +125,6 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
         this.addGangScore(allGangScore);
         this.addScore(allScore);
         this.roomInfo.addUserSocre(this.getUserId(), allScore);
-
 
 
         room.pushScoreChange();
@@ -113,20 +138,48 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
         //大包 返分情况
         boolean isBaoAll = !isZimo && !this.gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing;
         boolean isDabao = isHasMode(room.getMode(), GameInfoZhuohaozi.mode_大包) && isBaoAll;
+
+        for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
+            System.out.println("玩家 " + playerCardsInfoMj.getUserId() + " : 目前分数" + playerCardsInfoMj.getScore() + " 应该的杠分: " + playerCardsInfoMj.getGangScore());
+        }
         //所有的杠都加回去
         if (isDabao) {
+            //分数清0
+
             PlayerCardsInfoMj dabaoUser = gameInfo.getPlayerCardsInfos().get(dianpaoUser);
             for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
+//                if (playerCardsInfoMj.getUserId() != dianpaoUser) {
+                    double temp = -playerCardsInfoMj.getScore();
+                room.addUserSocre(playerCardsInfoMj.getUserId(), -playerCardsInfoMj.getScore());
+                playerCardsInfoMj.addScore(-playerCardsInfoMj.getScore());
+//
+                    System.out.println("先减掉分数 " + playerCardsInfoMj.getUserId() + "  减了 " + temp + "  目前分数: "+playerCardsInfoMj.getScore());
+//                    double realScore = dabaoUser.addScore(-playerCardsInfoMj.getGangScore());
+//                    room.addUserSocre(dianpaoUser, -playerCardsInfoMj.getGangScore());
+//                    System.out.println("点炮者输分 " + -dabaoUser.getGangScore() +" 实际输: " + realScore + "  当前分数: " + dabaoUser.getScore());
+//
+//                    playerCardsInfoMj.addScore(-realScore);
+//                    room.addUserSocre(playerCardsInfoMj.getUserId(), -realScore);
+//
+//                    System.out.println("加上分数 " + playerCardsInfoMj.getUserId() + " 加了 : " + -realScore + " 当前分数: " + playerCardsInfoMj.getScore());
+
+//                }
+            }
+
+
+
+            for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
+
                 if (playerCardsInfoMj.getUserId() != dianpaoUser) {
-                    playerCardsInfoMj.addScore(-playerCardsInfoMj.getScore());
-                    room.addUserSocre(playerCardsInfoMj.getUserId(), -playerCardsInfoMj.getScore());
+                    int gangScore = getAllGangScore(playerCardsInfoMj, gameInfo, room);
+                    double realScore = dabaoUser.addScore(- 3 * gangScore);
+                    room.addUserSocre(dabaoUser.getUserId(), -3 * gangScore);
 
-                    double realScore = -dabaoUser.addScore(playerCardsInfoMj.getGangScore());
-                    room.addUserSocre(dianpaoUser, playerCardsInfoMj.getGangScore());
+                    System.out.println("点炮者输分 " +dabaoUser.getUserId()+" " +" 实际输: " + realScore + "  当前分数: " + dabaoUser.getScore());
 
-                    playerCardsInfoMj.addScore(realScore);
-                    room.addUserSocre(playerCardsInfoMj.getUserId(), realScore);
-
+                    playerCardsInfoMj.addScore(-realScore);
+                    room.addUserSocre(playerCardsInfoMj.getUserId(), -realScore);
+                    System.out.println("加上分数 " + playerCardsInfoMj.getUserId() + " 加了 : " + -realScore + " 当前分数: " + playerCardsInfoMj.getScore());
                 }
             }
         }
@@ -139,7 +192,7 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
         for (HuCardType huCardType : huList) {
 
             int temp = getMaxPoint(huCardType, !isZimo);
-            if(temp > maxPoint){
+            if (temp > maxPoint) {
                 maxPoint = temp;
             }
 
@@ -148,10 +201,9 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
 
         //显庄 并且 赢得人是庄家
         boolean isBankerWinMore = bankerIsZhuang && isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_显庄);
-        if(isBankerWinMore) maxPoint += 10;
+        if (isBankerWinMore) maxPoint += 10;
 
-        if(isZimo) maxPoint *= 2;
-
+        if (isZimo) maxPoint *= 2;
 
 
         int allScore = 0;
@@ -162,32 +214,38 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
                 int tempScore = maxPoint;
                 //庄家多输
                 if (playerCardsInfoMj.getUserId() == this.gameInfo.getFirstTurn() && isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_显庄)) {
-                    if(isZimo) {
+                    if (isZimo) {
                         tempScore += 20;
-                    }else{
-                        tempScore += 30;
+                    } else {
+                        if (playerCardsInfoMj.getUserId() == dianpaoUser) {
+                            tempScore += 30;
+                        } else {
+                            tempScore += 10;
+                        }
                     }
                 }
                 tempScore *= room.getMultiple();
 //                allScore += tempScore;
 
                 double realScore = 0;
-                if(!isBaoAll){
+                if (!isBaoAll) {
                     realScore = -playerCardsInfoMj.addScore(-tempScore);
                     this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -tempScore);
-                }else{
+                    System.out.println("胡牌 玩家" + playerCardsInfoMj.getUserId() + " 输 " + realScore + " 目前分数 : " + playerCardsInfoMj.getScore());
+                } else {
                     PlayerCardsInfoMj dpUser = this.gameInfo.getPlayerCardsInfos().get(dianpaoUser);
                     realScore = -dpUser.addScore(-tempScore);
                     this.roomInfo.addUserSocre(dpUser.getUserId(), -tempScore);
+                    System.out.println("包胡 点炮者" + dpUser.getUserId() + " 输 " + realScore + " 目前分数 : " + dpUser.getScore());
                 }
                 allScore += realScore;
             }
         }
 
 
-
         this.addScore(allScore);
         this.roomInfo.addUserSocre(this.userId, allScore);
+        System.out.println("胡牌 " + this.userId + " 赢: " + allScore + " 当前 : " + this.getScore());
 
     }
 

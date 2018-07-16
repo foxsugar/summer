@@ -141,7 +141,11 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
                     if(isZimo) {
                         tempScore += 20;
                     }else{
-                        tempScore += 30;
+                        if (playerCardsInfoMj.getUserId() == dianpaoUser) {
+                            tempScore += 30;
+                        }else{
+                            tempScore += 10;
+                        }
                     }
                 }
                 allScore += tempScore;

@@ -600,7 +600,7 @@ public class GameClubService {
         for(int i=0;i<10;i++) {
             club.getClubInfo().getRoomModels().remove(floor * 10);
         }
-        if (club.getClubInfo().getFloorDesc().size() > 0) {
+        if (club.getClubInfo().getFloorDesc().size() > floor) {
 
             club.getClubInfo().getFloorDesc().remove(floor);
         }
