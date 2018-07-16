@@ -44,7 +44,19 @@ public class GameInfoHS extends GameInfoNew {
     @Override
     protected void handleHuangzhuang(long userId) {
         turnResultToZeroOnHuangZhuang();
-        super.handleHuangzhuang(userId);
+        sendResult(false, userId, null);
+        noticeDissolutionResult();
+        //通知所有玩家结束
+        room.clearReadyStatus(true);
+
+        //庄家换下个人
+        if (room instanceof RoomInfo) {
+            RoomInfo roomInfo = (RoomInfo) room;
+            if (roomInfo.isChangeBankerAfterHuangZhuang()) {
+                room.setBankerId(nextTurnId(room.getBankerId()));
+            }
+
+        }
     }
 
     protected void handleYiPaoDuoXiang() {
