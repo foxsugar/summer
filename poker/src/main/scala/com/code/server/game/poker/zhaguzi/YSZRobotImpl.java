@@ -151,7 +151,7 @@ public class YSZRobotImpl implements YSZRobot {
                 map.putAll(room.getUserStatus());
                 map.forEach((k,v) ->{
                     if (v != Room.STATUS_READY) {
-                        quitRoom(room,k);
+                        getReady(room,k);
                     }
                 });
             }
