@@ -134,6 +134,8 @@ public class ErrorCode {
 	//宣起起
 	public static final int MUST_PLAY_MaxCard = 1000001;//有大的牌没出的错误码
 
+	//打七
+	public static final int ERROR_CARD = 1100001;//牌不对
 
 	static class ErrorCodeRepeatChecker {
     	public void check() {

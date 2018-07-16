@@ -46,5 +46,8 @@ public interface IGameConstant extends IkafkaMsgId{
 
     long SECOND = 1000L;//秒
 
-
+    //打七
+    int STEP_RENSHU = 7;
+    int STEP_FANZHU = 8;
+    int STEP_GET_CARD_FINISH = 9;
 }
