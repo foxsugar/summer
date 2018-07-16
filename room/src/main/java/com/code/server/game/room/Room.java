@@ -630,6 +630,7 @@ public class Room implements IfaceRoom {
 
 
     public void clearReadyStatus(boolean isAddGameNum) {
+        lastOperateTime = System.currentTimeMillis();
         this.setGame(null);
         this.setInGame(false);
         for (Map.Entry<Long, Integer> entry : this.userStatus.entrySet()) {
@@ -638,7 +639,6 @@ public class Room implements IfaceRoom {
         if (isAddGameNum) {
             this.curGameNumber += 1;
         }
-        lastOperateTime = System.currentTimeMillis();
     }
 
     public void addUserSocre(long userId, double score) {
