@@ -656,6 +656,8 @@ public class GameBaseYSZ extends Game {
     public void pushGoldScore(){
         if (this.room.isGoldRoom()){
             this.room.pushScoreChange();
+        }else {
+            this.room.pushScoreChange();
         }
     }
 
