@@ -107,7 +107,7 @@ public class SubscribeHandler extends AbstractHandler {
 
             boolean isSelf = referrerUnionId.equals(unionId);
 
-            StringBuilder sb = new StringBuilder(wxMpUser.getNickname() + "扫您的专属二维码,");
+            StringBuilder sb = new StringBuilder(wxMpUser.getNickname() + "扫描您的专属二维码,");
 
             if (recommend == null && !isSelf) {
                 recommend = new Recommend();
@@ -120,11 +120,6 @@ public class SubscribeHandler extends AbstractHandler {
                 //通知 代理 有人绑定他
 //                String name = wxMpUser.getNickname();
 
-
-//                sb.append(name).append(" 已点击您的专属链接,");
-                //这个人是否已经点过
-
-
                 //这个人如果已经是玩家 并且玩家没有上级 那么成为这个人的下级
                 User user = userService.getUserDao().getUserByOpenId(unionId);
                 if (user != null) {
@@ -136,53 +131,51 @@ public class SubscribeHandler extends AbstractHandler {
                     } else {
                         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
                         if (userBean != null) {
-                            if (userBean.getReferee() == agentId) {
-                                sb.append("已经和您建立过绑定关系");
-                            } else {
+                            if (userBean.getReferee() == 0) {
                                 userBean.setReferee((int) agentId);
                                 RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
-                                sb.append("已和您成功绑定");
+
                                 agentBean.getChildList().add(userId);
                                 RedisManager.getAgentRedisService().updateAgentBean(agentBean);
+                                sb.append("已和您成功绑定");
+                            } else {
+                                if (userBean.getReferee() == agentId) {
+                                    sb.append("已经和您建立过绑定关系");
+                                } else {
+                                    sb.append("但已绑定其他代理");
+                                }
                             }
                         } else {
-                            if (user.getReferee() == agentId) {
-                                sb.append("已经和您建立过绑定关系");
-                            } else {
+                            if (user.getReferee() == 0) {
                                 user.setReferee((int) agentId);
                                 userService.save(user);
-                                sb.append("已和您成功绑定");
+
                                 agentBean.getChildList().add(userId);
                                 RedisManager.getAgentRedisService().updateAgentBean(agentBean);
+                                sb.append("已和您成功绑定");
+                            } else {
+                                if (user.getReferee() == agentId) {
+                                    sb.append("已经和您建立过绑定关系");
+                                } else {
+                                    sb.append("但已绑定其他代理");
+                                }
                             }
                         }
                     }
                 }
+                wxMpService.getKefuService().sendKefuMessage(
+                        WxMpKefuMessage
+                                .TEXT()
+                                .toUser(agentBean.getOpenId())
+                                .content(sb.toString())
+                                .build());
+
             }
-            wxMpService.getKefuService().sendKefuMessage(
-                    WxMpKefuMessage
-                            .TEXT()
-                            .toUser(agentBean.getOpenId())
-                            .content(sb.toString())
-                            .build());
 
+            //TODO
+            return null;
         }
-
-        //TODO
         return null;
+
     }
-
-
-//    接收到请求消息，内容：【WxMpXmlMessage[
-//    toUser=gh_baceceb30e04
-//            fromUser=oLCTw1PrkCjnL392PIQdJJehXBx0
-//    createTime=1527561567
-//    msgType=event
-//            event=subscribe
-//    eventKey=qrscene_outO70Z7ur3g1RV0FoHGi7UkU0Og
-//            ticket=gQHL8TwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyLUJhXzBNSUFmTWsxMDAwME0wN1YAAgT_rwdbAwQAAAAA
-//    scanCodeInfo=ScanCodeInfo[<all null values>]
-//    sendPicsInfo=SendPicsInfo[
-//    picList=[]
-//            ]
 }

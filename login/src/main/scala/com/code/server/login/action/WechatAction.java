@@ -228,26 +228,34 @@ public class WechatAction extends Cors {
                 }else{
                     UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
                     if (userBean != null) {
-                        if (userBean.getReferee() == agentId) {
-                            sb.append("已经和您建立过绑定关系");
-                        }else{
+                        if (userBean.getReferee() == 0) {
                             userBean.setReferee((int) agentId);
                             RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
 
                             agentBean.getChildList().add(userId);
                             RedisManager.getAgentRedisService().updateAgentBean(agentBean);
                             sb.append("已和您成功绑定");
+                        }else{
+                            if (userBean.getReferee() == agentId) {
+                                sb.append("已经和您建立过绑定关系");
+                            }else{
+                                sb.append("但已绑定其他代理");
+                            }
                         }
                     }else{
-                        if (user.getReferee() == agentId) {
-                            sb.append("已经和您建立过绑定关系");
-                        } else {
+                        if (user.getReferee() == 0) {
                             user.setReferee((int) agentId);
                             userService.save(user);
 
                             agentBean.getChildList().add(userId);
                             RedisManager.getAgentRedisService().updateAgentBean(agentBean);
                             sb.append("已和您成功绑定");
+                        }else{
+                            if (user.getReferee() == agentId) {
+                                sb.append("已经和您建立过绑定关系");
+                            } else {
+                                sb.append("但已绑定其他代理");
+                            }
                         }
                     }
                 }
