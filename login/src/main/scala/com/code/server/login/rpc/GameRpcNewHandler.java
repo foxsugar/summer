@@ -75,6 +75,7 @@ public class GameRpcNewHandler implements GameRPCNew.AsyncIface {
             charge.setMoney_point(order.getNum());
             charge.setRecharge_source("" + IChargeType.AGENT);
             charge.setStatus(1);
+            charge.setChargeType(ChargeType.money.getValue() == 1 ? 0 : 1);
             SpringUtil.getBean(ChargeService.class).save(charge);
 
         }
