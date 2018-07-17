@@ -116,6 +116,7 @@ public class RoomInfo extends RoomExtendGold {
 
     public void clearReadyStatus(boolean isAddGameNum) {
 //        GameManager.getInstance().remove(game);
+        lastOperateTime = System.currentTimeMillis();
         this.setGame(null);
 
 

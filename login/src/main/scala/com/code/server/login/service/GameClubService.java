@@ -591,11 +591,11 @@ public class GameClubService {
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
         }
-        if (club.getClubInfo().getRoomModels().size() < floor * 10) {
+        if (club.getClubInfo().getRoomModels().size() < floor * 8) {
             return ErrorCode.CLUB_PARAM_ERROR;
         }
-        for(int i=0;i<10;i++) {
-            club.getClubInfo().getRoomModels().remove(floor * 10);
+        for(int i=0;i<8;i++) {
+            club.getClubInfo().getRoomModels().remove(floor * 8);
         }
         if (club.getClubInfo().getFloorDesc().size() > floor) {
 
