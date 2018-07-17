@@ -63,7 +63,7 @@ public class GameRpcNewHandler implements GameRPCNew.AsyncIface {
             }
         }
         //充值记录
-        if (order.getAgentId() != 0 && order.getType() == ChargeType.money.getValue()) {
+        if (order.getAgentId() != 0) {
             Charge charge = new Charge();
             charge.setOrderId("" + IdWorker.getDefaultInstance().nextId());
             charge.setUserid(order.getUserId());
@@ -75,6 +75,7 @@ public class GameRpcNewHandler implements GameRPCNew.AsyncIface {
             charge.setMoney_point(order.getNum());
             charge.setRecharge_source("" + IChargeType.AGENT);
             charge.setStatus(1);
+            charge.setChargeType(ChargeType.money.getValue() == 1 ? 0 : 1);
             SpringUtil.getBean(ChargeService.class).save(charge);
 
         }
