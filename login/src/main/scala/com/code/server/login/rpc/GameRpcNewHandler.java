@@ -63,7 +63,7 @@ public class GameRpcNewHandler implements GameRPCNew.AsyncIface {
             }
         }
         //充值记录
-        if (order.getAgentId() != 0 && order.getType() == ChargeType.money.getValue()) {
+        if (order.getAgentId() != 0) {
             Charge charge = new Charge();
             charge.setOrderId("" + IdWorker.getDefaultInstance().nextId());
             charge.setUserid(order.getUserId());
