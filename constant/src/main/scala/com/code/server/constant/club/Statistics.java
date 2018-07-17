@@ -10,6 +10,11 @@ public class Statistics {
 
     private Map<String, ClubStatistics> statistics = new HashMap<>();
 
+
+    private double consume;
+
+
+
     public Map<String, ClubStatistics> getStatistics() {
         return statistics;
     }

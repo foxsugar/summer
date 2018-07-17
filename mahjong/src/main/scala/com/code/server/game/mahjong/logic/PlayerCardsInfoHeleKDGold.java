@@ -136,7 +136,12 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
 
         //显庄 庄家输赢每家多10分
         //大包 返分情况
-        boolean isBaoAll = !isZimo && !this.gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing;
+        PlayerCardsInfoMj dabaoUser = gameInfo.getPlayerCardsInfos().get(dianpaoUser);
+        int opSize = 0;
+        if (dabaoUser != null) {
+            opSize = dabaoUser.operateList.size();
+        }
+        boolean isBaoAll = !isZimo && !(dabaoUser.isTing && opSize > 1 && dabaoUser.operateList.get(opSize - 1) != type_ting);
         boolean isDabao = isHasMode(room.getMode(), GameInfoZhuohaozi.mode_大包) && isBaoAll;
 
         for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
@@ -146,14 +151,14 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
         if (isDabao) {
             //分数清0
 
-            PlayerCardsInfoMj dabaoUser = gameInfo.getPlayerCardsInfos().get(dianpaoUser);
+
             for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
 //                if (playerCardsInfoMj.getUserId() != dianpaoUser) {
-                    double temp = -playerCardsInfoMj.getScore();
+                double temp = -playerCardsInfoMj.getScore();
                 room.addUserSocre(playerCardsInfoMj.getUserId(), -playerCardsInfoMj.getScore());
                 playerCardsInfoMj.addScore(-playerCardsInfoMj.getScore());
 //
-                    System.out.println("先减掉分数 " + playerCardsInfoMj.getUserId() + "  减了 " + temp + "  目前分数: "+playerCardsInfoMj.getScore());
+                System.out.println("先减掉分数 " + playerCardsInfoMj.getUserId() + "  减了 " + temp + "  目前分数: " + playerCardsInfoMj.getScore());
 //                    double realScore = dabaoUser.addScore(-playerCardsInfoMj.getGangScore());
 //                    room.addUserSocre(dianpaoUser, -playerCardsInfoMj.getGangScore());
 //                    System.out.println("点炮者输分 " + -dabaoUser.getGangScore() +" 实际输: " + realScore + "  当前分数: " + dabaoUser.getScore());
@@ -167,15 +172,14 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
             }
 
 
-
             for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
 
                 if (playerCardsInfoMj.getUserId() != dianpaoUser) {
                     int gangScore = getAllGangScore(playerCardsInfoMj, gameInfo, room);
-                    double realScore = dabaoUser.addScore(- 3 * gangScore);
+                    double realScore = dabaoUser.addScore(-3 * gangScore);
                     room.addUserSocre(dabaoUser.getUserId(), -3 * gangScore);
 
-                    System.out.println("点炮者输分 " +dabaoUser.getUserId()+" " +" 实际输: " + realScore + "  当前分数: " + dabaoUser.getScore());
+                    System.out.println("点炮者输分 " + dabaoUser.getUserId() + " " + " 实际输: " + realScore + "  当前分数: " + dabaoUser.getScore());
 
                     playerCardsInfoMj.addScore(-realScore);
                     room.addUserSocre(playerCardsInfoMj.getUserId(), -realScore);

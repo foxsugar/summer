@@ -176,11 +176,12 @@ public class Room implements IfaceRoom {
             KafkaMsgKey kafkaKey = new KafkaMsgKey();
             kafkaKey.setUserId(0);
 
-            Map<String, String> msg = new HashMap<>();
+            Map<String, Object> msg = new HashMap<>();
 
             msg.put("clubId", this.clubId);
             msg.put("clubModelId", this.clubRoomModel);
             msg.put("roomId", this.roomId);
+            msg.put("users", this.users);
             ResponseVo responseVo = new ResponseVo("clubService", "clubGameStart", msg);
             msgProducer.send("clubService", kafkaKey, responseVo);
         }

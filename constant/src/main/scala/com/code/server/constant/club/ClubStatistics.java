@@ -1,15 +1,19 @@
 package com.code.server.constant.club;
 
+import java.util.Set;
+
 /**
  * Created by sunxianping on 2018/1/30.
  */
 public class ClubStatistics {
 
-    private int openNum;
+    private int openNum;//开局数
     private int completeNum;
     private int winnerNum;
-    private int consumeNum;
+    private int consumeNum;//消耗数
     private double allScore;
+    private int playerNum;
+    private Set<Long> playerUser;
 
     public int getOpenNum() {
         return openNum;
@@ -53,6 +57,24 @@ public class ClubStatistics {
 
     public ClubStatistics setAllScore(double allScore) {
         this.allScore = allScore;
+        return this;
+    }
+
+    public int getPlayerNum() {
+        return playerNum;
+    }
+
+    public ClubStatistics setPlayerNum(int playerNum) {
+        this.playerNum = playerNum;
+        return this;
+    }
+
+    public Set<Long> getPlayerUser() {
+        return playerUser;
+    }
+
+    public ClubStatistics setPlayerUser(Set<Long> playerUser) {
+        this.playerUser = playerUser;
         return this;
     }
 }

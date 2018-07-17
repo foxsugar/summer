@@ -1,9 +1,6 @@
 package com.code.server.login.service;
 
-import com.code.server.constant.club.ClubMember;
-import com.code.server.constant.club.ClubStatistics;
-import com.code.server.constant.club.RoomInstance;
-import com.code.server.constant.club.RoomModel;
+import com.code.server.constant.club.*;
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.game.UserBean;
@@ -861,7 +858,7 @@ public class GameClubService {
      * @param clubModelId
      * @return
      */
-    public int cludGameStart(String clubId, String clubModelId) {
+    public int cludGameStart(String clubId, String clubModelId,List<Long> users) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club != null) {
             synchronized (club.lock) {
@@ -886,11 +883,37 @@ public class GameClubService {
                     roomModel.getStatisticsMap().remove(LocalDate.now().minusDays(7).toString());
 
                 }
+
+                addStatisticeOpenNum(club, 1);
+                addStatisticePlayer(club, users);
             }
             initRoomInstance(club);
         }
         return 0;
     }
+
+    private static ClubStatistics getClubStatistics(Club club){
+        String date = LocalDate.now().toString();
+        club.getStatistics().getStatistics().putIfAbsent(date, new ClubStatistics());
+        return club.getStatistics().getStatistics().get(date);
+    }
+
+    private void addStatisticeOpenNum(Club club, int num) {
+        ClubStatistics clubStatistics = getClubStatistics(club);
+        clubStatistics.setOpenNum(clubStatistics.getOpenNum() + num);
+    }
+
+    private static void addStatisticeConsume(Club club, int num) {
+        ClubStatistics clubStatistics = getClubStatistics(club);
+        clubStatistics.setConsumeNum(clubStatistics.getConsumeNum() + num);
+    }
+
+    private void addStatisticePlayer(Club club, List<Long> users) {
+        ClubStatistics clubStatistics = getClubStatistics(club);
+//        clubStatistics.setPlayerNum(clubStatistics.getPlayerNum() + num);
+        clubStatistics.getPlayerUser().addAll(users);
+    }
+
 
     public void addPlayingRoom(Club club, RoomInstance roomInstance) {
         if (roomInstance == null) return;
@@ -984,6 +1007,18 @@ public class GameClubService {
         ClubRecord clubRecord = clubRecordService.getClubRecordDao().getClubRecordById(unionId);
 
         sendMsg(msgKey, new ResponseVo("clubService", "getClubRecord", clubRecord));
+        return 0;
+    }
+
+    public int getClubRecordByDate(KafkaMsgKey msgKey, long userId, String clubId, String date){
+        String unionId = clubId + "|" + date;
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+
+        ClubRecord clubRecord = clubRecordService.getClubRecordDao().getClubRecordById(unionId);
+        sendMsg(msgKey, new ResponseVo("clubService", "getClubRecordByDate", clubRecord));
         return 0;
     }
 
@@ -1094,6 +1129,8 @@ public class GameClubService {
                     club.setMoney(moneyNow);
 
                     //统计
+                    addStatisticeConsume(club, roomModel.getMoney());
+
 
                 }
             }

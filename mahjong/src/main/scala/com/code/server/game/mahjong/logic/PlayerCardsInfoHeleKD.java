@@ -84,12 +84,17 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
 
         //显庄 庄家输赢每家多10分
         //大包 返分情况
-        boolean isBaoAll = !isZimo && !this.gameInfo.getPlayerCardsInfos().get(dianpaoUser).isTing;
+        PlayerCardsInfoMj dabaoUser = gameInfo.getPlayerCardsInfos().get(dianpaoUser);
+        int opSize = 0;
+        if (dabaoUser != null) {
+            opSize = dabaoUser.operateList.size();
+        }
+        boolean isBaoAll = !isZimo && !(dabaoUser.isTing && opSize > 1 && dabaoUser.operateList.get(opSize - 1) != type_ting);
         boolean isDabao = isHasMode(room.getMode(), GameInfoZhuohaozi.mode_大包) && isBaoAll;
         //所有的杠都加回去
         if (isDabao) {
 
-            PlayerCardsInfoMj dabaoUser = gameInfo.getPlayerCardsInfos().get(dianpaoUser);
+//            PlayerCardsInfoMj dabaoUser = gameInfo.getPlayerCardsInfos().get(dianpaoUser);
             for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
                 if (playerCardsInfoMj.getUserId() != dianpaoUser) {
                     if (playerCardsInfoMj.getScore() < 0) {
