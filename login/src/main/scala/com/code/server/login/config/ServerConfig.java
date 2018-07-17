@@ -36,6 +36,8 @@ public class ServerConfig {
 
     private String domain = "";
 
+    private int clubJoinLimit = 5;
+
 
     public String getServerType() {
         return serverType;
@@ -183,6 +185,15 @@ public class ServerConfig {
 
     public ServerConfig setClubLimit(int clubLimit) {
         this.clubLimit = clubLimit;
+        return this;
+    }
+
+    public int getClubJoinLimit() {
+        return clubJoinLimit;
+    }
+
+    public ServerConfig setClubJoinLimit(int clubJoinLimit) {
+        this.clubJoinLimit = clubJoinLimit;
         return this;
     }
 }

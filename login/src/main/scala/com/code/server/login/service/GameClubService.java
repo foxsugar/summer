@@ -369,7 +369,8 @@ public class GameClubService {
         }
         //自己加入了几个俱乐部
         List<String> joinList = ClubManager.getInstance().getUserClubs(userId);
-        if (joinList.size() >= JOIN_LIMIT) {
+        int limit = SpringUtil.getBean(ServerConfig.class).getClubJoinLimit();
+        if (joinList.size() >= limit) {
             return ErrorCode.CLUB_CANNOT_NUM;
         }
         if (joinList.contains(clubId)) {
@@ -436,8 +437,8 @@ public class GameClubService {
         if (club.getPresident() != userId) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
-
-        if (ClubManager.getInstance().getUserClubNum(agreeId) >= JOIN_LIMIT) {
+        int limit = SpringUtil.getBean(ServerConfig.class).getClubJoinLimit();
+        if (ClubManager.getInstance().getUserClubNum(agreeId) >= limit) {
             return ErrorCode.CLUB_CANNOT_JOIN;
         }
         //加入俱乐部
@@ -560,7 +561,8 @@ public class GameClubService {
             return ErrorCode.USERID_ERROR;
         }
         List<String> clubs = ClubManager.getInstance().getUserClubs(userId);
-        if (clubs.size() >= JOIN_LIMIT) {
+        int limit = SpringUtil.getBean(ServerConfig.class).getClubJoinLimit();
+        if (clubs.size() >= limit) {
             return ErrorCode.CLUB_CANNOT_NUM;
         }
         if (clubs.contains(clubId)) {
