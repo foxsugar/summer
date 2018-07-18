@@ -143,8 +143,8 @@ public class Room implements IfaceRoom {
         clubRoomSetId();
     }
 
-    public void getDefaultGoldRoomInstance(long userId, String roomType, String gameType, Integer goldRoomType) {
-
+    public Room getDefaultGoldRoomInstance(long userId, String roomType, String gameType, Integer goldRoomType) {
+        return null;
     }
 
     /**
@@ -696,8 +696,39 @@ public class Room implements IfaceRoom {
 
     public int changeRoom(long userId){
 
+        //先退出
+        this.quitRoom(userId);
 
+
+        List<Room> rooms = RoomManager.getInstance().getNotFullRoom(gameType, goldRoomType);
+        Room room = null;
+
+        boolean isAdd = false;
+        if (rooms.size() > 0) {
+            Random random = new Random();
+            room = rooms.get(random.nextInt(rooms.size()));
+        }
+        if (room == null) {
+            isAdd = true;
+            room = this.getDefaultGoldRoomInstance(userId, roomType, gameType, goldRoomType);
+
+        }
+
+        int rtn = room.joinRoom(userId, true);
+        if(rtn != 0) {
+            return rtn;
+        }else{
+            if(isAdd){
+                room.add2GoldPool();
+            }
+            MsgSender.sendMsg2Player(new ResponseVo("roomService", "changeRoom", room.toVo(userId)), userId);
+        }
         return 0;
+    }
+
+
+    public void add2GoldPool(){
+
     }
     public static void main(String[] args) {
         Room room = new Room();
