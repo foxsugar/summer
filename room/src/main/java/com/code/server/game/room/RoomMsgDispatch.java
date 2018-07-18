@@ -143,6 +143,9 @@ public class RoomMsgDispatch {
                 }
                 return 0;
             }
+            case "changeRoom":{
+
+            }
 
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;

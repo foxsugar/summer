@@ -111,6 +111,7 @@ public class Room implements IfaceRoom {
     }
 
 
+
     public int getNeedMoney() throws DataNotFoundException {
 
         StaticDataProto.RoomData roomData = DataManager.data.getRoomDataMap().get(gameType);
@@ -693,6 +694,11 @@ public class Room implements IfaceRoom {
         }
     }
 
+    public int changeRoom(long userId){
+
+
+        return 0;
+    }
     public static void main(String[] args) {
         Room room = new Room();
         room.setGame(new Game());

@@ -105,6 +105,7 @@ public class GameClubService {
         ClubVo clubVo = getClubVo_simple(club);
         clubVo.getRoomModels().addAll(club.getClubInfo().getRoomModels());
         clubVo.getFloorDesc().addAll(club.getClubInfo().getFloorDesc());
+        clubVo.setStatistics(club.getStatistics());
         //玩家在线情况
         clubVo.getMember().addAll(club.getClubInfo().getMember().values());
         clubVo.getMember().forEach(clubMember -> {
@@ -886,8 +887,25 @@ public class GameClubService {
 
                 }
 
+                //俱乐部的统计
+                String date = LocalDate.now().toString();
+                String removeDate = LocalDate.now().minusDays(3).toString();
                 addStatisticeOpenNum(club, 1);
                 addStatisticePlayer(club, users);
+                club.getStatistics().getStatistics().remove(removeDate);
+
+                //玩家身上的统计
+                for (Long userId : users) {
+
+                    ClubMember clubMember = club.getClubInfo().getMember().get("" + userId);
+                    if (clubMember != null) {
+
+                        ClubStatistics clubStatistics = clubMember.getStatistics().getOrDefault(date, new ClubStatistics());
+                        club.getStatistics().getStatistics().put(date, clubStatistics);
+                        clubStatistics.setOpenNum(clubStatistics.getOpenNum() + 1);
+                        clubMember.getStatistics().remove(removeDate);
+                    }
+                }
             }
             initRoomInstance(club);
         }
@@ -1132,6 +1150,8 @@ public class GameClubService {
 
                     //统计
                     addStatisticeConsume(club, roomModel.getMoney());
+
+                    club.getStatistics().setConsume(club.getStatistics().getConsume() + roomModel.getMoney());
 
 
                 }

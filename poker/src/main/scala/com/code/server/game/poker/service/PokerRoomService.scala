@@ -251,6 +251,9 @@ object PokerRoomService {
 
         joinGoldRoom(userId, roomType, gameType, goldRoomType)
 
+      case "changeRoom"=>
+
+
 
       case "getGoldRooms" =>
 
@@ -301,5 +304,8 @@ object PokerRoomService {
     }
     0
   }
+
+
+
 
 }

@@ -338,6 +338,7 @@ public class RoomInfo extends RoomExtendGold {
     }
 
 
+
     public TimerNode getDissolutionRoomTimerNode() {
         return new TimerNode(System.currentTimeMillis(), IGameConstant.ONE_HOUR, false, this::dissolutionRoom);
     }

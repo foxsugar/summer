@@ -1,5 +1,6 @@
 package com.code.server.constant.club;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -13,7 +14,7 @@ public class ClubStatistics {
     private int consumeNum;//消耗数
     private double allScore;
     private int playerNum;
-    private Set<Long> playerUser;
+    private Set<Long> playerUser = new HashSet<>();
 
     public int getOpenNum() {
         return openNum;
