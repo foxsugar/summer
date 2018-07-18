@@ -26,6 +26,7 @@ public class ErrorCode {
 	public static final int REDIS_NO_TOKEN = 1000017;
 	public static final int CANNOT_SHARE = 1000018;
 	public static final int BLACK_LIST = 1000019;
+	public static final int ROOM_CAN_NOT_CHANGE = 1000020;
 
 
 

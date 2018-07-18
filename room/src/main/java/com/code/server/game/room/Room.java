@@ -696,6 +696,9 @@ public class Room implements IfaceRoom {
 
     public int changeRoom(long userId){
 
+        if (this.game == null) {
+            return ErrorCode.ROOM_CAN_NOT_CHANGE;
+        }
         //先退出
         this.quitRoom(userId);
 
