@@ -212,7 +212,7 @@ public class HuUtil implements HuType {
             }
         }
         if (huList.size() > 0) {
-            System.out.println("hello");
+//            System.out.println("hello");
         }
 
         return huList;

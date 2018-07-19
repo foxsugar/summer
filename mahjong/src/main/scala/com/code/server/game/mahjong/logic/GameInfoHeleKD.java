@@ -2,6 +2,7 @@ package com.code.server.game.mahjong.logic;
 
 import com.code.server.game.mahjong.util.HuWithHun;
 import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.redis.service.RedisManager;
 
 import java.util.List;
 import java.util.Random;
@@ -52,6 +53,21 @@ public class GameInfoHeleKD extends GameInfoXYKD {
 //        	logger.info("<<<牌局得分>>>"+HuUtil.getUserAndScore(this.room.getUserScores()));
 //        }
     }
+
+
+    protected void turnResultToZeroOnHuangZhuang() {
+        for (long i : room.getUserScores().keySet()) {
+            if (room instanceof RoomInfoGoldHeLe) {
+                RedisManager.getUserRedisService().addUserGold(i, -getPlayerCardsInfos().get(i).getScore());
+            }
+            room.setUserSocre(i, -getPlayerCardsInfos().get(i).getScore());
+            if (this.getPlayerCardsInfos().get(i) != null) {
+                this.getPlayerCardsInfos().get(i).setScore(0);
+            }
+        }
+    }
+
+
 
     /**
      * 初始化混

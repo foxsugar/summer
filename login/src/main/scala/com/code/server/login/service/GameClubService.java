@@ -108,6 +108,7 @@ public class GameClubService {
         clubVo.setStatistics(club.getStatistics());
         //玩家在线情况
         clubVo.getMember().addAll(club.getClubInfo().getMember().values());
+        clubVo.getAdmin().addAll(club.getClubInfo().getAdmin());
         clubVo.getMember().forEach(clubMember -> {
             String gateId = RedisManager.getUserRedisService().getGateId(clubMember.getUserId());
             boolean online = gateId != null;
@@ -264,7 +265,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (userId != club.getPresident()) {
+        if (userId != club.getPresident() && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_CANNOT_NO_PRESIDENT;
         }
         club.setName(clubName).setPresidentWx(wx).setArea(area).setClubDesc(desc);
@@ -289,7 +290,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (userId != club.getPresident()) {
+        if (userId != club.getPresident() && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_CANNOT_NO_PRESIDENT;
         }
         ClubMember clubMember = club.getClubInfo().getMember().get("" + markUser);
@@ -314,7 +315,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (userId != club.getPresident()) {
+        if (userId != club.getPresident() && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_CANNOT_NO_PRESIDENT;
         }
 
@@ -435,7 +436,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
         int limit = SpringUtil.getBean(ServerConfig.class).getClubJoinLimit();
@@ -475,7 +476,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
 
@@ -509,7 +510,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
         List<ClubCharge> list = clubChargeService.getClubChargeDao().getClubChargesByClubId(clubId);
@@ -547,6 +548,15 @@ public class GameClubService {
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
         }
+        if (club.getPresident() != userId) {
+            return ErrorCode.CLUB_NOT_PRESIDENT;
+        }
+        if (isAdd) {
+            club.getClubInfo().getAdmin().add(adminUser);
+        }else{
+            club.getClubInfo().getAdmin().remove(adminUser);
+        }
+        sendMsg(msgKey, new ResponseVo("clubService", "setAdmin", "ok"));
 
         return 0;
     }
@@ -681,7 +691,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
@@ -743,7 +753,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
         RoomModel roomModel = getRoomModel(club, roomModelId);
@@ -776,7 +786,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
 
@@ -831,7 +841,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
 
@@ -1060,7 +1070,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
 
@@ -1116,7 +1126,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
         clubRemoveMember(club, kickUser);

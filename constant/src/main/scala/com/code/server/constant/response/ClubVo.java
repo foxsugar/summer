@@ -38,6 +38,8 @@ public class ClubVo {
 
     private Statistics statistics;
 
+    private List<Long> admin = new ArrayList<>();
+
 
 
     public String getId() {
@@ -190,6 +192,15 @@ public class ClubVo {
 
     public ClubVo setStatistics(Statistics statistics) {
         this.statistics = statistics;
+        return this;
+    }
+
+    public List<Long> getAdmin() {
+        return admin;
+    }
+
+    public ClubVo setAdmin(List<Long> admin) {
+        this.admin = admin;
         return this;
     }
 }
