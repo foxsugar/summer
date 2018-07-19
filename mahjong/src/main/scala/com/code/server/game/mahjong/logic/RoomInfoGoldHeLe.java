@@ -102,7 +102,7 @@ public class RoomInfoGoldHeLe extends RoomInfo {
         for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
             if (playerCardsInfoMj.getScore() > 0) {
                 double g = 3 * playerCardsInfoMj.getScore() / 100;
-                double g1 = 32* playerCardsInfoMj.getScore() / 100;
+                double g1 = 2* playerCardsInfoMj.getScore() / 100;
                 RedisManager.getUserRedisService().addUserGold(playerCardsInfoMj.getUserId(), -g);
                 //返利
 

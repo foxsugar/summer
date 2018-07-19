@@ -295,6 +295,41 @@ public class Room implements IfaceRoom {
 
     }
 
+    public void noticeClubJoinRoom(long userId) {
+        if (isClubRoom()) {
+            MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+            KafkaMsgKey kafkaKey = new KafkaMsgKey();
+            kafkaKey.setUserId(0);
+
+            Map<String, Object> msg = new HashMap<>();
+
+            msg.put("clubId", this.clubId);
+            msg.put("clubModelId", this.clubRoomModel);
+            msg.put("roomId", this.roomId);
+            msg.put("userId", userId);
+            ResponseVo responseVo = new ResponseVo("clubService", "clubJoinRoom", msg);
+            msgProducer.send("clubService", kafkaKey, responseVo);
+        }
+    }
+
+    public void noticeClubQuitRoom(long userId) {
+        if (isClubRoom()) {
+            MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+            KafkaMsgKey kafkaKey = new KafkaMsgKey();
+            kafkaKey.setUserId(0);
+
+            Map<String, Object> msg = new HashMap<>();
+
+            msg.put("clubId", this.clubId);
+            msg.put("clubModelId", this.clubRoomModel);
+            msg.put("roomId", this.roomId);
+            msg.put("userId", userId);
+            ResponseVo responseVo = new ResponseVo("clubService", "clubQuitRoom", msg);
+            msgProducer.send("clubService", kafkaKey, responseVo);
+        }
+    }
+
+
     protected boolean isCanJoinCheckMoney(long userId) {
         //代建房
         if (!isCreaterJoin) {
@@ -630,6 +665,12 @@ public class Room implements IfaceRoom {
         genRoomRecord();
     }
 
+
+    public int dissolutionRoom(long userId) {
+        dissolutionRoom();
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "dissolutionRoom", "ok"), userId);
+        return 0;
+    }
 
     public void clearReadyStatus(boolean isAddGameNum) {
         lastOperateTime = System.currentTimeMillis();

@@ -608,6 +608,46 @@ public class GameClubService {
         return 0;
     }
 
+
+    /**
+     * club join room 推送
+     * @param clubId
+     * @param userId
+     * @param roomModelId
+     */
+    public void clubJoinRoom(String clubId, long userId, String roomModelId){
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        List<Long> users = new ArrayList<>();
+        if (club != null) {
+            club.getClubInfo().getMember().forEach((id, ClubMember) -> users.add(Long.valueOf(id)));
+        }
+        Map<String, Object> r = new HashMap<>();
+        r.put("userId", userId);
+        r.put("roomModelId", roomModelId);
+        ResponseVo responseVo = new ResponseVo("clubService","clubJoinRoom",r);
+        users.forEach(uid -> sendMsg2Player(responseVo, uid));
+    }
+
+
+    /**
+     * 退出房间推送
+     * @param clubId
+     * @param userId
+     * @param roomModelId
+     */
+    public void clubQuitRoom(String clubId, long userId, String roomModelId){
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        List<Long> users = new ArrayList<>();
+        if (club != null) {
+            club.getClubInfo().getMember().forEach((id, ClubMember) -> users.add(Long.valueOf(id)));
+        }
+        Map<String, Object> r = new HashMap<>();
+        r.put("userId", userId);
+        r.put("roomModelId", roomModelId);
+        ResponseVo responseVo = new ResponseVo("clubService","clubQuitRoom",r);
+        users.forEach(uid -> sendMsg2Player(responseVo, uid));
+    }
+
     /**
      * 初始化数据 懒加载
      */

@@ -173,6 +173,25 @@ public class ClubServiceMsgDispatch {
                 int floor = params.get("floor").asInt();
                 return gameClubService.removeFloor(msgKey, clubId,userId,floor);
             }
+            case "clubJoinRoom":{
+                clubId = params.path("clubId").asText();
+                String clubModelId3 = params.path("clubModelId").asText();
+//                String roomId2 = params.path("roomId").asText();
+                long joinUser = params.path("userId").asLong();
+
+
+                gameClubService.clubJoinRoom( clubId,joinUser,clubModelId3);
+            }
+            case "clubQuitRoom":{
+                clubId = params.path("clubId").asText();
+                String clubModelId3 = params.path("clubModelId").asText();
+//                String roomId2 = params.path("roomId").asText();
+                long quitUser = params.path("userId").asLong();
+
+                gameClubService.clubQuitRoom( clubId,quitUser,clubModelId3);
+            }
+
+
 
         }
         return 0;

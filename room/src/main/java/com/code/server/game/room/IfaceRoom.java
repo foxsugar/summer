@@ -91,4 +91,6 @@ public interface IfaceRoom extends IGameConstant {
     boolean isRobotRoom();
 
     GameLogKey getGameLogKey();
+
+    int dissolutionRoom(long userId);
 }
