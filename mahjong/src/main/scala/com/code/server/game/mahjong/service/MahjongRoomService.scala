@@ -105,6 +105,8 @@ object MahjongRoomService {
         MsgSender.sendMsg2Player("mahjongRoomService", "getGoldRooms", result, userId)
         code = 0
       }
+
+
     }
     return code
   }
