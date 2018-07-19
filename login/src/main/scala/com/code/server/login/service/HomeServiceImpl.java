@@ -61,7 +61,8 @@ public class HomeServiceImpl implements HomeService{
         logger.info("+++= {}", homeChargeVo);
 
         logger.info("---{}", total);
-        homePageVo.setTotalMoney(total);
+        homePageVo.setTotalMoney(total + homeChargeVo.getTotalGold());
+
         return homePageVo;
     }
 
