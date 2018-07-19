@@ -35,6 +35,7 @@ public class GameInfoHeleKD extends GameInfoXYKD {
 
     protected void handleHuangzhuang(long userId) {
 
+        turnResultToZeroOnHuangZhuang();
         sendResult(false, userId, null);
         noticeDissolutionResult();
         //通知所有玩家结束

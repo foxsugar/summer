@@ -1,5 +1,7 @@
 package com.code.server.login.service;
 
+import com.code.server.constant.club.ClubMember;
+import com.code.server.constant.club.ClubStatistics;
 import com.code.server.constant.club.RoomModel;
 import com.code.server.constant.game.Record;
 import com.code.server.constant.game.RoomRecord;
@@ -17,6 +19,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.Gson;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -181,6 +184,20 @@ public class CenterMsgService implements IkafkaMsgId {
                 roomRecord.setName(rm.getDesc());
 
                 //数据统计
+
+
+                String date = LocalDate.now().toString();
+                for (com.code.server.constant.game.UserRecord userRecord : roomRecord.getRecords()) {
+                    ClubMember clubMember = club.getClubInfo().getMember().get(""+userRecord.getUserId());
+                    if (clubMember != null) {
+                        ClubStatistics clubStatistics = clubMember.getStatistics().getOrDefault(date, new ClubStatistics());
+                        clubMember.getStatistics().put(date, clubStatistics);
+                        clubStatistics.setAllScore(clubStatistics.getAllScore() + userRecord.getScore());
+                    }
+
+                }
+
+                //推送房间解散
 
 
             }

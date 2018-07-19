@@ -143,6 +143,13 @@ public class RoomMsgDispatch {
                 }
                 return 0;
             }
+            case "changeRoom":{
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                Room r = (Room)room;
+                return r.changeRoom(userId);
+
+            }
+
 
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;

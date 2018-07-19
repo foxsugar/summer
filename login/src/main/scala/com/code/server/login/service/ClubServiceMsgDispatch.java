@@ -126,7 +126,7 @@ public class ClubServiceMsgDispatch {
 
             case "clubGameStart":
                 String clubModelId1 = params.get("clubModelId").asText();
-                String us = params.get("desc").toString();
+                String us = params.get("users").toString();
                 List<Long> users = JsonUtil.readValue(us,new TypeReference<List<Long>>() {});
 //                String roomId = params.get("roomId").asText();
                 return gameClubService.cludGameStart(clubId, clubModelId1,users);

@@ -105,6 +105,7 @@ public class GameClubService {
         ClubVo clubVo = getClubVo_simple(club);
         clubVo.getRoomModels().addAll(club.getClubInfo().getRoomModels());
         clubVo.getFloorDesc().addAll(club.getClubInfo().getFloorDesc());
+        clubVo.setStatistics(club.getStatistics());
         //玩家在线情况
         clubVo.getMember().addAll(club.getClubInfo().getMember().values());
         clubVo.getMember().forEach(clubMember -> {
@@ -369,7 +370,8 @@ public class GameClubService {
         }
         //自己加入了几个俱乐部
         List<String> joinList = ClubManager.getInstance().getUserClubs(userId);
-        if (joinList.size() >= JOIN_LIMIT) {
+        int limit = SpringUtil.getBean(ServerConfig.class).getClubJoinLimit();
+        if (joinList.size() >= limit) {
             return ErrorCode.CLUB_CANNOT_NUM;
         }
         if (joinList.contains(clubId)) {
@@ -436,8 +438,8 @@ public class GameClubService {
         if (club.getPresident() != userId) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
-
-        if (ClubManager.getInstance().getUserClubNum(agreeId) >= JOIN_LIMIT) {
+        int limit = SpringUtil.getBean(ServerConfig.class).getClubJoinLimit();
+        if (ClubManager.getInstance().getUserClubNum(agreeId) >= limit) {
             return ErrorCode.CLUB_CANNOT_JOIN;
         }
         //加入俱乐部
@@ -560,7 +562,8 @@ public class GameClubService {
             return ErrorCode.USERID_ERROR;
         }
         List<String> clubs = ClubManager.getInstance().getUserClubs(userId);
-        if (clubs.size() >= JOIN_LIMIT) {
+        int limit = SpringUtil.getBean(ServerConfig.class).getClubJoinLimit();
+        if (clubs.size() >= limit) {
             return ErrorCode.CLUB_CANNOT_NUM;
         }
         if (clubs.contains(clubId)) {
@@ -884,8 +887,25 @@ public class GameClubService {
 
                 }
 
+                //俱乐部的统计
+                String date = LocalDate.now().toString();
+                String removeDate = LocalDate.now().minusDays(3).toString();
                 addStatisticeOpenNum(club, 1);
                 addStatisticePlayer(club, users);
+                club.getStatistics().getStatistics().remove(removeDate);
+
+                //玩家身上的统计
+                for (Long userId : users) {
+
+                    ClubMember clubMember = club.getClubInfo().getMember().get("" + userId);
+                    if (clubMember != null) {
+
+                        ClubStatistics clubStatistics = clubMember.getStatistics().getOrDefault(date, new ClubStatistics());
+                        club.getStatistics().getStatistics().put(date, clubStatistics);
+                        clubStatistics.setOpenNum(clubStatistics.getOpenNum() + 1);
+                        clubMember.getStatistics().remove(removeDate);
+                    }
+                }
             }
             initRoomInstance(club);
         }
@@ -1130,6 +1150,8 @@ public class GameClubService {
 
                     //统计
                     addStatisticeConsume(club, roomModel.getMoney());
+
+                    club.getStatistics().setConsume(club.getStatistics().getConsume() + roomModel.getMoney());
 
 
                 }

@@ -23,4 +23,13 @@ public class Statistics {
         this.statistics = statistics;
         return this;
     }
+
+    public double getConsume() {
+        return consume;
+    }
+
+    public Statistics setConsume(double consume) {
+        this.consume = consume;
+        return this;
+    }
 }
