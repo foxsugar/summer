@@ -356,7 +356,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
                 "067",
                 "080",
                 "084",
-                "052"};//092
+                "088"};//092
 //        String[] s = new String[]{"112", "113", "114",   "024",   "028", "032",  "088", "092", "096",  "097",    "132", "133", "124", "120"};
 
 //        094, 038, 093, 063, 067, 044, 034, 106, 058, 035, 041, 104, 033, 032
@@ -392,14 +392,14 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 //                playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
 //                playerCardsInfo.getChiPengGangNum(), hun, 23);
 //        boolean isCanHu = playerCardsInfo.isCanHu_dianpao("024");
-//        playerCardsInfo.isTing = true;
-//        boolean isCanHu = playerCardsInfo.isCanHu_zimo("088");
+        playerCardsInfo.isTing = true;
+        boolean isCanHu = playerCardsInfo.isCanHu_zimo("088");
 //        boolean isGang = playerCardsInfo.isHasGang();
-//        System.out.println(isCanHu);
+        System.out.println(isCanHu);
 
 
-        boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);
-        System.out.println(isCanTing);
+//        boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);
+//        System.out.println(isCanTing);
 
 //        playerCardsInfo.hu_zm(roomInfo,gameInfoTJ,"133");
 //        playerCardsInfo.huCompute( roomInfo,  gameInfoTJ, true, 0, "133");
