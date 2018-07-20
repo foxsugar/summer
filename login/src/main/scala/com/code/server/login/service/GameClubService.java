@@ -634,6 +634,7 @@ public class GameClubService {
         Map<String, Object> r = new HashMap<>();
         r.put("userId", userId);
         r.put("roomModelId", roomModelId);
+        r.put("clubId", clubId);
         ResponseVo responseVo = new ResponseVo("clubService","clubJoinRoom",r);
         users.forEach(uid -> sendMsg2Player(responseVo, uid));
     }
@@ -654,6 +655,7 @@ public class GameClubService {
         Map<String, Object> r = new HashMap<>();
         r.put("userId", userId);
         r.put("roomModelId", roomModelId);
+        r.put("clubId", clubId);
         ResponseVo responseVo = new ResponseVo("clubService","clubQuitRoom",r);
         users.forEach(uid -> sendMsg2Player(responseVo, uid));
     }

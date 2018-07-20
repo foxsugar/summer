@@ -292,6 +292,10 @@ public class Room implements IfaceRoom {
 
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "roomNotice", userOfRoom), this.getUsers());
 
+        if (isClubRoom()) {
+            noticeClubJoinRoom(userId);
+        }
+
 
     }
 
@@ -415,6 +419,10 @@ public class Room implements IfaceRoom {
 
         ResponseVo result = new ResponseVo("roomService", "quitRoom", n);
         MsgSender.sendMsg2Player(result, userId);
+
+        if (isClubRoom()) {
+            noticeClubQuitRoom(userId);
+        }
 
     }
 
@@ -737,7 +745,7 @@ public class Room implements IfaceRoom {
 
     public int changeRoom(long userId){
 
-        if (this.game == null) {
+        if (this.game != null) {
             return ErrorCode.ROOM_CAN_NOT_CHANGE;
         }
         //先退出
