@@ -181,6 +181,7 @@ public class ClubServiceMsgDispatch {
 
 
                 gameClubService.clubJoinRoom( clubId,joinUser,clubModelId3);
+                break;
             }
             case "clubQuitRoom":{
                 clubId = params.path("clubId").asText();
@@ -189,6 +190,7 @@ public class ClubServiceMsgDispatch {
                 long quitUser = params.path("userId").asLong();
 
                 gameClubService.clubQuitRoom( clubId,quitUser,clubModelId3);
+                break;
             }
 
 
