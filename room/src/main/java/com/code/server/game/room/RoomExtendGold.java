@@ -155,8 +155,8 @@ public class RoomExtendGold extends Room {
                 return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME;
             }
 
-            List<Long> noticeList = new ArrayList<>();
-            noticeList.addAll(this.getUsers());
+//            List<Long> noticeList = new ArrayList<>();
+//            noticeList.addAll(this.getUsers());
 
             //删除玩家房间映射关系
             roomRemoveUser(userId);
