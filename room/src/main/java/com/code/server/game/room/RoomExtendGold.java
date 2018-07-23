@@ -77,7 +77,7 @@ public class RoomExtendGold extends Room {
                 RedisManager.getUserRedisService().addUserGold(userId, -cost);
                 //返利
                 UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-                RedisManager.getAgentRedisService().addRebate(userId, userBean.getReferee(), 1, cost / 100);
+                RedisManager.getAgentRedisService().addRebate(userId, userBean.getReferee(), 1, cost / 100,cost);
             }
             //
             RedisManager.getLogRedisService().addGoldIncome(getGameLogKeyStr(), cost * users.size());

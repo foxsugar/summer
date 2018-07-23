@@ -1,5 +1,6 @@
 package com.code.server.redis.service;
 
+import com.code.server.constant.db.ChildCost;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.dao.IAgentRedis;
@@ -63,6 +64,47 @@ public class AgentRedisService implements IAgentRedis, IConstant {
             updateAgentBean(agentBean);
         }
         return m;
+    }
+
+    public void addChildCost(long agentId, double cost, int levle,String date, String deleteDay) {
+        AgentBean agentBean = getAgentBean(agentId);
+        if (agentBean != null) {
+            if (cost > 0) {
+                ChildCost childCost = agentBean.getAgentInfo().getEveryDayCost().getOrDefault(date, new ChildCost());
+
+                switch (levle) {
+                    case 0:
+                        childCost.partner += cost;
+                        break;
+                    case 1:
+                        childCost.firstLevel += cost;
+                        break;
+                    case 2:
+                        childCost.secondLevel += cost;
+                        break;
+                    case 3:
+                        childCost.thirdLevel += cost;
+                        break;
+                }
+                agentBean.getAgentInfo().getEveryDayCost().put(date, childCost);
+                agentBean.getAgentInfo().getEveryDayRebate().remove(deleteDay);
+//
+//                //历史总返利
+//                double allRebate = agentBean.getAgentInfo().getAllRebate();
+//                allRebate += rebate;
+//                agentBean.getAgentInfo().setAllRebate(allRebate);
+//                //每日返利
+//                Map<String,Double> everyDayRebate = agentBean.getAgentInfo().getEveryDayRebate();
+//
+//                double todayRebate = everyDayRebate.getOrDefault(date, 0D);
+//                todayRebate += rebate;
+//                everyDayRebate.putIfAbsent(date, todayRebate);
+//                //删除记录
+//                everyDayRebate.remove(deleteDay);
+                updateAgentBean(agentBean);
+            }
+
+        }
     }
 
     @Override
@@ -176,7 +218,7 @@ public class AgentRedisService implements IAgentRedis, IConstant {
 //          2、2级代理（房卡10%、金币10%）
 //          3、3级代理（房卡5%、金币10%）
 
-    public void addRebate(long userId, long parentId, int type, double num) {
+    public void addRebate(long userId, long parentId, int type, double num, double childCost) {
         long agentId1 = 0;
         long agentId2 = 0;
         long agentId3 = 0;
@@ -217,16 +259,19 @@ public class AgentRedisService implements IAgentRedis, IConstant {
             double n = scala1 * num / 100;
             allRebate += n;
             addRebate(agentId1, n,today,deleteDay);
+            addChildCost(agentId1,childCost,1,today, deleteDay);
         }
         if (agentId2 != 0) {
             double n = scala2 * num / 100;
             allRebate += n;
             addRebate(agentId2, n,today,deleteDay);
+            addChildCost(agentId1,childCost,2,today, deleteDay);
         }
         if (agentId3 != 0) {
             double n = scala3 * num / 100;
             allRebate += n;
             addRebate(agentId3, n,today,deleteDay);
+            addChildCost(agentId1,childCost,3,today, deleteDay);
         }
 
         //合伙人 10%
@@ -234,6 +279,7 @@ public class AgentRedisService implements IAgentRedis, IConstant {
             double n = 10 * num / 100;
             allRebate += n;
             addRebate(partnerId, n,today,deleteDay);
+            addChildCost(agentId1,childCost,0,today, deleteDay);
         }
 
         if (type == 0) {
