@@ -71,7 +71,7 @@ public class RoomPlaySeven extends Room {
         room.bankerId = userId;
         room.setClubId(clubId);
         room.setClubRoomModel(clubRoomModel);
-
+        room.isRobotRoom =true;
         room.init(gameNumber, multiple);
 
         int code = room.joinRoom(userId, isJoin);

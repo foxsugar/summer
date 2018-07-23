@@ -48,9 +48,9 @@ public class SevenRobot implements ISevenRobot,IGameConstant {
                     case STEP_FANZHU:
                         fanZhu(game);
                         break;
-                    case STEP_GET_CARD_FINISH:
+/*                    case STEP_GET_CARD_FINISH:
                         renShu(game);
-                        break;
+                        break;*/
                 }
             }
         }
@@ -82,7 +82,7 @@ public class SevenRobot implements ISevenRobot,IGameConstant {
 
         Map<String, Object> put = new HashMap();
         put.put("fan",false);
-        put.put("fan",0);
+        put.put("card",0);
 
         for (PlayerCardInfoPlaySeven p : game.getPlayerCardInfos().values()) {
             if("1".equals(p.fanZhu)){

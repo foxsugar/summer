@@ -49,5 +49,9 @@ public interface IGameConstant extends IkafkaMsgId{
     //打七
     int STEP_RENSHU = 7;
     int STEP_FANZHU = 8;
-    int STEP_GET_CARD_FINISH = 9;
+    int STEP_GET_CARD_FINISH = 9;//发完牌
+    int CAN_CHANGE_TABLE_CARDS = 10;//换底牌
+    int STEP_CHUPAI = 11;//出牌
+    int STEP_GET_CARD_UNFINISH = 12;//未发完牌
+    int CHANGE_TABLE_CARDS_NOW = 13;//正在换底牌
 }

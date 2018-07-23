@@ -113,10 +113,10 @@ public class CardsUtil {
             cardsOfScore.put(integer,0);
         }
         cardsOfScore.put(37,10);cardsOfScore.put(38,10);cardsOfScore.put(39,10);cardsOfScore.put(40,10);
-        cardsOfScore.put(28,10);cardsOfScore.put(26,10);cardsOfScore.put(27,10);cardsOfScore.put(28,10);
+        cardsOfScore.put(25,10);cardsOfScore.put(26,10);cardsOfScore.put(27,10);cardsOfScore.put(28,10);
         cardsOfScore.put(9,5);cardsOfScore.put(10,5);cardsOfScore.put(11,5);cardsOfScore.put(12,5);
         cardsOfScore.put(-37,10);cardsOfScore.put(-38,10);cardsOfScore.put(-39,10);cardsOfScore.put(-40,10);
-        cardsOfScore.put(-28,10);cardsOfScore.put(-26,10);cardsOfScore.put(-27,10);cardsOfScore.put(-28,10);
+        cardsOfScore.put(-25,10);cardsOfScore.put(-26,10);cardsOfScore.put(-27,10);cardsOfScore.put(-28,10);
         cardsOfScore.put(-9,5);cardsOfScore.put(-10,5);cardsOfScore.put(-11,5);cardsOfScore.put(-12,5);
     }
 
@@ -126,7 +126,12 @@ public class CardsUtil {
         if(1==before.size() && 1==after.size()){
             return compareOneCard(huase, before, after);
         }else if(2==before.size() && 2==after.size()){
-            return compareOneCard(huase, before, after);
+            if(after.get(0)+after.get(1)==0){
+                return compareOneCard(huase, before, after);
+            }else{
+                return true;
+            }
+
         }else if(before.size()>=4 && after.size()>=4){
             return compareTuoLaJi(before, after);
         }

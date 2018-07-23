@@ -98,6 +98,9 @@ public class PlayerCardsInfoFactory {
             case "107":
                 playerCardsInfo = new PlayerCardsInfoHeleKDGold();
                 break;
+            case "108":
+                playerCardsInfo = new PlayerCardsInfoGSJ_New();
+                break;
             default:
                 logger.error("初始化 playercardsInfo 错误");
                 return null;
