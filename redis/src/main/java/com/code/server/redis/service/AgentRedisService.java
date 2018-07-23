@@ -70,6 +70,9 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         AgentBean agentBean = getAgentBean(agentId);
         if (agentBean != null) {
             if (cost > 0) {
+                if (agentBean.getAgentInfo().getEveryDayRebate() == null) {
+                    agentBean.getAgentInfo().setEveryDayCost(new HashMap<>());
+                }
                 ChildCost childCost = agentBean.getAgentInfo().getEveryDayCost().getOrDefault(date, new ChildCost());
 
                 switch (levle) {
