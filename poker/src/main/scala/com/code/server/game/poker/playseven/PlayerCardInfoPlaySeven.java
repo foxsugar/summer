@@ -51,7 +51,6 @@ public class PlayerCardInfoPlaySeven implements IfacePlayerInfo {
         vo.renShu = this.renShu;//认输
         vo.seeTableCard = this.seeTableCard;
         vo.fen = this.fen;//得分 5，10，K
-
         vo.score = this.score;
         return vo;
     }

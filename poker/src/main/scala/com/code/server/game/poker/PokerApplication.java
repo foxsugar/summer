@@ -5,6 +5,7 @@ import com.code.server.constant.exception.RegisterFailedException;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.cow.CowRobot;
 import com.code.server.game.poker.doudizhu.DouDiZhuGoldRobot;
+import com.code.server.game.poker.playseven.SevenRobot;
 import com.code.server.game.poker.robot.RobotManager;
 import com.code.server.game.poker.tuitongzi.TTZRobot;
 import com.code.server.game.poker.zhaguzi.YSZRobotImpl;
@@ -43,6 +44,7 @@ public class PokerApplication {
 		robotManager.addRobot(new CowRobot());
 		robotManager.addRobot(new TTZRobot());
 		robotManager.addRobot(new YSZRobotImpl());
+		robotManager.addRobot(new SevenRobot());
 		ThreadPool.getInstance().executor.execute(robotManager);
 
 //		MsgConsumer.startAConsumer("gameService", serverConfig.getServerId(), MsgDispatch::dispatch);
