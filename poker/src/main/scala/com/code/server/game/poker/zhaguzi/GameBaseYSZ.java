@@ -210,7 +210,6 @@ public class GameBaseYSZ extends Game {
 
         result.put("zhuList", this.getGenZhuList());
         result.put("maxBet", this.MAX_BET_NUM);
-
         logger.info("==============:{}", result);
 
         ResponseVo vo = new ResponseVo("gameService", "mustBet", result);
@@ -343,10 +342,25 @@ public class GameBaseYSZ extends Game {
         return 0;
     }
 
+    public boolean check(long userId){
+
+        if (curUserId != userId){
+            logger.info(userId + "  重复操作");
+
+            return false;
+        }
+
+        return true;
+    }
+
     public int fold(long userId) {
 
         logger.info(userId + "  foldddd!!!");
 
+        if (check(userId) == false){
+
+            return ErrorCode.NOT_YOU_TURN;
+        }
 
         Map<String, Object> result = new HashMap<>();
         result.put("userId", userId);
@@ -384,6 +398,10 @@ public class GameBaseYSZ extends Game {
 
     public int see(long userId) {
 
+        if (check(userId) == false){
+            return ErrorCode.NOT_YOU_TURN;
+        }
+
         logger.info(userId + "  看 牌" + playerCardInfos.get(userId).getHandcards());
 
         if (playerCardInfos.get(userId).getCurRoundNumber() <= room.getMenPai()) {
@@ -417,6 +435,11 @@ public class GameBaseYSZ extends Game {
      * @return
      */
     public int kill(long askerId, long accepterId) {
+
+        if (check(askerId) == false){
+
+            return ErrorCode.NOT_YOU_TURN;
+        }
 
         logger.info(askerId + "  比 牌: " + chip);
 

@@ -31,6 +31,7 @@ public class YSZRobotImpl implements YSZRobot {
         int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
         KafkaMsgKey msgKey = new KafkaMsgKey();
 
+        logger.info("{}  robot pass", game.curRoundNumber);
         msgKey.setRoomId(roomId);
         msgKey.setPartition(partition);
         Map<String, Object> put = new HashMap<>();
