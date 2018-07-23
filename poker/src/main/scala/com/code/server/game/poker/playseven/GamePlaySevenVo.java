@@ -38,6 +38,10 @@ public class GamePlaySevenVo extends GameVo {
     public Integer liangCard;//亮的牌
     public long secondBanker;//另一个队友Id
     public int huaSe;
+    public int step;//步骤
+    public boolean changTableCard;
+    public int chuHuaSe;
+    public long diYiChu=0l;
 
     //出过 1，未出 0
     protected Map<Long, Integer> ifChuPai = new HashMap<>();

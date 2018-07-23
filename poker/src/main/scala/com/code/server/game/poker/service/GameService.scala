@@ -46,6 +46,8 @@ object GameService {
     case "getCard" =>
       val number = params.path("number").asInt(0)
       game.getCard(userId,number)
+    case "getAllCard" =>
+      game.getAllCard(userId)
     case "getTableCard" =>
       game.getTableCard(userId)
     case "shouQi" =>
@@ -69,7 +71,7 @@ object GameService {
       val tableAdd = params.path("tableAdd").asText()
       game.changeTableCards(userId,tableDelete,tableAdd)
     case "play" =>
-      val playCard = params.path("card").asText()
+      val playCard = params.path("playCard").asText()
       game.play(userId,playCard)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
