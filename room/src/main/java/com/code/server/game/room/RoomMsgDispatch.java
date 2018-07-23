@@ -72,6 +72,16 @@ public class RoomMsgDispatch {
                 }
                 return room.joinRoom(userId, true);
             }
+
+            case "dissolutionRoom":{
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                if (room == null) {
+                    return ErrorCode.CANNOT_JOIN_ROOM_NOT_EXIST;
+                }
+                return room.dissolutionRoom(userId);
+
+            }
+
 //            case "joinRoomQuick":{
 //                double type = params.getDouble("type");
 //                return GoldRoomPool.getInstance().addRoom(player, type);
@@ -143,6 +153,13 @@ public class RoomMsgDispatch {
                 }
                 return 0;
             }
+            case "changeRoom":{
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                Room r = (Room)room;
+                return r.changeRoom(userId);
+
+            }
+
 
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;

@@ -10,12 +10,26 @@ public class Statistics {
 
     private Map<String, ClubStatistics> statistics = new HashMap<>();
 
+
+    private double consume;
+
+
+
     public Map<String, ClubStatistics> getStatistics() {
         return statistics;
     }
 
     public Statistics setStatistics(Map<String, ClubStatistics> statistics) {
         this.statistics = statistics;
+        return this;
+    }
+
+    public double getConsume() {
+        return consume;
+    }
+
+    public Statistics setConsume(double consume) {
+        this.consume = consume;
         return this;
     }
 }

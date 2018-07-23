@@ -87,7 +87,7 @@ object PokerRoomService {
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
 
-        return RoomPlaySeven.createPlaySevenRoom(userId, gameNumber, fengDing,kouDiJiaJi,zhuangDanDaJiaBei, personNumber, multiple, gameType, roomType, isAA, isJoin, clubId, clubRoomModel)
+        return RoomPlaySeven.createPlaySevenRoom(userId, gameNumber, fengDing, kouDiJiaJi, zhuangDanDaJiaBei, personNumber, multiple, gameType, roomType, isAA, isJoin, clubId, clubRoomModel)
 
 
       case "startGameByClient" =>
@@ -190,7 +190,7 @@ object PokerRoomService {
         val clubRoomModel = params.path("clubRoomModel").asText
         val goldRoomType = params.path("goldRoomType").asInt(0)
         val goldRoomPermission = params.path("goldRoomPermission").asInt(0)
-        return RoomYSZ.createYSZRoom(userId, gameNumber, personNumber, cricleNumber, multiple, caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel,goldRoomType,goldRoomPermission)
+        return RoomYSZ.createYSZRoom(userId, gameNumber, personNumber, cricleNumber, multiple, caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel, goldRoomType, goldRoomPermission)
 
       case "createPullMiceRoom" =>
         val roomType = params.path("roomType").asText()
@@ -228,14 +228,14 @@ object PokerRoomService {
         }
         return roomGuessCar.asInstanceOf[RoomGuessCar].guessCar(userId, redOrGreen)
 
-      case "createWZQRoom"=>
+      case "createWZQRoom" =>
         val roomType = params.path("roomType").asText()
         val gameType = params.path("gameType").asText()
         val personNumber = params.path("personNumber").asInt()
         val multiple = params.path("multiple").asInt()
         val gameNumber = params.path("gameNumber").asInt()
-//        if(multiple <=0 ) return ErrorCode.REQUEST_PARAM_ERROR
-        return RoomWzq.createRoom(userId,roomType,gameType,multiple,personNumber,gameNumber)
+        //        if(multiple <=0 ) return ErrorCode.REQUEST_PARAM_ERROR
+        return RoomWzq.createRoom(userId, roomType, gameType, multiple, personNumber, gameNumber)
 
       case "getAllRoom" =>
         return RoomGuessCar.getAllRoom(userId);
@@ -273,33 +273,30 @@ object PokerRoomService {
   def joinGoldRoom(userId: Long, roomType: String, gameType: String, goldRoomType: Int): Int = {
     val rooms = RoomManager.getInstance().getNotFullRoom(gameType, goldRoomType)
     var room: Room = null
+    var isAdd = false
     if (rooms.size() > 0) {
       room = rooms.get(0)
     }
     if (room == null) {
-      room = PokerGoldRoomFactory.create(userId, roomType, gameType, goldRoomType)
-      //获得一个默认房间
-      //加入房间列表
-      val serverId: Int = SpringUtil.getBean(classOf[ServerConfig]).getServerId
-      val roomId: String = Room.getRoomIdStr(Room.genRoomId(serverId))
-      room.setRoomId(roomId)
-      room.setGameType(gameType)
-      room.setRoomType(roomType)
-      room.setGoldRoomType(goldRoomType)
-      room.setGoldRoomPermission(1)
-      room.setMultiple(goldRoomType)
+      isAdd = true
+      room = new PokerGoldRoom()
+      room = room.getDefaultGoldRoomInstance(userId, roomType, gameType, goldRoomType)
 
-      RoomManager.getInstance().addNotFullGoldRoom(room)
-      RoomManager.addRoom(room.getRoomId, "" + serverId, room)
     }
+    val rtn: Int = room.joinRoom(userId, true)
 
-    val rtn:Int = room.joinRoom(userId,true)
-    if(rtn != 0) {
+    if (rtn != 0) {
       return rtn
-    }else{
+    } else {
+      if (isAdd) {
+        val serverId: Int = SpringUtil.getBean(classOf[ServerConfig]).getServerId
+        RoomManager.getInstance().addNotFullGoldRoom(room)
+        RoomManager.addRoom(room.getRoomId, "" + serverId, room)
+      }
       MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "joinGoldRoom", room.toVo(userId)), userId)
     }
     0
   }
+
 
 }

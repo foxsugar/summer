@@ -51,7 +51,7 @@ public class RoomYSZ extends RoomExtendGold {
     protected long lastReadyTime;
     protected long timerTick;
     protected long leaveSecond;
-
+    protected long lastOverTime;
     public static int BASE_TIME = 10;
 
 

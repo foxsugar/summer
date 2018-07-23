@@ -656,6 +656,8 @@ public class GameBaseYSZ extends Game {
     public void pushGoldScore(){
         if (this.room.isGoldRoom()){
             this.room.pushScoreChange();
+        }else {
+            this.room.pushScoreChange();
         }
     }
 
@@ -693,7 +695,8 @@ public class GameBaseYSZ extends Game {
         }
         gameResultHitGoldFlower.setWinnerList(winnerList);
         gameResultHitGoldFlower.setBankerId(winnerList.get(0));
-        MsgSender.sendMsg2Player("gameService", "gameResult", gameResultHitGoldFlower, users);
+//        MsgSender.sendMsg2Player("gameService", "gameResult", gameResultHitGoldFlower, users);
+        MsgSender.sendMsg2Player("gameService", "gameResult", gameResultHitGoldFlower, this.room.users);
         this.pushGoldScore();
     }
 
@@ -1029,6 +1032,7 @@ public class GameBaseYSZ extends Game {
         genRecord();
 
         room.setBankerId(winList.get(0));
+        this.room.lastOverTime = System.currentTimeMillis();
         room.clearReadyStatus(true);
         sendFinalResult();
     }

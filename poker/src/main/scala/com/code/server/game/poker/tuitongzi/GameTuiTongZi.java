@@ -72,6 +72,7 @@ public class GameTuiTongZi extends Game{
 
     public void startGame(List<Long> users, Room room){
         this.room = (RoomTuiTongZi) room;
+        this.room.offset = this.offset();
         this.users = users;
 
         this.firstBankerId = ((RoomTuiTongZi) room).firstBankerId;

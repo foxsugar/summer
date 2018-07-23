@@ -84,7 +84,7 @@ object HuWithHun {
         val (cs, cdl) = getRemainCards(newCards, cardGroupList)
         //是否可以胡的初次判断 混必须满足最少需求个数
 
-        val remainCardNum = getCardNum(cs)
+        val remainCardNum :Int= getCardNum(cs)
         if (hunIsEnough(cs, cdl, hunNum)) {
 
           val isHasJiang = Hu.isHasJiang(cdl)
@@ -887,7 +887,7 @@ object HuWithHun {
         if (getCardNum(newCards) == 0 && hunNum - 1 == 0) {
           Hu.add2List(complete, newCardGroupList)
         } else {
-          getKaoPai(newCards, complete, newCardGroupList, hunNum - 2, hun2Num)
+          getKaoPai(newCards, complete, newCardGroupList, hunNum - 1, hun2Num)
         }
       }
 

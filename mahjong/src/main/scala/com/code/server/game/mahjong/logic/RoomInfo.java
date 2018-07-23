@@ -5,7 +5,6 @@ import com.code.server.constant.data.DataManager;
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.*;
 import com.code.server.constant.response.*;
-import com.code.server.game.room.RoomExtendGold;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
@@ -18,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class RoomInfo extends RoomExtendGold {
+public class RoomInfo extends RoomInfoExtendGold {
 
 
 //    private static final Logger logger = Logger.getLogger("game");
@@ -116,6 +115,7 @@ public class RoomInfo extends RoomExtendGold {
 
     public void clearReadyStatus(boolean isAddGameNum) {
 //        GameManager.getInstance().remove(game);
+        lastOperateTime = System.currentTimeMillis();
         this.setGame(null);
 
 
@@ -335,6 +335,7 @@ public class RoomInfo extends RoomExtendGold {
         genRoomRecord();
 
     }
+
 
 
     public TimerNode getDissolutionRoomTimerNode() {

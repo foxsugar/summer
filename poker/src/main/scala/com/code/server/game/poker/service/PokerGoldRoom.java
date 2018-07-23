@@ -1,20 +1,47 @@
 package com.code.server.game.poker.service;
 
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.doudizhu.RoomDouDiZhuGold;
 import com.code.server.game.poker.doudizhu.RoomDouDiZhuPlus;
 import com.code.server.game.poker.zhaguzi.RoomYSZ;
 import com.code.server.game.room.IfaceRoom;
 import com.code.server.game.room.Room;
-
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
+import com.code.server.game.room.RoomExtendGold;
+import com.code.server.game.room.service.RoomManager;
+import com.code.server.util.SpringUtil;
 
 /**
  * Created by sunxianping on 2018/6/5.
  */
-public class PokerGoldRoomFactory {
+public class PokerGoldRoom extends RoomExtendGold {
+
+
+    @Override
+    public Room getDefaultGoldRoomInstance(long userId, String roomType, String gameType, Integer goldRoomType) {
+        Room room =  create(userId, roomType, gameType, goldRoomType);
+        int serverId = SpringUtil.getBean(ServerConfig.class).getServerId();
+        String roomId = Room.getRoomIdStr(Room.genRoomId(serverId));
+        room.setRoomId(roomId);
+        room.setGameType(gameType);
+        room.setRoomType(roomType);
+        room.setGoldRoomType(goldRoomType);
+        room.setGoldRoomPermission(GOLD_ROOM_PERMISSION_DEFAULT);
+        room.setMultiple(goldRoomType);
+
+
+
+
+        return room;
+
+    }
+
+
+    public void add2GoldPool() {
+        int serverId = SpringUtil.getBean(ServerConfig.class).getServerId();
+        RoomManager.getInstance().addNotFullGoldRoom(this);
+        RoomManager.addRoom(this.getRoomId(), "" + serverId, this);
+    }
 
     public static Room create(long userId, String roomType, String gameType, int goldRoomType) {
 
@@ -32,22 +59,6 @@ public class PokerGoldRoomFactory {
 
                 break;
         }
-
-//        val roomType = params.get("roomType").asText()
-//        val gameNumber = params.get("gameNumber").asInt()
-//        val personNumber = params.get("personNumber").asInt()
-//        val cricleNumber = params.get("cricleNumber").asInt()
-//        val multiple = params.get("multiple").asInt()
-//        val caiFen = params.get("caiFen").asInt()
-//        val menPai = params.get("menPai").asInt()
-//
-//        val gameType = params.path("gameType").asText("0")
-//        val isAA = params.path("isAA").asBoolean(false)
-//        val isJoin = params.path("isJoin").asBoolean(true)
-//        val clubId = params.path("clubId").asText
-//        val clubRoomModel = params.path("clubRoomModel").asText
-//        val goldRoomType = params.path("goldRoomType").asInt(0)
-//        val goldRoomPermission = params.path("goldRoomPermission").asInt(0)
 
         switch (gameType) {
             case "285":
@@ -74,6 +85,7 @@ public class PokerGoldRoomFactory {
 
                 return roomYSZ;
         }
+
 
         return room;
     }

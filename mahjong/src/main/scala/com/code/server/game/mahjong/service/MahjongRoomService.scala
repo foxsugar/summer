@@ -2,7 +2,7 @@ package com.code.server.game.mahjong.service
 
 import com.code.server.constant.response.{ErrorCode, ResponseVo}
 import com.code.server.game.mahjong.config.ServerConfig
-import com.code.server.game.mahjong.logic.{RoomFactory, RoomInfo, RoomInfoGold}
+import com.code.server.game.mahjong.logic.{RoomFactory, RoomInfo, RoomInfoExtendGold}
 import com.code.server.game.room.{Room, RoomExtendGold}
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
@@ -38,7 +38,7 @@ object MahjongRoomService {
 
         code = createRoomByUser(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType,
           roomType, mustZimo, isHasYipaoduoxiang, canChi, haveTing,
-          clubId, clubRoomModel, goldRoomType, goldRoomPermission,showChat)
+          clubId, clubRoomModel, goldRoomType, goldRoomPermission, showChat)
 
       }
       case "createRoomByEachUser" => {
@@ -60,7 +60,7 @@ object MahjongRoomService {
         val showChat = paramsjSONObject.path("showChat").asBoolean(true)
         code = createRoomByEachUser(userId, modeTotal, mode, multiple, gameNumber,
           personNumber, gameType, roomType, mustZimo, isHasYipaoduoxiang, canChi, haveTing,
-          clubId, clubRoomModel, goldRoomType, goldRoomPermission,showChat)
+          clubId, clubRoomModel, goldRoomType, goldRoomPermission, showChat)
 
       }
       case "createRoomButNotInRoom" => {
@@ -82,7 +82,7 @@ object MahjongRoomService {
         val showChat = paramsjSONObject.path("showChat").asBoolean(true)
         code = createRoomButNotInRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber,
           gameType, roomType, mustZimo, isHasYipaoduoxiang, canChi, haveTing,
-          clubId, clubRoomModel, goldRoomType, goldRoomPermission,showChat)
+          clubId, clubRoomModel, goldRoomType, goldRoomPermission, showChat)
 
       }
 
@@ -105,6 +105,8 @@ object MahjongRoomService {
         MsgSender.sendMsg2Player("mahjongRoomService", "getGoldRooms", result, userId)
         code = 0
       }
+
+
     }
     return code
   }
@@ -215,7 +217,7 @@ object MahjongRoomService {
 
   def createRoom(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int, gameType: String,
                  each: String, isJoin: Boolean, roomType: String, mustZimo: Int, yipaoduoxiang: Boolean, canChi: Boolean, haveTing: Boolean,
-                 clubId: String, clubRoomModel: String, goldRoomType: Int, goldRoomPermission: Int,showChat:Boolean): (Int, RoomInfo) = {
+                 clubId: String, clubRoomModel: String, goldRoomType: Int, goldRoomPermission: Int, showChat: Boolean): (Int, RoomInfo) = {
     val roomInfo: RoomInfo = RoomFactory.getRoomInstance(gameType)
     val serverId: Int = SpringUtil.getBean(classOf[ServerConfig]).getServerId
     val roomId: String = Room.getRoomIdStr(Room.genRoomId(serverId))
@@ -232,7 +234,7 @@ object MahjongRoomService {
     roomInfo.setGoldRoomPermission(goldRoomPermission)
     roomInfo.setShowChat(showChat)
     roomInfo.init(roomId, userId, modeTotal, mode, multiple, gameNumber, personNumber, userId, 0, mustZimo)
-    if(goldRoomPermission!=0) {
+    if (goldRoomPermission != 0) {
       roomInfo.setMultiple(goldRoomType)
     }
     var code = 0
@@ -268,13 +270,13 @@ object MahjongRoomService {
     */
   def createRoomByEachUser(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int,
                            gameType: String, roomType: String, mustZimo: Int, yipaoduoxiang: Boolean, canChi: Boolean, haveTing: Boolean,
-                           clubId: String, clubRoomModel: String, goldRoomType: Int, goldRoomPermission: Int,showChat:Boolean): Int = {
+                           clubId: String, clubRoomModel: String, goldRoomType: Int, goldRoomPermission: Int, showChat: Boolean): Int = {
     if (!isCanCreate(modeTotal, mode, "" + multiple)) {
       return ErrorCode.CANNOT_CREATE_ROOM_PARAMETER_IS_ERROR
     }
     val (code, roomInfo) = createRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType, "1",
       true, roomType, mustZimo, yipaoduoxiang, canChi, haveTing,
-      clubId, clubRoomModel, goldRoomType, goldRoomPermission,showChat)
+      clubId, clubRoomModel, goldRoomType, goldRoomPermission, showChat)
     if (code != 0) {
       return code
     }
@@ -306,13 +308,13 @@ object MahjongRoomService {
     */
   def createRoomByUser(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int,
                        gameType: String, roomType: String, mustZimo: Int, yipaoduoxiang: Boolean, canChi: Boolean,
-                       haveTing: Boolean, clubId: String, clubRoomModel: String, goldRoomType: Int, goldRoomPermission: Int,showChat:Boolean): Int = {
+                       haveTing: Boolean, clubId: String, clubRoomModel: String, goldRoomType: Int, goldRoomPermission: Int, showChat: Boolean): Int = {
     if (!isCanCreate(modeTotal, mode, "" + multiple)) {
       return ErrorCode.CANNOT_CREATE_ROOM_PARAMETER_IS_ERROR
     }
     val (code, roomInfo) = createRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber, gameType,
       "0", true, roomType, mustZimo, yipaoduoxiang, canChi, haveTing,
-      clubId, clubRoomModel, goldRoomType, goldRoomPermission,showChat)
+      clubId, clubRoomModel, goldRoomType, goldRoomPermission, showChat)
     if (code != 0) {
       return code
     }
@@ -339,7 +341,7 @@ object MahjongRoomService {
     */
   def createRoomButNotInRoom(userId: Long, modeTotal: String, mode: String, multiple: Int, gameNumber: Int, personNumber: Int,
                              gameType: String, roomType: String, mustZimo: Int, yipaoduoxiang: Boolean, canChi: Boolean, haveTing: Boolean,
-                             clubId: String, clubRoomModel: String, goldRoomType: Int, goldRoomPermission: Int,showChat:Boolean): Int = {
+                             clubId: String, clubRoomModel: String, goldRoomType: Int, goldRoomPermission: Int, showChat: Boolean): Int = {
     if (!isCanCreate(modeTotal, mode, "" + multiple)) {
       return ErrorCode.CANNOT_CREATE_ROOM_PARAMETER_IS_ERROR
     }
@@ -354,7 +356,7 @@ object MahjongRoomService {
     //    }
     val (code, roomInfo) = createRoom(userId, modeTotal, mode, multiple, gameNumber, personNumber,
       gameType, "2", false, roomType, mustZimo, yipaoduoxiang, canChi, haveTing,
-      clubId, clubRoomModel, goldRoomType, goldRoomPermission,showChat)
+      clubId, clubRoomModel, goldRoomType, goldRoomPermission, showChat)
     if (code != 0) {
       return code
     }
@@ -380,29 +382,27 @@ object MahjongRoomService {
 
   def joinGoldRoom(userId: Long, roomType: String, gameType: String, goldRoomType: Int): Int = {
     val rooms = RoomManager.getInstance().getNotFullRoom(gameType, goldRoomType)
-    var room:Room = null
-    if(rooms.size()>0) {
+    var room: Room = null
+    var isAdd = false
+    if (rooms.size() > 0) {
       room = rooms.get(0)
     }
     if (room == null) {
-      room = new RoomInfoGold()
+      isAdd = true
+      room = new RoomInfoExtendGold()
       //获得一个默认房间
-      room.getDefaultGoldRoomInstance(userId, roomType, gameType, goldRoomType)
-      //加入房间列表
-      val serverId: Int = SpringUtil.getBean(classOf[ServerConfig]).getServerId
-      val roomId: String = Room.getRoomIdStr(Room.genRoomId(serverId))
-      room.setRoomId(roomId)
-
-      RoomManager.getInstance().addNotFullGoldRoom(room)
-      RoomManager.addRoom(room.getRoomId, "" + serverId, room)
-
-
+      room = room.getDefaultGoldRoomInstance(userId, roomType, gameType, goldRoomType)
     }
+    val rtn: Int = room.joinRoom(userId, true)
 
-    val rtn:Int = room.joinRoom(userId,true)
-    if(rtn != 0) {
+    if (rtn != 0) {
       return rtn
-    }else{
+    } else {
+      if (isAdd) {
+        val serverId: Int = SpringUtil.getBean(classOf[ServerConfig]).getServerId
+        RoomManager.getInstance().addNotFullGoldRoom(room)
+        RoomManager.addRoom(room.getRoomId, "" + serverId, room)
+      }
       MsgSender.sendMsg2Player(new ResponseVo("mahjongRoomService", "joinGoldRoom", room.asInstanceOf[RoomInfo].toJSONObject), userId)
     }
     return 0

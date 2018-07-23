@@ -102,12 +102,13 @@ public class RoomInfoGoldHeLe extends RoomInfo {
         for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
             if (playerCardsInfoMj.getScore() > 0) {
                 double g = 3 * playerCardsInfoMj.getScore() / 100;
+                double g1 = 2* playerCardsInfoMj.getScore() / 100;
                 RedisManager.getUserRedisService().addUserGold(playerCardsInfoMj.getUserId(), -g);
                 //返利
 
                 Map<String, Object> addGold = new HashMap<>();
                 addGold.put("userId", playerCardsInfoMj.getUserId());
-                addGold.put("gold", g);
+                addGold.put("gold", g1);
                 KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_GUESS_ADD_GOLD);
                 MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
                 msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addGold);

@@ -2,6 +2,7 @@ package com.code.server.constant.response;
 
 import com.code.server.constant.club.ClubMember;
 import com.code.server.constant.club.RoomModel;
+import com.code.server.constant.club.Statistics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,10 @@ public class ClubVo {
     private List<RoomInstanceVo> roomInstance = new ArrayList<>();//房间实例
 
     private List<RoomInstanceVo> playingRoom = new ArrayList<>();
+
+    private Statistics statistics;
+
+    private List<Long> admin = new ArrayList<>();
 
 
 
@@ -178,6 +183,24 @@ public class ClubVo {
 
     public ClubVo setImage(String image) {
         this.image = image;
+        return this;
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
+    }
+
+    public ClubVo setStatistics(Statistics statistics) {
+        this.statistics = statistics;
+        return this;
+    }
+
+    public List<Long> getAdmin() {
+        return admin;
+    }
+
+    public ClubVo setAdmin(List<Long> admin) {
+        this.admin = admin;
         return this;
     }
 }

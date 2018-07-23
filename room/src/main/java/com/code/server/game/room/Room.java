@@ -111,6 +111,7 @@ public class Room implements IfaceRoom {
     }
 
 
+
     public int getNeedMoney() throws DataNotFoundException {
 
         StaticDataProto.RoomData roomData = DataManager.data.getRoomDataMap().get(gameType);
@@ -142,8 +143,8 @@ public class Room implements IfaceRoom {
         clubRoomSetId();
     }
 
-    public void getDefaultGoldRoomInstance(long userId, String roomType, String gameType, Integer goldRoomType) {
-
+    public Room getDefaultGoldRoomInstance(long userId, String roomType, String gameType, Integer goldRoomType) {
+        return null;
     }
 
     /**
@@ -176,11 +177,12 @@ public class Room implements IfaceRoom {
             KafkaMsgKey kafkaKey = new KafkaMsgKey();
             kafkaKey.setUserId(0);
 
-            Map<String, String> msg = new HashMap<>();
+            Map<String, Object> msg = new HashMap<>();
 
             msg.put("clubId", this.clubId);
             msg.put("clubModelId", this.clubRoomModel);
             msg.put("roomId", this.roomId);
+            msg.put("users", this.users);
             ResponseVo responseVo = new ResponseVo("clubService", "clubGameStart", msg);
             msgProducer.send("clubService", kafkaKey, responseVo);
         }
@@ -290,8 +292,47 @@ public class Room implements IfaceRoom {
 
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "roomNotice", userOfRoom), this.getUsers());
 
+        if (isClubRoom()) {
+            noticeClubJoinRoom(userId);
+        }
+
 
     }
+
+    public void noticeClubJoinRoom(long userId) {
+        if (isClubRoom()) {
+            MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+            KafkaMsgKey kafkaKey = new KafkaMsgKey();
+            kafkaKey.setUserId(0);
+
+            Map<String, Object> msg = new HashMap<>();
+
+            msg.put("clubId", this.clubId);
+            msg.put("clubModelId", this.clubRoomModel);
+            msg.put("roomId", this.roomId);
+            msg.put("userId", userId);
+            ResponseVo responseVo = new ResponseVo("clubService", "clubJoinRoom", msg);
+            msgProducer.send("clubService", kafkaKey, responseVo);
+        }
+    }
+
+    public void noticeClubQuitRoom(long userId) {
+        if (isClubRoom()) {
+            MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+            KafkaMsgKey kafkaKey = new KafkaMsgKey();
+            kafkaKey.setUserId(0);
+
+            Map<String, Object> msg = new HashMap<>();
+
+            msg.put("clubId", this.clubId);
+            msg.put("clubModelId", this.clubRoomModel);
+            msg.put("roomId", this.roomId);
+            msg.put("userId", userId);
+            ResponseVo responseVo = new ResponseVo("clubService", "clubQuitRoom", msg);
+            msgProducer.send("clubService", kafkaKey, responseVo);
+        }
+    }
+
 
     protected boolean isCanJoinCheckMoney(long userId) {
         //代建房
@@ -378,6 +419,10 @@ public class Room implements IfaceRoom {
 
         ResponseVo result = new ResponseVo("roomService", "quitRoom", n);
         MsgSender.sendMsg2Player(result, userId);
+
+        if (isClubRoom()) {
+            noticeClubQuitRoom(userId);
+        }
 
     }
 
@@ -629,7 +674,14 @@ public class Room implements IfaceRoom {
     }
 
 
+    public int dissolutionRoom(long userId) {
+        dissolutionRoom();
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "dissolutionRoom", "ok"), userId);
+        return 0;
+    }
+
     public void clearReadyStatus(boolean isAddGameNum) {
+        lastOperateTime = System.currentTimeMillis();
         this.setGame(null);
         this.setInGame(false);
         for (Map.Entry<Long, Integer> entry : this.userStatus.entrySet()) {
@@ -638,7 +690,6 @@ public class Room implements IfaceRoom {
         if (isAddGameNum) {
             this.curGameNumber += 1;
         }
-        lastOperateTime = System.currentTimeMillis();
     }
 
     public void addUserSocre(long userId, double score) {
@@ -692,6 +743,46 @@ public class Room implements IfaceRoom {
         }
     }
 
+    public int changeRoom(long userId){
+
+        if (this.game != null && !this.game.isCanChangeRoom(userId)) {
+            return ErrorCode.ROOM_CAN_NOT_CHANGE;
+        }
+
+        //先退出
+        this.quitRoom(userId);
+
+
+        List<Room> rooms = RoomManager.getInstance().getNotFullRoom(gameType, goldRoomType);
+        Room room = null;
+
+        boolean isAdd = false;
+        if (rooms.size() > 0) {
+            Random random = new Random();
+            room = rooms.get(random.nextInt(rooms.size()));
+        }
+        if (room == null) {
+            isAdd = true;
+            room = this.getDefaultGoldRoomInstance(userId, roomType, gameType, goldRoomType);
+
+        }
+
+        int rtn = room.joinRoom(userId, true);
+        if(rtn != 0) {
+            return rtn;
+        }else{
+            if(isAdd){
+                room.add2GoldPool();
+            }
+            MsgSender.sendMsg2Player(new ResponseVo("roomService", "changeRoom", room.toVo(userId)), userId);
+        }
+        return 0;
+    }
+
+
+    public void add2GoldPool(){
+
+    }
     public static void main(String[] args) {
         Room room = new Room();
         room.setGame(new Game());

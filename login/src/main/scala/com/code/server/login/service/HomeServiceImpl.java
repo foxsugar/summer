@@ -57,11 +57,7 @@ public class HomeServiceImpl implements HomeService{
         homePageVo.setInvitationCode("" + agentId);
         HomeChargeVo homeChargeVo = todayChargeService.showCharge(agentId);
         String total = homeChargeVo.getTotal();
-
-        logger.info("+++= {}", homeChargeVo);
-
-        logger.info("---{}", total);
-        homePageVo.setTotalMoney(total);
+        homePageVo.setTotalMoney((Double.parseDouble(homeChargeVo.getTotalGold()) + Double.parseDouble(total) + ""));
         return homePageVo;
     }
 

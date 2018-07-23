@@ -1,9 +1,6 @@
 package com.code.server.login.service;
 
-import com.code.server.constant.club.ClubMember;
-import com.code.server.constant.club.ClubStatistics;
-import com.code.server.constant.club.RoomInstance;
-import com.code.server.constant.club.RoomModel;
+import com.code.server.constant.club.*;
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.game.UserBean;
@@ -108,8 +105,10 @@ public class GameClubService {
         ClubVo clubVo = getClubVo_simple(club);
         clubVo.getRoomModels().addAll(club.getClubInfo().getRoomModels());
         clubVo.getFloorDesc().addAll(club.getClubInfo().getFloorDesc());
+        clubVo.setStatistics(club.getStatistics());
         //玩家在线情况
         clubVo.getMember().addAll(club.getClubInfo().getMember().values());
+        clubVo.getAdmin().addAll(club.getClubInfo().getAdmin());
         clubVo.getMember().forEach(clubMember -> {
             String gateId = RedisManager.getUserRedisService().getGateId(clubMember.getUserId());
             boolean online = gateId != null;
@@ -266,7 +265,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (userId != club.getPresident()) {
+        if (userId != club.getPresident() && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_CANNOT_NO_PRESIDENT;
         }
         club.setName(clubName).setPresidentWx(wx).setArea(area).setClubDesc(desc);
@@ -291,7 +290,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (userId != club.getPresident()) {
+        if (userId != club.getPresident() && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_CANNOT_NO_PRESIDENT;
         }
         ClubMember clubMember = club.getClubInfo().getMember().get("" + markUser);
@@ -316,7 +315,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (userId != club.getPresident()) {
+        if (userId != club.getPresident() && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_CANNOT_NO_PRESIDENT;
         }
 
@@ -372,7 +371,8 @@ public class GameClubService {
         }
         //自己加入了几个俱乐部
         List<String> joinList = ClubManager.getInstance().getUserClubs(userId);
-        if (joinList.size() >= JOIN_LIMIT) {
+        int limit = SpringUtil.getBean(ServerConfig.class).getClubJoinLimit();
+        if (joinList.size() >= limit) {
             return ErrorCode.CLUB_CANNOT_NUM;
         }
         if (joinList.contains(clubId)) {
@@ -436,11 +436,11 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
-
-        if (ClubManager.getInstance().getUserClubNum(agreeId) >= JOIN_LIMIT) {
+        int limit = SpringUtil.getBean(ServerConfig.class).getClubJoinLimit();
+        if (ClubManager.getInstance().getUserClubNum(agreeId) >= limit) {
             return ErrorCode.CLUB_CANNOT_JOIN;
         }
         //加入俱乐部
@@ -476,7 +476,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
 
@@ -510,7 +510,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
         List<ClubCharge> list = clubChargeService.getClubChargeDao().getClubChargesByClubId(clubId);
@@ -548,6 +548,15 @@ public class GameClubService {
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
         }
+        if (club.getPresident() != userId) {
+            return ErrorCode.CLUB_NOT_PRESIDENT;
+        }
+        if (isAdd) {
+            club.getClubInfo().getAdmin().add(adminUser);
+        }else{
+            club.getClubInfo().getAdmin().remove(adminUser);
+        }
+        sendMsg(msgKey, new ResponseVo("clubService", "setAdmin", "ok"));
 
         return 0;
     }
@@ -563,7 +572,8 @@ public class GameClubService {
             return ErrorCode.USERID_ERROR;
         }
         List<String> clubs = ClubManager.getInstance().getUserClubs(userId);
-        if (clubs.size() >= JOIN_LIMIT) {
+        int limit = SpringUtil.getBean(ServerConfig.class).getClubJoinLimit();
+        if (clubs.size() >= limit) {
             return ErrorCode.CLUB_CANNOT_NUM;
         }
         if (clubs.contains(clubId)) {
@@ -594,18 +604,60 @@ public class GameClubService {
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
         }
-        if (club.getClubInfo().getRoomModels().size() < floor * 10) {
+        if (club.getClubInfo().getRoomModels().size() < floor * 8) {
             return ErrorCode.CLUB_PARAM_ERROR;
         }
-        for(int i=0;i<10;i++) {
-            club.getClubInfo().getRoomModels().remove(floor * 10);
+        for(int i=0;i<8;i++) {
+            club.getClubInfo().getRoomModels().remove(floor * 8);
         }
-        if (club.getClubInfo().getFloorDesc().size() > 0) {
+        if (club.getClubInfo().getFloorDesc().size() > floor) {
 
             club.getClubInfo().getFloorDesc().remove(floor);
         }
         sendMsg(msgKey, new ResponseVo("clubService", "removeFloor","ok"));
         return 0;
+    }
+
+
+    /**
+     * club join room 推送
+     * @param clubId
+     * @param userId
+     * @param roomModelId
+     */
+    public void clubJoinRoom(String clubId, long userId, String roomModelId){
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        List<Long> users = new ArrayList<>();
+        if (club != null) {
+            club.getClubInfo().getMember().forEach((id, ClubMember) -> users.add(Long.valueOf(id)));
+        }
+        Map<String, Object> r = new HashMap<>();
+        r.put("userId", userId);
+        r.put("roomModelId", roomModelId);
+        r.put("clubId", clubId);
+        ResponseVo responseVo = new ResponseVo("clubService","clubJoinRoom",r);
+        users.forEach(uid -> sendMsg2Player(responseVo, uid));
+    }
+
+
+    /**
+     * 退出房间推送
+     * @param clubId
+     * @param userId
+     * @param roomModelId
+     */
+    public void clubQuitRoom(String clubId, long userId, String roomModelId){
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        List<Long> users = new ArrayList<>();
+        if (club != null) {
+            club.getClubInfo().getMember().forEach((id, ClubMember) -> users.add(Long.valueOf(id)));
+        }
+        Map<String, Object> r = new HashMap<>();
+        r.put("userId", userId);
+        r.put("roomModelId", roomModelId);
+        r.put("clubId", clubId);
+        ResponseVo responseVo = new ResponseVo("clubService","clubQuitRoom",r);
+        users.forEach(uid -> sendMsg2Player(responseVo, uid));
     }
 
     /**
@@ -641,7 +693,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
@@ -703,7 +755,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
         RoomModel roomModel = getRoomModel(club, roomModelId);
@@ -736,7 +788,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
 
@@ -791,7 +843,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
 
@@ -861,7 +913,7 @@ public class GameClubService {
      * @param clubModelId
      * @return
      */
-    public int cludGameStart(String clubId, String clubModelId) {
+    public int cludGameStart(String clubId, String clubModelId,List<Long> users) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club != null) {
             synchronized (club.lock) {
@@ -886,11 +938,54 @@ public class GameClubService {
                     roomModel.getStatisticsMap().remove(LocalDate.now().minusDays(7).toString());
 
                 }
+
+                //俱乐部的统计
+                String date = LocalDate.now().toString();
+                String removeDate = LocalDate.now().minusDays(3).toString();
+                addStatisticeOpenNum(club, 1);
+                addStatisticePlayer(club, users);
+                club.getStatistics().getStatistics().remove(removeDate);
+
+                //玩家身上的统计
+                for (Long userId : users) {
+
+                    ClubMember clubMember = club.getClubInfo().getMember().get("" + userId);
+                    if (clubMember != null) {
+
+                        ClubStatistics clubStatistics = clubMember.getStatistics().getOrDefault(date, new ClubStatistics());
+                        club.getStatistics().getStatistics().put(date, clubStatistics);
+                        clubStatistics.setOpenNum(clubStatistics.getOpenNum() + 1);
+                        clubMember.getStatistics().remove(removeDate);
+                    }
+                }
             }
             initRoomInstance(club);
         }
         return 0;
     }
+
+    private static ClubStatistics getClubStatistics(Club club){
+        String date = LocalDate.now().toString();
+        club.getStatistics().getStatistics().putIfAbsent(date, new ClubStatistics());
+        return club.getStatistics().getStatistics().get(date);
+    }
+
+    private void addStatisticeOpenNum(Club club, int num) {
+        ClubStatistics clubStatistics = getClubStatistics(club);
+        clubStatistics.setOpenNum(clubStatistics.getOpenNum() + num);
+    }
+
+    private static void addStatisticeConsume(Club club, int num) {
+        ClubStatistics clubStatistics = getClubStatistics(club);
+        clubStatistics.setConsumeNum(clubStatistics.getConsumeNum() + num);
+    }
+
+    private void addStatisticePlayer(Club club, List<Long> users) {
+        ClubStatistics clubStatistics = getClubStatistics(club);
+//        clubStatistics.setPlayerNum(clubStatistics.getPlayerNum() + num);
+        clubStatistics.getPlayerUser().addAll(users);
+    }
+
 
     public void addPlayingRoom(Club club, RoomInstance roomInstance) {
         if (roomInstance == null) return;
@@ -977,13 +1072,25 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
 
         ClubRecord clubRecord = clubRecordService.getClubRecordDao().getClubRecordById(unionId);
 
         sendMsg(msgKey, new ResponseVo("clubService", "getClubRecord", clubRecord));
+        return 0;
+    }
+
+    public int getClubRecordByDate(KafkaMsgKey msgKey, long userId, String clubId, String date){
+        String unionId = clubId + "|" + date;
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+
+        ClubRecord clubRecord = clubRecordService.getClubRecordDao().getClubRecordById(unionId);
+        sendMsg(msgKey, new ResponseVo("clubService", "getClubRecordByDate", clubRecord));
         return 0;
     }
 
@@ -1021,7 +1128,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId) {
+        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
             return ErrorCode.CLUB_NOT_PRESIDENT;
         }
         clubRemoveMember(club, kickUser);
@@ -1094,6 +1201,10 @@ public class GameClubService {
                     club.setMoney(moneyNow);
 
                     //统计
+                    addStatisticeConsume(club, roomModel.getMoney());
+
+                    club.getStatistics().setConsume(club.getStatistics().getConsume() + roomModel.getMoney());
+
 
                 }
             }

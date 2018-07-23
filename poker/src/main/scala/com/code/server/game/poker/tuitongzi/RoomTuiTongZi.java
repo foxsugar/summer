@@ -47,6 +47,8 @@ public class RoomTuiTongZi extends Room{
         this.quan = quan;
     }
 
+    protected long offset = 0;
+
     //作弊的那个人info
     protected Map<String, Object> cheatInfo = new HashMap<>();
 
@@ -288,9 +290,10 @@ public class RoomTuiTongZi extends Room{
 
     @Override
     protected void dissolutionRoom() {
-        if (this.game != null){
-            this.addUserSocre(this.getBankerId(), this.getPotBottom() - ((GameTuiTongZi)this.game).offset());
-        }
+//        if (this.game != null){
+//            this.addUserSocre(this.getBankerId(), this.getPotBottom() - ((GameTuiTongZi)this.game).offset());
+//        }
+        this.addUserSocre(this.getBankerId(), this.getPotBottom() - this.offset);
         super.dissolutionRoom();
     }
 

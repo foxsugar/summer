@@ -85,6 +85,9 @@ public class Game implements IfaceGame{
         msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, data);
     }
 
+    public boolean isCanChangeRoom(long userId) {
+        return !users.contains(userId);
+    }
     @Override
     public IfaceGameVo toVo() {
         return null;
