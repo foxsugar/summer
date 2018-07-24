@@ -211,7 +211,7 @@ public class GameBaseYSZ extends Game {
         result.put("zhuList", this.getGenZhuList());
         result.put("maxBet", this.MAX_BET_NUM);
         logger.info("==============:{}", result);
-
+        result.put("users", this.users);
         ResponseVo vo = new ResponseVo("gameService", "mustBet", result);
         MsgSender.sendMsg2Player(vo, users);
 
