@@ -293,8 +293,8 @@ object PokerRoomService {
         RoomManager.getInstance().addNotFullGoldRoom(room)
         RoomManager.addRoom(room.getRoomId, "" + serverId, room)
       }
-//      room.getReady(userId)
       MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "joinGoldRoom", room.toVo(userId)), userId)
+      room.getReady(userId)
     }
     0
   }
