@@ -121,7 +121,7 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
         int score = huCardType.fan == 0 ? 1 : huCardType.fan;
         int subScore = 0;
 
-        this.fan = huCardType.fan;
+        this.fan = huCardType.fan == 0 ? 1 : huCardType.fan;
         //yu
         int yu = getYu();
 
@@ -156,7 +156,7 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
             //截杠胡 输三倍
             if (isJieGangHu) {
                 score *= 9;
-                this.fan = 3;
+                this.fan *= 3;
             } else { //普通点炮 输两倍
                 score *= 3;
             }
