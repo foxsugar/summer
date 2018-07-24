@@ -759,7 +759,7 @@ public class Room implements IfaceRoom {
         List<Room> openRoom = new ArrayList<>();
         List<Room> notOpenRoom = new ArrayList<>();
         for (Room r : rooms) {
-            if (r.getRoomId().equals(this.getRoomId())) {
+            if (!r.getRoomId().equals(this.getRoomId())) {
                 if (r.isOpen) {
                     openRoom.add(r);
                 } else {
