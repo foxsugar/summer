@@ -151,7 +151,7 @@ public class RoomExtendGold extends Room {
                 return ErrorCode.CANNOT_QUIT_ROOM_NOT_EXIST;
             }
 
-            if (isInGame) {
+            if (isInGame && this.game.users.contains(userId)) {
                 return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME;
             }
 
