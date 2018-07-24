@@ -795,7 +795,7 @@ public class Room implements IfaceRoom {
 
             MsgSender.sendMsg2Player(new ResponseVo("roomService", "changeRoom", room.toVo(userId)), userId);
 
-            room.getReady(userId);
+//            room.getReady(userId);
         }
         return 0;
     }
