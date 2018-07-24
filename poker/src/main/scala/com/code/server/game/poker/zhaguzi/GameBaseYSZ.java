@@ -1044,6 +1044,22 @@ public class GameBaseYSZ extends Game {
         for (Player p : winnerList) {
             winList.add(p.getUid());
         }
+
+        //按照座位号对winList 排序
+
+        long winnerId = 0;
+        for (long uid : users){
+            for (long winId : winList){
+                if (uid == winId){
+                    winnerId = uid;
+                    break;
+                }
+            }
+        }
+
+        winList.clear();
+        winList.add(winnerId);
+
         Map<String, Object> result = new HashMap<>();
         result.put("winList", winList);
         ResponseVo vo = new ResponseVo("gameService", "campareAllCards", result);
