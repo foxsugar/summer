@@ -111,7 +111,6 @@ public class Room implements IfaceRoom {
     }
 
 
-
     public int getNeedMoney() throws DataNotFoundException {
 
         StaticDataProto.RoomData roomData = DataManager.data.getRoomDataMap().get(gameType);
@@ -378,7 +377,7 @@ public class Room implements IfaceRoom {
             n.setMessage("roomNum " + this.getRoomId() + " :has destroy success!");
             MsgSender.sendMsg2Player(new ResponseVo("roomService", "destroyRoom", n), noticeList);
             //代开房 并且游戏未开始
-            if (!isCreaterJoin  && this.curGameNumber == 1) {
+            if (!isCreaterJoin && this.curGameNumber == 1) {
                 dissolutionRoom();
             }
 
@@ -589,7 +588,7 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
-    protected boolean isCanAgreeDissloution(int agreeNum){
+    protected boolean isCanAgreeDissloution(int agreeNum) {
         return agreeNum >= personNumber - 1 && agreeNum >= 2;
     }
 
@@ -743,7 +742,7 @@ public class Room implements IfaceRoom {
         }
     }
 
-    public int changeRoom(long userId){
+    public int changeRoom(long userId) {
 
         if (this.game != null && !this.game.isCanChangeRoom(userId)) {
             return ErrorCode.ROOM_CAN_NOT_CHANGE;
@@ -757,32 +756,53 @@ public class Room implements IfaceRoom {
         Room room = null;
 
         boolean isAdd = false;
-        if (rooms.size() > 0) {
-            Random random = new Random();
-            room = rooms.get(random.nextInt(rooms.size()));
+        List<Room> openRoom = new ArrayList<>();
+        List<Room> notOpenRoom = new ArrayList<>();
+        for (Room r : rooms) {
+            if (r.getRoomId().equals(this.getRoomId())) {
+                if (r.isOpen) {
+                    openRoom.add(r);
+                } else {
+                    notOpenRoom.add(r);
+                }
+            }
+        }
+        if (notOpenRoom.size() > 0) {
+            room = notOpenRoom.get(0);
+        }
+        if (room == null && openRoom.size() > 0) {
+            room = openRoom.get(0);
         }
         if (room == null) {
-            isAdd = true;
-            room = this.getDefaultGoldRoomInstance(userId, roomType, gameType, goldRoomType);
-
+            room = this;
         }
+//        if (room == null) {
+//            isAdd = true;
+//            room = this.getDefaultGoldRoomInstance(userId, roomType, gameType, goldRoomType);
+//
+//        }
 
         int rtn = room.joinRoom(userId, true);
-        if(rtn != 0) {
+        if (rtn != 0) {
             return rtn;
-        }else{
-            if(isAdd){
-                room.add2GoldPool();
-            }
+        } else {
+//            if (isAdd) {
+//                room.add2GoldPool();
+//            }
+
+
             MsgSender.sendMsg2Player(new ResponseVo("roomService", "changeRoom", room.toVo(userId)), userId);
+
+            room.getReady(userId);
         }
         return 0;
     }
 
 
-    public void add2GoldPool(){
+    public void add2GoldPool() {
 
     }
+
     public static void main(String[] args) {
         Room room = new Room();
         room.setGame(new Game());
