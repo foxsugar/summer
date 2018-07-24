@@ -767,6 +767,8 @@ public class Room implements IfaceRoom {
                 }
             }
         }
+        Collections.shuffle(openRoom);
+        Collections.shuffle(notOpenRoom);
         if (notOpenRoom.size() > 0) {
             room = notOpenRoom.get(0);
         }
