@@ -406,6 +406,9 @@ public class RoomYSZ extends RoomExtendGold {
         }
 
         if (timerTick != lastTimerTick){
+
+            if (this.game != null) return;
+
             long deta = (System.currentTimeMillis() - this.lastReadyTime) / ((long)(10 * Math.pow(10, 9)));
             this.leaveSecond = BASE_TIME - deta;
             Map<String, Object> result = new HashMap<>();
