@@ -1046,7 +1046,6 @@ public class GameBaseYSZ extends Game {
         }
 
         //按照座位号对winList 排序
-
         long winnerId = 0;
         for (long uid : users){
             for (long winId : winList){
