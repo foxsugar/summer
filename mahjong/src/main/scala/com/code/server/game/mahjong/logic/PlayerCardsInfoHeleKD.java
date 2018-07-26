@@ -5,10 +5,30 @@ import com.code.server.game.mahjong.util.HuUtil;
 
 import java.util.List;
 
+import static com.code.server.game.mahjong.logic.GameInfoZhuohaozi.mode_明听;
+
 /**
  * Created by sunxianping on 2018/6/26.
  */
 public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
+
+    @Override
+    public void ting(String card) {
+        //出牌 弃牌置为空(客户端扣牌)
+        this.cards.remove(card);
+        String ifAnKou = this.gameInfo.room.getMode();
+        if(!this.gameInfo.room.isHasMode(mode_明听)){
+            this.disCards.add(null);
+        }else {
+            this.disCards.add(card);
+        }
+
+        this.isTing = true;
+        tingSet = getTingCardType(cards, null);
+        this.lastOperate = type_ting;
+        operateList.add(type_ting);
+        this.gameInfo.addUserOperate(this.userId, type_ting);
+    }
 
     @Override
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card) {

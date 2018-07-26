@@ -167,6 +167,15 @@ public class GameInfo extends Game {
     }
 
 
+    public void initHun(){
+        Random rand = new Random();
+        int hunIndex = 0;
+        hunIndex = rand.nextInt(34);
+        this.hun.add(hunIndex);
+    //通知混
+        MsgSender.sendMsg2Player("gameService", "noticeHun", this.hun, users);
+    }
+
     /**
      * 荒庄的处理
      *

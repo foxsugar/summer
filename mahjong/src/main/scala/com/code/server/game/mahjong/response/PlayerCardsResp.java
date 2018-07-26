@@ -35,6 +35,7 @@ public class PlayerCardsResp {
     private boolean canBeChiTing;
     private boolean canBePengTing;
     private boolean canBeXuanfengDan;
+    private boolean canBeBufeng;
     private String huCard;
 
     private List<Integer> winType = new ArrayList<>();
@@ -71,6 +72,7 @@ public class PlayerCardsResp {
             this.canBeChiTing = info.isCanBeChiTing();
             this.canBePengTing = info.isCanBePengTing();
             this.canBeXuanfengDan = info.isCanBeXuanfeng();
+            this.canBeBufeng = info.isCanBeBufeng();
          
             if(info instanceof PlayerCardsInfoLS){
             	PlayerCardsInfoLS infols = (PlayerCardsInfoLS)info;
@@ -343,6 +345,15 @@ public class PlayerCardsResp {
 
     public PlayerCardsResp setCanBePengTing(boolean canBePengTing) {
         this.canBePengTing = canBePengTing;
+        return this;
+    }
+
+    public boolean isCanBeBufeng() {
+        return canBeBufeng;
+    }
+
+    public PlayerCardsResp setCanBeBufeng(boolean canBeBufeng) {
+        this.canBeBufeng = canBeBufeng;
         return this;
     }
 }

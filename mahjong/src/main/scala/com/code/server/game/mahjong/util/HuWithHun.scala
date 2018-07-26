@@ -182,6 +182,9 @@ object HuWithHun {
       //      huList.add(playerCardsInfoMj.getSpecialHuScore.get(HuType.hu_清一色))
       huCardType.specialHuList.add(HuType.hu_清一色)
     }
+    if(playerCardsInfoMj.getSpecialHuScore.containsKey(HuType.hu_清龙) && isQingLong(huCardType, noHuncards, hun, lastCard)) {
+      huCardType.specialHuList.add(HuType.hu_清龙)
+    }
     if (playerCardsInfoMj.getSpecialHuScore.containsKey(HuType.hu_吊将) && isDiaoJiang(huCardType, hun, lastCard)) {
       //      huList.add(playerCardsInfoMj.getSpecialHuScore.get(HuType.hu_吊将))
       huCardType.specialHuList.add(HuType.hu_吊将)
@@ -368,6 +371,10 @@ object HuWithHun {
     return set.size == 1
   }
 
+
+  def isQingLong(huCardType: HuCardType,noHuncards: Array[Int], hun: util.List[Integer], lastCard: Int): Boolean ={
+    return isYiTiaoLong(huCardType,hun, lastCard) && isQingYiSe(huCardType, noHuncards, hun, lastCard)
+  }
   /**
     * 获得龙的牌型
     *

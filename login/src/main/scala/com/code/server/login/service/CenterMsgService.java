@@ -64,6 +64,7 @@ public class CenterMsgService implements IkafkaMsgId {
                 break;
             case KAFKA_MSG_ID_ROOM_CLUB_USER:
                 getRoomClubByUser(msg);
+                break;
 
 
         }

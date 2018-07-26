@@ -185,12 +185,10 @@ object NettyMsgDispatch {
         val partition = getPartitionByRoomId(roomId)
         if (partition == null) {
           sendMsg(new ResponseVo("roomService", method, ErrorCode.CAN_NOT_NO_ROOM), userId)
-          println("no room===============")
         } else {
           msgKey.setRoomId(roomId)
           msgKey.setPartition(partition.toInt)
           SpringUtil.getBean(classOf[MsgProducer]).send2Partition(service, partition.toInt, msgKey, msg)
-          println("partition ============= " + partition.toInt )
         }
 
 

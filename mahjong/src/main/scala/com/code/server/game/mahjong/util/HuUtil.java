@@ -198,6 +198,16 @@ public class HuUtil implements HuType {
             }
         }
 
+        if (playerCardsInfo.isHasSpecialHu(HuType.hu_清七对)) {
+            HuCardType huCardType = isHaoHuaQixiaodui_hun(cards, playerCardsInfo, hun, lastCard);
+            if (huCardType != null) {
+                huCardType.setFan(playerCardsInfo.getSpecialHuScore(hu_豪华七小对)).specialHuList.add(hu_豪华七小对);
+                huList.add(huCardType);
+            }
+        }
+
+
+
 
         huList.addAll(HuWithHun.getHuCardType(playerCardsInfo, cards,analyse(convert(cards)), chiPengGangNum, hun, lastCard));
 
@@ -780,6 +790,19 @@ public class HuUtil implements HuType {
 
         return huCardType;
 
+    }
+
+
+    private static boolean isQingQiDui_hun(List<String> cards, PlayerCardsInfoMj playerCardsInfo, List<Integer> hun, int lastCard) {
+        List<String> noHunCards = new ArrayList<>();
+        for (String card : cards) {
+
+            if (!hun.contains(CardTypeUtil.getTypeByCard(card))) {
+                noHunCards.add(card);
+            }
+        }
+        return isYiSe_wtt(cards) &&
+                (isQixiaodui_hun(cards, playerCardsInfo, hun, lastCard) != null || isHaoHuaQixiaodui_hun(cards, playerCardsInfo, hun, lastCard) != null);
     }
 
     private static List<Integer> mapHasValue(Map<Integer, Integer> map, int size) {
