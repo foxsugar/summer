@@ -121,7 +121,7 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
         int score = huCardType.fan == 0 ? 1 : huCardType.fan;
         int subScore = 0;
 
-        this.fan = huCardType.fan == 0 ? 1 : huCardType.fan;
+        this.fan = huCardType.fan;
         //yu
         int yu = getYu();
 
@@ -131,6 +131,7 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
             if (isGangKai()) {
                 score *= 6;
                 this.winType.add(hu_杠上开花);
+                this.fan = 3;
             } else {
                 score *= 2;
             }
