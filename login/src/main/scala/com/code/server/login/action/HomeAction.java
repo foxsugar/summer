@@ -36,7 +36,7 @@ public class HomeAction {
     @AuthChecker
     @RequestMapping("/show")
     public AgentResponse showHomePage(){
-
+        logger.info("==========/home/show/");
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         long agentId = AgentUtil.getAgentByRequest(request);
