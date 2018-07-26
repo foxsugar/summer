@@ -1061,6 +1061,13 @@ public class GameBaseYSZ extends Game {
 
         Map<String, Object> result = new HashMap<>();
         result.put("winList", winList);
+
+        List<Long> loserList = new ArrayList<>();
+        for (Long uid : aliveUser){
+            if (winList.contains(uid)) continue;
+            loserList.add(uid);
+        }
+        result.put("loserList", loserList);
         boolean showing = getMaxRoundNumberB() && aliveUser.size() > 1;
         result.put("showing", showing);
         if (showing){
