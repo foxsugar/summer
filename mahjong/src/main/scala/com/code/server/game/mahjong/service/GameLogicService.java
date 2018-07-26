@@ -2,6 +2,7 @@ package com.code.server.game.mahjong.service;
 
 
 import com.code.server.game.mahjong.logic.GameInfo;
+import com.code.server.game.mahjong.logic.GameInfoLuanGuaFeng;
 import com.code.server.game.mahjong.logic.GameInfoTJ;
 import com.code.server.game.mahjong.logic.RoomInfo;
 import com.code.server.game.room.IfaceRoom;
@@ -22,12 +23,12 @@ public class GameLogicService {
     protected static final Logger logger = Logger.getLogger("game");
 
 
-    public static int dispatch(long userId, String method, String roomId, JsonNode paramsjSONObject) {
+    public static int dispatch(long userId, String method, String roomId, JsonNode jsonNode) {
 
 
         String card = "";
-        if (paramsjSONObject.has("card")) {
-            card = paramsjSONObject.get("card").asText();
+        if (jsonNode.has("card")) {
+            card = jsonNode.get("card").asText();
         }
         int code = 0;
 
@@ -51,40 +52,44 @@ public class GameLogicService {
                 code = hu(roomId, userId);
                 break;
             case "chi":
-                String one = paramsjSONObject.get("one").asText();
-                String two = paramsjSONObject.get("two").asText();
+                String one = jsonNode.get("one").asText();
+                String two = jsonNode.get("two").asText();
                 code = chi(roomId, userId, one, two);
                 break;
             case "chiTing":
-                String one1 = paramsjSONObject.get("one").asText();
-                String two1 = paramsjSONObject.get("two").asText();
+                String one1 = jsonNode.get("one").asText();
+                String two1 = jsonNode.get("two").asText();
                 code = chiTing(roomId, userId, one1, two1);
                 break;
             case "pengTing":
                 code = pengTing(roomId, userId);
                 break;
             case "exchange":
-                int srcType = paramsjSONObject.get("srcType").asInt();
-                int desType = paramsjSONObject.get("desType").asInt();
+                int srcType = jsonNode.get("srcType").asInt();
+                int desType = jsonNode.get("desType").asInt();
                 code = exchange(roomId, userId, srcType, desType);
                 break;
             case "needCard":
-                int cardType = paramsjSONObject.get("cardType").asInt();
+                int cardType = jsonNode.get("cardType").asInt();
                 code = needCard(roomId, userId, cardType);
                 break;
             case "xuanfengdan":
-                int xuanfengType = paramsjSONObject.get("xuanfengType").asInt();
-                String xuanfengCard = paramsjSONObject.get("xuanfengCards").toString();
+                int xuanfengType = jsonNode.get("xuanfengType").asInt();
+                String xuanfengCard = jsonNode.get("xuanfengCards").toString();
                 List<String> xuanfengCardList = JsonUtil.readValue(xuanfengCard, new TypeReference<List<String>>() {
                 });
 //                code = xuanfengdan(roomId, userId, xuanfengType, xuanfengCardList);
                 break;
             case "laZhuang":
-                int num = paramsjSONObject.path("num").asInt();
+                int num = jsonNode.path("num").asInt();
                 code = ((GameInfoTJ)getGameInfo(roomId)).laZhuang(userId, num);
                 break;
             case "tingWhat":
                 code = tingWhat(roomId, userId);
+                break;
+            case "liang":
+                List<String> cards = JsonUtil.readValue(jsonNode.get("cards").toString(), new TypeReference<List<String>>() {});
+                code = liang(roomId, userId,cards);
                 break;
         }
         if (code == 0) {
@@ -169,6 +174,11 @@ public class GameLogicService {
 
     public static int tingWhat(String roomId, long userId) {
         return getGameInfo(roomId).tingWhat(userId);
+    }
+
+    public static int liang(String roomId, long userId, List<String> cards) {
+        GameInfoLuanGuaFeng gameInfoLuanGuaFeng = (GameInfoLuanGuaFeng) getGameInfo(roomId);
+        return gameInfoLuanGuaFeng.liang(userId, cards);
     }
 
 }

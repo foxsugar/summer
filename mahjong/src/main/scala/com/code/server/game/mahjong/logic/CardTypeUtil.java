@@ -81,6 +81,11 @@ public class CardTypeUtil {
         }
         return 0;
     }
+
+    public static boolean isFeng(String card) {
+        int type = getCardGroup(card);
+        return type == GROUP_FENG || type == GROUP_ZI;
+    }
     private static void init_all_cards() {
         ALL_CARD.addAll(WAN_CARD);
         ALL_CARD.addAll(TONG_CARD);

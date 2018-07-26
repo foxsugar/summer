@@ -49,6 +49,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     protected boolean canBeChiTing;
     protected boolean canBePengTing;
     protected boolean canBeXuanfeng;
+    protected boolean canBeBufeng;
 
 
     protected Map<Integer, Integer> specialHuScore = new HashMap<>();
@@ -177,6 +178,19 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         this.lastOperate = type_ting;
         operateList.add(type_ting);
         this.gameInfo.addUserOperate(this.userId, type_ting);
+    }
+
+    /**
+     * 亮
+     * @param cardType
+     * @param cards
+     */
+    public void liang(int cardType, List<String> cards) {
+        this.xuanfengDan.put(cardType, cards);
+        this.lastOperate = type_xuanfengdan;
+        operateList.add(type_xuanfengdan);
+        this.gameInfo.addUserOperate(this.userId, type_xuanfengdan);
+
     }
 
     /**
@@ -1319,6 +1333,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     public PlayerCardsInfoMj setTingWhatInfo(List<HuCardType> tingWhatInfo) {
         this.tingWhatInfo = tingWhatInfo;
+        return this;
+    }
+
+    public boolean isCanBeBufeng() {
+        return canBeBufeng;
+    }
+
+    public PlayerCardsInfoMj setCanBeBufeng(boolean canBeBufeng) {
+        this.canBeBufeng = canBeBufeng;
         return this;
     }
 }

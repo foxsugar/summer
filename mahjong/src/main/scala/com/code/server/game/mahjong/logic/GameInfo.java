@@ -534,6 +534,7 @@ public class GameInfo extends Game {
         playerCardsInfo.setCanBeChiTing(false);
         playerCardsInfo.setCanBePengTing(false);
         playerCardsInfo.setCanBeXuanfeng(false);
+        playerCardsInfo.setCanBeBufeng(false);
     }
 
     protected void resetOtherOperate(long userId) {

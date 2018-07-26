@@ -70,7 +70,7 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         AgentBean agentBean = getAgentBean(agentId);
         if (agentBean != null) {
             if (cost > 0) {
-                if (agentBean.getAgentInfo().getEveryDayRebate() == null) {
+                if (agentBean.getAgentInfo().getEveryDayCost() == null) {
                     agentBean.getAgentInfo().setEveryDayCost(new HashMap<>());
                 }
                 ChildCost childCost = agentBean.getAgentInfo().getEveryDayCost().getOrDefault(date, new ChildCost());
@@ -257,24 +257,25 @@ public class AgentRedisService implements IAgentRedis, IConstant {
 
         String today = LocalDate.now().toString();
         String deleteDay = LocalDate.now().minusDays(7).toString();
+        String deleteDay1 = LocalDate.now().minusDays(90).toString();
         double allRebate = 0;
         if (agentId1 != 0) {
             double n = scala1 * num / 100;
             allRebate += n;
             addRebate(agentId1, n,today,deleteDay);
-            addChildCost(agentId1,childCost,1,today, deleteDay);
+            addChildCost(agentId1,childCost,1,today, deleteDay1);
         }
         if (agentId2 != 0) {
             double n = scala2 * num / 100;
             allRebate += n;
             addRebate(agentId2, n,today,deleteDay);
-            addChildCost(agentId1,childCost,2,today, deleteDay);
+            addChildCost(agentId1,childCost,2,today, deleteDay1);
         }
         if (agentId3 != 0) {
             double n = scala3 * num / 100;
             allRebate += n;
             addRebate(agentId3, n,today,deleteDay);
-            addChildCost(agentId1,childCost,3,today, deleteDay);
+            addChildCost(agentId1,childCost,3,today, deleteDay1);
         }
 
         //合伙人 10%
@@ -282,7 +283,7 @@ public class AgentRedisService implements IAgentRedis, IConstant {
             double n = 10 * num / 100;
             allRebate += n;
             addRebate(partnerId, n,today,deleteDay);
-            addChildCost(agentId1,childCost,0,today, deleteDay);
+            addChildCost(agentId1,childCost,0,today, deleteDay1);
         }
 
         if (type == 0) {

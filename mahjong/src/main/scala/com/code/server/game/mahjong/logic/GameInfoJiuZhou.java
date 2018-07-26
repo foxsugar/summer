@@ -1,7 +1,5 @@
 package com.code.server.game.mahjong.logic;
 
-import com.code.server.game.mahjong.logic.GameInfo;
-
 //
 //
 //import com.code.server.game.mahjong.response.*;
