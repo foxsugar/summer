@@ -319,22 +319,27 @@ public class Demo {
 	}
 
 	public static void main(String[] args) {
-		Player p1 = new Player(1l, "HEI", "A", "HEI", "A", "HEI", "A");
-		Player p2 = new Player(2l, "HONG", "2", "HONG", "3", "HONG", "4");
-//		Player p3 = new Player(3, "HUA", "2", "HUA", "3", "PIAN", "5");
-		Player p4 = new Player(4l, "HUA", "7", "HUA", "7", "PIAN", "7");
+//		Player p1 = new Player(1l, "HEI", "J", "HEI", "A", "HEI", "A");
+//		Player p2 = new Player(2l, "HONG", "2", "HONG", "3", "HONG", "4");
+////		Player p3 = new Player(3, "HUA", "2", "HUA", "3", "PIAN", "5");
+//		Player p4 = new Player(4l, "HUA", "7", "HUA", "7", "PIAN", "7");
+//
+//		ArrayList<Player> li = Player.findWinners(p1, p2, p4);
+//
+//		for(Player p : li){
+//			System.out.println(p);
+//		}
+//
+//		System.out.println("====================");
+//		System.out.println(p1.getCategory());
+//		System.out.println(p1.getCategory().toString());
 
-		ArrayList<Player> li = Player.findWinners(p1, p2, p4);
 
-		for(Player p : li){
-			System.out.println(p);
-		}
+		Player p1 = new Player(1l, "HEI", "J", "HONG", "J", "HUA", "3");
+		Player p2 = new Player(2l, "HUA", "J", "PIAN", "J", "HEI", "5");
 
-		System.out.println("====================");
-		System.out.println(p1.getCategory());
-		System.out.println(p1.getCategory().toString());
-
-
+		ArrayList<Player> aList = Player.findWinners(p1, p2);
+		System.out.println(aList);
 
 		Player asker = new Player(222L, ListUtils.cardCode.get(20), ListUtils.cardCode.get(16), ListUtils.cardCode.get(44));
 		Player accepter = new Player(333L, ListUtils.cardCode.get(40), ListUtils.cardCode.get(24), ListUtils.cardCode.get(36));
