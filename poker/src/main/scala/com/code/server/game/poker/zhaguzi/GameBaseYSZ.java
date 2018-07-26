@@ -1061,6 +1061,11 @@ public class GameBaseYSZ extends Game {
 
         Map<String, Object> result = new HashMap<>();
         result.put("winList", winList);
+        boolean showing = getMaxRoundNumberB() && aliveUser.size() > 1;
+        result.put("showing", showing);
+        if (showing){
+            logger.info("......15轮之后比牌");
+        }
         ResponseVo vo = new ResponseVo("gameService", "campareAllCards", result);
         MsgSender.sendMsg2Player(vo, users);
 
