@@ -82,6 +82,7 @@ public class CenterMsgService implements IkafkaMsgId {
     }
 
     private static void getRoomClubByUser(String msg) {
+        System.out.println("center : getRoomClubByUser" );
         JsonNode jsonNode = JsonUtil.readTree(msg);
 
         Map<String, Object> map = JsonUtil.readValue(msg, new TypeReference<HashMap<String, Object>>() {});
@@ -91,6 +92,7 @@ public class CenterMsgService implements IkafkaMsgId {
         List<String> clubs = ClubManager.getInstance().getUserClubs(userId);
         map.put("clubs", clubs);
 
+        System.out.println("send ===============");
         GameClubService.sendMsg2Player(new ResponseVo("roomService","getRoomClubByUser",map),userId);
 
     }
