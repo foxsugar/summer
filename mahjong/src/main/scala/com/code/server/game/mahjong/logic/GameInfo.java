@@ -56,7 +56,7 @@ public class GameInfo extends Game {
     protected String jieGangHuCard = null;
     protected long beJieGangUser = -1;
 
-    protected List<String> jieXuanfengCard = null;
+    protected String jieXuanfengCard = null;
     protected long beJieXuanfengUser = -1;
     protected long jieXuanfengCardType = -1;
 
@@ -1696,11 +1696,12 @@ public class GameInfo extends Game {
         return this;
     }
 
-    public List<String> getJieXuanfengCard() {
+
+    public String getJieXuanfengCard() {
         return jieXuanfengCard;
     }
 
-    public GameInfo setJieXuanfengCard(List<String> jieXuanfengCard) {
+    public GameInfo setJieXuanfengCard(String jieXuanfengCard) {
         this.jieXuanfengCard = jieXuanfengCard;
         return this;
     }

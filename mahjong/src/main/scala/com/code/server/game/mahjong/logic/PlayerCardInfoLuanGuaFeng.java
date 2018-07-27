@@ -30,9 +30,32 @@ public class PlayerCardInfoLuanGuaFeng extends  PlayerCardsInfoMj{
         return true;
     }
 
+    @Override
+    public boolean isHasChi(String card) {
+        return false;
+    }
+
+    @Override
+    public void init(List<String> cards) {
+        super.init(cards);
+    }
+
+    @Override
+    public boolean isCanTing(List<String> cards) {
+        return false;
+    }
+
     private boolean isCanLiang(){
+        System.out.println("card num : " + cards.size());
         int opSize = this.operateList.size();
 
+        int size = 0;
+        for (String c : this.cards) {
+            if (isFeng(c) || isHun(c)) {
+                size += 1;
+            }
+        }
+        System.out.println("size : " + size);
         if(opSize == 1 && this.operateList.get(opSize - 1) == type_mopai){
             return this.cards.stream().filter(card->isFeng(card) || isHun(card)).count() >= 3;
         }

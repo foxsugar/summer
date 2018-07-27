@@ -12,6 +12,7 @@ public class OperateResp {
     private boolean isCanChiTing;
     private boolean isCanPengTing;
     private boolean isCanXuanfengDan;
+    private boolean isCanBufeng;
 
 
     public void setCanBeOperate(boolean chi,boolean peng,boolean gang,boolean ting,boolean hu,boolean chiTing,boolean pengTing){
@@ -89,6 +90,15 @@ public class OperateResp {
 
     public OperateResp setCanXuanfengDan(boolean canXuanfengDan) {
         isCanXuanfengDan = canXuanfengDan;
+        return this;
+    }
+
+    public boolean isCanBufeng() {
+        return isCanBufeng;
+    }
+
+    public OperateResp setCanBufeng(boolean canBufeng) {
+        isCanBufeng = canBufeng;
         return this;
     }
 }
