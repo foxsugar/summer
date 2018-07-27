@@ -14,6 +14,22 @@ public class GameInfoLuanGuaFeng extends GameInfoNew {
 
 
     @Override
+    public void init(int gameId, long firstTurn, List<Long> users, RoomInfo room) {
+        this.gameId = gameId;
+
+        this.firstTurn = firstTurn;
+        this.turnId = firstTurn;
+        remainCards.addAll(CardTypeUtil.ALL_CARD);
+        this.users.addAll(users);
+        this.room = room;
+        this.cardSize = 13;
+        this.playerSize = room.getPersonNumber();
+        initHun();
+        //不带风
+        fapai();
+    }
+
+    @Override
     protected void mopai(long userId, String... wz) {
         logger.info("摸牌: " + userId);
         PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
@@ -56,7 +72,7 @@ public class GameInfoLuanGuaFeng extends GameInfoNew {
         boolean isCanGang = playerCardsInfo.isHasGang();
         boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);//多一张
         boolean isCanHu = playerCardsInfo.isCanHu_zimo(catchCard);
-        boolean isCanXuanfeng = playerCardsInfo.isCanBeXuanfeng();
+        boolean isCanXuanfeng = playerCardsInfo.isHasXuanfengDan(playerCardsInfo.cards, card);
 
         //能做的操作
         playerCardsInfo.setCanBeGang(isCanGang);

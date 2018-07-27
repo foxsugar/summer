@@ -524,6 +524,9 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         return false;
     }
 
+    public boolean isCanBufeng(String card){
+        return false;
+    }
 
     protected void setCanBeOperate(boolean chi, boolean peng, boolean gang, boolean ting, boolean hu, boolean chiTing, boolean pengTing) {
         this.canBeChi = chi;
