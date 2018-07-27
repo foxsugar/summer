@@ -4,6 +4,7 @@ import org.junit.Test;
 
 public class PlayerPullMiceTest {
 
+    PlayerPullMiceTest self = this;
     @Test
     public void toVo() {
 
@@ -13,6 +14,11 @@ public class PlayerPullMiceTest {
         playerPullMice.setPxId(2);
         PlayerPullMiceVo vo = (PlayerPullMiceVo) playerPullMice.toVo();
         System.out.println(vo);
+        self.testSelf();
+    }
+
+    public void testSelf(){
+        System.out.println("我就想用self");
     }
 
 }

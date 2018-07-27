@@ -8,10 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +28,20 @@ public class TuiTongTongCardUtilsTest {
         PlayerTuiTongZi pB = new PlayerTuiTongZi(2, 32, 28);
         Boolean ret = TuiTongTongCardUtils.zhuangIsBiggerThanXian(pB, pA);
         Assert.assertNotEquals(false, ret);
+
+        TuiTongTongCardUtilsTest self = this;
+    }
+
+    @Test
+    public void dateTest(){
+
+        String today = DateUtil.convert2DayString(new Date());
+        System.out.println(today);
+
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("a", 1);
+        System.out.println(rs.get("b"));
+        System.out.println("xxx");
     }
 
     @Test
