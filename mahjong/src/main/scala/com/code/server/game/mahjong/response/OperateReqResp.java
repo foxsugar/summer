@@ -18,6 +18,7 @@ public class OperateReqResp {
     public static final int type_mopai = 10;
     public static final int type_play = 11;
     public static final int type_yipaoduoxiang = 12;//一炮多响
+    public static final int type_bufeng = 13;//一炮多响
 
 
 

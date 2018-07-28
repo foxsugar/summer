@@ -36,13 +36,11 @@ public class HomeAction {
     @AuthChecker
     @RequestMapping("/show")
     public AgentResponse showHomePage(){
-
+        logger.info("==========/home/show/");
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         long agentId = AgentUtil.getAgentByRequest(request);
-
-        logger.info("------");
-        logger.info("agent Id:是{}", agentId);
+        logger.info("/home/show/ ===============================agent Id:是{}", agentId);
 
         HomePageVo homePageVo = homeService.showHomePage(agentId);
         Map<String, Object> rs = new HashMap<>();

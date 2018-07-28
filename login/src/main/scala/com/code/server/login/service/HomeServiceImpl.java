@@ -1,5 +1,7 @@
 package com.code.server.login.service;
 
+import com.code.server.constant.db.AgentInfo;
+import com.code.server.constant.db.ChildCost;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.db.dao.IChargeDao;
 import com.code.server.db.dao.IGameAgentDao;
@@ -11,6 +13,7 @@ import com.code.server.login.action.AgentAction;
 import com.code.server.login.vo.HomeChargeVo;
 import com.code.server.login.vo.HomePageVo;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +24,7 @@ import scala.Char;
 
 import javax.persistence.criteria.*;
 import java.awt.print.Pageable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by dajuejinxian on 2018/5/8.
@@ -58,6 +58,17 @@ public class HomeServiceImpl implements HomeService{
         HomeChargeVo homeChargeVo = todayChargeService.showCharge(agentId);
         String total = homeChargeVo.getTotal();
         homePageVo.setTotalMoney((Double.parseDouble(homeChargeVo.getTotalGold()) + Double.parseDouble(total) + ""));
+        //收益
+        AgentInfo agentInfo = agentBean.getAgentInfo();
+        String today = DateUtil.convert2DayString(new Date());
+        Map<String, ChildCost> everyDayCos = agentInfo.getEveryDayCost();
+        ChildCost childCost = everyDayCos.get(today);
+        if (childCost != null){
+            homePageVo.setFirstLevel(childCost.getFirstLevel());
+            homePageVo.setSecondLevel(childCost.getSecondLevel());
+            homePageVo.setThirdLevel(childCost.getThirdLevel());
+            homePageVo.setAllCost(childCost.getFirstLevel() + childCost.getSecondLevel() + childCost.getThirdLevel());
+        }
         return homePageVo;
     }
 

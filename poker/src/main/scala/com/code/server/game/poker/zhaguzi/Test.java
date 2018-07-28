@@ -320,26 +320,31 @@ public class Test {
 		System.out.println(p1.getCategory().toString());
 	}
 
+
+
 	public static void main(String[] args) {
-		Player p1 = new Player(1l, "HEI", "A", "HEI", "A", "HEI", "A");
-		Player p2 = new Player(2l, "HONG", "2", "HONG", "3", "HONG", "4");
-//		Player p3 = new Player(3, "HUA", "2", "HUA", "3", "PIAN", "5");
-		Player p4 = new Player(4l, "HUA", "7", "HUA", "7", "PIAN", "7");
+//		Player p1 = new Player(1l, "HEI", "A", "HEI", "A", "HEI", "A");
+//		Player p2 = new Player(2l, "HONG", "2", "HONG", "3", "HONG", "4");
+////		Player p3 = new Player(3, "HUA", "2", "HUA", "3", "PIAN", "5");
+//		Player p4 = new Player(4l, "HUA", "7", "HUA", "7", "PIAN", "7");
+//
+//		ArrayList<Player> li = Player.findWinners(p1, p2, p4);
+//
+//		for(Player p : li){
+//			System.out.println(p);
+//		}
+//
+//		System.out.println("====================");
+//		System.out.println(p1.getCategory());
+//		System.out.println(p1.getCategory().toString());
 
-		ArrayList<Player> li = Player.findWinners(p1, p2, p4);
-
-		for(Player p : li){
-			System.out.println(p);
-		}
-
-		System.out.println("====================");
-		System.out.println(p1.getCategory());
-		System.out.println(p1.getCategory().toString());
 
 
+//		Player asker = new Player(222L, ArrUtils.cardCode.get(20), ArrUtils.cardCode.get(16), ArrUtils.cardCode.get(44));
+//		Player accepter = new Player(333L, ArrUtils.cardCode.get(40), ArrUtils.cardCode.get(24), ArrUtils.cardCode.get(36));
 
-		Player asker = new Player(222L, ArrUtils.cardCode.get(20), ArrUtils.cardCode.get(16), ArrUtils.cardCode.get(44));
-		Player accepter = new Player(333L, ArrUtils.cardCode.get(40), ArrUtils.cardCode.get(24), ArrUtils.cardCode.get(36));
+		Player asker = new Player(1l, "PIAN", "9", "HEI", "8", "HUA", "9");
+		Player accepter = new Player(2l, "PIAN", "2", "PIAN", "10", "HUA", "5");
 
 		ArrayList<Player> winnerList = Player.findWinners(asker,accepter);
 

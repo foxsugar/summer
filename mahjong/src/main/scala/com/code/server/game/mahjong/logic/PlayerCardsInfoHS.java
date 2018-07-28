@@ -131,6 +131,7 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
             if (isGangKai()) {
                 score *= 6;
                 this.winType.add(hu_杠上开花);
+                this.fan = 3;
             } else {
                 score *= 2;
             }
@@ -156,6 +157,7 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
             //截杠胡 输三倍
             if (isJieGangHu) {
                 score *= 9;
+                this.fan *= 3;
             } else { //普通点炮 输两倍
                 score *= 3;
             }

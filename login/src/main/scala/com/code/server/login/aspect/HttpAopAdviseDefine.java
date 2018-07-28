@@ -53,7 +53,7 @@ public class HttpAopAdviseDefine {
             return new AgentResponse(1000, rs);
         };
 
-//        logger.info("----------map is -- {}", map);
+        logger.info("----------map is -- {}", map);
         return joinPoint.proceed();
     }
 

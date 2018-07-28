@@ -2,7 +2,10 @@ package com.code.server.game.mahjong.logic;
 
 
 import com.code.server.constant.response.IfacePlayerInfoVo;
-import com.code.server.game.mahjong.util.*;
+import com.code.server.game.mahjong.util.HuCardType;
+import com.code.server.game.mahjong.util.HuLimit;
+import com.code.server.game.mahjong.util.HuType;
+import com.code.server.game.mahjong.util.HuUtil;
 import com.code.server.game.room.PlayerCardInfo;
 
 import java.util.*;
@@ -19,6 +22,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     public static final int type_play = 6;
     public static final int type_chi = 7;
     public static final int type_xuanfengdan = 8;
+    public static final int type_bufeng = 9;
 
 
     protected List<String> cards = new ArrayList<>();//手上的牌
@@ -49,6 +53,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     protected boolean canBeChiTing;
     protected boolean canBePengTing;
     protected boolean canBeXuanfeng;
+    protected boolean canBeBufeng;
 
 
     protected Map<Integer, Integer> specialHuScore = new HashMap<>();
@@ -177,6 +182,19 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         this.lastOperate = type_ting;
         operateList.add(type_ting);
         this.gameInfo.addUserOperate(this.userId, type_ting);
+    }
+
+    /**
+     * 亮
+     * @param cardType
+     * @param cards
+     */
+    public void liang(int cardType, List<String> cards) {
+        this.xuanfengDan.put(cardType, cards);
+        this.lastOperate = type_xuanfengdan;
+        operateList.add(type_xuanfengdan);
+        this.gameInfo.addUserOperate(this.userId, type_xuanfengdan);
+
     }
 
     /**
@@ -406,6 +424,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     }
 
 
+
     /**
      * 是否可以胡这张牌
      *
@@ -510,6 +529,9 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         return false;
     }
 
+    public boolean isCanBufeng(String card){
+        return false;
+    }
 
     protected void setCanBeOperate(boolean chi, boolean peng, boolean gang, boolean ting, boolean hu, boolean chiTing, boolean pengTing) {
         this.canBeChi = chi;
@@ -654,6 +676,13 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         return isMing;
     }
 
+    public void bu_feng(RoomInfo roomInfo, GameInfo gameInfo, String card) {
+        List<String> cards = this.xuanfengDan.get(0);
+        cards.add(card);
+        operateList.add(type_bufeng);
+        this.gameInfo.addUserOperate(this.userId, type_bufeng);
+    }
+
     /**
      * 杠弃牌
      *
@@ -662,11 +691,9 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
      * @return
      */
     public boolean gang_discard(RoomInfo room, GameInfo gameInfo, long diangangUser, String disCard) {
-
         this.cards.add(disCard);
         int cardType = CardTypeUtil.cardType.get(disCard);
         mingGangType.put(cardType, diangangUser);
-
         gangCompute(room, gameInfo, true, diangangUser, disCard);
 
         return false;
@@ -1319,6 +1346,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     public PlayerCardsInfoMj setTingWhatInfo(List<HuCardType> tingWhatInfo) {
         this.tingWhatInfo = tingWhatInfo;
+        return this;
+    }
+
+    public boolean isCanBeBufeng() {
+        return canBeBufeng;
+    }
+
+    public PlayerCardsInfoMj setCanBeBufeng(boolean canBeBufeng) {
+        this.canBeBufeng = canBeBufeng;
         return this;
     }
 }

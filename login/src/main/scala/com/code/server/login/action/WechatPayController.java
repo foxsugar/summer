@@ -490,6 +490,7 @@ public class WechatPayController {
                                     msgKey.setRoomId(roomId);
                                     int partitionId = Integer.valueOf(serverId);
                                     msgKey.setPartition(partitionId);
+                                    msgKey.setUserId(userId);
                                     MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
 
                                     ResponseVo responseVo = new ResponseVo();
@@ -506,7 +507,7 @@ public class WechatPayController {
                             //扣6%的税
                             if (charge.getChargeType() == 0) {
                                 double num = charge.getMoney() * 94 / 100;
-                                RedisManager.getAgentRedisService().addRebate(userId, referee, charge.getChargeType(), num);
+                                RedisManager.getAgentRedisService().addRebate(userId, referee, charge.getChargeType(), num,0);
                             }
                         }
 
@@ -525,6 +526,44 @@ public class WechatPayController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    @RequestMapping(value = "testPay")
+    public void testPay(HttpServletRequest request){
+//
+//        long userId = Long.valueOf(request.getParameter("userId"));
+//        int money = Integer.valueOf(request.getParameter("money"));
+//        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+//        RedisManager.getInstance().addGold(userId, money);
+//
+//
+//
+//
+//        Map<String, String> rs = new HashMap<>();
+//        MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), userId);
+//
+//        String roomId = RedisManager.getUserRedisService().getRoomId(userId);
+//        if (roomId != null) {
+//            String serverId = RedisManager.getRoomRedisService().getServerId(roomId);
+//            if (serverId != null) {
+//
+//                KafkaMsgKey msgKey = new KafkaMsgKey();
+//                msgKey.setRoomId(roomId);
+//                int partitionId = Integer.valueOf(serverId);
+//                msgKey.setPartition(partitionId);
+//                msgKey.setUserId(userId);
+//                MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+//
+//                ResponseVo responseVo = new ResponseVo();
+//                responseVo.setService("roomService");
+//                responseVo.setMethod("pushScoreChange");
+//                responseVo.setParams("inner");
+//                msgProducer.send2Partition("roomService", partitionId, msgKey, responseVo);
+//
+//            }
+//        }
+
     }
 
     private void agentRebate(long userId, long parentId) {

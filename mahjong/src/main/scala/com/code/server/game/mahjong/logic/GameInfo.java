@@ -56,7 +56,7 @@ public class GameInfo extends Game {
     protected String jieGangHuCard = null;
     protected long beJieGangUser = -1;
 
-    protected List<String> jieXuanfengCard = null;
+    protected String jieXuanfengCard = null;
     protected long beJieXuanfengUser = -1;
     protected long jieXuanfengCardType = -1;
 
@@ -166,6 +166,15 @@ public class GameInfo extends Game {
 
     }
 
+
+    public void initHun(){
+        Random rand = new Random();
+        int hunIndex = 0;
+        hunIndex = rand.nextInt(34);
+        this.hun.add(hunIndex);
+    //通知混
+        MsgSender.sendMsg2Player("gameService", "noticeHun", this.hun, users);
+    }
 
     /**
      * 荒庄的处理
@@ -534,6 +543,7 @@ public class GameInfo extends Game {
         playerCardsInfo.setCanBeChiTing(false);
         playerCardsInfo.setCanBePengTing(false);
         playerCardsInfo.setCanBeXuanfeng(false);
+        playerCardsInfo.setCanBeBufeng(false);
     }
 
     protected void resetOtherOperate(long userId) {
@@ -1686,11 +1696,12 @@ public class GameInfo extends Game {
         return this;
     }
 
-    public List<String> getJieXuanfengCard() {
+
+    public String getJieXuanfengCard() {
         return jieXuanfengCard;
     }
 
-    public GameInfo setJieXuanfengCard(List<String> jieXuanfengCard) {
+    public GameInfo setJieXuanfengCard(String jieXuanfengCard) {
         this.jieXuanfengCard = jieXuanfengCard;
         return this;
     }

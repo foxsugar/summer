@@ -294,6 +294,7 @@ object PokerRoomService {
         RoomManager.addRoom(room.getRoomId, "" + serverId, room)
       }
       MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "joinGoldRoom", room.toVo(userId)), userId)
+      room.getReady(userId)
     }
     0
   }

@@ -19,8 +19,9 @@ public class RoomYSZVo extends RoomVo{
         return bankerId;
     }
 
-    public void setBankerId(long bankerId) {
+    public RoomYSZVo setBankerId(long bankerId) {
         this.bankerId = bankerId;
+        return this;
     }
 
     public double getCaiFen() {

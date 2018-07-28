@@ -10,6 +10,8 @@ public class AgentInfo {
 
     private double allRebate;
     private Map<String, Double> everyDayRebate = new HashMap<>();
+    private Map<String, ChildCost> everyDayCost = new HashMap<>();
+    private Map<String, PartnerRebate> everyPartnerRebate = new HashMap<>();
 
     public double getAllRebate() {
         return allRebate;
@@ -26,6 +28,24 @@ public class AgentInfo {
 
     public AgentInfo setEveryDayRebate(Map<String, Double> everyDayRebate) {
         this.everyDayRebate = everyDayRebate;
+        return this;
+    }
+
+    public Map<String, ChildCost> getEveryDayCost() {
+        return everyDayCost;
+    }
+
+    public AgentInfo setEveryDayCost(Map<String, ChildCost> everyDayCost) {
+        this.everyDayCost = everyDayCost;
+        return this;
+    }
+
+    public Map<String, PartnerRebate> getEveryPartnerRebate() {
+        return everyPartnerRebate;
+    }
+
+    public AgentInfo setEveryPartnerRebate(Map<String, PartnerRebate> everyPartnerRebate) {
+        this.everyPartnerRebate = everyPartnerRebate;
         return this;
     }
 }

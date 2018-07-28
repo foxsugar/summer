@@ -8,6 +8,7 @@ import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.DateUtil;
 import com.code.server.util.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -210,9 +211,8 @@ public class GameBaseYSZ extends Game {
 
         result.put("zhuList", this.getGenZhuList());
         result.put("maxBet", this.MAX_BET_NUM);
-
         logger.info("==============:{}", result);
-
+        result.put("users", this.users);
         ResponseVo vo = new ResponseVo("gameService", "mustBet", result);
         MsgSender.sendMsg2Player(vo, users);
 
@@ -343,10 +343,25 @@ public class GameBaseYSZ extends Game {
         return 0;
     }
 
+    public boolean check(long userId){
+
+        if (curUserId != userId){
+            logger.info(userId + "  重复操作");
+
+            return false;
+        }
+
+        return true;
+    }
+
     public int fold(long userId) {
 
         logger.info(userId + "  foldddd!!!");
 
+        if (check(userId) == false){
+
+            return ErrorCode.NOT_YOU_TURN;
+        }
 
         Map<String, Object> result = new HashMap<>();
         result.put("userId", userId);
@@ -384,6 +399,10 @@ public class GameBaseYSZ extends Game {
 
     public int see(long userId) {
 
+        if (check(userId) == false){
+            return ErrorCode.NOT_YOU_TURN;
+        }
+
         logger.info(userId + "  看 牌" + playerCardInfos.get(userId).getHandcards());
 
         if (playerCardInfos.get(userId).getCurRoundNumber() <= room.getMenPai()) {
@@ -417,6 +436,11 @@ public class GameBaseYSZ extends Game {
      * @return
      */
     public int kill(long askerId, long accepterId) {
+
+        if (check(askerId) == false){
+
+            return ErrorCode.NOT_YOU_TURN;
+        }
 
         logger.info(askerId + "  比 牌: " + chip);
 
@@ -956,6 +980,8 @@ public class GameBaseYSZ extends Game {
      * 发牌
      */
     protected void deal() {
+
+        logger.info("发牌时间是========{}===={}",System.currentTimeMillis(), DateUtil.timeStampToTimeString(System.currentTimeMillis()));
         for (PlayerYSZ playerCardInfo : playerCardInfos.values()) {
             for (int i = 0; i < INIT_CARD_NUM; i++) {
                 playerCardInfo.handcards.add(cards.remove(0));
@@ -1021,8 +1047,35 @@ public class GameBaseYSZ extends Game {
         for (Player p : winnerList) {
             winList.add(p.getUid());
         }
+
+        //按照座位号对winList 排序
+        long winnerId = 0;
+        for (long uid : users){
+            for (long winId : winList){
+                if (uid == winId){
+                    winnerId = uid;
+                    break;
+                }
+            }
+        }
+
+        winList.clear();
+        winList.add(winnerId);
+
         Map<String, Object> result = new HashMap<>();
         result.put("winList", winList);
+
+        List<Long> loserList = new ArrayList<>();
+        for (Long uid : aliveUser){
+            if (winList.contains(uid)) continue;
+            loserList.add(uid);
+        }
+        result.put("loserList", loserList);
+        boolean showing = getMaxRoundNumberB() && aliveUser.size() > 1;
+        result.put("showing", showing);
+        if (showing){
+            logger.info("......15轮之后比牌");
+        }
         ResponseVo vo = new ResponseVo("gameService", "campareAllCards", result);
         MsgSender.sendMsg2Player(vo, users);
 

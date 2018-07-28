@@ -77,7 +77,7 @@ public class RoomExtendGold extends Room {
                 RedisManager.getUserRedisService().addUserGold(userId, -cost);
                 //返利
                 UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-                RedisManager.getAgentRedisService().addRebate(userId, userBean.getReferee(), 1, cost / 100);
+                RedisManager.getAgentRedisService().addRebate(userId, userBean.getReferee(), 1, cost / 100,cost);
             }
             //
             RedisManager.getLogRedisService().addGoldIncome(getGameLogKeyStr(), cost * users.size());
@@ -151,7 +151,7 @@ public class RoomExtendGold extends Room {
                 return ErrorCode.CANNOT_QUIT_ROOM_NOT_EXIST;
             }
 
-            if (isInGame) {
+            if (isInGame && this.game.users.contains(userId)) {
                 return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME;
             }
 
