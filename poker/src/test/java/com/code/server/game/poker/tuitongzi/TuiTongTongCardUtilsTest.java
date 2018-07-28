@@ -8,6 +8,9 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,6 +53,68 @@ public class TuiTongTongCardUtilsTest {
 //        CardUtils.string2Local("'",)
         HashMap map = new HashMap();
 
+
+    }
+
+    @Test
+    public void demo(){
+        Date date = new Date();
+        Instant instant = date.toInstant();
+        ZoneId zoneId = ZoneId.systemDefault();
+
+        // atZone()方法返回在指定时区从此Instant生成的ZonedDateTime。
+        LocalDate localDate = instant.atZone(zoneId).toLocalDate();
+        System.out.println("Date = " + date);
+        System.out.println("LocalDate = " + localDate);
+    }
+
+//    @Test
+    public void dateToLocalDate(Date date){
+        Instant instant = date.toInstant();
+        ZoneId zoneId = ZoneId.systemDefault();
+        // atZone()方法返回在指定时区从此Instant生成的ZonedDateTime。
+        LocalDate localDate = instant.atZone(zoneId).toLocalDate();
+        System.out.println("Date = " + date);
+        System.out.println("LocalDate = " + localDate);
+    }
+
+    @Test
+    public void previousDay(){
+        Date date = new Date();
+        Instant instant = date.toInstant();
+        ZoneId zoneId = ZoneId.systemDefault();
+        // atZone()方法返回在指定时区从此Instant生成的ZonedDateTime。
+        LocalDate localDate = instant.atZone(zoneId).toLocalDate();
+        LocalDate ll = localDate.plusDays(-2);
+        System.out.println("LocalDate = " + ll);
+    }
+
+    @Test
+    public void testLocalDate(){
+        String e = "2018-01-23";
+        String s = "2018-07-24";
+
+        List<String> list = DateUtil.getDateListIn(s, e);
+        System.out.println(list);
+        System.out.println("==");
+//        testDate(null, null);
+    }
+    public void testDate(String current, String end){
+
+        current = DateUtil.getPreviousDay("2018-07-25");
+        end = DateUtil.getPreviousDay("2018-07-01");
+//        System.out.println(current);
+        List<String> list = new ArrayList<>();
+        list.add(current);
+        for (int i = 1; i < 90; i++){
+            current = DateUtil.getPreviousDay(current);
+            if (current.equals(end)){
+                break;
+            }
+            list.add(current);
+        }
+        System.out.println("======");
+        System.out.println(list);
 
     }
 

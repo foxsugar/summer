@@ -1,11 +1,16 @@
 package com.code.server.login.action;
+import com.code.server.constant.db.AgentInfo;
+import com.code.server.constant.db.ChildCost;
+import com.code.server.constant.game.AgentBean;
 import com.code.server.db.dao.IChargeDao;
 import com.code.server.login.anotation.AuthChecker;
 import com.code.server.login.service.TodayChargeService;
 import com.code.server.login.service.TodayChargeServiceImpl;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.vo.*;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.DateUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,10 +18,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by dajuejinxian on 2018/5/14.
@@ -190,6 +192,44 @@ public class TodayChargeAction {
         Map<String, Object> result = new HashMap<>();
         result.put("result", threeLevelVo);
         AgentResponse agentResponse = new AgentResponse(200, result);
+        return agentResponse;
+    }
+
+    @AuthChecker
+    @RequestMapping("/dCost")
+    public AgentResponse showCost(String start, String end){
+
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        long agentId = AgentUtil.getAgentByRequest(request);
+        List<String> list = DateUtil.getDateListIn(end, start);
+        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+        AgentInfo agentInfo = agentBean.getAgentInfo();
+        List<DChildCostVo> li = new ArrayList<>();
+
+        double oneLevel = 0d;
+        double twoLevel = 0d;
+        double threeLevel = 0d;
+        for (String dateStr : list){
+            ChildCost childCost = agentInfo.getEveryDayCost().get(dateStr);
+            DChildCostVo dChildCostVo = new DChildCostVo();
+            if (childCost != null){
+                BeanUtils.copyProperties(childCost, dChildCostVo);
+            }
+            dChildCostVo.setDateStr(dateStr);
+            li.add(dChildCostVo);
+            oneLevel += dChildCostVo.getFirstLevel();
+            twoLevel += dChildCostVo.getSecondLevel();
+            threeLevel += dChildCostVo.getThirdLevel();
+        }
+        double total = oneLevel + twoLevel + threeLevel;
+        Map<String, Object> result = new HashMap<>();
+        result.put("li", li);
+        result.put("total", total);
+        result.put("oneLevel", oneLevel);
+        result.put("twoLevel", twoLevel);
+        result.put("threeLevel", threeLevel);
+        AgentResponse agentResponse = new AgentResponse(200, request);
         return agentResponse;
     }
 

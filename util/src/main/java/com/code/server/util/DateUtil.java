@@ -2,12 +2,11 @@ package com.code.server.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 /**
  * Created by sunxianping on 2017/9/1.
@@ -104,4 +103,47 @@ public final class DateUtil {
             return null;
         }
     }
+
+    //获得前一天的日期
+    public static String getPreviousDay(String currentDay){
+        Date date = convertDay2Date(currentDay);
+        LocalDate localDate = previousDay(date, -1);
+//        String ret = localDate.toString().replace("LocalDate = ", "");
+//        return ret;
+        return localDate.toString();
+    }
+
+    public static LocalDate previousDay(Date date,int offset){
+        Instant instant = date.toInstant();
+        ZoneId zoneId = ZoneId.systemDefault();
+        // atZone()方法返回在指定时区从此Instant生成的ZonedDateTime。
+        LocalDate localDate = instant.atZone(zoneId).toLocalDate();
+        LocalDate ll = localDate.plusDays(offset);
+//        System.out.println("LocalDate = " + ll);
+        return ll;
+    }
+
+    public static String timeStampToTimeString(long timeStamp){
+        //long timeStamp = 1495777335060;//直接是时间戳
+//      /获取当前时间戳,也可以是你自已给的一个随机的或是别人给你的时间戳(一定是long型的数据)
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//这个是你要转成后的时间的格式
+        String sd = sdf.format(new Date(timeStamp));   // 时间戳转换成时间
+        System.out.println(sd);//打印出你要的时间
+        return sd;
+    }
+
+    public static List<String> getDateListIn(String current, String end){
+        List<String> list = new ArrayList<>();
+        list.add(current);
+        for (int i = 1; i < 90; i++){
+            current = DateUtil.getPreviousDay(current);
+            if (current.equals(end)){
+                list.add(end);
+                break;
+            }
+            list.add(current);
+        }
+        return list;
+    }
+
 }
