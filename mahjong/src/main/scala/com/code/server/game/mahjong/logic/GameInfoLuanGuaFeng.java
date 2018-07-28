@@ -6,6 +6,7 @@ import com.code.server.game.room.kafka.MsgSender;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2018/7/25.
@@ -73,6 +74,7 @@ public class GameInfoLuanGuaFeng extends GameInfoNew {
         boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);//多一张
         boolean isCanHu = playerCardsInfo.isCanHu_zimo(catchCard);
         boolean isCanXuanfeng = playerCardsInfo.isHasXuanfengDan(playerCardsInfo.cards, card);
+        boolean isCanBufeng = playerCardsInfo.isCanBufeng(card);
 
         //能做的操作
         playerCardsInfo.setCanBeGang(isCanGang);
@@ -80,11 +82,14 @@ public class GameInfoLuanGuaFeng extends GameInfoNew {
         playerCardsInfo.setCanBeHu(isCanHu);
         playerCardsInfo.setCanBeTing(isCanTing);
         playerCardsInfo.setCanBeXuanfeng(isCanXuanfeng);
+        playerCardsInfo.setCanBeBufeng(isCanBufeng);
 
         OperateResp resp = new OperateResp();
         resp.setIsCanGang(isCanGang);
         resp.setIsCanHu(isCanHu);
         resp.setIsCanTing(isCanTing);
+        resp.setCanBufeng(isCanBufeng);
+        resp.setCanXuanfengDan(isCanXuanfeng);
 
         //回放 抓牌
         OperateReqResp operateReqResp = new OperateReqResp();
@@ -101,8 +106,109 @@ public class GameInfoLuanGuaFeng extends GameInfoNew {
 
     public int buFeng(long userId, String card) {
 
+        if (isAlreadyHu) {
+            return ErrorCode.CAN_NOT_GANG;
+        }
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
+        if (playerCardsInfo == null) {
+            return ErrorCode.USER_ERROR;
+        }
+        OperateReqResp operateReqResp = new OperateReqResp();
+        operateReqResp.setOperateType(OperateReqResp.type_bufeng);
+        ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
+
+        if (lastOperateUserId == userId) {
+            //杠手里的牌
+
+            if (!playerCardsInfo.isCanBufeng(card)) {
+                return ErrorCode.CAN_NOT_GANG;
+            }
+            int gangType = CardTypeUtil.getTypeByCard(card);
+            boolean isMing = playerCardsInfo.getPengType().containsKey(gangType);
+            //通知别人有杠
+            //回放
+//            operateReqResp.setFromUserId(userId);
+            operateReqResp.setUserId(userId);
+            operateReqResp.setCard(card);
+//            operateReqResp.setIsMing(isMing);
+            replay.getOperate().add(operateReqResp);
+            //通知所有人有补风
+            MsgSender.sendMsg2Player(vo, users);
+
+            //截杠胡
+            if (isHasJieGangHu && isMing) {
+
+                for (Map.Entry<Long, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
+                    OperateResp operateResp = new OperateResp();
+
+                    //其他玩家的处理 碰杠等 如果有加入等待列表(要等待这些玩家"过")
+                    if (userId != entry.getKey()) {
+                        //通知其他玩家出了什么牌 自己能有什么操作
+                        PlayerCardsInfoMj playerOther = entry.getValue();
+                        boolean isCanHu = false;
+//                        boolean isCanHu = playerOther.isCanHu_dianpao(card);
+                        boolean isCanGang = playerOther.isCanGangAddThisCard(card);
+                        boolean isCanPeng = playerOther.isCanPengAddThisCard(card);
+
+                        if (isHasGuoHu() && playerOther.isGuoHu()) {
+                            isCanHu = false;
+                        } else {
+                            isCanHu = playerCardsInfo.isCanHu_dianpao(card);
+                        }
+                        //设置返回结果
+                        operateResp.setCanBeOperate(false, isCanPeng, isCanGang, false, isCanHu, false, false);
+                        //设置自己能做的操作
+                        playerOther.setCanBeOperate(false, isCanPeng, isCanGang, false, isCanHu, false, false);
+                        boolean isWait = isCanHu|isCanGang|isCanPeng;
+                        if (isWait) {
+                            add2WaitingList(entry.getKey(), isCanHu, isCanGang, isCanPeng, false, false, false);
+                        }
+                    }
+
+                    //可能的操作
+                    ResponseVo OperateVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OPERATE, operateResp);
+                    MsgSender.sendMsg2Player(OperateVo, entry.getKey());
+                }
+
+                //todo 多个截杠胡 是否一炮多响
+            }
+
+            if (this.waitingforList.size() == 0) {
+                doBuFeng(playerCardsInfo, card);
+            } else {
+                this.disCard = card;
+                //排序
+                compare(waitingforList);
+                //出现截杠胡
+                this.beJieGangUser = userId;
+                this.jieGangHuCard = card;
+                this.jieXuanfengCard = card;
+            }
+
+
+        } else {
+//            if (disCard == null || !playerCardsInfo.canBeGang) {
+//                return ErrorCode.CAN_NOT_GANG;
+//            }
+//            boolean isCanGang = playerCardsInfo.isCanGangAddThisCard(disCard);
+//            if (!isCanGang) {
+//                return ErrorCode.CAN_NOT_GANG;
+//            }
+//            handleWait(userId, WaitDetail.gangPoint);
+//            lastOperateUserId = userId;
+        }
+
+
         return 0;
     }
+
+
+    private void doBuFeng(PlayerCardsInfoMj playerCardsInfoMj, String card){
+        playerCardsInfoMj.bu_feng(this.room, this, card);
+
+        mopai(playerCardsInfoMj.getUserId(), "补风");
+    }
+
 
     public int buPai(long userId, int num) {
         List<String> buCards = new ArrayList<>();

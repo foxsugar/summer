@@ -91,6 +91,10 @@ public class GameLogicService {
                 List<String> cards = JsonUtil.readValue(jsonNode.get("cards").toString(), new TypeReference<List<String>>() {});
                 code = liang(roomId, userId,cards);
                 break;
+
+            case "bufeng":
+                code = bufeng(roomId, userId, card);
+                break;
         }
         if (code == 0) {
             MsgSender.sendMsg2Player("gameLogicService",method,code, userId);
@@ -179,6 +183,11 @@ public class GameLogicService {
     public static int liang(String roomId, long userId, List<String> cards) {
         GameInfoLuanGuaFeng gameInfoLuanGuaFeng = (GameInfoLuanGuaFeng) getGameInfo(roomId);
         return gameInfoLuanGuaFeng.liang(userId, cards);
+    }
+
+    public static int bufeng(String roomId, long userId, String card) {
+        GameInfoLuanGuaFeng gameInfoLuanGuaFeng = (GameInfoLuanGuaFeng) getGameInfo(roomId);
+        return gameInfoLuanGuaFeng.buFeng(userId, card);
     }
 
 }

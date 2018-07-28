@@ -1,11 +1,14 @@
 package com.code.server.login.service;
 
 import com.code.server.constant.db.OnlineInfo;
+import com.code.server.constant.db.PartnerRebate;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.UserBean;
+import com.code.server.db.Service.AgentRecordService;
 import com.code.server.db.Service.GameAgentService;
 import com.code.server.db.Service.LogRecordService;
 import com.code.server.db.Service.UserService;
+import com.code.server.db.model.AgentRecords;
 import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.LogRecord;
 import com.code.server.db.model.User;
@@ -26,6 +29,7 @@ import java.util.Set;
  */
 @Service
 public class CenterService {
+
 
 
     public static void work() {
@@ -93,6 +97,51 @@ public class CenterService {
         }
     }
 
+
+    private static void saveAgentRecord(){
+        LocalDate now = LocalDate.now();
+        String date = now.toString();
+        for (String agentIdStr : RedisManager.getAgentRedisService().getSaveAgents()) {
+            long agentId = Long.valueOf(agentIdStr);
+            AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+            AgentRecordService agentRecordService = SpringUtil.getBean(AgentRecordService.class);
+            AgentRecords today = createAgentRecords(agentBean, date);
+            if (today != null) {
+                agentRecordService.getAgentRecordsDao().save(today);
+            }
+
+
+            int hour = LocalTime.now().getHour();
+            int min = LocalTime.now().getMinute();
+            if (hour == 0 && min < 20) {
+                String yesStr = now.minusDays(1).toString();
+                AgentRecords yesDay = createAgentRecords(agentBean, yesStr);
+                if (yesDay != null) {
+                    agentRecordService.getAgentRecordsDao().save(yesDay);
+                }
+            }
+
+        }
+    }
+
+    private static AgentRecords createAgentRecords(AgentBean agentBean, String date){
+
+        if (agentBean.getAgentInfo().getEveryPartnerRebate() != null) {
+            PartnerRebate partnerRebate = agentBean.getAgentInfo().getEveryPartnerRebate().get(date);
+
+            if (partnerRebate != null) {
+                AgentRecords agentRecord = new AgentRecords();
+                agentRecord.setId(agentBean.getId()+"|"+date);
+                agentRecord.setDate(date);
+                agentRecord.setAllRebate(partnerRebate.getAllRebate());
+                agentRecord.setChildCost(partnerRebate.getCost());
+                agentRecord.setMoneyRebate(partnerRebate.getMoneyRebate());
+                agentRecord.setGoldRebate(partnerRebate.getGoldRebate());
+                return agentRecord;
+            }
+        }
+        return null;
+    }
     /**
      * 保存log信息
      */

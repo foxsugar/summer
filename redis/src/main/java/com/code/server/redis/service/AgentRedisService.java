@@ -1,6 +1,7 @@
 package com.code.server.redis.service;
 
 import com.code.server.constant.db.ChildCost;
+import com.code.server.constant.db.PartnerRebate;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.dao.IAgentRedis;
@@ -107,6 +108,26 @@ public class AgentRedisService implements IAgentRedis, IConstant {
                 updateAgentBean(agentBean);
             }
 
+        }
+    }
+
+    public void addPartnerRebate(long agentId, double cost, double moneyRebate, double goldRebate, String date, String deleteDay) {
+        AgentBean agentBean = getAgentBean(agentId);
+        if (agentBean != null) {
+            if (agentBean.getAgentInfo().getEveryPartnerRebate() == null) {
+                agentBean.getAgentInfo().setEveryPartnerRebate(new HashMap<>());
+            }
+            PartnerRebate partnerRebate = agentBean.getAgentInfo().getEveryPartnerRebate().getOrDefault(date, new PartnerRebate());
+            partnerRebate.cost += cost;
+            partnerRebate.moneyRebate += moneyRebate;
+            partnerRebate.goldRebate += goldRebate;
+            partnerRebate.allRebate += moneyRebate;
+            partnerRebate.allRebate += goldRebate;
+
+            agentBean.getAgentInfo().getEveryPartnerRebate().put(date, partnerRebate);
+            agentBean.getAgentInfo().getEveryPartnerRebate().remove(deleteDay);
+
+            updateAgentBean(agentBean);
         }
     }
 
@@ -258,6 +279,7 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         String today = LocalDate.now().toString();
         String deleteDay = LocalDate.now().minusDays(7).toString();
         String deleteDay1 = LocalDate.now().minusDays(90).toString();
+        String deleteDay2 = LocalDate.now().minusDays(3).toString();
         double allRebate = 0;
         if (agentId1 != 0) {
             double n = scala1 * num / 100;
@@ -282,8 +304,14 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         if (partnerId != 0) {
             double n = 10 * num / 100;
             allRebate += n;
-            addRebate(partnerId, n,today,deleteDay);
-            addChildCost(agentId1,childCost,0,today, deleteDay1);
+//            addRebate(partnerId, n,today,deleteDay);
+//            addChildCost(agentId1,childCost,0,today, deleteDay1);
+
+            if (type == 0) {
+                addPartnerRebate(agentId1, childCost, n, 0, today, deleteDay2);
+            }else{
+                addPartnerRebate(agentId1, childCost, 0, n, today, deleteDay2);
+            }
         }
 
         if (type == 0) {
