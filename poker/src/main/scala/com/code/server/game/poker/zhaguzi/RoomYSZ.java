@@ -428,6 +428,7 @@ public class RoomYSZ extends RoomExtendGold {
 
     protected void noticeQuitRoom(long userId) {
         super.noticeQuitRoom(userId);
+        this.lastReadyTime = System.currentTimeMillis();
         this.isTickTimer();
     }
 
