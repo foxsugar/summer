@@ -195,7 +195,7 @@ public class TodayChargeAction {
         return agentResponse;
     }
 
-//    @AuthChecker
+    @AuthChecker
     @RequestMapping("/dCost")
     public AgentResponse showCost(String start, String end){
 
@@ -223,13 +223,16 @@ public class TodayChargeAction {
             twoLevel += dChildCostVo.getSecondLevel();
             threeLevel += dChildCostVo.getThirdLevel();
         }
-        double total = oneLevel + twoLevel + threeLevel;
+        double total = oneLevel * 0.2 * 0.01 + twoLevel * 0.1 * 0.01 + threeLevel *0.1 * 0.01;
         Map<String, Object> result = new HashMap<>();
         result.put("li", li);
         result.put("total", total);
-        result.put("oneLevel", oneLevel);
-        result.put("twoLevel", twoLevel);
-        result.put("threeLevel", threeLevel);
+        result.put("oneLevel", oneLevel * 0.2 * 0.01);
+        result.put("twoLevel", twoLevel * 0.1 * 0.01);
+        result.put("threeLevel", threeLevel *0.1 * 0.01);
+        result.put("start", list.get(list.size() - 1));
+
+        result.put("end", list.get(0));
         AgentResponse agentResponse = new AgentResponse(200, result);
         return agentResponse;
     }
