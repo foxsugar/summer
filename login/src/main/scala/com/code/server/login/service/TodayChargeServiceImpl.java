@@ -175,7 +175,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             }
         }
 
-        logger.info("=========={}", RedisManager.getAgentRedisService().isExit(100009));
+        logger.info("=========={}==={}", RedisManager.getAgentRedisService().isExit(100009), aList);
 
         double total = 0d;
         double goldTotal = 0d;
