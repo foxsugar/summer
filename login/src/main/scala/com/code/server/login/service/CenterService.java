@@ -42,12 +42,12 @@ public class CenterService {
         //保存玩家
         GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 5, true, CenterService::saveUser));
 
-        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 5, true, CenterService::saveAgent));
 
         //在线记录
         GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 10, true, CenterService::saveLogRecord));
 
-        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 10, true, CenterService::saveAgentRecord));
+        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 5, true, CenterService::saveAgentRecord));
+        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 5, true, CenterService::saveAgent));
 
 
     }

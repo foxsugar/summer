@@ -236,7 +236,7 @@ public class CenterMsgService implements IkafkaMsgId {
                 UserBean userBean = RedisManager.getUserRedisService().getUserBean(userRecord.getUserId());
                 u.put("Unionid", userBean.getOpenId());
                 u.put("WeixinName", userBean.getUsername());
-                u.put("HeadImgUrl", userBean.getImage());
+                u.put("HeadImgUrl", userBean.getImage() + "/132");
                 u.put("NTotalPoint", userRecord.getScore());
                 list.add(u);
 
