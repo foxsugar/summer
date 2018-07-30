@@ -199,10 +199,9 @@ public class TodayChargeAction {
     @RequestMapping("/dCost")
     public AgentResponse showCost(String start, String end){
 
-//        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-//        HttpServletRequest request = attributes.getRequest();
-//        long agentId = AgentUtil.getAgentByRequest(request);
-        long agentId = 100017;
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        long agentId = AgentUtil.getAgentByRequest(request);
         List<String> list = DateUtil.getDateListIn(end, start);
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         AgentInfo agentInfo = agentBean.getAgentInfo();
