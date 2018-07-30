@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.code.server.game.mahjong.logic.PlayerCardsInfoMj.type_bufeng;
+
 /**
  * Created by sunxianping on 2018/7/25.
  */
@@ -174,6 +176,7 @@ public class GameInfoLuanGuaFeng extends GameInfoNew {
             resetCanBeOperate(playerCardsInfo);
 
             playerCardsInfo.cards.remove(card);
+            playerCardsInfo.setLastOperate(type_bufeng);
 
             if (this.waitingforList.size() == 0) {
                 doBuFeng(playerCardsInfo, card);
