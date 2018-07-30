@@ -1,18 +1,4 @@
 package com.code.server.game.poker.zhaguzi;
-
-/**
- * 项目名称：${project_name}
- * 类名称：${type_name}
- * 类描述：
- * 创建人：Clark
- * 创建时间：${date} ${time}
- * 修改人：Clark
- * 修改时间：${date} ${time}
- * 修改备注：
- *
- * @version 1.0
- */
-
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.*;
 import com.code.server.constant.response.*;
@@ -22,10 +8,13 @@ import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.DateUtil;
 import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
@@ -53,6 +42,7 @@ public class RoomYSZ extends RoomExtendGold {
     protected long leaveSecond;
     protected long lastOverTime;
     public static int BASE_TIME = 10;
+    protected static final Logger logger = LoggerFactory.getLogger(RoomYSZ.class);
 
 
 //    @Override
@@ -412,20 +402,19 @@ public class RoomYSZ extends RoomExtendGold {
             long deta = (System.currentTimeMillis() - this.lastReadyTime) / ((long)(10 * Math.pow(10, 9)));
             this.leaveSecond = BASE_TIME - deta;
             Map<String, Object> result = new HashMap<>();
-//            result.put("second", base);
-//            result.put("timerTick", timerTick);
-//            result.put("leaveSecond", this.leaveSecond);
             result.put("second", this.leaveSecond);
             if (timerTick == 0){
                 result.put("second", 0);
             }
             result.put("timerTick", timerTick);
+            logger.info("================tickTimer{},当前时间{}===={}", result, System.currentTimeMillis(), DateUtil.timeStampToTimeString(System.currentTimeMillis()));
             MsgSender.sendMsg2Player(new ResponseVo("roomService", "tickTimer", result), this.users);
         }
     }
 
     protected void noticeQuitRoom(long userId) {
         super.noticeQuitRoom(userId);
+        this.lastReadyTime = System.currentTimeMillis();
         this.isTickTimer();
     }
 

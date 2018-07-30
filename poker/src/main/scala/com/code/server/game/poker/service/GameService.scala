@@ -73,6 +73,8 @@ object GameService {
     case "play" =>
       val playCard = params.path("playCard").asText()
       game.play(userId,playCard)
+    case "dealAgain" =>
+      game.dealAgain()
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

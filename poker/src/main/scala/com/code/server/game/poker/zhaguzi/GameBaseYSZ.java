@@ -8,6 +8,7 @@ import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.DateUtil;
 import com.code.server.util.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -979,6 +980,8 @@ public class GameBaseYSZ extends Game {
      * 发牌
      */
     protected void deal() {
+
+        logger.info("发牌时间是========{}===={}",System.currentTimeMillis(), DateUtil.timeStampToTimeString(System.currentTimeMillis()));
         for (PlayerYSZ playerCardInfo : playerCardInfos.values()) {
             for (int i = 0; i < INIT_CARD_NUM; i++) {
                 playerCardInfo.handcards.add(cards.remove(0));
