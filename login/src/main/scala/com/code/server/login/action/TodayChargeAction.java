@@ -231,7 +231,8 @@ public class TodayChargeAction {
         result.put("twoLevel", twoLevel);
         result.put("threeLevel", threeLevel);
         result.put("start", list.get(list.size() - 1));
-        result.put("end", list.get(list.size() - 1));
+
+        result.put("end", list.get(0));
         AgentResponse agentResponse = new AgentResponse(200, result);
         return agentResponse;
     }
