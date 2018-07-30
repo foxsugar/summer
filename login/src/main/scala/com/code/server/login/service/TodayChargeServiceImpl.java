@@ -170,12 +170,12 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         //获取所有二级代理的id
         List<Long> aList = new ArrayList<>();
         for (Long id : agentBean.getChildList()){
-            if (RedisManager.getAgentRedisService().isExit(agentId)){
+            if (RedisManager.getAgentRedisService().isExit(id)){
                 aList.add(id);
             }
         }
 
-        logger.info("=========={}==={}", RedisManager.getAgentRedisService().isExit(100009), aList);
+        logger.info("==========agentId{}===aList:{}", agentId, aList);
 
         double total = 0d;
         double goldTotal = 0d;
