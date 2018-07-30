@@ -53,6 +53,15 @@ public class SevenRobot implements ISevenRobot,IGameConstant {
                         break;*/
                 }
             }
+            /*if(now > game.lastOperateTime + SECOND * 10){
+                switch (game.step) {
+*//*                    case STEP_GET_CARD_FINISH:
+                    noticeGetCardAgain(game);//无操作自动开牌
+                    break;*//*
+                    default:fanZhu(game);
+                    break;
+                }
+            }*/
         }
     }
 

@@ -164,11 +164,11 @@ public class CardsUtil {
         }else if(a!=54 && a!=53 && (b==53||b==54)){
             return false;
         }else{//主牌
-            if(a>40&&b<=40){
+            if(a>44&&b<=44){
                 return true;
-            }else if(a<=40&&b>40){
+            }else if(a<=44&&b>44){
                 return false;
-            }else if(a>40&&b>40){
+            }else if(a>44&&b>44){
                 if(cardsOf108.get(a)!=cardsOf108.get(b)){
                     return a>b;
                 }else {
@@ -202,7 +202,7 @@ public class CardsUtil {
     }
 
 
-    private static Boolean isTuoLaJi(List<Integer> list){
+    public static Boolean isTuoLaJi(List<Integer> list){
         boolean b0;
         boolean b1 = true;
         boolean b2 = true;

@@ -137,6 +137,7 @@ public class ErrorCode {
 
 	//打七
 	public static final int ERROR_CARD = 1100001;//牌不对
+	public static final int ERROR_CARD_MAX = 1100002;//牌不对
 
 	static class ErrorCodeRepeatChecker {
     	public void check() {

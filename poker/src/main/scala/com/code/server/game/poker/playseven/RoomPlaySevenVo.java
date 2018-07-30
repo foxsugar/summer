@@ -22,4 +22,35 @@ public class RoomPlaySevenVo extends RoomVo{
 
     public long fanZhuUserId=0l;
 
+    public Integer getFengDing() {
+        return fengDing;
+    }
+
+    public void setFengDing(Integer fengDing) {
+        this.fengDing = fengDing;
+    }
+
+    public boolean isKouDiJiaJi() {
+        return kouDiJiaJi;
+    }
+
+    public void setKouDiJiaJi(boolean kouDiJiaJi) {
+        this.kouDiJiaJi = kouDiJiaJi;
+    }
+
+    public boolean isZhuangDanDaJiaBei() {
+        return zhuangDanDaJiaBei;
+    }
+
+    public void setZhuangDanDaJiaBei(boolean zhuangDanDaJiaBei) {
+        this.zhuangDanDaJiaBei = zhuangDanDaJiaBei;
+    }
+
+    public long getFanZhuUserId() {
+        return fanZhuUserId;
+    }
+
+    public void setFanZhuUserId(long fanZhuUserId) {
+        this.fanZhuUserId = fanZhuUserId;
+    }
 }
