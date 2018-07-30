@@ -15,4 +15,7 @@ public interface IAgentUserDao extends PagingAndSortingRepository<AgentUser, Int
 
 
     AgentUser findAgentUserByUsernameAndPassword(String userName, String password);
+
+
+    AgentUser findAgentUserByUsername(String userName);
 }

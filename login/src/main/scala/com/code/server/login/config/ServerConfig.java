@@ -25,18 +25,34 @@ public class ServerConfig {
 
     private  String key;//API秘钥
 
-    private  String notifyUrl;
+    private String notifyUrl;
+    //数据地址
     private String dataFile;
 
+    //俱乐部创建消耗
     private int clubCreateMoney = 5000;
 
+    //俱乐部玩法限制
     private int clubRoomModelLimit = 3;
 
+    //俱乐部个数限制
     private int clubLimit = 5;
 
+    //域名
     private String domain = "";
 
+    //加入俱乐部个数限制
     private int clubJoinLimit = 5;
+
+    //龙七 http 推送
+    private String lq_http_url = "";
+    private int send_lq_http = 0;
+
+    //俱乐部是否推送玩家离开进入房间
+    private int clubPushUserRoomInfo = 0;
+
+    //是否保存回放
+    private int saveReplay = 1;
 
 
     public String getServerType() {
@@ -194,6 +210,42 @@ public class ServerConfig {
 
     public ServerConfig setClubJoinLimit(int clubJoinLimit) {
         this.clubJoinLimit = clubJoinLimit;
+        return this;
+    }
+
+    public String getLq_http_url() {
+        return lq_http_url;
+    }
+
+    public ServerConfig setLq_http_url(String lq_http_url) {
+        this.lq_http_url = lq_http_url;
+        return this;
+    }
+
+    public int getClubPushUserRoomInfo() {
+        return clubPushUserRoomInfo;
+    }
+
+    public ServerConfig setClubPushUserRoomInfo(int clubPushUserRoomInfo) {
+        this.clubPushUserRoomInfo = clubPushUserRoomInfo;
+        return this;
+    }
+
+    public int getSaveReplay() {
+        return saveReplay;
+    }
+
+    public ServerConfig setSaveReplay(int saveReplay) {
+        this.saveReplay = saveReplay;
+        return this;
+    }
+
+    public int getSend_lq_http() {
+        return send_lq_http;
+    }
+
+    public ServerConfig setSend_lq_http(int send_lq_http) {
+        this.send_lq_http = send_lq_http;
         return this;
     }
 }
