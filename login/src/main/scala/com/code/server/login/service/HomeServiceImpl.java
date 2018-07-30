@@ -64,10 +64,10 @@ public class HomeServiceImpl implements HomeService{
         Map<String, ChildCost> everyDayCos = agentInfo.getEveryDayCost();
         ChildCost childCost = everyDayCos.get(today);
         if (childCost != null){
-            homePageVo.setFirstLevel(childCost.getFirstLevel());
-            homePageVo.setSecondLevel(childCost.getSecondLevel());
-            homePageVo.setThirdLevel(childCost.getThirdLevel());
-            homePageVo.setAllCost(childCost.getFirstLevel() + childCost.getSecondLevel() + childCost.getThirdLevel());
+            homePageVo.setFirstLevel(childCost.getFirstLevel()* 0.01 * 0.2);
+            homePageVo.setSecondLevel(childCost.getSecondLevel()* 0.01 * 0.1);
+            homePageVo.setThirdLevel(childCost.getThirdLevel()* 0.01 * 0.1);
+            homePageVo.setAllCost(childCost.getFirstLevel() * 0.01 * 0.2 + childCost.getSecondLevel()* 0.01 * 0.1 + childCost.getThirdLevel() * 0.01 * 0.1);
         }
         return homePageVo;
     }
