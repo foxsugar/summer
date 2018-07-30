@@ -195,13 +195,14 @@ public class TodayChargeAction {
         return agentResponse;
     }
 
-    @AuthChecker
+//    @AuthChecker
     @RequestMapping("/dCost")
     public AgentResponse showCost(String start, String end){
 
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
-        long agentId = AgentUtil.getAgentByRequest(request);
+//        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//        HttpServletRequest request = attributes.getRequest();
+//        long agentId = AgentUtil.getAgentByRequest(request);
+        long agentId = 100017;
         List<String> list = DateUtil.getDateListIn(end, start);
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         AgentInfo agentInfo = agentBean.getAgentInfo();
@@ -229,7 +230,7 @@ public class TodayChargeAction {
         result.put("oneLevel", oneLevel);
         result.put("twoLevel", twoLevel);
         result.put("threeLevel", threeLevel);
-        AgentResponse agentResponse = new AgentResponse(200, request);
+        AgentResponse agentResponse = new AgentResponse(200, result);
         return agentResponse;
     }
 
