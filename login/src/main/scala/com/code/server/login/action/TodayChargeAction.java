@@ -227,9 +227,9 @@ public class TodayChargeAction {
         Map<String, Object> result = new HashMap<>();
         result.put("li", li);
         result.put("total", total);
-        result.put("oneLevel", oneLevel);
-        result.put("twoLevel", twoLevel);
-        result.put("threeLevel", threeLevel);
+        result.put("oneLevel", oneLevel * 0.2 * 0.01);
+        result.put("twoLevel", twoLevel * 0.1 * 0.01);
+        result.put("threeLevel", threeLevel *0.1 * 0.01);
         result.put("start", list.get(list.size() - 1));
 
         result.put("end", list.get(0));
