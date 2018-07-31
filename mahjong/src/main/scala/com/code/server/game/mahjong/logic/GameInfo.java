@@ -81,6 +81,8 @@ public class GameInfo extends Game {
     public boolean autoPlay = false;
 
     protected boolean isAlreadyComputeGang = false;
+
+    public int rand = 0;
 //    private Set<Long> noCanHuList = new HashSet<>();//本轮不能胡的人
 
     /**

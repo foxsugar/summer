@@ -2,6 +2,9 @@ package com.code.server.login.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by sunxianping on 2017/3/17.
  */
@@ -53,6 +56,10 @@ public class ServerConfig {
 
     //是否保存回放
     private int saveReplay = 1;
+
+    private String domainMapKey = "nx";
+
+    private Map<String,String> domainMap = new HashMap<>();
 
 
     public String getServerType() {
@@ -246,6 +253,24 @@ public class ServerConfig {
 
     public ServerConfig setSend_lq_http(int send_lq_http) {
         this.send_lq_http = send_lq_http;
+        return this;
+    }
+
+    public String getDomainMapKey() {
+        return domainMapKey;
+    }
+
+    public ServerConfig setDomainMapKey(String domainMapKey) {
+        this.domainMapKey = domainMapKey;
+        return this;
+    }
+
+    public Map<String, String> getDomainMap() {
+        return domainMap;
+    }
+
+    public ServerConfig setDomainMap(Map<String, String> domainMap) {
+        this.domainMap = domainMap;
         return this;
     }
 }

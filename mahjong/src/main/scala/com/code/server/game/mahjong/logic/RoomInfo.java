@@ -238,10 +238,12 @@ public class RoomInfo extends RoomInfoExtendGold {
 
         Random random = new Random();
         Map<String, Object> ran = new HashMap<>();
-        ran.put("rand", random.nextInt(11) + 2);
+        int ra = random.nextInt(11) + 2;
+        ran.put("rand", ra);
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "random",ran ), this.getUsers());
 
         gameInfo.init(0, this.bankerId, this.users, this);
+        gameInfo.rand = ra;
 //        gameInfo.fapai();
         this.game = gameInfo;
 
