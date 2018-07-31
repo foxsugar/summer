@@ -203,6 +203,9 @@ public class TodayChargeAction {
     @RequestMapping("/dCost")
     public AgentResponse showCost(String start, String end){
         logger.info("dCost==========start:{},end:{}",start,end);
+
+        start = DateUtil.becomeStandardSTime(start);
+        end = DateUtil.becomeStandardSTime(end);
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         long agentId = AgentUtil.getAgentByRequest(request);
