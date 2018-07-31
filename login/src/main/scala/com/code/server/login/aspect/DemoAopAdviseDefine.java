@@ -1,6 +1,7 @@
 package com.code.server.login.aspect;
 
 import com.code.server.login.action.AgentResponse;
+import com.code.server.login.util.AgentUtil;
 import com.code.server.redis.service.RedisManager;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -35,6 +36,13 @@ public class DemoAopAdviseDefine {
         Map<String, String> map = getAgentByToken(request);
 
         Object[] objects = joinPoint.getArgs();
+
+
+        Cookie cookie = AgentUtil.get(request,"HTTP_X_TOKEN");
+        if (cookie == null) {
+
+            System.out.println("=======");
+        }
 
 //        if (null == map) {
 ////            return "错误, 请登录!";

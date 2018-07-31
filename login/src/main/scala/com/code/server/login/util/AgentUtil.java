@@ -23,9 +23,6 @@ public class AgentUtil {
     private static final String AGENT_COOKIE_NAME = "AGENT_TOKEN";
     protected static final Logger logger = LoggerFactory.getLogger(AgentUtil.class);
     //暂时这么命名 根据token取 agentId
-    public static long getAgentIdByCookie(){
-        return 1;
-    }
 
     public static long getAgentByRequest(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
