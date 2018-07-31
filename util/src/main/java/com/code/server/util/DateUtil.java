@@ -132,6 +132,26 @@ public final class DateUtil {
         return sd;
     }
 
+    public static String becomeStandardSTime(String time){
+
+        if (time.length() == 10){
+            return time;
+        }
+
+        String[] strings = time.split("-");
+
+        List<String> list = new ArrayList<>();
+        for (String s : strings){
+            if (s.length() == 1){
+                String st = "0" + s;
+                list.add(st);
+            }else {
+                list.add(s);
+            }
+        }
+        return list.get(0) + "-" + list.get(1) + "-" + list.get(2);
+    }
+
     public static List<String> getDateListIn(String current, String end){
         List<String> list = new ArrayList<>();
         list.add(current);

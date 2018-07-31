@@ -10,6 +10,8 @@ import com.code.server.login.util.AgentUtil;
 import com.code.server.login.vo.*;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +33,8 @@ public class TodayChargeAction {
     private static final String AGENT_COOKIE_NAME = "AGENT_TOKEN";
     @Autowired
     private TodayChargeService todayChargeService;
+
+    protected static final Logger logger = LoggerFactory.getLogger(TodayChargeAction.class);
 
     @AuthChecker
     //流水记录
@@ -198,7 +202,11 @@ public class TodayChargeAction {
     @AuthChecker
     @RequestMapping("/dCost")
     public AgentResponse showCost(String start, String end){
-
+        //转化为标准字符串
+        logger.info("dCost==========start:{},end:{}",start,end);
+        start = DateUtil.becomeStandardSTime(start);
+        end = DateUtil.becomeStandardSTime(end);
+        logger.info("dCost==========start:{},end:{}",start,end);
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         long agentId = AgentUtil.getAgentByRequest(request);
@@ -246,7 +254,7 @@ public class TodayChargeAction {
         double re = todayChargeService.canBlance(agentId);
         Map<String, Object> rs = new HashMap<>();
         rs.put("result", re);
-        System.out.println("---------|||||" + re);
+//        System.out.println("---------|||||" + re);
         agentResponse.setData(rs);
         return agentResponse;
     }

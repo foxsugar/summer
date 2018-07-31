@@ -91,12 +91,15 @@ public class TuiTongTongCardUtilsTest {
 
     @Test
     public void testLocalDate(){
-        String e = "2018-01-23";
-        String s = "2018-07-24";
+        String e = "2018-1-3";
+        String s = "2018-07-4";
 
-        List<String> list = DateUtil.getDateListIn(s, e);
-        System.out.println(list);
-        System.out.println("==");
+//        List<String> list = DateUtil.getDateListIn(s, e);
+//        System.out.println(list);
+//        System.out.println("==");
+
+        String ss = DateUtil.becomeStandardSTime(e);
+        System.out.println(ss);
 //        testDate(null, null);
     }
     public void testDate(String current, String end){
