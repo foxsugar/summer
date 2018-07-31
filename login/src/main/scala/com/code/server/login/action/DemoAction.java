@@ -27,6 +27,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -806,6 +807,26 @@ public class DemoAction{
         return agentResponse;
     }
 
+    @DemoChecker
+    @RequestMapping("/changePwd")
+    @Transactional
+    public AgentResponse changePwd(String pwd){
+        // TODO: 2018/7/31  需要通过token获取
+        int agentId = 1;
+        AgentUser agentUser = agentUserDao.findOne(agentId);
+        agentUser.setPassword(pwd);
+        AgentUser au = agentUserDao.save(agentUser);
+        if (au != null){
+            AgentResponse agentResponse = new AgentResponse();
+            return agentResponse;
+        }else {
+            AgentResponse agentResponse = new AgentResponse();
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+            agentResponse.setMsg("修改失败");
+            return agentResponse;
+        }
+    }
+
     @RequestMapping("/findCharges")
     public AgentResponse findCharges(int curPage){
         if (curPage > 0){
@@ -844,12 +865,10 @@ public class DemoAction{
             rs.put("username", agentUser.getUsername());
             String token = getToken(agentUser.getId());
             AgentUtil.caches.put(token, rs);
-
-//            Cookie cookie1 = new Cookie("X-Token",token);
-//            response.addCookie(cookie1);
-
+            //3. 设置token至cookie
+            AgentUtil.set(response, "HTTP_X_TOKEN", token, 7200);
             agentResponse = new AgentResponse(0, result);
-            agentResponse.setData(token);
+            return agentResponse.setData(token);
 
         }else {
             agentResponse = new AgentResponse(ErrorCode.ROLE_ACCOUNT_OR_PASSWORD_ERROR,result);
@@ -891,7 +910,7 @@ public class DemoAction{
     @RequestMapping("/test")
     public Map<String, Object> test(){
 
-        return ass();
+        return AgentUtil.caches;
     }
 
     public static void main(String[] args) {

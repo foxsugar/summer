@@ -35,12 +35,20 @@ public class SevenRobot implements ISevenRobot,IGameConstant {
         if (room == null && room.getGame()==null) {
             return;
         }
-
+        /*if(room != null && room.getGame() == null){
+            if(room instanceof RoomPlaySeven){
+                RoomPlaySeven roomCow = (RoomPlaySeven)room;
+                long now = System.currentTimeMillis();
+                if(now > roomCow.getRoomLastTime() + SECOND * 10){
+                    getReady(roomCow);
+                }
+            }
+        }*/
         if (room.getGame() instanceof GamePlaySeven) {
             GamePlaySeven game = (GamePlaySeven) room.getGame();
             long now = System.currentTimeMillis();
             //执行
-            if(now > game.lastOperateTime + SECOND * 5){
+            if(now > game.lastOperateTime + SECOND * 10){
                 switch (game.step) {
                     case STEP_RENSHU:
                         renShu(game);
@@ -53,15 +61,15 @@ public class SevenRobot implements ISevenRobot,IGameConstant {
                         break;*/
                 }
             }
-            /*if(now > game.lastOperateTime + SECOND * 10){
+            if(now > game.lastOperateTime + SECOND * 25){
                 switch (game.step) {
-*//*                    case STEP_GET_CARD_FINISH:
+                    case STEP_GET_CARD_FINISH:
                     noticeGetCardAgain(game);//无操作自动开牌
-                    break;*//*
-                    default:fanZhu(game);
                     break;
+/*                    default:fanZhu(game);
+                    break;*/
                 }
-            }*/
+            }
         }
     }
 
@@ -149,6 +157,29 @@ public class SevenRobot implements ISevenRobot,IGameConstant {
 
     @Override
     public void play(GamePlaySeven game) {
+
+    }
+
+    @Override
+    public void getReady(RoomPlaySeven roomCow) {
+
+        String roomId = roomCow.getRoomId();
+        int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
+        KafkaMsgKey msgKey = new KafkaMsgKey();
+
+        msgKey.setRoomId(roomId);
+        msgKey.setPartition(partition);
+        for (Long l:roomCow.getUserStatus().keySet()) {
+            if(0==roomCow.getUserStatus().get(l)){
+                msgKey.setUserId(l);
+            }
+        }
+
+        Map<String, Object> put = new HashMap();
+
+
+        ResponseRobotVo result = new ResponseRobotVo("roomService", "getReady",put);
+        SpringUtil.getBean(MsgProducer.class).send2Partition("roomService",partition, msgKey, result);
 
     }
 }
