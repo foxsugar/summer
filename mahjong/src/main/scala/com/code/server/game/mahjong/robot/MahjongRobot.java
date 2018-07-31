@@ -46,8 +46,8 @@ public class MahjongRobot {
                 map.putAll(roomInfo.getUserStatus());
                 map.forEach((k,v) ->{
                     if (v != Room.STATUS_READY) {
-                        System.out.println("玩家 " + k +" 准备");
-                        getReady(roomInfo,k);
+                        System.out.println("玩家 " + k +" 离开");
+                        quitRoom(roomInfo,k);
                     }
                 });
             }
