@@ -184,7 +184,7 @@ public class DelegateRelataionServiceImpl implements DelegateRelataionService {
             userInfo.setUsername(user.getUsername());
             userInfo.setCreateTime(DateUtil.convert2String(user.getRegistDate()));
             AgentBean bean = RedisManager.getAgentRedisService().getAgentBean(userId);
-            if (bean == null){
+            if (bean != null){
                 for (long uid : bean.getChildList()){
                     if (RedisManager.getAgentRedisService().isExit(uid)){
                         delegateCount++;
