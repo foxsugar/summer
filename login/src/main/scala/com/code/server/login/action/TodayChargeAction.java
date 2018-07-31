@@ -202,10 +202,11 @@ public class TodayChargeAction {
     @AuthChecker
     @RequestMapping("/dCost")
     public AgentResponse showCost(String start, String end){
+        //转化为标准字符串
         logger.info("dCost==========start:{},end:{}",start,end);
-
         start = DateUtil.becomeStandardSTime(start);
         end = DateUtil.becomeStandardSTime(end);
+        logger.info("dCost==========start:{},end:{}",start,end);
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         long agentId = AgentUtil.getAgentByRequest(request);
