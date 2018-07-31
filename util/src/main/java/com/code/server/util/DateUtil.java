@@ -132,14 +132,13 @@ public final class DateUtil {
         return sd;
     }
 
+    //把 2000-1-1这种不标准的字符串转化为 2000-01-01这种标准的字符串
     public static String becomeStandardSTime(String time){
 
         if (time.length() == 10){
             return time;
         }
-
         String[] strings = time.split("-");
-
         List<String> list = new ArrayList<>();
         for (String s : strings){
             if (s.length() == 1){
@@ -153,7 +152,14 @@ public final class DateUtil {
     }
 
     public static List<String> getDateListIn(String current, String end){
+
         List<String> list = new ArrayList<>();
+
+        if (current.equals(end)){
+            list.add(current);
+            return list;
+        }
+
         list.add(current);
         for (int i = 1; i < 90; i++){
             current = DateUtil.getPreviousDay(current);
