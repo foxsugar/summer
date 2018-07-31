@@ -254,7 +254,6 @@ public class CenterMsgService implements IkafkaMsgId {
             try {
                 URL url= new URL(url1);
                 URI uri = new URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), null);
-                System.out.println(url);
                 HttpGet request = new HttpGet(uri);
                 request.setConfig(requestConfig);
 
@@ -275,10 +274,10 @@ public class CenterMsgService implements IkafkaMsgId {
     private static int getClubModelIndex(Club club,String roomModel) {
         int index = 0;
         for (RoomModel rm : club.getClubInfo().getRoomModels()) {
+            index += 1;
             if(roomModel.equals(rm.getId())){
                 return index;
             }
-            index += 1;
         }
         return index;
     }
