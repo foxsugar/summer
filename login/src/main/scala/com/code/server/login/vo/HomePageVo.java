@@ -8,8 +8,8 @@ import com.code.server.constant.game.AgentBean;
 public class HomePageVo {
 
     private String InvitationCode;
-    private String totalMoney;
-    private String rebate;
+    private double totalMoney;
+    private double rebate;
     //收益
     private double firstLevel;
     private double secondLevel;
@@ -24,13 +24,29 @@ public class HomePageVo {
         this.allCost = allCost;
     }
 
-    public String getTotalMoney() {
+    public double getTotalMoney() {
         return totalMoney;
     }
 
-    public void setTotalMoney(String totalMoney) {
+    public void setTotalMoney(double totalMoney) {
         this.totalMoney = totalMoney;
     }
+
+    public double getRebate() {
+        return rebate;
+    }
+
+    public void setRebate(double rebate) {
+        this.rebate = rebate;
+    }
+
+    //    public String getTotalMoney() {
+//        return totalMoney;
+//    }
+//
+//    public void setTotalMoney(String totalMoney) {
+//        this.totalMoney = totalMoney;
+//    }
 
     public String getInvitationCode() {
         return InvitationCode;
@@ -40,13 +56,13 @@ public class HomePageVo {
         InvitationCode = invitationCode;
     }
 
-    public String getRebate() {
-        return rebate;
-    }
-
-    public void setRebate(String rebate) {
-        this.rebate = rebate;
-    }
+//    public String getRebate() {
+//        return rebate;
+//    }
+//
+//    public void setRebate(String rebate) {
+//        this.rebate = rebate;
+//    }
 
     public double getFirstLevel() {
         return firstLevel;
