@@ -12,18 +12,22 @@ import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.*;
 import com.code.server.db.model.*;
 import com.code.server.login.action.LoginAction;
+import com.code.server.login.config.ServerConfig;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.Gson;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 
+import java.io.IOException;
+import java.net.*;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by sunxianping on 2017/6/16.
@@ -119,6 +123,10 @@ public class CenterMsgService implements IkafkaMsgId {
     }
 
     private static void replay(String msg) {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        if (serverConfig.getSaveReplay() == 0) {
+            return;
+        }
         if (msg != null) {
             long id = JsonUtil.readTree(msg).path("id").asLong();
             int count = JsonUtil.readTree(msg).path("count").asInt();
@@ -203,11 +211,76 @@ public class CenterMsgService implements IkafkaMsgId {
                 //推送房间解散
 
 
+
+                //龙七 发送http
+                sendLq_http(roomRecord, club);
+
             }
             clubRecordService.addRecord(clubId, roomRecord);
         }
     }
 
+
+    private static void sendLq_http(RoomRecord roomRecord,Club club) {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        if (serverConfig.getSend_lq_http() == 1) {
+            Map<String, Object> result = new HashMap<>();
+            result.put("ClubNo", club.getId());
+            result.put("RoomId", roomRecord.getRoomId());
+            result.put("OnlyNo", System.currentTimeMillis());
+            int index = getClubModelIndex(club, roomRecord.getClubRoomModel());
+            result.put("wanfa", index);
+            List<Map<String, Object>> list = new ArrayList<>();
+            result.put("PlayerList", list);
+            for (com.code.server.constant.game.UserRecord userRecord : roomRecord.getRecords()) {
+                Map<String, Object> u = new HashMap<>();
+                UserBean userBean = RedisManager.getUserRedisService().getUserBean(userRecord.getUserId());
+                u.put("Unionid", userBean.getOpenId());
+                u.put("WeixinName", userBean.getUsername());
+                u.put("HeadImgUrl", URLEncoder.encode(userBean.getImage() + "/132"));
+                u.put("NTotalPoint", userRecord.getScore());
+                list.add(u);
+
+            }
+            String json = JsonUtil.toJson(result);
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            //设置连接超时5s
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectTimeout(5000).setConnectionRequestTimeout(5000)
+                    .setSocketTimeout(5000).build();
+
+            String url1 = serverConfig.getLq_http_url() + "?strContext=" +json;
+
+            try {
+                URL url= new URL(url1);
+                URI uri = new URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), null);
+                HttpGet request = new HttpGet(uri);
+                request.setConfig(requestConfig);
+
+                try {
+                    httpClient.execute(request);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (URISyntaxException | MalformedURLException e) {
+                e.printStackTrace();
+            }
+//            url = URLEncoder.encode(url);
+
+
+        }
+    }
+
+    private static int getClubModelIndex(Club club,String roomModel) {
+        int index = 0;
+        for (RoomModel rm : club.getClubInfo().getRoomModels()) {
+            index += 1;
+            if(roomModel.equals(rm.getId())){
+                return index;
+            }
+        }
+        return index;
+    }
 
     private static void guessAddGold(String msg) {
         if (msg != null) {

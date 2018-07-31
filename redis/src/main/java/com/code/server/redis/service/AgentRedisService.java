@@ -249,7 +249,7 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         long partnerId = 0;
 
         //没有上级代理
-        if (parentId == 0) return;
+//        if (parentId == 0) return;
         //自己是否是代理
         AgentBean agent1 = RedisManager.getAgentRedisService().getAgentBean(userId);
         if (agent1 == null) {//自己是代理则自己就是1级代理
@@ -270,6 +270,7 @@ public class AgentRedisService implements IAgentRedis, IConstant {
             partnerId = agent1.getPartnerId();
         }
 
+//        if(agent1 == null) return;
 
         int scala1 = getScala(type, 1);
         int scala2 = getScala(type, 2);
@@ -307,10 +308,11 @@ public class AgentRedisService implements IAgentRedis, IConstant {
 //            addRebate(partnerId, n,today,deleteDay);
 //            addChildCost(agentId1,childCost,0,today, deleteDay1);
 
+            System.out.println("合伙人 返利");
             if (type == 0) {
-                addPartnerRebate(agentId1, childCost, n, 0, today, deleteDay2);
+                addPartnerRebate(partnerId, childCost, n, 0, today, deleteDay2);
             }else{
-                addPartnerRebate(agentId1, childCost, 0, n, today, deleteDay2);
+                addPartnerRebate(partnerId, childCost, 0, n, today, deleteDay2);
             }
         }
 

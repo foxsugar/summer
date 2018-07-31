@@ -44,9 +44,13 @@ public class RoomWzq extends Room {
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);
         room.setUuid(idWorker.nextId());
 
+        int code = room.joinRoom(userId, true);
+        if (code != 0) {
+            return code;
+        }
+
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createWZQRoom", room.toVo(userId)), userId);
 
-        room.joinRoom(userId, true);
         return 0;
     }
 }

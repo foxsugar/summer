@@ -53,21 +53,21 @@ public class HomeServiceImpl implements HomeService{
     public HomePageVo showHomePage(long agentId) {
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         HomePageVo homePageVo = new HomePageVo();
-        homePageVo.setRebate("" + agentBean.getRebate());
+        homePageVo.setRebate( agentBean.getRebate());
         homePageVo.setInvitationCode("" + agentId);
         HomeChargeVo homeChargeVo = todayChargeService.showCharge(agentId);
         String total = homeChargeVo.getTotal();
-        homePageVo.setTotalMoney((Double.parseDouble(homeChargeVo.getTotalGold()) + Double.parseDouble(total) + ""));
+        homePageVo.setTotalMoney((Double.parseDouble(total)));
         //收益
         AgentInfo agentInfo = agentBean.getAgentInfo();
         String today = DateUtil.convert2DayString(new Date());
         Map<String, ChildCost> everyDayCos = agentInfo.getEveryDayCost();
         ChildCost childCost = everyDayCos.get(today);
         if (childCost != null){
-            homePageVo.setFirstLevel(childCost.getFirstLevel());
-            homePageVo.setSecondLevel(childCost.getSecondLevel());
-            homePageVo.setThirdLevel(childCost.getThirdLevel());
-            homePageVo.setAllCost(childCost.getFirstLevel() + childCost.getSecondLevel() + childCost.getThirdLevel());
+            homePageVo.setFirstLevel(childCost.getFirstLevel()* 0.01 * 0.2);
+            homePageVo.setSecondLevel(childCost.getSecondLevel()* 0.01 * 0.1);
+            homePageVo.setThirdLevel(childCost.getThirdLevel()* 0.01 * 0.1);
+            homePageVo.setAllCost(childCost.getFirstLevel() * 0.01 * 0.2 + childCost.getSecondLevel()* 0.01 * 0.1 + childCost.getThirdLevel() * 0.01 * 0.1);
         }
         return homePageVo;
     }

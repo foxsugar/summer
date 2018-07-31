@@ -626,6 +626,9 @@ public class GameClubService {
      * @param roomModelId
      */
     public void clubJoinRoom(String clubId, long userId, String roomModelId){
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        if(serverConfig.getClubPushUserRoomInfo() == 0) return;
+
         Club club = ClubManager.getInstance().getClubById(clubId);
         List<Long> users = new ArrayList<>();
         if (club != null) {
@@ -647,6 +650,9 @@ public class GameClubService {
      * @param roomModelId
      */
     public void clubQuitRoom(String clubId, long userId, String roomModelId){
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        if(serverConfig.getClubPushUserRoomInfo() == 0) return;
+
         Club club = ClubManager.getInstance().getClubById(clubId);
         List<Long> users = new ArrayList<>();
         if (club != null) {

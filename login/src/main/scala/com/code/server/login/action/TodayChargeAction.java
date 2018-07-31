@@ -10,6 +10,8 @@ import com.code.server.login.util.AgentUtil;
 import com.code.server.login.vo.*;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +33,8 @@ public class TodayChargeAction {
     private static final String AGENT_COOKIE_NAME = "AGENT_TOKEN";
     @Autowired
     private TodayChargeService todayChargeService;
+
+    protected static final Logger logger = LoggerFactory.getLogger(TodayChargeAction.class);
 
     @AuthChecker
     //流水记录
@@ -198,7 +202,11 @@ public class TodayChargeAction {
     @AuthChecker
     @RequestMapping("/dCost")
     public AgentResponse showCost(String start, String end){
-
+        //转化为标准字符串
+        logger.info("dCost==========start:{},end:{}",start,end);
+        start = DateUtil.becomeStandardSTime(start);
+        end = DateUtil.becomeStandardSTime(end);
+        logger.info("dCost==========start:{},end:{}",start,end);
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         long agentId = AgentUtil.getAgentByRequest(request);
@@ -222,14 +230,17 @@ public class TodayChargeAction {
             twoLevel += dChildCostVo.getSecondLevel();
             threeLevel += dChildCostVo.getThirdLevel();
         }
-        double total = oneLevel + twoLevel + threeLevel;
+        double total = oneLevel * 0.2 * 0.01 + twoLevel * 0.1 * 0.01 + threeLevel *0.1 * 0.01;
         Map<String, Object> result = new HashMap<>();
         result.put("li", li);
         result.put("total", total);
-        result.put("oneLevel", oneLevel);
-        result.put("twoLevel", twoLevel);
-        result.put("threeLevel", threeLevel);
-        AgentResponse agentResponse = new AgentResponse(200, request);
+        result.put("oneLevel", oneLevel * 0.2 * 0.01);
+        result.put("twoLevel", twoLevel * 0.1 * 0.01);
+        result.put("threeLevel", threeLevel *0.1 * 0.01);
+        result.put("start", list.get(list.size() - 1));
+
+        result.put("end", list.get(0));
+        AgentResponse agentResponse = new AgentResponse(200, result);
         return agentResponse;
     }
 
@@ -243,7 +254,7 @@ public class TodayChargeAction {
         double re = todayChargeService.canBlance(agentId);
         Map<String, Object> rs = new HashMap<>();
         rs.put("result", re);
-        System.out.println("---------|||||" + re);
+//        System.out.println("---------|||||" + re);
         agentResponse.setData(rs);
         return agentResponse;
     }

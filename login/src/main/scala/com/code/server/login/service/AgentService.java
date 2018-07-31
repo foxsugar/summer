@@ -2,10 +2,8 @@ package com.code.server.login.service;
 
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.UserBean;
-import com.code.server.db.Service.GameAgentService;
-import com.code.server.db.Service.GameAgentWxService;
-import com.code.server.db.Service.RecommendService;
-import com.code.server.db.Service.UserService;
+import com.code.server.db.Service.*;
+import com.code.server.db.model.AgentUser;
 import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.User;
 import com.code.server.redis.service.AgentRedisService;
@@ -38,6 +36,9 @@ public class AgentService {
 
     @Autowired
     private GameAgentWxService gameAgentWxService;
+
+    @Autowired
+    private AgentUserService agentUserService;
 
 
     public void user2Partner(long userId) {
@@ -107,6 +108,15 @@ public class AgentService {
             RedisManager.getAgentRedisService().updateAgentBean(subAgentBean);
         }
 
+
+        //在agent_user 生产合伙人表
+
+        AgentUser agentUser = agentUserService.agentUserDao.findAgentUserByUsername("" + userId);
+        if (agentUser == null) {
+            agentUser = new AgentUser();
+            agentUser.setCreateTime(new Date()).setUsername(""+userId).setPassword(""+userId).setLevel(1);
+            agentUserService.agentUserDao.save(agentUser);
+        }
 
     }
 
