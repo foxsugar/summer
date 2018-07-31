@@ -153,7 +153,14 @@ public final class DateUtil {
     }
 
     public static List<String> getDateListIn(String current, String end){
+
         List<String> list = new ArrayList<>();
+
+        if (current.equals(end)){
+            list.add(current);
+            return list;
+        }
+
         list.add(current);
         for (int i = 1; i < 90; i++){
             current = DateUtil.getPreviousDay(current);

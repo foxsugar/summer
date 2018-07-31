@@ -57,6 +57,13 @@ public class TuiTongTongCardUtilsTest {
     }
 
     @Test
+    public void demo2(){
+
+        List<String> list = DateUtil.getDateListIn("2018-07-31", "2018-07-31");
+        System.out.println(list);
+    }
+
+    @Test
     public void demo(){
         Date date = new Date();
         Instant instant = date.toInstant();
