@@ -395,7 +395,7 @@ public class GameInfoLuanGuaFeng extends GameInfoNew {
 
         //补牌
 
-        int buSize = cards.size() - 3;
+        int buSize = cards.size() % 3;
 
 
         if (buSize > 0) {

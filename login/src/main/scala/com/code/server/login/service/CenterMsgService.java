@@ -25,6 +25,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.IOException;
+import java.net.*;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -220,7 +221,7 @@ public class CenterMsgService implements IkafkaMsgId {
     }
 
 
-    private static void sendLq_http(RoomRecord roomRecord,Club club){
+    private static void sendLq_http(RoomRecord roomRecord,Club club) {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         if (serverConfig.getSend_lq_http() == 1) {
             Map<String, Object> result = new HashMap<>();
@@ -236,7 +237,7 @@ public class CenterMsgService implements IkafkaMsgId {
                 UserBean userBean = RedisManager.getUserRedisService().getUserBean(userRecord.getUserId());
                 u.put("Unionid", userBean.getOpenId());
                 u.put("WeixinName", userBean.getUsername());
-                u.put("HeadImgUrl", userBean.getImage() + "/132");
+                u.put("HeadImgUrl", URLEncoder.encode(userBean.getImage() + "/132"));
                 u.put("NTotalPoint", userRecord.getScore());
                 list.add(u);
 
@@ -248,15 +249,23 @@ public class CenterMsgService implements IkafkaMsgId {
                     .setConnectTimeout(5000).setConnectionRequestTimeout(5000)
                     .setSocketTimeout(5000).build();
 
-            String url = serverConfig.getLq_http_url() + "?strContext=" +json;
-            HttpGet request = new HttpGet(url);
-            request.setConfig(requestConfig);
+            String url1 = serverConfig.getLq_http_url() + "?strContext=" +json;
 
             try {
-                httpClient.execute(request);
-            } catch (IOException e) {
+                URL url= new URL(url1);
+                URI uri = new URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), null);
+                HttpGet request = new HttpGet(uri);
+                request.setConfig(requestConfig);
+
+                try {
+                    httpClient.execute(request);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (URISyntaxException | MalformedURLException e) {
                 e.printStackTrace();
             }
+//            url = URLEncoder.encode(url);
 
 
         }
@@ -265,10 +274,10 @@ public class CenterMsgService implements IkafkaMsgId {
     private static int getClubModelIndex(Club club,String roomModel) {
         int index = 0;
         for (RoomModel rm : club.getClubInfo().getRoomModels()) {
+            index += 1;
             if(roomModel.equals(rm.getId())){
                 return index;
             }
-            index += 1;
         }
         return index;
     }

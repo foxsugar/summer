@@ -98,13 +98,13 @@ public class CardsUtil {
         tempList.remove((Integer)(-53));
 
         for (Integer i:tempList) {
-            if(i%4==1){
+            if(Math.abs(i)%4==1){
                 hei.add(i);
-            }else if(i%4==2){
+            }else if(Math.abs(i)%4==2){
                 hong.add(i);
-            }else if(i%4==3){
+            }else if(Math.abs(i)%4==3){
                 hua.add(i);
-            }else if(i%4==0){
+            }else if(Math.abs(i)%4==0){
                 pian.add(i);
             }
         }
@@ -121,13 +121,13 @@ public class CardsUtil {
     }
 
 
-    public static boolean compareCards(int huase,List<Integer> before,List<Integer> after){
+    public static boolean compareCards(int huase,int chuHuaSe,List<Integer> before,List<Integer> after){
 
         if(1==before.size() && 1==after.size()){
-            return compareOneCard(huase, before, after);
+            return compareOneCard(huase, chuHuaSe,before, after);
         }else if(2==before.size() && 2==after.size()){
             if(after.get(0)+after.get(1)==0){
-                return compareOneCard(huase, before, after);
+                return compareOneCard(huase,chuHuaSe, before, after);
             }else{
                 return true;
             }
@@ -148,7 +148,7 @@ public class CardsUtil {
         }
     }
 
-    private static Boolean compareOneCard(int huase, List<Integer> before, List<Integer> after) {
+    private static Boolean compareOneCard(int huase, int chuHuaSe,List<Integer> before, List<Integer> after) {
         int a = Math.abs(before.get(0));
         int b = Math.abs(after.get(0));
         if(a==b){//大小王
@@ -190,10 +190,16 @@ public class CardsUtil {
                 }else if(huase!=a%4 && huase==b%4){
                     return false;
                 }else if(huase!=a%4 && huase!=b%4){
-                    if(cardsOf108.get(a)>=cardsOf108.get(b)){
+                    //return a>b;
+                    /*if(cardsOf108.get(a)>=cardsOf108.get(b)){
                         return true;
                     }else{
                         return false;
+                    }*/
+                    if(chuHuaSe==a%4 && chuHuaSe==b%4){
+                        return a>b;
+                    }else{
+                        return true;
                     }
                 }
             }
@@ -214,7 +220,7 @@ public class CardsUtil {
 
         int temp1 = Math.abs(list.get(0))%4;
         a:for (Integer integer:list) {//判断是否同花色
-            if(temp1!=integer%4){
+            if(temp1!=Math.abs(integer)%4){
                 b1 = false;
                 break a;
             }
