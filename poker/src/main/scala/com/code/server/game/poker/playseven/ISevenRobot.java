@@ -24,4 +24,5 @@ public interface ISevenRobot extends IRobot {
     void changeTableCards(GamePlaySeven gamePlaySeven);
     void play(GamePlaySeven gamePlaySeven);
     void noticeGetCardAgain(GamePlaySeven gamePlaySeven);
+    void getReady(RoomPlaySeven roomCow);
 }

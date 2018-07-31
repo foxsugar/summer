@@ -32,7 +32,7 @@ import java.util.Map;
  * @version 1.0
  */
 public class RoomPlaySeven extends Room {
-
+    protected long roomLastTime;
     public Integer fengDing;//封顶
     public boolean kouDiJiaJi;//抠底加级
     public boolean zhuangDanDaJiaBei;//庄单打加倍
@@ -155,5 +155,13 @@ public class RoomPlaySeven extends Room {
         }
 
         return roomVo;
+    }
+
+    public long getRoomLastTime() {
+        return roomLastTime;
+    }
+
+    public void setRoomLastTime(long roomLastTime) {
+        this.roomLastTime = roomLastTime;
     }
 }
