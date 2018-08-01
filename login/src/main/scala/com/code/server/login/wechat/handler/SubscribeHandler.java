@@ -97,7 +97,9 @@ public class SubscribeHandler extends AbstractHandler {
 
             // "|" 的分隔符要转义
             String[] sp = referrerUnionId.split("\\|");
+            System.out.println("参数=========== " + referrerUnionId);
             if (sp.length > 1) {
+                System.out.println("参数带分隔符");
                 referrerUnionId = sp[1];
             }
 
