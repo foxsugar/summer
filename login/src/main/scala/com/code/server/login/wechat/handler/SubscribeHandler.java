@@ -80,6 +80,7 @@ public class SubscribeHandler extends AbstractHandler {
     public static void main(String[] args) {
         System.out.println("nxhfjhsfkhfk".split("\\|")[0]);
     }
+
     /**
      * 处理特殊请求，比如如果是扫码进来的，可以做相应处理
      */
@@ -92,96 +93,96 @@ public class SubscribeHandler extends AbstractHandler {
         }
 
         String[] s = eventKey.split("_");
-        if ("qrscene".equals(s[0])) {
-            String referrerUnionId = s[1];
+//        if ("qrscene".equals(s[0])) {
+        String referrerUnionId = eventKey;
 
-            // "|" 的分隔符要转义
-            String[] sp = referrerUnionId.split("\\|");
-            System.out.println("参数=========== " + referrerUnionId);
-            if (sp.length > 1) {
-                System.out.println("参数带分隔符");
-                referrerUnionId = sp[1];
-            }
-
-
-            String unionId = wxMpUser.getUnionId();
-
-            //这个人是否已经点过
-            //todo 自己不能推荐自己
-            Recommend recommend = recommendService.getRecommendDao().getByUnionId(unionId);
-            long agentId = userService.getUserDao().getIdByOpenId(referrerUnionId);
-            AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
-            if (agentBean == null) {
-                return null;
-            }
+        // "|" 的分隔符要转义
+        String[] sp = referrerUnionId.split("\\|");
+        System.out.println("参数=========== " + referrerUnionId);
+        if (sp.length > 1) {
+            System.out.println("参数带分隔符");
+            referrerUnionId = sp[1];
+        }
 
 
-            boolean isSelf = referrerUnionId.equals(unionId);
+        String unionId = wxMpUser.getUnionId();
 
-            StringBuilder sb = new StringBuilder(wxMpUser.getNickname() + "扫描您的专属二维码,");
+        //这个人是否已经点过
+        //todo 自己不能推荐自己
+        Recommend recommend = recommendService.getRecommendDao().getByUnionId(unionId);
+        long agentId = userService.getUserDao().getIdByOpenId(referrerUnionId);
+        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+        if (agentBean == null) {
+            return null;
+        }
 
-            if (recommend == null && !isSelf) {
-                recommend = new Recommend();
-                recommend.setUnionId(unionId).setAgentId(agentId);
-                //保存
-                recommendService.getRecommendDao().save(recommend);
 
-                sb.append("成功绑定");
-            } else {
-                //通知 代理 有人绑定他
+        boolean isSelf = referrerUnionId.equals(unionId);
+
+        StringBuilder sb = new StringBuilder(wxMpUser.getNickname() + "扫描您的专属二维码,");
+
+        if (recommend == null && !isSelf) {
+            recommend = new Recommend();
+            recommend.setUnionId(unionId).setAgentId(agentId);
+            //保存
+            recommendService.getRecommendDao().save(recommend);
+
+            sb.append("成功绑定");
+        } else {
+            //通知 代理 有人绑定他
 //                String name = wxMpUser.getNickname();
 
-                //这个人如果已经是玩家 并且玩家没有上级 那么成为这个人的下级
-                User user = userService.getUserDao().getUserByOpenId(unionId);
-                if (user != null) {
-                    long userId = user.getId();
-                    boolean userIsAgnet = RedisManager.getAgentRedisService().isExit(userId);
-                    //点击者已经是代理
-                    if (userIsAgnet) {
-                        sb.append("但已成为代理");
-                    } else {
-                        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-                        if (userBean != null) {
-                            if (userBean.getReferee() == 0) {
-                                userBean.setReferee((int) agentId);
-                                RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
+            //这个人如果已经是玩家 并且玩家没有上级 那么成为这个人的下级
+            User user = userService.getUserDao().getUserByOpenId(unionId);
+            if (user != null) {
+                long userId = user.getId();
+                boolean userIsAgnet = RedisManager.getAgentRedisService().isExit(userId);
+                //点击者已经是代理
+                if (userIsAgnet) {
+                    sb.append("但已成为代理");
+                } else {
+                    UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+                    if (userBean != null) {
+                        if (userBean.getReferee() == 0) {
+                            userBean.setReferee((int) agentId);
+                            RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
 
-                                agentBean.getChildList().add(userId);
-                                RedisManager.getAgentRedisService().updateAgentBean(agentBean);
-                                sb.append("已和您成功绑定");
-                            } else {
-                                if (userBean.getReferee() == agentId) {
-                                    sb.append("已经和您建立过绑定关系");
-                                } else {
-                                    sb.append("但已绑定其他代理");
-                                }
-                            }
+                            agentBean.getChildList().add(userId);
+                            RedisManager.getAgentRedisService().updateAgentBean(agentBean);
+                            sb.append("已和您成功绑定");
                         } else {
-                            if (user.getReferee() == 0) {
-                                user.setReferee((int) agentId);
-                                userService.save(user);
-
-                                agentBean.getChildList().add(userId);
-                                RedisManager.getAgentRedisService().updateAgentBean(agentBean);
-                                sb.append("已和您成功绑定");
+                            if (userBean.getReferee() == agentId) {
+                                sb.append("已经和您建立过绑定关系");
                             } else {
-                                if (user.getReferee() == agentId) {
-                                    sb.append("已经和您建立过绑定关系");
-                                } else {
-                                    sb.append("但已绑定其他代理");
-                                }
+                                sb.append("但已绑定其他代理");
+                            }
+                        }
+                    } else {
+                        if (user.getReferee() == 0) {
+                            user.setReferee((int) agentId);
+                            userService.save(user);
+
+                            agentBean.getChildList().add(userId);
+                            RedisManager.getAgentRedisService().updateAgentBean(agentBean);
+                            sb.append("已和您成功绑定");
+                        } else {
+                            if (user.getReferee() == agentId) {
+                                sb.append("已经和您建立过绑定关系");
+                            } else {
+                                sb.append("但已绑定其他代理");
                             }
                         }
                     }
                 }
-                wxMpService.getKefuService().sendKefuMessage(
-                        WxMpKefuMessage
-                                .TEXT()
-                                .toUser(agentBean.getOpenId())
-                                .content(sb.toString())
-                                .build());
-
             }
+            wxMpService.getKefuService().sendKefuMessage(
+                    WxMpKefuMessage
+                            .TEXT()
+                            .toUser(agentBean.getOpenId())
+                            .content(sb.toString())
+                            .build());
+
+//            }
 
             //TODO
             return null;
