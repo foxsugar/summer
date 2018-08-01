@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
  */
 @RestController
 @RequestMapping("/admin")
-public class DemoAction{
+public class DemoAction extends Cors{
 
     @Autowired
     private IAgentUserDao agentUserDao;
@@ -866,7 +866,10 @@ public class DemoAction{
             String token = getToken(agentUser.getId());
             AgentUtil.caches.put(token, rs);
             //3. 设置token至cookie
-            AgentUtil.set(response, "HTTP_X_TOKEN", token, 7200);
+//             new AgentUtil.setCookies(response, "HTTP_X_TOKEN", token, 7200);
+            AgentUtil agentUtil = new AgentUtil();
+            agentUtil.setCookies(response, "HTTP_X_TOKEN", token, 7200);
+//            new AgentUtil().setCookies(response,"HTTP_X_TOKEN", 7200);
             agentResponse = new AgentResponse(0, result);
             return agentResponse.setData(token);
 
