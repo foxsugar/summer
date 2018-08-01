@@ -22,13 +22,12 @@ public class GameWzq extends Game {
 
     private Room roomWzq;
 
-    private List<WzqNode> nodes;
+    private Map<String, WzqNode> nodes;
 
     private long lastMoveUser;
 
 
-
-    public int admitDefeat(long userId){
+    public int admitDefeat(long userId) {
 
         double gold = RedisManager.getUserRedisService().getUserGold(userId);
         if (gold < this.roomWzq.getMultiple()) {
@@ -52,12 +51,11 @@ public class GameWzq extends Game {
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "admitDefeat", golds), this.getUsers());
 
 
-
-        sendResult();
+        sendResult(other);
 
         this.roomWzq.clearReadyStatus(true);
 
-        sendFinalResult();
+//        sendFinalResult();
 
         return 0;
     }
@@ -73,8 +71,6 @@ public class GameWzq extends Game {
     }
 
 
-
-
     protected void sendFinalResult() {
         //所有牌局都结束
         if (this.roomWzq.isRoomOver()) {
@@ -83,11 +79,18 @@ public class GameWzq extends Game {
         }
     }
 
-    protected void sendResult() {
-        MsgSender.sendMsg2Player("gameService", "gameWzqResult", "gameResult", users);
+    protected void sendResult(long winnerId) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("winner", winnerId);
+        int score = this.roomWzq.getMultiple();
+        if (winnerId == -1) {
+            score = 0;
+        }
+        result.put("score", score);
+        MsgSender.sendMsg2Player("gameService", "gameWzqResult", result, users);
     }
 
-    public int move(long userId, int x, int y){
+    public int move(long userId, int x, int y) {
 
         if (userId == lastMoveUser) {
             return ErrorCode.CAN_NOT_MOVE;
@@ -99,12 +102,27 @@ public class GameWzq extends Game {
         wzqNode.x = x;
         wzqNode.y = y;
         wzqNode.userId = userId;
-        nodes.add(wzqNode);
+        nodes.put(getNodeKey(x, y), wzqNode);
+
+        lastMoveUser = userId;
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("x", x);
+        result.put("y", y);
+        result.put("userId", userId);
+        MsgSender.sendMsg2Player("gameService", "move", result, users);
+
+
+        //是否有人赢
 
 
         return 0;
     }
 
+
+    private String getNodeKey(int x, int y) {
+        return x + "|" + y;
+    }
 
     private boolean isCanMove(int x, int y) {
         if (x < 0 || x > 16) {
@@ -113,7 +131,7 @@ public class GameWzq extends Game {
         if (y < 0 || y > 16) {
             return false;
         }
-        for (WzqNode wzqNode : nodes) {
+        for (WzqNode wzqNode : nodes.values()) {
             if (wzqNode.x == x && wzqNode.y == y) {
                 return false;
             }

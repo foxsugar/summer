@@ -3,13 +3,14 @@ package com.code.server.game.mahjong.logic;
 import com.code.server.game.mahjong.util.HuCardType;
 import com.code.server.game.mahjong.util.HuUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by sunxianping on 2018/7/25.
  */
 public class PlayerCardInfoLuanGuaFeng extends  PlayerCardsInfoMj{
-
+private static final int FANGZUOBI = 1;
     @Override
     public void init(List<String> cards) {
         super.init(cards);
@@ -105,46 +106,78 @@ public class PlayerCardInfoLuanGuaFeng extends  PlayerCardsInfoMj{
         return huList.size() > 0;
     }
 
+
+    @Override
+    public void computeALLGang() {
+        int gangFan = 0;
+        gangFan += this.mingGangType.size() * 2;
+        gangFan += this.anGangType.size() * 4;
+        int score = gangFan * roomInfo.getMultiple();
+        int sub = 0;
+        for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
+            if (playerCardsInfo.getUserId() != this.userId) {
+                playerCardsInfo.addScore(-score);
+                playerCardsInfo.addGangScore(-score);
+                roomInfo.setUserSocre(playerCardsInfo.getUserId(), -score);
+                sub += score;
+            }
+        }
+        this.addScore(sub);
+        roomInfo.setUserSocre(this.getUserId(), sub);
+    }
+
+    public boolean isHuangzhuang(GameInfo gameInfo) {
+        return gameInfo.getRemainCards().size() <= 16;
+    }
+
+    public int getChiPengGangNum() {
+        return this.chiCards.size() + this.pengType.size() + this.mingGangType.size() +
+                this.anGangType.size() + this.xuanfengDan.getOrDefault(0,new ArrayList<>()).size()/3;
+    }
+
     @Override
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
         //显庄 庄家输赢每家多10分
 
-        System.out.println("===========房间倍数============ " + room.getMultiple());
+        this.gameInfo.computeAllGang();
+
+
         List<String> cs = getCardsNoChiPengGang(cards);
-        System.out.println("检测是否可胡自摸= " + cs);
-        int cardType = CardTypeUtil.cardType.get(card);
 
         int lastCard = CardTypeUtil.getTypeByCard(card);
         int chiPengGangNum = getChiPengGangNum();
+
         List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), chiPengGangNum, this.gameInfo.hun, lastCard);
         HuCardType huCardType = getMaxScoreHuCardType(huList);
         int maxPoint = huCardType.fan == 0? 2: huCardType.fan;
 
+        //加上旋风蛋的分
+        maxPoint += this.xuanfengDan.getOrDefault(0, new ArrayList<>()).size() + this.xuanfengDan.getOrDefault(1, new ArrayList<>()).size();
 
-        boolean bankerIsZhuang = this.userId == this.gameInfo.getFirstTurn();
+        if (isZimo) {
+            maxPoint *= 2;
+        }
 
-        //显庄 并且 赢得人是庄家
-        boolean isBankerWinMore = bankerIsZhuang && isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_显庄);
-        if (isBankerWinMore) maxPoint += 10;
+        boolean isBao = !isZimo && isHasMode(this.roomInfo.mode, FANGZUOBI);
 
-        if (isZimo) maxPoint *= 2;
-
-
-        int allScore = 0;
+        double allScore = 0;
 
         for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
             if (playerCardsInfoMj.getUserId() != this.userId) {
 
-                int tempScore = maxPoint;
-                //庄家多输
-
-                allScore += tempScore;
-
-
-
+                if (!isBao) {
+                    playerCardsInfoMj.addScore(-maxPoint);
+                    this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -maxPoint);
+                }
+                maxPoint += allScore;
             }
         }
 
+        if (isBao) {
+            PlayerCardsInfoMj dianPao = this.gameInfo.getPlayerCardsInfos().get(dianpaoUser);
+            dianPao.addScore(-allScore);
+
+        } this.roomInfo.addUserSocre(dianpaoUser ,-allScore);
 
         this.addScore(allScore);
         this.roomInfo.addUserSocre(this.userId, allScore);

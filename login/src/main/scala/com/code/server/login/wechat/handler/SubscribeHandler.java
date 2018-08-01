@@ -77,6 +77,9 @@ public class SubscribeHandler extends AbstractHandler {
         return null;
     }
 
+    public static void main(String[] args) {
+        System.out.println("nxhfjhsfkhfk".split("\\|")[0]);
+    }
     /**
      * 处理特殊请求，比如如果是扫码进来的，可以做相应处理
      */
@@ -91,6 +94,12 @@ public class SubscribeHandler extends AbstractHandler {
         String[] s = eventKey.split("_");
         if ("qrscene".equals(s[0])) {
             String referrerUnionId = s[1];
+
+            // "|" 的分隔符要转义
+            String[] sp = referrerUnionId.split("\\|");
+            if (sp.length > 1) {
+                referrerUnionId = sp[1];
+            }
 
 
             String unionId = wxMpUser.getUnionId();
