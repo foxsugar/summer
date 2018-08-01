@@ -92,6 +92,7 @@ public class SubscribeHandler extends AbstractHandler {
             return null;
         }
 
+        System.out.println("   evnetKey =    "+eventKey);
         String[] s = eventKey.split("_");
 //        if ("qrscene".equals(s[0])) {
         String referrerUnionId = eventKey;
