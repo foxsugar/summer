@@ -19,6 +19,7 @@ import com.code.server.util.SpringUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.Gson;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
@@ -237,7 +238,7 @@ public class CenterMsgService implements IkafkaMsgId {
                 UserBean userBean = RedisManager.getUserRedisService().getUserBean(userRecord.getUserId());
                 u.put("Unionid", userBean.getOpenId());
                 u.put("WeixinName", userBean.getUsername());
-                u.put("HeadImgUrl", URLEncoder.encode(userBean.getImage() + "/132"));
+                u.put("HeadImgUrl", userBean.getImage() + "/132");
                 u.put("NTotalPoint", userRecord.getScore());
                 list.add(u);
 
@@ -254,11 +255,15 @@ public class CenterMsgService implements IkafkaMsgId {
             try {
                 URL url= new URL(url1);
                 URI uri = new URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), null);
+//                System.out.println(url);
+//                System.out.println(uri);
                 HttpGet request = new HttpGet(uri);
                 request.setConfig(requestConfig);
 
                 try {
-                    httpClient.execute(request);
+                    HttpResponse httpResponse = httpClient.execute(request);
+//                    System.out.println(httpResponse.getEntity().toString());
+//                    System.out.println(httpResponse.getStatusLine().toString());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
