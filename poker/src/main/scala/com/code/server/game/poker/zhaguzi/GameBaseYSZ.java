@@ -1,7 +1,9 @@
 package com.code.server.game.poker.zhaguzi;
 
 import com.code.server.constant.data.DataManager;
+import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.response.*;
+import com.code.server.game.poker.doudizhu.CardUtil;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.IfaceRoom;
 import com.code.server.game.room.Room;
@@ -10,6 +12,7 @@ import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.DateUtil;
 import com.code.server.util.IdWorker;
+import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -539,7 +542,6 @@ public class GameBaseYSZ extends Game {
         return 0;
     }
 
-
     protected void computeCardType(){
 
         for (PlayerYSZ playerCardInfo : playerCardInfos.values()){
@@ -719,9 +721,47 @@ public class GameBaseYSZ extends Game {
         }
         gameResultHitGoldFlower.setWinnerList(winnerList);
         gameResultHitGoldFlower.setBankerId(winnerList.get(0));
-//        MsgSender.sendMsg2Player("gameService", "gameResult", gameResultHitGoldFlower, users);
+
+        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+            for (Map.Entry<Long, PlayerYSZ> entry : this.playerCardInfos.entrySet()){
+                RoomStatistics roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
+                if (roomStatistics == null){
+                    this.room.getRoomStatisticsMap().put(entry.getKey(), new RoomStatistics());
+                }
+                if (winnerList.contains(entry.getValue().getUserId())){
+                    roomStatistics.winTime++;
+                    int maxScore = (int) entry.getValue().getFinalScore();
+                    if (roomStatistics.maxScore < maxScore){
+                        roomStatistics.maxScore = maxScore;
+                    }
+                }else {
+                    roomStatistics.failedTime++;
+                }
+                String maxCardGroup = roomStatistics.maxCardGroup;
+                if (maxCardGroup == null || maxCardGroup.isEmpty()){
+                    roomStatistics.maxCardGroup = CardUtils.transfromCardsToString(entry.getValue().handcards);
+                }else {
+                    List<Integer> last = CardUtils.transfromStringToCards(roomStatistics.maxCardGroup);
+                    List<Integer> current = entry.getValue().getHandcards();
+
+                    Player playerLast = new Player(1l,  ArrUtils.cardCode.get(last.get(0)), ArrUtils.cardCode.get(last.get(1)), ArrUtils.cardCode.get(last.get(2)));
+                    Player playerCurrent = new Player(2l, ArrUtils.cardCode.get(current.get(0)), ArrUtils.cardCode.get(current.get(1)), ArrUtils.cardCode.get(current.get(2)));
+                    ArrayList<Player> retList = Player.findWinners(playerLast, playerCurrent);
+                    Player winner = retList.get(0);
+
+                    if (winner.getUid() == 2){
+                        roomStatistics.maxCardGroup = CardUtils.transfromCardsToString(current);
+                    }
+                }
+            }
+        }
+
         MsgSender.sendMsg2Player("gameService", "gameResult", gameResultHitGoldFlower, this.room.users);
         this.pushGoldScore();
+    }
+
+    public void additionCompute(){
+
     }
 
     /**
