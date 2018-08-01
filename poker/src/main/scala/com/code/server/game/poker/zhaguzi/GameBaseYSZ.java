@@ -762,10 +762,6 @@ public class GameBaseYSZ extends Game {
         this.pushGoldScore();
     }
 
-    public void additionCompute(){
-
-    }
-
     /**
      * 战绩
      */
