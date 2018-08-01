@@ -88,11 +88,11 @@ public class SubscribeHandler extends AbstractHandler {
 
         //如果是扫码登录
         String eventKey = wxMessage.getEventKey();
+        System.out.println("   evnetKey =    "+eventKey);
         if (eventKey == null || "".equals(eventKey)) {
             return null;
         }
 
-        System.out.println("   evnetKey =    "+eventKey);
         String[] s = eventKey.split("_");
 //        if ("qrscene".equals(s[0])) {
         String referrerUnionId = eventKey;
