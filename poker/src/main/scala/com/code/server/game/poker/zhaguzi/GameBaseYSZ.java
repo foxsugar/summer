@@ -249,7 +249,7 @@ public class GameBaseYSZ extends Game {
                 }
             }
         }
-        logger.info("      ===== 结束 牌 型:", this.room.getRoomStatisticsMap());
+        logger.info("      ===== 开始 牌 型:", this.room.getRoomStatisticsMap());
     }
 
 //    public double getUserScores(long userId){
