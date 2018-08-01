@@ -123,6 +123,7 @@ public class ErrorCode {
 	//红绿车
 	public static final int STATE_ERROR = 800001;
 	public static final int SET_SCORE_ERROR = 800002;
+	public static final int CAN_NOT_MOVE = 800003;
 
 	//扎股子
 	public static final int CARDS_ERROR = 900001;

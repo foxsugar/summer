@@ -10,6 +10,19 @@ import java.util.List;
  */
 public class PlayerCardInfoLuanGuaFeng extends  PlayerCardsInfoMj{
 
+    @Override
+    public void init(List<String> cards) {
+        super.init(cards);
+
+
+        specialHuScore.put(hu_七小对, 10);
+        specialHuScore.put(hu_豪华七小对, 10);
+        specialHuScore.put(hu_清一色, 10);
+        specialHuScore.put(hu_一条龙, 10);
+
+        specialHuScore.put(hu_清龙, 20);
+        specialHuScore.put(hu_清七对, 20);
+    }
 
     @Override
     public boolean isHasXuanfengDan(List<String> cards,String card) {
@@ -35,10 +48,7 @@ public class PlayerCardInfoLuanGuaFeng extends  PlayerCardsInfoMj{
         return false;
     }
 
-    @Override
-    public void init(List<String> cards) {
-        super.init(cards);
-    }
+
 
     @Override
     public boolean isCanTing(List<String> cards) {
@@ -74,6 +84,28 @@ public class PlayerCardInfoLuanGuaFeng extends  PlayerCardsInfoMj{
     }
 
     @Override
+    public boolean isCanHu_dianpao(String card) {
+        //混牌 不能点炮
+        int cardType = CardTypeUtil.getTypeByCard(card);
+        if (this.gameInfo.hun.contains(cardType)) {
+            return false;
+        }
+        List<String> temp = getCardsAddThisCard(card);
+        List<String> noPengAndGang = getCardsNoChiPengGang(temp);
+        int lastCard = CardTypeUtil.getTypeByCard(card);
+        List<HuCardType> huList = HuUtil.isHu(this, noPengAndGang, getChiPengGangNum(), this.gameInfo.hun, lastCard);
+        return huList.size() > 0;
+    }
+
+    @Override
+    public boolean isCanHu_zimo(String card) {
+        int lastCard = CardTypeUtil.getTypeByCard(card);
+
+        List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), getChiPengGangNum(), this.gameInfo.hun, lastCard);
+        return huList.size() > 0;
+    }
+
+    @Override
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
         //显庄 庄家输赢每家多10分
 
@@ -85,7 +117,8 @@ public class PlayerCardInfoLuanGuaFeng extends  PlayerCardsInfoMj{
         int lastCard = CardTypeUtil.getTypeByCard(card);
         int chiPengGangNum = getChiPengGangNum();
         List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), chiPengGangNum, this.gameInfo.hun, lastCard);
-        int maxPoint = 0;
+        HuCardType huCardType = getMaxScoreHuCardType(huList);
+        int maxPoint = huCardType.fan == 0? 2: huCardType.fan;
 
 
         boolean bankerIsZhuang = this.userId == this.gameInfo.getFirstTurn();

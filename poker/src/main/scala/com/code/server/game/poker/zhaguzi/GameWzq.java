@@ -22,6 +22,12 @@ public class GameWzq extends Game {
 
     private Room roomWzq;
 
+    private List<WzqNode> nodes;
+
+    private long lastMoveUser;
+
+
+
     public int admitDefeat(long userId){
 
         double gold = RedisManager.getUserRedisService().getUserGold(userId);
@@ -66,6 +72,9 @@ public class GameWzq extends Game {
         return 0;
     }
 
+
+
+
     protected void sendFinalResult() {
         //所有牌局都结束
         if (this.roomWzq.isRoomOver()) {
@@ -79,9 +88,39 @@ public class GameWzq extends Game {
     }
 
     public int move(long userId, int x, int y){
+
+        if (userId == lastMoveUser) {
+            return ErrorCode.CAN_NOT_MOVE;
+        }
+        if (!isCanMove(x, y)) {
+            return ErrorCode.CAN_NOT_MOVE;
+        }
+        WzqNode wzqNode = new WzqNode();
+        wzqNode.x = x;
+        wzqNode.y = y;
+        wzqNode.userId = userId;
+        nodes.add(wzqNode);
+
+
         return 0;
     }
 
+
+    private boolean isCanMove(int x, int y) {
+        if (x < 0 || x > 16) {
+            return false;
+        }
+        if (y < 0 || y > 16) {
+            return false;
+        }
+        for (WzqNode wzqNode : nodes) {
+            if (wzqNode.x == x && wzqNode.y == y) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     @Override
     public void startGame(List<Long> users, Room room) {

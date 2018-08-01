@@ -677,8 +677,9 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     }
 
     public void bu_feng(RoomInfo roomInfo, GameInfo gameInfo, String card) {
-        List<String> cards = this.xuanfengDan.get(0);
+        List<String> cards = this.xuanfengDan.getOrDefault(1, new ArrayList<>());
         cards.add(card);
+        this.xuanfengDan.put(1, cards);
         operateList.add(type_bufeng);
         this.gameInfo.addUserOperate(this.userId, type_bufeng);
     }
