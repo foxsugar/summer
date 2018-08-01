@@ -756,6 +756,8 @@ public class GameBaseYSZ extends Game {
             }
         }
 
+        logger.info("      =====局 数:", this.room.getRoomStatisticsMap());
+
         MsgSender.sendMsg2Player("gameService", "gameResult", gameResultHitGoldFlower, this.room.users);
         this.pushGoldScore();
     }
