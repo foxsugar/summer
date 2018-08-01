@@ -177,6 +177,7 @@ public class GameBaseYSZ extends Game {
         deal();//发牌
         initDiZhu();
         computeCardType();
+        recordCardType();
         chip = INIT_BOTTOM_CHIP;
         mustBet();
         curUserId = room.getBankerId();
@@ -221,6 +222,34 @@ public class GameBaseYSZ extends Game {
 
         this.pushGoldScore();
 
+    }
+
+    public void recordCardType(){
+        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+            for (Map.Entry<Long, PlayerYSZ> entry : this.playerCardInfos.entrySet()){
+                RoomStatistics roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
+                if (roomStatistics == null){
+                    this.room.getRoomStatisticsMap().put(entry.getKey(), new RoomStatistics());
+                }
+                String maxCardGroup = roomStatistics.maxCardGroup;
+                if (maxCardGroup == null || maxCardGroup.isEmpty()){
+                    roomStatistics.maxCardGroup = CardUtils.transfromCardsToString(entry.getValue().handcards);
+                }else {
+                    List<Integer> last = CardUtils.transfromStringToCards(roomStatistics.maxCardGroup);
+                    List<Integer> current = entry.getValue().getHandcards();
+
+                    Player playerLast = new Player(1l,  ArrUtils.cardCode.get(last.get(0)), ArrUtils.cardCode.get(last.get(1)), ArrUtils.cardCode.get(last.get(2)));
+                    Player playerCurrent = new Player(2l, ArrUtils.cardCode.get(current.get(0)), ArrUtils.cardCode.get(current.get(1)), ArrUtils.cardCode.get(current.get(2)));
+                    ArrayList<Player> retList = Player.findWinners(playerLast, playerCurrent);
+                    Player winner = retList.get(0);
+
+                    if (winner.getUid() == 2){
+                        roomStatistics.maxCardGroup = CardUtils.transfromCardsToString(current);
+                    }
+                }
+            }
+        }
+        logger.info("      ===== 结束 牌 型:", this.room.getRoomStatisticsMap());
     }
 
 //    public double getUserScores(long userId){
@@ -737,26 +766,26 @@ public class GameBaseYSZ extends Game {
                 }else {
                     roomStatistics.failedTime++;
                 }
-                String maxCardGroup = roomStatistics.maxCardGroup;
-                if (maxCardGroup == null || maxCardGroup.isEmpty()){
-                    roomStatistics.maxCardGroup = CardUtils.transfromCardsToString(entry.getValue().handcards);
-                }else {
-                    List<Integer> last = CardUtils.transfromStringToCards(roomStatistics.maxCardGroup);
-                    List<Integer> current = entry.getValue().getHandcards();
-
-                    Player playerLast = new Player(1l,  ArrUtils.cardCode.get(last.get(0)), ArrUtils.cardCode.get(last.get(1)), ArrUtils.cardCode.get(last.get(2)));
-                    Player playerCurrent = new Player(2l, ArrUtils.cardCode.get(current.get(0)), ArrUtils.cardCode.get(current.get(1)), ArrUtils.cardCode.get(current.get(2)));
-                    ArrayList<Player> retList = Player.findWinners(playerLast, playerCurrent);
-                    Player winner = retList.get(0);
-
-                    if (winner.getUid() == 2){
-                        roomStatistics.maxCardGroup = CardUtils.transfromCardsToString(current);
-                    }
-                }
+//                String maxCardGroup = roomStatistics.maxCardGroup;
+//                if (maxCardGroup == null || maxCardGroup.isEmpty()){
+//                    roomStatistics.maxCardGroup = CardUtils.transfromCardsToString(entry.getValue().handcards);
+//                }else {
+//                    List<Integer> last = CardUtils.transfromStringToCards(roomStatistics.maxCardGroup);
+//                    List<Integer> current = entry.getValue().getHandcards();
+//
+//                    Player playerLast = new Player(1l,  ArrUtils.cardCode.get(last.get(0)), ArrUtils.cardCode.get(last.get(1)), ArrUtils.cardCode.get(last.get(2)));
+//                    Player playerCurrent = new Player(2l, ArrUtils.cardCode.get(current.get(0)), ArrUtils.cardCode.get(current.get(1)), ArrUtils.cardCode.get(current.get(2)));
+//                    ArrayList<Player> retList = Player.findWinners(playerLast, playerCurrent);
+//                    Player winner = retList.get(0);
+//
+//                    if (winner.getUid() == 2){
+//                        roomStatistics.maxCardGroup = CardUtils.transfromCardsToString(current);
+//                    }
+//                }
             }
         }
 
-        logger.info("      =====局 数:", this.room.getRoomStatisticsMap());
+        logger.info("      ===== 结束 局 数:", this.room.getRoomStatisticsMap());
 
         MsgSender.sendMsg2Player("gameService", "gameResult", gameResultHitGoldFlower, this.room.users);
         this.pushGoldScore();
