@@ -327,6 +327,10 @@ object GameService {
     case "setScore"=>
       val score = params.path("score").asInt(0)
       game.setScore(userId, score)
+    case "move"=>
+      val x = params.path("x").asInt()
+      val y = params.path("y").asInt()
+      game.move(userId, x, y)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }
