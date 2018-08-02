@@ -21,6 +21,7 @@ public class Constant extends BaseEntity {
     private String marquee1;
     private String marquee2;
     private String download;
+    private String download1;
     private String download2;
     private int initMoney;
     private String versionOfAndroid;//安卓版本
@@ -153,6 +154,15 @@ public class Constant extends BaseEntity {
         return this;
     }
 
+    public String getDownload1() {
+        return download1;
+    }
+
+    public Constant setDownload1(String download1) {
+        this.download1 = download1;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Constant{" +
@@ -161,6 +171,7 @@ public class Constant extends BaseEntity {
                 ", marquee1='" + marquee1 + '\'' +
                 ", marquee2='" + marquee2 + '\'' +
                 ", download='" + download + '\'' +
+                ", download1='" + download1 + '\'' +
                 ", download2='" + download2 + '\'' +
                 ", initMoney=" + initMoney +
                 ", versionOfAndroid='" + versionOfAndroid + '\'' +

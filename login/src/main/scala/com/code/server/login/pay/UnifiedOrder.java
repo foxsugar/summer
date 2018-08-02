@@ -59,7 +59,7 @@ public class UnifiedOrder {
 
         int money100 = money * 100;
 
-        String body = "龙七棋牌-充值";
+        String body = "充值";
 
         String bodyUTF8 = null;
         try {
