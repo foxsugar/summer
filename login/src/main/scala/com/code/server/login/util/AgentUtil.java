@@ -2,6 +2,7 @@ package com.code.server.login.util;
 
 import com.code.server.login.config.ServerConfig;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,6 @@ import java.util.Map;
  * Created by dajuejinxian on 2018/4/2.
  */
 public class AgentUtil {
-
-    @Autowired
-    private ServerConfig serverConfig;
 
     public static Map<String, Object> caches = null;
     static {
@@ -66,6 +64,7 @@ public class AgentUtil {
                            int maxAge) {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         cookie.setDomain(serverConfig.getDomain());
         cookie.setMaxAge(maxAge);
         response.addCookie(cookie);

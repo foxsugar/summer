@@ -118,6 +118,11 @@ public class GameInfo extends Game {
             remainCards.removeAll(CardTypeUtil.ZI_CARD);
 
         }
+
+        if (this.room.curGameNumber == 1){
+            this.room.getBankerMap().put(1, firstTurn);
+        }
+
         fapai();
     }
 

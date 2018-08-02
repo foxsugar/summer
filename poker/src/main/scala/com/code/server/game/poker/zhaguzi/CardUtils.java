@@ -680,7 +680,7 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
             Integer x = list.get(i);
             ret = ret + x;
             if (i != list.size() - 1){
-                ret = ret + "-";
+                ret = ret + "_";
             }
         }
 
