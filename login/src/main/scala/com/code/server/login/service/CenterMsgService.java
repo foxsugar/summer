@@ -19,14 +19,16 @@ import com.code.server.util.SpringUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.Gson;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -222,6 +224,7 @@ public class CenterMsgService implements IkafkaMsgId {
     }
 
 
+
     private static void sendLq_http(RoomRecord roomRecord,Club club) {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         if (serverConfig.getSend_lq_http() == 1) {
@@ -255,28 +258,20 @@ public class CenterMsgService implements IkafkaMsgId {
             try {
                 URL url= new URL(url1);
                 URI uri = new URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), null);
-//                System.out.println(url);
-//                System.out.println(uri);
                 HttpGet request = new HttpGet(uri);
                 request.setConfig(requestConfig);
-
                 try {
-                    HttpResponse httpResponse = httpClient.execute(request);
-//                    System.out.println(httpResponse.getEntity().toString());
-//                    System.out.println(httpResponse.getStatusLine().toString());
+                   httpClient.execute(request);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             } catch (URISyntaxException | MalformedURLException e) {
                 e.printStackTrace();
             }
-//            url = URLEncoder.encode(url);
-
-
         }
     }
 
-    private static int getClubModelIndex(Club club,String roomModel) {
+    public static int getClubModelIndex(Club club,String roomModel) {
         int index = 0;
         for (RoomModel rm : club.getClubInfo().getRoomModels()) {
             index += 1;

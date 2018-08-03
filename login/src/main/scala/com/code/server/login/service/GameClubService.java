@@ -1,6 +1,9 @@
 package com.code.server.login.service;
 
-import com.code.server.constant.club.*;
+import com.code.server.constant.club.ClubMember;
+import com.code.server.constant.club.ClubStatistics;
+import com.code.server.constant.club.RoomInstance;
+import com.code.server.constant.club.RoomModel;
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.game.UserBean;
@@ -25,10 +28,18 @@ import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -919,7 +930,7 @@ public class GameClubService {
      * @param clubModelId
      * @return
      */
-    public int cludGameStart(String clubId, String clubModelId,List<Long> users) {
+    public int cludGameStart(String clubId, String clubModelId,List<Long> users,String roomId, int gameNumber) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club != null) {
             synchronized (club.lock) {
@@ -966,10 +977,60 @@ public class GameClubService {
                 }
             }
             initRoomInstance(club);
+
+            //龙七 发送游戏开始
+            ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+            if (serverConfig.getSend_lq_http() == 1 && gameNumber == 1) {
+                send_Lq_start(club, roomId, clubModelId, users);
+            }
         }
         return 0;
     }
 
+
+    private static void send_Lq_start(Club club, String roomId, String clubRoomModel, List<Long> users ){
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        if (serverConfig.getSend_lq_http() == 1) {
+            Map<String, Object> result = new HashMap<>();
+            result.put("ClubNo", club.getId());
+            result.put("RoomId", roomId);
+            result.put("OnlyNo", System.currentTimeMillis());
+            int index = CenterMsgService.getClubModelIndex(club, clubRoomModel);
+            result.put("wanfa", index);
+            List<Map<String, Object>> list = new ArrayList<>();
+            result.put("PlayerList", list);
+            for (long userId: users) {
+                UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+                Map<String, Object> u = new HashMap<>();
+                u.put("Unionid", userBean.getOpenId());
+                u.put("WeixinName", userBean.getUsername());
+                u.put("HeadImgUrl", userBean.getImage() + "/132");
+                list.add(u);
+            }
+            String json = JsonUtil.toJson(result);
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            //设置连接超时5s
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectTimeout(5000).setConnectionRequestTimeout(5000)
+                    .setSocketTimeout(5000).build();
+
+            String url1 = serverConfig.getLq_http_url() + "?strContext=" +json;
+
+            try {
+                URL url= new URL(url1);
+                URI uri = new URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), null);
+                HttpGet request = new HttpGet(uri);
+                request.setConfig(requestConfig);
+                try {
+                    httpClient.execute(request);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (URISyntaxException | MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     private static ClubStatistics getClubStatistics(Club club){
         String date = LocalDate.now().toString();
         club.getStatistics().getStatistics().putIfAbsent(date, new ClubStatistics());

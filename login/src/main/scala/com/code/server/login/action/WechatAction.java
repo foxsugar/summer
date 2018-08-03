@@ -12,6 +12,7 @@ import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.service.AgentService;
+import com.code.server.login.service.ServerManager;
 import com.code.server.redis.service.AgentRedisService;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
@@ -693,5 +694,19 @@ public class WechatAction extends Cors {
         map.put("qr", agentBean.getQrTicket());
         map.put("icon", agentBean.getImage());
         return agentResponse.setData(map);
+    }
+
+
+    @RequestMapping("/getDownloadUrl")
+    @ResponseBody
+    public AgentResponse getDownloadUrl() {
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("android", ServerManager.constant.getDownload1());
+        result.put("ios", ServerManager.constant.getDownload2());
+
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(result);
+        return agentResponse;
     }
 }
