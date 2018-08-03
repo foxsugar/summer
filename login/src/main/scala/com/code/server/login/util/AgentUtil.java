@@ -107,7 +107,7 @@ public class AgentUtil {
             Enumeration<String> headerValues = request.getHeaders(headerName);
             while (headerValues.hasMoreElements()) {
                 String str = headerValues.nextElement();
-                System.out.println(headerName + ":" + str);
+//                System.out.println(headerName + ":" + str);
                 if (headerName.equals(key)){
                     token = str;
                     find = true;
