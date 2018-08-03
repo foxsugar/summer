@@ -112,7 +112,7 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(1000);
             }else if (room.getGoldRoomType() == 500){
                 max = 4000;
-                minGold = 4000;
+                minGold = 5000;
                 genZhuList.add(800);
                 genZhuList.add(1200);
                 genZhuList.add(1600);
@@ -149,7 +149,7 @@ public class GameBaseYSZ extends Game {
 
             }else if (room.getGoldRoomType() == 500){
                 max = 4000;
-                minGold = 4000;
+                minGold = 5000;
                 genZhuList.add(800);
                 genZhuList.add(1200);
                 genZhuList.add(1600);
@@ -176,6 +176,10 @@ public class GameBaseYSZ extends Game {
         shuffle();//洗牌
         deal();//发牌
         initDiZhu();
+
+        //出场值是入场的一半
+        minGold = this.room.computeEnterGold() / 2;
+
         computeCardType();
         recordCardType();
         chip = INIT_BOTTOM_CHIP;

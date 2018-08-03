@@ -241,7 +241,8 @@ public class RoomYSZ extends RoomExtendGold {
     protected int getOutGold() {
         if (isGoldRoom() && this.goldRoomPermission != GOLD_ROOM_PERMISSION_DEFAULT) {
             //todo 根据闷牌 得到出场限制
-            return super.getOutGold();
+//            return super.getOutGold();
+            return computeEnterGold() / 2;
         } else{
             return super.getOutGold();
         }
@@ -250,11 +251,55 @@ public class RoomYSZ extends RoomExtendGold {
     @Override
     protected int getEnterGold() {
         if (isGoldRoom() && this.goldRoomPermission != GOLD_ROOM_PERMISSION_DEFAULT) {
+
             //todo 根据闷牌 得到进场限制
-            return super.getEnterGold();
+//            return super.getEnterGold();
+            return computeEnterGold();
         } else{
             return super.getEnterGold();
         }
+    }
+
+
+    public  int computeEnterGold(){
+        int enter = 0;
+        if (this.menPai == 0){
+
+            if (this.goldRoomType == 50){
+                enter = 1000;
+            }else if (this.goldRoomType == 100){
+                enter = 2000;
+            }else if (this.goldRoomType == 200){
+                enter = 5000;
+            }else if (this.goldRoomType == 500){
+                enter = 10000;
+            }
+
+        }else if (this.menPai == 3){
+            if (this.goldRoomType == 50){
+                enter = 1000;
+            }else if (this.goldRoomType == 100){
+                enter = 2000;
+            }else if (this.goldRoomType == 200){
+                enter = 5000;
+            }else if (this.goldRoomType == 500){
+                enter = 10000;
+            }
+
+        }else if (this.menPai == 5){
+
+            if (this.goldRoomType == 50){
+                enter = 1000;
+            }else if (this.goldRoomType == 100){
+                enter = 2000;
+            }else if (this.goldRoomType == 200){
+                enter = 5000;
+            }else if (this.goldRoomType == 500){
+                enter = 15000;
+            }
+        }
+
+        return enter;
     }
 
     @Override
