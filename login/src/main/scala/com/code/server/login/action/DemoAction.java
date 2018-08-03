@@ -12,6 +12,7 @@ import com.code.server.login.service.AgentService;
 import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.HomeService;
 import com.code.server.login.util.AgentUtil;
+import com.code.server.login.util.CookieUtils;
 import com.code.server.login.util.MD5Util;
 import com.code.server.login.vo.DChargeAdminVo;
 import com.code.server.login.vo.DChildVo;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import sun.management.Agent;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -103,7 +105,7 @@ public class DemoAction extends Cors{
         }
         return role;
     }
-
+    @DemoChecker
     @RequestMapping("/timeSearch")
     public AgentResponse doSearch(String t1, String t2, int curPage){
 
@@ -175,6 +177,7 @@ public class DemoAction extends Cors{
         return agentResponse;
     }
 
+    @DemoChecker
     @RequestMapping("/roleInfo")
     public AgentResponse roleInfo(long userId){
         long role = getRole(userId);
@@ -182,7 +185,7 @@ public class DemoAction extends Cors{
         agentResponse.setData(role);
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/toAgent")
     public AgentResponse toAgent(long userId) {
         AgentResponse agentResponse = new AgentResponse();
@@ -196,7 +199,7 @@ public class DemoAction extends Cors{
         agentService.change2Agent(userId);
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/toUser")
     public AgentResponse toUser(long userId) {
 
@@ -211,7 +214,7 @@ public class DemoAction extends Cors{
         agentService.change2Player(userId);
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/toPartner")
     public AgentResponse toPartner(long userId) {
 
@@ -244,6 +247,7 @@ public class DemoAction extends Cors{
         return agentResponse;
     }
 
+    @DemoChecker
     @RequestMapping("/fetchPlayer")
     public AgentResponse fetchPlayer(long userId, HttpServletRequest request){
 
@@ -271,6 +275,7 @@ public class DemoAction extends Cors{
         return agentResponse;
     };
 
+    @DemoChecker
     @RequestMapping("/fetchDelegate")
     public AgentResponse fetchDelegate(long userId){
         if (userId == 0){
@@ -301,7 +306,7 @@ public class DemoAction extends Cors{
 
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/fetchDelegates")
     public AgentResponse fetchDelegates(int curPage){
 
@@ -332,6 +337,7 @@ public class DemoAction extends Cors{
         return agentResponse;
     }
 
+    @DemoChecker
     @RequestMapping("/fetchPartner")
     public AgentResponse fetchPartner(long userId){
         if (userId == 0){
@@ -361,7 +367,7 @@ public class DemoAction extends Cors{
         }
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/fetchPartners")
     public AgentResponse fetchPartners(int curPage){
         if (curPage > 0){
@@ -389,14 +395,18 @@ public class DemoAction extends Cors{
         agentResponse.setData(rs);
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/logout")
     public AgentResponse logout(){
-        AgentUtil.caches.clear();
+
+        String token = AgentUtil.findTokenInHeader();
+        if (AgentUtil.caches.keySet().contains(token)){
+            AgentUtil.caches.remove(token);
+        }
         AgentResponse agentResponse = new AgentResponse();
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping(value = "/doChargeNew", method = RequestMethod.POST)
     public AgentResponse doChargeNew(HttpServletRequest request, long userId, @RequestParam(value = "money", required = true) long money, String type){
 
@@ -450,7 +460,7 @@ public class DemoAction extends Cors{
         agentResponse.setData(rs);
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/downward")
     public AgentResponse downwardDelegate(HttpServletRequest request, long agentId){
 
@@ -725,7 +735,7 @@ public class DemoAction extends Cors{
 
         return rs;
     }
-
+    @DemoChecker
     @RequestMapping("/oFindCharge")
     public AgentResponse findChargeByOrderId(long orderId){
         Charge charge =  homeService.findChargeByOrderId(orderId);
@@ -748,7 +758,7 @@ public class DemoAction extends Cors{
         }
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/uFindCharge")
     public AgentResponse findChargeByUserId(long userId){
 
@@ -772,7 +782,7 @@ public class DemoAction extends Cors{
         }
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/chargeTimeSearch")
     public AgentResponse chargeTimerSearch(String time, int curPage){
 
@@ -810,9 +820,10 @@ public class DemoAction extends Cors{
     @DemoChecker
     @RequestMapping("/changePwd")
     @Transactional
-    public AgentResponse changePwd(String pwd){
-        // TODO: 2018/7/31  需要通过token获取
-        int agentId = 1;
+    public AgentResponse changePwd(String pwd, HttpServletRequest request){
+
+        String token = AgentUtil.findTokenInHeader();
+        int agentId = (int)AgentUtil.getUserIdByToken(token);
         AgentUser agentUser = agentUserDao.findOne(agentId);
         agentUser.setPassword(pwd);
         AgentUser au = agentUserDao.save(agentUser);
@@ -826,7 +837,7 @@ public class DemoAction extends Cors{
             return agentResponse;
         }
     }
-
+    @DemoChecker
     @RequestMapping("/findCharges")
     public AgentResponse findCharges(int curPage){
         if (curPage > 0){
@@ -864,16 +875,17 @@ public class DemoAction extends Cors{
             rs.put("id", agentUser.getId());
             rs.put("username", agentUser.getUsername());
             String token = getToken(agentUser.getId());
+            //清除缓存
+            AgentUtil.clearUserTokenByUserId(agentUser.getId());
             AgentUtil.caches.put(token, rs);
-            //3. 设置token至cookie
-//             new AgentUtil.setCookies(response, "HTTP_X_TOKEN", token, 7200);
-            AgentUtil agentUtil = new AgentUtil();
-            agentUtil.setCookies(response, "HTTP_X_TOKEN", token, 7200);
-//            new AgentUtil().setCookies(response,"HTTP_X_TOKEN", 7200);
+
             agentResponse = new AgentResponse(0, result);
-            return agentResponse.setData(token);
+            Map<String, Object> rrr = new HashMap<>();
+            rrr.put("token", token);
+            return agentResponse.setData(rrr);
 
         }else {
+
             agentResponse = new AgentResponse(ErrorCode.ROLE_ACCOUNT_OR_PASSWORD_ERROR,result);
             agentResponse.msg = "用户不存在";
         }
@@ -890,7 +902,7 @@ public class DemoAction extends Cors{
         r.put("roles", roles);
         return new AgentResponse(0, r);
     }
-
+    @DemoChecker
     @RequestMapping("/onlineInfo")
     public AgentResponse onlineInfo(String date){
         //todo token 验证
@@ -898,6 +910,7 @@ public class DemoAction extends Cors{
         return new AgentResponse(0, JsonUtil.toJson(logRecord));
     }
 
+    @DemoChecker
     @RequestMapping("/getLogByDates")
     public AgentResponse getLogByDates(int num) {
         LocalDate today = LocalDate.now();
