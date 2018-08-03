@@ -8,11 +8,14 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import sun.management.Agent;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,30 +32,13 @@ public class DemoAopAdviseDefine {
 
     @Around("pointcut()")
     public Object checkAuth(ProceedingJoinPoint joinPoint) throws Throwable {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-                .getRequest();
-
-        // 检查用户所传递的 token 是否合法
-        Map<String, String> map = getAgentByToken(request);
-
-        Object[] objects = joinPoint.getArgs();
-
-
-        Cookie cookie = AgentUtil.get(request,"HTTP_X_TOKEN");
-        if (cookie == null) {
-
-            System.out.println("=======");
+        String token = AgentUtil.findTokenInHeader();
+        if (!AgentUtil.caches.keySet().contains(token)){
+            Map<String, Object> rs = new HashMap<>();
+            return new AgentResponse(50008, rs);
         }
-
-//        if (null == map) {
-////            return "错误, 请登录!";
-//            Map<String, Object> rs = new HashMap<>();
-//            return new AgentResponse(1000, rs);
-//        };
-//
         return joinPoint.proceed();
     }
-
 
     public static Map<String, String> getAgentByToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();

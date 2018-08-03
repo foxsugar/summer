@@ -36,6 +36,28 @@ public class TuiTongTongCardUtilsTest {
     }
 
     @Test
+    public void digui(){
+
+        List<Object> oo = new ArrayList<>();
+
+        jieCheng(5, oo);
+
+        System.out.println(oo);
+
+    }
+
+    public void jieCheng(int n, List<Object> list){
+
+        if (n == 1){
+            list.add(n);
+            return;
+        }else {
+            list.add(n);
+            jieCheng(n -1, list);
+        }
+    }
+
+    @Test
     public void dateTest(){
 
         String today = DateUtil.convert2DayString(new Date());
