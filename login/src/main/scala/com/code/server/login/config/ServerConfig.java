@@ -61,6 +61,8 @@ public class ServerConfig {
 
     private Map<String,String> domainMap = new HashMap<>();
 
+    private Map<Integer, Integer> chargeMap = new HashMap<>();
+
 
     public String getServerType() {
         return serverType;
@@ -271,6 +273,15 @@ public class ServerConfig {
 
     public ServerConfig setDomainMap(Map<String, String> domainMap) {
         this.domainMap = domainMap;
+        return this;
+    }
+
+    public Map<Integer, Integer> getChargeMap() {
+        return chargeMap;
+    }
+
+    public ServerConfig setChargeMap(Map<Integer, Integer> chargeMap) {
+        this.chargeMap = chargeMap;
         return this;
     }
 }

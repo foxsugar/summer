@@ -271,7 +271,7 @@ public class CenterMsgService implements IkafkaMsgId {
         }
     }
 
-    private static int getClubModelIndex(Club club,String roomModel) {
+    public static int getClubModelIndex(Club club,String roomModel) {
         int index = 0;
         for (RoomModel rm : club.getClubInfo().getRoomModels()) {
             index += 1;
