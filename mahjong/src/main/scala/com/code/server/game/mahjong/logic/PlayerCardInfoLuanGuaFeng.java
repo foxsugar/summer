@@ -177,7 +177,7 @@ private static final int FANGZUOBI = 1;
             PlayerCardsInfoMj dianPao = this.gameInfo.getPlayerCardsInfos().get(dianpaoUser);
             dianPao.addScore(-allScore);
 
-        } this.roomInfo.addUserSocre(dianpaoUser ,-allScore);
+        }
 
         this.addScore(allScore);
         this.roomInfo.addUserSocre(this.userId, allScore);

@@ -393,7 +393,7 @@ public class GameUserService {
             case IProjectName.HUANLE:
                 return 1;
             default:
-                return 0;
+                return 1;
         }
 
     }

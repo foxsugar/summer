@@ -29,6 +29,8 @@ public class RoomFactory {
                 return ((RoomInfo)new RoomInfo().setGameType(gameType)).setHasGangBlackList(false);
             case "NIUYEZI":
                 return ((RoomInfo)new RoomInfo().setGameType(gameType)).setHasGangBlackList(false);
+            case "HS":
+                return (RoomInfo)new RoomInfoGoldH().setGameType(gameType);
             case "HELEGOLD":
                 return (RoomInfo)new RoomInfoGoldHeLe().setGameType(gameType);
             default:

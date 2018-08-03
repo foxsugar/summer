@@ -238,6 +238,26 @@ public class RoomYSZ extends RoomExtendGold {
 
 
     @Override
+    protected int getOutGold() {
+        if (isGoldRoom() && this.goldRoomPermission != GOLD_ROOM_PERMISSION_DEFAULT) {
+            //todo 根据闷牌 得到出场限制
+            return super.getOutGold();
+        } else{
+            return super.getOutGold();
+        }
+    }
+
+    @Override
+    protected int getEnterGold() {
+        if (isGoldRoom() && this.goldRoomPermission != GOLD_ROOM_PERMISSION_DEFAULT) {
+            //todo 根据闷牌 得到进场限制
+            return super.getEnterGold();
+        } else{
+            return super.getEnterGold();
+        }
+    }
+
+    @Override
     public void noticeJoinRoom(long userId) {
         List<UserVo> usersList = new ArrayList<>();
         UserOfRoom userOfRoom = new UserOfRoom();
