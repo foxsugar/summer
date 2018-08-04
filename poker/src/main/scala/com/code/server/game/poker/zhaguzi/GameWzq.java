@@ -35,9 +35,7 @@ public class GameWzq extends Game {
         if (gold < this.roomWzq.getMultiple()) {
             return ErrorCode.NOT_HAVE_MORE_MONEY;
         }
-        if (userId == this.roomWzq.getBankerId()) {
-            return ErrorCode.NOT_HAVE_MORE_MONEY;
-        }
+
 
         List<Long> tempUser = new ArrayList<>();
         tempUser.addAll(this.users);
