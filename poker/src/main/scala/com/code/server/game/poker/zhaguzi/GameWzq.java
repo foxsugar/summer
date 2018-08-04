@@ -50,7 +50,7 @@ public class GameWzq extends Game {
         golds.put(other, gold2);
 
         computeScore(userId, -this.roomWzq.getMultiple());
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "admitDefeat", golds), this.getUsers());
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "admitDefeat", golds), users);
 
 
         sendResult(other,golds);
@@ -83,7 +83,7 @@ public class GameWzq extends Game {
             return ErrorCode.SET_SCORE_ERROR;
         }
         this.roomWzq.setMultiple(score);
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "setScore", score), this.getUsers());
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "setScore", score), users);
         return 0;
     }
 
