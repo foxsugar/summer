@@ -83,7 +83,10 @@ public class GameWzq extends Game {
             return ErrorCode.SET_SCORE_ERROR;
         }
         this.roomWzq.setMultiple(score);
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "setScore", score), users);
+        Map<String, Object> result = new HashMap<>();
+        result.put("userId", userId);
+        result.put("score", score);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "setScore", result), users);
         return 0;
     }
 
