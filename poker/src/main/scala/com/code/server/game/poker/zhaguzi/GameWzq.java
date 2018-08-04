@@ -52,7 +52,9 @@ public class GameWzq extends Game {
         golds.put(other, gold2);
 
         computeScore(userId, -this.roomWzq.getMultiple());
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "admitDefeat", golds), users);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "admitDefeatResp", golds), users);
+
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "admitDefeat", 0), userId);
 
 
         sendResult(other,golds);
@@ -88,7 +90,8 @@ public class GameWzq extends Game {
         Map<String, Object> result = new HashMap<>();
         result.put("userId", userId);
         result.put("score", score);
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "setScore", result), users);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "setScoreResp", result), users);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "setScore", 0), userId);
         return 0;
     }
 
@@ -133,7 +136,8 @@ public class GameWzq extends Game {
         result.put("x", x);
         result.put("y", y);
         result.put("userId", userId);
-        MsgSender.sendMsg2Player("gameService", "move", result, users);
+        MsgSender.sendMsg2Player("gameService", "moveResp", result, users);
+        MsgSender.sendMsg2Player("gameService", "move", 0, userId);
 
 
         //是否有人赢
