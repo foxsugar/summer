@@ -24,6 +24,8 @@ public class GameWzq extends Game {
 
     private Map<String, WzqNode> nodes;
 
+
+
     private long lastMoveUser;
 
 
