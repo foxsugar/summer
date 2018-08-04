@@ -276,6 +276,7 @@ public class GameWzq extends Game {
     public void startGame(List<Long> users, Room room) {
         this.roomWzq = room;
         this.users.addAll(room.getUsers());
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameWzqBegin", "ok"), this.getUsers());
     }
 
     @Override
