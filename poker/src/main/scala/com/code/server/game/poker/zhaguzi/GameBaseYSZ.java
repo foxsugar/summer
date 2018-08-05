@@ -885,6 +885,15 @@ public class GameBaseYSZ extends Game {
             }
         }
         result.put("zhuList", list);
+
+        List<Object> allScoreList = new ArrayList<>();
+        for (long uid : this.users){
+            Map<Long, Double> allScoreItem = new HashMap<>();
+            allScoreItem.put(uid, playerCardInfo.getAllScore());
+            allScoreList.add(allScoreItem);
+        }
+        result.put("allScoreList", allScoreList);
+
         ResponseVo vo = new ResponseVo("gameService", "noticeActionSelf", result);
         MsgSender.sendMsg2Player(vo, users);
     }
@@ -946,6 +955,14 @@ public class GameBaseYSZ extends Game {
         }
 
         result.put("zhuList", list);
+
+        List<Object> allScoreList = new ArrayList<>();
+        for (long uid : this.users){
+            Map<Long, Double> allScoreItem = new HashMap<>();
+            allScoreItem.put(uid, playerCardInfo.getAllScore());
+            allScoreList.add(allScoreItem);
+        }
+        result.put("allScoreList", allScoreList);
 
         ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
         MsgSender.sendMsg2Player(vo, users);
