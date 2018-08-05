@@ -235,11 +235,11 @@ public class GameBaseYSZ extends Game {
                 if (roomStatistics == null){
                     this.room.getRoomStatisticsMap().put(entry.getKey(), new RoomStatistics());
                 }
-                String maxCardGroup = roomStatistics.maxCardGroup;
+                String maxCardGroup = roomStatistics.ext;
                 if (maxCardGroup == null || maxCardGroup.isEmpty()){
-                    roomStatistics.maxCardGroup = CardUtils.transfromCardsToString(entry.getValue().handcards);
+                    roomStatistics.ext = CardUtils.transfromCardsToString(entry.getValue().handcards);
                 }else {
-                    List<Integer> last = CardUtils.transfromStringToCards(roomStatistics.maxCardGroup);
+                    List<Integer> last = CardUtils.transfromStringToCards(roomStatistics.ext);
                     List<Integer> current = entry.getValue().getHandcards();
 
                     Player playerLast = new Player(1l,  ArrUtils.cardCode.get(last.get(0)), ArrUtils.cardCode.get(last.get(1)), ArrUtils.cardCode.get(last.get(2)));
@@ -248,12 +248,18 @@ public class GameBaseYSZ extends Game {
                     Player winner = retList.get(0);
 
                     if (winner.getUid() == 2){
-                        roomStatistics.maxCardGroup = CardUtils.transfromCardsToString(current);
+                        roomStatistics.ext = CardUtils.transfromCardsToString(current);
+                        roomStatistics.maxCardGroup = playerLast.transfromCategoryToString();
+                    }else {
+                        roomStatistics.maxCardGroup = playerCurrent.transfromCategoryToString();
                     }
                 }
+
+
+
             }
         }
-        logger.info("      ===== 开始 牌 型:", this.room.getRoomStatisticsMap());
+        logger.info("      ===== 开始 牌 型:{}", this.room.getRoomStatisticsMap());
     }
 
 //    public double getUserScores(long userId){
@@ -789,7 +795,7 @@ public class GameBaseYSZ extends Game {
             }
         }
 
-        logger.info("      ===== 结束 局 数:", this.room.getRoomStatisticsMap());
+        logger.info("      ===== 结束 局 数:{}", this.room.getRoomStatisticsMap());
 
         MsgSender.sendMsg2Player("gameService", "gameResult", gameResultHitGoldFlower, this.room.users);
         this.pushGoldScore();
@@ -885,6 +891,15 @@ public class GameBaseYSZ extends Game {
             }
         }
         result.put("zhuList", list);
+
+        List<Object> allScoreList = new ArrayList<>();
+        for (long uid : this.users){
+            Map<Long, Double> allScoreItem = new HashMap<>();
+            allScoreItem.put(uid, playerCardInfo.getAllScore());
+            allScoreList.add(allScoreItem);
+        }
+        result.put("allScoreList", allScoreList);
+
         ResponseVo vo = new ResponseVo("gameService", "noticeActionSelf", result);
         MsgSender.sendMsg2Player(vo, users);
     }
@@ -946,6 +961,14 @@ public class GameBaseYSZ extends Game {
         }
 
         result.put("zhuList", list);
+
+        List<Object> allScoreList = new ArrayList<>();
+        for (long uid : this.users){
+            Map<Long, Double> allScoreItem = new HashMap<>();
+            allScoreItem.put(uid, playerCardInfo.getAllScore());
+            allScoreList.add(allScoreItem);
+        }
+        result.put("allScoreList", allScoreList);
 
         ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
         MsgSender.sendMsg2Player(vo, users);
@@ -1018,6 +1041,15 @@ public class GameBaseYSZ extends Game {
             }
         }
         result.put("zhuList", list);
+
+        List<Object> allScoreList = new ArrayList<>();
+        for (long uid : this.users){
+            Map<Long, Double> allScoreItem = new HashMap<>();
+            allScoreItem.put(uid, playerCardInfo.getAllScore());
+            allScoreList.add(allScoreItem);
+        }
+        result.put("allScoreList", allScoreList);
+
         ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
         MsgSender.sendMsg2Player(vo, users);
     }

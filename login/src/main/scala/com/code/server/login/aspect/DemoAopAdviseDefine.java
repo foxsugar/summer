@@ -40,21 +40,4 @@ public class DemoAopAdviseDefine {
         return joinPoint.proceed();
     }
 
-    public static Map<String, String> getAgentByToken(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) return null;
-        Cookie cookie = null;
-        for (Cookie c : cookies) {
-//            if (AGENT_COOKIE_NAME.equals(c.getName())) {
-//                cookie = c;
-//            }
-            System.out.println(c.getName());
-        }
-        if (cookie != null) {
-            return RedisManager.getAgentRedisService().getAgentByToken(cookie.getValue());
-        }
-
-        return null;
-    }
-
 }
