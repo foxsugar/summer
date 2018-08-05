@@ -84,6 +84,12 @@ public class GameWzq extends Game {
         if (roomWzq.getMultiple() != 0 || score < 0) {
             return ErrorCode.SET_SCORE_ERROR;
         }
+        for(long user : users){
+            double g = RedisManager.getUserRedisService().getUserGold(user);
+            if (score > g) {
+                return ErrorCode.SET_SCORE_ERROR;
+            }
+        }
         this.roomWzq.setMultiple(score);
         Map<String, Object> result = new HashMap<>();
         result.put("userId", userId);
