@@ -1,5 +1,6 @@
 package com.code.server.game.poker.zhaguzi;
 
+import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
@@ -55,6 +56,20 @@ public class RoomWzq extends Room {
         return 0;
     }
 
+
+    protected void roomAddUser(long userId) {
+
+        this.users.add(userId);
+        this.userStatus.put(userId, 0);
+        this.userScores.put(userId, 0D);
+
+        this.userScores.put(userId, RedisManager.getUserRedisService().getUserGold(userId));
+
+        this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
+        this.canStartUserId = users.get(0);
+
+        addUser2RoomRedis(userId);
+    }
 
     @Override
     public void pushScoreChange() {
