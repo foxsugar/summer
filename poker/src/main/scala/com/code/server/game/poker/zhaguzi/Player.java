@@ -15,6 +15,24 @@ public class Player {
     
     public Player() {
 	}
+
+	public  String transfromCategoryToString(){
+
+    	String str = "";
+
+    	if (this.getCategory().equals(CardCategory.BaoZi)){
+    		str = "豹子";
+		}else if (this.getCategory().equals(CardCategory.BaoZi.ShunJin)){
+    		str = "顺金";
+		}else if(this.getCategory().equals(CardCategory.JinHua)){
+			str = "金花";
+		}else if (this.getCategory().equals(CardCategory.DuiZi)){
+			str = "对子";
+		}else if (this.getCategory().equals(CardCategory.DanZi)){
+			str = "单子";
+		}
+		return str;
+	}
     
     public Player(Long uid, String c1, String v1, String c2, String v2, String c3, String v3) {
 

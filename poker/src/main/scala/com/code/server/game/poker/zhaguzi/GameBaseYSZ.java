@@ -249,8 +249,14 @@ public class GameBaseYSZ extends Game {
 
                     if (winner.getUid() == 2){
                         roomStatistics.maxCardGroup = CardUtils.transfromCardsToString(current);
+                        roomStatistics.ext = playerLast.transfromCategoryToString();
+                    }else {
+                        roomStatistics.ext = playerCurrent.transfromCategoryToString();
                     }
                 }
+
+
+
             }
         }
         logger.info("      ===== 开始 牌 型:{}", this.room.getRoomStatisticsMap());
@@ -1035,6 +1041,15 @@ public class GameBaseYSZ extends Game {
             }
         }
         result.put("zhuList", list);
+
+        List<Object> allScoreList = new ArrayList<>();
+        for (long uid : this.users){
+            Map<Long, Double> allScoreItem = new HashMap<>();
+            allScoreItem.put(uid, playerCardInfo.getAllScore());
+            allScoreList.add(allScoreItem);
+        }
+        result.put("allScoreList", allScoreList);
+
         ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
         MsgSender.sendMsg2Player(vo, users);
     }
