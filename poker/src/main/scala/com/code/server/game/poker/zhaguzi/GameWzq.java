@@ -24,6 +24,8 @@ public class GameWzq extends Game {
 
     private Map<String, WzqNode> nodes;
 
+
+
     private long lastMoveUser;
 
 
@@ -33,9 +35,7 @@ public class GameWzq extends Game {
         if (gold < this.roomWzq.getMultiple()) {
             return ErrorCode.NOT_HAVE_MORE_MONEY;
         }
-        if (userId == this.roomWzq.getBankerId()) {
-            return ErrorCode.NOT_HAVE_MORE_MONEY;
-        }
+
 
         List<Long> tempUser = new ArrayList<>();
         tempUser.addAll(this.users);
@@ -50,7 +50,9 @@ public class GameWzq extends Game {
         golds.put(other, gold2);
 
         computeScore(userId, -this.roomWzq.getMultiple());
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "admitDefeat", golds), this.getUsers());
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "admitDefeatResp", golds), users);
+
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "admitDefeat", 0), userId);
 
 
         sendResult(other,golds);
@@ -82,8 +84,18 @@ public class GameWzq extends Game {
         if (roomWzq.getMultiple() != 0 || score < 0) {
             return ErrorCode.SET_SCORE_ERROR;
         }
+        for(long user : users){
+            double g = RedisManager.getUserRedisService().getUserGold(user);
+            if (score > g) {
+                return ErrorCode.SET_SCORE_ERROR;
+            }
+        }
         this.roomWzq.setMultiple(score);
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "setScore", score), this.getUsers());
+        Map<String, Object> result = new HashMap<>();
+        result.put("userId", userId);
+        result.put("score", score);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "setScoreResp", result), users);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "setScore", 0), userId);
         return 0;
     }
 
@@ -128,7 +140,8 @@ public class GameWzq extends Game {
         result.put("x", x);
         result.put("y", y);
         result.put("userId", userId);
-        MsgSender.sendMsg2Player("gameService", "move", result, users);
+        MsgSender.sendMsg2Player("gameService", "moveResp", result, users);
+        MsgSender.sendMsg2Player("gameService", "move", 0, userId);
 
 
         //是否有人赢
@@ -267,6 +280,7 @@ public class GameWzq extends Game {
     public void startGame(List<Long> users, Room room) {
         this.roomWzq = room;
         this.users.addAll(room.getUsers());
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameWzqBegin", "ok"), this.getUsers());
     }
 
     @Override
