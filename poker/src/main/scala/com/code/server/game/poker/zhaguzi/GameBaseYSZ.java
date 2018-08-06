@@ -117,6 +117,8 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(1200);
                 genZhuList.add(1600);
                 genZhuList.add(2000);
+            }else {
+                logger.info("传值错误~~~");
             }
             INIT_BOTTOM_CHIP = dizhu;
             MAX_BET_NUM = max;
@@ -154,6 +156,8 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(1200);
                 genZhuList.add(1600);
                 genZhuList.add(2000);
+            }else {
+                logger.info("传值错误~~~");
             }
 
             INIT_BOTTOM_CHIP = dizhu;
@@ -892,13 +896,11 @@ public class GameBaseYSZ extends Game {
         }
         result.put("zhuList", list);
 
-        List<Object> allScoreList = new ArrayList<>();
+        Map<Long, Double> allScoreItems = new HashMap<>();
         for (long uid : this.users){
-            Map<Long, Double> allScoreItem = new HashMap<>();
-            allScoreItem.put(uid, playerCardInfo.getAllScore());
-            allScoreList.add(allScoreItem);
+            allScoreItems.put(uid, playerCardInfo.getAllScore());
         }
-        result.put("allScoreList", allScoreList);
+        result.put("allScoreList", allScoreItems);
 
         ResponseVo vo = new ResponseVo("gameService", "noticeActionSelf", result);
         MsgSender.sendMsg2Player(vo, users);
@@ -962,13 +964,11 @@ public class GameBaseYSZ extends Game {
 
         result.put("zhuList", list);
 
-        List<Object> allScoreList = new ArrayList<>();
+        Map<Long, Double> allScoreItems = new HashMap<>();
         for (long uid : this.users){
-            Map<Long, Double> allScoreItem = new HashMap<>();
-            allScoreItem.put(uid, playerCardInfo.getAllScore());
-            allScoreList.add(allScoreItem);
+            allScoreItems.put(uid, playerCardInfo.getAllScore());
         }
-        result.put("allScoreList", allScoreList);
+        result.put("allScoreList", allScoreItems);
 
         ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
         MsgSender.sendMsg2Player(vo, users);
@@ -1042,13 +1042,11 @@ public class GameBaseYSZ extends Game {
         }
         result.put("zhuList", list);
 
-        List<Object> allScoreList = new ArrayList<>();
+        Map<Long, Double> allScoreItems = new HashMap<>();
         for (long uid : this.users){
-            Map<Long, Double> allScoreItem = new HashMap<>();
-            allScoreItem.put(uid, playerCardInfo.getAllScore());
-            allScoreList.add(allScoreItem);
+            allScoreItems.put(uid, playerCardInfo.getAllScore());
         }
-        result.put("allScoreList", allScoreList);
+        result.put("allScoreList", allScoreItems);
 
         ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
         MsgSender.sendMsg2Player(vo, users);
