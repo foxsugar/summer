@@ -242,6 +242,12 @@ public class GameBaseYSZ extends Game {
                 String maxCardGroup = roomStatistics.ext;
                 if (maxCardGroup == null || maxCardGroup.isEmpty()){
                     roomStatistics.ext = CardUtils.transfromCardsToString(entry.getValue().handcards);
+                    Integer l1 = entry.getValue().handcards.get(0);
+                    Integer l2 = entry.getValue().handcards.get(1);
+                    Integer l3 = entry.getValue().handcards.get(2);
+                    Player playerLast = new Player(1l,  ArrUtils.cardCode.get(l1), ArrUtils.cardCode.get(l2), ArrUtils.cardCode.get(l3));
+                    roomStatistics.maxCardGroup = playerLast.transfromCategoryToString();
+
                 }else {
                     List<Integer> last = CardUtils.transfromStringToCards(roomStatistics.ext);
                     List<Integer> current = entry.getValue().getHandcards();
@@ -258,9 +264,6 @@ public class GameBaseYSZ extends Game {
                         roomStatistics.maxCardGroup = playerCurrent.transfromCategoryToString();
                     }
                 }
-
-
-
             }
         }
         logger.info("      ===== 开始 牌 型:{}", this.room.getRoomStatisticsMap());

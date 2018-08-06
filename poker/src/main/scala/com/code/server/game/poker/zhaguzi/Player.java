@@ -29,7 +29,7 @@ public class Player {
 		}else if (this.getCategory().equals(CardCategory.DuiZi)){
 			str = "对子";
 		}else if (this.getCategory().equals(CardCategory.DanZi)){
-			str = "单子";
+			str = "单牌";
 		}
 		return str;
 	}
