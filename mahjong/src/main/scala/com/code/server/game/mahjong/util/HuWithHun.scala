@@ -360,11 +360,15 @@ object HuWithHun {
 
     for (index <- noHuncards.indices) {
 
-      val group = CardTypeUtil.getCardGroupByCardType(index)
-      if (group == CardTypeUtil.GROUP_FENG || group == CardTypeUtil.GROUP_ZI) {
-        return false
+
+      if(noHuncards(index) !=0){
+
+        val group = CardTypeUtil.getCardGroupByCardType(index)
+        if (group == CardTypeUtil.GROUP_FENG || group == CardTypeUtil.GROUP_ZI) {
+          return false
+        }
+        set.add(group)
       }
-      set.add(group)
 
 
     }

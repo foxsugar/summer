@@ -231,7 +231,7 @@ public class CenterMsgService implements IkafkaMsgId {
             Map<String, Object> result = new HashMap<>();
             result.put("ClubNo", club.getId());
             result.put("RoomId", roomRecord.getRoomId());
-            result.put("OnlyNo", System.currentTimeMillis());
+            result.put("OnlyNo", club.getId() + roomRecord.getRoomId() + roomRecord.getClubRoomModel());
             int index = getClubModelIndex(club, roomRecord.getClubRoomModel());
             result.put("wanfa", index);
             List<Map<String, Object>> list = new ArrayList<>();

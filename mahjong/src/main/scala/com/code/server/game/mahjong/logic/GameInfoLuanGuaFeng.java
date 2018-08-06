@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.code.server.game.mahjong.logic.PlayerCardsInfoMj.isHasMode;
 import static com.code.server.game.mahjong.logic.PlayerCardsInfoMj.type_bufeng;
 
 /**
@@ -30,6 +31,27 @@ public class GameInfoLuanGuaFeng extends GameInfoNew {
         initHun();
         //不带风
         fapai();
+    }
+
+
+    @Override
+    protected void handleHuangzhuang(long userId) {
+        if (isHasMode(this.room.mode, PlayerCardInfoLuanGuaFeng.HUANGZHUANG)) {
+            turnResultToZeroOnHuangZhuang();
+        }
+        sendResult(false, userId, null);
+        noticeDissolutionResult();
+        //通知所有玩家结束
+        room.clearReadyStatus(true);
+
+        //庄家换下个人
+        if (room instanceof RoomInfo) {
+            RoomInfo roomInfo = (RoomInfo) room;
+            if (roomInfo.isChangeBankerAfterHuangZhuang()) {
+                room.setBankerId(nextTurnId(room.getBankerId()));
+            }
+
+        }
     }
 
     @Override
@@ -72,10 +94,10 @@ public class GameInfoLuanGuaFeng extends GameInfoNew {
         }
 
 
-        boolean isCanGang = playerCardsInfo.isHasGang();
         boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);//多一张
         boolean isCanHu = playerCardsInfo.isCanHu_zimo(catchCard);
         boolean isCanXuanfeng = playerCardsInfo.isHasXuanfengDan(playerCardsInfo.cards, card);
+        boolean isCanGang =!isCanXuanfeng && playerCardsInfo.isHasGang();
         boolean isCanBufeng = playerCardsInfo.isCanBufeng(card);
 
         //能做的操作

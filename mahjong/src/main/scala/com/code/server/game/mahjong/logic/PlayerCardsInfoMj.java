@@ -478,6 +478,12 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         Set<Integer> set = new HashSet<>();
         List<String> temp = new ArrayList<>();
         temp.addAll(cards);
+
+        //去掉旋风蛋
+        for (List<String> xuanfengdanCard : xuanfengDan.values()) {
+            temp.removeAll(xuanfengdanCard);
+        }
+
         //去掉吃
         for (List<String> chi : chiCards) {
             temp.removeAll(chi);
@@ -489,6 +495,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         for (int type : anGangType) {
             removeCardByType(temp, type, 4);
         }
+
 
 
         for (Map.Entry<Integer, Integer> entry : getCardNum(temp).entrySet()) {

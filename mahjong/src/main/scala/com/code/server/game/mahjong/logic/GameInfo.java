@@ -348,6 +348,7 @@ public class GameInfo extends Game {
         String modeTotal = this.room.getModeTotal();
         return ("LQ".equals(gameType) && "2".equals(modeTotal)) ||
                 ("HL".equals(gameType) && "2".equals(modeTotal)) ||
+                ("THREEA".equals(gameType) && "2".equals(modeTotal)) ||
                 "SS".equals(gameType) ||
                 "HS".equals(gameType)||
                 "KXHY".equals(gameType)||
