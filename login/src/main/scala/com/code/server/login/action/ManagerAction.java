@@ -1,6 +1,9 @@
 package com.code.server.login.action;
 
+import com.code.server.login.config.ServerConfig;
+import com.code.server.login.service.ServerManager;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.SpringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.data.redis.core.BoundHashOperations;
@@ -20,18 +23,18 @@ import static com.code.server.redis.config.IConstant.USER_GATE;
  */
 @RestController
 @EnableAutoConfiguration
-public class ManagerAction extends Cors{
+public class ManagerAction extends Cors {
 
     @Autowired
     private RedisTemplate redisTemplate;
 
     @RequestMapping("/getOnlineUser")
     public Map<String, Object> getOnlineUser() {
-        BoundHashOperations<String,String,String> user_gate = redisTemplate.boundHashOps(USER_GATE);
-        BoundHashOperations<String,String,String> room = redisTemplate.boundHashOps(ROOM_USER);
-        Map<String,Object> result = new HashMap<>();
-        result.put("userNum",user_gate.size());
-        result.put("roomNum",room.size());
+        BoundHashOperations<String, String, String> user_gate = redisTemplate.boundHashOps(USER_GATE);
+        BoundHashOperations<String, String, String> room = redisTemplate.boundHashOps(ROOM_USER);
+        Map<String, Object> result = new HashMap<>();
+        result.put("userNum", user_gate.size());
+        result.put("roomNum", room.size());
         return result;
     }
 
@@ -40,10 +43,10 @@ public class ManagerAction extends Cors{
     public Map<String, Object> getRoomUser(String roomId) {
         Map<String, Object> result = new HashMap<>();
         String serverId = RedisManager.getRoomRedisService().getServerId(roomId);
-        if(serverId == null){
+        if (serverId == null) {
 
             result.put("user", null);
-        }else{
+        } else {
             result.put("user", RedisManager.getRoomRedisService().getUsers(roomId));
         }
         return result;
@@ -51,16 +54,15 @@ public class ManagerAction extends Cors{
     }
 
 
-
     @RequestMapping("/getRoomUserInfo")
     public Map<String, Object> getRoomUserInfo(String roomId) {
         Map<String, Object> result = new HashMap<>();
         String serverId = RedisManager.getRoomRedisService().getServerId(roomId);
-        if(serverId == null){
+        if (serverId == null) {
             result.put("user", null);
-        }else{
+        } else {
             Set<Long> users = RedisManager.getRoomRedisService().getUsers(roomId);
-            result.put("user",  RedisManager.getUserRedisService().getUserBeans(users));
+            result.put("user", RedisManager.getUserRedisService().getUserBeans(users));
         }
         return result;
 
@@ -84,5 +86,15 @@ public class ManagerAction extends Cors{
         result.put("token", "1");
         return agentResponse;
 
+    }
+
+    @RequestMapping("/getDownloadUrl")
+    public String getDownloadUrl(String platform, String versionNow) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("hello", "hello");
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        ServerManager.constant.getVersionOfAndroid();
+        String url = "http://" + serverConfig.getDomain() + "/client/" + platform;
+        return url;
     }
 }

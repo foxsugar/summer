@@ -11,6 +11,7 @@ public class RoomStatistics {
     public int winAllTime;
     public int loseAllTime;
     public String maxCardGroup;
+    public String ext;
 
     public RoomStatistics() {
     }
