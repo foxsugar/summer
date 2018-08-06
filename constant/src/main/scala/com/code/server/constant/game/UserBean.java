@@ -29,6 +29,7 @@ public class UserBean implements IUserBean {
 
     private Date registDate;
     private Date lastLoginDate;
+    private String unionId;
 
     @Override
     public UserVo toVo() {
@@ -204,6 +205,15 @@ public class UserBean implements IUserBean {
 
     public UserBean setRegistDate(Date registDate) {
         this.registDate = registDate;
+        return this;
+    }
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public UserBean setUnionId(String unionId) {
+        this.unionId = unionId;
         return this;
     }
 }

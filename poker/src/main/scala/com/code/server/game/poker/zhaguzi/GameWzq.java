@@ -49,7 +49,7 @@ public class GameWzq extends Game {
         golds.put(userId, gold1);
         golds.put(other, gold2);
 
-        computeScore(userId, -this.roomWzq.getMultiple());
+//        golds = computeScore(userId, -this.roomWzq.getMultiple());
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "admitDefeatResp", golds), users);
 
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "admitDefeat", 0), userId);
@@ -59,7 +59,7 @@ public class GameWzq extends Game {
 
         this.roomWzq.clearReadyStatus(true);
 
-//        sendFinalResult();
+        sendFinalResult();
 
         return 0;
     }
@@ -69,9 +69,9 @@ public class GameWzq extends Game {
         tempUser.addAll(this.users);
         tempUser.remove(userId);
         long other = tempUser.get(0);
-        double gold1 = RedisManager.getUserRedisService().addUserGold(userId, -score);
+        double gold1 = RedisManager.getUserRedisService().addUserGold(userId, score);
 
-        double gold2 = RedisManager.getUserRedisService().addUserGold(other, score);
+        double gold2 = RedisManager.getUserRedisService().addUserGold(other, -score);
 
         Map<Long, Object> golds = new HashMap<>();
         golds.put(userId, gold1);
@@ -164,6 +164,7 @@ public class GameWzq extends Game {
                 golds = computeScore(userId, this.roomWzq.getMultiple());
                 sendResult(winnerId,golds);
             }
+            sendFinalResult();
         }
 
         return 0;

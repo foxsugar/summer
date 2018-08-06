@@ -994,7 +994,7 @@ public class GameClubService {
             Map<String, Object> result = new HashMap<>();
             result.put("ClubNo", club.getId());
             result.put("RoomId", roomId);
-            result.put("OnlyNo", System.currentTimeMillis());
+            result.put("OnlyNo", club.getId() + roomId + clubRoomModel);
             int index = CenterMsgService.getClubModelIndex(club, clubRoomModel);
             result.put("wanfa", index);
             List<Map<String, Object>> list = new ArrayList<>();
@@ -1251,6 +1251,15 @@ public class GameClubService {
             for (String s : removeList) {
                 RoomModel roomModel = getRoomModel(club, s);
                 createRoom(club, roomModel);
+                //减钱
+                int moneyNow = club.getMoney() - roomModel.getMoney();
+                club.setMoney(moneyNow);
+
+                //统计
+                addStatisticeConsume(club, roomModel.getMoney());
+
+                club.getStatistics().setConsume(club.getStatistics().getConsume() + roomModel.getMoney());
+
             }
 
 

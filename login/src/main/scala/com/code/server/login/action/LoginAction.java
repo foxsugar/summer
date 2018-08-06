@@ -97,12 +97,12 @@ public class LoginAction {
         return 0;
     }
 
-    private int login4sqlByOpenId(String openId, String userName, String img, int sex, Map<String, Object> params) {
+    private int login4sqlByOpenId(String openId,String unionId, String userName, String img, int sex, Map<String, Object> params) {
         User user = userService.getUserByOpenId(openId);
         //查询数据库，没有新建玩家
         if (user == null) {
             //新建玩家
-            user = createUser(openId, userName, img, sex);
+            user = createUser(openId,unionId, userName, img, sex);
 
             //代理推荐情况
             Recommend recommend = recommendService.getRecommendDao().getByUnionId(openId);
@@ -227,9 +227,10 @@ public class LoginAction {
 
 
     @RequestMapping("/checkOpenId")
-    public Map<String, Object> checkOpenId(String openId, String username, String image, int sex, String token_user) {
+    public Map<String, Object> checkOpenId(String openId, String username, String image, int sex, String token_user,String unionId) {
 
 
+        System.out.println(unionId);
         int code = 0;
 
         Map<String, Object> params = new HashMap<>();
@@ -237,7 +238,7 @@ public class LoginAction {
         String userId = userRedisService.getUserIdByOpenId(openId);
 
         if (userId == null) {
-            code = login4sqlByOpenId(openId, username, image, sex, params);
+            code = login4sqlByOpenId(openId, unionId,username, image, sex, params);
             userId = (String) params.get("userId");
         } else {
             //刷新redis数据
@@ -247,6 +248,7 @@ public class LoginAction {
                 userBean.setImage(image);
                 userBean.setSex(sex);
                 userBean.setLastLoginDate(new Date());
+                userBean.setUnionId(unionId);
                 userRedisService.updateUserBean(Long.valueOf(userId), userBean);
             }
             String redisToken = getToken(Long.valueOf(userId));
@@ -398,7 +400,7 @@ public class LoginAction {
      * @param sex
      * @return
      */
-    private User createUser(String openId, String username, String image, int sex) {
+    private User createUser(String openId, String unionId, String username, String image, int sex) {
         User newUser = new User();
         newUser.setAccount(openId);
         newUser.setPassword("111111");
@@ -411,6 +413,7 @@ public class LoginAction {
         newUser.setMoney(getConstant().getInitMoney());
         newUser.setRegistDate(new Date());
         newUser.setLastLoginDate(new Date());
+        newUser.setUnionId(unionId);
         return newUser;
     }
 

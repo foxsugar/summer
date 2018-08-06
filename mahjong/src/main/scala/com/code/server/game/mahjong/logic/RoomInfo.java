@@ -220,6 +220,9 @@ public class RoomInfo extends RoomInfoExtendGold {
         if (this.gameType.equals("ZHONGXIN")) {
             this.gameType = "LQ";
         }
+        if (this.gameType.equals("THREEA")) {
+            this.gameType = "LQ";
+        }
 
         if (!isOpen && isCreaterJoin) {
             spendMoney();

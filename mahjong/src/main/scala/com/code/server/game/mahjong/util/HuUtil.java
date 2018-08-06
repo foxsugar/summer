@@ -199,9 +199,10 @@ public class HuUtil implements HuType {
         }
 
         if (playerCardsInfo.isHasSpecialHu(HuType.hu_清七对)) {
-            HuCardType huCardType = isHaoHuaQixiaodui_hun(cards, playerCardsInfo, hun, lastCard);
-            if (huCardType != null) {
-                huCardType.setFan(playerCardsInfo.getSpecialHuScore(hu_豪华七小对)).specialHuList.add(hu_豪华七小对);
+            Boolean isQingqidui = isQingQiDui_hun(cards, playerCardsInfo, hun, lastCard);
+            if (isQingqidui) {
+                HuCardType huCardType = new HuCardType();
+                huCardType.setFan(playerCardsInfo.getSpecialHuScore(hu_清七对)).specialHuList.add(hu_清七对);
                 huList.add(huCardType);
             }
         }

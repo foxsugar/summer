@@ -9,24 +9,28 @@ import java.util.List;
 /**
  * Created by sunxianping on 2018/7/25.
  */
-public class PlayerCardInfoLuanGuaFeng extends  PlayerCardsInfoMj{
-private static final int FANGZUOBI = 1;
+public class PlayerCardInfoLuanGuaFeng extends PlayerCardsInfoMj {
+    private static final int FANGZUOBI = 1;
+    private static final int HAS_QIXIAODUI = 2;
+    public static final int HUANGZHUANG = 3;
+
     @Override
     public void init(List<String> cards) {
         super.init(cards);
 
 
-        specialHuScore.put(hu_七小对, 10);
-        specialHuScore.put(hu_豪华七小对, 10);
+        if (isHasMode(this.roomInfo.mode, HAS_QIXIAODUI)) {
+            specialHuScore.put(hu_七小对, 10);
+            specialHuScore.put(hu_豪华七小对, 10);
+            specialHuScore.put(hu_清七对, 20);
+        }
         specialHuScore.put(hu_清一色, 10);
         specialHuScore.put(hu_一条龙, 10);
-
         specialHuScore.put(hu_清龙, 20);
-        specialHuScore.put(hu_清七对, 20);
     }
 
     @Override
-    public boolean isHasXuanfengDan(List<String> cards,String card) {
+    public boolean isHasXuanfengDan(List<String> cards, String card) {
         return isCanLiang();
     }
 
@@ -36,7 +40,7 @@ private static final int FANGZUOBI = 1;
         if (this.xuanfengDan.size() == 0) {
             return false;
         }
-        if(!CardTypeUtil.isFeng(card)){
+        if (!CardTypeUtil.isFeng(card)) {
             return false;
         }
 
@@ -50,13 +54,12 @@ private static final int FANGZUOBI = 1;
     }
 
 
-
     @Override
     public boolean isCanTing(List<String> cards) {
         return false;
     }
 
-    private boolean isCanLiang(){
+    private boolean isCanLiang() {
         System.out.println("card num : " + cards.size());
         int opSize = this.operateList.size();
 
@@ -67,8 +70,8 @@ private static final int FANGZUOBI = 1;
             }
         }
         System.out.println("size : " + size);
-        if(opSize == 1 && this.operateList.get(opSize - 1) == type_mopai){
-            return this.cards.stream().filter(card->isFeng(card) || isHun(card)).count() >= 3;
+        if (opSize == 1 && this.operateList.get(opSize - 1) == type_mopai) {
+            return this.cards.stream().filter(card -> isFeng(card) || isHun(card)).count() >= 3;
         }
         return false;
     }
@@ -83,6 +86,7 @@ private static final int FANGZUOBI = 1;
         int type = CardTypeUtil.getCardGroup(card);
         return this.gameInfo.hun.contains(type);
     }
+
 
     @Override
     public boolean isCanHu_dianpao(String card) {
@@ -132,7 +136,7 @@ private static final int FANGZUOBI = 1;
 
     public int getChiPengGangNum() {
         return this.chiCards.size() + this.pengType.size() + this.mingGangType.size() +
-                this.anGangType.size() + this.xuanfengDan.getOrDefault(0,new ArrayList<>()).size()/3;
+                this.anGangType.size() + this.xuanfengDan.getOrDefault(0, new ArrayList<>()).size() / 3;
     }
 
     @Override
@@ -149,7 +153,8 @@ private static final int FANGZUOBI = 1;
 
         List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), chiPengGangNum, this.gameInfo.hun, lastCard);
         HuCardType huCardType = getMaxScoreHuCardType(huList);
-        int maxPoint = huCardType.fan == 0? 2: huCardType.fan;
+        int maxPoint = huCardType.fan == 0 ? 2 : huCardType.fan;
+        this.winType.addAll(huCardType.specialHuList);
 
         //加上旋风蛋的分
         maxPoint += this.xuanfengDan.getOrDefault(0, new ArrayList<>()).size() + this.xuanfengDan.getOrDefault(1, new ArrayList<>()).size();
@@ -169,7 +174,7 @@ private static final int FANGZUOBI = 1;
                     playerCardsInfoMj.addScore(-maxPoint);
                     this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -maxPoint);
                 }
-                maxPoint += allScore;
+                allScore += maxPoint;
             }
         }
 
