@@ -233,12 +233,34 @@ public class GameBaseYSZ extends Game {
     }
 
     public void recordCardType(){
+
         if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+
+            if (this.room.curGameNumber == 1){
+
+                for (Map.Entry<Long, PlayerYSZ> entry : this.playerCardInfos.entrySet()){
+                    RoomStatistics roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
+                    if (roomStatistics == null){
+                        this.room.getRoomStatisticsMap().put(entry.getKey(), new RoomStatistics());
+                    }
+                    roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
+                    roomStatistics.maxCardGroup = "";
+                    roomStatistics.ext = "";
+                    roomStatistics.maxScore = 0;
+                    roomStatistics.failedTime = 0;
+                    roomStatistics.winTime = 0;
+                    roomStatistics.loseAllTime = 0;
+                    roomStatistics.winAllTime = 0;
+                }
+            }
+
             for (Map.Entry<Long, PlayerYSZ> entry : this.playerCardInfos.entrySet()){
                 RoomStatistics roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
                 if (roomStatistics == null){
                     this.room.getRoomStatisticsMap().put(entry.getKey(), new RoomStatistics());
                 }
+                roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
+
                 String maxCardGroup = roomStatistics.ext;
                 if (maxCardGroup == null || maxCardGroup.isEmpty()){
                     roomStatistics.ext = CardUtils.transfromCardsToString(entry.getValue().handcards);
@@ -774,6 +796,7 @@ public class GameBaseYSZ extends Game {
                 if (roomStatistics == null){
                     this.room.getRoomStatisticsMap().put(entry.getKey(), new RoomStatistics());
                 }
+                roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
                 if (winnerList.contains(entry.getValue().getUserId())){
                     roomStatistics.winTime++;
                     int maxScore = (int) entry.getValue().getFinalScore();
