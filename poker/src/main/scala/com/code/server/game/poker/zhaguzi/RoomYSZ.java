@@ -174,19 +174,39 @@ public class RoomYSZ extends RoomExtendGold {
 
     @Override
     public void addUserSocre(long userId, double score) {
+
         double s = userScores.get(userId);
         userScores.put(userId, s + score);
-        RoomStatistics roomStatistics = roomStatisticsMap.get(userId);
-        if (roomStatistics != null) {
-            roomStatistics.maxScore = roomStatistics.maxScore > score ? roomStatistics.maxScore : score;
-        }
         //todo 金币改变
         if (isGoldRoom()) {
             RedisManager.getUserRedisService().addUserGold(userId, score);
-
         }
-
     }
+
+//    public void addUserSocre(long userId, double score) {
+//        double s = userScores.get(userId);
+//        userScores.put(userId, s + score);
+//        RoomStatistics roomStatistics = roomStatisticsMap.get(userId);
+//        if (roomStatistics != null) {
+//            roomStatistics.maxScore = roomStatistics.maxScore > score ? roomStatistics.maxScore : score;
+//            if (score >= 0) {
+//                roomStatistics.winTime += 1;
+//            } else {
+//                roomStatistics.failedTime += 1;
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void addUserSocre(long userId, double score) {
+//        super.addUserSocre(userId, score);
+//        //todo 金币改变
+//        if (isGoldRoom()) {
+//            RedisManager.getUserRedisService().addUserGold(userId, score);
+//
+//        }
+//
+//    }
 
     /**
      * 快速开始
