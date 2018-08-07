@@ -146,7 +146,7 @@ public class YSZRobotImpl implements YSZRobot {
         } else {
 
             //如果没在游戏中
-            if (room.getCurGameNumber() > 1 && now - room.getLastOperateTime() > 1000* 17) {
+            if (room.getCurGameNumber() > 1 && now - room.getLastOperateTime() > 1000* 15) {
 //                logger.info("xxxxxxx:now{}:lastOverTime{}==inter:{}", now, ((RoomYSZ) room).getLastReadyTime(), (now - ((RoomYSZ) room).getLastReadyTime())/ 1000.0);
                 Map<Long, Integer> map = new HashMap<>();
                 map.putAll(room.getUserStatus());
