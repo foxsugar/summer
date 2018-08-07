@@ -783,22 +783,6 @@ public class GameBaseYSZ extends Game {
                 }else {
                     roomStatistics.failedTime++;
                 }
-//                String maxCardGroup = roomStatistics.maxCardGroup;
-//                if (maxCardGroup == null || maxCardGroup.isEmpty()){
-//                    roomStatistics.maxCardGroup = CardUtils.transfromCardsToString(entry.getValue().handcards);
-//                }else {
-//                    List<Integer> last = CardUtils.transfromStringToCards(roomStatistics.maxCardGroup);
-//                    List<Integer> current = entry.getValue().getHandcards();
-//
-//                    Player playerLast = new Player(1l,  ArrUtils.cardCode.get(last.get(0)), ArrUtils.cardCode.get(last.get(1)), ArrUtils.cardCode.get(last.get(2)));
-//                    Player playerCurrent = new Player(2l, ArrUtils.cardCode.get(current.get(0)), ArrUtils.cardCode.get(current.get(1)), ArrUtils.cardCode.get(current.get(2)));
-//                    ArrayList<Player> retList = Player.findWinners(playerLast, playerCurrent);
-//                    Player winner = retList.get(0);
-//
-//                    if (winner.getUid() == 2){
-//                        roomStatistics.maxCardGroup = CardUtils.transfromCardsToString(current);
-//                    }
-//                }
             }
         }
 
@@ -901,7 +885,8 @@ public class GameBaseYSZ extends Game {
 
         Map<Long, Double> allScoreItems = new HashMap<>();
         for (long uid : this.users){
-            allScoreItems.put(uid, playerCardInfo.getAllScore());
+            PlayerYSZ p = playerCardInfos.get(uid);
+            allScoreItems.put(uid, p.getAllScore());
         }
         result.put("allScoreList", allScoreItems);
 
@@ -969,7 +954,8 @@ public class GameBaseYSZ extends Game {
 
         Map<Long, Double> allScoreItems = new HashMap<>();
         for (long uid : this.users){
-            allScoreItems.put(uid, playerCardInfo.getAllScore());
+            PlayerYSZ p = playerCardInfos.get(uid);
+            allScoreItems.put(uid, p.getAllScore());
         }
         result.put("allScoreList", allScoreItems);
 
