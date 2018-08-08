@@ -164,7 +164,6 @@ public class GameBaseYSZ extends Game {
             MAX_BET_NUM = max;
         }
 
-
     }
 
     public void init(List<Long> users) {
@@ -261,8 +260,8 @@ public class GameBaseYSZ extends Game {
                 }
                 roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
 
-                String maxCardGroup = roomStatistics.ext;
-                if (maxCardGroup == null || maxCardGroup.isEmpty()){
+                String ext = roomStatistics.ext;
+                if (ext == null || ext.isEmpty() || ext.length() == 0){
                     roomStatistics.ext = CardUtils.transfromCardsToString(entry.getValue().handcards);
                     Integer l1 = entry.getValue().handcards.get(0);
                     Integer l2 = entry.getValue().handcards.get(1);
