@@ -287,7 +287,7 @@ public class GameBaseYSZ extends Game {
                 }
             }
         }
-        logger.info("      ===== 开始 牌 型:{}", this.room.getRoomStatisticsMap());
+        logger.info(" 第{}局    ===== 开始 牌 型:{}", this.room.curGameNumber , this.room.getRoomStatisticsMap());
     }
 
 //    public double getUserScores(long userId){
@@ -808,7 +808,7 @@ public class GameBaseYSZ extends Game {
             }
         }
 
-        logger.info("      ===== 结束 局 数:{}", this.room.getRoomStatisticsMap());
+        logger.info("第{}局,  ===== 结束 局 数:{}", this.room.curGameNumber, this.room.getRoomStatisticsMap());
 
         MsgSender.sendMsg2Player("gameService", "gameResult", gameResultHitGoldFlower, this.room.users);
         this.pushGoldScore();
