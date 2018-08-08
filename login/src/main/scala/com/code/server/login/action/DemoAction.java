@@ -929,6 +929,11 @@ public class DemoAction extends Cors{
         return AgentUtil.caches;
     }
 
+    @RequestMapping("/ttt")
+    public String hello(){
+        return "Hello World";
+    }
+
     public static void main(String[] args) {
 //        LocalDate today = LocalDate.now();
 //        for(int i=0;i<7;i++) {
