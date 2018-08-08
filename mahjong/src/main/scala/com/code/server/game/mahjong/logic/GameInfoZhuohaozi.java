@@ -73,6 +73,8 @@ public class GameInfoZhuohaozi extends GameInfoNew {
         //通知混
         MsgSender.sendMsg2Player("gameService", "noticeHun", this.hun, users);
 
+        replay.getHun().addAll(this.hun);
+
     }
 
 

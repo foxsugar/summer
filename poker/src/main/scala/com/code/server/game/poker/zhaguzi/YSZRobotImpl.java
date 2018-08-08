@@ -145,6 +145,7 @@ public class YSZRobotImpl implements YSZRobot {
             }
         } else {
 
+            System.out.println("last op " + ((RoomYSZ) room).getLastReadyTime());
             //如果没在游戏中
             if (room.getCurGameNumber() > 1 && now - room.getLastOperateTime() > 1000* 10) {
 //                logger.info("xxxxxxx:now{}:lastOverTime{}==inter:{}", now, ((RoomYSZ) room).getLastReadyTime(), (now - ((RoomYSZ) room).getLastReadyTime())/ 1000.0);

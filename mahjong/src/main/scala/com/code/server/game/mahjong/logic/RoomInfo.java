@@ -249,6 +249,7 @@ public class RoomInfo extends RoomInfoExtendGold {
         gameInfo.rand = ra;
 //        gameInfo.fapai();
         this.game = gameInfo;
+        gameInfo.replay.setRand(ra);
 
 
         //通知其他人游戏已经开始

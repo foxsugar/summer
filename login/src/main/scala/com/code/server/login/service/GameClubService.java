@@ -347,6 +347,13 @@ public class GameClubService {
         RedisManager.getUserRedisService().addUserMoney(userId, club.getMoney());
 
         //todo 在建的房间 是否退钱
+        for (RoomInstance roomInstance : club.getClubInfo().getRoomInstance().values()) {
+            String roomId = roomInstance.getRoomId();
+            if (RedisManager.getRoomRedisService().getUsers(roomId).size() == 0) {
+                RoomModel roomModel = GameClubService.getRoomModel(club, roomInstance.getRoomModelId());
+                RedisManager.getUserRedisService().addUserMoney(userId, roomModel.getMoney());
+            }
+        }
 
         sendMsg(msgKey, new ResponseVo("clubService", "dissolve", club));
         return 0;
@@ -590,7 +597,7 @@ public class GameClubService {
         if (clubs.contains(clubId)) {
             return ErrorCode.CLUB_CANNOT_JOIN;
         }
-        ClubManager.getInstance().userAddClub(userId, clubId);
+//        ClubManager.getInstance().userAddClub(userId, clubId);
 
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         if (userBean != null) {

@@ -3,7 +3,6 @@ package com.code.server.game.mahjong.logic;
 import com.code.server.game.mahjong.util.HuCardType;
 import com.code.server.game.mahjong.util.HuLimit;
 import com.code.server.game.mahjong.util.HuUtil;
-import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +104,7 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
 
         if (isHas){
 
-            List<String> noPengGang = getCardsNoChiGang(cards);
+            List<String> noPengGang = getCardsNoChiPengGang(cards);
 
             long wanCount = noPengGang.stream().filter(x ->{
                 return (Integer.valueOf(x) / 4 <= 8);

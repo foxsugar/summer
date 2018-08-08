@@ -344,13 +344,13 @@ public class GameInfoLuanGuaFeng extends GameInfoNew {
                 resetCanBeOperate(other);
 
 
-                //回放 抓牌
-                OperateReqResp operateReqResp = new OperateReqResp();
-                operateReqResp.setCard(c);
-                operateReqResp.setUserId(userId);
-                operateReqResp.setOperateType(OperateReqResp.type_mopai);
-                replay.getOperate().add(operateReqResp);
             }
+            //回放 抓牌
+            OperateReqResp operateReqResp = new OperateReqResp();
+            operateReqResp.setCard(c);
+            operateReqResp.setUserId(userId);
+            operateReqResp.setOperateType(OperateReqResp.type_mopai);
+            replay.getOperate().add(operateReqResp);
         }
 
 
@@ -415,6 +415,7 @@ public class GameInfoLuanGuaFeng extends GameInfoNew {
         //todo 回放
 
 
+        replay.getOperate().add(operateReqResp);
         //补牌
 
         int buSize = cards.size() % 3;

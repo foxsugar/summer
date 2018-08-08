@@ -21,6 +21,10 @@ public class ReplayMj {
     private ResultResp result;
     private Map<String, Object> roomInfo = new HashMap<>();
 
+    private List<Integer> hun = new ArrayList<>();
+
+    private int rand;
+
     // 不能加gameInfo进来 会循环引用
 
     public Map<Long, List<String>> getCards() {
@@ -83,6 +87,24 @@ public class ReplayMj {
 
     public ReplayMj setRoom_uuid(long room_uuid) {
         this.room_uuid = room_uuid;
+        return this;
+    }
+
+    public List<Integer> getHun() {
+        return hun;
+    }
+
+    public ReplayMj setHun(List<Integer> hun) {
+        this.hun = hun;
+        return this;
+    }
+
+    public int getRand() {
+        return rand;
+    }
+
+    public ReplayMj setRand(int rand) {
+        this.rand = rand;
         return this;
     }
 }
