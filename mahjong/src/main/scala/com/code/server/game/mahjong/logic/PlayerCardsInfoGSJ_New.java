@@ -157,15 +157,35 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
                 }
             }
 
-            if (wanCount < 7 && tongCount < 7 && tiaoCount < 7){
-                return false;
+            List<HuCardType> huList = getTingHuCardType(getCardsNoChiPengGang(cards), null);
+
+            for (HuCardType huCardType : huList) {
+
+                long wanCountTemp = wanCount;
+                long tiaoCountTemp = tiaoCount;
+                long tongCountTemp = tongCount;
+
+                int removeGroup = CardTypeUtil.getCardGroup(huCardType.tingRemoveCard);
+                int rs = CardTypeUtil.getCardGroupByCardType(removeGroup / 4);
+                switch (rs){
+                    case CardTypeUtil.GROUP_WAN:
+                        wanCountTemp--;
+                        break;
+                    case CardTypeUtil.GROUP_TIAO:
+                        tiaoCountTemp--;
+                        break;
+                    case CardTypeUtil.GROUP_TONG:
+                        tongCountTemp--;
+                        break;
+                }
+
+                if (wanCountTemp >= 7 || tiaoCountTemp >= 7 || tongCountTemp >= 7){
+                    return true;
+                }
             }
-        }
-        List<HuCardType> huList = getTingHuCardType(getCardsNoChiPengGang(cards), null);
 
-        for (HuCardType huCardType : huList) {
-            int removeGroup = CardTypeUtil.getCardGroup(huCardType.tingRemoveCard);
-
+        }else {
+            return getTingHuCardType(getCardsNoChiPengGang(cards), null).size() > 0;
         }
 
         return false;
