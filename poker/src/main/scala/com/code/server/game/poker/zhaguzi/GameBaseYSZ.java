@@ -1330,6 +1330,7 @@ public class GameBaseYSZ extends Game {
             temp += playerCardInfo.getAllScore();
         }
         vo.allTableChip = temp;
+        vo.allTableChip += this.users.size() * INIT_BOTTOM_CHIP;
         return vo;
     }
 
