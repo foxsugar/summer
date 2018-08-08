@@ -184,11 +184,15 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
                 }
             }
 
+            return false;
+
         }else {
-            return getTingHuCardType(getCardsNoChiPengGang(cards), null).size() > 0;
+
+            return  getTingHuCardType(getCardsNoChiPengGang(cards), null).size() > 0;
         }
 
-        return false;
+
+
 
     }
 
