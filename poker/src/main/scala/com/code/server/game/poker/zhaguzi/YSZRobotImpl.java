@@ -146,13 +146,13 @@ public class YSZRobotImpl implements YSZRobot {
         } else {
 
             //如果没在游戏中
-            if (room.getCurGameNumber() > 1 && now - room.getLastOperateTime() > 1000* 10) {
+            if (room.getCurGameNumber() > 1 && now - room.getLastOperateTime() > 1000* 15) {
 //                logger.info("xxxxxxx:now{}:lastOverTime{}==inter:{}", now, ((RoomYSZ) room).getLastReadyTime(), (now - ((RoomYSZ) room).getLastReadyTime())/ 1000.0);
                 Map<Long, Integer> map = new HashMap<>();
                 map.putAll(room.getUserStatus());
                 map.forEach((k,v) ->{
                     if (v != Room.STATUS_READY) {
-                        System.out.println("玩家 " + k + " 准备");
+                        System.out.println("玩家 " + k + " 退出");
                         quitRoom(room,k);
                     }
                 });
