@@ -643,7 +643,7 @@ public class GameClubService {
      * @param userId
      * @param roomModelId
      */
-    public void clubJoinRoom(String clubId, long userId, String roomModelId){
+    public void clubJoinRoom(String clubId, long userId, String roomModelId,String roomId){
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         if(serverConfig.getClubPushUserRoomInfo() == 0) return;
 
@@ -658,6 +658,11 @@ public class GameClubService {
         r.put("clubId", clubId);
         ResponseVo responseVo = new ResponseVo("clubService","clubJoinRoom",r);
         users.forEach(uid -> sendMsg2Player(responseVo, uid));
+
+
+        if (serverConfig.getSend_lq_http() == 1 ) {
+            send_Lq_start(club, roomId, roomModelId, users,0);
+        }
     }
 
 
@@ -988,14 +993,14 @@ public class GameClubService {
             //龙七 发送游戏开始
             ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
             if (serverConfig.getSend_lq_http() == 1 && gameNumber == 1) {
-                send_Lq_start(club, roomId, clubModelId, users);
+                send_Lq_start(club, roomId, clubModelId, users,1);
             }
         }
         return 0;
     }
 
 
-    private static void send_Lq_start(Club club, String roomId, String clubRoomModel, List<Long> users ){
+    private static void send_Lq_start(Club club, String roomId, String clubRoomModel, List<Long> users ,int roomStatus){
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         if (serverConfig.getSend_lq_http() == 1) {
             Map<String, Object> result = new HashMap<>();
@@ -1004,6 +1009,7 @@ public class GameClubService {
             result.put("OnlyNo", club.getId() + roomId + clubRoomModel);
             int index = CenterMsgService.getClubModelIndex(club, clubRoomModel);
             result.put("wanfa", index);
+            result.put("Nstatus", roomStatus);
             List<Map<String, Object>> list = new ArrayList<>();
             result.put("PlayerList", list);
             for (long userId: users) {
@@ -1021,7 +1027,7 @@ public class GameClubService {
                     .setConnectTimeout(5000).setConnectionRequestTimeout(5000)
                     .setSocketTimeout(5000).build();
 
-            String url1 = serverConfig.getLq_http_url() + "?strContext=" +json;
+            String url1 = "http://long7.l7jqr.com/RoomResult_club_info.php?strContext=" +json;
 
             try {
                 URL url= new URL(url1);
