@@ -98,6 +98,9 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
 
     @Override
     public boolean isCanTing(List<String> cards) {
+        if (isTing) {
+            return false;
+        }
         List<HuCardType> list = getTingHuCardType(getCardsNoChiPengGang(cards), new HuLimit(0));
 
         boolean isHas = this.roomInfo.isHasMode(mode_硬八张);
@@ -159,7 +162,7 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
             }
         }
 
-        return !isTing && getTingCardType(getCardsNoChiPengGang(cards),null).size() > 0;
+        return getTingCardType(getCardsNoChiPengGang(cards),null).size() > 0;
 
     }
 
