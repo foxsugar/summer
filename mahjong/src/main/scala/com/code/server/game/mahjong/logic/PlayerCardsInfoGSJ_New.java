@@ -161,8 +161,14 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
                 return false;
             }
         }
+        List<HuCardType> huList = getTingHuCardType(getCardsNoChiPengGang(cards), null);
 
-        return getTingCardType(getCardsNoChiPengGang(cards),null).size() > 0;
+        for (HuCardType huCardType : huList) {
+            int removeGroup = CardTypeUtil.getCardGroup(huCardType.tingRemoveCard);
+
+        }
+
+        return false;
 
     }
 
