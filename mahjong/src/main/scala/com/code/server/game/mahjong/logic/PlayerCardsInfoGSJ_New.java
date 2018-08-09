@@ -27,6 +27,8 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
         specialHuScore.put(hu_清一色,15);
         specialHuScore.put(hu_一条龙,15);
         specialHuScore.put(hu_七小对,15);
+        specialHuScore.put(hu_豪华七小对,30);
+        specialHuScore.put(hu_双豪七小对,30);
         specialHuScore.put(hu_十三幺,30);
         specialHuScore.put(hu_清龙,30);
         //坎胡
@@ -46,6 +48,9 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
 
     @Override
     public boolean isCanHu_dianpao(String card) {
+
+        if (!isTing) return false;
+
         List<String> tempList = new ArrayList<>();
         tempList.addAll(cards);
         tempList.add(card);
@@ -62,6 +67,9 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
      */
     @Override
     public boolean isCanHu_zimo(String card) {
+
+        if (!isTing) return false;
+
         List<String> cs = getCardsNoChiPengGang(cards);
         System.out.println("检测是否可胡自摸= " + cs );
         return HuUtil.isHu(cs, this, CardTypeUtil.cardType.get(card), null).size()>0 && checkCard(cards);
@@ -71,7 +79,7 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
     public boolean checkCard(List<String> cards){
 
         boolean isHas = this.roomInfo.isHasMode(mode_硬八张);
-        if (isHas) return true;
+        if (!isHas) return true;
 
         int wanNum = 0;
         int tiaoNum = 0;
@@ -90,13 +98,16 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
 
     @Override
     public boolean isCanTing(List<String> cards) {
+        if (isTing) {
+            return false;
+        }
         List<HuCardType> list = getTingHuCardType(getCardsNoChiPengGang(cards), new HuLimit(0));
 
         boolean isHas = this.roomInfo.isHasMode(mode_硬八张);
 
         if (isHas){
 
-            List<String> noPengGang = getCardsNoChiGang(cards);
+            List<String> noPengGang = getCardsNoChiPengGang(cards);
 
             long wanCount = noPengGang.stream().filter(x ->{
                 return (Integer.valueOf(x) / 4 <= 8);
@@ -111,47 +122,82 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
             }).count();
 
             for (Map.Entry<Integer,Long> entry : getPengType().entrySet()){
-                if (entry.getKey() == CardTypeUtil.GROUP_WAN){
+                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_WAN){
                     wanCount += 3;
                 }
-                if (entry.getKey() == CardTypeUtil.GROUP_TIAO){
+                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_TIAO){
                     tiaoCount += 3;
                 }
-                if (entry.getKey() == CardTypeUtil.GROUP_TONG){
+                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_TONG){
                     tongCount += 3;
                 }
             }
 
             for (Map.Entry<Integer,Long> entry : getMingGangType().entrySet()){
-                if (entry.getKey() == CardTypeUtil.GROUP_WAN){
+                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_WAN){
                     wanCount += 3;
                 }
-                if (entry.getKey() == CardTypeUtil.GROUP_TIAO){
+                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_TIAO){
                     tiaoCount += 3;
                 }
-                if (entry.getKey() == CardTypeUtil.GROUP_TONG){
+                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_TONG){
                     tongCount += 3;
                 }
             }
 
             for (Integer i : getAnGangType()){
-                if (i == CardTypeUtil.GROUP_WAN){
+                if (CardTypeUtil.getCardGroupByCardType(i) == CardTypeUtil.GROUP_WAN){
                     wanCount += 3;
                 }
-                if (i == CardTypeUtil.GROUP_TIAO){
+                if (CardTypeUtil.getCardGroupByCardType(i) == CardTypeUtil.GROUP_TIAO){
                     tiaoCount += 3;
                 }
-                if (i == CardTypeUtil.GROUP_TONG){
+                if (CardTypeUtil.getCardGroupByCardType(i) == CardTypeUtil.GROUP_TONG){
                     tongCount += 3;
                 }
             }
 
-            if (wanCount < 7 && tongCount < 7 && tiaoCount < 7){
-                return false;
+            List<HuCardType> huList = getTingHuCardType(getCardsNoChiPengGang(cards), null);
+
+            for (HuCardType huCardType : huList) {
+
+                long wanCountTemp = wanCount;
+                long tiaoCountTemp = tiaoCount;
+                long tongCountTemp = tongCount;
+
+                if (huCardType.tingRemoveCard == null){
+                    if (wanCountTemp >= 7 || tiaoCountTemp >= 7 || tongCountTemp >= 7){
+                        return true;
+                    }
+                }else {
+                    int removeGroup = CardTypeUtil.getCardGroup(huCardType.tingRemoveCard);
+//                int rs = CardTypeUtil.getCardGroupByCardType(removeGroup / 4);
+                    switch (removeGroup){
+                        case CardTypeUtil.GROUP_WAN:
+                            wanCountTemp--;
+                            break;
+                        case CardTypeUtil.GROUP_TIAO:
+                            tiaoCountTemp--;
+                            break;
+                        case CardTypeUtil.GROUP_TONG:
+                            tongCountTemp--;
+                            break;
+                    }
+                    if (wanCountTemp >= 7 || tiaoCountTemp >= 7 || tongCountTemp >= 7){
+                        return true;
+                    }
+                }
             }
+
+            return false;
+
+        }else {
+
+            return  getTingHuCardType(getCardsNoChiPengGang(cards), null).size() > 0;
         }
 
-        return !isTing && getTingCardType(getCardsNoChiPengGang(cards),null).size() > 0;
+
+
 
     }
 
@@ -222,7 +268,7 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
 //        todo
         int score = huCardType.fan == 0 ? 5 : huCardType.fan;
         int count = bankerNumber(room.getBankerMap());
-        score += (count - 1);
+        score += count;
         //加轮数
         int selfScore = 0;
 
@@ -249,6 +295,7 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
         this.addScore(selfScore);
         this.addScore(gangScore);
         this.roomInfo.addUserSocre(this.userId, selfScore);
+        this.roomInfo.addUserSocre(this.userId, gangScore);
     }
 
     /**

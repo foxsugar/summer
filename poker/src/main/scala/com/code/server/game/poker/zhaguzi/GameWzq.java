@@ -22,15 +22,20 @@ public class GameWzq extends Game {
 
     private Room roomWzq;
 
-    public int admitDefeat(long userId){
+    private Map<String, WzqNode> nodes;
+
+
+
+    private long lastMoveUser;
+
+
+    public int admitDefeat(long userId) {
 
         double gold = RedisManager.getUserRedisService().getUserGold(userId);
         if (gold < this.roomWzq.getMultiple()) {
             return ErrorCode.NOT_HAVE_MORE_MONEY;
         }
-        if (userId == this.roomWzq.getBankerId()) {
-            return ErrorCode.NOT_HAVE_MORE_MONEY;
-        }
+
 
         List<Long> tempUser = new ArrayList<>();
         tempUser.addAll(this.users);
@@ -43,11 +48,14 @@ public class GameWzq extends Game {
         Map<Long, Object> golds = new HashMap<>();
         golds.put(userId, gold1);
         golds.put(other, gold2);
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "admitDefeat", golds), this.getUsers());
+
+//        golds = computeScore(userId, -this.roomWzq.getMultiple());
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "admitDefeatResp", golds), users);
+
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "admitDefeat", 0), userId);
 
 
-
-        sendResult();
+        sendResult(other,golds);
 
         this.roomWzq.clearReadyStatus(true);
 
@@ -56,15 +64,41 @@ public class GameWzq extends Game {
         return 0;
     }
 
+    private Map<Long,Object> computeScore(long userId, int score){
+        List<Long> tempUser = new ArrayList<>();
+        tempUser.addAll(this.users);
+        tempUser.remove(userId);
+        long other = tempUser.get(0);
+        double gold1 = RedisManager.getUserRedisService().addUserGold(userId, score);
+
+        double gold2 = RedisManager.getUserRedisService().addUserGold(other, -score);
+
+        Map<Long, Object> golds = new HashMap<>();
+        golds.put(userId, gold1);
+        golds.put(other, gold2);
+        return golds;
+    }
+
 
     public int setScore(long userId, int score) {
         if (roomWzq.getMultiple() != 0 || score < 0) {
             return ErrorCode.SET_SCORE_ERROR;
         }
+        for(long user : users){
+            double g = RedisManager.getUserRedisService().getUserGold(user);
+            if (score > g) {
+                return ErrorCode.SET_SCORE_ERROR;
+            }
+        }
         this.roomWzq.setMultiple(score);
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "setScore", score), this.getUsers());
+        Map<String, Object> result = new HashMap<>();
+        result.put("userId", userId);
+        result.put("score", score);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "setScoreResp", result), users);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "setScore", 0), userId);
         return 0;
     }
+
 
     protected void sendFinalResult() {
         //所有牌局都结束
@@ -74,25 +108,188 @@ public class GameWzq extends Game {
         }
     }
 
-    protected void sendResult() {
-        MsgSender.sendMsg2Player("gameService", "gameWzqResult", "gameResult", users);
+    protected void sendResult(long winnerId, Map<Long,Object> golds) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("winner", winnerId);
+        int score = this.roomWzq.getMultiple();
+        if (winnerId == -1) {
+            score = 0;
+        }
+        result.put("score", score);
+        result.put("golds", golds);
+        MsgSender.sendMsg2Player("gameService", "gameWzqResult", result, users);
     }
 
-    public int move(long userId, int x, int y){
+    public int move(long userId, int x, int y) {
+
+        if (userId == lastMoveUser) {
+            return ErrorCode.CAN_NOT_MOVE;
+        }
+        if (!isCanMove(x, y)) {
+            return ErrorCode.CAN_NOT_MOVE;
+        }
+        WzqNode wzqNode = new WzqNode();
+        wzqNode.x = x;
+        wzqNode.y = y;
+        wzqNode.userId = userId;
+        nodes.put(getNodeKey(x, y), wzqNode);
+
+        lastMoveUser = userId;
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("x", x);
+        result.put("y", y);
+        result.put("userId", userId);
+        MsgSender.sendMsg2Player("gameService", "moveResp", result, users);
+        MsgSender.sendMsg2Player("gameService", "move", 0, userId);
+
+
+        //是否有人赢
+
+        long winnerId = 0;
+        if (isWin(wzqNode, userId)) {
+            winnerId = userId;
+        }else{
+            //如果棋牌全部占满 就是平局
+            if (nodes.size() >=289) {
+                winnerId = -1;
+            }
+        }
+        if (winnerId != 0) {
+            Map<Long,Object> golds;
+            if (winnerId == -1) {
+                golds = computeScore(userId, 0);
+                sendResult(-1,golds);
+            }else{
+                golds = computeScore(userId, this.roomWzq.getMultiple());
+                sendResult(winnerId,golds);
+            }
+            sendFinalResult();
+        }
+
         return 0;
     }
 
+
+//    private boolean isWin(long userId) {
+//        for (int x = 0; x < 17; x++) {
+//            for (int y = 0; y < 17; y++) {
+//                String nodeStr = x + "_" + y;
+//                WzqNode wzqNode = nodes.get(nodeStr);
+//                if (wzqNode != null && wzqNode.userId == userId) {
+//                    if (isWinBeginNode(wzqNode, userId)) {
+//                        return true;
+//                    }
+//                }
+//
+//            }
+//        }
+//        return false;
+//    }
+
+
+    private boolean isWin(WzqNode wzqNode, long userId) {
+
+        List<WzqNode> list1 = getFiveNodeByDirection(wzqNode, 1, 0);
+        if(isOk(list1,userId)) return true;
+
+        List<WzqNode> list2 = getFiveNodeByDirection(wzqNode, 0, 1);
+        if(isOk(list2,userId)) return true;
+
+        List<WzqNode> list3 = getFiveNodeByDirection(wzqNode, 1, 1);
+        if(isOk(list3,userId)) return true;
+
+        List<WzqNode> list4 = getFiveNodeByDirection(wzqNode, -1, -1);
+        if(isOk(list4,userId)) return true;
+
+        List<WzqNode> list5 = getFiveNodeByDirection(wzqNode, -1, 0);
+        if(isOk(list5,userId)) return true;
+
+        List<WzqNode> list6 = getFiveNodeByDirection(wzqNode, 0, -1);
+        if(isOk(list6,userId)) return true;
+
+        List<WzqNode> list7 = getFiveNodeByDirection(wzqNode, 1, -1);
+        if(isOk(list7,userId)) return true;
+
+        List<WzqNode> list8 = getFiveNodeByDirection(wzqNode, -1, 1);
+        if(isOk(list8,userId)) return true;
+
+
+        return false;
+    }
+
+
+    /**
+     * 获得方向上的五个子
+     * @param wzqNode
+     * @param xAdd
+     * @param yAdd
+     * @return
+     */
+    private List<WzqNode> getFiveNodeByDirection(WzqNode wzqNode, int xAdd, int yAdd) {
+        List<WzqNode> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            int newX = wzqNode.x + i * xAdd;
+            int newY = wzqNode.y + i * yAdd;
+
+            String nodeStr = newX + "_" + newY;
+
+            WzqNode node = nodes.get(nodeStr);
+            list.add(node);
+        }
+
+        return list;
+    }
+
+
+    private boolean isOk(List<WzqNode> list,long userId) {
+        for (WzqNode wzqNode : list) {
+            if (wzqNode == null) {
+                return false;
+            }
+            if (wzqNode.userId != userId) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
+
+    private String getNodeKey(int x, int y) {
+        return x + "_" + y;
+    }
+
+    private boolean isCanMove(int x, int y) {
+        if (x < 0 || x > 16) {
+            return false;
+        }
+        if (y < 0 || y > 16) {
+            return false;
+        }
+        for (WzqNode wzqNode : nodes.values()) {
+            if (wzqNode.x == x && wzqNode.y == y) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     @Override
     public void startGame(List<Long> users, Room room) {
         this.roomWzq = room;
         this.users.addAll(room.getUsers());
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameWzqBegin", "ok"), this.getUsers());
     }
 
     @Override
     public IfaceGameVo toVo() {
         GameWzqVo gameWzqVo = new GameWzqVo();
         gameWzqVo.getUsers().addAll(this.users);
+        gameWzqVo.setLastMoveUser(this.lastMoveUser);
+        gameWzqVo.setNodes(this.nodes);
         return gameWzqVo;
     }
 
@@ -100,6 +297,8 @@ public class GameWzq extends Game {
     public IfaceGameVo toVo(long watchUser) {
         GameWzqVo gameWzqVo = new GameWzqVo();
         gameWzqVo.getUsers().addAll(this.users);
+        gameWzqVo.setLastMoveUser(this.lastMoveUser);
+        gameWzqVo.setNodes(this.nodes);
         return gameWzqVo;
     }
 }

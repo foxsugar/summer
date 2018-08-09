@@ -58,8 +58,8 @@ public class WxMenuController implements WxMpMenuService {
     WxMenuButton button11 = new WxMenuButton();
     button11.setType(MenuButtonType.VIEW);
     button11.setName("下载游戏");
-    button11.setUrl("http://"+ serverConfig.getDomain() +"/agent/#/download");
-//    button11.setKey("DOWNLOAD_GAME");
+//    button11.setUrl("http://"+ serverConfig.getDomain() +"/agent/#/download");
+    button11.setKey("DOWNLOAD_GAME");
 
     WxMenuButton button12 = new WxMenuButton();
     button12.setType(MenuButtonType.CLICK);

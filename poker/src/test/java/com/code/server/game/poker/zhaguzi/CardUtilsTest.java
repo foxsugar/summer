@@ -29,6 +29,15 @@ import static org.junit.Assert.*;
 public class CardUtilsTest {
     @Test
     public void transfromStringToCards1() throws Exception {
+
+        List<Integer> a = new ArrayList<>();
+        a.add(1);
+        a.add(2);
+        a.add(3);
+//        a.add(4);
+
+        String ss = CardUtils.transfromCardsToString(a);
+        System.out.println(ss);
     }
 
     @Test

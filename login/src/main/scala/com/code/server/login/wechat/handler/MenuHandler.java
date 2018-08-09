@@ -95,7 +95,7 @@ public class MenuHandler extends AbstractHandler {
                 case "CLEAR":
                     return handle_clear(wxMessage, weixinService);
                 case "DOWNLOAD_GAME":
-
+                    return handle_download(wxMessage, weixinService);
                 case "KEFU_ONLINE":
                     return handle_kefu(wxMessage, weixinService);
             }
@@ -282,14 +282,16 @@ public class MenuHandler extends AbstractHandler {
             //gameAgent 是否已经生成ticket
             AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
 
-            agentBean.setImage(wxMpUser.getHeadImgUrl());
-            agentBean.setOpenId(wxMpUser.getOpenId());
-            if (agentBean.getQrTicket() == null || "".equals(agentBean.getQrTicket())) {
-                //根据unionId生成二维码
-                WxMpQrCodeTicket ticket = wxService.getQrcodeService().qrCodeCreateLastTicket(unionId);
+            if (agentBean.getOpenId() == null||agentBean.getQrTicket() == null || "".equals(agentBean.getQrTicket())) {
+                agentBean.setImage(wxMpUser.getHeadImgUrl());
+                agentBean.setOpenId(wxMpUser.getOpenId());
+                //根据unionId生成二维码 todo 加上游戏key
+                WxMpQrCodeTicket ticket = wxService.getQrcodeService().qrCodeCreateLastTicket(serverConfig.getDomainMapKey()+"|"+unionId);
                 agentBean.setQrTicket(ticket.getTicket());
 
+                RedisManager.getAgentRedisService().updateAgentBean(agentBean);
             }
+
             RedisManager.getAgentRedisService().updateAgentBean(agentBean);
 
 
@@ -338,6 +340,27 @@ public class MenuHandler extends AbstractHandler {
         item1.setPicUrl("https://mmbiz.qpic.cn/mmbiz_png/wj1STzkg04h46BuribmuoJnsMQgc2m70558p3mE91j6zq4sph6RavCicfUiahTSRj4CVRSRN9ecdJKic6ysZeBCZiag/0?wx_fmt=png");
         item1.setTitle("客服微信号:17189556611");
 
+
+        WxMpXmlOutNewsMessage m = WxMpXmlOutMessage.NEWS()
+                .fromUser(wxMessage.getToUser())
+                .toUser(wxMessage.getFromUser())
+                .addArticle(item, item1)
+                .build();
+        return m;
+    }
+
+
+    private WxMpXmlOutMessage handle_download(WxMpXmlMessage wxMessage, WxMpService wxService){
+        WxMpXmlOutNewsMessage.Item item = new WxMpXmlOutNewsMessage.Item();
+        item.setTitle("下载地址");
+//        item.setDescription("点击进入专属界面");
+
+        WxMpXmlOutNewsMessage.Item item1 = new WxMpXmlOutNewsMessage.Item();
+        //todo 展示二维码 链接
+
+        item1.setPicUrl("https://mmbiz.qpic.cn/mmbiz_png/wj1STzkg04h46BuribmuoJnsMQgc2m70558p3mE91j6zq4sph6RavCicfUiahTSRj4CVRSRN9ecdJKic6ysZeBCZiag/0?wx_fmt=png");
+        item1.setTitle("董小姐棋牌室");
+        item1.setUrl("/game/wecha");
 
         WxMpXmlOutNewsMessage m = WxMpXmlOutMessage.NEWS()
                 .fromUser(wxMessage.getToUser())

@@ -12,6 +12,7 @@ import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.service.AgentService;
+import com.code.server.login.service.ServerManager;
 import com.code.server.redis.service.AgentRedisService;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
@@ -25,6 +26,7 @@ import me.chanjar.weixin.mp.bean.kefu.WxMpKefuMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
+import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -156,22 +158,47 @@ public class WechatAction extends Cors {
     }
 
 
+    /**
+     * 通过返回url获得域名
+     * @param returnUrl
+     * @return
+     */
+    private String getDomainByReturnUrl(String returnUrl){
+        //todo 多服共享时改成 注释的内容
+//        String  domainKey = returnUrl.split("\\|")[0];
+//        String domain = serverConfig.getDomainMap().get(domainKey);
+//
+//        return domain;
+        return serverConfig.getDomain();
+    }
+    /**
+     * 授权地址
+     * @param returnUrl
+     * @return
+     */
     @GetMapping("/authorize")
     public String authorize(@RequestParam("returnUrl") String returnUrl) {
         System.out.println("授权---------------");
         //1. 配置
         //2. 调用方法
-        String url = "http://" + serverConfig.getDomain() + "/game/wechat/userInfo";
+        String domain = getDomainByReturnUrl(returnUrl);
+        String url = "http://" + domain + "/game/wechat/userInfo";
         String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, URLEncoder.encode(returnUrl));
         return "redirect:" + redirectUrl;
     }
 
+    /**
+     * 授权地址-基本信息  点击专属链接
+     * @param returnUrl
+     * @return
+     */
     @GetMapping("/authorize_base")
     public String authorize_base(@RequestParam("returnUrl") String returnUrl) {
         System.out.println("授权---------------");
         //1. 配置
         //2. 调用方法
-        String url = "http://" + serverConfig.getDomain() + "/game/wechat/clickLink";
+        String domain = getDomainByReturnUrl(returnUrl);
+        String url = "http://" + domain + "/game/wechat/clickLink";
         String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, URLEncoder.encode(returnUrl));
         return "redirect:" + redirectUrl;
     }
@@ -374,6 +401,18 @@ public class WechatAction extends Cors {
             return;
         }
 
+        AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+        if (agentBean != null) {
+            if (agentBean.getOpenId() == null|| agentBean.getQrTicket() == null || "".equals(agentBean.getQrTicket())) {
+                agentBean.setImage(wxMpUser.getHeadImgUrl());
+                agentBean.setOpenId(wxMpUser.getOpenId());
+                //根据unionId生成二维码 todo 加上游戏key
+                WxMpQrCodeTicket ticket = wxMpService.getQrcodeService().qrCodeCreateLastTicket(serverConfig.getDomainMapKey()+"|"+wxMpUser.getUnionId());
+                agentBean.setQrTicket(ticket.getTicket());
+                RedisManager.getAgentRedisService().updateAgentBean(agentBean);
+            }
+
+        }
 
         //设置cookie
         Map<String, String> agent = getAgentByToken(request);
@@ -655,5 +694,19 @@ public class WechatAction extends Cors {
         map.put("qr", agentBean.getQrTicket());
         map.put("icon", agentBean.getImage());
         return agentResponse.setData(map);
+    }
+
+
+    @RequestMapping("/getDownloadUrl")
+    @ResponseBody
+    public AgentResponse getDownloadUrl() {
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("android", ServerManager.constant.getDownload1());
+        result.put("ios", ServerManager.constant.getDownload2());
+
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(result);
+        return agentResponse;
     }
 }

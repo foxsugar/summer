@@ -673,6 +673,20 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
         }
     }
 
+    public static String transfromCardsToString(List<Integer> list){
+
+        String ret = "";
+        for (int i = 0; i < list.size(); i++){
+            Integer x = list.get(i);
+            ret = ret + x;
+            if (i != list.size() - 1){
+                ret = ret + "_";
+            }
+        }
+
+        return ret;
+    }
+
     //把字符串转化为数组
     public static List<Integer> transfromStringToCards(String str){
 

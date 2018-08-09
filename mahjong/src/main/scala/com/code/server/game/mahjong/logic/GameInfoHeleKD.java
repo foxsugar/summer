@@ -94,6 +94,7 @@ public class GameInfoHeleKD extends GameInfoXYKD {
 
         //通知混
         MsgSender.sendMsg2Player("gameService", "noticeHun", this.hun, users);
+        replay.getHun().addAll(this.hun);
 
     }
 

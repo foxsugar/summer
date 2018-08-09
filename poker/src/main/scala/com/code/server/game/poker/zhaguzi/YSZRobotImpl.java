@@ -7,6 +7,7 @@ import com.code.server.game.poker.robot.ResponseRobotVo;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -145,15 +146,20 @@ public class YSZRobotImpl implements YSZRobot {
             }
         } else {
 
+//            System.out.println("last op " + ((RoomYSZ) room).getLastReadyTime());
             //如果没在游戏中
-            if (room.getCurGameNumber() > 1 && now - room.getLastOperateTime() > 1000* 10) {
+            if (room.getCurGameNumber() > 1 && now - room.getLastOperateTime() > 1000 * 10) {
 //                logger.info("xxxxxxx:now{}:lastOverTime{}==inter:{}", now, ((RoomYSZ) room).getLastReadyTime(), (now - ((RoomYSZ) room).getLastReadyTime())/ 1000.0);
                 Map<Long, Integer> map = new HashMap<>();
                 map.putAll(room.getUserStatus());
-                map.forEach((k,v) ->{
-                    if (v != Room.STATUS_READY) {
-                        System.out.println("玩家 " + k + " 准备");
-                        quitRoom(room,k);
+                map.forEach((uid, status) -> {
+                    if ((status != Room.STATUS_READY)) {
+                        boolean isOnline = RedisManager.getUserRedisService().getGateId(uid) != null;
+                        if (isOnline) {
+                            getReady(room, uid);
+                        }else{
+                            quitRoom(room,uid);
+                        }
                     }
                 });
             }

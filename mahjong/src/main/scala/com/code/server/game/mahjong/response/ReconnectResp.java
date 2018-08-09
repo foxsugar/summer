@@ -20,6 +20,7 @@ public class ReconnectResp {
     private List<PlayerCardsResp> playerCards = new ArrayList<>();
     private boolean isAllPass;
     private List<Integer> hun = new ArrayList<>();
+    private int rand;
 
 
 
@@ -33,6 +34,7 @@ public class ReconnectResp {
         changeBaoCount = gameInfo.getChangeBaoSize();
         isAllPass = gameInfo.getWaitingforList().size() ==0;
         hun.addAll(gameInfo.getHun());
+        rand = gameInfo.rand;
 
         for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
             long uid = playerCardsInfo.getUserId();

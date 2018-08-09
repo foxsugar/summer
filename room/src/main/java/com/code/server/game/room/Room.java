@@ -182,6 +182,7 @@ public class Room implements IfaceRoom {
             msg.put("clubModelId", this.clubRoomModel);
             msg.put("roomId", this.roomId);
             msg.put("users", this.users);
+            msg.put("curGameNumber", this.curGameNumber);
             ResponseVo responseVo = new ResponseVo("clubService", "clubGameStart", msg);
             msgProducer.send("clubService", kafkaKey, responseVo);
         }
@@ -416,8 +417,11 @@ public class Room implements IfaceRoom {
         Notice n = new Notice();
         n.setMessage("quit room success!");
 
-        ResponseVo result = new ResponseVo("roomService", "quitRoom", n);
-        MsgSender.sendMsg2Player(result, userId);
+        MsgSender.sendMsg2Player("roomService", "quitRoom", n, userId);
+        if (isGoldRoom()) {
+            MsgSender.sendMsg2Player("roomService", "quitGoldRoom", n, userId);
+        }
+
 
         if (isClubRoom()) {
             noticeClubQuitRoom(userId);
@@ -456,6 +460,9 @@ public class Room implements IfaceRoom {
             startGame();
         }
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "getReady", 0), userId);
+        if (isGoldRoom()) {
+            MsgSender.sendMsg2Player(new ResponseVo("roomService", "getReadyGoldRoom", 0), userId);
+        }
         return 0;
     }
 

@@ -8,6 +8,7 @@ import com.code.server.game.mahjong.logic.PlayerCardsInfoMj;
 import com.code.server.game.mahjong.logic.RoomInfo;
 import com.code.server.game.room.Room;
 import com.code.server.kafka.MsgProducer;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 
 import java.util.HashMap;
@@ -21,34 +22,40 @@ public class MahjongRobot {
     private static long INTERVAL_TIME = 1000L * 30;
     private static long READY_TIME = 1000L * 10;
 
-    public static void execute(RoomInfo roomInfo) {
+    public static void execute(RoomInfo room) {
         long now = System.currentTimeMillis();
-        GameInfo gameInfo = (GameInfo) roomInfo.getGame();
+        GameInfo gameInfo = (GameInfo) room.getGame();
         if (gameInfo != null) {
             if (now- gameInfo.getLastOperateTime()   > INTERVAL_TIME) {
                 if (gameInfo.getWaitingforList().size() > 0) {
                     GameInfo.WaitDetail waitDetail = gameInfo.getWaitingforList().get(0);
                     if (waitDetail.isHu) {
-                        hu(roomInfo, waitDetail.myUserId);
+                        hu(room, waitDetail.myUserId);
                     } else {
-                        guo(roomInfo, waitDetail.myUserId);
+                        guo(room, waitDetail.myUserId);
                     }
                 } else {
                     if (gameInfo.getTurnId() != 0) {
-                        playCard(roomInfo);
+                        playCard(room);
                     }
                 }
             }
         } else {//在准备状态
 
-            if(roomInfo.getCurGameNumber()>1 && now - roomInfo.getLastOperateTime() > READY_TIME){
+            if(room.getCurGameNumber()>1 && now - room.getLastOperateTime() > READY_TIME){
                 Map<Long, Integer> map = new HashMap<>();
-                map.putAll(roomInfo.getUserStatus());
-                map.forEach((k,v) ->{
-                    if (v != Room.STATUS_READY) {
-                        System.out.println("玩家 " + k +" 离开");
-                        quitRoom(roomInfo,k);
+                map.putAll(room.getUserStatus());
+                map.forEach((uid,status) ->{
+
+                    if ((status != Room.STATUS_READY)) {
+                        boolean isOnline = RedisManager.getUserRedisService().getGateId(uid) != null;
+                        if (isOnline) {
+                            getReady(room, uid);
+                        }else{
+                            quitRoom(room,uid);
+                        }
                     }
+
                 });
             }
 

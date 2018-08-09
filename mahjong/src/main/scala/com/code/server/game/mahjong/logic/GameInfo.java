@@ -81,6 +81,8 @@ public class GameInfo extends Game {
     public boolean autoPlay = false;
 
     protected boolean isAlreadyComputeGang = false;
+
+    public int rand = 0;
 //    private Set<Long> noCanHuList = new HashSet<>();//本轮不能胡的人
 
     /**
@@ -116,6 +118,11 @@ public class GameInfo extends Game {
             remainCards.removeAll(CardTypeUtil.ZI_CARD);
 
         }
+
+        if (this.room.curGameNumber == 1){
+            this.room.getBankerMap().put(1, firstTurn);
+        }
+
         fapai();
     }
 
@@ -174,6 +181,7 @@ public class GameInfo extends Game {
         this.hun.add(hunIndex);
     //通知混
         MsgSender.sendMsg2Player("gameService", "noticeHun", this.hun, users);
+        replay.getHun().addAll(this.hun);
     }
 
     /**
@@ -341,6 +349,7 @@ public class GameInfo extends Game {
         String modeTotal = this.room.getModeTotal();
         return ("LQ".equals(gameType) && "2".equals(modeTotal)) ||
                 ("HL".equals(gameType) && "2".equals(modeTotal)) ||
+                ("THREEA".equals(gameType) && "2".equals(modeTotal)) ||
                 "SS".equals(gameType) ||
                 "HS".equals(gameType)||
                 "KXHY".equals(gameType)||

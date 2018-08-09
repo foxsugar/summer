@@ -1,7 +1,9 @@
 package com.code.server.game.poker.zhaguzi;
 
 import com.code.server.constant.data.DataManager;
+import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.response.*;
+import com.code.server.game.poker.doudizhu.CardUtil;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.IfaceRoom;
 import com.code.server.game.room.Room;
@@ -10,6 +12,7 @@ import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.DateUtil;
 import com.code.server.util.IdWorker;
+import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -109,11 +112,13 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(1000);
             }else if (room.getGoldRoomType() == 500){
                 max = 4000;
-                minGold = 4000;
+                minGold = 5000;
                 genZhuList.add(800);
                 genZhuList.add(1200);
                 genZhuList.add(1600);
                 genZhuList.add(2000);
+            }else {
+                logger.info("传值错误~~~");
             }
             INIT_BOTTOM_CHIP = dizhu;
             MAX_BET_NUM = max;
@@ -146,17 +151,18 @@ public class GameBaseYSZ extends Game {
 
             }else if (room.getGoldRoomType() == 500){
                 max = 4000;
-                minGold = 4000;
+                minGold = 5000;
                 genZhuList.add(800);
                 genZhuList.add(1200);
                 genZhuList.add(1600);
                 genZhuList.add(2000);
+            }else {
+                logger.info("传值错误~~~");
             }
 
             INIT_BOTTOM_CHIP = dizhu;
             MAX_BET_NUM = max;
         }
-
 
     }
 
@@ -173,7 +179,12 @@ public class GameBaseYSZ extends Game {
         shuffle();//洗牌
         deal();//发牌
         initDiZhu();
+
+        //出场值是入场的一半
+        minGold = this.room.computeEnterGold() / 2;
+
         computeCardType();
+        recordCardType();
         chip = INIT_BOTTOM_CHIP;
         mustBet();
         curUserId = room.getBankerId();
@@ -218,6 +229,65 @@ public class GameBaseYSZ extends Game {
 
         this.pushGoldScore();
 
+    }
+
+    public void recordCardType(){
+
+        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+
+            if (this.room.curGameNumber == 1){
+
+                for (Map.Entry<Long, PlayerYSZ> entry : this.playerCardInfos.entrySet()){
+                    RoomStatistics roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
+                    if (roomStatistics == null){
+                        this.room.getRoomStatisticsMap().put(entry.getKey(), new RoomStatistics());
+                    }
+                    roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
+                    roomStatistics.maxCardGroup = "";
+                    roomStatistics.ext = "";
+                    roomStatistics.maxScore = 0;
+                    roomStatistics.failedTime = 0;
+                    roomStatistics.winTime = 0;
+                    roomStatistics.loseAllTime = 0;
+                    roomStatistics.winAllTime = 0;
+                }
+            }
+
+            for (Map.Entry<Long, PlayerYSZ> entry : this.playerCardInfos.entrySet()){
+                RoomStatistics roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
+                if (roomStatistics == null){
+                    this.room.getRoomStatisticsMap().put(entry.getKey(), new RoomStatistics());
+                }
+                roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
+
+                String ext = roomStatistics.ext;
+                if (ext == null || ext.isEmpty() || ext.length() == 0){
+                    roomStatistics.ext = CardUtils.transfromCardsToString(entry.getValue().handcards);
+                    Integer l1 = entry.getValue().handcards.get(0);
+                    Integer l2 = entry.getValue().handcards.get(1);
+                    Integer l3 = entry.getValue().handcards.get(2);
+                    Player playerLast = new Player(1l,  ArrUtils.cardCode.get(l1), ArrUtils.cardCode.get(l2), ArrUtils.cardCode.get(l3));
+                    roomStatistics.maxCardGroup = playerLast.transfromCategoryToString();
+
+                }else {
+                    List<Integer> last = CardUtils.transfromStringToCards(roomStatistics.ext);
+                    List<Integer> current = entry.getValue().getHandcards();
+
+                    Player playerLast = new Player(1l,  ArrUtils.cardCode.get(last.get(0)), ArrUtils.cardCode.get(last.get(1)), ArrUtils.cardCode.get(last.get(2)));
+                    Player playerCurrent = new Player(2l, ArrUtils.cardCode.get(current.get(0)), ArrUtils.cardCode.get(current.get(1)), ArrUtils.cardCode.get(current.get(2)));
+                    ArrayList<Player> retList = Player.findWinners(playerLast, playerCurrent);
+                    Player winner = retList.get(0);
+
+                    if (winner.getUid() == 2){
+                        roomStatistics.ext = CardUtils.transfromCardsToString(current);
+                        roomStatistics.maxCardGroup = playerLast.transfromCategoryToString();
+                    }else {
+                        roomStatistics.maxCardGroup = playerCurrent.transfromCategoryToString();
+                    }
+                }
+            }
+        }
+        logger.info(" 第{}局    ===== 开始 牌 型:{}", this.room.curGameNumber , this.room.getRoomStatisticsMap());
     }
 
 //    public double getUserScores(long userId){
@@ -539,7 +609,6 @@ public class GameBaseYSZ extends Game {
         return 0;
     }
 
-
     protected void computeCardType(){
 
         for (PlayerYSZ playerCardInfo : playerCardInfos.values()){
@@ -719,7 +788,28 @@ public class GameBaseYSZ extends Game {
         }
         gameResultHitGoldFlower.setWinnerList(winnerList);
         gameResultHitGoldFlower.setBankerId(winnerList.get(0));
-//        MsgSender.sendMsg2Player("gameService", "gameResult", gameResultHitGoldFlower, users);
+
+        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+            for (Map.Entry<Long, PlayerYSZ> entry : this.playerCardInfos.entrySet()){
+                RoomStatistics roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
+                if (roomStatistics == null){
+                    this.room.getRoomStatisticsMap().put(entry.getKey(), new RoomStatistics());
+                }
+                roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
+                if (winnerList.contains(entry.getValue().getUserId())){
+                    roomStatistics.winTime++;
+                    int maxScore = (int) entry.getValue().getFinalScore();
+                    if (roomStatistics.maxScore < maxScore){
+                        roomStatistics.maxScore = maxScore;
+                    }
+                }else {
+                    roomStatistics.failedTime++;
+                }
+            }
+        }
+
+        logger.info("第{}局,  ===== 结束 局 数:{}", this.room.curGameNumber, this.room.getRoomStatisticsMap());
+
         MsgSender.sendMsg2Player("gameService", "gameResult", gameResultHitGoldFlower, this.room.users);
         this.pushGoldScore();
     }
@@ -814,6 +904,14 @@ public class GameBaseYSZ extends Game {
             }
         }
         result.put("zhuList", list);
+
+        Map<Long, Double> allScoreItems = new HashMap<>();
+        for (long uid : this.users){
+            PlayerYSZ p = playerCardInfos.get(uid);
+            allScoreItems.put(uid, p.getAllScore());
+        }
+        result.put("allScoreList", allScoreItems);
+
         ResponseVo vo = new ResponseVo("gameService", "noticeActionSelf", result);
         MsgSender.sendMsg2Player(vo, users);
     }
@@ -875,6 +973,13 @@ public class GameBaseYSZ extends Game {
         }
 
         result.put("zhuList", list);
+
+        Map<Long, Double> allScoreItems = new HashMap<>();
+        for (long uid : this.users){
+            PlayerYSZ p = playerCardInfos.get(uid);
+            allScoreItems.put(uid, p.getAllScore());
+        }
+        result.put("allScoreList", allScoreItems);
 
         ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
         MsgSender.sendMsg2Player(vo, users);
@@ -947,6 +1052,13 @@ public class GameBaseYSZ extends Game {
             }
         }
         result.put("zhuList", list);
+
+        Map<Long, Double> allScoreItems = new HashMap<>();
+        for (long uid : this.users){
+            allScoreItems.put(uid, playerCardInfo.getAllScore());
+        }
+        result.put("allScoreList", allScoreItems);
+
         ResponseVo vo = new ResponseVo("gameService", "noticeAction", result);
         MsgSender.sendMsg2Player(vo, users);
     }
@@ -1218,6 +1330,7 @@ public class GameBaseYSZ extends Game {
             temp += playerCardInfo.getAllScore();
         }
         vo.allTableChip = temp;
+        vo.allTableChip += this.users.size() * INIT_BOTTOM_CHIP;
         return vo;
     }
 

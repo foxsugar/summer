@@ -1,6 +1,9 @@
 package com.code.server.login.service;
 
-import com.code.server.constant.club.*;
+import com.code.server.constant.club.ClubMember;
+import com.code.server.constant.club.ClubStatistics;
+import com.code.server.constant.club.RoomInstance;
+import com.code.server.constant.club.RoomModel;
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.game.UserBean;
@@ -25,10 +28,19 @@ import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -336,6 +348,13 @@ public class GameClubService {
         RedisManager.getUserRedisService().addUserMoney(userId, club.getMoney());
 
         //todo 在建的房间 是否退钱
+        for (RoomInstance roomInstance : club.getClubInfo().getRoomInstance().values()) {
+            String roomId = roomInstance.getRoomId();
+            if (RedisManager.getRoomRedisService().getUsers(roomId).size() == 0) {
+                RoomModel roomModel = GameClubService.getRoomModel(club, roomInstance.getRoomModelId());
+                RedisManager.getUserRedisService().addUserMoney(userId, roomModel.getMoney());
+            }
+        }
 
         sendMsg(msgKey, new ResponseVo("clubService", "dissolve", club));
         return 0;
@@ -579,7 +598,7 @@ public class GameClubService {
         if (clubs.contains(clubId)) {
             return ErrorCode.CLUB_CANNOT_JOIN;
         }
-        ClubManager.getInstance().userAddClub(userId, clubId);
+//        ClubManager.getInstance().userAddClub(userId, clubId);
 
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         if (userBean != null) {
@@ -625,7 +644,7 @@ public class GameClubService {
      * @param userId
      * @param roomModelId
      */
-    public void clubJoinRoom(String clubId, long userId, String roomModelId){
+    public void clubJoinRoom(String clubId, long userId, String roomModelId,String roomId){
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         if(serverConfig.getClubPushUserRoomInfo() == 0) return;
 
@@ -640,6 +659,11 @@ public class GameClubService {
         r.put("clubId", clubId);
         ResponseVo responseVo = new ResponseVo("clubService","clubJoinRoom",r);
         users.forEach(uid -> sendMsg2Player(responseVo, uid));
+
+
+        if (serverConfig.getSend_lq_http() == 1 ) {
+            send_Lq_start(club, roomId, roomModelId, users,0);
+        }
     }
 
 
@@ -919,7 +943,7 @@ public class GameClubService {
      * @param clubModelId
      * @return
      */
-    public int cludGameStart(String clubId, String clubModelId,List<Long> users) {
+    public int cludGameStart(String clubId, String clubModelId,List<Long> users,String roomId, int gameNumber) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club != null) {
             synchronized (club.lock) {
@@ -966,10 +990,65 @@ public class GameClubService {
                 }
             }
             initRoomInstance(club);
+
+            //龙七 发送游戏开始
+            ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+            if (serverConfig.getSend_lq_http() == 1 && gameNumber == 1) {
+                send_Lq_start(club, roomId, clubModelId, users,2);
+            }
         }
         return 0;
     }
 
+
+    private static void send_Lq_start(Club club, String roomId, String clubRoomModel, List<Long> users ,int roomStatus){
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        if (serverConfig.getSend_lq_http() == 1) {
+            Map<String, Object> result = new HashMap<>();
+            result.put("ClubNo", club.getId());
+            result.put("RoomId", roomId);
+            int index = CenterMsgService.getClubModelIndex(club, clubRoomModel);
+            result.put("wanfa", index);
+            result.put("OnlyNo", club.getId() + roomId + index);
+            result.put("Nstatus", roomStatus);
+            List<Map<String, Object>> list = new ArrayList<>();
+            result.put("PlayerList", list);
+            for (long userId: users) {
+                UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+                Map<String, Object> u = new HashMap<>();
+                u.put("Unionid", userBean.getUnionId());
+                u.put("WeixinName", userBean.getUsername());
+                u.put("HeadImgUrl", userBean.getImage() + "/132");
+                list.add(u);
+            }
+            String json = JsonUtil.toJson(result);
+            System.out.println(json);
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            //设置连接超时5s
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectTimeout(5000).setConnectionRequestTimeout(5000)
+                    .setSocketTimeout(5000).build();
+
+            String url1 = "http://long7.l7jqr.com/RoomResult_club_info.php?strContext=" +json;
+
+            try {
+                URL url= new URL(url1);
+                URI uri = new URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), null);
+                System.out.println(url);
+                System.out.println(uri);
+                HttpGet request = new HttpGet(uri);
+                request.setConfig(requestConfig);
+                try {
+                   HttpResponse httpResponse =  httpClient.execute(request);
+                    System.out.println(httpResponse);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (URISyntaxException | MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     private static ClubStatistics getClubStatistics(Club club){
         String date = LocalDate.now().toString();
         club.getStatistics().getStatistics().putIfAbsent(date, new ClubStatistics());
@@ -1190,6 +1269,15 @@ public class GameClubService {
             for (String s : removeList) {
                 RoomModel roomModel = getRoomModel(club, s);
                 createRoom(club, roomModel);
+                //减钱
+                int moneyNow = club.getMoney() - roomModel.getMoney();
+                club.setMoney(moneyNow);
+
+                //统计
+                addStatisticeConsume(club, roomModel.getMoney());
+
+                club.getStatistics().setConsume(club.getStatistics().getConsume() + roomModel.getMoney());
+
             }
 
 

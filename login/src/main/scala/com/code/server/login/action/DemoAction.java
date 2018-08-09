@@ -11,13 +11,16 @@ import com.code.server.login.anotation.DemoChecker;
 import com.code.server.login.service.AgentService;
 import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.HomeService;
+import com.code.server.login.service.TodayChargeService;
 import com.code.server.login.util.AgentUtil;
+import com.code.server.login.util.CookieUtils;
 import com.code.server.login.util.MD5Util;
 import com.code.server.login.vo.DChargeAdminVo;
 import com.code.server.login.vo.DChildVo;
 import com.code.server.login.vo.GameAgentVo;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.rpc.idl.ChargeType;
+import com.code.server.util.DateUtil;
 import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
@@ -27,11 +30,15 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import scala.Int;
+import sun.management.Agent;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +53,7 @@ import java.util.regex.Pattern;
  */
 @RestController
 @RequestMapping("/admin")
-public class DemoAction{
+public class DemoAction extends Cors{
 
     @Autowired
     private IAgentUserDao agentUserDao;
@@ -58,20 +65,13 @@ public class DemoAction{
     private IUserDao userDao;
 
     @Autowired
-    private IChargeDao chargeDao;
-
-    @Autowired
-    private IGameAgentDao gameAgentDao;
-
-    @Autowired
     private HomeService homeService;
 
     @Autowired
     private AgentService agentService;
 
-    public static final int MONEY_TYPE = 0;
-
-    public static final int GOLD_TYPE = 1;
+    @Autowired
+    private IAgentRecordsDao agentRecordsDao;
 
     public static String getToken(long userId) {
         return MD5Util.MD5Encode("salt," + userId + System.currentTimeMillis(), "UTF-8");
@@ -102,7 +102,7 @@ public class DemoAction{
         }
         return role;
     }
-
+    @DemoChecker
     @RequestMapping("/timeSearch")
     public AgentResponse doSearch(String t1, String t2, int curPage){
 
@@ -174,6 +174,7 @@ public class DemoAction{
         return agentResponse;
     }
 
+    @DemoChecker
     @RequestMapping("/roleInfo")
     public AgentResponse roleInfo(long userId){
         long role = getRole(userId);
@@ -181,7 +182,7 @@ public class DemoAction{
         agentResponse.setData(role);
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/toAgent")
     public AgentResponse toAgent(long userId) {
         AgentResponse agentResponse = new AgentResponse();
@@ -195,7 +196,7 @@ public class DemoAction{
         agentService.change2Agent(userId);
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/toUser")
     public AgentResponse toUser(long userId) {
 
@@ -210,7 +211,7 @@ public class DemoAction{
         agentService.change2Player(userId);
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/toPartner")
     public AgentResponse toPartner(long userId) {
 
@@ -243,6 +244,7 @@ public class DemoAction{
         return agentResponse;
     }
 
+    @DemoChecker
     @RequestMapping("/fetchPlayer")
     public AgentResponse fetchPlayer(long userId, HttpServletRequest request){
 
@@ -270,6 +272,7 @@ public class DemoAction{
         return agentResponse;
     };
 
+    @DemoChecker
     @RequestMapping("/fetchDelegate")
     public AgentResponse fetchDelegate(long userId){
         if (userId == 0){
@@ -300,7 +303,7 @@ public class DemoAction{
 
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/fetchDelegates")
     public AgentResponse fetchDelegates(int curPage){
 
@@ -331,6 +334,7 @@ public class DemoAction{
         return agentResponse;
     }
 
+    @DemoChecker
     @RequestMapping("/fetchPartner")
     public AgentResponse fetchPartner(long userId){
         if (userId == 0){
@@ -360,7 +364,7 @@ public class DemoAction{
         }
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/fetchPartners")
     public AgentResponse fetchPartners(int curPage){
         if (curPage > 0){
@@ -388,14 +392,18 @@ public class DemoAction{
         agentResponse.setData(rs);
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/logout")
     public AgentResponse logout(){
-        AgentUtil.caches.clear();
+
+        String token = AgentUtil.findTokenInHeader();
+        if (AgentUtil.caches.keySet().contains(token)){
+            AgentUtil.caches.remove(token);
+        }
         AgentResponse agentResponse = new AgentResponse();
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping(value = "/doChargeNew", method = RequestMethod.POST)
     public AgentResponse doChargeNew(HttpServletRequest request, long userId, @RequestParam(value = "money", required = true) long money, String type){
 
@@ -449,7 +457,7 @@ public class DemoAction{
         agentResponse.setData(rs);
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/downward")
     public AgentResponse downwardDelegate(HttpServletRequest request, long agentId){
 
@@ -724,7 +732,7 @@ public class DemoAction{
 
         return rs;
     }
-
+    @DemoChecker
     @RequestMapping("/oFindCharge")
     public AgentResponse findChargeByOrderId(long orderId){
         Charge charge =  homeService.findChargeByOrderId(orderId);
@@ -747,7 +755,7 @@ public class DemoAction{
         }
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/uFindCharge")
     public AgentResponse findChargeByUserId(long userId){
 
@@ -771,7 +779,7 @@ public class DemoAction{
         }
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/chargeTimeSearch")
     public AgentResponse chargeTimerSearch(String time, int curPage){
 
@@ -806,6 +814,27 @@ public class DemoAction{
         return agentResponse;
     }
 
+    @DemoChecker
+    @RequestMapping("/changePwd")
+    @Transactional
+    public AgentResponse changePwd(String pwd, HttpServletRequest request){
+
+        String token = AgentUtil.findTokenInHeader();
+        int agentId = (int)AgentUtil.getUserIdByToken(token);
+        AgentUser agentUser = agentUserDao.findOne(agentId);
+        agentUser.setPassword(pwd);
+        AgentUser au = agentUserDao.save(agentUser);
+        if (au != null){
+            AgentResponse agentResponse = new AgentResponse();
+            return agentResponse;
+        }else {
+            AgentResponse agentResponse = new AgentResponse();
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+            agentResponse.setMsg("修改失败");
+            return agentResponse;
+        }
+    }
+    @DemoChecker
     @RequestMapping("/findCharges")
     public AgentResponse findCharges(int curPage){
         if (curPage > 0){
@@ -843,15 +872,17 @@ public class DemoAction{
             rs.put("id", agentUser.getId());
             rs.put("username", agentUser.getUsername());
             String token = getToken(agentUser.getId());
+            //清除缓存
+            AgentUtil.clearUserTokenByUserId(agentUser.getId());
             AgentUtil.caches.put(token, rs);
 
-//            Cookie cookie1 = new Cookie("X-Token",token);
-//            response.addCookie(cookie1);
-
             agentResponse = new AgentResponse(0, result);
-            agentResponse.setData(token);
+            Map<String, Object> rrr = new HashMap<>();
+            rrr.put("token", token);
+            return agentResponse.setData(rrr);
 
         }else {
+
             agentResponse = new AgentResponse(ErrorCode.ROLE_ACCOUNT_OR_PASSWORD_ERROR,result);
             agentResponse.msg = "用户不存在";
         }
@@ -861,14 +892,23 @@ public class DemoAction{
     @RequestMapping("/info")
     public AgentResponse userInfo(String token){
         //todo token 验证
-        AgentUtil.caches.get(token);
+        Map<String, Object> map = (Map<String, Object>) AgentUtil.caches.get(token);
         Map<String, Object> r = new HashMap<>();
-        int[] roles = new int[]{1};
-        r.put("userId", 1);
-        r.put("roles", roles);
+
+        r.put("userId", map.get("id"));
+        System.out.println(map.get("id"));
+        if ((Integer)map.get("id") - 1 == 0){
+            r.put("roles", "admin");
+        }else {
+            r.put("roles", "delegate");
+        }
+        AgentUser agentUser = agentUserDao.findOne((Integer) map.get("id"));
+        r.put("name", agentUser.getUsername());
+        r.put("avatar", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=253777390,947512827&fm=23&gp=0.jpg/96");
+
         return new AgentResponse(0, r);
     }
-
+    @DemoChecker
     @RequestMapping("/onlineInfo")
     public AgentResponse onlineInfo(String date){
         //todo token 验证
@@ -876,6 +916,7 @@ public class DemoAction{
         return new AgentResponse(0, JsonUtil.toJson(logRecord));
     }
 
+    @DemoChecker
     @RequestMapping("/getLogByDates")
     public AgentResponse getLogByDates(int num) {
         LocalDate today = LocalDate.now();
@@ -888,10 +929,71 @@ public class DemoAction{
         return new AgentResponse(0, logRecordDao.findByIdIn(days));
     }
 
+//    @DemoChecker
+    @RequestMapping("/partnerRecord")
+    public AgentResponse getChargeRecord(String time, int curPage){
+        if (curPage > 0){
+            curPage--;
+        }
+
+        if (curPage > 0){
+            curPage--;
+        }
+        String[] sA = null;
+        if (time.contains(",")){
+            sA = time.split(",", 1000);
+        }
+
+        String start = sA[0];
+        String end = sA[1];
+
+        int agentId = (int)AgentUtil.getUserIdByToken(AgentUtil.findTokenInHeader());
+//        int agentId = 100027;
+        start = DateUtil.becomeStandardSTime(start);
+        end = DateUtil.becomeStandardSTime(end);
+        List<String> listA = DateUtil.getDateListIn(end, start);
+        Page<AgentRecords> page = homeService.findAllAgentRecords( agentId,listA, new PageRequest(curPage, 20));
+        List<AgentRecords> agentRecordsList = page.getContent();
+
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("list", agentRecordsList);
+        rs.put("count", page.getTotalElements());
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(rs);
+        return agentResponse;
+    }
+
+    @RequestMapping("/todayPartnerRecord")
+    public AgentResponse todayPartnerRecord(int curPage){
+        if (curPage > 0){
+            curPage--;
+        }
+        int agentId = (int)AgentUtil.getUserIdByToken(AgentUtil.findTokenInHeader());
+//        int agentId = 100027;
+        String start = DateUtil.convert2DayString(new Date());
+        String end = DateUtil.convert2DayString(new Date());
+        List<String> listA = DateUtil.getDateListIn(end, start);
+        Page<AgentRecords> page = homeService.findAllAgentRecords( agentId,listA, new PageRequest(curPage, 20));
+        List<AgentRecords> agentRecordsList = page.getContent();
+
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("list", agentRecordsList);
+        rs.put("count", page.getTotalElements());
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(rs);
+        return agentResponse;
+
+    }
+
     @RequestMapping("/test")
     public Map<String, Object> test(){
 
-        return ass();
+        return AgentUtil.caches;
+    }
+
+    @RequestMapping("/ttt")
+    public String hello(){
+        return "Hello World";
     }
 
     public static void main(String[] args) {

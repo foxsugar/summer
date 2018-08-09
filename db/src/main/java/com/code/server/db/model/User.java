@@ -58,6 +58,8 @@ public class User extends BaseEntity{
 
     private String openId;//openId
 
+    private String unionId;
+
     private int sex;//
 
     private String aliId;
@@ -257,6 +259,15 @@ public class User extends BaseEntity{
 
     public User setGold(double gold) {
         this.gold = gold;
+        return this;
+    }
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public User setUnionId(String unionId) {
+        this.unionId = unionId;
         return this;
     }
 

@@ -127,9 +127,11 @@ public class ClubServiceMsgDispatch {
             case "clubGameStart":
                 String clubModelId1 = params.get("clubModelId").asText();
                 String us = params.get("users").toString();
+                int gameNumber = params.get("curGameNumber").asInt();
+                String roomIdc = params.get("roomId").asText();
                 List<Long> users = JsonUtil.readValue(us,new TypeReference<List<Long>>() {});
 //                String roomId = params.get("roomId").asText();
-                return gameClubService.cludGameStart(clubId, clubModelId1,users);
+                return gameClubService.cludGameStart(clubId, clubModelId1,users,roomIdc,gameNumber);
             case "getFreeUser":
                 return gameClubService.getFreeUser(msgKey,clubId);
             case "invite":
@@ -176,11 +178,11 @@ public class ClubServiceMsgDispatch {
             case "clubJoinRoom":{
                 clubId = params.path("clubId").asText();
                 String clubModelId3 = params.path("clubModelId").asText();
-//                String roomId2 = params.path("roomId").asText();
+                String roomId2 = params.path("roomId").asText();
                 long joinUser = params.path("userId").asLong();
 
 
-                gameClubService.clubJoinRoom( clubId,joinUser,clubModelId3);
+                gameClubService.clubJoinRoom( clubId,joinUser,clubModelId3,roomId2);
                 break;
             }
             case "clubQuitRoom":{

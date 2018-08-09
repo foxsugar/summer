@@ -171,6 +171,43 @@ public class RoomYSZ extends RoomExtendGold {
         return 0;
     }
 
+
+    @Override
+    public void addUserSocre(long userId, double score) {
+
+        double s = userScores.get(userId);
+        userScores.put(userId, s + score);
+        //todo 金币改变
+        if (isGoldRoom()) {
+            RedisManager.getUserRedisService().addUserGold(userId, score);
+        }
+    }
+
+//    public void addUserSocre(long userId, double score) {
+//        double s = userScores.get(userId);
+//        userScores.put(userId, s + score);
+//        RoomStatistics roomStatistics = roomStatisticsMap.get(userId);
+//        if (roomStatistics != null) {
+//            roomStatistics.maxScore = roomStatistics.maxScore > score ? roomStatistics.maxScore : score;
+//            if (score >= 0) {
+//                roomStatistics.winTime += 1;
+//            } else {
+//                roomStatistics.failedTime += 1;
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void addUserSocre(long userId, double score) {
+//        super.addUserSocre(userId, score);
+//        //todo 金币改变
+//        if (isGoldRoom()) {
+//            RedisManager.getUserRedisService().addUserGold(userId, score);
+//
+//        }
+//
+//    }
+
     /**
      * 快速开始
      * @param userId
@@ -236,6 +273,71 @@ public class RoomYSZ extends RoomExtendGold {
         return 0;
     }
 
+
+    @Override
+    protected int getOutGold() {
+        if (isGoldRoom() && this.goldRoomPermission != GOLD_ROOM_PERMISSION_DEFAULT) {
+            //todo 根据闷牌 得到出场限制
+//            return super.getOutGold();
+            return computeEnterGold() / 2;
+        } else{
+            return super.getOutGold();
+        }
+    }
+
+    @Override
+    protected int getEnterGold() {
+        if (isGoldRoom() && this.goldRoomPermission != GOLD_ROOM_PERMISSION_DEFAULT) {
+
+            //todo 根据闷牌 得到进场限制
+//            return super.getEnterGold();
+            return computeEnterGold();
+        } else{
+            return super.getEnterGold();
+        }
+    }
+
+
+    public  int computeEnterGold(){
+        int enter = 0;
+        if (this.menPai == 0){
+
+            if (this.goldRoomType == 50){
+                enter = 1000;
+            }else if (this.goldRoomType == 100){
+                enter = 2000;
+            }else if (this.goldRoomType == 200){
+                enter = 5000;
+            }else if (this.goldRoomType == 500){
+                enter = 10000;
+            }
+
+        }else if (this.menPai == 3){
+            if (this.goldRoomType == 50){
+                enter = 1000;
+            }else if (this.goldRoomType == 100){
+                enter = 2000;
+            }else if (this.goldRoomType == 200){
+                enter = 5000;
+            }else if (this.goldRoomType == 500){
+                enter = 10000;
+            }
+
+        }else if (this.menPai == 5){
+
+            if (this.goldRoomType == 50){
+                enter = 1000;
+            }else if (this.goldRoomType == 100){
+                enter = 2000;
+            }else if (this.goldRoomType == 200){
+                enter = 5000;
+            }else if (this.goldRoomType == 500){
+                enter = 15000;
+            }
+        }
+
+        return enter;
+    }
 
     @Override
     public void noticeJoinRoom(long userId) {

@@ -12,6 +12,7 @@ import com.code.server.login.kafka.MsgSender;
 import com.code.server.login.util.ErrorCode;
 import com.code.server.login.util.PayUtil;
 import com.code.server.redis.service.UserRedisService;
+import com.code.server.util.SpringUtil;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -116,9 +117,12 @@ public class PayCallback {
                     UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
 
                     int addMoney = Integer.valueOf(element.elementText("total_fee"))/10;
+
+                    ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+//                    serverConfig.getChargeMap()
                     //龙七分档
-                    if (chargeMoney.containsKey(money_total)) {
-                        addMoney = chargeMoney.get(money_total);
+                    if (serverConfig.getChargeMap().containsKey(money_total)) {
+                        addMoney = serverConfig.getChargeMap().get(money_total);
                     }
 
                     if (UserBeanRedis != null) {
