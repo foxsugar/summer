@@ -3,9 +3,11 @@ package com.code.server.login.service;
 import com.code.server.constant.db.AgentInfo;
 import com.code.server.constant.db.ChildCost;
 import com.code.server.constant.game.AgentBean;
+import com.code.server.db.dao.IAgentRecordsDao;
 import com.code.server.db.dao.IChargeDao;
 import com.code.server.db.dao.IGameAgentDao;
 import com.code.server.db.dao.IUserDao;
+import com.code.server.db.model.AgentRecords;
 import com.code.server.db.model.Charge;
 import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.User;
@@ -47,6 +49,9 @@ public class HomeServiceImpl implements HomeService{
 
     @Autowired
     private IChargeDao chargeDao;
+
+    @Autowired
+    private IAgentRecordsDao agentRecordsDao;
 
     private static final Logger logger = LoggerFactory.getLogger(HomeServiceImpl.class);
     @Override
@@ -293,6 +298,33 @@ public class HomeServiceImpl implements HomeService{
 
         return chargeDao.count(specification);
     }
+
+    @Override
+    public Page<AgentRecords> findAllAgentRecords(int agentId,List<String> listA, org.springframework.data.domain.Pageable pageable) {
+
+        Specification<AgentRecords> specification = new Specification<AgentRecords>() {
+            @Override
+            public Predicate toPredicate(Root<AgentRecords> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                List<Predicate> predicates = new ArrayList<>();
+
+                if (listA != null && listA.size() != 0){
+                    CriteriaBuilder.In<String> in = cb.in(root.<String>get("date"));
+                    for (String dateStr : listA){
+                        in.value(dateStr);
+                    }
+                    predicates.add(in);
+                    Predicate is = cb.equal(root.get("agentId").as(Integer.class), agentId);
+                    predicates.add(is);
+                }
+
+                Predicate[] pre = new Predicate[predicates.size()];
+                return query.where(predicates.toArray(pre)).getRestriction();
+            }
+        };
+        return agentRecordsDao.findAll(specification, pageable);
+    }
+
 
     @Override
     public Page<User> timeQuery(List<Date> listA, List<Date> listB, org.springframework.data.domain.Pageable pageable) {

@@ -1,5 +1,6 @@
 package com.code.server.login.service;
 
+import com.code.server.db.model.AgentRecords;
 import com.code.server.db.model.Charge;
 import com.code.server.db.model.GameAgent;
 import com.code.server.db.model.User;
@@ -45,5 +46,7 @@ public interface HomeService {
     Long chargesCount();
 
     Long timeSearchChargesCount(List<Date> listA);
+
+    Page<AgentRecords> findAllAgentRecords(int agentId , List<String> listA, Pageable pageable);
 
 }

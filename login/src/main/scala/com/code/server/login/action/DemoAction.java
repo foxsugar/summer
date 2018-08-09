@@ -11,6 +11,7 @@ import com.code.server.login.anotation.DemoChecker;
 import com.code.server.login.service.AgentService;
 import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.HomeService;
+import com.code.server.login.service.TodayChargeService;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.util.CookieUtils;
 import com.code.server.login.util.MD5Util;
@@ -19,6 +20,7 @@ import com.code.server.login.vo.DChildVo;
 import com.code.server.login.vo.GameAgentVo;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.rpc.idl.ChargeType;
+import com.code.server.util.DateUtil;
 import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
@@ -28,6 +30,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,20 +64,13 @@ public class DemoAction extends Cors{
     private IUserDao userDao;
 
     @Autowired
-    private IChargeDao chargeDao;
-
-    @Autowired
-    private IGameAgentDao gameAgentDao;
-
-    @Autowired
     private HomeService homeService;
 
     @Autowired
     private AgentService agentService;
 
-    public static final int MONEY_TYPE = 0;
-
-    public static final int GOLD_TYPE = 1;
+    @Autowired
+    private IAgentRecordsDao agentRecordsDao;
 
     public static String getToken(long userId) {
         return MD5Util.MD5Encode("salt," + userId + System.currentTimeMillis(), "UTF-8");
@@ -921,6 +917,21 @@ public class DemoAction extends Cors{
         }
 
         return new AgentResponse(0, logRecordDao.findByIdIn(days));
+    }
+
+//    @DemoChecker
+    @RequestMapping("/partnerRecord")
+    public AgentResponse getChargeRecord(String start, String end, int curPage){
+        if (curPage > 0){
+            curPage--;
+        }
+        int agentId = (int)AgentUtil.getUserIdByToken(AgentUtil.findTokenInHeader());
+        start = DateUtil.becomeStandardSTime(start);
+        end = DateUtil.becomeStandardSTime(end);
+        List<String> listA = DateUtil.getDateListIn(end, start);
+        List<AgentRecords> agentRecordsList = homeService.findAllAgentRecords( agentId,listA, new PageRequest(curPage, 20)).getContent();
+        AgentResponse agentResponse = new AgentResponse(0, agentRecordsList);
+        return agentResponse;
     }
 
     @RequestMapping("/test")
