@@ -28,6 +28,7 @@ import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
@@ -993,7 +994,7 @@ public class GameClubService {
             //龙七 发送游戏开始
             ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
             if (serverConfig.getSend_lq_http() == 1 && gameNumber == 1) {
-                send_Lq_start(club, roomId, clubModelId, users,1);
+                send_Lq_start(club, roomId, clubModelId, users,2);
             }
         }
         return 0;
@@ -1006,21 +1007,22 @@ public class GameClubService {
             Map<String, Object> result = new HashMap<>();
             result.put("ClubNo", club.getId());
             result.put("RoomId", roomId);
-            result.put("OnlyNo", club.getId() + roomId + clubRoomModel);
             int index = CenterMsgService.getClubModelIndex(club, clubRoomModel);
             result.put("wanfa", index);
+            result.put("OnlyNo", club.getId() + roomId + index);
             result.put("Nstatus", roomStatus);
             List<Map<String, Object>> list = new ArrayList<>();
             result.put("PlayerList", list);
             for (long userId: users) {
                 UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
                 Map<String, Object> u = new HashMap<>();
-                u.put("Unionid", userBean.getOpenId());
+                u.put("Unionid", userBean.getUnionId());
                 u.put("WeixinName", userBean.getUsername());
                 u.put("HeadImgUrl", userBean.getImage() + "/132");
                 list.add(u);
             }
             String json = JsonUtil.toJson(result);
+            System.out.println(json);
             HttpClient httpClient = HttpClientBuilder.create().build();
             //设置连接超时5s
             RequestConfig requestConfig = RequestConfig.custom()
@@ -1032,10 +1034,13 @@ public class GameClubService {
             try {
                 URL url= new URL(url1);
                 URI uri = new URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), null);
+                System.out.println(url);
+                System.out.println(uri);
                 HttpGet request = new HttpGet(uri);
                 request.setConfig(requestConfig);
                 try {
-                    httpClient.execute(request);
+                   HttpResponse httpResponse =  httpClient.execute(request);
+                    System.out.println(httpResponse);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
