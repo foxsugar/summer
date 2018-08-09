@@ -28,6 +28,7 @@ import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
@@ -643,7 +644,7 @@ public class GameClubService {
      * @param userId
      * @param roomModelId
      */
-    public void clubJoinRoom(String clubId, long userId, String roomModelId){
+    public void clubJoinRoom(String clubId, long userId, String roomModelId,String roomId){
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         if(serverConfig.getClubPushUserRoomInfo() == 0) return;
 
@@ -658,6 +659,11 @@ public class GameClubService {
         r.put("clubId", clubId);
         ResponseVo responseVo = new ResponseVo("clubService","clubJoinRoom",r);
         users.forEach(uid -> sendMsg2Player(responseVo, uid));
+
+
+        if (serverConfig.getSend_lq_http() == 1 ) {
+            send_Lq_start(club, roomId, roomModelId, users,0);
+        }
     }
 
 
@@ -988,48 +994,53 @@ public class GameClubService {
             //龙七 发送游戏开始
             ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
             if (serverConfig.getSend_lq_http() == 1 && gameNumber == 1) {
-                send_Lq_start(club, roomId, clubModelId, users);
+                send_Lq_start(club, roomId, clubModelId, users,2);
             }
         }
         return 0;
     }
 
 
-    private static void send_Lq_start(Club club, String roomId, String clubRoomModel, List<Long> users ){
+    private static void send_Lq_start(Club club, String roomId, String clubRoomModel, List<Long> users ,int roomStatus){
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         if (serverConfig.getSend_lq_http() == 1) {
             Map<String, Object> result = new HashMap<>();
             result.put("ClubNo", club.getId());
             result.put("RoomId", roomId);
-            result.put("OnlyNo", club.getId() + roomId + clubRoomModel);
             int index = CenterMsgService.getClubModelIndex(club, clubRoomModel);
             result.put("wanfa", index);
+            result.put("OnlyNo", club.getId() + roomId + index);
+            result.put("Nstatus", roomStatus);
             List<Map<String, Object>> list = new ArrayList<>();
             result.put("PlayerList", list);
             for (long userId: users) {
                 UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
                 Map<String, Object> u = new HashMap<>();
-                u.put("Unionid", userBean.getOpenId());
+                u.put("Unionid", userBean.getUnionId());
                 u.put("WeixinName", userBean.getUsername());
                 u.put("HeadImgUrl", userBean.getImage() + "/132");
                 list.add(u);
             }
             String json = JsonUtil.toJson(result);
+            System.out.println(json);
             HttpClient httpClient = HttpClientBuilder.create().build();
             //设置连接超时5s
             RequestConfig requestConfig = RequestConfig.custom()
                     .setConnectTimeout(5000).setConnectionRequestTimeout(5000)
                     .setSocketTimeout(5000).build();
 
-            String url1 = serverConfig.getLq_http_url() + "?strContext=" +json;
+            String url1 = "http://long7.l7jqr.com/RoomResult_club_info.php?strContext=" +json;
 
             try {
                 URL url= new URL(url1);
                 URI uri = new URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), null);
+                System.out.println(url);
+                System.out.println(uri);
                 HttpGet request = new HttpGet(uri);
                 request.setConfig(requestConfig);
                 try {
-                    httpClient.execute(request);
+                   HttpResponse httpResponse =  httpClient.execute(request);
+                    System.out.println(httpResponse);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

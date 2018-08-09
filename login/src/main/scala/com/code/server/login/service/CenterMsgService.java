@@ -231,15 +231,15 @@ public class CenterMsgService implements IkafkaMsgId {
             Map<String, Object> result = new HashMap<>();
             result.put("ClubNo", club.getId());
             result.put("RoomId", roomRecord.getRoomId());
-            result.put("OnlyNo", club.getId() + roomRecord.getRoomId() + roomRecord.getClubRoomModel());
             int index = getClubModelIndex(club, roomRecord.getClubRoomModel());
+            result.put("OnlyNo", club.getId() + roomRecord.getRoomId() + index);
             result.put("wanfa", index);
             List<Map<String, Object>> list = new ArrayList<>();
             result.put("PlayerList", list);
             for (com.code.server.constant.game.UserRecord userRecord : roomRecord.getRecords()) {
                 Map<String, Object> u = new HashMap<>();
                 UserBean userBean = RedisManager.getUserRedisService().getUserBean(userRecord.getUserId());
-                u.put("Unionid", userBean.getOpenId());
+                u.put("Unionid", userBean.getUnionId());
                 u.put("WeixinName", userBean.getUsername());
                 u.put("HeadImgUrl", userBean.getImage() + "/132");
                 u.put("NTotalPoint", userRecord.getScore());
