@@ -11,6 +11,7 @@ import com.code.server.login.anotation.DemoChecker;
 import com.code.server.login.service.AgentService;
 import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.HomeService;
+import com.code.server.login.service.TodayChargeService;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.util.CookieUtils;
 import com.code.server.login.util.MD5Util;
@@ -19,6 +20,7 @@ import com.code.server.login.vo.DChildVo;
 import com.code.server.login.vo.GameAgentVo;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.rpc.idl.ChargeType;
+import com.code.server.util.DateUtil;
 import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
@@ -28,12 +30,14 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import scala.Int;
 import sun.management.Agent;
 
 import javax.servlet.http.Cookie;
@@ -61,20 +65,13 @@ public class DemoAction extends Cors{
     private IUserDao userDao;
 
     @Autowired
-    private IChargeDao chargeDao;
-
-    @Autowired
-    private IGameAgentDao gameAgentDao;
-
-    @Autowired
     private HomeService homeService;
 
     @Autowired
     private AgentService agentService;
 
-    public static final int MONEY_TYPE = 0;
-
-    public static final int GOLD_TYPE = 1;
+    @Autowired
+    private IAgentRecordsDao agentRecordsDao;
 
     public static String getToken(long userId) {
         return MD5Util.MD5Encode("salt," + userId + System.currentTimeMillis(), "UTF-8");
@@ -895,11 +892,20 @@ public class DemoAction extends Cors{
     @RequestMapping("/info")
     public AgentResponse userInfo(String token){
         //todo token 验证
-        AgentUtil.caches.get(token);
+        Map<String, Object> map = (Map<String, Object>) AgentUtil.caches.get(token);
         Map<String, Object> r = new HashMap<>();
-        int[] roles = new int[]{1};
-        r.put("userId", 1);
-        r.put("roles", roles);
+
+        r.put("userId", map.get("id"));
+        System.out.println(map.get("id"));
+        if ((Integer)map.get("id") - 1 == 0){
+            r.put("roles", "admin");
+        }else {
+            r.put("roles", "delegate");
+        }
+        AgentUser agentUser = agentUserDao.findOne((Integer) map.get("id"));
+        r.put("name", agentUser.getUsername());
+        r.put("avatar", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=253777390,947512827&fm=23&gp=0.jpg/96");
+
         return new AgentResponse(0, r);
     }
     @DemoChecker
@@ -921,6 +927,62 @@ public class DemoAction extends Cors{
         }
 
         return new AgentResponse(0, logRecordDao.findByIdIn(days));
+    }
+
+//    @DemoChecker
+    @RequestMapping("/partnerRecord")
+    public AgentResponse getChargeRecord(String time, int curPage){
+        if (curPage > 0){
+            curPage--;
+        }
+
+        if (curPage > 0){
+            curPage--;
+        }
+        String[] sA = null;
+        if (time.contains(",")){
+            sA = time.split(",", 1000);
+        }
+
+        String start = sA[0];
+        String end = sA[1];
+
+        int agentId = (int)AgentUtil.getUserIdByToken(AgentUtil.findTokenInHeader());
+//        int agentId = 100027;
+        start = DateUtil.becomeStandardSTime(start);
+        end = DateUtil.becomeStandardSTime(end);
+        List<String> listA = DateUtil.getDateListIn(end, start);
+        Page<AgentRecords> page = homeService.findAllAgentRecords( agentId,listA, new PageRequest(curPage, 20));
+        List<AgentRecords> agentRecordsList = page.getContent();
+
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("list", agentRecordsList);
+        rs.put("count", page.getTotalElements());
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(rs);
+        return agentResponse;
+    }
+
+    @RequestMapping("/todayPartnerRecord")
+    public AgentResponse todayPartnerRecord(int curPage){
+        if (curPage > 0){
+            curPage--;
+        }
+        int agentId = (int)AgentUtil.getUserIdByToken(AgentUtil.findTokenInHeader());
+//        int agentId = 100027;
+        String start = DateUtil.convert2DayString(new Date());
+        String end = DateUtil.convert2DayString(new Date());
+        List<String> listA = DateUtil.getDateListIn(end, start);
+        Page<AgentRecords> page = homeService.findAllAgentRecords( agentId,listA, new PageRequest(curPage, 20));
+        List<AgentRecords> agentRecordsList = page.getContent();
+
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("list", agentRecordsList);
+        rs.put("count", page.getTotalElements());
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(rs);
+        return agentResponse;
+
     }
 
     @RequestMapping("/test")
