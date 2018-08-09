@@ -921,17 +921,58 @@ public class DemoAction extends Cors{
 
 //    @DemoChecker
     @RequestMapping("/partnerRecord")
-    public AgentResponse getChargeRecord(String start, String end, int curPage){
+    public AgentResponse getChargeRecord(String time, int curPage){
+        if (curPage > 0){
+            curPage--;
+        }
+
+        if (curPage > 0){
+            curPage--;
+        }
+        String[] sA = null;
+        if (time.contains(",")){
+            sA = time.split(",", 1000);
+        }
+
+        String start = sA[0];
+        String end = sA[1];
+
+        int agentId = (int)AgentUtil.getUserIdByToken(AgentUtil.findTokenInHeader());
+//        int agentId = 100027;
+        start = DateUtil.becomeStandardSTime(start);
+        end = DateUtil.becomeStandardSTime(end);
+        List<String> listA = DateUtil.getDateListIn(end, start);
+        Page<AgentRecords> page = homeService.findAllAgentRecords( agentId,listA, new PageRequest(curPage, 20));
+        List<AgentRecords> agentRecordsList = page.getContent();
+
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("list", agentRecordsList);
+        rs.put("count", page.getTotalElements());
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(rs);
+        return agentResponse;
+    }
+
+    @RequestMapping("/todayPartnerRecord")
+    public AgentResponse todayPartnerRecord(int curPage){
         if (curPage > 0){
             curPage--;
         }
         int agentId = (int)AgentUtil.getUserIdByToken(AgentUtil.findTokenInHeader());
-        start = DateUtil.becomeStandardSTime(start);
-        end = DateUtil.becomeStandardSTime(end);
+//        int agentId = 100027;
+        String start = DateUtil.convert2DayString(new Date());
+        String end = DateUtil.convert2DayString(new Date());
         List<String> listA = DateUtil.getDateListIn(end, start);
-        List<AgentRecords> agentRecordsList = homeService.findAllAgentRecords( agentId,listA, new PageRequest(curPage, 20)).getContent();
-        AgentResponse agentResponse = new AgentResponse(0, agentRecordsList);
+        Page<AgentRecords> page = homeService.findAllAgentRecords( agentId,listA, new PageRequest(curPage, 20));
+        List<AgentRecords> agentRecordsList = page.getContent();
+
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("list", agentRecordsList);
+        rs.put("count", page.getTotalElements());
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(rs);
         return agentResponse;
+
     }
 
     @RequestMapping("/test")
