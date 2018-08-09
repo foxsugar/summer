@@ -65,8 +65,8 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
                     gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * maxFan * room.getMultiple()-2);
                     room.setUserSocre(i, - 2 * maxFan * room.getMultiple()-2);
                 }
-                this.score = this.score +  8 * maxFan * room.getMultiple()+8;
-                room.setUserSocre(this.userId, 8 * maxFan * room.getMultiple()+8);
+                this.score = this.score +  2 * room.getPersonNumber() * maxFan * room.getMultiple()+2 * room.getPersonNumber();
+                room.setUserSocre(this.userId, 2 * room.getPersonNumber() * maxFan * room.getMultiple()+2 * room.getPersonNumber());
                 this.fan = 2 * maxFan;
             }else{//庄输
                 for (Long i : gameInfo.getPlayerCardsInfos().keySet()){
@@ -78,8 +78,8 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
                         room.setUserSocre(i, - 2 * maxFan * room.getMultiple());
                     }
                 }
-                this.score = this.score +  8 * maxFan * room.getMultiple()+2;
-                room.setUserSocre(this.userId, 8 * maxFan * room.getMultiple()+2);
+                this.score = this.score +  2 * room.getPersonNumber() * maxFan * room.getMultiple()+2;
+                room.setUserSocre(this.userId, 2 * room.getPersonNumber() * maxFan * room.getMultiple()+2);
                 this.fan = 2 * maxFan;
             }
 
@@ -91,8 +91,8 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
                         gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - maxFan * room.getMultiple()-1);
                         room.setUserSocre(i, - maxFan * room.getMultiple()-1);
                     }
-                    this.score = this.score + 4 * maxFan * room.getMultiple() +4;
-                    room.setUserSocre(this.userId, 4 * maxFan * room.getMultiple()+4);
+                    this.score = this.score + room.getPersonNumber() * maxFan * room.getMultiple() +room.getPersonNumber();
+                    room.setUserSocre(this.userId, room.getPersonNumber() * maxFan * room.getMultiple()+room.getPersonNumber());
                     this.fan = maxFan;
                 }else{//庄输
                     for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
@@ -104,8 +104,8 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
                             room.setUserSocre(i, - maxFan * room.getMultiple());
                         }
                     }
-                    this.score = this.score + 4 * maxFan * room.getMultiple()+1;
-                    room.setUserSocre(this.userId, 4 * maxFan * room.getMultiple()+1);
+                    this.score = this.score + room.getPersonNumber() * maxFan * room.getMultiple()+1;
+                    room.setUserSocre(this.userId, room.getPersonNumber() * maxFan * room.getMultiple()+1);
                     this.fan = maxFan;
                 }
                 System.out.println("======点炮（已听）：" + 3 * maxFan * room.getMultiple());
@@ -116,8 +116,8 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
                             gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - maxFan * room.getMultiple()-1);
                             room.setUserSocre(i, - maxFan * room.getMultiple()-1);
                         }
-                        this.score = this.score + 4 * maxFan * room.getMultiple() +4;
-                        room.setUserSocre(this.userId, 4 * maxFan * room.getMultiple()+4);
+                        this.score = this.score + room.getPersonNumber() * maxFan * room.getMultiple() +room.getPersonNumber();
+                        room.setUserSocre(this.userId, room.getPersonNumber() * maxFan * room.getMultiple()+room.getPersonNumber());
                         this.fan = maxFan;
                     }else{//庄输
                         for (Long i : gameInfo.getPlayerCardsInfos().keySet()) {
@@ -129,22 +129,22 @@ public class PlayerCardsInfoNZZ extends PlayerCardsInfoMj {
                                 room.setUserSocre(i, - maxFan * room.getMultiple());
                             }
                         }
-                        this.score = this.score + 4 * maxFan * room.getMultiple()+1;
-                        room.setUserSocre(this.userId, 4 * maxFan * room.getMultiple()+1);
+                        this.score = this.score + room.getPersonNumber() * maxFan * room.getMultiple()+1;
+                        room.setUserSocre(this.userId, room.getPersonNumber() * maxFan * room.getMultiple()+1);
                         this.fan = maxFan;
                     }
                     System.out.println("======点炮（已听）：" + 3 * maxFan * room.getMultiple());
                 }else{
                     if(this.userId==gameInfo.getFirstTurn()){//庄赢
-                        gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 3 * maxFan * room.getMultiple()-3);
-                        this.score = this.score + 3 * maxFan * room.getMultiple()+3;
-                        room.setUserSocre(dianpaoUser, -3 * maxFan * room.getMultiple()-3);
-                        room.setUserSocre(this.userId, 3 * maxFan * room.getMultiple()+3);
+                        gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - (room.getPersonNumber()-1) * maxFan * room.getMultiple()-(room.getPersonNumber()-1));
+                        this.score = this.score + (room.getPersonNumber()-1) * maxFan * room.getMultiple()+(room.getPersonNumber()-1);
+                        room.setUserSocre(dianpaoUser, -(room.getPersonNumber()-1) * maxFan * room.getMultiple()-(room.getPersonNumber()-1));
+                        room.setUserSocre(this.userId, (room.getPersonNumber()-1) * maxFan * room.getMultiple()+(room.getPersonNumber()-1));
                     }else{
-                        gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 3 * maxFan * room.getMultiple()-1);
-                        this.score = this.score + 3 * maxFan * room.getMultiple()+1;
-                        room.setUserSocre(dianpaoUser, -3 * maxFan * room.getMultiple()-1);
-                        room.setUserSocre(this.userId, 3 * maxFan * room.getMultiple()+1);
+                        gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - (room.getPersonNumber()-1) * maxFan * room.getMultiple()-1);
+                        this.score = this.score + (room.getPersonNumber()-1) * maxFan * room.getMultiple()+1;
+                        room.setUserSocre(dianpaoUser, -(room.getPersonNumber()-1) * maxFan * room.getMultiple()-1);
+                        room.setUserSocre(this.userId, (room.getPersonNumber()-1) * maxFan * room.getMultiple()+1);
                     }
                     this.fan = maxFan;
                     System.out.println("======点炮（未听）：" + 3 * maxFan * room.getMultiple());
