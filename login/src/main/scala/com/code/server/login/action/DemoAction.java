@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import scala.Int;
 import sun.management.Agent;
 
 import javax.servlet.http.Cookie;
@@ -891,11 +892,20 @@ public class DemoAction extends Cors{
     @RequestMapping("/info")
     public AgentResponse userInfo(String token){
         //todo token 验证
-        AgentUtil.caches.get(token);
+        Map<String, Object> map = (Map<String, Object>) AgentUtil.caches.get(token);
         Map<String, Object> r = new HashMap<>();
-        int[] roles = new int[]{1};
-        r.put("userId", 1);
-        r.put("roles", roles);
+
+        r.put("userId", map.get("id"));
+        System.out.println(map.get("id"));
+        if ((Integer)map.get("id") - 1 == 0){
+            r.put("roles", "admin");
+        }else {
+            r.put("roles", "delegate");
+        }
+        AgentUser agentUser = agentUserDao.findOne((Integer) map.get("id"));
+        r.put("name", agentUser.getUsername());
+        r.put("avatar", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=253777390,947512827&fm=23&gp=0.jpg/96");
+
         return new AgentResponse(0, r);
     }
     @DemoChecker
