@@ -1010,7 +1010,7 @@ public class GameClubService {
             int index = CenterMsgService.getClubModelIndex(club, clubRoomModel);
             result.put("wanfa", index);
             result.put("OnlyNo", club.getId() + roomId + index);
-            result.put("Nstatus", roomStatus);
+            result.put("NStatus", roomStatus);
             List<Map<String, Object>> list = new ArrayList<>();
             result.put("PlayerList", list);
             for (long userId: users) {
