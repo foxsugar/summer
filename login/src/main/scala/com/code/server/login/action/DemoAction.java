@@ -897,11 +897,14 @@ public class DemoAction extends Cors{
 
         r.put("userId", map.get("id"));
         System.out.println(map.get("id"));
+
+        List<String> roles = new ArrayList<>();
         if ((Integer)map.get("id") - 1 == 0){
-            r.put("roles", "admin");
+            roles.add("admin");
         }else {
-            r.put("roles", "delegate");
+            roles.add("delegate");
         }
+        r.put("roles", roles);
         AgentUser agentUser = agentUserDao.findOne((Integer) map.get("id"));
         r.put("name", agentUser.getUsername());
         r.put("avatar", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=253777390,947512827&fm=23&gp=0.jpg/96");
