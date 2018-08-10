@@ -188,10 +188,10 @@ public class ClubServiceMsgDispatch {
             case "clubQuitRoom":{
                 clubId = params.path("clubId").asText();
                 String clubModelId3 = params.path("clubModelId").asText();
-//                String roomId2 = params.path("roomId").asText();
+                String roomId3 = params.path("roomId").asText();
                 long quitUser = params.path("userId").asLong();
 
-                gameClubService.clubQuitRoom( clubId,quitUser,clubModelId3);
+                gameClubService.clubQuitRoom( clubId,quitUser,clubModelId3,roomId3);
                 break;
             }
 
