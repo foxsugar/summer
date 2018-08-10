@@ -187,8 +187,8 @@ public class PlayerCardsInfoKD extends PlayerCardsInfoMj {
         		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * CardUtil.KDGangForScores(card) * room.getMultiple());
         		room.setUserSocre(i, - 2 * CardUtil.KDGangForScores(card) * room.getMultiple());
         	}
-        	this.score = this.score + 2 * CardUtil.KDGangForScores(card) * 4 * room.getMultiple();
-        	room.setUserSocre(this.userId, 2 * CardUtil.KDGangForScores(card) * 4 * room.getMultiple());
+        	this.score = this.score + 2 * CardUtil.KDGangForScores(card) * room.getPersonNumber() * room.getMultiple();
+        	room.setUserSocre(this.userId, 2 * CardUtil.KDGangForScores(card) * room.getPersonNumber() * room.getMultiple());
 			System.out.println("======暗杠：" + 2 * CardUtil.KDGangForScores(card) * 3 * room.getMultiple());
 		}else{//明杠
     		if (diangangUser==-1) {
@@ -196,8 +196,8 @@ public class PlayerCardsInfoKD extends PlayerCardsInfoMj {
             		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - CardUtil.KDGangForScores(card) * room.getMultiple());
             		room.setUserSocre(i, - CardUtil.KDGangForScores(card) * room.getMultiple());
     			}
-    			this.score = this.score + CardUtil.KDGangForScores(card) * 4 * room.getMultiple();
-    			room.setUserSocre(this.userId, CardUtil.KDGangForScores(card) * 4 * room.getMultiple());
+    			this.score = this.score + CardUtil.KDGangForScores(card) * room.getPersonNumber() * room.getMultiple();
+    			room.setUserSocre(this.userId, CardUtil.KDGangForScores(card) * room.getPersonNumber() * room.getMultiple());
 				System.out.println("======明杠：" + CardUtil.KDGangForScores(card) * 3 * room.getMultiple());
 			} else {
 				if(gameInfo.getPlayerCardsInfos().get(diangangUser).isTing){
@@ -205,14 +205,14 @@ public class PlayerCardsInfoKD extends PlayerCardsInfoMj {
 	            		gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - CardUtil.KDGangForScores(card) * room.getMultiple());
 	            		room.setUserSocre(i, - CardUtil.KDGangForScores(card) * room.getMultiple());
 	    			}
-	    			this.score = this.score + CardUtil.KDGangForScores(card) * 4 * room.getMultiple();
-	    			room.setUserSocre(this.userId, CardUtil.KDGangForScores(card) * 4 * room.getMultiple());
+	    			this.score = this.score + CardUtil.KDGangForScores(card) * room.getPersonNumber() * room.getMultiple();
+	    			room.setUserSocre(this.userId, CardUtil.KDGangForScores(card) * room.getPersonNumber() * room.getMultiple());
 					System.out.println("======明杠（已听）：" + CardUtil.KDGangForScores(card) * 3 * room.getMultiple());
 	    		}else{
-	    			gameInfo.getPlayerCardsInfos().get(diangangUser).setScore(gameInfo.getPlayerCardsInfos().get(diangangUser).getScore() - 3 * CardUtil.KDGangForScores(card) * room.getMultiple());
-	    			gameInfo.getPlayerCardsInfos().get(this.userId).setScore(gameInfo.getPlayerCardsInfos().get(this.userId).getScore() + 3 * CardUtil.KDGangForScores(card) * room.getMultiple());
-	    			room.setUserSocre(diangangUser, - 3 * CardUtil.KDGangForScores(card) * room.getMultiple());
-	        		room.setUserSocre(this.userId, 3 * CardUtil.KDGangForScores(card) * room.getMultiple());
+	    			gameInfo.getPlayerCardsInfos().get(diangangUser).setScore(gameInfo.getPlayerCardsInfos().get(diangangUser).getScore() - (room.getPersonNumber()-1) * CardUtil.KDGangForScores(card) * room.getMultiple());
+	    			gameInfo.getPlayerCardsInfos().get(this.userId).setScore(gameInfo.getPlayerCardsInfos().get(this.userId).getScore() + (room.getPersonNumber()-1) * CardUtil.KDGangForScores(card) * room.getMultiple());
+	    			room.setUserSocre(diangangUser, - (room.getPersonNumber()-1) * CardUtil.KDGangForScores(card) * room.getMultiple());
+	        		room.setUserSocre(this.userId, (room.getPersonNumber()-1) * CardUtil.KDGangForScores(card) * room.getMultiple());
 					System.out.println("======明杠（未听）：" + 3 * CardUtil.KDGangForScores(card) * room.getMultiple());
 	    		}
 			}
@@ -247,8 +247,8 @@ public class PlayerCardsInfoKD extends PlayerCardsInfoMj {
 					gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 2 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
 					room.setUserSocre(i, - 2 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
 				}
-				this.score = this.score +  8 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length()-1),card,huCardType) * room.getMultiple();
-				room.setUserSocre(this.userId, 8 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length()-1),card,huCardType) * room.getMultiple());
+				this.score = this.score +  2 * room.getPersonNumber() * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length()-1),card,huCardType) * room.getMultiple();
+				room.setUserSocre(this.userId, 2 * room.getPersonNumber() * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length()-1),card,huCardType) * room.getMultiple());
 				this.fan = 2 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType);
 				System.out.println("======自摸：" + 6 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length()-1),card,huCardType) * room.getMultiple());
 			}else{
@@ -257,15 +257,15 @@ public class PlayerCardsInfoKD extends PlayerCardsInfoMj {
 						gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
 						room.setUserSocre(i, - CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
 					}
-					this.score = this.score + 4 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple();
-					room.setUserSocre(this.userId, 4 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
+					this.score = this.score + room.getPersonNumber() * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple();
+					room.setUserSocre(this.userId, room.getPersonNumber() * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
 					this.fan = CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType);
 					System.out.println("======点炮（已听）：" + 3 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
 				}else{
-					gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 3 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
-					this.score = this.score + 3 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length()-1),card,huCardType) * room.getMultiple();
-					room.setUserSocre(dianpaoUser,- 3 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
-					room.setUserSocre(this.userId, 3 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length()-1),card,huCardType) * room.getMultiple());
+					gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - (room.getPersonNumber()-1) * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
+					this.score = this.score + (room.getPersonNumber()-1) * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length()-1),card,huCardType) * room.getMultiple();
+					room.setUserSocre(dianpaoUser,- (room.getPersonNumber()-1) * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType) * room.getMultiple());
+					room.setUserSocre(this.userId, (room.getPersonNumber()-1) * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length()-1),card,huCardType) * room.getMultiple());
 					this.fan = CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length() - 1), card,huCardType);
 					System.out.println("======点炮（未听）：" +  3 * CardUtil.KDForScoresDoubleScore(sb.toString().substring(0, sb.length()-1),card,huCardType) * room.getMultiple());
 				}
