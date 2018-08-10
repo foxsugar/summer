@@ -662,7 +662,9 @@ public class GameClubService {
 
 
         if (serverConfig.getSend_lq_http() == 1 ) {
-            send_Lq_start(club, roomId, roomModelId, users,0);
+            List<Long> us = new ArrayList<>();
+            us.addAll(RedisManager.getRoomRedisService().getUsers(roomId));
+            send_Lq_start(club, roomId, roomModelId, us,0);
         }
     }
 
