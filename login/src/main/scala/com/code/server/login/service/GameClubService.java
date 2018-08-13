@@ -662,7 +662,9 @@ public class GameClubService {
 
 
         if (serverConfig.getSend_lq_http() == 1 ) {
-            send_Lq_start(club, roomId, roomModelId, users,0);
+            List<Long> us = new ArrayList<>();
+            us.addAll(RedisManager.getRoomRedisService().getUsers(roomId));
+            send_Lq_start(club, roomId, roomModelId, us,0);
         }
     }
 
@@ -673,7 +675,7 @@ public class GameClubService {
      * @param userId
      * @param roomModelId
      */
-    public void clubQuitRoom(String clubId, long userId, String roomModelId){
+    public void clubQuitRoom(String clubId, long userId, String roomModelId,String roomId){
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         if(serverConfig.getClubPushUserRoomInfo() == 0) return;
 
@@ -688,6 +690,12 @@ public class GameClubService {
         r.put("clubId", clubId);
         ResponseVo responseVo = new ResponseVo("clubService","clubQuitRoom",r);
         users.forEach(uid -> sendMsg2Player(responseVo, uid));
+
+        if (serverConfig.getSend_lq_http() == 1 ) {
+            List<Long> us = new ArrayList<>();
+            us.addAll(RedisManager.getRoomRedisService().getUsers(roomId));
+            send_Lq_start(club, roomId, roomModelId, us,0);
+        }
     }
 
     /**
