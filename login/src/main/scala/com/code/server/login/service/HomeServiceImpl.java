@@ -1,5 +1,4 @@
 package com.code.server.login.service;
-
 import com.code.server.constant.db.AgentInfo;
 import com.code.server.constant.db.ChildCost;
 import com.code.server.constant.game.AgentBean;
@@ -23,7 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import scala.Char;
-
 import javax.persistence.criteria.*;
 import java.awt.print.Pageable;
 import java.util.*;

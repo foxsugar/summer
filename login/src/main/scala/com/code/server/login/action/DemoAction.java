@@ -907,7 +907,7 @@ public class DemoAction extends Cors{
         r.put("roles", roles);
         AgentUser agentUser = agentUserDao.findOne((Integer) map.get("id"));
         r.put("name", agentUser.getUsername());
-        r.put("avatar", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=253777390,947512827&fm=23&gp=0.jpg/96");
+        r.put("avatar", "http://tb.himg.baidu.com/sys/portrait/item/553f736466666473667364666364571b");
 
         return new AgentResponse(0, r);
     }
