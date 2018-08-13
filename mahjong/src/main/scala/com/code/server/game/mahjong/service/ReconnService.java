@@ -52,6 +52,7 @@ public class ReconnService {
         result.put("goldRoomType", roomInfo.getGoldRoomType());
         result.put("goldRoomPermission", roomInfo.getGoldRoomPermission());
         result.put("showChat", roomInfo.showChat);
+        result.put("otherMode", roomInfo.getOtherMode());
 
 
         return result;

@@ -165,14 +165,17 @@ public class RoomInfo extends RoomInfoExtendGold {
             case "DH":
                 return new GameInfoDonghu();
             case "NZZ":
+            case "NZZ2":
                 return new GameInfoNZZ().setHasJieGangHu(true);
             case "HELE":
                 return new GameInfoHasChi().setHasJieGangHu(true);
             case "HM":
+            case "HM2":
                 return new GameInfoHM().setHasJieGangHu(true);
             case "BENGBU":
                 return new GameInfoBengbu().setHasJieGangHu(true);
             case "NIUYEZI":
+            case "NIUYEZI2":
                 this.setChangeBankerAfterHuangZhuang(true);
                 return new GameInfoNiuyezi();
             case "HS":
@@ -221,6 +224,10 @@ public class RoomInfo extends RoomInfoExtendGold {
             this.gameType = "LQ";
         }
         if (this.gameType.equals("THREEA")) {
+            this.gameType = "LQ";
+        }
+
+        if (this.gameType.equals("LQ2")) {
             this.gameType = "LQ";
         }
 
@@ -424,6 +431,7 @@ public class RoomInfo extends RoomInfoExtendGold {
         result.put("goldRoomType", this.getGoldRoomType());
         result.put("goldRoomPermission", this.getGoldRoomPermission());
         result.put("showChat", this.showChat);
+        result.put("otherMode", this.otherMode);
 
         return result;
     }
@@ -486,6 +494,7 @@ public class RoomInfo extends RoomInfoExtendGold {
         roomVo.setEach(this.getEach());
         roomVo.setMustZimo(this.mustZimo);
         roomVo.setShowChat(this.showChat);
+        roomVo.setOtherMode(this.otherMode);
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.getGame() != null) {
             roomVo.game = this.game.toVo(userId);

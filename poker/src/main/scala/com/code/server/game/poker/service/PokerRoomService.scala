@@ -39,8 +39,9 @@ object PokerRoomService {
         val showChat = params.path("showChat").asBoolean(false)
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
+        val otherMode = params.path("otherMode").asInt(0)
 
-        return RoomDouDiZhu.createRoom(userId, gameNumber, multiple, gameType, roomType, isAA, isJoin, showChat, personNum, jiaoScore, shuanglong, clubId, clubRoomModel)
+        return RoomDouDiZhu.createRoom(userId, gameNumber, multiple, gameType, roomType, isAA, isJoin, showChat, personNum, jiaoScore, shuanglong, clubId, clubRoomModel,otherMode)
 
       case "createHitGoldFlowerRoom" =>
         val roomType = params.get("roomType").asText()

@@ -79,6 +79,10 @@ public class Room implements IfaceRoom {
 
     protected long lastOperateTime;
 
+    protected int otherMode;
+
+
+
 
     public static String getRoomIdStr(int roomId) {
         String s = "000000" + roomId;
@@ -1309,6 +1313,15 @@ public class Room implements IfaceRoom {
 
     public Room setLastOperateTime(long lastOperateTime) {
         this.lastOperateTime = lastOperateTime;
+        return this;
+    }
+
+    public int getOtherMode() {
+        return otherMode;
+    }
+
+    public Room setOtherMode(int otherMode) {
+        this.otherMode = otherMode;
         return this;
     }
 }
