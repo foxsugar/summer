@@ -113,16 +113,16 @@ public class GamePlaySeven extends Game{
         int tempcardNum = playerCardInfos.get(userId).handCards.get(size-1);
         msg.put("card",tempcardNum);
         if(size==1){
-            if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
-                    tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54){
+            if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||
+                    tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52){
                 playerCardInfos.get(userId).setShouQi("1");
                 playerCardInfos.get(userId).setDanLiang("1");
                 msg.put("shouQi", "1");
                 msg.put("danLiang", "1");
             }
         }else{
-            if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
-                    tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54){
+            if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||
+                    tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52){
                 playerCardInfos.get(userId).setDanLiang("1");
                 msg.put("danLiang", "1");
             }
@@ -183,14 +183,14 @@ public class GamePlaySeven extends Game{
             int size = playerCardInfos.get(userId).handCards.size();
             int tempcardNum = playerCardInfos.get(userId).handCards.get(size-1);
             if(size==1){
-                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
-                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54){
+                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||
+                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52){
                     playerCardInfos.get(userId).setShouQi("1");
                     playerCardInfos.get(userId).setDanLiang("1");
                 }
             }else{
-                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
-                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54){
+                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||
+                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52){
                     playerCardInfos.get(userId).setDanLiang("1");
                 }
             }
