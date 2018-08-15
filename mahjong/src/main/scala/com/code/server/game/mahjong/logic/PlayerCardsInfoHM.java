@@ -108,10 +108,10 @@ public class PlayerCardsInfoHM extends PlayerCardsInfoMj {
                     room.setUserSocre(this.userId, 2 * room.getPersonNumber() * maxFan * room.getMultiple());
                 }else{
                     if(gameInfo.getFirstTurn()!=dianpaoUser){
-                        gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - room.getPersonNumber() * maxFan * room.getMultiple()-1);
-                        this.score = this.score + room.getPersonNumber() * maxFan * room.getMultiple()+1;
-                        room.setUserSocre(dianpaoUser, - room.getPersonNumber() * maxFan * room.getMultiple()-1);
-                        room.setUserSocre(this.userId, room.getPersonNumber() * maxFan * room.getMultiple()+1);
+                        gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - (room.getPersonNumber() * room.getMultiple()+1)* maxFan);
+                        this.score = this.score + (room.getPersonNumber()  * room.getMultiple()+1)* maxFan;
+                        room.setUserSocre(dianpaoUser, - (room.getPersonNumber()  * room.getMultiple()+1)* maxFan);
+                        room.setUserSocre(this.userId, (room.getPersonNumber()  * room.getMultiple()+1)* maxFan);
                     }else{
                         gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 2*(room.getPersonNumber()-1) * maxFan * room.getMultiple());
                         this.score = this.score + 2*(room.getPersonNumber()-1) * maxFan * room.getMultiple();
