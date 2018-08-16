@@ -120,8 +120,8 @@ public class GameClubService {
         clubVo.setStatistics(club.getStatistics());
         //玩家在线情况
         clubVo.getMember().addAll(club.getClubInfo().getMember().values());
-        if (clubVo.getMember().size() > 21) {
-            clubVo.setMember(clubVo.getMember().subList(0, 20));
+        if (clubVo.getMember().size() > 100) {
+            clubVo.setMember(clubVo.getMember().subList(0, 100));
         }
         clubVo.getAdmin().addAll(club.getClubInfo().getAdmin());
         clubVo.getMember().forEach(clubMember -> {
