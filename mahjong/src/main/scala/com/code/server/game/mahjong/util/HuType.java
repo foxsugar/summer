@@ -87,5 +87,6 @@ public interface HuType {
     int hu_混一色 = 171;//同一色加字
 
     int hu_三碰 = 172;//XXPB专用
+    int hu_四个红中 = 173;//XXPB专用
 
 }

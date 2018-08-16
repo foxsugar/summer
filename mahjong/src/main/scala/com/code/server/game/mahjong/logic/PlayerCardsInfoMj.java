@@ -730,6 +730,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     public void computeALLGang() {
 
+
     }
 
     /**
