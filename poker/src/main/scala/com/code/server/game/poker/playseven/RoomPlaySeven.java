@@ -1,6 +1,7 @@
 package com.code.server.game.poker.playseven;
 
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.IfaceRoomVo;
 import com.code.server.constant.response.ResponseVo;
@@ -163,5 +164,69 @@ public class RoomPlaySeven extends Room {
 
     public void setRoomLastTime(long roomLastTime) {
         this.roomLastTime = roomLastTime;
+    }
+
+    @Override
+    public int joinRoom(long userId, boolean isJoin) {
+
+        if (isClubRoom() && userId == 0) {
+            return 0;
+        }
+        if (userId == 0) {
+            return ErrorCode.JOIN_ROOM_USERID_IS_0;
+        }
+        if (this.users.contains(userId)) {
+            return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;
+        }
+        if (this.users.size() >= this.personNumber) {
+            return ErrorCode.CANNOT_JOIN_ROOM_IS_FULL;
+
+        }
+        if (RedisManager.getUserRedisService().getRoomId(userId) != null) {
+            return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;
+        }
+        if (!isCanJoinCheckMoney(userId)) {
+            return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
+        }
+
+
+        if (isJoin) {
+            roomAddUser(userId);
+            //加进玩家-房间映射表
+            noticeJoinRoom(userId);
+        }
+
+        return 0;
+    }
+
+    @Override
+    public void noticeJoinRoom(long userId) {
+        UserOfRoomSeven userOfRoom = new UserOfRoomSeven();
+        int readyNumber = 0;
+
+        for (UserBean userBean : RedisManager.getUserRedisService().getUserBeans(users)) {
+            userOfRoom.getUserList().add(userBean.toVo());
+        }
+
+        userOfRoom.setInRoomNumber(users.size());
+        userOfRoom.setReadyNumber(readyNumber);
+        userOfRoom.setClubId(clubId);
+        userOfRoom.setClubRoomModel(clubRoomModel);
+
+        userOfRoom.setCanStartUserId(users.get(0));
+        userOfRoom.setUserScores(this.userScores);
+        userOfRoom.setFengDing(fengDing);
+        userOfRoom.setKouDiJiaJi(kouDiJiaJi);
+        userOfRoom.setZhuangDanDaJiaBei(zhuangDanDaJiaBei);
+
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "joinRoom", this.toVo(userId)), userId);
+
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "roomNotice", userOfRoom), this.getUsers());
+
+        if (isClubRoom()) {
+            noticeClubJoinRoom(userId);
+        }
+
+
     }
 }

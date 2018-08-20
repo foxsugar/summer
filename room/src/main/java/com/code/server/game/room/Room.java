@@ -68,8 +68,8 @@ public class Room implements IfaceRoom {
     public int mustZimo = 0;//1是0否
     public boolean showChat;
 
-    private String clubId;
-    private String clubRoomModel;
+    protected String clubId;
+    protected String clubRoomModel;
 
     public Map<Long, Double> userScoresForGold = new HashMap<>();
 

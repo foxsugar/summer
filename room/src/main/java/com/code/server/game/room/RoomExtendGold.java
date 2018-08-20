@@ -113,15 +113,18 @@ public class RoomExtendGold extends Room {
     @Override
     public int joinRoom(long userId, boolean isJoin) {
         //随机匹配的金币房
-        if (isGoldRoom() && goldRoomPermission == GOLD_ROOM_PERMISSION_DEFAULT) {
+        if (isGoldRoom()) {
             int rtn = super.joinRoom(userId, isJoin);
             if (rtn != 0) {
                 return rtn;
             }
+
             //如果房间已满 加入已满房间
-            if (this.isRoomFull()) {
+            if (goldRoomPermission == GOLD_ROOM_PERMISSION_DEFAULT && this.isRoomFull()) {
                 RoomManager.getInstance().moveGoldRoomNotFull2Full(this);
             }
+
+            getReady(userId);
             return 0;
         } else {
             return super.joinRoom(userId, isJoin);
