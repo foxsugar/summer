@@ -235,13 +235,10 @@ public class GameBaseYSZ extends Game {
 
         if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
 
-            if (this.room.curGameNumber == 1){
 
-                for (Map.Entry<Long, PlayerYSZ> entry : this.playerCardInfos.entrySet()){
-                    RoomStatistics roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
-                    if (roomStatistics == null){
-                        this.room.getRoomStatisticsMap().put(entry.getKey(), new RoomStatistics());
-                    }
+            for (Map.Entry<Long, PlayerYSZ> entry : this.playerCardInfos.entrySet()){
+                RoomStatistics roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
+                if (roomStatistics == null){
                     roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
                     roomStatistics.maxCardGroup = "";
                     roomStatistics.ext = "";
@@ -250,14 +247,9 @@ public class GameBaseYSZ extends Game {
                     roomStatistics.winTime = 0;
                     roomStatistics.loseAllTime = 0;
                     roomStatistics.winAllTime = 0;
+                    this.room.getRoomStatisticsMap().put(entry.getKey(), roomStatistics);
                 }
-            }
 
-            for (Map.Entry<Long, PlayerYSZ> entry : this.playerCardInfos.entrySet()){
-                RoomStatistics roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
-                if (roomStatistics == null){
-                    this.room.getRoomStatisticsMap().put(entry.getKey(), new RoomStatistics());
-                }
                 roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
 
                 String ext = roomStatistics.ext;
@@ -270,20 +262,35 @@ public class GameBaseYSZ extends Game {
                     roomStatistics.maxCardGroup = playerLast.transfromCategoryToString();
 
                 }else {
-                    List<Integer> last = CardUtils.transfromStringToCards(roomStatistics.ext);
+
                     List<Integer> current = entry.getValue().getHandcards();
-
-                    Player playerLast = new Player(1l,  ArrUtils.cardCode.get(last.get(0)), ArrUtils.cardCode.get(last.get(1)), ArrUtils.cardCode.get(last.get(2)));
                     Player playerCurrent = new Player(2l, ArrUtils.cardCode.get(current.get(0)), ArrUtils.cardCode.get(current.get(1)), ArrUtils.cardCode.get(current.get(2)));
-                    ArrayList<Player> retList = Player.findWinners(playerLast, playerCurrent);
-                    Player winner = retList.get(0);
+                    String lastMax = roomStatistics.maxCardGroup;
+                    String currentMax = playerCurrent.transfromCategoryToString();
 
-                    if (winner.getUid() == 2){
-                        roomStatistics.ext = CardUtils.transfromCardsToString(current);
-                        roomStatistics.maxCardGroup = playerLast.transfromCategoryToString();
-                    }else {
-                        roomStatistics.maxCardGroup = playerCurrent.transfromCategoryToString();
+                    int lastValue = Player.transformCardsValue(lastMax);
+                    int currentValue = Player.transformCardsValue(currentMax);
+
+                    if (currentValue < lastValue){
+                        roomStatistics.maxCardGroup = currentMax;
                     }
+
+//                    List<Integer> last = CardUtils.transfromStringToCards(roomStatistics.ext);
+//                    List<Integer> current = entry.getValue().getHandcards();
+//
+//                    Player playerLast = new Player(1l,  ArrUtils.cardCode.get(last.get(0)), ArrUtils.cardCode.get(last.get(1)), ArrUtils.cardCode.get(last.get(2)));
+//                    Player playerCurrent = new Player(2l, ArrUtils.cardCode.get(current.get(0)), ArrUtils.cardCode.get(current.get(1)), ArrUtils.cardCode.get(current.get(2)));
+//                    ArrayList<Player> retList = Player.findWinners(playerLast, playerCurrent);
+//                    Player winner = retList.get(0);
+//
+//                    if (winner.getUid() == 2){
+//                        //客户端编码
+//                        roomStatistics.ext = CardUtils.transfromCardsToString(current);
+//                        roomStatistics.maxCardGroup = playerLast.transfromCategoryToString();
+//                    }else {
+////                        roomStatistics.ext = CardUtils.transfromCardsToString(last);
+//                        roomStatistics.maxCardGroup = playerCurrent.transfromCategoryToString();
+//                    }
                 }
             }
         }
