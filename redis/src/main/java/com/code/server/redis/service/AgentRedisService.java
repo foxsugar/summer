@@ -67,7 +67,8 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         return m;
     }
 
-    public void addChildCost(long agentId, double cost, int levle,String date, String deleteDay) {
+
+    public void addChildCost(long agentId, double cost, int level,String date, String deleteDay) {
         AgentBean agentBean = getAgentBean(agentId);
         if (agentBean != null) {
             if (cost > 0) {
@@ -76,7 +77,7 @@ public class AgentRedisService implements IAgentRedis, IConstant {
                 }
                 ChildCost childCost = agentBean.getAgentInfo().getEveryDayCost().getOrDefault(date, new ChildCost());
 
-                switch (levle) {
+                switch (level) {
                     case 0:
                         childCost.partner += cost;
                         break;
@@ -292,13 +293,13 @@ public class AgentRedisService implements IAgentRedis, IConstant {
             double n = scala2 * num / 100;
             allRebate += n;
             addRebate(agentId2, n,today,deleteDay);
-            addChildCost(agentId1,childCost,2,today, deleteDay1);
+            addChildCost(agentId2,childCost,2,today, deleteDay1);
         }
         if (agentId3 != 0) {
             double n = scala3 * num / 100;
             allRebate += n;
             addRebate(agentId3, n,today,deleteDay);
-            addChildCost(agentId1,childCost,3,today, deleteDay1);
+            addChildCost(agentId3,childCost,3,today, deleteDay1);
         }
 
         //合伙人 10%
