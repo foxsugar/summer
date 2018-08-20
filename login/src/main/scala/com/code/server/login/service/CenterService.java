@@ -31,7 +31,6 @@ import java.util.Set;
 public class CenterService {
 
 
-
     public static void work() {
 
 
@@ -46,7 +45,7 @@ public class CenterService {
         //在线记录
         GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 10, true, CenterService::saveLogRecord));
 
-        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 5, true, CenterService::saveAgentRecord));
+//        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 5, true, CenterService::saveAgentRecord));
         GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 5, true, CenterService::saveAgent));
 
 
@@ -88,6 +87,9 @@ public class CenterService {
                 if (agentBean != null) {
                     GameAgent gameAgent = AgentService.agentBean2GameAgent(agentBean);
                     gameAgentService.getGameAgentDao().save(gameAgent);
+                    if (gameAgent.getIsPartner() == 1) {
+                        saveAgentRecord(agentBean);
+                    }
                 }
                 removeList.add(agent);
 
@@ -100,42 +102,42 @@ public class CenterService {
     }
 
 
-    private static void saveAgentRecord(){
+    private static void saveAgentRecord(AgentBean agentBean) {
         LocalDate now = LocalDate.now();
         String date = now.toString();
-        for (String agentIdStr : RedisManager.getAgentRedisService().getSaveAgents()) {
-            long agentId = Long.valueOf(agentIdStr);
-            AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
-            AgentRecordService agentRecordService = SpringUtil.getBean(AgentRecordService.class);
-            AgentRecords today = createAgentRecords(agentBean, date);
-            if (today != null) {
-                agentRecordService.getAgentRecordsDao().save(today);
-            }
-
-
-            int hour = LocalTime.now().getHour();
-            int min = LocalTime.now().getMinute();
-            if (hour == 0 && min < 20) {
-                String yesStr = now.minusDays(1).toString();
-                AgentRecords yesDay = createAgentRecords(agentBean, yesStr);
-                if (yesDay != null) {
-                    agentRecordService.getAgentRecordsDao().save(yesDay);
-                }
-            }
-
+//        for (String agentIdStr : RedisManager.getAgentRedisService().getSaveAgents()) {
+//            long agentId = Long.valueOf(agentIdStr);
+//            AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+        AgentRecordService agentRecordService = SpringUtil.getBean(AgentRecordService.class);
+        AgentRecords today = createAgentRecords(agentBean, date);
+        if (today != null) {
+            agentRecordService.getAgentRecordsDao().save(today);
         }
+
+
+        int hour = LocalTime.now().getHour();
+        int min = LocalTime.now().getMinute();
+        if (hour == 0 && min < 20) {
+            String yesStr = now.minusDays(1).toString();
+            AgentRecords yesDay = createAgentRecords(agentBean, yesStr);
+            if (yesDay != null) {
+                agentRecordService.getAgentRecordsDao().save(yesDay);
+            }
+        }
+
+//        }
     }
 
-    private static AgentRecords createAgentRecords(AgentBean agentBean, String date){
+    private static AgentRecords createAgentRecords(AgentBean agentBean, String date) {
 
         if (agentBean.getAgentInfo().getEveryPartnerRebate() != null) {
             PartnerRebate partnerRebate = agentBean.getAgentInfo().getEveryPartnerRebate().get(date);
 
             if (partnerRebate != null) {
                 AgentRecords agentRecord = new AgentRecords();
-                agentRecord.setId(agentBean.getId()+"|"+date);
+                agentRecord.setId(agentBean.getId() + "|" + date);
                 agentRecord.setDate(date);
-                agentRecord.setId(""+agentBean.getId());
+                agentRecord.setId("" + agentBean.getId());
                 agentRecord.setAllRebate(partnerRebate.getAllRebate());
                 agentRecord.setChildCost(partnerRebate.getCost());
                 agentRecord.setMoneyRebate(partnerRebate.getMoneyRebate());
@@ -145,6 +147,7 @@ public class CenterService {
         }
         return null;
     }
+
     /**
      * 保存log信息
      */
@@ -187,7 +190,7 @@ public class CenterService {
             LogRecord lastRecord = onlineRecordService.getOnlineRecordDao().findOne(lastDate);
             if (lastRecord != null) {
                 if (lastRecord.getGameNumData() != null && lastRecord.getGameNumData().getInfo() != null) {
-                    setGameNumAndRebateData(lastRecord,lastDate);
+                    setGameNumAndRebateData(lastRecord, lastDate);
                     onlineRecordService.getOnlineRecordDao().save(lastRecord);
                 }
             }
@@ -198,10 +201,11 @@ public class CenterService {
 
     /**
      * 设置开局数,返利等相关信息
+     *
      * @param logRecord
      * @param date
      */
-    private static void setGameNumAndRebateData(LogRecord logRecord,String date){
+    private static void setGameNumAndRebateData(LogRecord logRecord, String date) {
         //牌局数
         logRecord.getGameNumData().getInfo().putAll(RedisManager.getLogRedisService().getGameNumInfo(date));
         //gold 收入
@@ -217,10 +221,10 @@ public class CenterService {
     /**
      * 读取log信息
      */
-    public static void loadLogInfo(){
+    public static void loadLogInfo() {
         String date = LocalDate.now().toString();
-        Map<String,String> gameNumInfo = RedisManager.getLogRedisService().getGameNumInfo(date);
-        Map<String,String> goldIncomeInfo = RedisManager.getLogRedisService().getGoldIncomeInfo(date);
+        Map<String, String> gameNumInfo = RedisManager.getLogRedisService().getGameNumInfo(date);
+        Map<String, String> goldIncomeInfo = RedisManager.getLogRedisService().getGoldIncomeInfo(date);
 
         //redis 有数据
         boolean redisHasData = (RedisManager.getLogRedisService().getChargeRebate(date) > 0) ||
@@ -230,7 +234,7 @@ public class CenterService {
             //数据库中是否有今日数据
             LogRecordService onlineRecordService = SpringUtil.getBean(LogRecordService.class);
             LogRecord data = onlineRecordService.getOnlineRecordDao().findOne(date);
-            boolean isHasData = data != null && data.getGameNumData() != null && data.getGameNumData().getInfo()!=null;
+            boolean isHasData = data != null && data.getGameNumData() != null && data.getGameNumData().getInfo() != null;
             if (isHasData) {
                 RedisManager.getLogRedisService().addChargeRebate(data.getChargeRebate());
                 RedisManager.getLogRedisService().putGameNum(data.getGameNumData().getInfo());

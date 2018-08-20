@@ -113,16 +113,16 @@ public class GamePlaySeven extends Game{
         int tempcardNum = playerCardInfos.get(userId).handCards.get(size-1);
         msg.put("card",tempcardNum);
         if(size==1){
-            if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
-                    tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54){
+            if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||
+                    tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52){
                 playerCardInfos.get(userId).setShouQi("1");
                 playerCardInfos.get(userId).setDanLiang("1");
                 msg.put("shouQi", "1");
                 msg.put("danLiang", "1");
             }
         }else{
-            if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
-                    tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54){
+            if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||
+                    tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52){
                 playerCardInfos.get(userId).setDanLiang("1");
                 msg.put("danLiang", "1");
             }
@@ -183,14 +183,14 @@ public class GamePlaySeven extends Game{
             int size = playerCardInfos.get(userId).handCards.size();
             int tempcardNum = playerCardInfos.get(userId).handCards.get(size-1);
             if(size==1){
-                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
-                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54){
+                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||
+                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52){
                     playerCardInfos.get(userId).setShouQi("1");
                     playerCardInfos.get(userId).setDanLiang("1");
                 }
             }else{
-                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
-                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54){
+                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||
+                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52){
                     playerCardInfos.get(userId).setDanLiang("1");
                 }
             }
@@ -598,6 +598,39 @@ public class GamePlaySeven extends Game{
                 MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", 0), l);
                 b = true;
             }
+
+            if(shuangLiangDouble){//双亮
+                if(liangCard==53||liangCard==54){
+
+                }else{
+                    if((playerCardInfos.get(l).getHandCards().contains(54)&&playerCardInfos.get(l).getHandCards().contains(-54))||
+                            (playerCardInfos.get(l).getHandCards().contains(53)&&playerCardInfos.get(l).getHandCards().contains(-53))){
+                        playerCardInfos.get(l).setFanZhu("1");
+                        //MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", 0), l);
+                        b = true;
+
+                        Map<String, Object> opreaterMsg = new HashMap<>();
+                        opreaterMsg.put("fanZhu", "1");
+                        opreaterMsg.put("canOperateUserId", l);
+                        MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", opreaterMsg), l);
+                    }
+                }
+            }else{
+                if((playerCardInfos.get(l).getHandCards().contains(54)&&playerCardInfos.get(l).getHandCards().contains(-54))||
+                   (playerCardInfos.get(l).getHandCards().contains(53)&&playerCardInfos.get(l).getHandCards().contains(-53))||
+                   (playerCardInfos.get(l).getHandCards().contains(52)&&playerCardInfos.get(l).getHandCards().contains(-52))||
+                   (playerCardInfos.get(l).getHandCards().contains(51)&&playerCardInfos.get(l).getHandCards().contains(-51))||
+                   (playerCardInfos.get(l).getHandCards().contains(50)&&playerCardInfos.get(l).getHandCards().contains(-50))||
+                   (playerCardInfos.get(l).getHandCards().contains(49)&&playerCardInfos.get(l).getHandCards().contains(-49))){
+                    playerCardInfos.get(l).setFanZhu("1");
+                    //MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", 0), l);
+                    Map<String, Object> opreaterMsg = new HashMap<>();
+                    opreaterMsg.put("fanZhu", "1");
+                    opreaterMsg.put("canOperateUserId", l);
+                    MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", opreaterMsg), l);
+                    b = true;
+                }
+            }
         }
         MsgSender.sendMsg2Player("gameService", "changeTableCards", 0, userId);
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "tellChangeTableCards", userId), users);
@@ -708,6 +741,23 @@ public class GamePlaySeven extends Game{
             }else if(playCardList.size()==2){
                 if(playCardList.get(0)+playCardList.get(1)!=0){
                     return ErrorCode.ERROR_CARD;
+                }
+            }
+        }else{
+            if(playCardList.size()>=4){
+                if(-1==chuHuaSe||chuHuaSe==huaSe){//出的主
+                    if(2*CardsUtil.duiNumZhu(playCardList,huaSe)!=playCardList.size()){
+                        if(CardsUtil.duiNumZhu(playerCardInfos.get(userId).handCards,huaSe)*2>=playCardList.size()){
+                            return ErrorCode.ERROR_CARD;
+                        }
+                    }
+                }
+                else{//出的不是主
+                    if(2*CardsUtil.duiNumNoZhu(playCardList,chuHuaSe)!=playCardList.size()){
+                        if(CardsUtil.duiNumNoZhu(playerCardInfos.get(userId).handCards,chuHuaSe)*2>=playCardList.size()){
+                            return ErrorCode.ERROR_CARD;
+                        }
+                    }
                 }
             }
         }

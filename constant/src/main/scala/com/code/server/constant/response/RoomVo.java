@@ -48,6 +48,8 @@ public class RoomVo implements IfaceRoomVo {
     public int isGold;
     public int goldType;
 
+    public int otherMode;
+
     public long canStartUserId;//代建房专用，告诉谁可以手动开始
 
     public RoomVo() {
@@ -328,6 +330,15 @@ public class RoomVo implements IfaceRoomVo {
 
     public RoomVo setGoldRoomPermission(int goldRoomPermission) {
         this.goldRoomPermission = goldRoomPermission;
+        return this;
+    }
+
+    public int getOtherMode() {
+        return otherMode;
+    }
+
+    public RoomVo setOtherMode(int otherMode) {
+        this.otherMode = otherMode;
         return this;
     }
 }

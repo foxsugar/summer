@@ -348,6 +348,7 @@ public class GameInfo extends Game {
         String gameType = this.room.getGameType();
         String modeTotal = this.room.getModeTotal();
         return ("LQ".equals(gameType) && "2".equals(modeTotal)) ||
+                 ("LQ2".equals(gameType) && "2".equals(modeTotal)) ||
                 ("HL".equals(gameType) && "2".equals(modeTotal)) ||
                 ("THREEA".equals(gameType) && "2".equals(modeTotal)) ||
                 "SS".equals(gameType) ||
@@ -923,7 +924,7 @@ public class GameInfo extends Game {
 
             room.setBankerId(winnerId);
         } else {
-            if ("LQ".equals(this.room.getGameType()) && ("11".equals(this.room.getMode()) || "12".equals(this.room.getMode()) || "13".equals(this.room.getMode()) || "14".equals(this.room.getMode()) || "1".equals(this.room.getMode()) || "2".equals(this.room.getMode()) || "3".equals(this.room.getMode()) || "4".equals(this.room.getMode()))) {
+            if (("LQ".equals(this.room.getGameType()) || "LQ2".equals(this.room.getGameType())) && ("11".equals(this.room.getMode()) || "12".equals(this.room.getMode()) || "13".equals(this.room.getMode()) || "14".equals(this.room.getMode()) || "1".equals(this.room.getMode()) || "2".equals(this.room.getMode()) || "3".equals(this.room.getMode()) || "4".equals(this.room.getMode()))) {
                 room.setBankerId(winnerId);
             } else {
                 long nextId = nextTurnId(this.getFirstTurn());

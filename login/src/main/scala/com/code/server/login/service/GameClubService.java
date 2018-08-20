@@ -120,6 +120,9 @@ public class GameClubService {
         clubVo.setStatistics(club.getStatistics());
         //玩家在线情况
         clubVo.getMember().addAll(club.getClubInfo().getMember().values());
+//        if (clubVo.getMember().size() > 100) {
+//            clubVo.setMember(clubVo.getMember().subList(0, 100));
+//        }
         clubVo.getAdmin().addAll(club.getClubInfo().getAdmin());
         clubVo.getMember().forEach(clubMember -> {
             String gateId = RedisManager.getUserRedisService().getGateId(clubMember.getUserId());
@@ -1276,6 +1279,7 @@ public class GameClubService {
             //创建这几个消失的房间
             for (String s : removeList) {
                 RoomModel roomModel = getRoomModel(club, s);
+
                 createRoom(club, roomModel);
                 //减钱
                 int moneyNow = club.getMoney() - roomModel.getMoney();

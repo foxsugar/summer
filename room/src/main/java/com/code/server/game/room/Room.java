@@ -68,8 +68,8 @@ public class Room implements IfaceRoom {
     public int mustZimo = 0;//1是0否
     public boolean showChat;
 
-    private String clubId;
-    private String clubRoomModel;
+    protected String clubId;
+    protected String clubRoomModel;
 
     public Map<Long, Double> userScoresForGold = new HashMap<>();
 
@@ -78,6 +78,10 @@ public class Room implements IfaceRoom {
     public boolean isRobotRoom;
 
     protected long lastOperateTime;
+
+    protected int otherMode;
+
+
 
 
     public static String getRoomIdStr(int roomId) {
@@ -1309,6 +1313,15 @@ public class Room implements IfaceRoom {
 
     public Room setLastOperateTime(long lastOperateTime) {
         this.lastOperateTime = lastOperateTime;
+        return this;
+    }
+
+    public int getOtherMode() {
+        return otherMode;
+    }
+
+    public Room setOtherMode(int otherMode) {
+        this.otherMode = otherMode;
         return this;
     }
 }

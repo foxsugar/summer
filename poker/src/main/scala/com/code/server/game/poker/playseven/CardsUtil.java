@@ -247,6 +247,44 @@ public class CardsUtil {
         return b0 && b1 && b2;
     }
 
+    //查询有多少对子,不算主
+    public static int duiNumNoZhu(List<Integer> list,Integer huase){
+        int num = 0;
+        List<Integer> templist = new ArrayList<>();
+        for (Integer integer:list) {
+            if(Math.abs(integer)<45 &&Math.abs(integer)%4==huase){
+                templist.add(integer);
+            }
+        }
+        for (Integer out:templist) {
+            for (Integer in:templist) {
+                if(out+in==0){
+                    num++;
+                }
+            }
+        }
+        return num;
+    }
+
+    //查询有多少对子,不算主
+    public static int duiNumZhu(List<Integer> list,Integer huase){
+        int num = 0;
+        List<Integer> templist = new ArrayList<>();
+        for (Integer integer:list) {
+            if(Math.abs(integer)>44 || Math.abs(integer)%4==huase){
+                templist.add(integer);
+            }
+        }
+        for (Integer out:templist) {
+            for (Integer in:templist) {
+                if(out+in==0){
+                    num++;
+                }
+            }
+        }
+        return num;
+    }
+
     //把字符串转化为数组
     public static List<Integer> transfromStringToCards(String str){
 

@@ -41,7 +41,7 @@ public class RoomYSZ extends RoomExtendGold {
     protected long timerTick;
     protected long leaveSecond;
     protected long lastOverTime;
-    public static int BASE_TIME = 10;
+    public static int BASE_TIME = 3;
     protected static final Logger logger = LoggerFactory.getLogger(RoomYSZ.class);
 
 
