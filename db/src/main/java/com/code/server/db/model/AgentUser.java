@@ -1,11 +1,10 @@
 package com.code.server.db.model;
 
+import com.code.server.constant.db.AgentInfo;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -36,6 +35,19 @@ public class AgentUser {
     private double shareDeduct;//分享提成
     private double parentPayDeduct;//上级支付提成
     private double parentShareDeduct;//上级分享提成
+
+    @Type(type = "json")
+    @Lob
+    @Column(columnDefinition = "json")
+    private AgentInfo agentInfo = new AgentInfo();
+
+    public AgentInfo getAgentInfo() {
+        return agentInfo;
+    }
+
+    public void setAgentInfo(AgentInfo agentInfo) {
+        this.agentInfo = agentInfo;
+    }
 
     public int getId() {
         return id;

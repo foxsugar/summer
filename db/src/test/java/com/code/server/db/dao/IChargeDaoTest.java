@@ -1,10 +1,14 @@
 package com.code.server.db.dao;
 
+import com.code.server.constant.db.AgentInfo;
+import com.code.server.constant.db.ChildCost;
+import com.code.server.db.model.AgentUser;
 import com.code.server.db.model.Charge;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
 import scala.Char;
 
@@ -23,6 +27,38 @@ public class IChargeDaoTest {
 
     @Autowired
     private IChargeDao chargeDao;
+
+    @Autowired
+    private IAgentUserDao agentUserDao;
+
+    @Test
+    public void test(){
+//        System.out.println(agentUserDao);
+//        System.out.println(agentUserDao.findAll());
+        Object o = agentUserDao.findAll();
+         List<AgentUser> list = (List<AgentUser>) agentUserDao.findAll();
+
+        for (AgentUser agentUser : list){
+            AgentInfo agentInfo = new AgentInfo();
+            if (agentUser.getId() == 17){
+                ChildCost childCost1 = new ChildCost();
+                childCost1.firstLevel = 10;
+                childCost1.secondLevel = 5;
+                childCost1.setPartner(0d);
+                agentInfo.getEveryDayCost().put("2018-8-20", childCost1);
+
+                ChildCost childCost2 = new ChildCost();
+                childCost2.firstLevel = 12;
+                childCost2.secondLevel =6;
+                childCost1.setPartner(1d);
+                agentInfo.getEveryDayCost().put("2018-8-19", childCost2);
+            }
+
+            agentUser.setAgentInfo(agentInfo);
+            agentUserDao.save(agentUser);
+
+        }
+    }
 
     @Test
     public void getChargeByOrderId() throws Exception {
