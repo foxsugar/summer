@@ -809,6 +809,8 @@ public class GameInfoNZZ extends GameInfo {
         operateReqResp.setUserId(userId);
         operateReqResp.setChiCards(chiCards);
         operateReqResp.setFromUserId(lastPlayUserId);
+        //回放
+        replay.getOperate().add(operateReqResp);
 
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_OTHER_OPERATE, operateReqResp);
         //通知其他玩家听
