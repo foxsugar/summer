@@ -72,6 +72,7 @@ public class HomeServiceImpl implements HomeService{
             homePageVo.setThirdLevel(childCost.getThirdLevel()* 0.01 * 0.1);
 //            homePageVo.setAllCost(childCost.getFirstLevel() * 0.01 * 0.2 + childCost.getSecondLevel()* 0.01 * 0.1 + childCost.getThirdLevel() * 0.01 * 0.1);
             double allCost =  (childCost.getFirstLevel() + childCost.getSecondLevel() + childCost.getThirdLevel()) * 0.01;
+            homePageVo.setAllCost(allCost);
         }
         return homePageVo;
     }
