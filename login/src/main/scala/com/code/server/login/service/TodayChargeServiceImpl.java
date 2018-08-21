@@ -279,8 +279,16 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         List<Long> bList = new ArrayList<>();
         for (Long uid : aList){
             if (RedisManager.getAgentRedisService().isExit(uid)){
+                // 二级代理的bean
                 AgentBean agent3Bean = RedisManager.getAgentRedisService().getAgentBean(uid);
-                bList.addAll(agent3Bean.getChildList());
+                List<Long> li = new ArrayList<>();
+                for (Long tid : agent3Bean.getChildList()){
+                   if ( RedisManager.getAgentRedisService().isExit(tid)){
+                       AgentBean ab = RedisManager.getAgentRedisService().getAgentBean(tid);
+                       li.addAll(ab.getChildList());
+                   }
+                }
+                bList.addAll(li);
             }
         }
 
