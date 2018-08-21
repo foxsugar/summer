@@ -43,6 +43,15 @@ public class Charge {
     private String recharge_source;//1 微信  2 支付宝  3 分享赠送  4 充值卡  5绑定赠送  11.提现
     private double charge_before_money;
     private double charge_after_money;
+    private String finishTime; //返利完成时间
+
+    public String getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(String finishTime) {
+        this.finishTime = finishTime;
+    }
 
     public String getOrderId() {
         return orderId;

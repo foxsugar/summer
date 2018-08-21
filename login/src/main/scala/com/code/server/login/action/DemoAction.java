@@ -1,4 +1,6 @@
 package com.code.server.login.action;
+import com.code.server.constant.db.AgentInfo;
+import com.code.server.constant.db.ChildCost;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.IChargeType;
 import com.code.server.constant.game.UserBean;
@@ -18,6 +20,7 @@ import com.code.server.login.util.MD5Util;
 import com.code.server.login.vo.DChargeAdminVo;
 import com.code.server.login.vo.DChildVo;
 import com.code.server.login.vo.GameAgentVo;
+import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.rpc.idl.ChargeType;
 import com.code.server.util.DateUtil;
@@ -72,6 +75,11 @@ public class DemoAction extends Cors{
 
     @Autowired
     private IAgentRecordsDao agentRecordsDao;
+
+    private IConstantDao constantDao;
+
+    @Autowired
+    private IChargeDao chargeDao;
 
     public static String getToken(long userId) {
         return MD5Util.MD5Encode("salt," + userId + System.currentTimeMillis(), "UTF-8");
@@ -470,6 +478,11 @@ public class DemoAction extends Cors{
             return agentResponse;
         }
 
+
+        String token = AgentUtil.findTokenInHeader();
+        int self_agentId = (int)AgentUtil.getUserIdByToken(token);
+
+
         //如果代理是空的
         if (RedisManager.getAgentRedisService().getAgentBean(agentId) == null){
             AgentResponse agentResponse = new AgentResponse();
@@ -479,6 +492,15 @@ public class DemoAction extends Cors{
         }
 
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+
+        if (agentBean.getPartnerId() != self_agentId){
+            AgentResponse agentResponse = new AgentResponse();
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+            agentResponse.setMsg("没有权限");
+            return agentResponse;
+        }
+
+
         //直接玩家
         List<Long> aList = new ArrayList<>();
         //二级代理
@@ -932,7 +954,7 @@ public class DemoAction extends Cors{
         return new AgentResponse(0, logRecordDao.findByIdIn(days));
     }
 
-//    @DemoChecker
+    @DemoChecker
     @RequestMapping("/partnerRecord")
     public AgentResponse getChargeRecord(String time, int curPage){
         if (curPage > 0){
@@ -965,7 +987,7 @@ public class DemoAction extends Cors{
         agentResponse.setData(rs);
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/todayPartnerRecord")
     public AgentResponse todayPartnerRecord(int curPage){
         if (curPage > 0){
@@ -986,6 +1008,108 @@ public class DemoAction extends Cors{
         agentResponse.setData(rs);
         return agentResponse;
 
+    }
+
+    //充值之后计算返利
+    @RequestMapping("/testDemo")
+    public void testAgentInfo(){
+//
+//        Charge charge = chargeDao.findOne(6424891349438832640l);
+//        double money = charge.getMoney();
+//
+//        String dayStr = DateUtil.convert2DayString(new Date());
+//        Constant constant = constantDao.findOne(1l);
+//        AgentUser agentUser1 = agentUserDao.findOne(17);
+//        AgentInfo agentInfo1 = agentUser1.getAgentInfo();
+//
+//        if (agentUser1 != null){
+//            Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
+//            ChildCost childCost1 = rs1.get(dayStr);
+//            if (childCost1 == null){
+//                childCost1 = new ChildCost();
+//            }
+//            //今日来源于玩家的收入
+//            childCost1.firstLevel += money * constant.getIncome1();
+//            //暂时用来充当今日有没有结算完
+//            childCost1.setPartner(0);
+//            rs1.put(dayStr, childCost1);
+//            agentUserDao.save(agentUser1);
+//        }
+//
+//        AgentUser agentUser2 = null;
+//        if (agentUser1 != null){
+//            agentUserDao.findOne(agentUser1.getParentId());
+//        }
+//
+//        if (agentUser2 != null){
+//            AgentInfo agentInfo2 = agentUser2.getAgentInfo();
+//            Map<String, ChildCost> rs2 = agentInfo2.getEveryDayCost();
+//            ChildCost childCost2 = rs2.get(dayStr);
+//            if (childCost2 == null){
+//                childCost2 = new ChildCost();
+//            }
+//
+//            //今日来源于代理的收入
+//            childCost2.secondLevel += money * constant.getIncome2();
+//            //暂时用来充当今日有没有结算完
+//            childCost2.setPartner(0);
+//            rs2.put(dayStr, childCost2);
+//            agentUserDao.save(agentUser2);
+//        }
+//
+//        //更新订单结算是否已经返利
+//        charge.setFinishTime(dayStr);
+//        chargeDao.save(charge);
+
+    }
+
+    public void testRecord(){
+        AgentUser agentUser1 = agentUserDao.findOne(17);
+        AgentInfo agentInfo = agentUser1.getAgentInfo();
+
+        Map<String, ChildCost> rs = new HashMap<>();
+        List<Map<String, ChildCost>> list = new ArrayList<>();
+        for (String key : agentInfo.getEveryDayCost().keySet()){
+            ChildCost childCost = agentInfo.getEveryDayCost().get(key);
+            if (childCost.getPartner() -0d == 1d){
+                rs.put(key, childCost);
+                list.add(rs);
+            }
+        }
+        System.out.println("====");
+        System.out.println(list);
+    }
+
+    //清除返利
+    public void testClear(){
+
+        AgentUser agentUser1 = agentUserDao.findOne(17);
+        AgentInfo agentInfo = agentUser1.getAgentInfo();
+        for (String key : agentInfo.getEveryDayCost().keySet()){
+            ChildCost childCost = agentInfo.getEveryDayCost().get(key);
+            childCost.setPartner(1);
+        }
+        agentUserDao.save(agentUser1);
+    }
+
+    public void testTest(){
+
+        AgentUser agentUser1 = agentUserDao.findOne(17);
+        AgentInfo agentInfo = agentUser1.getAgentInfo();
+        //计算累计收入
+        double totalMoney = 0;
+        double firstLevel = 0;
+        double secondLevel = 0;
+        for (String key : agentInfo.getEveryDayCost().keySet()){
+            ChildCost childCost = agentInfo.getEveryDayCost().get(key);
+            if (childCost.getPartner() -0d == 1d){
+                totalMoney += childCost.firstLevel;
+                totalMoney += childCost.secondLevel;
+            }else {
+                firstLevel += childCost.getFirstLevel();
+                secondLevel += childCost.getSecondLevel();
+            }
+        }
     }
 
     @RequestMapping("/test")

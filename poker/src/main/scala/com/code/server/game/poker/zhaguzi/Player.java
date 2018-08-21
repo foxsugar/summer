@@ -16,16 +16,37 @@ public class Player {
     public Player() {
 	}
 
+	public static int transformCardsValue(String str){
+
+		if (str.equals("豹子")){
+			return 1;
+		}else if(str.equals("顺金")){
+			return 2;
+		}else if(str.equals("金花")){
+			return 3;
+		}else if (str.equals("顺子")){
+			return 4;
+		}else if(str.equals("对子")){
+			return 5;
+		}else if (str.equals("单牌")){
+			return 6;
+		}
+		return 0;
+
+	}
+
 	public  String transfromCategoryToString(){
 
     	String str = "";
 
     	if (this.getCategory().equals(CardCategory.BaoZi)){
     		str = "豹子";
-		}else if (this.getCategory().equals(CardCategory.BaoZi.ShunJin)){
+		}else if (this.getCategory().equals(CardCategory.ShunJin)){
     		str = "顺金";
 		}else if(this.getCategory().equals(CardCategory.JinHua)){
 			str = "金花";
+		}else if (this.getCategory().equals(CardCategory.ShunZi)){
+			str = "顺子";
 		}else if (this.getCategory().equals(CardCategory.DuiZi)){
 			str = "对子";
 		}else if (this.getCategory().equals(CardCategory.DanZi)){

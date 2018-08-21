@@ -29,7 +29,8 @@ public class Constant extends BaseEntity {
     private int appleCheck;
     private int shareMoney;//分享获得的钱
     private String AccessCode;
-
+    private int income1;
+    private int income2;
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
@@ -161,6 +162,22 @@ public class Constant extends BaseEntity {
     public Constant setDownload1(String download1) {
         this.download1 = download1;
         return this;
+    }
+
+    public int getIncome1() {
+        return income1;
+    }
+
+    public void setIncome1(int income1) {
+        this.income1 = income1;
+    }
+
+    public int getIncome2() {
+        return income2;
+    }
+
+    public void setIncome2(int income2) {
+        this.income2 = income2;
     }
 
     @Override
