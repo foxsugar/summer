@@ -193,7 +193,8 @@ public class RoomInfo extends RoomInfoExtendGold {
                 return new GameInfoHeleKD();
             case "LUANGUAF":
                 return new GameInfoLuanGuaFeng();
-
+            case "HONGZHONG":
+                return new GameInfoHongZhong();
             default:
                 return new GameInfo();
         }
