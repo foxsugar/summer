@@ -22,6 +22,7 @@ public class HomeChargeVo {
     private String total;
     private String start;
     private String end;
+    private double income;
 
     @JsonProperty("list1")
     private List<OneLevelInfoVo> oneLevelVoList = new ArrayList<>();
@@ -30,6 +31,13 @@ public class HomeChargeVo {
     @JsonProperty("list3")
     private List<ThreeLevelInfoVo> threeLevelInfoVoList = new ArrayList<>();
 
+    public double getIncome() {
+        return income;
+    }
+
+    public void setIncome(double income) {
+        this.income = income;
+    }
 
     public String getTotalGold() {
         return totalGold;
