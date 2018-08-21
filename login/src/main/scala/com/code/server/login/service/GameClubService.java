@@ -943,6 +943,9 @@ public class GameClubService {
                     roomInstance.setRoomId(roomId);
                 }
             }
+
+            List<Long> us = new ArrayList<>();
+            send_Lq_start(club, roomId, clubModelId, us,0);
         }
         return 0;
     }
