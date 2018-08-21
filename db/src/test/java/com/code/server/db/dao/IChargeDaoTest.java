@@ -61,6 +61,14 @@ public class IChargeDaoTest {
     }
 
     @Test
+    public void findOne(){
+
+        AgentUser agentUser = agentUserDao.findOne(27);
+        AgentInfo agentInfo = agentUser.getAgentInfo();
+        System.out.println(agentInfo);
+    }
+
+    @Test
     public void getChargeByOrderId() throws Exception {
 
 //        List<Charge> list = chargeDao.getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(0l),new Date(), new Date(),1,Arrays.asList(1));

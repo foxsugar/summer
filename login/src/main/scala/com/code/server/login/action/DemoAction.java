@@ -478,6 +478,11 @@ public class DemoAction extends Cors{
             return agentResponse;
         }
 
+
+        String token = AgentUtil.findTokenInHeader();
+        int self_agentId = (int)AgentUtil.getUserIdByToken(token);
+
+
         //如果代理是空的
         if (RedisManager.getAgentRedisService().getAgentBean(agentId) == null){
             AgentResponse agentResponse = new AgentResponse();
@@ -487,6 +492,15 @@ public class DemoAction extends Cors{
         }
 
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+
+        if (agentBean.getPartnerId() != self_agentId){
+            AgentResponse agentResponse = new AgentResponse();
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+            agentResponse.setMsg("没有权限");
+            return agentResponse;
+        }
+
+
         //直接玩家
         List<Long> aList = new ArrayList<>();
         //二级代理
