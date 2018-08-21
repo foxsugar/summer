@@ -244,6 +244,10 @@ public class TodayChargeAction {
         result.put("start", list.get(list.size() - 1));
 
         result.put("end", list.get(0));
+
+        double income = oneLevel * 0.2 * 0.01 + twoLevel * 0.1 * 0.01 + threeLevel *0.1 * 0.01;
+        result.put("income", income);
+
         AgentResponse agentResponse = new AgentResponse(200, result);
         return agentResponse;
     }

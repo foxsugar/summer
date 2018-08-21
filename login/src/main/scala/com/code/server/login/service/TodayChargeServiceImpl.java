@@ -54,6 +54,10 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         TwoLevelVo twoLevelVo = twoLevelCharges(start, end, agentId);
 
         ThreeLevelVo threeLevelVo = threeLevelCharges(start, end, agentId);
+
+        logger.info("=========================+++++++++++++++++++++++++++++");
+        logger.info("threeLevelVo:{}", threeLevelVo);
+
         HomeChargeVo homeChargeVo = new HomeChargeVo();
         homeChargeVo.setOnelevel("" + oneLevelVo.getMoney());
         homeChargeVo.setTwoLevel("" + twoLevelVo.getMoney());
@@ -73,6 +77,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         double totalGold = oneLevelVo.getGold() + twoLevelVo.getGold() + threeLevelVo.getGold();
         homeChargeVo.setTotalGold("" + totalGold);
 
+        double income = oneLevelVo.getMoney() * 0.6 + twoLevelVo.getMoney() * 0.1 + threeLevelVo.getMoney() * 0.1;
+        homeChargeVo.setIncome(income);
         homeChargeVo.setStart(startStr);
         homeChargeVo.setEnd(endStr);
         return homeChargeVo;
@@ -262,10 +268,12 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         //所有的二级代理
         List<Long> aList = new ArrayList<>();
         for (Long uid : agentBean.getChildList()){
-            if (RedisManager.getAgentRedisService().isExit(agentId)){
+            if (RedisManager.getAgentRedisService().isExit(uid)){
                 aList.add(uid);
             }
         }
+
+        logger.info("{}的所有二级代理{}", agentId, aList);
 
         //所有的三级代理和三级代理手上的玩家
         List<Long> bList = new ArrayList<>();
@@ -276,6 +284,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             }
         }
 
+        logger.info("{}的所有三级代理{}", agentId, bList);
+
         double total = 0d;
         double goldTotal = 0d;
         for (Long uid : bList){
@@ -283,6 +293,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             User user = userDao.getUserById(uid);
             if (user == null) continue;
             List<Charge> chargeList = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
+
+            logger.info(" 三级代理{}的订单{}", uid, chargeList);
+
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
             threeLevelInfoVo.setUsername(user.getUsername());
             threeLevelInfoVo.setImage(user.getImage() + "/96");
