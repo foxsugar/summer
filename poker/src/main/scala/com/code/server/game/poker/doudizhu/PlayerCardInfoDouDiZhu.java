@@ -111,9 +111,9 @@ public class PlayerCardInfoDouDiZhu implements IfacePlayerInfo {
                     && CardUtil.getTypeByCard(cards.get(len - 1)).intValue() != CardUtil.getTypeByCard(cards.get(len - 2)).intValue()) {
                 return CardStruct.type_四带二;
             }
-            if (len == 8 && CardUtil.getTypeByCard(cards.get(0)).intValue() == CardUtil.getTypeByCard(cards.get(len - 3)).intValue()
-                    && CardUtil.getTypeByCard(cards.get(1)).intValue() == CardUtil.getTypeByCard(cards.get(len - 3)).intValue()
-                    && CardUtil.getTypeByCard(cards.get(2)).intValue() == CardUtil.getTypeByCard(cards.get(len - 3)).intValue()
+            if (len == 8 && CardUtil.getTypeByCard(cards.get(0)).intValue() == CardUtil.getTypeByCard(cards.get(len - 5)).intValue()
+                    && CardUtil.getTypeByCard(cards.get(1)).intValue() == CardUtil.getTypeByCard(cards.get(len - 6)).intValue()
+                    && CardUtil.getTypeByCard(cards.get(2)).intValue() == CardUtil.getTypeByCard(cards.get(len - 6)).intValue()
                     && CardUtil.getTypeByCard(cards.get(len - 1)).intValue() == CardUtil.getTypeByCard(cards.get(len - 2)).intValue()
                     && CardUtil.getTypeByCard(cards.get(len - 3)).intValue() == CardUtil.getTypeByCard(cards.get(len - 4)).intValue()) {
                 return CardStruct.type_四带二;
