@@ -273,6 +273,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             }
         }
 
+        logger.info("{}的所有二级代理{}", agentId, aList);
+
         //所有的三级代理和三级代理手上的玩家
         List<Long> bList = new ArrayList<>();
         for (Long uid : aList){
@@ -282,6 +284,8 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             }
         }
 
+        logger.info("{}的所有三级代理{}", agentId, bList);
+
         double total = 0d;
         double goldTotal = 0d;
         for (Long uid : bList){
@@ -289,6 +293,9 @@ public class TodayChargeServiceImpl implements TodayChargeService {
             User user = userDao.getUserById(uid);
             if (user == null) continue;
             List<Charge> chargeList = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
+
+            logger.info(" 三级代理{}的订单{}", uid, chargeList);
+
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
             threeLevelInfoVo.setUsername(user.getUsername());
             threeLevelInfoVo.setImage(user.getImage() + "/96");

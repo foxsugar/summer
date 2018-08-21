@@ -64,4 +64,16 @@ public class ThreeLevelInfoVo {
     public void setMoney(String money) {
         this.money = money;
     }
+
+    @Override
+    public String toString() {
+        return "ThreeLevelInfoVo{" +
+                "uid=" + uid +
+                ", categoryName='" + categoryName + '\'' +
+                ", image='" + image + '\'' +
+                ", username='" + username + '\'' +
+                ", money='" + money + '\'' +
+                ", gold='" + gold + '\'' +
+                '}';
+    }
 }

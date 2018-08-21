@@ -208,4 +208,30 @@ public class Charge {
         this.chargeType = chargeType;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Charge{" +
+                "orderId='" + orderId + '\'' +
+                ", transaction_id='" + transaction_id + '\'' +
+                ", userid=" + userid +
+                ", createtime=" + createtime +
+                ", callbacktime=" + callbacktime +
+                ", money=" + money +
+                ", origin=" + origin +
+                ", status=" + status +
+                ", sign='" + sign + '\'' +
+                ", sp_ip='" + sp_ip + '\'' +
+                ", shareid=" + shareid +
+                ", share_content='" + share_content + '\'' +
+                ", share_area='" + share_area + '\'' +
+                ", money_point=" + money_point +
+                ", chargeType=" + chargeType +
+                ", username='" + username + '\'' +
+                ", recharge_source='" + recharge_source + '\'' +
+                ", charge_before_money=" + charge_before_money +
+                ", charge_after_money=" + charge_after_money +
+                ", finishTime='" + finishTime + '\'' +
+                '}';
+    }
 }
