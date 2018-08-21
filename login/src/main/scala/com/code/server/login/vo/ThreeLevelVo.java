@@ -51,4 +51,14 @@ public class ThreeLevelVo {
     public void setList(List<ThreeLevelInfoVo> list) {
         this.list = list;
     }
+
+    @Override
+    public String toString() {
+        return "ThreeLevelVo{" +
+                "categoryName='" + categoryName + '\'' +
+                ", money=" + money +
+                ", gold=" + gold +
+                ", list=" + list +
+                '}';
+    }
 }

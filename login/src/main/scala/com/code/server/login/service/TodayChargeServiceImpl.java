@@ -54,6 +54,10 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         TwoLevelVo twoLevelVo = twoLevelCharges(start, end, agentId);
 
         ThreeLevelVo threeLevelVo = threeLevelCharges(start, end, agentId);
+
+        logger.info("=========================+++++++++++++++++++++++++++++");
+        logger.info("threeLevelVo:{}", threeLevelVo);
+
         HomeChargeVo homeChargeVo = new HomeChargeVo();
         homeChargeVo.setOnelevel("" + oneLevelVo.getMoney());
         homeChargeVo.setTwoLevel("" + twoLevelVo.getMoney());
