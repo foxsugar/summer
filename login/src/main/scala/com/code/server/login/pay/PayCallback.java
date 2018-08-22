@@ -132,9 +132,10 @@ public class PayCallback {
 
                     User u = userService.getUserByOpenId(element.elementText("openid"));
                     AgentUser agentUser1 = agentUserDao.findAgentUserByInvite_code(u.getReferee() + "");
-                    AgentInfo agentInfo1 = agentUser1.getAgentInfo();
+                    AgentInfo agentInfo1 = null;
 
                     if (agentUser1 != null){
+                        agentInfo1 = agentUser1.getAgentInfo();
                         Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
                         ChildCost childCost1 = rs1.get(dayStr);
                         if (childCost1 == null){
@@ -142,15 +143,13 @@ public class PayCallback {
                         }
                         //今日来源于玩家的收入
                         childCost1.firstLevel += money * constant.getIncome1();
-                        //暂时用来充当今日有没有结算完
-                        childCost1.setPartner(0);
                         rs1.put(dayStr, childCost1);
                         agentUserDao.save(agentUser1);
                     }
 
                     AgentUser agentUser2 = null;
                     if (agentUser1 != null){
-                        agentUserDao.findOne(agentUser1.getParentId());
+                        agentUser2 = agentUserDao.findOne(agentUser1.getParentId());
                     }
 
                     if (agentUser2 != null){
@@ -163,8 +162,6 @@ public class PayCallback {
 
                         //今日来源于代理的收入
                         childCost2.secondLevel += money * constant.getIncome2();
-                        //暂时用来充当今日有没有结算完
-                        childCost2.setPartner(0);
                         rs2.put(dayStr, childCost2);
                         agentUserDao.save(agentUser2);
                     }
