@@ -1,6 +1,7 @@
 package com.code.server.db.dao;
 
 import com.code.server.constant.db.AgentInfo;
+import com.code.server.constant.db.AgentInfoRecord;
 import com.code.server.constant.db.ChildCost;
 import com.code.server.db.model.AgentUser;
 import com.code.server.db.model.Charge;
@@ -40,6 +41,7 @@ public class IChargeDaoTest {
 
         for (AgentUser agentUser : list){
             AgentInfo agentInfo = new AgentInfo();
+            AgentInfoRecord agentInfoRecord = new AgentInfoRecord();
             if (agentUser.getId() == 17){
                 ChildCost childCost1 = new ChildCost();
                 childCost1.firstLevel = 10;
@@ -50,11 +52,12 @@ public class IChargeDaoTest {
                 ChildCost childCost2 = new ChildCost();
                 childCost2.firstLevel = 12;
                 childCost2.secondLevel =6;
-                childCost1.setPartner(1d);
+                childCost1.setPartner(0d);
                 agentInfo.getEveryDayCost().put("2018-8-19", childCost2);
             }
 
             agentUser.setAgentInfo(agentInfo);
+            agentUser.setAgentInfoRecord(agentInfoRecord);
             agentUserDao.save(agentUser);
 
         }

@@ -1,6 +1,7 @@
 package com.code.server.db.model;
 
 import com.code.server.constant.db.AgentInfo;
+import com.code.server.constant.db.AgentInfoRecord;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
@@ -40,6 +41,19 @@ public class AgentUser {
     @Lob
     @Column(columnDefinition = "json")
     private AgentInfo agentInfo = new AgentInfo();
+
+    @Type(type = "json")
+    @Lob
+    @Column(columnDefinition = "json")
+    private AgentInfoRecord agentInfoRecord = new AgentInfoRecord();
+
+    public AgentInfoRecord getAgentInfoRecord() {
+        return agentInfoRecord;
+    }
+
+    public void setAgentInfoRecord(AgentInfoRecord agentInfoRecord) {
+        this.agentInfoRecord = agentInfoRecord;
+    }
 
     public AgentInfo getAgentInfo() {
         return agentInfo;
