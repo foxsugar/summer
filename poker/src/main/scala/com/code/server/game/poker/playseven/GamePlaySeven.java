@@ -219,6 +219,9 @@ public class GamePlaySeven extends Game{
 
 
     public int getTableCard(long userId) {
+        if(userId!=this.zhuId){
+            return ErrorCode.NOT_YOU_TURN;
+        }
         Map<String, Object> tableCardMsg = new HashMap<>();
         tableCardMsg.put("userId", userId);
         tableCardMsg.put("tableCards", tableCards);
@@ -230,9 +233,9 @@ public class GamePlaySeven extends Game{
     }
 
     public int shouQi(long userId,Integer card){
-        /*if(Math.abs(card)!=49 || Math.abs(card)!=50 || Math.abs(card)!=51 || Math.abs(card)!=52 || Math.abs(card)!=53 || Math.abs(card)!=54){
+        if(Math.abs(card)==53 || Math.abs(card)==54){
             return ErrorCode.ERROR_CARD;
-        }*/
+        }
         if(Math.abs(card)>52){
             this.huaSe = -1;
         }else{
@@ -261,11 +264,29 @@ public class GamePlaySeven extends Game{
                 opreaterMsg.put("danLiang", "3");
                 opreaterMsg.put("shuangLiang", "3");
             }
-            /*if(ifTwo7OrWang(l)){*/
-                playerCardInfos.get(l).setFanZhu("1");
-                opreaterMsg.put("fanZhu", "1");
-                this.step = STEP_FANZHU;
-            /*}*/
+            if((playerCardInfos.get(l).handCards.contains(49)&&playerCardInfos.get(l).handCards.contains(-49))||
+                    (playerCardInfos.get(l).handCards.contains(50)&&playerCardInfos.get(l).handCards.contains(-50))||
+                    (playerCardInfos.get(l).handCards.contains(51)&&playerCardInfos.get(l).handCards.contains(-51))||
+                    (playerCardInfos.get(l).handCards.contains(52)&&playerCardInfos.get(l).handCards.contains(-52))||
+                    (playerCardInfos.get(l).handCards.contains(53)&&playerCardInfos.get(l).handCards.contains(-53))||
+                    (playerCardInfos.get(l).handCards.contains(54)&&playerCardInfos.get(l).handCards.contains(-54))){
+                if(l!=userId){
+                    playerCardInfos.get(l).setFanZhu("1");
+                    opreaterMsg.put("fanZhu", "1");
+                    this.step = STEP_FANZHU;
+                }
+            }if((playerCardInfos.get(l).handCards.contains(49)&&playerCardInfos.get(l).handCards.contains(-49))||
+                    (playerCardInfos.get(l).handCards.contains(50)&&playerCardInfos.get(l).handCards.contains(-50))||
+                    (playerCardInfos.get(l).handCards.contains(51)&&playerCardInfos.get(l).handCards.contains(-51))||
+                    (playerCardInfos.get(l).handCards.contains(52)&&playerCardInfos.get(l).handCards.contains(-52))||
+                    (playerCardInfos.get(l).handCards.contains(53)&&playerCardInfos.get(l).handCards.contains(-53))||
+                    (playerCardInfos.get(l).handCards.contains(54)&&playerCardInfos.get(l).handCards.contains(-54))){
+                if(l!=userId){
+                    playerCardInfos.get(l).setFanZhu("1");
+                    opreaterMsg.put("fanZhu", "1");
+                    this.step = STEP_FANZHU;
+                }
+            }
             opreaterMsg.put("canOperateUserId", l);
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", opreaterMsg), l);
         }
@@ -294,9 +315,9 @@ public class GamePlaySeven extends Game{
     }
 
     public int danLiang(long userId,Integer card){
-        /*if(Math.abs(card)!=49 || Math.abs(card)!=50 || Math.abs(card)!=51 || Math.abs(card)!=52 || Math.abs(card)!=53 || Math.abs(card)!=54){
+        if(Math.abs(card)==53 || Math.abs(card)==54){
             return ErrorCode.ERROR_CARD;
-        }*/
+        }
         if(Math.abs(card)>52){
             this.huaSe = -1;
         }else{
@@ -330,11 +351,11 @@ public class GamePlaySeven extends Game{
                     (playerCardInfos.get(l).handCards.contains(52)&&playerCardInfos.get(l).handCards.contains(-52))||
                     (playerCardInfos.get(l).handCards.contains(53)&&playerCardInfos.get(l).handCards.contains(-53))||
                     (playerCardInfos.get(l).handCards.contains(54)&&playerCardInfos.get(l).handCards.contains(-54))){
-                /*if(l!=userId){*/
+                if(l!=userId){
                     playerCardInfos.get(l).setFanZhu("1");
                     opreaterMsg.put("fanZhu", "1");
                     this.step = STEP_FANZHU;
-                /*}*/
+                }
             }
             opreaterMsg.put("canOperateUserId", l);
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", opreaterMsg), l);
@@ -403,10 +424,10 @@ public class GamePlaySeven extends Game{
             if(liangCard!=53&&liangCard!=54){
                 if((playerCardInfos.get(l).handCards.contains(53)&&playerCardInfos.get(l).handCards.contains(-53))||
                         (playerCardInfos.get(l).handCards.contains(54)&&playerCardInfos.get(l).handCards.contains(-54))){
-                /*if(l!=userId){*/
-                    playerCardInfos.get(l).setFanZhu("1");
-                    opreaterMsg.put("fanZhu", "1");
-                /*}*/
+                    if(l!=userId){
+                        playerCardInfos.get(l).setFanZhu("1");
+                        opreaterMsg.put("fanZhu", "1");
+                    }
                 }
             }
             opreaterMsg.put("canOperateUserId", l);
@@ -593,42 +614,44 @@ public class GamePlaySeven extends Game{
 
         boolean b = false;//判断是不是有人可以反主
         for (Long l:playerCardInfos.keySet()) {
-            if("1".equals(playerCardInfos.get(l).getFanZhu())||"4".equals(playerCardInfos.get(l).getFanZhu())){
-                playerCardInfos.get(l).setFanZhu("1");
-                MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", 0), l);
-                b = true;
-            }
+            if(l!=userId){
+                if("1".equals(playerCardInfos.get(l).getFanZhu())||"4".equals(playerCardInfos.get(l).getFanZhu())){
+                    playerCardInfos.get(l).setFanZhu("1");
+                    MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", 0), l);
+                    b = true;
+                }
 
-            if(shuangLiangDouble){//双亮
-                if(liangCard==53||liangCard==54){
+                if(shuangLiangDouble){//双亮
+                    if(liangCard==53||liangCard==54){
 
+                    }else{
+                        if((playerCardInfos.get(l).getHandCards().contains(54)&&playerCardInfos.get(l).getHandCards().contains(-54))||
+                                (playerCardInfos.get(l).getHandCards().contains(53)&&playerCardInfos.get(l).getHandCards().contains(-53))){
+                            playerCardInfos.get(l).setFanZhu("1");
+                            //MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", 0), l);
+                            b = true;
+
+                            Map<String, Object> opreaterMsg = new HashMap<>();
+                            opreaterMsg.put("fanZhu", "1");
+                            opreaterMsg.put("canOperateUserId", l);
+                            MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", opreaterMsg), l);
+                        }
+                    }
                 }else{
                     if((playerCardInfos.get(l).getHandCards().contains(54)&&playerCardInfos.get(l).getHandCards().contains(-54))||
-                            (playerCardInfos.get(l).getHandCards().contains(53)&&playerCardInfos.get(l).getHandCards().contains(-53))){
+                            (playerCardInfos.get(l).getHandCards().contains(53)&&playerCardInfos.get(l).getHandCards().contains(-53))||
+                            (playerCardInfos.get(l).getHandCards().contains(52)&&playerCardInfos.get(l).getHandCards().contains(-52))||
+                            (playerCardInfos.get(l).getHandCards().contains(51)&&playerCardInfos.get(l).getHandCards().contains(-51))||
+                            (playerCardInfos.get(l).getHandCards().contains(50)&&playerCardInfos.get(l).getHandCards().contains(-50))||
+                            (playerCardInfos.get(l).getHandCards().contains(49)&&playerCardInfos.get(l).getHandCards().contains(-49))){
                         playerCardInfos.get(l).setFanZhu("1");
                         //MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", 0), l);
-                        b = true;
-
                         Map<String, Object> opreaterMsg = new HashMap<>();
                         opreaterMsg.put("fanZhu", "1");
                         opreaterMsg.put("canOperateUserId", l);
                         MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", opreaterMsg), l);
+                        b = true;
                     }
-                }
-            }else{
-                if((playerCardInfos.get(l).getHandCards().contains(54)&&playerCardInfos.get(l).getHandCards().contains(-54))||
-                   (playerCardInfos.get(l).getHandCards().contains(53)&&playerCardInfos.get(l).getHandCards().contains(-53))||
-                   (playerCardInfos.get(l).getHandCards().contains(52)&&playerCardInfos.get(l).getHandCards().contains(-52))||
-                   (playerCardInfos.get(l).getHandCards().contains(51)&&playerCardInfos.get(l).getHandCards().contains(-51))||
-                   (playerCardInfos.get(l).getHandCards().contains(50)&&playerCardInfos.get(l).getHandCards().contains(-50))||
-                   (playerCardInfos.get(l).getHandCards().contains(49)&&playerCardInfos.get(l).getHandCards().contains(-49))){
-                    playerCardInfos.get(l).setFanZhu("1");
-                    //MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", 0), l);
-                    Map<String, Object> opreaterMsg = new HashMap<>();
-                    opreaterMsg.put("fanZhu", "1");
-                    opreaterMsg.put("canOperateUserId", l);
-                    MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", opreaterMsg), l);
-                    b = true;
                 }
             }
         }
@@ -744,6 +767,43 @@ public class GamePlaySeven extends Game{
                 }
             }
         }else{
+            /*if(playCardList.size()==2){
+                if(-1==chuHuaSe||chuHuaSe==huaSe){//出的主
+                    if(Math.abs(playCardList.get(0))%4==huaSe && Math.abs(playCardList.get(1))%4==huaSe ){
+
+                    }
+
+                    if((Math.abs(playCardList.get(0))%4!=huaSe||Math.abs(playCardList.get(1))%4!=huaSe)||(Math.abs(playCardList.get(0))>44)){
+                        int temp = 0;
+                        for (Integer i:playCardList) {
+                            if(Math.abs(i)%4==huaSe||Math.abs(i)>44){
+                                temp++;
+                            }
+                        }
+                        if(temp>=2){
+                            return ErrorCode.ERROR_CARD;
+                        }
+                    }
+                }
+                else{//出的不是主
+                    int temp = 0;
+                    for (Integer i:playCardList) {
+                        if(Math.abs(i)%4==chuHuaSe||Math.abs(i)<45){
+                            temp++;
+                        }
+                    }
+                    if(Math.abs(playCardList.get(0))%4!=chuHuaSe && Math.abs(playCardList.get(1))%4!=chuHuaSe){
+                        if(temp>=1){
+                            return ErrorCode.ERROR_CARD;
+                        }
+                    }else if(Math.abs(playCardList.get(0))%4!=chuHuaSe || Math.abs(playCardList.get(1))%4!=chuHuaSe){
+                        if(temp>=2){
+                            return ErrorCode.ERROR_CARD;
+                        }
+                    }
+                }
+            }*/
+
             if(playCardList.size()>=4){
                 if(-1==chuHuaSe||chuHuaSe==huaSe){//出的主
                     if(2*CardsUtil.duiNumZhu(playCardList,huaSe)!=playCardList.size()){
