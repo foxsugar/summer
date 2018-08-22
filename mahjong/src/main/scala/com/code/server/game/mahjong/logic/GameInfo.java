@@ -355,6 +355,7 @@ public class GameInfo extends Game {
                 "HS".equals(gameType)||
                 "KXHY".equals(gameType)||
                 "KXZHZ".equals(gameType)||
+                "XYKD".equals(gameType)||
                 "KXKD".equals(gameType);
     }
 
