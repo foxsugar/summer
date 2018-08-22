@@ -1,5 +1,6 @@
 package com.code.server.login.action;
 import com.code.server.constant.db.AgentInfo;
+import com.code.server.constant.db.AgentInfoRecord;
 import com.code.server.constant.db.ChildCost;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.IChargeType;
@@ -1121,6 +1122,39 @@ public class DemoAction extends Cors{
     @RequestMapping("/ttt")
     public String hello(){
         return "Hello World";
+    }
+
+    @RequestMapping("/testUpdate")
+    public String testUpdate(){
+//        System.out.println(agentUserDao);
+//        System.out.println(agentUserDao.findAll());
+        Object o = agentUserDao.findAll();
+        List<AgentUser> list = (List<AgentUser>) agentUserDao.findAll();
+
+        for (AgentUser agentUser : list){
+            AgentInfo agentInfo = new AgentInfo();
+            AgentInfoRecord agentInfoRecord = new AgentInfoRecord();
+            if (agentUser.getId() == 17){
+                ChildCost childCost1 = new ChildCost();
+                childCost1.firstLevel = 10;
+                childCost1.secondLevel = 5;
+                childCost1.setPartner(0d);
+                agentInfo.getEveryDayCost().put("2018-8-20", childCost1);
+
+                ChildCost childCost2 = new ChildCost();
+                childCost2.firstLevel = 12;
+                childCost2.secondLevel =6;
+                childCost1.setPartner(0d);
+                agentInfo.getEveryDayCost().put("2018-8-19", childCost2);
+            }
+
+            agentUser.setAgentInfo(agentInfo);
+            agentUser.setAgentInfoRecord(agentInfoRecord);
+            agentUserDao.save(agentUser);
+
+        }
+
+        return "ok";
     }
 
     public static void main(String[] args) {
