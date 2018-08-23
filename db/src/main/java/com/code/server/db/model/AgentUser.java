@@ -233,4 +233,31 @@ public class AgentUser {
         this.parentShareDeduct = parentShareDeduct;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "AgentUser{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", invite_code='" + invite_code + '\'' +
+                ", realName='" + realName + '\'' +
+                ", level=" + level +
+                ", parentId=" + parentId +
+                ", email='" + email + '\'' +
+                ", createTime=" + createTime +
+                ", idCard='" + idCard + '\'' +
+                ", cell='" + cell + '\'' +
+                ", area='" + area + '\'' +
+                ", address='" + address + '\'' +
+                ", money=" + money +
+                ", gold=" + gold +
+                ", payDeduct=" + payDeduct +
+                ", shareDeduct=" + shareDeduct +
+                ", parentPayDeduct=" + parentPayDeduct +
+                ", parentShareDeduct=" + parentShareDeduct +
+                ", agentInfo=" + agentInfo +
+                ", agentInfoRecord=" + agentInfoRecord +
+                '}';
+    }
 }

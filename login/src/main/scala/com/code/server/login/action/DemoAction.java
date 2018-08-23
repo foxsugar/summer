@@ -366,6 +366,9 @@ public class DemoAction extends Cors{
             BeanUtils.copyProperties(gameAgent, gameAgentVo);
 
             AgentUser agentUser = agentUserDao.findAgentUserByInvite_code(gameAgent.getId() + "");
+
+            System.out.println("agent user is "+ agentUser);
+
             gameAgentVo.setPassword(agentUser.getPassword());
             gameAgentVo.setInvite_code(agentUser.getInvite_code());
             gameAgentVo.setIsPartnerDes(gameAgent.getIsPartner() == 1 ? "合伙人" : "代理");
