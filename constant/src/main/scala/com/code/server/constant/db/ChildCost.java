@@ -45,4 +45,14 @@ public class ChildCost {
         this.partner = partner;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "ChildCost{" +
+                "firstLevel=" + firstLevel +
+                ", secondLevel=" + secondLevel +
+                ", thirdLevel=" + thirdLevel +
+                ", partner=" + partner +
+                '}';
+    }
 }

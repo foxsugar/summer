@@ -37,6 +37,25 @@ public class GameAgentVo {
 
     private String isPartnerDes;
 
+    private String password;
+    private String invite_code;//邀请码
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getInvite_code() {
+        return invite_code;
+    }
+
+    public void setInvite_code(String invite_code) {
+        this.invite_code = invite_code;
+    }
+
     public String getIsPartnerDes() {
         return isPartnerDes;
     }

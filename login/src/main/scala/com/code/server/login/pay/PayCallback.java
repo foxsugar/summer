@@ -22,6 +22,8 @@ import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.DateUtil;
 import com.code.server.util.SpringUtil;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,6 +55,8 @@ public class PayCallback {
     private IConstantDao constantDao;
 
     private static final Map<Integer, Integer> chargeMoney = new HashMap<>();
+
+    protected static final Logger logger = LoggerFactory.getLogger(PayCallback.class);
 
     static{
         chargeMoney.put(5,60);
@@ -130,41 +134,50 @@ public class PayCallback {
                     String dayStr = DateUtil.convert2DayString(new Date());
                     Constant constant = constantDao.findOne(1l);
 
-                    User u = userService.getUserByOpenId(element.elementText("openid"));
+                    User u = userService.getUserByUserId(charge.getUserid());
+
+                    logger.info("user is :{}", u);
+
                     AgentUser agentUser1 = agentUserDao.findAgentUserByInvite_code(u.getReferee() + "");
-                    AgentInfo agentInfo1 = agentUser1.getAgentInfo();
+                    AgentInfo agentInfo1 = null;
+
+                    logger.info("AgentUser1 is :{}", agentUser1);
 
                     if (agentUser1 != null){
+                        agentInfo1 = agentUser1.getAgentInfo();
+
+                        logger.info("AgentInfo1 is :{}", agentInfo1);
                         Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
                         ChildCost childCost1 = rs1.get(dayStr);
                         if (childCost1 == null){
                             childCost1 = new ChildCost();
                         }
+
+                        logger.info("childCost1  is :{}", childCost1);
                         //今日来源于玩家的收入
-                        childCost1.firstLevel += money * constant.getIncome1();
-                        //暂时用来充当今日有没有结算完
-                        childCost1.setPartner(0);
+                        childCost1.firstLevel += money * constant.getIncome1() * 0.01;
                         rs1.put(dayStr, childCost1);
                         agentUserDao.save(agentUser1);
                     }
 
                     AgentUser agentUser2 = null;
                     if (agentUser1 != null){
-                        agentUserDao.findOne(agentUser1.getParentId());
+                        agentUser2 = agentUserDao.findOne(agentUser1.getParentId());
                     }
+
+                    logger.info("AgentUser2 is :{}", agentUser2);
 
                     if (agentUser2 != null){
                         AgentInfo agentInfo2 = agentUser2.getAgentInfo();
+                        logger.info("AgentInfo2 is :{}", agentInfo2);
                         Map<String, ChildCost> rs2 = agentInfo2.getEveryDayCost();
                         ChildCost childCost2 = rs2.get(dayStr);
                         if (childCost2 == null){
                             childCost2 = new ChildCost();
                         }
-
+                        logger.info("childCost2  is :{}", childCost2);
                         //今日来源于代理的收入
-                        childCost2.secondLevel += money * constant.getIncome2();
-                        //暂时用来充当今日有没有结算完
-                        childCost2.setPartner(0);
+                        childCost2.secondLevel += money * constant.getIncome2() * 0.01;
                         rs2.put(dayStr, childCost2);
                         agentUserDao.save(agentUser2);
                     }
@@ -172,7 +185,7 @@ public class PayCallback {
                     //更新订单结算是否已经返利
                     charge.setFinishTime(dayStr);
 //                    chargeDao.save(charge);
-
+                    logger.info("Charge  is :{}", charge);
                     chargeService.save(charge);
 
 

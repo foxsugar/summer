@@ -45,6 +45,47 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
     private static final Logger logger = LoggerFactory.getLogger(TodayChargeServiceImpl.class);
 
+
+    class AgentItem{
+
+        private boolean isAgent;
+        private long parentId;
+        private long selfId;
+
+        public boolean isAgent() {
+            return isAgent;
+        }
+
+        public void setAgent(boolean agent) {
+            isAgent = agent;
+        }
+
+        public long getParentId() {
+            return parentId;
+        }
+
+        public void setParentId(long parentId) {
+            this.parentId = parentId;
+        }
+
+        public long getSelfId() {
+            return selfId;
+        }
+
+        public void setSelfId(long selfId) {
+            this.selfId = selfId;
+        }
+
+        @Override
+        public String toString() {
+            return "AgentItem{" +
+                    "isAgent=" + isAgent +
+                    ", parentId=" + parentId +
+                    ", selfId=" + selfId +
+                    '}';
+        }
+    }
+
     @Override
     public HomeChargeVo showCharge(Date start, Date end, long agentId) {
 
@@ -232,7 +273,10 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
                 if (RedisManager.getAgentRedisService().isExit(uid)) continue;
 
-                User twoLevelUser = userDao.getUserById(uid);
+//                User twoLevelUser = userDao.getUserById(uid);
+
+                User twoLevelUser = userDao.getUserById(twoLevelAgentBean.getId());
+
                 if (twoLevelUser == null) continue;
 
                 TwoLevelInfoVo infoVo = new TwoLevelInfoVo();
@@ -281,17 +325,42 @@ public class TodayChargeServiceImpl implements TodayChargeService {
         logger.info("{}的所有二级代理{}", agentId, aList);
 
         //所有的三级代理和三级代理手上的玩家
-        List<Long> bList = new ArrayList<>();
+//        List<Long> bList = new ArrayList<>();
+//        for (Long uid : aList){
+//            if (RedisManager.getAgentRedisService().isExit(uid)){
+//                // 二级代理的bean
+//                AgentBean agent3Bean = RedisManager.getAgentRedisService().getAgentBean(uid);
+//                List<Long> li = new ArrayList<>();
+//                for (Long tid : agent3Bean.getChildList()){
+//                   if ( RedisManager.getAgentRedisService().isExit(tid)){
+//                       AgentBean ab = RedisManager.getAgentRedisService().getAgentBean(tid);
+//                       li.addAll(ab.getChildList());
+//                   }
+//                }
+//                bList.addAll(li);
+//            }
+//        }
+
+        List<AgentItem> bList = new ArrayList<>();
         for (Long uid : aList){
             if (RedisManager.getAgentRedisService().isExit(uid)){
-                // 二级代理的bean
                 AgentBean agent3Bean = RedisManager.getAgentRedisService().getAgentBean(uid);
-                List<Long> li = new ArrayList<>();
+                List<AgentItem> li = new ArrayList<>();
                 for (Long tid : agent3Bean.getChildList()){
-                   if ( RedisManager.getAgentRedisService().isExit(tid)){
-                       AgentBean ab = RedisManager.getAgentRedisService().getAgentBean(tid);
-                       li.addAll(ab.getChildList());
-                   }
+                    if (RedisManager.getAgentRedisService().isExit(tid)){
+                        AgentBean ab = RedisManager.getAgentRedisService().getAgentBean(tid);
+                        for (Long iid : ab.getChildList()){
+                            AgentItem agentItem = new AgentItem();
+                            if(RedisManager.getAgentRedisService().isExit(iid)){
+                                agentItem.isAgent = true;
+                            }else {
+                                agentItem.isAgent = false;
+                            }
+                            agentItem.parentId = ab.getId();
+                            agentItem.selfId = iid;
+                            li.add(agentItem);
+                        }
+                    }
                 }
                 bList.addAll(li);
             }
@@ -301,18 +370,24 @@ public class TodayChargeServiceImpl implements TodayChargeService {
 
         double total = 0d;
         double goldTotal = 0d;
-        for (Long uid : bList){
+        for (AgentItem item : bList){
 
-            User user = userDao.getUserById(uid);
+            User user = userDao.getUserById(item.selfId);
             if (user == null) continue;
-            List<Charge> chargeList = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(uid), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
+            List<Charge> chargeList = getChargesByUseridInAndCreatetimeBetweenAndStatusIsAndChargeTypeIn(Arrays.asList(item.selfId), start, end, 1, Arrays.asList(MONEY_TYPE, GOLD_TYPE));
 
-            logger.info(" 三级代理{}的订单{}", uid, chargeList);
+            logger.info(" 三级代理{}的订单{}", item.selfId, chargeList);
 
+            User agentUser = userDao.getUserById(item.parentId);
             ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
-            threeLevelInfoVo.setUsername(user.getUsername());
-            threeLevelInfoVo.setImage(user.getImage() + "/96");
-            threeLevelInfoVo.setUid(user.getId());
+            threeLevelInfoVo.setUsername(agentUser.getUsername());
+            threeLevelInfoVo.setImage(agentUser.getImage() + "/96");
+            threeLevelInfoVo.setUid(agentUser.getId());
+
+//            ThreeLevelInfoVo threeLevelInfoVo = new ThreeLevelInfoVo();
+//            threeLevelInfoVo.setUsername(user.getUsername());
+//            threeLevelInfoVo.setImage(user.getImage() + "/96");
+//            threeLevelInfoVo.setUid(user.getId());
 
             double totalMoney = 0;
             double totalGold = 0;

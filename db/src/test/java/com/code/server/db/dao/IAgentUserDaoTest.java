@@ -22,6 +22,8 @@ public class IAgentUserDaoTest {
 
         System.out.println(agentUserDao);
         System.out.println(agentUserDao.findAll());
+        AgentUser agentUser = agentUserDao.findOne(10334);
+        System.out.println(agentUser);
     }
 
     @Test

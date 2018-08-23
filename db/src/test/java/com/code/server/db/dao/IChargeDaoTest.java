@@ -66,9 +66,12 @@ public class IChargeDaoTest {
     @Test
     public void findOne(){
 
-        AgentUser agentUser = agentUserDao.findOne(27);
-        AgentInfo agentInfo = agentUser.getAgentInfo();
-        System.out.println(agentInfo);
+//        AgentUser agentUser = agentUserDao.findOne(27);
+//        AgentInfo agentInfo = agentUser.getAgentInfo();
+//        System.out.println(agentInfo);
+
+        AgentUser agentUser = agentUserDao.findOne(10334);
+        System.out.println(agentUser);
     }
 
     @Test
