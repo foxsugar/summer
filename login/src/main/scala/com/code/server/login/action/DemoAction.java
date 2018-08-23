@@ -364,6 +364,10 @@ public class DemoAction extends Cors{
         }else {
             GameAgentVo gameAgentVo = new GameAgentVo();
             BeanUtils.copyProperties(gameAgent, gameAgentVo);
+
+            AgentUser agentUser = agentUserDao.findAgentUserByInvite_code(gameAgent.getId() + "");
+            gameAgentVo.setPassword(agentUser.getPassword());
+            gameAgentVo.setInvite_code(agentUser.getInvite_code());
             gameAgentVo.setIsPartnerDes(gameAgent.getIsPartner() == 1 ? "合伙人" : "代理");
             list.add(gameAgentVo);
             Map<String, Object> result = new HashMap<>();
