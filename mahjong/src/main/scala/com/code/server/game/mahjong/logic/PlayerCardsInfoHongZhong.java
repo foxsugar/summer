@@ -13,6 +13,7 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
     public static final int HAS_HONGZHONG = 2;
     public static final int HUN_RAND = 3;
     public static final int HUN_NO = 4;
+    public static final int NO_FENG = 5;
 
     @Override
     public void init(List<String> cards) {
@@ -36,7 +37,10 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
     }
 
 
-
+    @Override
+    public boolean isCanHu_dianpao(String card) {
+        return this.roomInfo.mustZimo == 0 && super.isCanHu_dianpao(card);
+    }
 
     @Override
     public boolean isCanTing(List<String> cards) {
