@@ -396,6 +396,11 @@ public class DemoAction extends Cors{
             BeanUtils.copyProperties(gameAgent, gameAgentVo);
             User user = userDao.findOne(gameAgent.getId());
             gameAgentVo.setName(user.getUsername());
+
+            AgentUser agentUser = agentUserDao.findAgentUserByInvite_code(gameAgent.getId() + "");
+            gameAgentVo.setPassword(agentUser.getPassword());
+            gameAgentVo.setInvite_code(agentUser.getInvite_code());
+
             voList.add(gameAgentVo);
         }
 
