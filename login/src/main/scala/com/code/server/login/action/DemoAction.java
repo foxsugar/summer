@@ -362,7 +362,6 @@ public class DemoAction extends Cors{
             System.out.println("agent user is "+ agentUser);
 
             gameAgentVo.setPassword(agentUser.getPassword());
-            gameAgentVo.setInvite_code(agentUser.getInvite_code());
             gameAgentVo.setIsPartnerDes(gameAgent.getIsPartner() == 1 ? "合伙人" : "代理");
             list.add(gameAgentVo);
             Map<String, Object> result = new HashMap<>();
