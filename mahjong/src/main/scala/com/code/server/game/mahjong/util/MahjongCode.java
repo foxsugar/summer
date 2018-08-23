@@ -91,6 +91,7 @@ public class MahjongCode {
 			put("253", 18);
 			put("266", 27);
 			put("288", 27);
+			put(SHUANGHAOHUAQIXIAODUI,9);
 		}
 	};
 

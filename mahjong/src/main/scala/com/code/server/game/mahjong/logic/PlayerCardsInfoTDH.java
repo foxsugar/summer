@@ -697,6 +697,8 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 						this.score = this.score + 4 * room.getMultiple() * MahjongCode.HUTOSCORE4LQ2.get(""+CardUtil.huForScores(cards,huCardType))/3;
 						room.setUserSocre(this.userId, 4  * room.getMultiple() * MahjongCode.HUTOSCORE4LQ2.get(""+CardUtil.huForScores(cards,huCardType))/3);
 					}else{
+						String s  = ""+CardUtil.huForScores(cards,huCardType);
+						System.out.println(s);
 						gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - room.getMultiple() * MahjongCode.HUTOSCORE4LQ2.get(""+CardUtil.huForScores(cards,huCardType)));
 						this.score = this.score + room.getMultiple() * MahjongCode.HUTOSCORE4LQ2.get(""+CardUtil.huForScores(cards,huCardType));
 						room.setUserSocre(dianpaoUser, - room.getMultiple() * MahjongCode.HUTOSCORE4LQ2.get(""+CardUtil.huForScores(cards,huCardType)));
