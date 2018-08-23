@@ -155,7 +155,7 @@ public class PayCallback {
 
                         logger.info("childCost1  is :{}", childCost1);
                         //今日来源于玩家的收入
-                        childCost1.firstLevel += money * constant.getIncome1();
+                        childCost1.firstLevel += money * constant.getIncome1() * 0.01;
                         rs1.put(dayStr, childCost1);
                         agentUserDao.save(agentUser1);
                     }
@@ -177,7 +177,7 @@ public class PayCallback {
                         }
                         logger.info("childCost2  is :{}", childCost2);
                         //今日来源于代理的收入
-                        childCost2.secondLevel += money * constant.getIncome2();
+                        childCost2.secondLevel += money * constant.getIncome2() * 0.01;
                         rs2.put(dayStr, childCost2);
                         agentUserDao.save(agentUser2);
                     }
