@@ -360,8 +360,10 @@ public class DemoAction extends Cors{
             AgentUser agentUser = agentUserDao.findAgentUserByInvite_code(gameAgent.getId() + "");
 
             System.out.println("agent user is "+ agentUser);
+            if (agentUser != null){
+                gameAgentVo.setPassword(agentUser.getPassword());
+            }
 
-            gameAgentVo.setPassword(agentUser.getPassword());
             gameAgentVo.setIsPartnerDes(gameAgent.getIsPartner() == 1 ? "合伙人" : "代理");
             list.add(gameAgentVo);
             Map<String, Object> result = new HashMap<>();
@@ -390,7 +392,9 @@ public class DemoAction extends Cors{
 
             AgentUser agentUser = agentUserDao.findAgentUserByInvite_code(gameAgent.getId() + "");
             System.out.println("agent user is "+ agentUser);
-            gameAgentVo.setPassword(agentUser.getPassword());
+            if (agentUser != null){
+                gameAgentVo.setPassword(agentUser.getPassword());
+            }
 //            gameAgentVo.setPassword(agentUser.getPassword());
 //            gameAgentVo.setInvite_code(agentUser.getInvite_code());
 
