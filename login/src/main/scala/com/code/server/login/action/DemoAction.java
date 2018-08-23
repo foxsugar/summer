@@ -23,28 +23,20 @@ import com.code.server.login.vo.DChildVo;
 import com.code.server.login.vo.GameAgentVo;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.RedisManager;
-import com.code.server.rpc.idl.ChargeType;
 import com.code.server.util.DateUtil;
 import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
-import javafx.scene.chart.Chart;
-import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import scala.Int;
-import sun.management.Agent;
-
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
@@ -368,9 +360,10 @@ public class DemoAction extends Cors{
             AgentUser agentUser = agentUserDao.findAgentUserByInvite_code(gameAgent.getId() + "");
 
             System.out.println("agent user is "+ agentUser);
+            if (agentUser != null){
+                gameAgentVo.setPassword(agentUser.getPassword());
+            }
 
-            gameAgentVo.setPassword(agentUser.getPassword());
-            gameAgentVo.setInvite_code(agentUser.getInvite_code());
             gameAgentVo.setIsPartnerDes(gameAgent.getIsPartner() == 1 ? "合伙人" : "代理");
             list.add(gameAgentVo);
             Map<String, Object> result = new HashMap<>();
@@ -396,6 +389,15 @@ public class DemoAction extends Cors{
             BeanUtils.copyProperties(gameAgent, gameAgentVo);
             User user = userDao.findOne(gameAgent.getId());
             gameAgentVo.setName(user.getUsername());
+
+            AgentUser agentUser = agentUserDao.findAgentUserByInvite_code(gameAgent.getId() + "");
+            System.out.println("agent user is "+ agentUser);
+            if (agentUser != null){
+                gameAgentVo.setPassword(agentUser.getPassword());
+            }
+//            gameAgentVo.setPassword(agentUser.getPassword());
+//            gameAgentVo.setInvite_code(agentUser.getInvite_code());
+
             voList.add(gameAgentVo);
         }
 
@@ -937,7 +939,7 @@ public class DemoAction extends Cors{
         r.put("roles", roles);
         AgentUser agentUser = agentUserDao.findOne((Integer) map.get("id"));
         r.put("name", agentUser.getUsername());
-        r.put("avatar", "http://tb.himg.baidu.com/sys/portrait/item/553f736466666473667364666364571b");
+        r.put("avatar", "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
 
         return new AgentResponse(0, r);
     }
