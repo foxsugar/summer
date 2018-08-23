@@ -398,8 +398,9 @@ public class DemoAction extends Cors{
             gameAgentVo.setName(user.getUsername());
 
             AgentUser agentUser = agentUserDao.findAgentUserByInvite_code(gameAgent.getId() + "");
-            gameAgentVo.setPassword(agentUser.getPassword());
-            gameAgentVo.setInvite_code(agentUser.getInvite_code());
+            System.out.println("agent user is "+ agentUser);
+//            gameAgentVo.setPassword(agentUser.getPassword());
+//            gameAgentVo.setInvite_code(agentUser.getInvite_code());
 
             voList.add(gameAgentVo);
         }
