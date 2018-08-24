@@ -347,6 +347,9 @@ public class DemoAction extends Cors{
         }
 //        GameAgent gameAgent = gameAgentDao.findOne(userId);
         GameAgent gameAgent = homeService.findOnePartner(userId);
+
+        logger.info("userId is{}, game agent is{}", userId, gameAgent);
+
         List<GameAgentVo> list = new ArrayList<>();
         AgentResponse agentResponse = new AgentResponse();
         if (gameAgent == null){
@@ -360,11 +363,7 @@ public class DemoAction extends Cors{
         }else {
             GameAgentVo gameAgentVo = new GameAgentVo();
             BeanUtils.copyProperties(gameAgent, gameAgentVo);
-
-            logger.info("gameAgentVo:============================{}", gameAgentVo);
             AgentUser agentUser = agentUserDao.findAgentUserByInvite_code(gameAgent.getId() + "");
-
-            System.out.println("agent user is "+ agentUser);
             if (agentUser != null){
                 gameAgentVo.setPassword(agentUser.getPassword());
             }
@@ -372,7 +371,6 @@ public class DemoAction extends Cors{
             gameAgentVo.setIsPartnerDes(gameAgent.getIsPartner() == 1 ? "合伙人" : "代理");
             list.add(gameAgentVo);
 
-            logger.info("list is {}", list);
 
             Map<String, Object> result = new HashMap<>();
             result.put("total", 1);
