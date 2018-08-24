@@ -21,6 +21,16 @@ public class GameInfoHongZhong extends GameInfoNew {
         this.room = room;
         this.cardSize = 13;
         this.playerSize = room.getPersonNumber();
+
+        if(this.room.isHasMode(PlayerCardsInfoHongZhong.NO_FENG)){
+            remainCards.removeAll(CardTypeUtil.FENG_CARD);
+            remainCards.removeAll(CardTypeUtil.ZI_CARD);
+            remainCards.add("124");
+            remainCards.add("125");
+            remainCards.add("126");
+            remainCards.add("127");
+        }
+
         initHun();
         //不带风
         fapai();

@@ -109,6 +109,9 @@ public class GameClubService {
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
         }
+        if (!club.getClubInfo().getMember().containsKey("" + userId)) {
+            return ErrorCode.CLUB_NOT_MEMBER;
+        }
         //刷新房间
         initRoomInstance(club);
 

@@ -22,7 +22,7 @@ public class GameWzq extends Game {
 
     private Room roomWzq;
 
-    private Map<String, WzqNode> nodes;
+    private Map<String, WzqNode> nodes = new HashMap<>();
 
 
 
