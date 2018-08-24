@@ -27,6 +27,8 @@ import com.code.server.util.DateUtil;
 import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -73,6 +75,8 @@ public class DemoAction extends Cors{
 
     @Autowired
     private IChargeDao chargeDao;
+
+    private static final Logger logger = LoggerFactory.getLogger(DemoAction.class);
 
     public static String getToken(long userId) {
         return MD5Util.MD5Encode("salt," + userId + System.currentTimeMillis(), "UTF-8");
@@ -356,6 +360,8 @@ public class DemoAction extends Cors{
         }else {
             GameAgentVo gameAgentVo = new GameAgentVo();
             BeanUtils.copyProperties(gameAgent, gameAgentVo);
+
+            logger.info("gameAgentVo:{}", gameAgentVo);
 
             AgentUser agentUser = agentUserDao.findAgentUserByInvite_code(gameAgent.getId() + "");
 

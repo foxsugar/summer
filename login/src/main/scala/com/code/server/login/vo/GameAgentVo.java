@@ -167,4 +167,26 @@ public class GameAgentVo {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    @Override
+    public String toString() {
+        return "GameAgentVo{" +
+                "id=" + id +
+                ", openId='" + openId + '\'' +
+                ", unionId='" + unionId + '\'' +
+                ", rebate=" + rebate +
+                ", partnerId=" + partnerId +
+                ", parentId=" + parentId +
+                ", isPartner=" + isPartner +
+                ", qrTicket='" + qrTicket + '\'' +
+                ", image='" + image + '\'' +
+                ", name='" + name + '\'' +
+                ", idCard='" + idCard + '\'' +
+                ", createDate=" + createDate +
+                ", phone='" + phone + '\'' +
+                ", isPartnerDes='" + isPartnerDes + '\'' +
+                ", password='" + password + '\'' +
+                ", invite_code='" + invite_code + '\'' +
+                '}';
+    }
 }
