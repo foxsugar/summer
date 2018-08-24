@@ -347,7 +347,7 @@ public class DemoAction extends Cors{
         }
 //        GameAgent gameAgent = gameAgentDao.findOne(userId);
         GameAgent gameAgent = homeService.findOnePartner(userId);
-
+        logger.info("==================================================");
         logger.info("userId is{}, game agent is{}", userId, gameAgent);
 
         List<GameAgentVo> list = new ArrayList<>();
