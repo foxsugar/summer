@@ -361,8 +361,7 @@ public class DemoAction extends Cors{
             GameAgentVo gameAgentVo = new GameAgentVo();
             BeanUtils.copyProperties(gameAgent, gameAgentVo);
 
-            logger.info("gameAgentVo:{}", gameAgentVo);
-
+            logger.info("gameAgentVo:============================{}", gameAgentVo);
             AgentUser agentUser = agentUserDao.findAgentUserByInvite_code(gameAgent.getId() + "");
 
             System.out.println("agent user is "+ agentUser);
@@ -372,6 +371,9 @@ public class DemoAction extends Cors{
 
             gameAgentVo.setIsPartnerDes(gameAgent.getIsPartner() == 1 ? "合伙人" : "代理");
             list.add(gameAgentVo);
+
+            logger.info("list is {}", list);
+
             Map<String, Object> result = new HashMap<>();
             result.put("total", 1);
             result.put("list", list);
