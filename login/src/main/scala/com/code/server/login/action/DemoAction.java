@@ -509,7 +509,7 @@ public class DemoAction extends Cors{
 
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
 
-        if (agentBean.getPartnerId() != self_agentId && self_agentId != 1){
+        if (agentBean.getPartnerId() != self_agentId && self_agentId != 1 && agentId != self_agentId){
             AgentResponse agentResponse = new AgentResponse();
             agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
             agentResponse.setMsg("没有权限");

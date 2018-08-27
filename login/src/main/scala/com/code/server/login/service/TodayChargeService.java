@@ -30,5 +30,11 @@ public interface TodayChargeService {
    //待机代理充值记录
    ThreeLevelVo threeLevelCharges(long agentId);
 
+   OneLevelVo oneLevelChargesNew(Date start, Date end, long agentId);
+
+   TwoLevelVo twoLevelChargesNew(Date start, Date end, long agentId);
+
+   ThreeLevelVo threeLevelChargesNew(Date start, Date end, long agentId);
+
    double canBlance(long agentId);
 }
