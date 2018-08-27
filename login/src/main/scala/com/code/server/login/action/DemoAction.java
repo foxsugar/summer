@@ -490,8 +490,9 @@ public class DemoAction extends Cors{
         logger.info("self_id:{}, agent id:{}", self_agentId, agentId);
         AgentUser agentUser = agentUserDao.findOne(self_agentId);
         logger.info("agentUser:{}", agentUser);
-//        int self_code = Integer.parseInt(agentUser.getInvite_code());
+        int self_code = Integer.parseInt(agentUser.getUsername());
 //        logger.info("self_code:{}", self_code);
+
 
         //先给个demo
         if (agentId == 0){
@@ -512,7 +513,7 @@ public class DemoAction extends Cors{
 
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
 
-        if (agentBean.getPartnerId() != self_agentId && self_agentId != 1 && agentId != self_agentId){
+        if (agentBean.getPartnerId() != self_agentId && self_agentId != 1 && agentId != self_code){
             AgentResponse agentResponse = new AgentResponse();
             agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
             agentResponse.setMsg("没有权限");
