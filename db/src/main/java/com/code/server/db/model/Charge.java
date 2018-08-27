@@ -18,6 +18,9 @@ import java.util.Date;
         @Index(name = "chargeType", columnList = "chargeType"),
         @Index(name = "createtime", columnList = "createtime"),
         @Index(name = "status", columnList = "status"),
+        @Index(name = "a1", columnList = "a1"),
+        @Index(name = "a2", columnList = "a2"),
+        @Index(name = "a3", columnList = "a3"),
 
 }
         )
