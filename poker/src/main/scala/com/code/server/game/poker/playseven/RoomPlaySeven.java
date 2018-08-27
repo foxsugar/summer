@@ -1,6 +1,7 @@
 package com.code.server.game.poker.playseven;
 
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.IfaceRoomVo;
@@ -226,7 +227,22 @@ public class RoomPlaySeven extends Room {
         if (isClubRoom()) {
             noticeClubJoinRoom(userId);
         }
+    }
 
-
+    @Override
+    public PrepareRoom getPrepareRoomVo() {
+        PrepareRoom prepareRoom = new PrepareRoom();
+        prepareRoom.goldRoomType = this.goldRoomType;
+        prepareRoom.goldRoomPermission = this.goldRoomPermission;
+        prepareRoom.createTime = System.currentTimeMillis();
+        prepareRoom.gameType = this.getGameType();
+        prepareRoom.roomType = this.getRoomType();
+        prepareRoom.roomId = this.roomId;
+        prepareRoom.multiple = this.multiple;
+        prepareRoom.gameNumber = this.gameNumber;
+        prepareRoom.fengDing = this.fengDing;
+        prepareRoom.kouDiJiaJi = this.kouDiJiaJi;
+        prepareRoom.zhuangDanDaJiaBei = this.zhuangDanDaJiaBei;
+        return prepareRoom;
     }
 }

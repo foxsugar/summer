@@ -23,5 +23,7 @@ public class PrepareRoom {
     public int goldRoomPermission;
 
     public int peopleNum;
-
+    public int fengDing;//封顶
+    public boolean kouDiJiaJi;//抠底加级
+    public boolean zhuangDanDaJiaBei;//庄单打加倍
 }
