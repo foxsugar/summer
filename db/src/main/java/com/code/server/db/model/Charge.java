@@ -18,6 +18,9 @@ import java.util.Date;
         @Index(name = "chargeType", columnList = "chargeType"),
         @Index(name = "createtime", columnList = "createtime"),
         @Index(name = "status", columnList = "status"),
+        @Index(name = "a1", columnList = "a1"),
+        @Index(name = "a2", columnList = "a2"),
+        @Index(name = "a3", columnList = "a3"),
 
 }
         )
@@ -44,6 +47,9 @@ public class Charge {
     private double charge_before_money;
     private double charge_after_money;
     private String finishTime; //返利完成时间
+    private long a1;
+    private long a2;
+    private long a3;
 
     public String getFinishTime() {
         return finishTime;
@@ -206,6 +212,33 @@ public class Charge {
 
     public Charge setChargeType(int chargeType) {
         this.chargeType = chargeType;
+        return this;
+    }
+
+    public long getA1() {
+        return a1;
+    }
+
+    public Charge setA1(long a1) {
+        this.a1 = a1;
+        return this;
+    }
+
+    public long getA2() {
+        return a2;
+    }
+
+    public Charge setA2(long a2) {
+        this.a2 = a2;
+        return this;
+    }
+
+    public long getA3() {
+        return a3;
+    }
+
+    public Charge setA3(long a3) {
+        this.a3 = a3;
         return this;
     }
 

@@ -444,6 +444,9 @@ public class WechatPayController {
                             double before = 0;
                             double after = 0;
                             int referee = 0;
+                            long a1 = 0;
+                            long a2 = 0;
+                            long a3 = 0;
                             if (userBeanRedis != null) {
                                 referee = userBeanRedis.getReferee();
                                 if (charge.getChargeType() == 0) {
@@ -453,6 +456,7 @@ public class WechatPayController {
                                     before = userBeanRedis.getGold();
                                     after = userRedisService.addUserGold(userId, addMoney);
                                 }
+
                             } else {
                                 //查询玩家
                                 User user = userService.getUserByUserId(userId);
@@ -469,10 +473,27 @@ public class WechatPayController {
                                 }
                                 userService.save(user);
                             }
+                            AgentBean agent1 = RedisManager.getAgentRedisService().getAgentBean(userId);
+                            if (agent1 == null) {
+                                agent1 = RedisManager.getAgentRedisService().getAgentBean(referee);
+                            }
+                            if (agent1 != null) {
+                                a1 = agent1.getId();
+                                a2 = agent1.getParentId();
+                                AgentBean agent2 = RedisManager.getAgentRedisService().getAgentBean(a2);
+                                if (agent2 != null) {
+                                    a3 = agent2.getParentId();
+                                }
+                            }
+                            charge.setA1(a1);
+                            charge.setA2(a2);
+                            charge.setA3(a3);
+
 
                             //保存充值记录
                             charge.setCharge_before_money(before);
                             charge.setCharge_after_money(after);
+
                             chargeService.save(charge);
 
                             //记录到reids

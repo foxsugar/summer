@@ -1,6 +1,7 @@
 package com.code.server.db.model;
 
 import com.code.server.constant.db.AgentInfo;
+import com.code.server.constant.db.AgentInfoRecord;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
@@ -40,6 +41,19 @@ public class AgentUser {
     @Lob
     @Column(columnDefinition = "json")
     private AgentInfo agentInfo = new AgentInfo();
+
+    @Type(type = "json")
+    @Lob
+    @Column(columnDefinition = "json")
+    private AgentInfoRecord agentInfoRecord = new AgentInfoRecord();
+
+    public AgentInfoRecord getAgentInfoRecord() {
+        return agentInfoRecord;
+    }
+
+    public void setAgentInfoRecord(AgentInfoRecord agentInfoRecord) {
+        this.agentInfoRecord = agentInfoRecord;
+    }
 
     public AgentInfo getAgentInfo() {
         return agentInfo;
@@ -218,5 +232,32 @@ public class AgentUser {
     public AgentUser setParentShareDeduct(double parentShareDeduct) {
         this.parentShareDeduct = parentShareDeduct;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "AgentUser{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", invite_code='" + invite_code + '\'' +
+                ", realName='" + realName + '\'' +
+                ", level=" + level +
+                ", parentId=" + parentId +
+                ", email='" + email + '\'' +
+                ", createTime=" + createTime +
+                ", idCard='" + idCard + '\'' +
+                ", cell='" + cell + '\'' +
+                ", area='" + area + '\'' +
+                ", address='" + address + '\'' +
+                ", money=" + money +
+                ", gold=" + gold +
+                ", payDeduct=" + payDeduct +
+                ", shareDeduct=" + shareDeduct +
+                ", parentPayDeduct=" + parentPayDeduct +
+                ", parentShareDeduct=" + parentShareDeduct +
+                ", agentInfo=" + agentInfo +
+                ", agentInfoRecord=" + agentInfoRecord +
+                '}';
     }
 }

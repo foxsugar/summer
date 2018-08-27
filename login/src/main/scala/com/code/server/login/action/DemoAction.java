@@ -1,5 +1,6 @@
 package com.code.server.login.action;
 import com.code.server.constant.db.AgentInfo;
+import com.code.server.constant.db.AgentInfoRecord;
 import com.code.server.constant.db.ChildCost;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.IChargeType;
@@ -22,28 +23,22 @@ import com.code.server.login.vo.DChildVo;
 import com.code.server.login.vo.GameAgentVo;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.RedisManager;
-import com.code.server.rpc.idl.ChargeType;
 import com.code.server.util.DateUtil;
 import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
-import javafx.scene.chart.Chart;
-import org.omg.CORBA.OBJ_ADAPTER;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import scala.Int;
-import sun.management.Agent;
-
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
@@ -80,6 +75,8 @@ public class DemoAction extends Cors{
 
     @Autowired
     private IChargeDao chargeDao;
+
+    private static final Logger logger = LoggerFactory.getLogger(DemoAction.class);
 
     public static String getToken(long userId) {
         return MD5Util.MD5Encode("salt," + userId + System.currentTimeMillis(), "UTF-8");
@@ -350,6 +347,9 @@ public class DemoAction extends Cors{
         }
 //        GameAgent gameAgent = gameAgentDao.findOne(userId);
         GameAgent gameAgent = homeService.findOnePartner(userId);
+        logger.info("==================================================");
+        logger.info("userId is{}, game agent is{}", userId, gameAgent);
+
         List<GameAgentVo> list = new ArrayList<>();
         AgentResponse agentResponse = new AgentResponse();
         if (gameAgent == null){
@@ -363,8 +363,15 @@ public class DemoAction extends Cors{
         }else {
             GameAgentVo gameAgentVo = new GameAgentVo();
             BeanUtils.copyProperties(gameAgent, gameAgentVo);
+            AgentUser agentUser = agentUserDao.findAgentUserByInvite_code(gameAgent.getId() + "");
+            if (agentUser != null){
+                gameAgentVo.setPassword(agentUser.getPassword());
+            }
+
             gameAgentVo.setIsPartnerDes(gameAgent.getIsPartner() == 1 ? "合伙人" : "代理");
             list.add(gameAgentVo);
+
+
             Map<String, Object> result = new HashMap<>();
             result.put("total", 1);
             result.put("list", list);
@@ -388,6 +395,15 @@ public class DemoAction extends Cors{
             BeanUtils.copyProperties(gameAgent, gameAgentVo);
             User user = userDao.findOne(gameAgent.getId());
             gameAgentVo.setName(user.getUsername());
+
+            AgentUser agentUser = agentUserDao.findAgentUserByInvite_code(gameAgent.getId() + "");
+            System.out.println("agent user is "+ agentUser);
+            if (agentUser != null){
+                gameAgentVo.setPassword(agentUser.getPassword());
+            }
+//            gameAgentVo.setPassword(agentUser.getPassword());
+//            gameAgentVo.setInvite_code(agentUser.getInvite_code());
+
             voList.add(gameAgentVo);
         }
 
@@ -493,7 +509,7 @@ public class DemoAction extends Cors{
 
         AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
 
-        if (agentBean.getPartnerId() != self_agentId){
+        if (agentBean.getPartnerId() != self_agentId && self_agentId != 1){
             AgentResponse agentResponse = new AgentResponse();
             agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
             agentResponse.setMsg("没有权限");
@@ -929,7 +945,7 @@ public class DemoAction extends Cors{
         r.put("roles", roles);
         AgentUser agentUser = agentUserDao.findOne((Integer) map.get("id"));
         r.put("name", agentUser.getUsername());
-        r.put("avatar", "http://tb.himg.baidu.com/sys/portrait/item/553f736466666473667364666364571b");
+        r.put("avatar", "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
 
         return new AgentResponse(0, r);
     }
@@ -1122,6 +1138,39 @@ public class DemoAction extends Cors{
     public String hello(){
         return "Hello World";
     }
+
+//    @RequestMapping("/testUpdate")
+//    public String testUpdate(){
+////        System.out.println(agentUserDao);
+////        System.out.println(agentUserDao.findAll());
+//        Object o = agentUserDao.findAll();
+//        List<AgentUser> list = (List<AgentUser>) agentUserDao.findAll();
+//
+//        for (AgentUser agentUser : list){
+//            AgentInfo agentInfo = new AgentInfo();
+//            AgentInfoRecord agentInfoRecord = new AgentInfoRecord();
+//            if (agentUser.getId() == 17){
+//                ChildCost childCost1 = new ChildCost();
+//                childCost1.firstLevel = 10;
+//                childCost1.secondLevel = 5;
+//                childCost1.setPartner(0d);
+//                agentInfo.getEveryDayCost().put("2018-8-20", childCost1);
+//
+//                ChildCost childCost2 = new ChildCost();
+//                childCost2.firstLevel = 12;
+//                childCost2.secondLevel =6;
+//                childCost1.setPartner(0d);
+//                agentInfo.getEveryDayCost().put("2018-8-19", childCost2);
+//            }
+//
+//            agentUser.setAgentInfo(agentInfo);
+//            agentUser.setAgentInfoRecord(agentInfoRecord);
+//            agentUserDao.save(agentUser);
+//
+//        }
+//
+//        return "ok";
+//    }
 
     public static void main(String[] args) {
 //        LocalDate today = LocalDate.now();

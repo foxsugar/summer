@@ -37,6 +37,25 @@ public class GameAgentVo {
 
     private String isPartnerDes;
 
+    private String password;
+    private String invite_code;//邀请码
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getInvite_code() {
+        return invite_code;
+    }
+
+    public void setInvite_code(String invite_code) {
+        this.invite_code = invite_code;
+    }
+
     public String getIsPartnerDes() {
         return isPartnerDes;
     }
@@ -147,5 +166,27 @@ public class GameAgentVo {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    @Override
+    public String toString() {
+        return "GameAgentVo{" +
+                "id=" + id +
+                ", openId='" + openId + '\'' +
+                ", unionId='" + unionId + '\'' +
+                ", rebate=" + rebate +
+                ", partnerId=" + partnerId +
+                ", parentId=" + parentId +
+                ", isPartner=" + isPartner +
+                ", qrTicket='" + qrTicket + '\'' +
+                ", image='" + image + '\'' +
+                ", name='" + name + '\'' +
+                ", idCard='" + idCard + '\'' +
+                ", createDate=" + createDate +
+                ", phone='" + phone + '\'' +
+                ", isPartnerDes='" + isPartnerDes + '\'' +
+                ", password='" + password + '\'' +
+                ", invite_code='" + invite_code + '\'' +
+                '}';
     }
 }
