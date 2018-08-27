@@ -489,9 +489,9 @@ public class DemoAction extends Cors{
         int self_agentId = (int)AgentUtil.getUserIdByToken(token);
         logger.info("self_id:{}, agent id:{}", self_agentId, agentId);
         AgentUser agentUser = agentUserDao.findOne(self_agentId);
-
-        int self_code = Integer.parseInt(agentUser.getInvite_code());
-        logger.info("self_code:{}", self_code);
+        logger.info("agentUser:{}", agentUser);
+//        int self_code = Integer.parseInt(agentUser.getInvite_code());
+//        logger.info("self_code:{}", self_code);
 
         //先给个demo
         if (agentId == 0){
