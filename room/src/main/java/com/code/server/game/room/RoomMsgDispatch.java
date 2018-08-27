@@ -160,6 +160,15 @@ public class RoomMsgDispatch {
 
             }
 
+            case "startAuto":{
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                Room r = (Room)room;
+                if (r.isAllReady() && r.getUsers().size() >= 2) {
+                    r.startGame();
+                }
+                return 0;
+            }
+
 
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
