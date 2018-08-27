@@ -488,14 +488,17 @@ public class DemoAction extends Cors{
         String token = AgentUtil.findTokenInHeader();
         int self_agentId = (int)AgentUtil.getUserIdByToken(token);
         logger.info("self_id:{}, agent id:{}", self_agentId, agentId);
-
+        AgentUser agentUser = agentUserDao.findOne(self_agentId);
+        self_agentId = Integer.parseInt(agentUser.getInvite_code());
+        logger.info("self_id:{}, agent id:{}", self_agentId, agentId);
         //先给个demo
         if (agentId == 0){
-            Map<String, Object> rrss = assDemo();
-
-            AgentResponse agentResponse = new AgentResponse();
-            agentResponse.setData(rrss);
-            return agentResponse;
+//            Map<String, Object> rrss = assDemo();
+//
+//            AgentResponse agentResponse = new AgentResponse();
+//            agentResponse.setData(rrss);
+//            return agentResponse;
+            agentId = self_agentId;
         }
 
         //如果代理是空的
