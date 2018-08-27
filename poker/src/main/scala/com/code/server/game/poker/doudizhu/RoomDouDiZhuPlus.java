@@ -19,23 +19,23 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Clark on 2017/8/7.
+ * Created by Clark on 2017/8/7.Long
  */
 public class RoomDouDiZhuPlus extends RoomDouDiZhu {
 
     public static final int PERSONNUM = 3;
 
-    public static final Map<Double,Integer> needsMoney = new HashMap<>();
-    public static final Map<Double,Integer> usesMoney = new HashMap<>();
+    public static final Map<Integer,Integer> needsMoney = new HashMap<>();
+    public static final Map<Integer,Integer> usesMoney = new HashMap<>();
 
     static {
-        needsMoney.put(10D,60);
-        needsMoney.put(50D,300);
-        needsMoney.put(100D,1000);
+        needsMoney.put(10,60);
+        needsMoney.put(50,300);
+        needsMoney.put(100,1000);
 
-        usesMoney.put(10D,2);
-        usesMoney.put(50D,4);
-        usesMoney.put(100D,6);
+        usesMoney.put(10,2);
+        usesMoney.put(50,4);
+        usesMoney.put(100,6);
     }
 
 
@@ -133,28 +133,28 @@ public class RoomDouDiZhuPlus extends RoomDouDiZhu {
 
     public void spendMoney() {
         this.users.forEach(userId -> {
-            RedisManager.getUserRedisService().addUserMoney(userId, - usesMoney.get(goldRoomType));
+            RedisManager.getUserRedisService().addUserMoney(userId, - usesMoney.get(this.goldRoomType));
             if (isAddGold()) RedisManager.addGold(userId, usesMoney.get(goldRoomType) / 10);
         });
     }
 
 
     protected boolean isCanJoinCheckMoney(long userId) {
-        if (RedisManager.getUserRedisService().getUserMoney(userId) < needsMoney.get(goldRoomType)) {
+
+        if (RedisManager.getUserRedisService().getUserMoney(userId) < needsMoney.get(this.goldRoomType)) {
             return false;
         }
         return true;
     }
 
 
-    public static Map<Double, Integer> getNeedsMoney() {
+    public static Map<Integer, Integer> getNeedsMoney() {
         return needsMoney;
     }
 
-    public static Map<Double, Integer> getUsesMoney() {
+    public static Map<Integer, Integer> getUsesMoney() {
         return usesMoney;
     }
-
 
     public void init(int gameNumber, int multiple) throws DataNotFoundException {
         this.goldRoomType = multiple;

@@ -121,6 +121,23 @@ public class YSZRobotImpl implements YSZRobot {
 
     }
 
+    public void startGame(Room room) {
+        String roomId = room.getRoomId();
+        int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
+        KafkaMsgKey msgKey = new KafkaMsgKey();
+
+        msgKey.setRoomId(roomId);
+        msgKey.setPartition(partition);
+        msgKey.setUserId(0);
+
+        Map<String, Object> put = new HashMap();
+
+
+        ResponseVo result = new ResponseVo("roomService", "startAuto", put);
+        SpringUtil.getBean(MsgProducer.class).send2Partition("roomService", partition, msgKey, result);
+
+    }
+
     @Override
     public void execute() {
         RoomManager.getInstance().getRobotRoom().forEach(this::doExecute);
@@ -166,7 +183,7 @@ public class YSZRobotImpl implements YSZRobot {
             if (r.getUsers().size() >= 2) {
                 long t = now - r.getLastReadyTime();
                 if (r.isAllReady() && t > SECOND * 3) {
-                    r.startGame();
+                    startGame(r);
                 }
             }
 
