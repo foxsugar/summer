@@ -490,7 +490,11 @@ public class DemoAction extends Cors{
         logger.info("self_id:{}, agent id:{}", self_agentId, agentId);
         AgentUser agentUser = agentUserDao.findOne(self_agentId);
         logger.info("agentUser:{}", agentUser);
-        int self_code = Integer.parseInt(agentUser.getUsername());
+        int self_code = 0;
+
+        if (self_agentId != 1){
+            self_code = Integer.parseInt(agentUser.getUsername());
+        }
 //        logger.info("self_code:{}", self_code);
 
 
