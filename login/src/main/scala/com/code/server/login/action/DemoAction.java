@@ -485,6 +485,10 @@ public class DemoAction extends Cors{
     @RequestMapping("/downward")
     public AgentResponse downwardDelegate(HttpServletRequest request, long agentId){
 
+        String token = AgentUtil.findTokenInHeader();
+        int self_agentId = (int)AgentUtil.getUserIdByToken(token);
+        logger.info("self_id:{}, agent id:{}", self_agentId, agentId);
+
         //先给个demo
         if (agentId == 0){
             Map<String, Object> rrss = assDemo();
@@ -493,11 +497,6 @@ public class DemoAction extends Cors{
             agentResponse.setData(rrss);
             return agentResponse;
         }
-
-
-        String token = AgentUtil.findTokenInHeader();
-        int self_agentId = (int)AgentUtil.getUserIdByToken(token);
-
 
         //如果代理是空的
         if (RedisManager.getAgentRedisService().getAgentBean(agentId) == null){
@@ -515,7 +514,6 @@ public class DemoAction extends Cors{
             agentResponse.setMsg("没有权限");
             return agentResponse;
         }
-
 
         //直接玩家
         List<Long> aList = new ArrayList<>();
@@ -543,40 +541,12 @@ public class DemoAction extends Cors{
 
         List<User> aUsers = userDao.findUsersByIdIn(aList);
         List<User> bUsers = userDao.findUsersByIdIn(bList);
-//        List<User> cUsers = userDao.findUsersByIdIn(cList);
 
         Map<String, Object> rs =  assembleDelegateRelationship(agentId, aUsers, bUsers);
         AgentResponse agentResponse = new AgentResponse();
         agentResponse.setData(rs);
-        System.out.println("====");
         System.out.println(agentResponse);
         return agentResponse;
-
-//        //直接
-//        Map<String, Object> rs = new HashMap<>();
-//        List<Object> rsList = new ArrayList();
-//        rs.put("children", rsList);
-//
-//        Map<String, Object> players = new HashMap<>();
-//        rsList.add(players);
-//        players.put("name", "直接玩家");
-//        List<Object> playerList = new ArrayList<>();
-//        players.put("children", playerList);
-//
-//        for (int i = 0; i < 10; i++){
-//            DChildVo childVo = new DChildVo();
-//            childVo.setName(i + "");
-//            childVo.setValue(i);
-//            playerList.add(childVo);
-//        }
-//
-//        rs.put("name", "root");
-//
-//        Map<String, Object> rrss = ass();
-//
-//        AgentResponse agentResponse = new AgentResponse();
-//        agentResponse.setData(rrss);
-//        return agentResponse;
     }
 
     public String transformStr(long uid){
