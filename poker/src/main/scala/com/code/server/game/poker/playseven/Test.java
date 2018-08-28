@@ -19,14 +19,12 @@ public class Test {
 
     public static void main(String[] args) {
         List<Integer> sortList = new ArrayList<>();
-        sortList.add(40);
-        sortList.add(-40);
-        sortList.add(44);
-        sortList.add(-44);
+        sortList.add(26);
+        sortList.add(-26);
+        sortList.add(22);
+        sortList.add(-22);
 
-        int i = 0;
-        i=(int)4.0;
-        System.out.println(i);
+        System.out.println(CardsUtil.duiNumZhu(sortList,2));
     }
 
 }
