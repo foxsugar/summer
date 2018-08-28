@@ -63,6 +63,8 @@ public class ServerConfig {
 
     private Map<Integer, Integer> chargeMap = new HashMap<>();
 
+    private int bindRefereeReward = 0;
+
 
     public String getServerType() {
         return serverType;
@@ -282,6 +284,15 @@ public class ServerConfig {
 
     public ServerConfig setChargeMap(Map<Integer, Integer> chargeMap) {
         this.chargeMap = chargeMap;
+        return this;
+    }
+
+    public int getBindRefereeReward() {
+        return bindRefereeReward;
+    }
+
+    public ServerConfig setBindRefereeReward(int bindRefereeReward) {
+        this.bindRefereeReward = bindRefereeReward;
         return this;
     }
 }

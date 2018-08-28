@@ -40,6 +40,7 @@ public class ClubVo {
 
     private List<Long> admin = new ArrayList<>();
 
+    private boolean autoJoin = false;
 
 
     public String getId() {
@@ -201,6 +202,15 @@ public class ClubVo {
 
     public ClubVo setAdmin(List<Long> admin) {
         this.admin = admin;
+        return this;
+    }
+
+    public boolean isAutoJoin() {
+        return autoJoin;
+    }
+
+    public ClubVo setAutoJoin(boolean autoJoin) {
+        this.autoJoin = autoJoin;
         return this;
     }
 }

@@ -11,6 +11,7 @@ import com.code.server.db.Service.*;
 import com.code.server.db.model.*;
 import com.code.server.db.model.UserRecord;
 import com.code.server.kafka.MsgProducer;
+import com.code.server.login.config.ServerConfig;
 import com.code.server.login.rpc.RpcManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
@@ -509,8 +510,12 @@ public class GameUserService {
 //            if(user == null || user.getVip()== 0) return ErrorCode.REFERRER_NOT_EXIST;
 //        }
 
+
+
         userBean.setReferee(referrerId);
         RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
+
+        RedisManager.getUserRedisService().addUserMoney(msgKey.getUserId(), SpringUtil.getBean(ServerConfig.class).getBindRefereeReward());
 
 
         ResponseVo vo = new ResponseVo("userService", "guessCarBind", 0);
