@@ -32,6 +32,9 @@ public interface IGameConstant extends IkafkaMsgId{
     String GAMETYPE_MAOSAN = "250";//毛三有踢
     String GAMETYPE_MAOSAN_NO_QIANG = "251";//毛三 没有踢
 
+    String GAMETYPE_HUAPAI = "350";//毛三 没有踢
+    String GAMETYPE_HUAPAI_NO_QIANG = "351";//毛三 没有踢
+
     //炸金花
     String GAMETYPE_HITGOLDFLOWER = "11";//普通扎金花
 

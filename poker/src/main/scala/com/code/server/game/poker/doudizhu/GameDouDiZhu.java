@@ -102,6 +102,9 @@ public class GameDouDiZhu extends Game {
             case Room.GAMETYPE_MAOSAN:
             case Room.GAMETYPE_MAOSAN_NO_QIANG:
                 return new PlayerCardInfoMaoSan();
+            case GAMETYPE_HUAPAI:
+            case GAMETYPE_HUAPAI_NO_QIANG:
+                return new PlayerCardInfoHuaPai();
             default:
                 return new PlayerCardInfoDouDiZhu();
         }
