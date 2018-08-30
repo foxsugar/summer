@@ -309,7 +309,7 @@ public class MenuHandler extends AbstractHandler {
 
         item1.setPicUrl("https://mmbiz.qpic.cn/mmbiz_png/wj1STzkg04h46BuribmuoJnsMQgc2m70558p3mE91j6zq4sph6RavCicfUiahTSRj4CVRSRN9ecdJKic6ysZeBCZiag/0?wx_fmt=png");
         item1.setTitle("董小姐棋牌");
-//          item1.setDescription("点击进入专属界面");
+          item1.setDescription("点击进入专属界面");
 //        String url = "http://" + serverConfig.getDomain() + "/game/wechat/clickLink";
         String sid = "" + System.currentTimeMillis() + "_" + new Random().nextInt(999999);
         String url = MessageFormat.format("http://" + serverConfig.getDomain() +"/agent/#/sharelink?id={0}&sid={1}&in=1", ""+agentId, sid);
