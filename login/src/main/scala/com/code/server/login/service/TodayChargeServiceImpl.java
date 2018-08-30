@@ -664,6 +664,7 @@ public class TodayChargeServiceImpl implements TodayChargeService {
                 predicates.add(cb.equal(root.get(pathValue).as(Long.class), agentId));
                 predicates.add(cb.between(root.get("createtime").as(Date.class), start, end));
                 predicates.add(cb.equal(root.get("status").as(Integer.class), 1));
+                predicates.add(cb.equal(root.get("chargeType").as(Integer.class), MONEY_TYPE));;
                 Predicate[] pre = new Predicate[predicates.size()];
                 return query.where(predicates.toArray(pre)).getRestriction();
             }
