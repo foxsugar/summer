@@ -145,47 +145,31 @@ public class GameWzq extends Game {
 
 
         //是否有人赢
-
-        long winnerId = 0;
-        if (isWin(wzqNode, userId)) {
-            winnerId = userId;
-        }else{
-            //如果棋牌全部占满 就是平局
-            if (nodes.size() >=289) {
-                winnerId = -1;
-            }
-        }
-        if (winnerId != 0) {
-            Map<Long,Object> golds;
-            if (winnerId == -1) {
-                golds = computeScore(userId, 0);
-                sendResult(-1,golds);
-            }else{
-                golds = computeScore(userId, this.roomWzq.getMultiple());
-                sendResult(winnerId,golds);
-            }
-            sendFinalResult();
-        }
+// todo 下面是输赢得判断
+//        long winnerId = 0;
+//        if (isWin(wzqNode, userId)) {
+//            winnerId = userId;
+//        }else{
+//            //如果棋牌全部占满 就是平局
+//            if (nodes.size() >=289) {
+//                winnerId = -1;
+//            }
+//        }
+//        if (winnerId != 0) {
+//            Map<Long,Object> golds;
+//            if (winnerId == -1) {
+//                golds = computeScore(userId, 0);
+//                sendResult(-1,golds);
+//            }else{
+//                golds = computeScore(userId, this.roomWzq.getMultiple());
+//                sendResult(winnerId,golds);
+//            }
+//            sendFinalResult();
+//        }
 
         return 0;
     }
 
-
-//    private boolean isWin(long userId) {
-//        for (int x = 0; x < 17; x++) {
-//            for (int y = 0; y < 17; y++) {
-//                String nodeStr = x + "_" + y;
-//                WzqNode wzqNode = nodes.get(nodeStr);
-//                if (wzqNode != null && wzqNode.userId == userId) {
-//                    if (isWinBeginNode(wzqNode, userId)) {
-//                        return true;
-//                    }
-//                }
-//
-//            }
-//        }
-//        return false;
-//    }
 
 
     private boolean isWin(WzqNode wzqNode, long userId) {
