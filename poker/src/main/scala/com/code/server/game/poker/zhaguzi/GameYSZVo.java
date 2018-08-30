@@ -24,6 +24,16 @@ public class GameYSZVo extends GameVo{
     public List<Long> loseUser = new ArrayList<>();//看牌的人
     public Long curUserId;
     public Double allTableChip;
+    //精确的值
+    protected Map<Long,Double> extUserScores = new HashMap<>();
+
+    public Map<Long, Double> getExtUserScores() {
+        return extUserScores;
+    }
+
+    public void setExtUserScores(Map<Long, Double> extUserScores) {
+        this.extUserScores = extUserScores;
+    }
 
     public List<Integer> zhuList = new ArrayList<>();
 
