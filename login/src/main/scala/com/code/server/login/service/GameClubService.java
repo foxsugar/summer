@@ -123,6 +123,7 @@ public class GameClubService {
         clubVo.setStatistics(club.getStatistics());
         //玩家在线情况
         clubVo.getMember().addAll(club.getClubInfo().getMember().values());
+        clubVo.setAutoJoin(club.getClubInfo().isAutoJoin());
 //        if (clubVo.getMember().size() > 100) {
 //            clubVo.setMember(clubVo.getMember().subList(0, 100));
 //        }
@@ -404,17 +405,22 @@ public class GameClubService {
             return ErrorCode.CLUB_CANNOT_JOIN;
         }
 
-        //加入申请列表
-        if (isInApplyList(club, userId)) {
-            return ErrorCode.CLUB_CANNOT_JOIN;
-        }
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-
         String name = userBean.getUsername();
         String image = userBean.getImage();
         int sex = userBean.getSex();
         ClubMember apply = new ClubMember().setTime(System.currentTimeMillis()).setUserId(userId).setMark(mark).setName(name).setImage(image).setSex(sex);
-        club.getClubInfo().getApplyList().add(apply);
+
+        //自动加入
+        if (club.getClubInfo().isAutoJoin()) {
+            clubAddMember(club, apply);
+        }else{
+            //加入申请列表
+            if (isInApplyList(club, userId)) {
+                return ErrorCode.CLUB_CANNOT_JOIN;
+            }
+            club.getClubInfo().getApplyList().add(apply);
+        }
 
         Map<String, Object> result = new HashMap<>();
         sendMsg(msgKey, new ResponseVo("clubService", "joinClub", result));
@@ -704,6 +710,16 @@ public class GameClubService {
         }
     }
 
+
+    public int setAutoJoin(KafkaMsgKey msgKey, String clubId, long userId,boolean auto) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        club.getClubInfo().setAutoJoin(auto);
+        sendMsg(msgKey, new ResponseVo("clubService", "setAutoJoin","ok"));
+        return 0;
+    }
     /**
      * 初始化数据 懒加载
      */

@@ -767,6 +767,22 @@ public class GamePlaySeven extends Game{
                 }
             }
         }else{
+            if(playCardList.size()==2){
+                if(-1==chuHuaSe||chuHuaSe==huaSe){//出的主
+                    if(CardsUtil.duiNumZhu(playCardList,huaSe)!=playCardList.size()){
+                        if(CardsUtil.duiNumNoZhu(playCardList,huaSe)>=2){
+                            return ErrorCode.ERROR_CARD;
+                        }
+                    }
+                }
+                else{//出的不是主
+                    if(CardsUtil.duiNumNoZhu(playCardList,chuHuaSe)!=playCardList.size()){
+                        if(CardsUtil.duiNumNoZhu(playCardList,chuHuaSe)>=2){
+                            return ErrorCode.ERROR_CARD;
+                        }
+                    }
+                }
+            }
             /*if(playCardList.size()==2){
                 if(-1==chuHuaSe||chuHuaSe==huaSe){//出的主
                     if(Math.abs(playCardList.get(0))%4==huaSe && Math.abs(playCardList.get(1))%4==huaSe ){
@@ -806,15 +822,15 @@ public class GamePlaySeven extends Game{
 
             if(playCardList.size()>=4){
                 if(-1==chuHuaSe||chuHuaSe==huaSe){//出的主
-                    if(2*CardsUtil.duiNumZhu(playCardList,huaSe)!=playCardList.size()){
-                        if(CardsUtil.duiNumZhu(playerCardInfos.get(userId).handCards,huaSe)*2>=playCardList.size()){
+                    if(CardsUtil.duiNumZhu(playCardList,huaSe)!=playCardList.size()){
+                        if(CardsUtil.duiNumZhu(playerCardInfos.get(userId).handCards,huaSe)>=playCardList.size()){
                             return ErrorCode.ERROR_CARD;
                         }
                     }
                 }
                 else{//出的不是主
-                    if(2*CardsUtil.duiNumNoZhu(playCardList,chuHuaSe)!=playCardList.size()){
-                        if(CardsUtil.duiNumNoZhu(playerCardInfos.get(userId).handCards,chuHuaSe)*2>=playCardList.size()){
+                    if(CardsUtil.duiNumNoZhu(playCardList,chuHuaSe)!=playCardList.size()){
+                        if(CardsUtil.duiNumNoZhu(playerCardInfos.get(userId).handCards,chuHuaSe)>=playCardList.size()){
                             return ErrorCode.ERROR_CARD;
                         }
                     }

@@ -266,7 +266,7 @@ public class CardsUtil {
         return num;
     }
 
-    //查询有多少对子,不算主
+    //查询有多少对子,算主
     public static int duiNumZhu(List<Integer> list,Integer huase){
         int num = 0;
         List<Integer> templist = new ArrayList<>();
