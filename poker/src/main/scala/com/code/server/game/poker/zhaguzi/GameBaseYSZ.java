@@ -181,7 +181,8 @@ public class GameBaseYSZ extends Game {
         initDiZhu();
 
         //出场值是入场的一半
-        minGold = this.room.computeEnterGold() / 2;
+//        minGold = this.room.computeEnterGold() / 2;
+//        logger.info("入场：{}出场{}", this.room.computeEnterGold(), minGold);
 
         computeCardType();
         recordCardType();
@@ -323,7 +324,10 @@ public class GameBaseYSZ extends Game {
         if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
             double gold = RedisManager.getUserRedisService().getUserGold(userId);
             logger.info(userId + "  金币: " + gold);
-            if (gold - (playerCardInfos.get(userId).getAllScore() + addChip) < minGold){
+//            if (gold - (playerCardInfos.get(userId).getAllScore() + addChip) < minGold){
+//                return ErrorCode.GOLD_NOT_ENOUGH;
+//            }
+            if (checkNeedCharge(userId, addChip)){
                 return ErrorCode.GOLD_NOT_ENOUGH;
             }
         }
@@ -363,6 +367,18 @@ public class GameBaseYSZ extends Game {
         return 0;
     }
 
+    public boolean checkNeedCharge(long userId, double addChip){
+        double gold = RedisManager.getUserRedisService().getUserGold(userId);
+        if (gold < minGold){
+            return true;
+        }
+        PlayerYSZ playerYSZ = playerCardInfos.get(userId);
+        if (gold - addChip < 0){
+            return true;
+        }
+        return false;
+    }
+
     public int call(long userId) {
 
         logger.info(userId + "  跟注: " + chip);
@@ -384,7 +400,10 @@ public class GameBaseYSZ extends Game {
             if (seeUser.contains(userId)){
                 addChip = chip * 2;
             }
-            if (gold - (playerCardInfos.get(userId).getAllScore() + addChip) < minGold){
+//            if (gold - (playerCardInfos.get(userId).getAllScore() + addChip) < minGold){
+//                return ErrorCode.GOLD_NOT_ENOUGH;
+//            }
+            if (checkNeedCharge(userId, addChip)){
                 return ErrorCode.GOLD_NOT_ENOUGH;
             }
         }
@@ -532,7 +551,10 @@ public class GameBaseYSZ extends Game {
             if (seeUser.contains(askerId)){
                 addChip = chip * 2;
             }
-            if (gold - (playerCardInfos.get(askerId).getAllScore() + addChip) < minGold){
+//            if (gold - (playerCardInfos.get(askerId).getAllScore() + addChip) < minGold){
+//                return ErrorCode.GOLD_NOT_ENOUGH;
+//            }
+            if (checkNeedCharge(askerId, addChip)){
                 return ErrorCode.GOLD_NOT_ENOUGH;
             }
         }
