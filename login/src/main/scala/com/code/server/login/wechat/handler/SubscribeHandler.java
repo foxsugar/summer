@@ -78,11 +78,27 @@ public class SubscribeHandler extends AbstractHandler {
     }
 
     public static void main(String[] args) {
-        System.out.println("nxhfjhsfkhfk".split("\\|")[0]);
+        String eventKey = "qrscene_nx|outO70W9n2oR_eEhudrbW4KTBSeo";
+        String[] s = eventKey.split("_");
+        if ("qrscene".equals(s[0])) {
+            String referrerUnionId = s[1];
+
+            // "|" 的分隔符要转义
+            String[] sp = referrerUnionId.split("\\|");
+            if (sp.length > 1) {
+                referrerUnionId = sp[1];
+            }
+
+
+        }
+
+        System.out.println(eventKey.split("qrscene_")[1]);
     }
     /**
      * 处理特殊请求，比如如果是扫码进来的，可以做相应处理
      */
+
+
     private WxMpXmlOutMessage handleSpecial(WxMpXmlMessage wxMessage, WxMpUser wxMpUser, WxMpService wxMpService) throws Exception {
 
         //如果是扫码登录
@@ -92,8 +108,9 @@ public class SubscribeHandler extends AbstractHandler {
         }
 
         String[] s = eventKey.split("_");
+        logger.info("eventKey = " +eventKey);
         if ("qrscene".equals(s[0])) {
-            String referrerUnionId = s[1];
+            String referrerUnionId = eventKey.split("qrscene_")[1];
 
             // "|" 的分隔符要转义
             String[] sp = referrerUnionId.split("\\|");
