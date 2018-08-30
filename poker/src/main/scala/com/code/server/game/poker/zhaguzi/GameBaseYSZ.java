@@ -1323,6 +1323,11 @@ public class GameBaseYSZ extends Game {
         return loseUser;
     }
 
+    //精确的值
+    protected Map<Long,Double> extUserScores = new HashMap<>();
+
+
+
     public void setLoseUser(List<Long> loseUser) {
         this.loseUser = loseUser;
     }
@@ -1330,7 +1335,18 @@ public class GameBaseYSZ extends Game {
     @Override
     public IfaceGameVo toVo(long userId) {
         GameYSZVo vo = new GameYSZVo();
-//        BeanUtils.copyProperties(this, vo);
+
+        this.extUserScores.clear();
+        for (Map.Entry<Long, Double> entry : this.room.userScores.entrySet()){
+            if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+                this.extUserScores.put(entry.getKey(), entry.getValue());
+            }else {
+                double gold = RedisManager.getUserRedisService().getUserGold(userId);
+                this.extUserScores.put(entry.getKey(), gold);
+            }
+        }
+        vo.extUserScores = this.extUserScores;
+
         vo.cards = this.cards;
         vo.leaveCards = this.leaveCards;
         //vo.cards = this.getCards();
