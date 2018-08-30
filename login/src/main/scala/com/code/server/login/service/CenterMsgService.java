@@ -152,7 +152,7 @@ public class CenterMsgService implements IkafkaMsgId {
             Map<String, Object> map = JsonUtil.readValue(msg, new TypeReference<HashMap<String, Object>>() {
             });
 
-            long room_uuid = (Long) map.get("room_uuid");
+            long room_uuid = (Long)map.get("room_uuid");
             long replay_id = (Long) map.get("replay_id");
             int count = (int) map.get("count");
             String recordStr = jsonNode.path("record").asText();
