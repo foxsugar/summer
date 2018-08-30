@@ -183,6 +183,7 @@ public class GameBaseYSZ extends Game {
         //出场值是入场的一半
 //        minGold = this.room.computeEnterGold() / 2;
 //        logger.info("入场：{}出场{}", this.room.computeEnterGold(), minGold);
+        logger.info("最小值:{}, zhuList:{}", minGold, this.genZhuList);
 
         computeCardType();
         recordCardType();
@@ -372,7 +373,7 @@ public class GameBaseYSZ extends Game {
         if (gold < minGold){
             return true;
         }
-        PlayerYSZ playerYSZ = playerCardInfos.get(userId);
+//        PlayerYSZ playerYSZ = playerCardInfos.get(userId);
         if (gold - addChip < 0){
             return true;
         }
