@@ -26,7 +26,7 @@ public class AgentRedisService implements IAgentRedis, IConstant {
     private static final Map<Integer, Integer> goldScala = new HashMap<>();
 
     static {
-        moneyScala.put(1, 60);
+        moneyScala.put(1, 54);
         moneyScala.put(2, 10);
         moneyScala.put(3, 10);
 
