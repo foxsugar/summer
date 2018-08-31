@@ -316,6 +316,7 @@ public class MenuHandler extends AbstractHandler {
 //        String url = MessageFormat.format("http://" + serverConfig.getDomain() +"/game/wechat/showLink?agentId={0}&sid={1}", ""+agentId, sid);
         logger.info("设置专属链接地址 : " + url);
         item1.setUrl(url);
+        item1.setDescription("");
 
         WxMpXmlOutNewsMessage m = WxMpXmlOutMessage.NEWS()
                 .fromUser(wxMessage.getToUser())

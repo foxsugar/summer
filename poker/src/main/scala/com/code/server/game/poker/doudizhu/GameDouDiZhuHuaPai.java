@@ -1,5 +1,7 @@
 package com.code.server.game.poker.doudizhu;
 
+import com.code.server.constant.game.CardStruct;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +32,23 @@ public class GameDouDiZhuHuaPai extends GameDouDiZhuLinFenLongQi {
         //生成操作列表
         operateNode = OperateNode.initOperate(canJiaoUser, users);
 
+    }
+
+
+    protected void computeBomb(CardStruct cardStruct){
+        if(cardStruct.getType()==CardStruct.type_炸){
+            List<Integer> cards = cardStruct.getCards();
+            if(cards.size()==4 && CardUtil.getTypeByCard(cards.get(0)) == 0){ //3333
+                zhaCount += 3;//记录炸的数量
+                multiple *= 8;//记录倍数
+            }else{ //除4个三的炸
+                zhaCount += 1;//记录炸的数量
+                multiple *= 2;//记录倍数
+            }
+        }else if(cardStruct.getType()==CardStruct.type_火箭){
+            zhaCount += 1;//记录炸的数量
+            multiple *= 2;//记录倍数
+        }
     }
 
     @Override

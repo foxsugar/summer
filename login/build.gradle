@@ -3,8 +3,8 @@ buildscript {
 		springBootVersion = '1.5.3.RELEASE'
 	}
 	repositories {
-		mavenCentral()
-//		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+//		mavenCentral()
+		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -13,8 +13,7 @@ buildscript {
 
 allprojects {
 	repositories {
-//		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-		mavenCentral()
+		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
 	}
 }
 apply plugin: 'java'

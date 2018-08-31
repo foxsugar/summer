@@ -357,6 +357,27 @@ object HuWithHun {
 
   def isQingYiSe(huCardType: HuCardType, noHuncards: Array[Int], hun: util.List[Integer], lastCard: Int): Boolean = {
     val set = new util.HashSet[Integer]
+    for(cardType <- huCardType.anGang.asScala){
+      val group = CardTypeUtil.getCardGroupByCardType(cardType)
+      if (group == CardTypeUtil.GROUP_FENG || group == CardTypeUtil.GROUP_ZI) {
+        return false
+      }
+      set.add(group)
+    }
+    for(cardType <- huCardType.mingGang.asScala) {
+      val group = CardTypeUtil.getCardGroupByCardType(cardType)
+      if (group == CardTypeUtil.GROUP_FENG || group == CardTypeUtil.GROUP_ZI) {
+        return false
+      }
+      set.add(group)
+    }
+    for(cardType <- huCardType.peng.asScala) {
+      val group = CardTypeUtil.getCardGroupByCardType(cardType)
+      if (group == CardTypeUtil.GROUP_FENG || group == CardTypeUtil.GROUP_ZI) {
+        return false
+      }
+      set.add(group)
+    }
 
     for (index <- noHuncards.indices) {
 
