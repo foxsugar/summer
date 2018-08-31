@@ -181,7 +181,9 @@ public class GameBaseYSZ extends Game {
         initDiZhu();
 
         //出场值是入场的一半
-        minGold = this.room.computeEnterGold() / 2;
+//        minGold = this.room.computeEnterGold() / 2;
+//        logger.info("入场：{}出场{}", this.room.computeEnterGold(), minGold);
+        logger.info("最小值:{}, zhuList:{}", minGold, this.genZhuList);
 
         computeCardType();
         recordCardType();
@@ -323,7 +325,10 @@ public class GameBaseYSZ extends Game {
         if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
             double gold = RedisManager.getUserRedisService().getUserGold(userId);
             logger.info(userId + "  金币: " + gold);
-            if (gold - (playerCardInfos.get(userId).getAllScore() + addChip) < minGold){
+//            if (gold - (playerCardInfos.get(userId).getAllScore() + addChip) < minGold){
+//                return ErrorCode.GOLD_NOT_ENOUGH;
+//            }
+            if (checkNeedCharge(userId, addChip)){
                 return ErrorCode.GOLD_NOT_ENOUGH;
             }
         }
@@ -363,6 +368,18 @@ public class GameBaseYSZ extends Game {
         return 0;
     }
 
+    public boolean checkNeedCharge(long userId, double addChip){
+        double gold = RedisManager.getUserRedisService().getUserGold(userId);
+        if (gold < minGold){
+            return true;
+        }
+//        PlayerYSZ playerYSZ = playerCardInfos.get(userId);
+        if (gold - addChip < 0){
+            return true;
+        }
+        return false;
+    }
+
     public int call(long userId) {
 
         logger.info(userId + "  跟注: " + chip);
@@ -384,7 +401,10 @@ public class GameBaseYSZ extends Game {
             if (seeUser.contains(userId)){
                 addChip = chip * 2;
             }
-            if (gold - (playerCardInfos.get(userId).getAllScore() + addChip) < minGold){
+//            if (gold - (playerCardInfos.get(userId).getAllScore() + addChip) < minGold){
+//                return ErrorCode.GOLD_NOT_ENOUGH;
+//            }
+            if (checkNeedCharge(userId, addChip)){
                 return ErrorCode.GOLD_NOT_ENOUGH;
             }
         }
@@ -532,7 +552,10 @@ public class GameBaseYSZ extends Game {
             if (seeUser.contains(askerId)){
                 addChip = chip * 2;
             }
-            if (gold - (playerCardInfos.get(askerId).getAllScore() + addChip) < minGold){
+//            if (gold - (playerCardInfos.get(askerId).getAllScore() + addChip) < minGold){
+//                return ErrorCode.GOLD_NOT_ENOUGH;
+//            }
+            if (checkNeedCharge(askerId, addChip)){
                 return ErrorCode.GOLD_NOT_ENOUGH;
             }
         }
@@ -1300,6 +1323,11 @@ public class GameBaseYSZ extends Game {
         return loseUser;
     }
 
+    //精确的值
+    protected Map<Long,Double> extUserScores = new HashMap<>();
+
+
+
     public void setLoseUser(List<Long> loseUser) {
         this.loseUser = loseUser;
     }
@@ -1307,7 +1335,18 @@ public class GameBaseYSZ extends Game {
     @Override
     public IfaceGameVo toVo(long userId) {
         GameYSZVo vo = new GameYSZVo();
-//        BeanUtils.copyProperties(this, vo);
+
+        this.extUserScores.clear();
+        for (Map.Entry<Long, Double> entry : this.room.userScores.entrySet()){
+            if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+                this.extUserScores.put(entry.getKey(), entry.getValue());
+            }else {
+                double gold = RedisManager.getUserRedisService().getUserGold(entry.getKey());
+                this.extUserScores.put(entry.getKey(), gold);
+            }
+        }
+        vo.extUserScores = this.extUserScores;
+
         vo.cards = this.cards;
         vo.leaveCards = this.leaveCards;
         //vo.cards = this.getCards();

@@ -16,6 +16,7 @@ import com.code.server.login.config.ServerConfig;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
+import com.code.server.util.ThreadPool;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.Gson;
@@ -52,16 +53,16 @@ public class CenterMsgService implements IkafkaMsgId {
         int msgId = msgKey.getMsgId();
         switch (msgId) {
             case KAFKA_MSG_ID_GEN_RECORD:
-                genRecord(msg);
+                ThreadPool.getInstance().executor.execute(() -> genRecord(msg));
                 break;
             case KAFKA_MSG_ID_REPLAY:
-                replay(msg);
+                ThreadPool.getInstance().executor.execute(()->replay(msg));
                 break;
             case KAFKA_MSG_ID_GAME_RECORD:
-                genGameRecord(msg);
+                ThreadPool.getInstance().executor.execute(()->genGameRecord(msg));
                 break;
             case KAFKA_MSG_ID_ROOM_RECORD:
-                genRoomRecord(msg);
+                ThreadPool.getInstance().executor.execute(()->genRoomRecord(msg));
                 break;
             case KAFKA_MSG_ID_GUESS_ADD_GOLD:
                 guessAddGold(msg);
@@ -151,7 +152,7 @@ public class CenterMsgService implements IkafkaMsgId {
             Map<String, Object> map = JsonUtil.readValue(msg, new TypeReference<HashMap<String, Object>>() {
             });
 
-            long room_uuid = (Long) map.get("room_uuid");
+            long room_uuid = (Long)map.get("room_uuid");
             long replay_id = (Long) map.get("replay_id");
             int count = (int) map.get("count");
             String recordStr = jsonNode.path("record").asText();

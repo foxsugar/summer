@@ -81,7 +81,7 @@ public class ClubServiceMsgDispatch {
                 int money = params.get("money").asInt();
                 return gameClubService.charge(msgKey, userId, clubId, money);
 
-            case "createRoomModel":{
+            case "createRoomModel": {
 
                 String createCommand = params.get("createCommand").asText();
                 String gameType = params.get("gameType").asText();
@@ -89,65 +89,68 @@ public class ClubServiceMsgDispatch {
                 String desc1 = params.get("desc").asText();
                 String str = params.path("indexs").toString();
                 List<Integer> indexs = null;
-                if(str != null && !str.equals("")){
-                    indexs = JsonUtil.readValue(params.path("indexs").toString(),new TypeReference<List<Integer>>() {});
+                if (str != null && !str.equals("")) {
+                    indexs = JsonUtil.readValue(params.path("indexs").toString(), new TypeReference<List<Integer>>() {
+                    });
                 }
 
-                return gameClubService.createRoomModel(msgKey,  userId, clubId, createCommand,gameType, gameNumber, desc1, indexs);
+                return gameClubService.createRoomModel(msgKey, userId, clubId, createCommand, gameType, gameNumber, desc1, indexs);
             }
 
             case "removeRoomModel":
                 String roomModelId = params.get("roomModelId").asText();
                 return gameClubService.removeRoomModel(msgKey, userId, clubId, roomModelId);
-            case "setRoomModel":{
+            case "setRoomModel": {
 
                 String createCommand_set = params.get("createCommand").asText();
                 String gameType_set = params.get("gameType").asText();
                 int gameNumber_set = params.get("gameNumber").asInt();
                 String desc1_set = params.get("desc").asText();
                 String roomModelId_set = params.get("roomModelId").asText();
-                return gameClubService.setRoomModel(msgKey,  userId, clubId,roomModelId_set,createCommand_set, gameType_set, gameNumber_set, desc1_set);
+                return gameClubService.setRoomModel(msgKey, userId, clubId, roomModelId_set, createCommand_set, gameType_set, gameNumber_set, desc1_set);
             }
 
-            case "setRoomModelBatch":{
+            case "setRoomModelBatch": {
                 String createCommand_set = params.get("createCommand").asText();
                 String gameType_set = params.get("gameType").asText();
                 int gameNumber_set = params.get("gameNumber").asInt();
                 String desc1_set = params.get("desc").asText();
-                List<Integer> indexs = JsonUtil.readValue(params.path("indexs").toString(),new TypeReference<List<Integer>>() {});
-                return gameClubService.setRoomModelBatch(msgKey,  userId, clubId,createCommand_set, gameType_set, gameNumber_set, desc1_set,indexs);
+                List<Integer> indexs = JsonUtil.readValue(params.path("indexs").toString(), new TypeReference<List<Integer>>() {
+                });
+                return gameClubService.setRoomModelBatch(msgKey, userId, clubId, createCommand_set, gameType_set, gameNumber_set, desc1_set, indexs);
             }
 
             case "clubRoomSetId":
 
                 String clubModelId = params.get("clubModelId").asText();
                 String roomId = params.get("roomId").asText();
-                return gameClubService.clubRoomSetId(clubId,clubModelId,roomId);
+                return gameClubService.clubRoomSetId(clubId, clubModelId, roomId);
 
             case "clubGameStart":
                 String clubModelId1 = params.get("clubModelId").asText();
                 String us = params.get("users").toString();
                 int gameNumber = params.get("curGameNumber").asInt();
                 String roomIdc = params.get("roomId").asText();
-                List<Long> users = JsonUtil.readValue(us,new TypeReference<List<Long>>() {});
+                List<Long> users = JsonUtil.readValue(us, new TypeReference<List<Long>>() {
+                });
 //                String roomId = params.get("roomId").asText();
-                return gameClubService.cludGameStart(clubId, clubModelId1,users,roomIdc,gameNumber);
+                return gameClubService.cludGameStart(clubId, clubModelId1, users, roomIdc, gameNumber);
             case "getFreeUser":
-                return gameClubService.getFreeUser(msgKey,clubId);
+                return gameClubService.getFreeUser(msgKey, clubId);
             case "invite":
                 String inviteUser = params.get("inviteUser").asText();
                 String roomId1 = params.get("roomId").asText();
                 String roomModel = params.get("roomModel").asText();
                 String name = params.get("name").asText();
-                return gameClubService.invite(msgKey,clubId, roomId1,inviteUser,roomModel,name);
+                return gameClubService.invite(msgKey, clubId, roomId1, inviteUser, roomModel, name);
             case "getClubRecord":
-                return gameClubService.getClubRecord(msgKey, userId,clubId);
+                return gameClubService.getClubRecord(msgKey, userId, clubId);
             case "getClubRecordByDate":
                 String date = params.get("date").asText();
-                return gameClubService.getClubRecordByDate(msgKey,userId, clubId, date);
+                return gameClubService.getClubRecordByDate(msgKey, userId, clubId, date);
             case "clubDrawBack":
                 String clubModelId2 = params.get("clubModelId").asText();
-                return gameClubService.clubDrawBack(clubId,clubModelId2);
+                return gameClubService.clubDrawBack(clubId, clubModelId2);
             case "kickUser":
                 long kickUser = params.get("kickUserId").asLong();
                 return gameClubService.kickUser(msgKey, userId, clubId, kickUser);
@@ -155,46 +158,49 @@ public class ClubServiceMsgDispatch {
             case "getChargeRecord":
                 return gameClubService.getChargeRecord(msgKey, userId, clubId);
 
-            case "setFloorDesc":{
+            case "setFloorDesc": {
 
                 int floor = params.get("floor").asInt();
                 String desc1 = params.get("desc").asText();
                 return gameClubService.setFloor(msgKey, userId, clubId, floor, desc1);
             }
 
-            case "setAdmin":{
+            case "setAdmin": {
                 long adminUser = params.get("adminUser").asLong();
                 boolean isAdd = params.get("isAdd").asBoolean();
                 return gameClubService.setAdmin(msgKey, userId, clubId, adminUser, isAdd);
             }
-            case "addUser":{
+            case "addUser": {
                 long user = params.get("userId").asLong();
-                return gameClubService.addUser(msgKey,clubId,user);
+                return gameClubService.addUser(msgKey, clubId, user);
             }
-            case "removeFloor":{
+            case "removeFloor": {
                 int floor = params.get("floor").asInt();
-                return gameClubService.removeFloor(msgKey, clubId,userId,floor);
+                return gameClubService.removeFloor(msgKey, clubId, userId, floor);
             }
-            case "clubJoinRoom":{
+            case "clubJoinRoom": {
                 clubId = params.path("clubId").asText();
                 String clubModelId3 = params.path("clubModelId").asText();
                 String roomId2 = params.path("roomId").asText();
                 long joinUser = params.path("userId").asLong();
 
 
-                gameClubService.clubJoinRoom( clubId,joinUser,clubModelId3,roomId2);
+                gameClubService.clubJoinRoom(clubId, joinUser, clubModelId3, roomId2);
                 break;
             }
-            case "clubQuitRoom":{
+            case "clubQuitRoom": {
                 clubId = params.path("clubId").asText();
                 String clubModelId3 = params.path("clubModelId").asText();
                 String roomId3 = params.path("roomId").asText();
                 long quitUser = params.path("userId").asLong();
 
-                gameClubService.clubQuitRoom( clubId,quitUser,clubModelId3,roomId3);
+                gameClubService.clubQuitRoom(clubId, quitUser, clubModelId3, roomId3);
                 break;
             }
-
+            case "setAutoJoin": {
+                boolean auto = params.path("auto").asBoolean();
+                return gameClubService.setAutoJoin(msgKey, clubId, userId, auto);
+            }
 
 
         }

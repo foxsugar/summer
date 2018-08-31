@@ -334,8 +334,10 @@ public class WechatAction extends Cors {
         //过期时间 30s
         cookie.setMaxAge(300);
         response.addCookie(cookie);
+        System.out.println("cookie = " + json);
 
         String url = MessageFormat.format("http://" + serverConfig.getDomain() + "/agent/#/sharelink?id={0}&sid={1}", "" + agentId, sid);
+        System.out.println("sharelink = " + url);
 
         response.sendRedirect(url);
 
