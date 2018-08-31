@@ -1341,7 +1341,7 @@ public class GameBaseYSZ extends Game {
             if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
                 this.extUserScores.put(entry.getKey(), entry.getValue());
             }else {
-                double gold = RedisManager.getUserRedisService().getUserGold(userId);
+                double gold = RedisManager.getUserRedisService().getUserGold(entry.getKey());
                 this.extUserScores.put(entry.getKey(), gold);
             }
         }
