@@ -48,6 +48,8 @@ public class GameBaseYSZ extends Game {
         this.genZhuList = genZhuList;
     }
 
+    protected Map<Long, Double> startUserScores = new HashMap<>();
+
     //private Double MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();//最大下注数
     private Double MAX_BET_NUM = 0.0;
 
@@ -179,6 +181,9 @@ public class GameBaseYSZ extends Game {
         shuffle();//洗牌
         deal();//发牌
         initDiZhu();
+
+        this.startUserScores = new HashMap<>();
+        this.startUserScores.putAll(this.room.userScores);
 
         //出场值是入场的一半
 //        minGold = this.room.computeEnterGold() / 2;
@@ -1337,14 +1342,20 @@ public class GameBaseYSZ extends Game {
         GameYSZVo vo = new GameYSZVo();
 
         this.extUserScores.clear();
-        for (Map.Entry<Long, Double> entry : this.room.userScores.entrySet()){
-            if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+
+        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+
+            for (Map.Entry<Long, Double> entry : this.startUserScores.entrySet()){
                 this.extUserScores.put(entry.getKey(), entry.getValue());
-            }else {
+            }
+
+        }else {
+            for (Map.Entry<Long, Double> entry : this.room.userScores.entrySet()){
                 double gold = RedisManager.getUserRedisService().getUserGold(entry.getKey());
                 this.extUserScores.put(entry.getKey(), gold);
             }
         }
+
         vo.extUserScores = this.extUserScores;
 
         vo.cards = this.cards;
