@@ -112,6 +112,9 @@ public class RoomInfo extends RoomInfoExtendGold {
         }
         double s = userScores.get(userId);
         userScores.put(userId, s + score);
+        if (isGoldRoom()) {
+            RedisManager.getUserRedisService().addUserGold(userId, score);
+        }
     }
 
     public void clearReadyStatus(boolean isAddGameNum) {

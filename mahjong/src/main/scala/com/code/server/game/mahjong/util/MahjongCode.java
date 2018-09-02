@@ -75,6 +75,7 @@ public class MahjongCode {
 			put("235", 27);
 			put("244", 27);
 			put("253", 54);
+			put("254", 54);
 			put("266", 81);
 			put("288", 81);
 		}
