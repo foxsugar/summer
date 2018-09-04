@@ -19,6 +19,7 @@ import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.HomeService;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.util.MD5Util;
+import com.code.server.login.vo.ConstantFormVo;
 import com.code.server.login.vo.DChargeAdminVo;
 import com.code.server.login.vo.DChildVo;
 import com.code.server.login.vo.GameAgentVo;
@@ -33,11 +34,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,12 +71,40 @@ public class DemoAction extends Cors {
     @Autowired
     private IAgentRecordsDao agentRecordsDao;
 
+    @Autowired
     private IConstantDao constantDao;
 
     @Autowired
     private IChargeDao chargeDao;
 
     private static final Logger logger = LoggerFactory.getLogger(DemoAction.class);
+
+
+//    class ConstantForm{
+//
+//        public ConstantForm() {
+//        }
+//
+//        String id;
+////        double  init_money;
+//        String apple_check;
+//
+//        public String getId() {
+//            return id;
+//        }
+//
+//        public void setId(String id) {
+//            this.id = id;
+//        }
+//
+//        public String getApple_check() {
+//            return apple_check;
+//        }
+//
+//        public void setApple_check(String apple_check) {
+//            this.apple_check = apple_check;
+//        }
+//    }
 
     public static String getToken(long userId) {
         return MD5Util.MD5Encode("salt," + userId + System.currentTimeMillis(), "UTF-8");
@@ -964,6 +991,25 @@ public class DemoAction extends Cors {
         }
 
         return new AgentResponse(0, logRecordDao.findByIdIn(days));
+    }
+
+    @DemoChecker
+    @RequestMapping("/fConstant")
+    public AgentResponse getConstnat (){
+
+        Constant constant = constantDao.findOne(1l);
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("constant", constant);
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(rs);
+        return agentResponse;
+    }
+
+    @RequestMapping("/uConstant")
+    public AgentResponse modifyConstnat(ConstantFormVo constantForm){
+        System.out.println("===");
+        System.out.println(constantForm);
+        return null;
     }
 
     @DemoChecker
