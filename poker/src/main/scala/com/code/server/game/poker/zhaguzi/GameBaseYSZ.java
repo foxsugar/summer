@@ -25,11 +25,10 @@ public class GameBaseYSZ extends Game {
 
     private static  Double INIT_BOTTOM_CHIP = 1.0;//底注
     private static final int INIT_CARD_NUM = 3;//玩家牌数3张
-
+    private List<Double> choumaList = new ArrayList<>();
     protected List<Integer> cards = new ArrayList<>();//牌
     public Map<Long, PlayerYSZ> playerCardInfos = new HashMap<>();
     protected Random rand = new Random();
-
     protected int curRoundNumber = 1;//当前轮数
     protected Double chip = INIT_BOTTOM_CHIP;
 
@@ -46,6 +45,16 @@ public class GameBaseYSZ extends Game {
     }
     public void setGenZhuList(List<Integer> genZhuList) {
         this.genZhuList = genZhuList;
+    }
+
+    protected Map<Long, Double> startUserScores = new HashMap<>();
+
+    public List<Double> getChoumaList() {
+        return choumaList;
+    }
+
+    public void setChoumaList(List<Double> choumaList) {
+        this.choumaList = choumaList;
     }
 
     //private Double MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();//最大下注数
@@ -180,6 +189,9 @@ public class GameBaseYSZ extends Game {
         deal();//发牌
         initDiZhu();
 
+        this.startUserScores = new HashMap<>();
+        this.startUserScores.putAll(this.room.userScores);
+
         //出场值是入场的一半
 //        minGold = this.room.computeEnterGold() / 2;
 //        logger.info("入场：{}出场{}", this.room.computeEnterGold(), minGold);
@@ -216,6 +228,7 @@ public class GameBaseYSZ extends Game {
     private void mustBet() {
         for (Long l : playerCardInfos.keySet()) {
             playerCardInfos.get(l).setAllScore(INIT_BOTTOM_CHIP);
+            this.choumaList.add(INIT_BOTTOM_CHIP);
             this.room.addUserSocre(playerCardInfos.get(l).userId, -playerCardInfos.get(l).allScore);
         }
 
@@ -339,11 +352,17 @@ public class GameBaseYSZ extends Game {
 //                return ErrorCode.BET_WRONG;
 //            }
             chip = addChip / 2;
+
+            this.choumaList.add(chip);
+            this.choumaList.add(chip);
+
         } else {
 //            if(addChip!=chip+2 && addChip!=chip*2 && addChip!=chip*4 && addChip!=MAX_BET_NUM/2){
 //                return ErrorCode.BET_WRONG;
 //            }
             chip = addChip;
+
+            this.choumaList.add(chip);
         }
 
         playerCardInfos.get(userId).setAllScore(playerCardInfos.get(userId).getAllScore() + addChip);
@@ -412,9 +431,13 @@ public class GameBaseYSZ extends Game {
         if (seeUser.contains(userId)) {
             playerCardInfos.get(userId).setAllScore(playerCardInfos.get(userId).getAllScore() + chip * 2);
             this.room.addUserSocre(userId, -chip * 2);
+
+            this.choumaList.add(chip);
+            this.choumaList.add(chip);
         } else {
             playerCardInfos.get(userId).setAllScore(playerCardInfos.get(userId).getAllScore() + chip);
             this.room.addUserSocre(userId, -chip);
+            this.choumaList.add(chip);
         }
 
         logger.info("{}", userId);
@@ -1337,14 +1360,20 @@ public class GameBaseYSZ extends Game {
         GameYSZVo vo = new GameYSZVo();
 
         this.extUserScores.clear();
-        for (Map.Entry<Long, Double> entry : this.room.userScores.entrySet()){
-            if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+
+            for (Map.Entry<Long, Double> entry : this.startUserScores.entrySet()){
                 this.extUserScores.put(entry.getKey(), entry.getValue());
-            }else {
+            }
+
+        }else {
+            for (Map.Entry<Long, Double> entry : this.room.userScores.entrySet()){
                 double gold = RedisManager.getUserRedisService().getUserGold(entry.getKey());
                 this.extUserScores.put(entry.getKey(), gold);
             }
         }
+
+        vo.getChoumaList().addAll(this.choumaList);
         vo.extUserScores = this.extUserScores;
 
         vo.cards = this.cards;
