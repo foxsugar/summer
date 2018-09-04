@@ -5,7 +5,9 @@ import com.code.server.constant.db.ChildCost;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.IChargeType;
 import com.code.server.constant.game.UserBean;
+import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
+import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.ChargeService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.dao.*;
@@ -1021,24 +1023,30 @@ public class DemoAction extends Cors {
 
     }
 
-    @DemoChecker
+//    @DemoChecker
     @RequestMapping("/dissolveRoom")
     public AgentResponse dissolveRoom(String roomId) {
         Map<String, Object> rs = new HashMap<>();
         AgentResponse agentResponse = new AgentResponse();
         agentResponse.setData(rs);
-        String gateId = RedisManager.getRoomRedisService().getServerId(roomId);
-        if (gateId != null) {
+        String serverId = RedisManager.getRoomRedisService().getServerId(roomId);
+        if (serverId == null) {
             rs.put("result", "no this room");
+            return agentResponse;
         }
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
         Map<String, Object> result = new HashMap<>();
         result.put("roomId", roomId);
-        msgProducer.send("roomService", "dissolveRoom", result);
+        KafkaMsgKey msgKey = new KafkaMsgKey();
+        msgKey.setUserId(0);
+        msgKey.setRoomId(roomId);
+        msgKey.setPartition(Integer.valueOf(serverId));
+        ResponseVo responseVo = new ResponseVo("roomService","dissolutionRoom",result);
+        msgProducer.send2Partition("roomService", Integer.valueOf(serverId),msgKey,responseVo);
 
         rs.put("result", "ok");
         return agentResponse;
-    }
+}
 
     //充值之后计算返利
     @RequestMapping("/testDemo")
