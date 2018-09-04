@@ -711,7 +711,7 @@ object HuWithHun {
     var result: util.List[Integer] = new util.ArrayList()
     val second = index match {
       case 8 => 0
-      case 17 => 1
+      case 17 => 9
       case 26 => 18
       case 30 => 27
       case 33 => 31
