@@ -1078,6 +1078,9 @@ public class DemoAction extends Cors {
         String serverId = RedisManager.getRoomRedisService().getServerId(roomId);
         if (serverId == null) {
             rs.put("result", "no this room");
+//            rs.put("")
+            agentResponse.setMsg("房间不存在");
+            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
             return agentResponse;
         }
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
