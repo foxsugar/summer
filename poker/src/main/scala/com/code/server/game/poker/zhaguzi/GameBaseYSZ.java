@@ -353,8 +353,8 @@ public class GameBaseYSZ extends Game {
 //            }
             chip = addChip / 2;
 
-            this.choumaList.add(chip);
-            this.choumaList.add(chip);
+//            this.choumaList.add(chip);
+//            this.choumaList.add(chip);
 
         } else {
 //            if(addChip!=chip+2 && addChip!=chip*2 && addChip!=chip*4 && addChip!=MAX_BET_NUM/2){
@@ -362,8 +362,11 @@ public class GameBaseYSZ extends Game {
 //            }
             chip = addChip;
 
-            this.choumaList.add(chip);
+//            this.choumaList.add(chip);
         }
+
+        List<Double> chouMaList = ArrUtils.transformChouMa(addChip, this.room.getGoldRoomType());
+        this.choumaList.addAll(chouMaList);
 
         playerCardInfos.get(userId).setAllScore(playerCardInfos.get(userId).getAllScore() + addChip);
 
@@ -432,12 +435,16 @@ public class GameBaseYSZ extends Game {
             playerCardInfos.get(userId).setAllScore(playerCardInfos.get(userId).getAllScore() + chip * 2);
             this.room.addUserSocre(userId, -chip * 2);
 
-            this.choumaList.add(chip);
-            this.choumaList.add(chip);
+//            this.choumaList.add(chip);
+//            this.choumaList.add(chip);
+            List<Double> chouMaList = ArrUtils.transformChouMa(chip * 2, this.room.getGoldRoomType());
+            this.choumaList.addAll(chouMaList);
         } else {
             playerCardInfos.get(userId).setAllScore(playerCardInfos.get(userId).getAllScore() + chip);
             this.room.addUserSocre(userId, -chip);
-            this.choumaList.add(chip);
+//            this.choumaList.add(chip);
+            List<Double> chouMaList = ArrUtils.transformChouMa(chip, this.room.getGoldRoomType());
+            this.choumaList.addAll(chouMaList);
         }
 
         logger.info("{}", userId);
