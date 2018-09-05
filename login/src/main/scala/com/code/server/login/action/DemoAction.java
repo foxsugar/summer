@@ -1,6 +1,7 @@
 package com.code.server.login.action;
 
 import com.code.server.constant.db.AgentInfo;
+import com.code.server.constant.db.AgentInfoRecord;
 import com.code.server.constant.db.ChildCost;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.IChargeType;
@@ -1112,6 +1113,21 @@ public class DemoAction extends Cors {
         return agentResponse;
 }
 
+    @RequestMapping("/upateAgentInfo")
+    public void updateAF(){
+
+        List<AgentUser> list = (List<AgentUser>) agentUserDao.findAll();
+
+        for (AgentUser agentUser : list){
+            AgentInfo agentInfo = new AgentInfo();
+            AgentInfoRecord agentInfoRecord = new AgentInfoRecord();
+            agentUser.setAgentInfo(agentInfo);
+            agentUser.setAgentInfoRecord(agentInfoRecord);
+            agentUserDao.save(agentUser);
+
+        }
+
+    }
     //充值之后计算返利
     @RequestMapping("/testDemo")
     public void testAgentInfo() {
