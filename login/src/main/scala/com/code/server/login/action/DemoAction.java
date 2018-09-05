@@ -995,6 +995,7 @@ public class DemoAction extends Cors {
     }
 
 //    @DemoChecker
+    @DemoChecker
     @RequestMapping("/fConstant")
     public AgentResponse getConstnat (){
 
@@ -1005,7 +1006,7 @@ public class DemoAction extends Cors {
         agentResponse.setData(rs);
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/uConstant")
     public AgentResponse modifyConstnat(@RequestParam("constantForm") String constantForm){
         Map<String, Object> rs = JsonUtil.readValue(constantForm, Map.class);
