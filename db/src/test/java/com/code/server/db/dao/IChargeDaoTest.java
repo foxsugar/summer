@@ -34,28 +34,12 @@ public class IChargeDaoTest {
 
     @Test
     public void test(){
-//        System.out.println(agentUserDao);
-//        System.out.println(agentUserDao.findAll());
-        Object o = agentUserDao.findAll();
-         List<AgentUser> list = (List<AgentUser>) agentUserDao.findAll();
+
+        List<AgentUser> list = (List<AgentUser>) agentUserDao.findAll();
 
         for (AgentUser agentUser : list){
             AgentInfo agentInfo = new AgentInfo();
             AgentInfoRecord agentInfoRecord = new AgentInfoRecord();
-            if (agentUser.getId() == 17){
-                ChildCost childCost1 = new ChildCost();
-                childCost1.firstLevel = 10;
-                childCost1.secondLevel = 5;
-                childCost1.setPartner(0d);
-                agentInfo.getEveryDayCost().put("2018-8-20", childCost1);
-
-                ChildCost childCost2 = new ChildCost();
-                childCost2.firstLevel = 12;
-                childCost2.secondLevel =6;
-                childCost1.setPartner(0d);
-                agentInfo.getEveryDayCost().put("2018-8-19", childCost2);
-            }
-
             agentUser.setAgentInfo(agentInfo);
             agentUser.setAgentInfoRecord(agentInfoRecord);
             agentUserDao.save(agentUser);

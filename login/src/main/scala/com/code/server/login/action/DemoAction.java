@@ -1,6 +1,7 @@
 package com.code.server.login.action;
 
 import com.code.server.constant.db.AgentInfo;
+import com.code.server.constant.db.AgentInfoRecord;
 import com.code.server.constant.db.ChildCost;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.IChargeType;
@@ -37,6 +38,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import sun.management.Agent;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -993,6 +995,7 @@ public class DemoAction extends Cors {
         return new AgentResponse(0, logRecordDao.findByIdIn(days));
     }
 
+//    @DemoChecker
     @DemoChecker
     @RequestMapping("/fConstant")
     public AgentResponse getConstnat (){
@@ -1004,12 +1007,25 @@ public class DemoAction extends Cors {
         agentResponse.setData(rs);
         return agentResponse;
     }
-
+    @DemoChecker
     @RequestMapping("/uConstant")
-    public AgentResponse modifyConstnat(ConstantFormVo constantForm){
-        System.out.println("===");
-        System.out.println(constantForm);
-        return null;
+    public AgentResponse modifyConstnat(@RequestParam("constantForm") String constantForm){
+        Map<String, Object> rs = JsonUtil.readValue(constantForm, Map.class);
+        ConstantFormVo vo = JsonUtil.readValue(constantForm, ConstantFormVo.class);
+        Constant constant = constantDao.findOne(1l);
+        constant.setInitMoney(vo.getInit_money());
+        constant.setAppleCheck(Integer.valueOf(vo.getApple_check()).intValue());
+        constant.setVersionOfAndroid(vo.getVersion_of_android());
+        constant.setVersionOfIos(vo.getVersion_of_ios());
+        constant.setMarquee(vo.getMarquee());
+        constant.setMarquee1(vo.getMarquee1());
+        constant.setMarquee2(vo.getMarquee2());
+        constant.setDownload2(vo.getDownload2());
+        constant.setDownload(vo.getDownload());
+        constantDao.save(constant);
+
+        AgentResponse agentResponse = new AgentResponse();
+        return agentResponse;
     }
 
     @DemoChecker
@@ -1069,7 +1085,7 @@ public class DemoAction extends Cors {
 
     }
 
-//    @DemoChecker
+    @DemoChecker
     @RequestMapping("/dissolveRoom")
     public AgentResponse dissolveRoom(String roomId) {
         Map<String, Object> rs = new HashMap<>();
@@ -1097,6 +1113,21 @@ public class DemoAction extends Cors {
         return agentResponse;
 }
 
+    @RequestMapping("/upateAgentInfo")
+    public void updateAF(){
+
+        List<AgentUser> list = (List<AgentUser>) agentUserDao.findAll();
+
+        for (AgentUser agentUser : list){
+            AgentInfo agentInfo = new AgentInfo();
+            AgentInfoRecord agentInfoRecord = new AgentInfoRecord();
+            agentUser.setAgentInfo(agentInfo);
+            agentUser.setAgentInfoRecord(agentInfoRecord);
+            agentUserDao.save(agentUser);
+
+        }
+
+    }
     //充值之后计算返利
     @RequestMapping("/testDemo")
     public void testAgentInfo() {
