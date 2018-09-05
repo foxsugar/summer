@@ -37,6 +37,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import sun.management.Agent;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -993,7 +994,7 @@ public class DemoAction extends Cors {
         return new AgentResponse(0, logRecordDao.findByIdIn(days));
     }
 
-    @DemoChecker
+//    @DemoChecker
     @RequestMapping("/fConstant")
     public AgentResponse getConstnat (){
 
@@ -1006,10 +1007,23 @@ public class DemoAction extends Cors {
     }
 
     @RequestMapping("/uConstant")
-    public AgentResponse modifyConstnat(ConstantFormVo constantForm){
-        System.out.println("===");
-        System.out.println(constantForm);
-        return null;
+    public AgentResponse modifyConstnat(@RequestParam("constantForm") String constantForm){
+        Map<String, Object> rs = JsonUtil.readValue(constantForm, Map.class);
+        ConstantFormVo vo = JsonUtil.readValue(constantForm, ConstantFormVo.class);
+        Constant constant = constantDao.findOne(1l);
+        constant.setInitMoney(vo.getInit_money());
+        constant.setAppleCheck(Integer.valueOf(vo.getApple_check()).intValue());
+        constant.setVersionOfAndroid(vo.getVersion_of_android());
+        constant.setVersionOfIos(vo.getVersion_of_ios());
+        constant.setMarquee(vo.getMarquee());
+        constant.setMarquee1(vo.getMarquee1());
+        constant.setMarquee2(vo.getMarquee2());
+        constant.setDownload2(vo.getDownload2());
+        constant.setDownload(vo.getDownload());
+        constantDao.save(constant);
+
+        AgentResponse agentResponse = new AgentResponse();
+        return agentResponse;
     }
 
     @DemoChecker
