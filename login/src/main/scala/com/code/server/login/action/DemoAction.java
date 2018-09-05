@@ -1084,7 +1084,7 @@ public class DemoAction extends Cors {
 
     }
 
-//    @DemoChecker
+    @DemoChecker
     @RequestMapping("/dissolveRoom")
     public AgentResponse dissolveRoom(String roomId) {
         Map<String, Object> rs = new HashMap<>();
