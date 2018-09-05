@@ -202,6 +202,7 @@ public class RoomInfo extends RoomInfoExtendGold {
                 return new GameInfoLuanGuaFeng();
             case "HONGZHONG":
             case "HONGZHONG2":
+            case "HONGZHONG3":
                 return new GameInfoHongZhong();
             default:
                 return new GameInfo();
@@ -232,7 +233,7 @@ public class RoomInfo extends RoomInfoExtendGold {
         if (this.gameType.equals("ZHONGXIN")) {
             this.gameType = "LQ";
         }
-        if (this.gameType.equals("THREEA") || this.gameType.equals("THREEA2") ) {
+        if (this.gameType.equals("THREEA") || this.gameType.equals("THREEA2") ||this.gameType.equals("THREEA3")) {
             this.gameType = "LQ";
         }
 
