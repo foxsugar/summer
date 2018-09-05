@@ -232,7 +232,7 @@ public class RoomInfo extends RoomInfoExtendGold {
         if (this.gameType.equals("ZHONGXIN")) {
             this.gameType = "LQ";
         }
-        if (this.gameType.equals("THREEA") || this.gameType.equals("THREEA2") ) {
+        if (this.gameType.equals("THREEA") || this.gameType.equals("THREEA2") ||this.gameType.equals("THREEA3")) {
             this.gameType = "LQ";
         }
 
