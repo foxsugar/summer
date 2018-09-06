@@ -34,6 +34,7 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
 
         this.TING_MIN_SCORE = 0;
         this.ZIMO_MIN_SCORE = 0;
+        this.DIANPAO_MIN_SCORE = 0;
     }
 
 
@@ -101,6 +102,9 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
         HuCardType huCardType = getMaxScoreHuCardType(huList);
         int score = huCardType.fan;
 
+        if (score == 0) {
+            score = 1;
+        }
         if (isZimo && huCardType.fan <= 9 && isHasMode(this.roomInfo.mode, HAS_HONGZHONG) && isHas4Hongzhong()) {
             this.winType.add(hu_四个红中);
             score = 10;

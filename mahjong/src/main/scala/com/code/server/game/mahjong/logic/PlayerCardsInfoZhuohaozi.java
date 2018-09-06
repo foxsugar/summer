@@ -44,6 +44,9 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         if (isTing) {
             return false;
         }
+        if (!this.roomInfo.haveTing) {
+            return false;
+        }
 
         List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(getCardsNoChiPengGang(cards), this.gameInfo.hun, this.getChiPengGangNum());
         for (HuCardType huCardType : huCardTypes) {
@@ -107,7 +110,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
     @Override
     public boolean isCanHu_dianpao(String card) {
-        if (!isTing) return false;
+        if (!isTing && this.roomInfo.haveTing) return false;
         //混牌 不能点炮
         int cardType = CardTypeUtil.getTypeByCard(card);
         if (this.gameInfo.hun.contains(cardType)) {
@@ -128,7 +131,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
     @Override
     public boolean isCanHu_zimo(String card) {
-        if (!isTing) return false;
+        if (!isTing && this.roomInfo.haveTing) return false;
         int lastCard = CardTypeUtil.getTypeByCard(card);
 
         List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), getChiPengGangNum(), this.gameInfo.hun, lastCard);
