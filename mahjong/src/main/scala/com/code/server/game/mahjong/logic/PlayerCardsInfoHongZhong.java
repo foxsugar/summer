@@ -19,6 +19,7 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
     public void init(List<String> cards) {
         super.init(cards);
 
+        specialHuScore.clear();
         if (isHasMode(this.roomInfo.mode, DA_HU)) {
 
             specialHuScore.put(hu_七小对, 9);
@@ -26,10 +27,9 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
 
             specialHuScore.put(hu_清一色, 9);
             specialHuScore.put(hu_一条龙, 9);
+            specialHuScore.put(hu_清龙, 9);
 
         }
-
-
 
 
         this.TING_MIN_SCORE = 0;
@@ -40,7 +40,41 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
 
     @Override
     public boolean isCanHu_dianpao(String card) {
-        return this.roomInfo.mustZimo == 0 && super.isCanHu_dianpao(card);
+        if( this.roomInfo.mustZimo == 1){
+            return false;
+        }
+
+        if (!isTing && this.roomInfo.haveTing) return false;
+        //混牌 不能点炮
+        int cardType = CardTypeUtil.getTypeByCard(card);
+        if (this.gameInfo.hun.contains(cardType)) {
+            return false;
+        }
+        List<String> temp = getCardsAddThisCard(card);
+        List<String> noPengAndGang = getCardsNoChiPengGang(temp);
+        int lastCard = CardTypeUtil.getTypeByCard(card);
+        List<HuCardType> huList = HuUtil.isHu(this, noPengAndGang, getChiPengGangNum(), this.gameInfo.hun, lastCard);
+        for (HuCardType huCardType : huList) {
+            if (getMaxPoint(huCardType, true) >= DIANPAO_MIN_SCORE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isCanHu_zimo(String card) {
+        if (!isTing && this.roomInfo.haveTing) return false;
+        int lastCard = CardTypeUtil.getTypeByCard(card);
+
+        List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), getChiPengGangNum(), this.gameInfo.hun, lastCard);
+        for (HuCardType huCardType : huList) {
+            if (getMaxPoint(huCardType, false) >= ZIMO_MIN_SCORE) {
+                return true;
+            }
+        }
+        return false;
+
     }
 
     @Override
@@ -74,7 +108,7 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
             this.roomInfo.addUserSocre(diangangUser, -score);
             allScore += score;
         } else {
-            score = isMing?this.roomInfo.getMultiple():2*this.roomInfo.getMultiple();
+            score = isMing ? this.roomInfo.getMultiple() : 2 * this.roomInfo.getMultiple();
             for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
                 if (playerCardsInfoMj.userId != this.userId) {
                     playerCardsInfoMj.addScore(-score);
@@ -90,7 +124,6 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
     }
 
 
-
     @Override
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
 
@@ -102,6 +135,7 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
         HuCardType huCardType = getMaxScoreHuCardType(huList);
         int score = huCardType.fan;
 
+        this.winType.addAll(huCardType.specialHuList);
         if (score == 0) {
             score = 1;
         }
@@ -134,7 +168,7 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
 
     }
 
-    private boolean isHas4Hongzhong(){
-        return this.cards.stream().filter(card->CardTypeUtil.getTypeByCard(card) == 31).count() == 4;
+    private boolean isHas4Hongzhong() {
+        return this.cards.stream().filter(card -> CardTypeUtil.getTypeByCard(card) == 31).count() == 4;
     }
 }

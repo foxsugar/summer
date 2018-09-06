@@ -174,21 +174,27 @@ object HuWithHun {
 
     if (playerCardsInfoMj.getSpecialHuScore.containsKey(HuType.hu_一条龙) && isYiTiaoLong(huCardType, hun, lastCard)) {
       huCardType.specialHuList.add(HuType.hu_一条龙)
+      huCardType.fan += playerCardsInfoMj.getSpecialHuScore.get(HuType.hu_一条龙)
 
       //      huList.add(playerCardsInfoMj.getSpecialHuScore.get(HuType.hu_一条龙))
     }
 
-    if (playerCardsInfoMj.getSpecialHuScore.containsKey(HuType.hu_清一色) && isQingYiSe(huCardType, noHuncards, hun, lastCard)) {
+    if (playerCardsInfoMj.getSpecialHuScore.containsKey(HuType.hu_清一色) && isQingYiSe(playerCardsInfoMj,huCardType, noHuncards, hun, lastCard)) {
       //      huList.add(playerCardsInfoMj.getSpecialHuScore.get(HuType.hu_清一色))
       huCardType.specialHuList.add(HuType.hu_清一色)
+      huCardType.fan += playerCardsInfoMj.getSpecialHuScore.get(HuType.hu_清一色)
     }
-    if(playerCardsInfoMj.getSpecialHuScore.containsKey(HuType.hu_清龙) && isQingLong(huCardType, noHuncards, hun, lastCard)) {
+    if(playerCardsInfoMj.getSpecialHuScore.containsKey(HuType.hu_清龙) && isQingLong(playerCardsInfoMj,huCardType, noHuncards, hun, lastCard)) {
       huCardType.specialHuList.add(HuType.hu_清龙)
+      huCardType.fan += playerCardsInfoMj.getSpecialHuScore.get(HuType.hu_清龙)
     }
     if (playerCardsInfoMj.getSpecialHuScore.containsKey(HuType.hu_吊将) && isDiaoJiang(huCardType, hun, lastCard)) {
       //      huList.add(playerCardsInfoMj.getSpecialHuScore.get(HuType.hu_吊将))
       huCardType.specialHuList.add(HuType.hu_吊将)
+      huCardType.fan += playerCardsInfoMj.getSpecialHuScore.get(HuType.hu_吊将)
     }
+
+    huCardType.fan = huCardType.clearRepeat(playerCardsInfoMj, huCardType.fan)
 
 
     //    var l = huList.stream().filter(i => playerCardsInfoMj.isHasSpecialHu(i)).collect(Collectors.toList())
@@ -355,24 +361,32 @@ object HuWithHun {
     //    getMaxHuType(huList)
   }
 
-  def isQingYiSe(huCardType: HuCardType, noHuncards: Array[Int], hun: util.List[Integer], lastCard: Int): Boolean = {
+  def isQingYiSe(playerCardsInfoMj: PlayerCardsInfoMj,huCardType: HuCardType, noHuncards: Array[Int], hun: util.List[Integer], lastCard: Int): Boolean = {
     val set = new util.HashSet[Integer]
-    for(cardType <- huCardType.anGang.asScala){
+    for(cardType <- playerCardsInfoMj.getAnGangType.asScala){
       val group = CardTypeUtil.getCardGroupByCardType(cardType)
       if (group == CardTypeUtil.GROUP_FENG || group == CardTypeUtil.GROUP_ZI) {
         return false
       }
       set.add(group)
     }
-    for(cardType <- huCardType.mingGang.asScala) {
+    for(cardType <- playerCardsInfoMj.getMingGangType.keySet.asScala) {
       val group = CardTypeUtil.getCardGroupByCardType(cardType)
       if (group == CardTypeUtil.GROUP_FENG || group == CardTypeUtil.GROUP_ZI) {
         return false
       }
       set.add(group)
     }
-    for(cardType <- huCardType.peng.asScala) {
+    for(cardType <- playerCardsInfoMj.getPengType.keySet().asScala) {
       val group = CardTypeUtil.getCardGroupByCardType(cardType)
+      if (group == CardTypeUtil.GROUP_FENG || group == CardTypeUtil.GROUP_ZI) {
+        return false
+      }
+      set.add(group)
+    }
+
+    for(cardTypeStr <- playerCardsInfoMj.getChiCards.asScala) {
+      val group = CardTypeUtil.getCardGroup(cardTypeStr.get(0))
       if (group == CardTypeUtil.GROUP_FENG || group == CardTypeUtil.GROUP_ZI) {
         return false
       }
@@ -397,8 +411,8 @@ object HuWithHun {
   }
 
 
-  def isQingLong(huCardType: HuCardType,noHuncards: Array[Int], hun: util.List[Integer], lastCard: Int): Boolean ={
-    return isYiTiaoLong(huCardType,hun, lastCard) && isQingYiSe(huCardType, noHuncards, hun, lastCard)
+  def isQingLong(playerCardsInfoMj: PlayerCardsInfoMj,huCardType: HuCardType,noHuncards: Array[Int], hun: util.List[Integer], lastCard: Int): Boolean ={
+    return isYiTiaoLong(huCardType,hun, lastCard) && isQingYiSe(playerCardsInfoMj,huCardType, noHuncards, hun, lastCard)
   }
   /**
     * 获得龙的牌型
