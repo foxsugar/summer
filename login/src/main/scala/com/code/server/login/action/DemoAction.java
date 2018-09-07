@@ -951,6 +951,7 @@ public class DemoAction extends Cors {
         return agentResponse;
     }
 
+    @DemoChecker
     @RequestMapping("/info")
     public AgentResponse userInfo(String token) {
         //todo token 验证
