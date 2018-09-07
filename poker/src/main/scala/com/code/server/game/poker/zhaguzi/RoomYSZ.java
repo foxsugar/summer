@@ -472,6 +472,7 @@ public class RoomYSZ extends RoomExtendGold {
 
     @Override
     public int getReady(long userId) {
+        this.personNumber = 4;
         int rtn = super.getReady(userId);
         if (rtn == 0) {
             this.lastReadyTime = System.currentTimeMillis();
