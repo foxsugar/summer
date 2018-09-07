@@ -21,6 +21,7 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
     @Override
     public void init(List<String> cards) {
 
+        specialHuScore.clear();
         this.cards = cards;
         isHasTing = true;
 

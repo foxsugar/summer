@@ -1092,18 +1092,32 @@ public class GameClubService {
 
     private static ClubStatistics getClubStatistics(Club club) {
         String date = LocalDate.now().toString();
-        club.getStatistics().getStatistics().putIfAbsent(date, new ClubStatistics());
-        return club.getStatistics().getStatistics().get(date);
+        System.out.println("club = " + club);
+        System.out.println("date = " + date);
+        ClubStatistics clubStatistics = club.getStatistics().getStatistics().get(date);
+        if (clubStatistics == null) {
+            System.out.println("clubStatistics is null =============== ");
+            clubStatistics = new ClubStatistics();
+        }
+        club.getStatistics().getStatistics().put(date, clubStatistics);
+        return clubStatistics;
+//        return club.getStatistics().getStatistics().get(date);
     }
 
     private void addStatisticeOpenNum(Club club, int num) {
         ClubStatistics clubStatistics = getClubStatistics(club);
+        System.out.println("之前的局数 " + clubStatistics.getOpenNum());
         clubStatistics.setOpenNum(clubStatistics.getOpenNum() + num);
+        System.out.println("之后的局数 " + clubStatistics.getOpenNum());
     }
 
     private static void addStatisticeConsume(Club club, int num) {
         ClubStatistics clubStatistics = getClubStatistics(club);
+        System.out.println("clubStatistics " + clubStatistics);
+        System.out.println("之前的消耗 " + clubStatistics.getConsumeNum());
         clubStatistics.setConsumeNum(clubStatistics.getConsumeNum() + num);
+        System.out.println("之后的消耗 " + clubStatistics.getConsumeNum());
+
     }
 
     private void addStatisticePlayer(Club club, List<Long> users) {
