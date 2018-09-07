@@ -48,13 +48,19 @@ public class IdWorker {
     }
     public static void main(String[] args) {
 
-//        System.out.println(nextId());
-        IdWorker idWorker = new IdWorker(1,1);
-        System.out.println(idWorker.nextId());
-        System.out.println(idWorker.nextId());
-        System.out.println(idWorker.nextId());
-        System.out.println(idWorker.nextId());
-        System.out.println(idWorker.nextId());
+////        System.out.println(nextId());
+//        IdWorker idWorker = new IdWorker(1,1);
+//        System.out.println(idWorker.nextId());
+//        System.out.println(idWorker.nextId());
+//        System.out.println(idWorker.nextId());
+//        System.out.println(idWorker.nextId());
+//        System.out.println(idWorker.nextId());
+
+
+        for(int i=0;i<10;i++){
+
+            System.out.println(IdWorker.getDefaultInstance().nextId());
+        }
     }
 
 

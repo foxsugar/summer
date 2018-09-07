@@ -45,6 +45,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
             return false;
         }
 
+
         List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(getCardsNoChiPengGang(cards), this.gameInfo.hun, this.getChiPengGangNum());
         for (HuCardType huCardType : huCardTypes) {
             int point = getMaxPoint(huCardType, false);
@@ -107,7 +108,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
     @Override
     public boolean isCanHu_dianpao(String card) {
-        if (!isTing) return false;
+        if (!isTing ) return false;
         //混牌 不能点炮
         int cardType = CardTypeUtil.getTypeByCard(card);
         if (this.gameInfo.hun.contains(cardType)) {

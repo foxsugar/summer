@@ -216,11 +216,11 @@ public class HuUtil implements HuType {
             //设置胡的类型
             HuCardType.setHuCardType(huCardType, playerCardsInfo);
             huCardType.tingCardType = lastCard;
-            for (Integer huType : huCardType.specialHuList) {
-                if (playerCardsInfo.getSpecialHuScore().containsKey(huType)) {
-                    huCardType.fan += playerCardsInfo.getSpecialHuScore().get(huType);
-                }
-            }
+//            for (Integer huType : huCardType.specialHuList) {
+//                if (playerCardsInfo.getSpecialHuScore().containsKey(huType)) {
+//                    huCardType.fan += playerCardsInfo.getSpecialHuScore().get(huType);
+//                }
+//            }
         }
         if (huList.size() > 0) {
 //            System.out.println("hello");

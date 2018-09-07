@@ -472,12 +472,51 @@ public class RoomYSZ extends RoomExtendGold {
 
     @Override
     public int getReady(long userId) {
-        int rtn = super.getReady(userId);
-        if (rtn == 0) {
-            this.lastReadyTime = System.currentTimeMillis();
+
+        if (!this.users.contains(userId)) {
+            return ErrorCode.CANNOT_FIND_THIS_USER;
         }
+        if (isInGame) {
+            return ErrorCode.CANNOT_FIND_THIS_USER;
+        }
+
+        this.userStatus.put(userId, STATUS_READY);
+
+        int readyNum = 0;
+        for (Map.Entry<Long, Integer> entry : this.userStatus.entrySet()) {
+            if (entry.getValue() == STATUS_READY) {
+                readyNum += 1;
+            }
+        }
+
+        //通知客户端谁是否准备
+        Map<String, Integer> userStatus = new HashMap<>();
+        for (Long i : this.userStatus.keySet()) {
+            userStatus.put(i + "", this.userStatus.get(i));
+        }
+        NoticeReady noticeReady = new NoticeReady();
+        noticeReady.setUserStatus(userStatus);
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "noticeReady", noticeReady), this.users);
+
+        //开始游戏 房卡场直接开始 金币场走倒计时
+
+        if (readyNum >= personNumber && !isGoldRoom()) {
+            startGame();
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "getReady", 0), userId);
+        if (isGoldRoom()) {
+            MsgSender.sendMsg2Player(new ResponseVo("roomService", "getReadyGoldRoom", 0), userId);
+        }
+
+
+
+
+
+
+            this.lastReadyTime = System.currentTimeMillis();
+
         isTickTimer();
-        return rtn;
+        return 0;
     }
 
     public void isTickTimer(){

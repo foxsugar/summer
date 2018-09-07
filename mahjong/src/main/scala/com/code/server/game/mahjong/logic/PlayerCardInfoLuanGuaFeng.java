@@ -181,6 +181,7 @@ public class PlayerCardInfoLuanGuaFeng extends PlayerCardsInfoMj {
         if (isBao) {
             PlayerCardsInfoMj dianPao = this.gameInfo.getPlayerCardsInfos().get(dianpaoUser);
             dianPao.addScore(-allScore);
+            this.roomInfo.addUserSocre(dianPao.getUserId(), -allScore);
 
         }
 
