@@ -472,10 +472,6 @@ public class RoomYSZ extends RoomExtendGold {
 
     @Override
     public int getReady(long userId) {
-        this.personNumber = 4;
-
-
-
 
         if (!this.users.contains(userId)) {
             return ErrorCode.CANNOT_FIND_THIS_USER;
@@ -502,7 +498,8 @@ public class RoomYSZ extends RoomExtendGold {
         noticeReady.setUserStatus(userStatus);
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "noticeReady", noticeReady), this.users);
 
-        //开始游戏
+        //开始游戏 房卡场直接开始 金币场走倒计时
+
         if (readyNum >= personNumber && !isGoldRoom()) {
             startGame();
         }
