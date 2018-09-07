@@ -557,6 +557,14 @@ public class GameBaseYSZ extends Game {
         return 0;
     }
 
+    public boolean checkCanKill(long askerId, long accepterId){
+
+        if (aliveUser.contains(askerId) && aliveUser.contains(accepterId)){
+            return true;
+        }
+        return false;
+    }
+
     /**
      * 比牌
      *
@@ -564,10 +572,16 @@ public class GameBaseYSZ extends Game {
      */
     public int kill(long askerId, long accepterId) {
 
+
         if (check(askerId) == false){
 
             return ErrorCode.NOT_YOU_TURN;
         }
+
+        if (checkCanKill(askerId, accepterId) == false){
+            return ErrorCode.NOT_KILL;
+        }
+
 
         logger.info(askerId + "  比 牌: " + chip);
 
