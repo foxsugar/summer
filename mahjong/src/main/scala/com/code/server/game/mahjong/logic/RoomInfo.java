@@ -345,6 +345,9 @@ public class RoomInfo extends RoomInfoExtendGold {
             drawBack();
             GameTimer.removeNode(this.prepareRoomTimerNode);
         }
+        if (isClubRoom() && !this.isInGame && this.curGameNumber == 1 && this.users.size() == 0) {
+            clubDrawBack();
+        }
 
         if (isChange && gameInfo != null) {
             gameInfo.genRecord();

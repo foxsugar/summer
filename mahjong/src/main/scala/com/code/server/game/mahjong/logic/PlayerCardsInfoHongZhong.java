@@ -103,7 +103,7 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
         int score = 0;
         if (diangangUser != -1) {
             PlayerCardsInfoMj dianPao = this.gameInfo.getPlayerCardsInfos().get(diangangUser);
-            score = 3 * this.roomInfo.getMultiple();
+            score = (this.roomInfo.getPersonNumber() - 1) * this.roomInfo.getMultiple();
             dianPao.addScore(-score);
             this.roomInfo.addUserSocre(diangangUser, -score);
             allScore += score;
@@ -137,8 +137,9 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
 
         this.winType.addAll(huCardType.specialHuList);
         if (score == 0) {
-            score = 1;
+            score = isZimo?2:3;
         }
+
         if (isZimo && huCardType.fan <= 9 && isHasMode(this.roomInfo.mode, HAS_HONGZHONG) && isHas4Hongzhong()) {
             this.winType.add(hu_四个红中);
             score = 10;
