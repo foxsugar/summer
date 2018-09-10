@@ -378,6 +378,11 @@ public class RoomYSZ extends RoomExtendGold {
 
         isTickTimer();
 
+        if (this.game != null && this.isInGame){
+            GameYSZ gameYSZ = (GameYSZ) this.game;
+            gameYSZ.updateAliveUsers();
+        }
+
     }
 
     public void spendMoney() {

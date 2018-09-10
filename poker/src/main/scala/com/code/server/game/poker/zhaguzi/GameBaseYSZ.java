@@ -175,6 +175,13 @@ public class GameBaseYSZ extends Game {
 
     }
 
+    public void updateAliveUsers(){
+        Map<String, Object> result = new HashMap<>();
+        result.put("aliveUser", this.aliveUser);
+        ResponseVo vo = new ResponseVo("gameService", "updateAliveUser", result);
+        MsgSender.sendMsg2Player(vo, users);
+    }
+
     public void init(List<Long> users) {
         //初始化玩家
         for (Long uid : users) {
