@@ -562,6 +562,11 @@ public class RoomYSZ extends RoomExtendGold {
         super.noticeQuitRoom(userId);
         this.lastReadyTime = System.currentTimeMillis();
         this.isTickTimer();
+
+        if (this.game != null && this.isInGame){
+            GameYSZ gameYSZ = (GameYSZ) this.game;
+            gameYSZ.updateAliveUsers();
+        }
     }
 
     public Map<Long, Integer> getBaoziNum() {
