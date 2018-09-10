@@ -1001,11 +1001,11 @@ public class GameClubService {
                     if (clubStatistics == null) {
                         clubStatistics = new ClubStatistics();
                     }
-                    clubStatistics.setOpenNum(clubStatistics.getOpenNum() + 1);
-                    clubStatistics.setConsumeNum(clubStatistics.getConsumeNum() + roomModel.getMoney());
-                    roomModel.getStatisticsMap().put(today, clubStatistics);
-                    //删除七天前的
-                    roomModel.getStatisticsMap().remove(LocalDate.now().minusDays(7).toString());
+//                    clubStatistics.setOpenNum(clubStatistics.getOpenNum() + 1);
+//                    clubStatistics.setConsumeNum(clubStatistics.getConsumeNum() + roomModel.getMoney());
+//                    roomModel.getStatisticsMap().put(today, clubStatistics);
+//                    //删除七天前的
+//                    roomModel.getStatisticsMap().remove(LocalDate.now().minusDays(7).toString());
 
                 }
 
@@ -1022,10 +1022,10 @@ public class GameClubService {
                     ClubMember clubMember = club.getClubInfo().getMember().get("" + userId);
                     if (clubMember != null) {
 
-                        ClubStatistics clubStatistics = clubMember.getStatistics().getOrDefault(date, new ClubStatistics());
-                        club.getStatistics().getStatistics().put(date, clubStatistics);
-                        clubStatistics.setOpenNum(clubStatistics.getOpenNum() + 1);
-                        clubMember.getStatistics().remove(removeDate);
+//                        ClubStatistics clubStatistics = clubMember.getStatistics().getOrDefault(date, new ClubStatistics());
+//                        club.getStatistics().getStatistics().put(date, clubStatistics);
+//                        clubStatistics.setOpenNum(clubStatistics.getOpenNum() + 1);
+//                        clubMember.getStatistics().remove(removeDate);
                     }
                 }
             }
@@ -1092,14 +1092,16 @@ public class GameClubService {
 
     private static ClubStatistics getClubStatistics(Club club) {
         String date = LocalDate.now().toString();
+
         System.out.println("club = " + club);
         System.out.println("date = " + date);
         ClubStatistics clubStatistics = club.getStatistics().getStatistics().get(date);
+        System.out.println("statistis = " + clubStatistics);
         if (clubStatistics == null) {
             System.out.println("clubStatistics is null =============== ");
             clubStatistics = new ClubStatistics();
+            club.getStatistics().getStatistics().put(date, clubStatistics);
         }
-        club.getStatistics().getStatistics().put(date, clubStatistics);
         return clubStatistics;
 //        return club.getStatistics().getStatistics().get(date);
     }
@@ -1252,9 +1254,12 @@ public class GameClubService {
 
                     //统计减去消耗
                     String today = LocalDate.now().toString();
-                    ClubStatistics clubStatistics = roomModel.getStatisticsMap().get(today);
+//                    ClubStatistics clubStatistics = roomModel.getStatisticsMap().getget(today);
+                    ClubStatistics clubStatistics = getClubStatistics(club);
                     if (clubStatistics != null) {
-                        clubStatistics.setConsumeNum(clubStatistics.getConsumeNum() - roomModel.getMoney());
+//                        clubStatistics.setConsumeNum(clubStatistics.getConsumeNum() - roomModel.getMoney());
+                        addStatisticeConsume(club, -roomModel.getMoney());
+                        club.getStatistics().setConsume(club.getStatistics().getConsume() - roomModel.getMoney());
                     }
                 }
             }
