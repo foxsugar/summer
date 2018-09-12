@@ -1329,6 +1329,9 @@ public class GameClubService {
             for (String s : removeList) {
                 RoomModel roomModel = getRoomModel(club, s);
 
+                if (roomModel == null) {
+                    continue;
+                }
                 createRoom(club, roomModel);
                 //减钱
                 int moneyNow = club.getMoney() - roomModel.getMoney();
