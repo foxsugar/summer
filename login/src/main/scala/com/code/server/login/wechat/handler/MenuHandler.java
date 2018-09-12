@@ -145,7 +145,7 @@ public class MenuHandler extends AbstractHandler {
             //gameAgent 是否已经生成ticket
             AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
             //金额小于 100 不能提
-            if (agentBean.getRebate() < 10) {
+            if (agentBean.getRebate() < 1) {
                 return new TextBuilder().build("金额小于100,不能提现", wxMessage, wxService);
             }
 
