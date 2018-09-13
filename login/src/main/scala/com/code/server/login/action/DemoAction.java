@@ -18,6 +18,7 @@ import com.code.server.login.anotation.DemoChecker;
 import com.code.server.login.service.AgentService;
 import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.HomeService;
+import com.code.server.login.service.ServerManager;
 import com.code.server.login.util.AgentUtil;
 import com.code.server.login.util.MD5Util;
 import com.code.server.login.vo.ConstantFormVo;
@@ -1025,6 +1026,10 @@ public class DemoAction extends Cors {
         constant.setDownload2(vo.getDownload2());
         constant.setDownload(vo.getDownload());
         constantDao.save(constant);
+
+        //刷新内存
+        ServerManager.constant = constantDao.findOne(1L);
+
 
         AgentResponse agentResponse = new AgentResponse();
         return agentResponse;
