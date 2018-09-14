@@ -201,6 +201,8 @@ public class RoomInfo extends RoomInfoExtendGold {
             case "LUANGUAF":
                 return new GameInfoLuanGuaFeng();
             case "HONGZHONG":
+            case "HONGZHONG2":
+            case "HONGZHONG3":
                 return new GameInfoHongZhong();
             default:
                 return new GameInfo();
@@ -231,7 +233,7 @@ public class RoomInfo extends RoomInfoExtendGold {
         if (this.gameType.equals("ZHONGXIN")) {
             this.gameType = "LQ";
         }
-        if (this.gameType.equals("THREEA")) {
+        if (this.gameType.equals("THREEA") || this.gameType.equals("THREEA2") ||this.gameType.equals("THREEA3")) {
             this.gameType = "LQ";
         }
 
@@ -342,6 +344,9 @@ public class RoomInfo extends RoomInfoExtendGold {
         if ((this.isInGame || !isCreaterJoin) && this.curGameNumber == 1 && !isChange) {
             drawBack();
             GameTimer.removeNode(this.prepareRoomTimerNode);
+        }
+        if (isClubRoom() && !this.isInGame && this.curGameNumber == 1 && this.users.size() == 0) {
+            clubDrawBack();
         }
 
         if (isChange && gameInfo != null) {

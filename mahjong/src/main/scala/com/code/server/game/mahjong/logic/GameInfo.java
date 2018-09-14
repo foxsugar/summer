@@ -351,11 +351,16 @@ public class GameInfo extends Game {
                  ("LQ2".equals(gameType) && "2".equals(modeTotal)) ||
                 ("HL".equals(gameType) && "2".equals(modeTotal)) ||
                 ("THREEA".equals(gameType) && "2".equals(modeTotal)) ||
+                ("THREEA2".equals(gameType) && "2".equals(modeTotal)) ||
+                ("THREEA3".equals(gameType) && "2".equals(modeTotal)) ||
                 "SS".equals(gameType) ||
                 "HS".equals(gameType)||
                 "KXHY".equals(gameType)||
                 "KXZHZ".equals(gameType)||
                 "XYKD".equals(gameType)||
+                "HONGZHONG".equals(gameType)||
+                "HONGZHONG2".equals(gameType)||
+                "HONGZHONG3".equals(gameType)||
                 "KXKD".equals(gameType);
     }
 

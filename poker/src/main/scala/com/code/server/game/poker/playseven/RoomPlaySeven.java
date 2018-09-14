@@ -167,38 +167,7 @@ public class RoomPlaySeven extends Room {
         this.roomLastTime = roomLastTime;
     }
 
-    @Override
-    public int joinRoom(long userId, boolean isJoin) {
 
-        if (isClubRoom() && userId == 0) {
-            return 0;
-        }
-        if (userId == 0) {
-            return ErrorCode.JOIN_ROOM_USERID_IS_0;
-        }
-        if (this.users.contains(userId)) {
-            return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;
-        }
-        if (this.users.size() >= this.personNumber) {
-            return ErrorCode.CANNOT_JOIN_ROOM_IS_FULL;
-
-        }
-        if (RedisManager.getUserRedisService().getRoomId(userId) != null) {
-            return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;
-        }
-        if (!isCanJoinCheckMoney(userId)) {
-            return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
-        }
-
-
-        if (isJoin) {
-            roomAddUser(userId);
-            //加进玩家-房间映射表
-            noticeJoinRoom(userId);
-        }
-
-        return 0;
-    }
 
     @Override
     public void noticeJoinRoom(long userId) {

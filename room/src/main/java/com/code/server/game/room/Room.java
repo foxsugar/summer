@@ -195,7 +195,7 @@ public class Room implements IfaceRoom {
     /**
      * 俱乐部找钱
      */
-    private void clubDrawBack() {
+    public void clubDrawBack() {
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
         KafkaMsgKey kafkaKey = new KafkaMsgKey();
         kafkaKey.setUserId(0);
@@ -670,6 +670,9 @@ public class Room implements IfaceRoom {
             drawBack();
             GameTimer.removeNode(this.prepareRoomTimerNode);
         }
+        if (isClubRoom() && !this.isInGame && this.curGameNumber == 1 && this.users.size() == 0) {
+            clubDrawBack();
+        }
         this.isInGame = false;
 
         // 存储返回
@@ -734,10 +737,6 @@ public class Room implements IfaceRoom {
         } else {
             RedisManager.getUserRedisService().addUserMoney(this.createUser, createNeedMoney);
             if (isAddGold()) RedisManager.addGold(this.createUser, -createNeedMoney / 10);
-        }
-        //俱乐部房间退钱
-        if (isClubRoom()) {
-            clubDrawBack();
         }
     }
 

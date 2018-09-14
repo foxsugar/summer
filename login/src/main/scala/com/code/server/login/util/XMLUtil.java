@@ -4,6 +4,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.xml.sax.SAXException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
@@ -42,11 +43,13 @@ public class XMLUtil {
      * @throws DocumentException
      * @throws IOException
      */
-    public static Map<String, String> parseInputStreamToMap(InputStream inputStream) throws DocumentException, IOException {
+    public static Map<String, String> parseInputStreamToMap(InputStream inputStream) throws DocumentException, IOException, SAXException {
         // 解析结果存储在HashMap中
         Map<String, String> map = new HashMap<String, String>();
         // 读取输入流
         SAXReader reader = new SAXReader();
+        //fix 微信支付 XXE漏洞
+        reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         Document document = reader.read(inputStream);
         //得到xml根元素
         Element root = document.getRootElement();
@@ -58,6 +61,11 @@ public class XMLUtil {
         }
         //释放资源
         inputStream.close();
+
+
+
+
+
         return map;
     }
 

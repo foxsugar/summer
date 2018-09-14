@@ -21,6 +21,7 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
     @Override
     public void init(List<String> cards) {
 
+        specialHuScore.clear();
         this.cards = cards;
         isHasTing = true;
 
@@ -49,7 +50,7 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
     @Override
     public boolean isCanHu_dianpao(String card) {
 
-        if (!isTing) return false;
+        if (!isTing && this.roomInfo.haveTing) return false;
 
         List<String> tempList = new ArrayList<>();
         tempList.addAll(cards);
@@ -68,7 +69,7 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
     @Override
     public boolean isCanHu_zimo(String card) {
 
-        if (!isTing) return false;
+        if (!isTing && this.roomInfo.haveTing) return false;
 
         List<String> cs = getCardsNoChiPengGang(cards);
         System.out.println("检测是否可胡自摸= " + cs );
@@ -98,7 +99,7 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
 
     @Override
     public boolean isCanTing(List<String> cards) {
-        if (isTing) {
+        if (isTing || !this.roomInfo.haveTing) {
             return false;
         }
         List<HuCardType> list = getTingHuCardType(getCardsNoChiPengGang(cards), new HuLimit(0));

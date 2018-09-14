@@ -238,7 +238,156 @@ public class ArrUtils {
                 return ret;  
             }  
         });  
-    }  
+    }
+
+
+    public static List<Double> transformChouMa(double chouma, int roomType){
+
+        List<Double> result = new ArrayList<>();
+
+        if (roomType == 50){
+            //50
+            if (chouma == 50d){
+                result.add(50d);
+            }else if (chouma == 100d){
+                result.add(100d);
+            }else if (chouma == 150d){
+                result.add(50d);
+                result.add(100d);
+            }else if (chouma == 200d){
+                result.add(200d);
+            }else if (chouma == 250d){
+                result.add(50d);
+                result.add(200d);
+            }else if (chouma == 300d){
+                result.add(300d);
+            }else if (chouma == 500d){
+                result.add(500d);
+            }else if (chouma == 400d){
+                result.add(300d);
+                result.add(100d);
+            }
+
+        }else if (roomType == 100){
+
+            //100
+            if (chouma == 100d){
+                result.add(100d);
+            }else if (chouma == 200d){
+                result.add(200d);
+            }else if (chouma == 300d){
+                result.add(100d);
+                result.add(200d);
+            }else if (chouma == 400d){
+                result.add(100d);
+                result.add(300d);
+            }else if (chouma == 500d){
+                result.add(500d);
+            }else if (chouma == 600d){
+                result.add(100d);
+                result.add(500d);
+            }else if(chouma == 800d){
+                result.add(300d);
+                result.add(500d);
+            }else if (chouma == 1000d){
+                result.add(1000d);
+            }
+
+        }else if (roomType == 200){
+
+            //200
+            if (chouma == 2000d){
+                result.add(200d);
+            }else if (chouma == 400d){
+                result.add(100d);
+                result.add(300d);
+            }else if (chouma == 600d){
+                result.add(100d);
+                result.add(500d);
+            }else if (chouma == 800d){
+                result.add(500d);
+                result.add(300d);
+            }else if (chouma == 1000d){
+                result.add(1000d);
+            }else if (chouma == 1200d){
+                result.add(1000d);
+                result.add(200d);
+            }else if (chouma == 1600d){
+                result.add(1000d);
+                result.add(5000d);
+                result.add(100d);
+            }else if (chouma == 2000d){
+                result.add(2000d);
+            }
+
+        }else if (roomType == 500){
+
+            if (chouma == 500d){
+                result.add(500d);
+            }
+
+            if (chouma == 1000d){
+                result.add(1000d);
+            }
+            //500
+            if (chouma == 800d){
+                result.add(300d);
+                result.add(500d);
+            }else if (chouma == 1200d){
+                result.add(1000d);
+                result.add(200d);
+            }else if (chouma == 1600d){
+                result.add(1000d);
+                result.add(500d);
+                result.add(100d);
+            }else if (chouma == 2000d){
+                result.add(2000d);
+            }else if (chouma == 2400d){
+                result.add(2000d);
+                result.add(300d);
+                result.add(100d);
+            }else if (chouma == 3200d){
+                result.add(2000d);
+                result.add(1000d);
+                result.add(200d);
+            }else if (chouma == 4000d){
+                result.add(2000d);
+                result.add(2000d);
+            }
+
+        }else {
+
+            //房卡
+            if (chouma == 1d){
+                result.add(1d);
+            }else if (chouma == 2d){
+                result.add(2d);
+            }else if (chouma == 3d){
+                result.add(1d);
+                result.add(2d);
+            }else if (chouma == 4d){
+                result.add(2d);
+                result.add(2d);
+            }else if (chouma == 5d){
+                result.add(5d);
+            }else if (chouma == 6d){
+                result.add(1d);
+                result.add(5d);
+            }else if (chouma == 8d){
+                result.add(1d);
+                result.add(2d);
+                result.add(5d);
+            }else if (chouma == 10d){
+                result.add(10d);
+            }
+
+        }
+
+        System.out.println("=========" + "roomType is" + roomType + "chouma is" + chouma);
+
+        return result;
+
+    }
       
     /** 
      * 给list的每个属性都指定是升序还是降序 
