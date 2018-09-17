@@ -218,6 +218,7 @@ public class WechatAction extends Cors {
                           @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
         try {
+            logger.info("------------- 点击分享链接-----------" );
             wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
             WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
 
