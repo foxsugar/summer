@@ -298,19 +298,24 @@ public class WechatAction extends Cors {
                 }
             }
 
-            wxMpService.getKefuService().sendKefuMessage(
-                    WxMpKefuMessage
-                            .TEXT()
-                            .toUser(agentBean.getOpenId())
-                            .content(sb.toString())
-                            .build());
+            try {
+
+                wxMpService.getKefuService().sendKefuMessage(
+                        WxMpKefuMessage
+                                .TEXT()
+                                .toUser(agentBean.getOpenId())
+                                .content(sb.toString())
+                                .build());
+            }catch (WxErrorException e){
+                logger.error("【clickLink】{}", e);
+            }
 
             //处理跳转
             handle_link_redirect(agentId, response);
 
 
         } catch (WxErrorException e) {
-            logger.error("【clickLink】{}", e);
+
         }
 
     }
