@@ -101,6 +101,25 @@ public class CenterService {
         }
     }
 
+    public static void saveAllAgent(){
+        Set<String> agents = RedisManager.getAgentRedisService().getAllAgentBeanKey();
+        if (agents != null) {
+            GameAgentService gameAgentService = SpringUtil.getBean(GameAgentService.class);
+            agents.forEach(agent -> {
+                long agentId = Long.valueOf(agent);
+                AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
+                if (agentBean != null) {
+                    GameAgent gameAgent = AgentService.agentBean2GameAgent(agentBean);
+                    gameAgentService.getGameAgentDao().save(gameAgent);
+                    if (gameAgent.getIsPartner() == 1) {
+                        saveAgentRecord(agentBean);
+                    }
+                }
+
+            });
+        }
+    }
+
 
     private static void saveAgentRecord(AgentBean agentBean) {
         LocalDate now = LocalDate.now();

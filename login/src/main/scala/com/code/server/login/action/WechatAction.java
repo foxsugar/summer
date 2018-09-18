@@ -12,6 +12,7 @@ import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.service.AgentService;
+import com.code.server.login.service.CenterService;
 import com.code.server.login.service.ServerManager;
 import com.code.server.redis.service.AgentRedisService;
 import com.code.server.redis.service.RedisManager;
@@ -87,6 +88,9 @@ public class WechatAction extends Cors {
 
     @Autowired
     private AgentService agentService;
+
+    @Autowired
+    private CenterService centerService;
 
     private static final String AGENT_COOKIE_NAME = "AGENT_TOKEN";
 
@@ -577,6 +581,16 @@ public class WechatAction extends Cors {
         return agentResponse;
     }
 
+    @RequestMapping("/saveAllAgent")
+    @ResponseBody
+    public AgentResponse saveAllAgent(String pass) {
+
+        if ("save".equals(pass)) {
+            centerService.saveAllAgent();
+        }
+        AgentResponse agentResponse = new AgentResponse();
+        return agentResponse;
+    }
 
     @RequestMapping("/addChild")
     @ResponseBody
