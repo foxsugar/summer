@@ -99,7 +99,7 @@ public class SubscribeHandler extends AbstractHandler {
      */
 
 
-    private WxMpXmlOutMessage handleSpecial(WxMpXmlMessage wxMessage, WxMpUser wxMpUser, WxMpService wxMpService) throws Exception {
+    private WxMpXmlOutMessage handleSpecial(WxMpXmlMessage wxMessage, WxMpUser wxMpUser, WxMpService wxMpService)  {
 
         //如果是扫码登录
         String eventKey = wxMessage.getEventKey();
@@ -189,12 +189,16 @@ public class SubscribeHandler extends AbstractHandler {
                         }
                     }
                 }
-                wxMpService.getKefuService().sendKefuMessage(
-                        WxMpKefuMessage
-                                .TEXT()
-                                .toUser(agentBean.getOpenId())
-                                .content(sb.toString())
-                                .build());
+                try {
+                    wxMpService.getKefuService().sendKefuMessage(
+                            WxMpKefuMessage
+                                    .TEXT()
+                                    .toUser(agentBean.getOpenId())
+                                    .content(sb.toString())
+                                    .build());
+                } catch (WxErrorException e) {
+                    e.printStackTrace();
+                }
 
             }
 
