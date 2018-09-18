@@ -187,7 +187,7 @@ object PokerRoomService {
         val gameType = params.path("gameType").asText("0")
 //        val isAA = params.path("isAA").asBoolean(false)
         //fix bug
-        val isAA =params.path("isAA").asBoolean(false) || params.path("isALL").asBoolean(false)
+        val isAA =params.path("isAA").asBoolean(false) || params.path("isAll").asBoolean(false)
         val isJoin = params.path("isJoin").asBoolean(true)
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
