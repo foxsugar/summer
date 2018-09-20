@@ -33,6 +33,8 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
 
+import static com.code.server.login.service.GameClubService.sendMsg2Player;
+
 /**
  * Created by sunxianping on 2017/6/16.
  */
@@ -56,13 +58,13 @@ public class CenterMsgService implements IkafkaMsgId {
                 ThreadPool.getInstance().executor.execute(() -> genRecord(msg));
                 break;
             case KAFKA_MSG_ID_REPLAY:
-                ThreadPool.getInstance().executor.execute(()->replay(msg));
+                ThreadPool.getInstance().executor.execute(() -> replay(msg));
                 break;
             case KAFKA_MSG_ID_GAME_RECORD:
-                ThreadPool.getInstance().executor.execute(()->genGameRecord(msg));
+                ThreadPool.getInstance().executor.execute(() -> genGameRecord(msg));
                 break;
             case KAFKA_MSG_ID_ROOM_RECORD:
-                ThreadPool.getInstance().executor.execute(()->genRoomRecord(msg));
+                ThreadPool.getInstance().executor.execute(() -> genRoomRecord(msg));
                 break;
             case KAFKA_MSG_ID_GUESS_ADD_GOLD:
                 guessAddGold(msg);
@@ -78,7 +80,7 @@ public class CenterMsgService implements IkafkaMsgId {
         }
     }
 
-    private static void refreshRoomInstance(String msg){
+    private static void refreshRoomInstance(String msg) {
 
         JsonNode jsonNode = JsonUtil.readTree(msg);
         String clubId = jsonNode.path("clubId").asText();
@@ -91,10 +93,11 @@ public class CenterMsgService implements IkafkaMsgId {
     }
 
     private static void getRoomClubByUser(String msg) {
-        System.out.println("center : getRoomClubByUser" );
+        System.out.println("center : getRoomClubByUser");
         JsonNode jsonNode = JsonUtil.readTree(msg);
 
-        Map<String, Object> map = JsonUtil.readValue(msg, new TypeReference<HashMap<String, Object>>() {});
+        Map<String, Object> map = JsonUtil.readValue(msg, new TypeReference<HashMap<String, Object>>() {
+        });
 
         Map<String, Object> result = JsonUtil.readValue(msg, Map.class);
         Long userId = jsonNode.path("userId").asLong();
@@ -102,7 +105,7 @@ public class CenterMsgService implements IkafkaMsgId {
         map.put("clubs", clubs);
 
         System.out.println("send ===============");
-        GameClubService.sendMsg2Player(new ResponseVo("roomService","getRoomClubByUser",map),userId);
+        sendMsg2Player(new ResponseVo("roomService", "getRoomClubByUser", map), userId);
 
     }
 
@@ -152,7 +155,7 @@ public class CenterMsgService implements IkafkaMsgId {
             Map<String, Object> map = JsonUtil.readValue(msg, new TypeReference<HashMap<String, Object>>() {
             });
 
-            long room_uuid = (Long)map.get("room_uuid");
+            long room_uuid = (Long) map.get("room_uuid");
             long replay_id = (Long) map.get("replay_id");
             int count = (int) map.get("count");
             String recordStr = jsonNode.path("record").asText();
@@ -203,7 +206,7 @@ public class CenterMsgService implements IkafkaMsgId {
 
                 String date = LocalDate.now().toString();
                 for (com.code.server.constant.game.UserRecord userRecord : roomRecord.getRecords()) {
-                    ClubMember clubMember = club.getClubInfo().getMember().get(""+userRecord.getUserId());
+                    ClubMember clubMember = club.getClubInfo().getMember().get("" + userRecord.getUserId());
                     if (clubMember != null) {
                         ClubStatistics clubStatistics = clubMember.getStatistics().getOrDefault(date, new ClubStatistics());
                         clubMember.getStatistics().put(date, clubStatistics);
@@ -212,8 +215,20 @@ public class CenterMsgService implements IkafkaMsgId {
 
                 }
 
-                //推送房间解散
 
+                //推送房间解散
+                ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+                if (serverConfig.getClubPushUserRoomInfo() == 1) {
+                    List<Long> users = new ArrayList<>();
+                    club.getClubInfo().getMember().forEach((id, ClubMember) -> users.add(Long.valueOf(id)));
+
+                    Map<String, Object> r = new HashMap<>();
+                    r.put("userId", roomRecord.getRoomId());
+                    r.put("roomModelId", roomModel);
+                    r.put("clubId", clubId);
+                    ResponseVo responseVo = new ResponseVo("clubService", "clubDissolutionRoom", r);
+                    users.forEach(uid -> sendMsg2Player(responseVo, uid));
+                }
 
 
                 //龙七 发送http
@@ -225,8 +240,7 @@ public class CenterMsgService implements IkafkaMsgId {
     }
 
 
-
-    private static void sendLq_http(RoomRecord roomRecord,Club club) {
+    private static void sendLq_http(RoomRecord roomRecord, Club club) {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         if (serverConfig.getSend_lq_http() == 1) {
             Map<String, Object> result = new HashMap<>();
@@ -254,15 +268,15 @@ public class CenterMsgService implements IkafkaMsgId {
                     .setConnectTimeout(5000).setConnectionRequestTimeout(5000)
                     .setSocketTimeout(5000).build();
 
-            String url1 = serverConfig.getLq_http_url() + "?strContext=" +json;
+            String url1 = serverConfig.getLq_http_url() + "?strContext=" + json;
 
             try {
-                URL url= new URL(url1);
+                URL url = new URL(url1);
                 URI uri = new URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), null);
                 HttpGet request = new HttpGet(uri);
                 request.setConfig(requestConfig);
                 try {
-                   httpClient.execute(request);
+                    httpClient.execute(request);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -272,11 +286,11 @@ public class CenterMsgService implements IkafkaMsgId {
         }
     }
 
-    public static int getClubModelIndex(Club club,String roomModel) {
+    public static int getClubModelIndex(Club club, String roomModel) {
         int index = 0;
         for (RoomModel rm : club.getClubInfo().getRoomModels()) {
             index += 1;
-            if(roomModel.equals(rm.getId())){
+            if (roomModel.equals(rm.getId())) {
                 return index;
             }
         }
@@ -294,13 +308,11 @@ public class CenterMsgService implements IkafkaMsgId {
 
             double addGold = gold;
 
-            AgentUser agentUser = agentUserService.getAgentUserDao().findAgentUserByInvite_code(""+bindUser1);
+            AgentUser agentUser = agentUserService.getAgentUserDao().findAgentUserByInvite_code("" + bindUser1);
             if (agentUser != null) {
                 agentUser.setGold(agentUser.getGold() + addGold);
                 agentUserService.getAgentUserDao().save(agentUser);
             }
-
-
 
 
 //            //第一级代理

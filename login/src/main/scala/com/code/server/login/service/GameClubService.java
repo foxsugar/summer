@@ -707,6 +707,7 @@ public class GameClubService {
             us.addAll(RedisManager.getRoomRedisService().getUsers(roomId));
             send_Lq_start(club, roomId, roomModelId, us, 0);
         }
+        System.out.println("user: " + userId +" quitClub = " + clubId);
     }
 
 
