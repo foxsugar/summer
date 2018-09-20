@@ -1279,6 +1279,7 @@ public class GameClubService {
         }
         clubRemoveMember(club, kickUser);
         sendMsg(msgKey, new ResponseVo("clubService", "kickUser", "ok"));
+        System.out.println("kickUser : " + " src = " + userId + " des = " + kickUser);
         return 0;
     }
 
