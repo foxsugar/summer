@@ -1002,11 +1002,11 @@ public class GameClubService {
                     if (clubStatistics == null) {
                         clubStatistics = new ClubStatistics();
                     }
-//                    clubStatistics.setOpenNum(clubStatistics.getOpenNum() + 1);
-//                    clubStatistics.setConsumeNum(clubStatistics.getConsumeNum() + roomModel.getMoney());
-//                    roomModel.getStatisticsMap().put(today, clubStatistics);
-//                    //删除七天前的
-//                    roomModel.getStatisticsMap().remove(LocalDate.now().minusDays(7).toString());
+                    clubStatistics.setOpenNum(clubStatistics.getOpenNum() + 1);
+                    clubStatistics.setConsumeNum(clubStatistics.getConsumeNum() + roomModel.getMoney());
+                    roomModel.getStatisticsMap().put(today, clubStatistics);
+                    //删除七天前的
+                    roomModel.getStatisticsMap().remove(LocalDate.now().minusDays(7).toString());
 
                 }
 
