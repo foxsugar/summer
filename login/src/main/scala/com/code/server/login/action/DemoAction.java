@@ -998,10 +998,10 @@ public class DemoAction extends Cors {
         return new AgentResponse(0, logRecordDao.findByIdIn(days));
     }
 
-//    @DemoChecker
+    //    @DemoChecker
     @DemoChecker
     @RequestMapping("/fConstant")
-    public AgentResponse getConstnat (){
+    public AgentResponse getConstnat() {
 
         Constant constant = constantDao.findOne(1l);
         Map<String, Object> rs = new HashMap<>();
@@ -1010,9 +1010,10 @@ public class DemoAction extends Cors {
         agentResponse.setData(rs);
         return agentResponse;
     }
+
     @DemoChecker
     @RequestMapping("/uConstant")
-    public AgentResponse modifyConstnat(@RequestParam("constantForm") String constantForm){
+    public AgentResponse modifyConstnat(@RequestParam("constantForm") String constantForm) {
         Map<String, Object> rs = JsonUtil.readValue(constantForm, Map.class);
         ConstantFormVo vo = JsonUtil.readValue(constantForm, ConstantFormVo.class);
         Constant constant = constantDao.findOne(1l);
@@ -1115,19 +1116,28 @@ public class DemoAction extends Cors {
         msgKey.setUserId(0);
         msgKey.setRoomId(roomId);
         msgKey.setPartition(Integer.valueOf(serverId));
-        ResponseVo responseVo = new ResponseVo("roomService","dissolutionRoom",result);
-        msgProducer.send2Partition("roomService", Integer.valueOf(serverId),msgKey,responseVo);
+        ResponseVo responseVo = new ResponseVo("roomService", "dissolutionRoom", result);
+        msgProducer.send2Partition("roomService", Integer.valueOf(serverId), msgKey, responseVo);
 
         rs.put("result", "ok");
         return agentResponse;
-}
+    }
+
+    @DemoChecker
+    @RequestMapping("/dissolveRoomByUserId")
+    public AgentResponse dissolveRoomByUserId(String userId) {
+        String roomId = RedisManager.getUserRedisService().getRoomId(Long.valueOf(userId));
+
+        return dissolveRoom(roomId);
+
+    }
 
     @RequestMapping("/upateAgentInfo")
-    public void updateAF(){
+    public void updateAF() {
 
         List<AgentUser> list = (List<AgentUser>) agentUserDao.findAll();
 
-        for (AgentUser agentUser : list){
+        for (AgentUser agentUser : list) {
             AgentInfo agentInfo = new AgentInfo();
             AgentInfoRecord agentInfoRecord = new AgentInfoRecord();
             agentUser.setAgentInfo(agentInfo);
@@ -1137,6 +1147,7 @@ public class DemoAction extends Cors {
         }
 
     }
+
     //充值之后计算返利
     @RequestMapping("/testDemo")
     public void testAgentInfo() {
