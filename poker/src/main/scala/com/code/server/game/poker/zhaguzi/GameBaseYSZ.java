@@ -184,16 +184,6 @@ public class GameBaseYSZ extends Game {
 
     public void init(List<Long> users) {
 
-
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-
-                System.out.println("aaa");
-            }
-        }, 5000);
-
         //初始化玩家
         for (Long uid : users) {
             PlayerYSZ playerCardInfo = getGameTypePlayerCardInfo();
