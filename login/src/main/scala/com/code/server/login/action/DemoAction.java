@@ -1096,6 +1096,7 @@ public class DemoAction extends Cors {
     @DemoChecker
     @RequestMapping("/dissolveRoom")
     public AgentResponse dissolveRoom(String roomId) {
+        System.out.println("admin解散房间");
         Map<String, Object> rs = new HashMap<>();
         AgentResponse agentResponse = new AgentResponse();
         agentResponse.setData(rs);
@@ -1127,6 +1128,7 @@ public class DemoAction extends Cors {
     @RequestMapping("/dissolveRoomByUserId")
     public AgentResponse dissolveRoomByUserId(String userId) {
         String roomId = RedisManager.getUserRedisService().getRoomId(Long.valueOf(userId));
+        System.out.println("roomId = " + roomId);
 
         return dissolveRoom(roomId);
 
