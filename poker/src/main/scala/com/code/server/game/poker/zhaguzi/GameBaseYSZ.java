@@ -184,6 +184,16 @@ public class GameBaseYSZ extends Game {
 
     public void init(List<Long> users) {
 
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                System.out.println("aaa");
+            }
+        }, 5000);
+
         //初始化玩家
         for (Long uid : users) {
             PlayerYSZ playerCardInfo = getGameTypePlayerCardInfo();
@@ -192,32 +202,27 @@ public class GameBaseYSZ extends Game {
         }
         this.users.addAll(users);
         this.aliveUser.addAll(users);
+
+        shuffle();//洗牌
+        deal();//发牌
+        initDiZhu();
+
         this.startUserScores = new HashMap<>();
         this.startUserScores.putAll(this.room.userScores);
 
-        long delay = 1;
-        if (this.room.curGameNumber < 2){
-            delay = 3000;
-        }
+        //出场值是入场的一半
+//        minGold = this.room.computeEnterGold() / 2;
+//        logger.info("入场：{}出场{}", this.room.computeEnterGold(), minGold);
+        logger.info("最小值:{}, zhuList:{}", minGold, this.genZhuList);
 
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
+        computeCardType();
+        recordCardType();
+        chip = INIT_BOTTOM_CHIP;
+        mustBet();
+        curUserId = room.getBankerId();
 
-                shuffle();//洗牌
-                deal();//发牌
-                initDiZhu();
-                computeCardType();
-                recordCardType();
-                chip = INIT_BOTTOM_CHIP;
-                mustBet();
-                curUserId = room.getBankerId();
-
-                noticeAction(curUserId);
-                updateLastOperateTime();
-            }
-        }, delay);
+        noticeAction(curUserId);
+        updateLastOperateTime();
     }
 
     public boolean isYsz() {
