@@ -132,6 +132,13 @@ public class AgentRedisService implements IAgentRedis, IConstant {
         }
     }
 
+    public Set<String> getAllAgentBeanKey(){
+        BoundHashOperations<String, String, String> agent_bean = redisTemplate.boundHashOps(AGENT_BEAN);
+        return agent_bean.keys();
+    }
+
+
+
     @Override
     public AgentBean getAgentBean(long agentId) {
 

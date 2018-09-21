@@ -12,6 +12,7 @@ import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.service.AgentService;
+import com.code.server.login.service.CenterService;
 import com.code.server.login.service.ServerManager;
 import com.code.server.redis.service.AgentRedisService;
 import com.code.server.redis.service.RedisManager;
@@ -87,6 +88,9 @@ public class WechatAction extends Cors {
 
     @Autowired
     private AgentService agentService;
+
+    @Autowired
+    private CenterService centerService;
 
     private static final String AGENT_COOKIE_NAME = "AGENT_TOKEN";
 
@@ -218,6 +222,7 @@ public class WechatAction extends Cors {
                           @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
         try {
+            logger.info("------------- 点击分享链接-----------" );
             wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
             WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
 
@@ -297,19 +302,24 @@ public class WechatAction extends Cors {
                 }
             }
 
-            wxMpService.getKefuService().sendKefuMessage(
-                    WxMpKefuMessage
-                            .TEXT()
-                            .toUser(agentBean.getOpenId())
-                            .content(sb.toString())
-                            .build());
+            try {
+
+                wxMpService.getKefuService().sendKefuMessage(
+                        WxMpKefuMessage
+                                .TEXT()
+                                .toUser(agentBean.getOpenId())
+                                .content(sb.toString())
+                                .build());
+            }catch (WxErrorException e){
+                logger.error("【clickLink】{}", e);
+            }
 
             //处理跳转
             handle_link_redirect(agentId, response);
 
 
         } catch (WxErrorException e) {
-            logger.error("【clickLink】{}", e);
+
         }
 
     }
@@ -387,17 +397,21 @@ public class WechatAction extends Cors {
     }
 
 
-    private void handleLoginAgent(WxMpUser wxMpUser, HttpServletRequest request, HttpServletResponse response) throws IOException, WxErrorException {
+    private void handleLoginAgent(WxMpUser wxMpUser, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         Long agentId = gameAgentService.getGameAgentDao().getUserIdByUnionId(wxMpUser.getUnionId());
         if (agentId == null || agentId == 0) {
             //不是代理
-            wxMpService.getKefuService().sendKefuMessage(
-                    WxMpKefuMessage
-                            .TEXT()
-                            .toUser(wxMpUser.getOpenId())
-                            .content("您还不是代理")
-                            .build());
+            try {
+                wxMpService.getKefuService().sendKefuMessage(
+                        WxMpKefuMessage
+                                .TEXT()
+                                .toUser(wxMpUser.getOpenId())
+                                .content("您还不是代理")
+                                .build());
+            } catch (WxErrorException e) {
+                e.printStackTrace();
+            }
             System.out.println(request.getRequestURL());
             response.getOutputStream().write("您不是代理".getBytes());
             return;
@@ -409,7 +423,12 @@ public class WechatAction extends Cors {
                 agentBean.setImage(wxMpUser.getHeadImgUrl());
                 agentBean.setOpenId(wxMpUser.getOpenId());
                 //根据unionId生成二维码 todo 加上游戏key
-                WxMpQrCodeTicket ticket = wxMpService.getQrcodeService().qrCodeCreateLastTicket(serverConfig.getDomainMapKey()+"|"+wxMpUser.getUnionId());
+                WxMpQrCodeTicket ticket = null;
+                try {
+                    ticket = wxMpService.getQrcodeService().qrCodeCreateLastTicket(serverConfig.getDomainMapKey()+"|"+wxMpUser.getUnionId());
+                } catch (WxErrorException e) {
+                    e.printStackTrace();
+                }
                 agentBean.setQrTicket(ticket.getTicket());
                 RedisManager.getAgentRedisService().updateAgentBean(agentBean);
             }
@@ -437,17 +456,21 @@ public class WechatAction extends Cors {
 
     }
 
-    private void handle_charge(WxMpUser wxMpUser, HttpServletRequest request, HttpServletResponse response) throws IOException, WxErrorException {
+    private void handle_charge(WxMpUser wxMpUser, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Long userId = userService.getUserDao().getIdByOpenId(wxMpUser.getUnionId());
 
         if (userId == null || userId == 0) {
             //不是代理
-            wxMpService.getKefuService().sendKefuMessage(
-                    WxMpKefuMessage
-                            .TEXT()
-                            .toUser(wxMpUser.getOpenId())
-                            .content("您还不是玩家")
-                            .build());
+            try {
+                wxMpService.getKefuService().sendKefuMessage(
+                        WxMpKefuMessage
+                                .TEXT()
+                                .toUser(wxMpUser.getOpenId())
+                                .content("您还不是玩家")
+                                .build());
+            } catch (WxErrorException e) {
+                e.printStackTrace();
+            }
             response.getOutputStream().write("您还不是玩家".getBytes("utf-8"));
             return;
         }
@@ -558,6 +581,16 @@ public class WechatAction extends Cors {
         return agentResponse;
     }
 
+    @RequestMapping("/saveAllAgent")
+    @ResponseBody
+    public AgentResponse saveAllAgent(String pass) {
+
+        if ("save".equals(pass)) {
+            centerService.saveAllAgent();
+        }
+        AgentResponse agentResponse = new AgentResponse();
+        return agentResponse;
+    }
 
     @RequestMapping("/addChild")
     @ResponseBody

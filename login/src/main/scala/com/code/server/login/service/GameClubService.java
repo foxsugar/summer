@@ -707,6 +707,7 @@ public class GameClubService {
             us.addAll(RedisManager.getRoomRedisService().getUsers(roomId));
             send_Lq_start(club, roomId, roomModelId, us, 0);
         }
+        System.out.println("user: " + userId +" quitClub = " + clubId);
     }
 
 
@@ -1001,11 +1002,11 @@ public class GameClubService {
                     if (clubStatistics == null) {
                         clubStatistics = new ClubStatistics();
                     }
-//                    clubStatistics.setOpenNum(clubStatistics.getOpenNum() + 1);
-//                    clubStatistics.setConsumeNum(clubStatistics.getConsumeNum() + roomModel.getMoney());
-//                    roomModel.getStatisticsMap().put(today, clubStatistics);
-//                    //删除七天前的
-//                    roomModel.getStatisticsMap().remove(LocalDate.now().minusDays(7).toString());
+                    clubStatistics.setOpenNum(clubStatistics.getOpenNum() + 1);
+                    clubStatistics.setConsumeNum(clubStatistics.getConsumeNum() + roomModel.getMoney());
+                    roomModel.getStatisticsMap().put(today, clubStatistics);
+                    //删除七天前的
+                    roomModel.getStatisticsMap().remove(LocalDate.now().minusDays(7).toString());
 
                 }
 
@@ -1278,6 +1279,7 @@ public class GameClubService {
         }
         clubRemoveMember(club, kickUser);
         sendMsg(msgKey, new ResponseVo("clubService", "kickUser", "ok"));
+        System.out.println("kickUser : " + " src = " + userId + " des = " + kickUser);
         return 0;
     }
 
@@ -1329,6 +1331,9 @@ public class GameClubService {
             for (String s : removeList) {
                 RoomModel roomModel = getRoomModel(club, s);
 
+                if (roomModel == null) {
+                    continue;
+                }
                 createRoom(club, roomModel);
                 //减钱
                 int moneyNow = club.getMoney() - roomModel.getMoney();

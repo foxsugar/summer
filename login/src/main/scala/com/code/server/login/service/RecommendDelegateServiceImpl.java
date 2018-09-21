@@ -1,17 +1,13 @@
 package com.code.server.login.service;
 
 import com.code.server.constant.game.AgentBean;
-import com.code.server.constant.game.UserBean;
 import com.code.server.db.Service.GameAgentService;
 import com.code.server.db.Service.GameAgentWxService;
 import com.code.server.db.Service.RecommendService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.dao.IUserDao;
 import com.code.server.db.model.GameAgent;
-import com.code.server.db.model.GameAgentWx;
-import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
-import com.code.server.login.action.RecommendDelegateAction;
 import com.code.server.login.vo.RecommandUserVo;
 import com.code.server.redis.service.RedisManager;
 import org.slf4j.Logger;
@@ -82,12 +78,14 @@ public class RecommendDelegateServiceImpl implements RecommendDelegateService {
 
         //todo 之前是代理
         if (userAgentBean != null) {
+            logger.info("---绑定--- 之前已经是代理" );
             return false;
         }
 
         //必须先在公众号点击专属链接 成为下级
         AgentBean parentAgentBean = RedisManager.getAgentRedisService().getAgentBean(agentId);
         if (!parentAgentBean.getChildList().contains(userId)) {
+            logger.info("---绑定--- 不是他的下级" );
             return false;
         }
 

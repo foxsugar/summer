@@ -3,7 +3,8 @@ buildscript {
 		springBootVersion = '1.5.2.RELEASE'
 	}
 	repositories {
-		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+//		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+		maven{ url 'https://plugins.gradle.org/m2/'}
 //		mavenCentral()
 	}
 	dependencies {
@@ -14,7 +15,9 @@ buildscript {
 }
 allprojects {
 	repositories {
-		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+//		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+		maven{ url 'https://plugins.gradle.org/m2/'}
+//		mavenCentral()
 	}
 }
 apply plugin: 'java'
@@ -28,8 +31,9 @@ version = '0.0.1-SNAPSHOT'
 //targetCompatibility = 1.8
 
 repositories {
-	maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-	mavenCentral()
+//	maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+	maven{ url 'https://plugins.gradle.org/m2/'}
+//	mavenCentral()
 }
 
 
@@ -71,7 +75,6 @@ protobuf {
 	}
 
 	generatedFilesBaseDir = "$projectDir/gen/"
-//	generatedFilesBaseDir = "buildDir/gen/"
 
 	generateProtoTasks {
 		all()*.plugins {

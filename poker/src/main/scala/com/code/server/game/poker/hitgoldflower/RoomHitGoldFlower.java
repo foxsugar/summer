@@ -105,7 +105,7 @@ public class RoomHitGoldFlower extends Room {
 
 
         //代建房 定时解散
-        if (!isJoin) {
+        if (!isJoin && !room.isClubRoom()) {
             //给代建房 开房者 扣钱
             if(RedisManager.getUserRedisService().getUserMoney(userId) < room.createNeedMoney){
 

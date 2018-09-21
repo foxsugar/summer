@@ -738,10 +738,6 @@ public class Room implements IfaceRoom {
             RedisManager.getUserRedisService().addUserMoney(this.createUser, createNeedMoney);
             if (isAddGold()) RedisManager.addGold(this.createUser, -createNeedMoney / 10);
         }
-        //俱乐部房间退钱
-        if (isClubRoom()) {
-            clubDrawBack();
-        }
     }
 
     public void spendMoney() {
