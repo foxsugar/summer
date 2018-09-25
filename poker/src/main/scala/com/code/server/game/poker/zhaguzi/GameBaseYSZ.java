@@ -183,6 +183,7 @@ public class GameBaseYSZ extends Game {
     }
 
     public void init(List<Long> users) {
+
         //初始化玩家
         for (Long uid : users) {
             PlayerYSZ playerCardInfo = getGameTypePlayerCardInfo();
