@@ -612,7 +612,7 @@ public class GameInfoNew extends GameInfo {
             }
 
             if (this.waitingforList.size() == 0) {
-                doGang_hand(playerCardsInfo, userId, card);
+                doGang_hand(playerCardsInfo, -1, card);
             } else {
                 //排序
                 compare(waitingforList);
