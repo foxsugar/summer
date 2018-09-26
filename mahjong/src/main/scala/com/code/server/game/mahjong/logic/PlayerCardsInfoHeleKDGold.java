@@ -76,7 +76,7 @@ public class PlayerCardsInfoHeleKDGold extends PlayerCardsInfoHeleKD {
         if (isHasMode(room.getMode(), GameInfoZhuohaozi.mode_摸四胡五)) {
             score = 5;
         }
-        if (isJinGang) score = 100;
+        if (isJinGang) score = 50;
         score *= room.getMultiple();
         int allScore = 0;
         int allGangScore = 0;

@@ -49,7 +49,7 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
         if (isHasMode(room.getMode(), GameInfoZhuohaozi.mode_摸四胡五)) {
             score = 5;
         }
-        if (isJinGang) score = 100;
+        if (isJinGang) score = 50;
         int allScore = 0;
 
         if (isMing && diangangUser != -1) {
