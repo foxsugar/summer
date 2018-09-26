@@ -161,7 +161,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         int gangType = CardTypeUtil.getTypeByCard(card);
         boolean isJinGang = this.gameInfo.hun.contains(gangType);
         int score = CardTypeUtil.cardTingScore.get(gangType);
-        if (isJinGang) score = 100;
+        if (isJinGang && !isMing) score = 100;
         int allScore = 0;
 
         if (isMing && diangangUser != -1) {

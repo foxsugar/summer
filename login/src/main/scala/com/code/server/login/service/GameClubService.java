@@ -471,9 +471,10 @@ public class GameClubService {
         if (ClubManager.getInstance().getUserClubNum(agreeId) >= limit) {
             return ErrorCode.CLUB_CANNOT_JOIN;
         }
+
         //加入俱乐部
         ClubMember apply = getApply(club, agreeId);
-        if (isAgree) {
+        if (isAgree && club.getClubInfo().getMember().containsKey(""+agreeId)) {
             if (apply != null) {
 
                 clubAddMember(club, apply);
