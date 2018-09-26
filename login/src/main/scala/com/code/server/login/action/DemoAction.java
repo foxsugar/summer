@@ -821,21 +821,24 @@ public class DemoAction extends Cors {
     @RequestMapping("/uFindCharge")
     public AgentResponse findChargeByUserId(long userId) {
 
-        Charge charge = homeService.findChargeByUserId(userId);
-        List<Charge> list = new ArrayList<>();
+//        Charge charge = homeService.findChargeByUserId(userId);
+
+        List<Charge> chargeList = homeService.findChargesByUserId(userId);
+
+//        List<Charge> list = new ArrayList<>();
 
         AgentResponse agentResponse = new AgentResponse();
-        if (charge == null) {
+        if (chargeList == null || chargeList.size() == 0) {
             Map<String, Object> rs = new HashMap<>();
-            rs.put("list", list);
+            rs.put("list", new ArrayList<>());
             rs.put("total", 0);
             agentResponse.setData(rs);
             agentResponse.setMsg("没有记录");
             agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
         } else {
-            list.add(charge);
+//            list.addAll(chargeList);
             Map<String, Object> rs = new HashMap<>();
-            rs.put("list", list);
+            rs.put("list", chargeList);
             rs.put("total", 1);
             agentResponse.setData(rs);
         }

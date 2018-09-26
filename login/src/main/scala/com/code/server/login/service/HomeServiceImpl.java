@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import scala.Char;
@@ -221,6 +222,23 @@ public class HomeServiceImpl implements HomeService{
        Charge charge = chargeDao.findOne(specification);
 
         return charge;
+    }
+
+    @Override
+    public List<Charge> findChargesByUserId(long userId) {
+
+        Specification<Charge> specification = new Specification<Charge>() {
+            @Override
+            public Predicate toPredicate(Root<Charge> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path path = root.get("userid");
+                Predicate predicate = path.as(Long.class).in(Arrays.asList(userId));
+                return predicate;
+            }
+        };
+
+        List<Charge> chargeList = (List<Charge>) chargeDao.findAll(specification);
+
+        return chargeList;
     }
 
     @Override
