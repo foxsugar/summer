@@ -36,6 +36,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -847,7 +848,10 @@ public class DemoAction extends Cors {
 
     @DemoChecker
     @RequestMapping("/chargeTimeSearch")
-    public AgentResponse chargeTimerSearch(String time, int curPage) {
+    public AgentResponse chargeTimerSearch(String time, int curPage,int chargeFrom, long userId, int moneyType) {
+
+//        moneyType 1 房卡 2 金币 3 房卡和金币
+//        chargeFrom 充值来源 1 微信 2 代理 3 任意
 
         if (curPage > 0) {
             curPage--;
@@ -869,7 +873,7 @@ public class DemoAction extends Cors {
                     }
                 });
 
-        Page<Charge> page = homeService.timeSearchCharges(list, new PageRequest(curPage, 20));
+        Page<Charge> page = homeService.timeSearchCharges(list, new PageRequest(curPage, 20), moneyType, chargeFrom, userId);
 
         AgentResponse agentResponse = new AgentResponse();
         Map<String, Object> rs = new HashMap<>();
