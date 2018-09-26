@@ -1,7 +1,6 @@
 package com.code.server.game.poker.tuitongzi;
 
 import com.code.server.constant.response.ErrorCode;
-import com.code.server.game.room.Game;
 import com.code.server.game.room.kafka.MsgSender;
 
 import java.util.*;
@@ -136,67 +135,35 @@ public class GameTuiTongTong extends GameTuiTongZi {
             }
         }
 
-        long lastGuoDi = this.room.getPotBottom();
+        long lastGuoDi = 0;
         long currentGuoDi = lastGuoDi;
         for (PlayerTuiTongZi loser : loserList){
-            long delta = 0;
-            if (loser.getBet().getZhu() == Bet.Wu){
-                delta = 5;
-            }else if(loser.getBet().getZhu() == Bet.SHI){
-                delta = 10;
-            }else if(loser.getBet().getZhu() == Bet.SHI_WU){
-                delta = 15;
-            }else if(loser.getBet().getZhu() == Bet.ER_SHI){
-                delta = 20;
-            }else if(loser.getBet().getZhu() == Bet.GUO_BAN){
-                delta = lastGuoDi / 2;
-            }else if(loser.getBet().getZhu() == Bet.MAN_ZHU){
-                delta = lastGuoDi;
-            }
+            long delta = loser.getBet().getZhu() - Bet.STATE_FREE_BET;
             loser.setScore(loser.getScore() - delta);
             currentGuoDi += delta;
             // 把分数加到room里
             room.addUserSocre(loser.getUserId(), loser.getScore());
         }
 
-
         for (PlayerTuiTongZi winner : winnerList){
 
-            if (currentGuoDi == 0){
-                winner.setScore(0);
-                room.addUserSocre(winner.getUserId(), winner.getScore());
-                continue;
-            }
-
-            long delta = 0;
-            if (winner.getBet().getZhu() == Bet.Wu){
-                delta = 5;
-            }else if(winner.getBet().getZhu() == Bet.SHI){
-                delta = 10;
-            }else if(winner.getBet().getZhu() == Bet.SHI_WU){
-                delta = 15;
-            }else if(winner.getBet().getZhu() == Bet.ER_SHI){
-                delta = 20;
-            }else if(winner.getBet().getZhu() == Bet.GUO_BAN){
-                delta = lastGuoDi / 2;
-            }else if(winner.getBet().getZhu() == Bet.MAN_ZHU){
-                delta = lastGuoDi;
-            }
-
-            if (delta > currentGuoDi){
-                delta = currentGuoDi;
-            }
+            long delta = winner.getBet().getZhu() - Bet.STATE_FREE_BET;
             currentGuoDi = currentGuoDi - delta;
             playerZhuang.setScore(playerZhuang.getScore() + delta);
             winner.setScore(winner.getScore() + delta);
             room.addUserSocre(winner.getUserId(), winner.getScore());
-            //假如锅里没钱就跳出别的玩家喝水
         }
-        this.room.setPotBottom(currentGuoDi);
-        playerZhuang.setScore(currentGuoDi - lastGuoDi);
 
+        this.room.setPotBottom(currentGuoDi);
+        playerZhuang.setScore(currentGuoDi);
+
+        //添加
+        room.addUserSocre(playerZhuang.getUserId(), playerZhuang.getScore());
+        this.room.setPotBottom(0);
+
+        //原来有锅的基础上
         for (PlayerTuiTongZi p : playerCardInfos.values()){
-            p.setPotBottom(currentGuoDi);
+            p.setPotBottom(0);
         }
 
     }
