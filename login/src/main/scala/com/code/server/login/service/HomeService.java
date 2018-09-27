@@ -39,9 +39,13 @@ public interface HomeService {
 
     Charge findChargeByUserId(long userId);
 
+    List<Charge> findChargesByUserId(long userId);
+
     Charge findChargeByOrderId(long oId);
 
     Page<Charge> timeSearchCharges(List<Date> listA, org.springframework.data.domain.Pageable pageable);
+
+    Page<Charge> timeSearchCharges(List<Date> listA, org.springframework.data.domain.Pageable pageable, int moneyType, int chargeFrom,long userId);
 
     Long chargesCount();
 

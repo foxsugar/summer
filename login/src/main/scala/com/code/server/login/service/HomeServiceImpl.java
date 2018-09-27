@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import scala.Char;
@@ -224,6 +225,23 @@ public class HomeServiceImpl implements HomeService{
     }
 
     @Override
+    public List<Charge> findChargesByUserId(long userId) {
+
+        Specification<Charge> specification = new Specification<Charge>() {
+            @Override
+            public Predicate toPredicate(Root<Charge> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path path = root.get("userid");
+                Predicate predicate = path.as(Long.class).in(Arrays.asList(userId));
+                return predicate;
+            }
+        };
+
+        List<Charge> chargeList = (List<Charge>) chargeDao.findAll(specification);
+
+        return chargeList;
+    }
+
+    @Override
     public Charge findChargeByOrderId(long oId) {
 
         Specification<Charge> specification = new Specification<Charge>() {
@@ -251,6 +269,48 @@ public class HomeServiceImpl implements HomeService{
 
                 if (listA != null && listA.size() != 0){
                     predicates.add(cb.between(root.get("createtime"), listA.get(0), listA.get(1)));
+                }
+
+                Predicate[] pre = new Predicate[predicates.size()];
+                return query.where(predicates.toArray(pre)).getRestriction();
+            }
+        };
+
+        Page<Charge> page = chargeDao.findAll(specification, pageable);
+        return page;
+    }
+
+    @Override
+    public Page<Charge> timeSearchCharges(List<Date> listA, org.springframework.data.domain.Pageable pageable, int moneyType, int chargeFrom, long userId) {
+
+        Specification<Charge> specification = new Specification<Charge>() {
+            @Override
+            public Predicate toPredicate(Root<Charge> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                List<Predicate> predicates = new ArrayList<>();
+
+                if (listA != null && listA.size() != 0){
+                    predicates.add(cb.between(root.get("createtime"), listA.get(0), listA.get(1)));
+                }
+
+//                private int chargeType;//充值类型
+//                private String username;//玩家名称
+//                private String recharge_source;//1 微信  2 支付宝  3 分享赠送  4 充值卡  5绑定赠送  11.提现
+                if (moneyType == 1 || moneyType == 2){
+//                    Predicate is = cb.equal(root.get("agentId").as(Integer.class), moneyType);
+//                    predicates.add(is);
+                }
+
+                if (userId != 0){
+
+                    Predicate is = cb.equal(root.get("userid").as(Long.class), userId);
+                    predicates.add(is);
+
+                }
+
+                if (chargeFrom == 1 || chargeFrom == 2){
+                    Predicate is = cb.equal(root.get("chargeType").as(Integer.class), chargeFrom == 1?1:0);
+                    predicates.add(is);
                 }
 
                 Predicate[] pre = new Predicate[predicates.size()];
