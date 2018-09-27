@@ -422,6 +422,15 @@ public class GameClubService {
         Map<String, Object> result = new HashMap<>();
         sendMsg(msgKey, new ResponseVo("clubService", "joinClub", result));
 
+        //给管理员推送 申请列表
+        List<Long> adminList = new ArrayList<>();
+        adminList.add(club.getPresident());
+        adminList.addAll(club.getClubInfo().getAdmin());
+        Map<String, Object> r = new HashMap<>();
+        r.put("clubId", club.getId());
+        adminList.forEach(uid->sendMsg2Player(new ResponseVo("clubService", "joinClubPush2Admin",r),uid));
+//        sendMsg2Player(new ResponseVo("clubService", "joinClubPush2Admin",0), );
+
         return 0;
     }
 
@@ -474,7 +483,7 @@ public class GameClubService {
 
         //加入俱乐部
         ClubMember apply = getApply(club, agreeId);
-        if (isAgree && club.getClubInfo().getMember().containsKey(""+agreeId)) {
+        if (isAgree && !club.getClubInfo().getMember().containsKey(""+agreeId)) {
             if (apply != null) {
 
                 clubAddMember(club, apply);
@@ -1536,6 +1545,11 @@ public class GameClubService {
         //加到全局列表
         ClubManager.getInstance().userAddClub(apply.getUserId(), club.getId());
 
+
+        //加入俱乐部的推送
+        Map<String, Object> joinResult = new HashMap<>();
+        joinResult.put("clubId", club.getId());
+        sendMsg2Player(new ResponseVo("clubService", "joinClubPush", joinResult), apply.getUserId());
     }
 
     /**
