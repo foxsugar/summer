@@ -293,9 +293,6 @@ public class HomeServiceImpl implements HomeService{
                     predicates.add(cb.between(root.get("createtime"), listA.get(0), listA.get(1)));
                 }
 
-//                private int chargeType;//充值类型
-//                private String username;//玩家名称
-//                private String recharge_source;//1 微信  2 支付宝  3 分享赠送  4 充值卡  5绑定赠送  11.提现
                 if (moneyType == 1 || moneyType == 2){
 //                    Predicate is = cb.equal(root.get("agentId").as(Integer.class), moneyType);
 //                    predicates.add(is);
@@ -312,6 +309,9 @@ public class HomeServiceImpl implements HomeService{
                     Predicate is = cb.equal(root.get("chargeType").as(Integer.class), chargeFrom == 1?1:0);
                     predicates.add(is);
                 }
+
+                //订单状态要是成功状态
+                Predicate status = cb.equal(root.get("status").as(Integer.class), 1);
 
                 Predicate[] pre = new Predicate[predicates.size()];
                 return query.where(predicates.toArray(pre)).getRestriction();
