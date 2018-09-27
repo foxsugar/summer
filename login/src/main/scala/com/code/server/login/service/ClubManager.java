@@ -90,6 +90,15 @@ public class ClubManager {
                 userClub.setId(1);
                 userClub.setUser_club(new HashMap<>());
                 userClubService.save(userClub);
+            }else{
+                for (Map.Entry<String, List<String>> entry : userClub.getUser_club().entrySet()) {
+                    Set<String> set = new HashSet<>();
+                    set.addAll(entry.getValue());
+                    List<String> newList = new ArrayList<>();
+                    newList.addAll(set);
+                    entry.setValue(newList);
+                }
+                userClubService.save(userClub);
             }
             this.userClub = userClub;
         }
