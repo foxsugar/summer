@@ -864,15 +864,16 @@ public class DemoAction extends Cors {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         List<Date> list = new ArrayList<>();
 
-        Arrays.stream(sA)
-                .forEach(x -> {
-                    try {
-                        list.add(simpleDateFormat.parse(x));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                });
-
+        if (sA != null){
+            Arrays.stream(sA)
+                    .forEach(x -> {
+                        try {
+                            list.add(simpleDateFormat.parse(x));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    });
+        }
         Page<Charge> page = homeService.timeSearchCharges(list, new PageRequest(curPage, 20), moneyType, chargeFrom, userId);
 
         AgentResponse agentResponse = new AgentResponse();

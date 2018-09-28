@@ -31,4 +31,6 @@ public interface IChargeDao extends PagingAndSortingRepository<Charge, Long>, Jp
     @Query(value = "select sum(money) from charge where charge.userid IN ?1 AND createtime BETWEEN ?2 AND ?3", nativeQuery = true)
     Integer getSumMoneyByUsersAndDate(List<Long> ids,Date start, Date end);
 
+    @Query(value = "select coalesce(sum(c.money), 0) from Charge c where c.userid = ?1 AND c.chargeType=?2")
+    double getSumMoneyByUseridAndChargeType(Long uid, int chargeType);
 }
