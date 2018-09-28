@@ -104,7 +104,9 @@ public class ManagerAction extends Cors {
     @RequestMapping("/removeUserClub")
     public String removeUserClub(String userId, String clubId) {
         List<String> clubs = ClubManager.getInstance().getUserClubs(Long.valueOf(userId));
+        System.out.println("clubs = " + clubs);
         clubs.remove(clubId);
+        System.out.println("remove clubs = " + clubs);
         return "ok";
     }
 }
