@@ -125,7 +125,7 @@ public class UtilXuanQiQi {
         }else if(ifTwoCard(a1,b1)==-1 && ifTwoCard(a2,b2)!=-1){
             return false;
         }else{
-            return ifTwoCard(a1,b1)>ifTwoCard(a2,b2);
+            return ifTwoCard(a1,b1)>=ifTwoCard(a2,b2);
         }
     }
 
