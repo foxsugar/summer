@@ -17,9 +17,12 @@ import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
 import org.springframework.beans.BeanUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class RoomTuiTongZi extends Room{
+public class RoomTuiTongZi extends Room {
 
     private long bankerScore;
 
@@ -114,7 +117,7 @@ public class RoomTuiTongZi extends Room{
         this.bankerInitScore = bankerInitScore;
     }
 
-    public static RoomTuiTongZi getRoomInstance(String roomType){
+    public static RoomTuiTongZi getRoomInstance(String roomType) {
         switch (roomType) {
             case "5":
                 return new RoomTuiTongZi();
@@ -134,7 +137,7 @@ public class RoomTuiTongZi extends Room{
         return users.get(nextId);
     }
 
-    public IfaceRoomVo toVo(long user){
+    public IfaceRoomVo toVo(long user) {
 
         GameTuiTongZi gameTuiTongZi = (GameTuiTongZi) this.getGame();
 
@@ -153,20 +156,21 @@ public class RoomTuiTongZi extends Room{
         roomVo.bankerId = this.bankerId;
         roomVo.potBottom = this.potBottom;
 
-        if (users.size() > 0){
-            if (nextTurnId(this.bankerId) == firstBankerId){
+        if (users.size() > 0) {
+            if (nextTurnId(this.bankerId) == firstBankerId) {
                 roomVo.firstBanerCount = this.firstBanerCount - 1;
-            }else {
+            } else {
                 roomVo.firstBanerCount = this.firstBanerCount;
             }
-        }else {
+        } else {
             roomVo.firstBanerCount = 0;
         }
 
         return roomVo;
     }
 
-    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, String clubId, String clubRoomModel, int quan) throws DataNotFoundException {
+
+    public static int createRoom(long userId, String roomType, String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, String clubId, String clubRoomModel, int quan) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
         RoomTuiTongZi room = getRoomInstance(roomType);
@@ -193,7 +197,7 @@ public class RoomTuiTongZi extends Room{
         //代建房 定时解散
         if (!isJoin && !room.isClubRoom()) {
             //给代建房 开房者 扣钱
-            if(RedisManager.getUserRedisService().getUserMoney(userId) < room.createNeedMoney){
+            if (RedisManager.getUserRedisService().getUserMoney(userId) < room.createNeedMoney) {
                 RoomManager.removeRoom(room.getRoomId());
                 return ErrorCode.CANNOT_CREATE_ROOM_MONEY;
             }
@@ -217,7 +221,7 @@ public class RoomTuiTongZi extends Room{
     @Override
     public int startGameByClient(long userId) {
 
-        if (this.users.get(0) != userId){
+        if (this.users.get(0) != userId) {
             return ErrorCode.ROOM_START_NOT_CREATEUSER;
         }
 
@@ -229,13 +233,13 @@ public class RoomTuiTongZi extends Room{
         if (userStatus.get(userId) != IGameConstant.STATUS_READY) return ErrorCode.ROOM_START_CAN_NOT;
 
         //防止多次点开始
-        if(this.game != null) return ErrorCode.ROOM_START_CAN_NOT;
+        if (this.game != null) return ErrorCode.ROOM_START_CAN_NOT;
 
         int readyCount = 0;
         for (Map.Entry<Long, Integer> entry : userStatus.entrySet()) {
 
             Integer status = entry.getValue();
-            if(status == IGameConstant.STATUS_READY) readyCount++;
+            if (status == IGameConstant.STATUS_READY) readyCount++;
         }
 
         if (readyCount < 2) return ErrorCode.READY_NUM_ERROR;
@@ -244,15 +248,15 @@ public class RoomTuiTongZi extends Room{
         //没准备的人
         ArrayList<Long> removeList = new ArrayList<>();
 
-        for (Map.Entry<Long, Integer> entry : userStatus.entrySet()){
+        for (Map.Entry<Long, Integer> entry : userStatus.entrySet()) {
             Integer status = entry.getValue();
 
-            if (status != IGameConstant.STATUS_READY){
+            if (status != IGameConstant.STATUS_READY) {
                 removeList.add(entry.getKey());
             }
         }
 
-        for (Long removeId : removeList){
+        for (Long removeId : removeList) {
             roomRemoveUser(removeId);
         }
 
@@ -277,14 +281,14 @@ public class RoomTuiTongZi extends Room{
     }
 
 
-    public boolean isCheat(){
-        if (this.cheatInfo.size() == 0){
+    public boolean isCheat() {
+        if (this.cheatInfo.size() == 0) {
             return false;
         }
         return true;
     }
 
-    public void clearCheat(){
+    public void clearCheat() {
         this.cheatInfo.clear();
     }
 

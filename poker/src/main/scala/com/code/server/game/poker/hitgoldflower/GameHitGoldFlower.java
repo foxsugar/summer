@@ -464,7 +464,7 @@ public class GameHitGoldFlower extends Game {
         }
         gameResultHitGoldFlower.setWinnerList(winnerList);
         gameResultHitGoldFlower.setBankerId(winnerList.get(0));
-        MsgSender.sendMsg2Player("gameService", "gameResult", gameResultHitGoldFlower, users);
+        MsgSender.sendMsg2Player("gameService", "gameResult", gameResultHitGoldFlower, this.room.users);
     }
 
     /**
