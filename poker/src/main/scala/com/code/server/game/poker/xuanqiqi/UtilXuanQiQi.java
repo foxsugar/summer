@@ -191,7 +191,7 @@ public class UtilXuanQiQi {
         if((x==53 && y==54)||(x==54 && y==53)){
             result = 888;
         }else if((x==38 && y==40)||(x==40 && y==38)){
-            result = 887;
+            result = 888;
         }else if((x==37 && y==39)||(x==39 && y==37)){
             result = 886;
         }else if((x==34 && y==36)||(x==36 && y==34)){
