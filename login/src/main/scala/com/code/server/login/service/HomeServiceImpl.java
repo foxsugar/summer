@@ -282,7 +282,8 @@ public class HomeServiceImpl implements HomeService{
 
     @Override
     public Page<Charge> timeSearchCharges(List<Date> listA, org.springframework.data.domain.Pageable pageable, int moneyType, int chargeFrom, long userId) {
-
+//        moneyType 1 房卡 2 金币 3 房卡和金币
+//        chargeFrom 充值来源 1 微信 2 代理 3 任意
         Specification<Charge> specification = new Specification<Charge>() {
             @Override
             public Predicate toPredicate(Root<Charge> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -306,17 +307,19 @@ public class HomeServiceImpl implements HomeService{
                 }
 
                 if (chargeFrom == 1 || chargeFrom == 2){
-                    Predicate is = cb.equal(root.get("chargeType").as(Integer.class), chargeFrom == 1?1:0);
+                    Predicate is = cb.equal(root.get("recharge_source").as(Integer.class), chargeFrom == 1?1:7);
                     predicates.add(is);
                 }
 
                 //订单状态要是成功状态
                 Predicate status = cb.equal(root.get("status").as(Integer.class), 1);
+                predicates.add(status);
 
                 Predicate[] pre = new Predicate[predicates.size()];
                 return query.where(predicates.toArray(pre)).getRestriction();
             }
         };
+
 
         Page<Charge> page = chargeDao.findAll(specification, pageable);
         return page;
