@@ -42,6 +42,9 @@ public class RoomHitGoldFlower extends Room {
     protected double caiFen;
     protected int menPai;
     protected int cricleNumber;//轮数
+    protected int time;
+    protected boolean isJoinHalfWay;
+    protected boolean wanjialiangpai;
 
     protected Map<Long, Integer> baoziNum = new HashMap<>();
     protected Map<Long, Integer> tonghuashunNum = new HashMap<>();
@@ -76,7 +79,10 @@ public class RoomHitGoldFlower extends Room {
 
     }
 
-    public static int createHitGoldFlowerRoom(long userId, int gameNumber, int personNumber,int cricleNumber,int multiple,int caiFen,int menPai, String gameType, String roomType, boolean isAA, boolean isJoin, String clubId, String clubRoomModel) throws DataNotFoundException {
+    public static int createHitGoldFlowerRoom(long userId, int gameNumber, int personNumber,int cricleNumber,int multiple,
+                                              int caiFen,int menPai, String gameType, String roomType, boolean isAA,
+                                              boolean isJoin, String clubId, String clubRoomModel,
+                                                boolean isRobot, int time, boolean isJoinHalfWay,boolean wanjialiangpai) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
         RoomHitGoldFlower room = getRoomInstance(roomType);
@@ -95,6 +101,10 @@ public class RoomHitGoldFlower extends Room {
         room.cricleNumber = cricleNumber;
         room.setClubId(clubId);
         room.setClubRoomModel(clubRoomModel);
+        room.setRobotRoom(isRobot);
+        room.time = time;
+        room.isJoinHalfWay = isJoinHalfWay;
+        room.wanjialiangpai = wanjialiangpai;
 
         room.init(gameNumber, multiple);
 
@@ -169,7 +179,9 @@ public class RoomHitGoldFlower extends Room {
         }
 
         //设置persionnum
-        room.setPersonNumber(room.userScores.size());
+        if (!room.isJoinHalfWay) {
+            room.setPersonNumber(room.userScores.size());
+        }
 
         for (long i:removeList) {
             room.roomRemoveUser(i);
@@ -190,6 +202,47 @@ public class RoomHitGoldFlower extends Room {
         return 0;
     }
 
+
+    public int getReady(long userId) {
+        if (!this.users.contains(userId)) {
+            return ErrorCode.CANNOT_FIND_THIS_USER;
+        }
+        if (isInGame) {
+            return ErrorCode.CANNOT_FIND_THIS_USER;
+        }
+
+        this.userStatus.put(userId, STATUS_READY);
+
+        int readyNum = 0;
+        for (Map.Entry<Long, Integer> entry : this.userStatus.entrySet()) {
+            if (entry.getValue() == STATUS_READY) {
+                readyNum += 1;
+            }
+        }
+
+        //通知客户端谁是否准备
+        Map<String, Integer> userStatus = new HashMap<>();
+        for (Long i : this.userStatus.keySet()) {
+            userStatus.put(i + "", this.userStatus.get(i));
+        }
+        NoticeReady noticeReady = new NoticeReady();
+        noticeReady.setUserStatus(userStatus);
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "noticeReady", noticeReady), this.users);
+
+        //开始游戏
+        if (readyNum >= this.users.size() && this.curGameNumber>1 ) {
+            startGame();
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "getReady", 0), userId);
+        if (isGoldRoom()) {
+            MsgSender.sendMsg2Player(new ResponseVo("roomService", "getReadyGoldRoom", 0), userId);
+        }
+        return 0;
+    }
+
+    protected boolean isCanAgreeDissloution(int agreeNum) {
+        return agreeNum >= this.users.size() - 1 && agreeNum >= 2;
+    }
 
     @Override
     public void noticeJoinRoom(long userId) {
@@ -355,6 +408,33 @@ public class RoomHitGoldFlower extends Room {
 
     public void setSanpaiNum(Map<Long, Integer> sanpaiNum) {
         this.sanpaiNum = sanpaiNum;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public RoomHitGoldFlower setTime(int time) {
+        this.time = time;
+        return this;
+    }
+
+    public boolean isJoinHalfWay() {
+        return isJoinHalfWay;
+    }
+
+    public RoomHitGoldFlower setJoinHalfWay(boolean joinHalfWay) {
+        isJoinHalfWay = joinHalfWay;
+        return this;
+    }
+
+    public boolean isWanjialiangpai() {
+        return wanjialiangpai;
+    }
+
+    public RoomHitGoldFlower setWanjialiangpai(boolean wanjialiangpai) {
+        this.wanjialiangpai = wanjialiangpai;
+        return this;
     }
 
     public void addBaoziNum(long userId) {

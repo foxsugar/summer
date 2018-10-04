@@ -1,6 +1,7 @@
 package com.code.server.login.action;
 
 import com.code.server.login.config.ServerConfig;
+import com.code.server.login.service.ClubManager;
 import com.code.server.login.service.ServerManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -96,5 +98,15 @@ public class ManagerAction extends Cors {
         ServerManager.constant.getVersionOfAndroid();
         String url = "http://" + serverConfig.getDomain() + "/client/" + platform;
         return url;
+    }
+
+
+    @RequestMapping("/removeUserClub")
+    public String removeUserClub(String userId, String clubId) {
+        List<String> clubs = ClubManager.getInstance().getUserClubs(Long.valueOf(userId));
+        System.out.println("clubs = " + clubs);
+        clubs.remove(clubId);
+        System.out.println("remove clubs = " + clubs);
+        return "ok";
     }
 }

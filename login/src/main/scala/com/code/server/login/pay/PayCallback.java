@@ -17,7 +17,6 @@ import com.code.server.login.config.ServerConfig;
 import com.code.server.login.kafka.MsgSender;
 import com.code.server.login.util.ErrorCode;
 import com.code.server.login.util.PayUtil;
-import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.DateUtil;
 import com.code.server.util.SpringUtil;
@@ -186,7 +185,7 @@ public class PayCallback {
                     charge.setFinishTime(dayStr);
 //                    chargeDao.save(charge);
                     logger.info("Charge  is :{}", charge);
-                    chargeService.save(charge);
+
 
 
                     UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
@@ -203,15 +202,20 @@ public class PayCallback {
                     if (UserBeanRedis != null) {
                         //  userRedisService.setUserMoney(charge.getUserid(),UserBeanRedis.getMoney() + Double.valueOf(element.elementText("total_fee")) / 10);
                         userRedisService.addUserMoney(charge.getUserid(), addMoney);
+                        charge.setUsername(UserBeanRedis.getUsername());
                     } else {
                         //查询玩家
                         User user = userService.getUserByUserId(charge.getUserid());
                         System.out.println("修改玩家豆豆");
                         //修改玩家豆豆
                         user.setMoney(user.getMoney() + addMoney);
+                        charge.setUsername(user.getUsername());
                         userService.save(user);
                     }
 
+
+                    //保存订单
+                    chargeService.save(charge);
 
                     System.out.println("通知客户端刷新充值");
                     Map<String, String> rs = new HashMap<>();
