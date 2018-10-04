@@ -312,8 +312,8 @@ public class HomeServiceImpl implements HomeService{
                 }
 
                 //订单状态要是成功状态
-                Predicate status = cb.equal(root.get("status").as(Integer.class), 1);
-                predicates.add(status);
+                Predicate is = cb.equal(root.get("status").as(Integer.class), 1);
+                predicates.add(is);
 
                 Predicate[] pre = new Predicate[predicates.size()];
                 return query.where(predicates.toArray(pre)).getRestriction();
