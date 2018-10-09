@@ -336,6 +336,11 @@ public class DemoAction extends Cors {
             agentResponse.setData(result);
         } else {
             GameAgentVo gameAgentVo = new GameAgentVo();
+            //手动设置上级代理id
+
+            AgentBean agentBean = RedisManager.getAgentRedisService().getAgentBean(userId);
+            gameAgent.setParentId(agentBean.getParentId());
+
             BeanUtils.copyProperties(gameAgent, gameAgentVo);
             gameAgentVo.setIsPartnerDes(gameAgent.getIsPartner() == 1 ? "合伙人" : "代理");
             list.add(gameAgentVo);
