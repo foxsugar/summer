@@ -64,6 +64,31 @@ public class HuCardType implements HuType {
             fanTemp = removeHu(playerCardsInfo, hu_豪华七小对, fanTemp);
             fanTemp = removeHu(playerCardsInfo, hu_双豪七小对_山西, fanTemp);
         }
+        if (this.specialHuList.contains(hu_清一色七小对)) {
+            fanTemp = removeHu(playerCardsInfo, hu_清一色, fanTemp);
+            fanTemp = removeHu(playerCardsInfo, hu_七小对, fanTemp);
+        }
+        if (this.specialHuList.contains(hu_清一色豪华七小对)) {
+            fanTemp = removeHu(playerCardsInfo, hu_清一色, fanTemp);
+            fanTemp = removeHu(playerCardsInfo, hu_豪华七小对, fanTemp);
+        }
+        if(this.specialHuList.contains(hu_清一色双豪华七小对)){
+            fanTemp = removeHu(playerCardsInfo, hu_清一色, fanTemp);
+            fanTemp = removeHu(playerCardsInfo, hu_双豪七小对, fanTemp);
+            fanTemp = removeHu(playerCardsInfo, hu_双豪七小对_山西, fanTemp);
+        }
+        if (this.specialHuList.contains(hu_架龙)) {
+            fanTemp = removeHu(playerCardsInfo, hu_一条龙, fanTemp);
+        }
+        if (this.specialHuList.contains(hu_清一色架龙)) {
+            fanTemp = removeHu(playerCardsInfo, hu_架龙, fanTemp);
+            fanTemp = removeHu(playerCardsInfo, hu_一条龙, fanTemp);
+            fanTemp = removeHu(playerCardsInfo, hu_清一色, fanTemp);
+        }
+        if (this.specialHuList.contains(hu_清一色碰碰胡)) {
+            fanTemp = removeHu(playerCardsInfo, hu_碰碰胡, fanTemp);
+            fanTemp = removeHu(playerCardsInfo, hu_清一色, fanTemp);
+        }
         return fanTemp;
     }
 

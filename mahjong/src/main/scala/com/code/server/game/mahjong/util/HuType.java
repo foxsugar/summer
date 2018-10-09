@@ -89,4 +89,16 @@ public interface HuType {
     int hu_三碰 = 172;//XXPB专用
     int hu_四个红中 = 173;//XXPB专用
 
+    int hu_碰碰胡 = 180;
+    int hu_清一色碰碰胡 = 181;
+    int hu_架龙 = 182;
+    int hu_清一色架龙 = 183;
+
+    int hu_清一色七小对 = 190;
+    int hu_清一色豪华七小对 = 191;
+    int hu_清一色双豪华七小对 = 192;
+
+
+
+
 }

@@ -204,6 +204,8 @@ public class RoomInfo extends RoomInfoExtendGold {
             case "HONGZHONG2":
             case "HONGZHONG3":
                 return new GameInfoHongZhong();
+            case "DINGSHENG":
+                return new GameInfoDingSheng();
             default:
                 return new GameInfo();
         }

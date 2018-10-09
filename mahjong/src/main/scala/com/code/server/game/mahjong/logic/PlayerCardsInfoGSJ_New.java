@@ -219,8 +219,9 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
         return list.size() > 0;
     }
 
+
     @Override
-    public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
+    public void computeALLGang() {
 
         int gangScoreTemp = 5;
         int anGangScoreTemp = 10;
@@ -260,6 +261,17 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
             }
         }
 
+        this.addScore(gangScore);
+        this.roomInfo.addUserSocre(this.getUserId(), gangScore);
+
+
+    }
+
+    @Override
+    public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
+
+        this.gameInfo.computeAllGang();
+
         List<String> cs = getCardsNoChiPengGang(cards);
         List<HuCardType> huList = HuUtil.isHu(cs, this, CardTypeUtil.cardType.get(card), new HuLimit(0));
         // 设置胡牌类型
@@ -294,9 +306,9 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
         }
 
         this.addScore(selfScore);
-        this.addScore(gangScore);
+//        this.addScore(gangScore);
         this.roomInfo.addUserSocre(this.userId, selfScore);
-        this.roomInfo.addUserSocre(this.userId, gangScore);
+     //   this.roomInfo.addUserSocre(this.userId, gangScore);
     }
 
     /**

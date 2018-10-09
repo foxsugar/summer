@@ -125,6 +125,16 @@ public class FanUtil implements HuType {
             fan += playerCardsInfo.getSpecialHuScore(hu_一条龙);
         }
 
+        if (playerCardsInfo.isHasSpecialHu(hu_架龙) && isYitiaolong_jialong(cards, huCardType)) {
+            huCardType.specialHuList.add(hu_架龙);
+            fan += playerCardsInfo.getSpecialHuScore(hu_架龙);
+        }
+
+        if (playerCardsInfo.isHasSpecialHu(hu_清一色架龙) && isYitiaolong_jialong(cards, huCardType)
+                && isQingyise(playerCardsInfo.getCards(), huCardType)) {
+            huCardType.specialHuList.add(hu_清一色架龙);
+            fan += playerCardsInfo.getSpecialHuScore(hu_清一色架龙);
+        }
 
         if (playerCardsInfo.isHasSpecialHu(hu_夹张) && jiazhang(cards, huCardType, tingCardType)) {//hu_夹张
             huCardType.specialHuList.add(hu_夹张);
@@ -162,7 +172,7 @@ public class FanUtil implements HuType {
             fan += playerCardsInfo.getSpecialHuScore(hu_吊将);
         }
 
-        if (playerCardsInfo.isHasSpecialHu(hu_断幺) && duanyao(cards,tingCardType,huCardType)) {
+        if (playerCardsInfo.isHasSpecialHu(hu_断幺) && duanyao(cards, tingCardType, huCardType)) {
             huCardType.specialHuList.add(hu_断幺);
             fan += playerCardsInfo.getSpecialHuScore(hu_断幺);
         }
@@ -170,6 +180,17 @@ public class FanUtil implements HuType {
         if (playerCardsInfo.isHasSpecialHu(HuType.hu_混一色) && isHunyise(playerCardsInfo.getCards(), huCardType)) {
             huCardType.specialHuList.add(hu_混一色);
             fan += playerCardsInfo.getSpecialHuScore(hu_混一色);
+        }
+
+        if (playerCardsInfo.isHasSpecialHu(HuType.hu_碰碰胡) && isPengpenghu(playerCardsInfo.getCards(), huCardType)) {
+            huCardType.specialHuList.add(hu_碰碰胡);
+            fan += playerCardsInfo.getSpecialHuScore(hu_碰碰胡);
+        }
+
+        if (playerCardsInfo.isHasSpecialHu(HuType.hu_清一色碰碰胡) && isPengpenghu(playerCardsInfo.getCards(), huCardType)
+                && isQingyise(playerCardsInfo.getCards(), huCardType)) {
+            huCardType.specialHuList.add(hu_清一色碰碰胡);
+            fan += playerCardsInfo.getSpecialHuScore(hu_清一色碰碰胡);
         }
 
 
@@ -312,7 +333,7 @@ public class FanUtil implements HuType {
      * @param huCardType
      * @return
      */
-    private static boolean duanyao(List<String> cards,int tingCardType, HuCardType huCardType) {
+    private static boolean duanyao(List<String> cards, int tingCardType, HuCardType huCardType) {
         boolean results = true;
         boolean resultc = true;
 
@@ -333,33 +354,38 @@ public class FanUtil implements HuType {
 
         List<String> list = new ArrayList<>();
         list.addAll(cards);
-        aa:for (String s:list) {
-            if(dy.contains(CardTypeUtil.getTypeByCard(s))){
+        aa:
+        for (String s : list) {
+            if (dy.contains(CardTypeUtil.getTypeByCard(s))) {
                 resultc = false;
                 break aa;
             }
         }
 
-        b:for (Integer s:huCardType.mingGang) {
-            if(tempList.contains(s)){
+        b:
+        for (Integer s : huCardType.mingGang) {
+            if (tempList.contains(s)) {
                 results = false;
                 break b;
             }
         }
-        c:for (Integer s:huCardType.anGang) {
-            if(tempList.contains(s)){
+        c:
+        for (Integer s : huCardType.anGang) {
+            if (tempList.contains(s)) {
                 results = false;
                 break c;
             }
         }
-        d:for (Integer s:huCardType.peng) {
-            if(tempList.contains(s)){
+        d:
+        for (Integer s : huCardType.peng) {
+            if (tempList.contains(s)) {
                 results = false;
                 break d;
             }
         }
-        e:for (Integer s:huCardType.chi) {
-            if(s==6||s==15||s==24||s==0||s==9||s==18){
+        e:
+        for (Integer s : huCardType.chi) {
+            if (s == 6 || s == 15 || s == 24 || s == 0 || s == 9 || s == 18) {
                 results = false;
                 break e;
             }
@@ -370,15 +396,25 @@ public class FanUtil implements HuType {
 
     public static void main(String[] args) {
         ArrayList<String> list = new ArrayList();
-        list.add("044");list.add("045");list.add("046");
-        list.add("048");list.add("052");list.add("056");
-        list.add("084");list.add("085");list.add("096");
-        list.add("100");list.add("104");list.add("004");
-        list.add("008");list.add("012");list.add("106");
+        list.add("044");
+        list.add("045");
+        list.add("046");
+        list.add("048");
+        list.add("052");
+        list.add("056");
+        list.add("084");
+        list.add("085");
+        list.add("096");
+        list.add("100");
+        list.add("104");
+        list.add("004");
+        list.add("008");
+        list.add("012");
+        list.add("106");
 
         HuCardType h = new HuCardType();
         h.specialHuList.add(hu_断幺);
-        System.out.print(duanyao(list,-1,h));
+        System.out.print(duanyao(list, -1, h));
     }
 
 
@@ -422,7 +458,7 @@ public class FanUtil implements HuType {
     private static boolean is_gujiang(List<String> cards, HuCardType huCardType) {
         int jiangType = huCardType.jiang;
         //七小对 没有将
-        if(jiangType == -1){
+        if (jiangType == -1) {
             return false;
         }
 
@@ -462,7 +498,8 @@ public class FanUtil implements HuType {
     }
 
     /**
-     *混一色
+     * 混一色
+     *
      * @param cards
      * @param huCardType
      * @return
@@ -478,11 +515,11 @@ public class FanUtil implements HuType {
             for (int group : getAllGroup(list, huCardType)) {
                 if (group == CardTypeUtil.GROUP_TONG || group == CardTypeUtil.GROUP_TIAO || group == CardTypeUtil.GROUP_WAN) {
                     huaSet.add(group);
-                }else{
+                } else {
                     ziSet.add(group);
                 }
             }
-            if(huaSet.size()==1 && ziSet.size()>0){
+            if (huaSet.size() == 1 && ziSet.size() > 0) {
                 result = true;
             }
             list.clear();
@@ -490,6 +527,14 @@ public class FanUtil implements HuType {
         }
 
         return result;
+    }
+
+
+    private static boolean isPengpenghu(List<String> cards, HuCardType huCardType) {
+        if (huCardType.peng.size() + huCardType.anGang.size() + huCardType.mingGang.size() == 4) {
+            return true;
+        }
+        return false;
     }
 
 
@@ -547,24 +592,35 @@ public class FanUtil implements HuType {
         boolean isHasLong3 = list1.containsAll(ytl3);
 
         boolean isHas = isHasLong1 || isHasLong2 || isHasLong3;
-//		boolean isHas = false;
-//		int ytlType = 0;
-//		for (int i = 0; i < 3; i++) {
-//			boolean isLx = true;
-//
-//			for (int j = 0; j < 9; j++) {
-//				if (!cardMap.containsKey(i * 9 + j)) {
-//					isLx = false;
-//					break;
-//				}
-//			}
-//			if (isLx) {
-//				isHas = true;
-//				ytlType = i;
-//			}
-//		}
-
         return isHas;
+    }
+
+
+    /**
+     * 是否是架龙
+     *
+     * @param cards
+     * @param huCardType
+     * @return
+     */
+    public static boolean isYitiaolong_jialong(List<String> cards, HuCardType huCardType) {
+        List<String> temp = new ArrayList<>();
+        temp.addAll(cards);
+        Map<Integer, Integer> cardMap = PlayerCardsInfoMj.getCardNum(temp);
+
+        List<Integer> list1 = new ArrayList<>();
+        list1.addAll(huCardType.shun);
+        list1.addAll(huCardType.chi);
+
+        boolean isHasLong1 = list1.containsAll(ytl1);
+        boolean isHasLong2 = list1.containsAll(ytl2);
+        boolean isHasLong3 = list1.containsAll(ytl3);
+
+        int jiangGroup = CardTypeUtil.getCardGroupByCardType(huCardType.jiang);
+
+        return isHasLong1 && jiangGroup == CardTypeUtil.GROUP_WAN ||
+                isHasLong2 && jiangGroup == CardTypeUtil.GROUP_TONG ||
+                isHasLong3 && jiangGroup == CardTypeUtil.GROUP_TIAO;
     }
 
     private static boolean isHasThisGroup(Set<Integer> set, int group) {
