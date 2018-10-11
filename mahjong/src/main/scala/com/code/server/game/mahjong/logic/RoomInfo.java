@@ -7,6 +7,7 @@ import com.code.server.constant.game.*;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.*;
+import com.code.server.game.mahjong.config.ServerConfig;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
@@ -145,6 +146,15 @@ public class RoomInfo extends RoomInfoExtendGold {
 
     }
 
+
+    protected boolean isCanAgreeDissloution(int agreeNum) {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        if (serverConfig.getDissloutionRoomMustAllAgree() == 1) {
+            return agreeNum >= personNumber  && agreeNum >= 2;
+        }else{
+            return agreeNum >= personNumber - 1 && agreeNum >= 2;
+        }
+    }
 
     private GameInfo getGameInfoInstance() {
         switch (this.getGameType()) {

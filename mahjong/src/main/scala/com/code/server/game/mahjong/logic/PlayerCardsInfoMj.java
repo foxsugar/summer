@@ -2,13 +2,11 @@ package com.code.server.game.mahjong.logic;
 
 
 import com.code.server.constant.response.IfacePlayerInfoVo;
-import com.code.server.game.mahjong.util.HuCardType;
-import com.code.server.game.mahjong.util.HuLimit;
-import com.code.server.game.mahjong.util.HuType;
-import com.code.server.game.mahjong.util.HuUtil;
+import com.code.server.game.mahjong.util.*;
 import com.code.server.game.room.PlayerCardInfo;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * Created by T420 on 2016/11/30.
@@ -621,7 +619,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     }
 
 
-    public List<HuCardType> getTingHuCardTypeWithHun(List<String> cards, List<Integer> hun,int chiPengGangNum) {
+    public List<HuCardType> getTingHuCardTypeWithHun(List<String> cards, List<Integer> hun,int chiPengGangNum,Predicate<Integer> predicate) {
         List<String> handCards = new ArrayList<>();
         handCards.addAll(cards);
 
@@ -632,13 +630,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         if (isMore) {//多一张
             //循环去掉一张看能否听
             for (String card : handCards) {
+//                int cardType = CardTypeUtil.getTypeByCard(card);
+//                if(hun.contains(cardType)) continue;
                 List<String> tempCards = new ArrayList<>();
                 tempCards.addAll(handCards);
                 tempCards.remove(card);
-                tingList.addAll(HuUtil.getTingHuListWithHun(tempCards, this, hun, card,chiPengGangNum));
+                tingList.addAll(HuUtil.getTingHuListWithHun(tempCards, this, hun, card,chiPengGangNum,predicate));
             }
         } else {
-            tingList.addAll(HuUtil.getTingHuListWithHun(handCards, this, hun, null,chiPengGangNum));
+            tingList.addAll(HuUtil.getTingHuListWithHun(handCards, this, hun, null,chiPengGangNum, predicate));
         }
         return tingList;
     }

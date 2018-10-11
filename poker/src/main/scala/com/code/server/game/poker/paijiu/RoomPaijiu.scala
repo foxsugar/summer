@@ -3,6 +3,7 @@ package com.code.server.game.poker.paijiu
 import com.code.server.constant.game.{IGameConstant, RoomStatistics}
 import com.code.server.constant.response.{ErrorCode, IfaceRoomVo, ResponseVo, RoomPaijiuVo}
 import com.code.server.game.poker.config.ServerConfig
+import com.code.server.game.poker.service.PokerGoldRoom
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
@@ -16,7 +17,7 @@ import scala.beans.BeanProperty
 /**
   * Created by sunxianping on 2017/7/24.
   */
-class RoomPaijiu extends Room {
+class RoomPaijiu extends PokerGoldRoom {
 
   @BeanProperty
   var cards: List[Int] = List()

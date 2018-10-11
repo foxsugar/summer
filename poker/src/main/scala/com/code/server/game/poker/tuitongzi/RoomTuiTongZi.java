@@ -6,7 +6,7 @@ import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.IfaceRoomVo;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
-import com.code.server.game.room.Room;
+import com.code.server.game.poker.service.PokerGoldRoom;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.config.IConstant;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RoomTuiTongZi extends Room {
+public class RoomTuiTongZi extends PokerGoldRoom {
 
     private long bankerScore;
 

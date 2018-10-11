@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 /**
  * Created by Administrator on 2017/7/3.
  */
@@ -23,4 +25,7 @@ public interface IReplayDao extends PagingAndSortingRepository<Replay, Long>{
 
     @Transactional
     void deleteAllByRoomUuid(long roomUuid);
+
+    @Transactional
+    void deleteAllByDateBefore(Date date);
 }

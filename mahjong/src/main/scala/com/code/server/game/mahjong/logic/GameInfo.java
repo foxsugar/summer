@@ -82,6 +82,8 @@ public class GameInfo extends Game {
 
     protected boolean isAlreadyComputeGang = false;
 
+    private long lastCatchCardUser = 0;//最后抓牌的玩家 繁峙下雨
+
     public int rand = 0;
 //    private Set<Long> noCanHuList = new HashSet<>();//本轮不能胡的人
 
@@ -1791,6 +1793,15 @@ public class GameInfo extends Game {
 
     public GameInfo setAfterTingShowCard(boolean afterTingShowCard) {
         this.afterTingShowCard = afterTingShowCard;
+        return this;
+    }
+
+    public long getLastCatchCardUser() {
+        return lastCatchCardUser;
+    }
+
+    public GameInfo setLastCatchCardUser(long lastCatchCardUser) {
+        this.lastCatchCardUser = lastCatchCardUser;
         return this;
     }
 }

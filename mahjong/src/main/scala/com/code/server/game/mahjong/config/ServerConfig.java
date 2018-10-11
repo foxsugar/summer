@@ -15,6 +15,7 @@ public class ServerConfig {
     private int isStartRobot = 1;
     private String dataFile;
     private String domain;
+    private int dissloutionRoomMustAllAgree = 0;
 
     public String getServerType() {
         return serverType;
@@ -78,6 +79,15 @@ public class ServerConfig {
 
     public ServerConfig setDomain(String domain) {
         this.domain = domain;
+        return this;
+    }
+
+    public int getDissloutionRoomMustAllAgree() {
+        return dissloutionRoomMustAllAgree;
+    }
+
+    public ServerConfig setDissloutionRoomMustAllAgree(int dissloutionRoomMustAllAgree) {
+        this.dissloutionRoomMustAllAgree = dissloutionRoomMustAllAgree;
         return this;
     }
 }

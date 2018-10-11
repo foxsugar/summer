@@ -46,7 +46,13 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         }
 
 
-        List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(getCardsNoChiPengGang(cards), this.gameInfo.hun, this.getChiPengGangNum());
+        List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(getCardsNoChiPengGang(cards), this.gameInfo.hun, this.getChiPengGangNum(), integer -> {
+            int point = CardTypeUtil.cardTingScore.get(integer);
+            if (point >= TING_MIN_SCORE || gameInfo.hun.contains(integer)) {
+                return true;
+            }
+            return false;
+        });
         for (HuCardType huCardType : huCardTypes) {
             int point = getMaxPoint(huCardType, false);
             if (point >= TING_MIN_SCORE) {
@@ -93,7 +99,14 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
         chipenggangNum++;
 
-        List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(cards, this.gameInfo.hun, chipenggangNum);
+        List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(getCardsNoChiPengGang(cards), this.gameInfo.hun, chipenggangNum, integer -> {
+
+            int point = CardTypeUtil.cardTingScore.get(integer);
+            if (point >= TING_MIN_SCORE || gameInfo.hun.contains(integer)) {
+                return true;
+            }
+            return false;
+        });
 
         for (HuCardType huCardType : huCardTypes) {
             int point = getMaxPoint(huCardType, false);
@@ -327,6 +340,9 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
             result.add(CardTypeUtil.cardTingScore.get(cardType));
         }
 
+        if (result.size() == 0) {
+            result.add(0);
+        }
         return Collections.max(result);
     }
 
@@ -342,28 +358,30 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
 //        String[] s = new String[]{"032", "033", "034", "036","040",  "044", "056",  "060",  "064",   "092", "093", "104", "105","135"};//092
         String[] s = new String[]{
-                "076",
-                "077",
-                "078",
+                "012",
+                "016",
+                "017",
 
                 "012",
                 "013",
-                "024",
-                "025",
-                "028",
-                "029",
 
-                "064",
-                "067",
-                "080",
+                "020",
+                "024",
+
                 "084",
-                "088"};//092
+                "088",
+                "092",
+
+                "112",
+                "113",
+                "114",
+                "115"};//092
 //        String[] s = new String[]{"112", "113", "114",   "024",   "028", "032",  "088", "092", "096",  "097",    "132", "133", "124", "120"};
 
 //        094, 038, 093, 063, 067, 044, 034, 106, 058, 035, 041, 104, 033, 032
 
         List<Integer> hun = new ArrayList<>();
-        hun.add(6);
+        hun.add(28);
 //        hun.add(31);
 //        hun.add(1);
 //        hun.add(8);
@@ -379,7 +397,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         playerCardsInfo.init(playerCardsInfo.cards);
 
 
-        playerCardsInfo.pengType.put(19,0L);
+//        playerCardsInfo.pengType.put(19,0L);
 //        playerCardsInfo.pengType.put(6,0L);
 //        playerCardsInfo.anGangType.add(32);
 
@@ -393,14 +411,21 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 //                playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
 //                playerCardsInfo.getChiPengGangNum(), hun, 23);
 //        boolean isCanHu = playerCardsInfo.isCanHu_dianpao("024");
-        playerCardsInfo.isTing = true;
-        boolean isCanHu = playerCardsInfo.isCanHu_zimo("088");
+//        playerCardsInfo.isTing = true;
+        long start = System.currentTimeMillis();
+        boolean isCanHu = playerCardsInfo.isCanHu_zimo("084");
+        long end = System.currentTimeMillis();
+        System.out.println((end - start));
 //        boolean isGang = playerCardsInfo.isHasGang();
         System.out.println(isCanHu);
 
 
-//        boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);
-//        System.out.println(isCanTing);
+        long start1 = System.currentTimeMillis();
+
+        boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);
+        long end1 = System.currentTimeMillis();
+        System.out.println((end1 - start1));
+        System.out.println(isCanTing);
 
 //        playerCardsInfo.hu_zm(roomInfo,gameInfoTJ,"133");
 //        playerCardsInfo.huCompute( roomInfo,  gameInfoTJ, true, 0, "133");

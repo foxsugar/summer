@@ -1,10 +1,7 @@
 package com.code.server.game.mahjong.service;
 
 
-import com.code.server.game.mahjong.logic.GameInfo;
-import com.code.server.game.mahjong.logic.GameInfoLuanGuaFeng;
-import com.code.server.game.mahjong.logic.GameInfoTJ;
-import com.code.server.game.mahjong.logic.RoomInfo;
+import com.code.server.game.mahjong.logic.*;
 import com.code.server.game.room.IfaceRoom;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
@@ -95,6 +92,9 @@ public class GameLogicService {
             case "bufeng":
                 code = bufeng(roomId, userId, card);
                 break;
+            case "fanshiGetCard":
+                boolean isGet = jsonNode.path("isGet").asBoolean();
+                code = fanshiGetCard(roomId, userId, isGet);
         }
         if (code == 0) {
             MsgSender.sendMsg2Player("gameLogicService",method,code, userId);
@@ -188,6 +188,11 @@ public class GameLogicService {
     public static int bufeng(String roomId, long userId, String card) {
         GameInfoLuanGuaFeng gameInfoLuanGuaFeng = (GameInfoLuanGuaFeng) getGameInfo(roomId);
         return gameInfoLuanGuaFeng.buFeng(userId, card);
+    }
+
+    public static int fanshiGetCard(String roomId, long userId,boolean isGet) {
+        GameInfoFanshi gameInfoFanshi = (GameInfoFanshi) getGameInfo(roomId);
+        return gameInfoFanshi.fanshiGetCard(userId, isGet);
     }
 
 }

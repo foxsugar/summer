@@ -3,6 +3,8 @@ package com.code.server.game.mahjong.logic;
 import com.code.server.game.mahjong.util.HuCardType;
 import com.code.server.game.mahjong.util.HuUtil;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -86,7 +88,12 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
             return false;
         }
 
-        List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(getCardsNoChiPengGang(cards), this.gameInfo.hun, this.getChiPengGangNum());
+        List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(getCardsNoChiPengGang(cards), this.gameInfo.hun, this.getChiPengGangNum(), integer -> {
+//            if (integer > TING_MIN_SCORE || gameInfo.hun.contains(integer)) {
+                return true;
+//            }
+//            return false;
+        });
         for (HuCardType huCardType : huCardTypes) {
             int point = getMaxPoint(huCardType, false);
             if (point >= TING_MIN_SCORE) {
@@ -171,5 +178,75 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
 
     private boolean isHas4Hongzhong() {
         return this.cards.stream().filter(card -> CardTypeUtil.getTypeByCard(card) == 31).count() == 4;
+    }
+
+
+
+
+    public static void main(String[] args) {
+
+//        PlayerCardsInfoSZ_LQ playerCardsInfo = new PlayerCardsInfoSZ_LQ();
+//        PlayerCardsInfoTDH playerCardsInfo = new PlayerCardsInfoTDH();
+        PlayerCardsInfoHongZhong playerCardsInfo = new PlayerCardsInfoHongZhong();
+//        playerCardsInfo.isHasFengShun = true;
+
+//        playerCardsInfo.isHasYimenpai = true;
+//        playerCardsInfo.isHasShuye = true;
+//        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","042","124","135"};
+//        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","134","042","124","135"};
+        String[] s = new String[]{"004","005","006","007","008","009", "044","045",  "064","065",  "068","100","101","124"};
+//        String[] s = new String[]{"000","001","002",     "036",  "037","038",    "052", "053","054",    "080","081","082",    "112","113"};
+
+//        String[] s = new String[]{"076","077","078",     "080",  "084","085",    "088", "089","090",    "092","093","096",    "100","101"};
+
+
+        List<Integer> hun = new ArrayList<>();
+        hun.add(31);
+//        hun.add(31);
+//        hun.add(1);
+//        hun.add(8);
+
+
+        RoomInfo roomInfo = new RoomInfo();
+        roomInfo.setMode("1023");
+        GameInfoNew gameInfoTJ = new GameInfoNew();
+        gameInfoTJ.hun = hun;
+        playerCardsInfo.setRoomInfo(roomInfo);
+        playerCardsInfo.setGameInfo(gameInfoTJ);
+
+        playerCardsInfo.cards = new ArrayList<>();
+        playerCardsInfo.setRoomInfo(roomInfo);
+        playerCardsInfo.init(playerCardsInfo.cards);
+        List<String> list = Arrays.asList(s);
+        playerCardsInfo.cards.addAll(list);
+//        System.out.println("!!!!!!!!!!!!"+HuUtil.isHu(list,playerCardsInfo,0,new HuLimit(0)));
+//        playerCardsInfo.anGangType.add(24);
+//        playerCardsInfo.mingGangType.put(0,1);
+//        playerCardsInfo.pengType.put(0,1);
+//        playerCardsInfo.pengType.put(13,1);
+//        playerCardsInfo.isTing = true;
+//        playerCardsInfo.pengType.put(0,1);
+//        playerCardsInfo.pengType.put(19,1);
+
+
+
+//        playerCardsInfo.pengType.put(25,1);
+
+//        playerCardsInfo.isTing = true;
+//        List<String> temp = new ArrayList<>();
+//        temp.addAll(playerCardsInfo.cards);
+////        playerCardsInfo.isTing = true;
+//        playerCardsInfo.tingSet = new HashSet<>();
+//        playerCardsInfo.tingSet.add(15);
+        System.out.println(playerCardsInfo.isCanHu_zimo("124"));
+//        System.out.println("==="+playerCardsInfo.getYiZhangYingSet(playerCardsInfo.getCardsNoChiPengGang(temp),null));
+//        System.out.println(playerCardsInfo.isCanHu_zimo("113"));
+//        System.out.println(playerCardsInfo.isCanTing(playerCardsInfo.cards));
+//        List<String> cs = playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.getCards());
+//        int cardType = CardTypeUtil.getTypeByCard("060");
+//        HuUtil.isHu(cs, playerCardsInfo, CardTypeUtil.cardType.get("060"), new HuLimit(3));
+//        System.out.println(HuUtil.isHu(playerCardsInfo.getCards(), playerCardsInfo, null));
+//        System.out.println(HuUtil.isHu(playerCardsInfo.cards,playerCardsInfo,new HuLimit(6)));
+//        playerCardsInfo.huCompute();
     }
 }

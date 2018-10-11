@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,5 +26,8 @@ public interface IGameRecordDao extends PagingAndSortingRepository<GameRecord, L
 
     @Transactional
     void deleteAllByUuid(long uuid);
+
+    @Transactional
+    void deleteAllByDateBefore(Date date);
 
 }

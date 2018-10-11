@@ -5,6 +5,7 @@ import com.code.server.game.mahjong.logic.CardTypeUtil;
 import com.code.server.game.mahjong.logic.PlayerCardsInfoMj;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class HuUtil implements HuType {
 
@@ -309,11 +310,13 @@ public class HuUtil implements HuType {
      * @param removeCard      听删掉的牌
      * @return
      */
-    public static List<HuCardType> getTingHuListWithHun(List<String> cards, PlayerCardsInfoMj playerCardsInfo, List<Integer> hun, String removeCard,int chiPengGangNum) {
+    public static List<HuCardType> getTingHuListWithHun(List<String> cards, PlayerCardsInfoMj playerCardsInfo, List<Integer> hun,
+                                                        String removeCard, int chiPengGangNum, Predicate<Integer> predicate) {
         List<HuCardType> result = new ArrayList<>();
         Set<Integer> tingSet = new HashSet<>();
 //        int chiPengGangNum = playerCardsInfo.getChiPengGangNum();
         for (int i = 0; i < n_zero.length; i++) {
+            if(!predicate.test(i)) continue;
             String addCard = CardTypeUtil.getCardStrByType(i);
             List<String> newCards = new ArrayList<>();
             newCards.addAll(cards);
@@ -768,6 +771,7 @@ public class HuUtil implements HuType {
         for (Map.Entry<Integer, Integer> entry : cardMap.entrySet()) {
             if (entry.getValue() != 2 && entry.getValue() != 4) {
                 needHunList.add(entry.getKey());
+                huCardType.hunReplaceCard.add(entry.getKey());
             }
             if (entry.getValue() == 4) {
                 isHas4Num++;

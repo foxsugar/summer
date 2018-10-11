@@ -2,9 +2,12 @@ package com.code.server.game.poker.xuanqiqi;
 
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.UserBean;
-import com.code.server.constant.response.*;
+import com.code.server.constant.response.ErrorCode;
+import com.code.server.constant.response.IfaceRoomVo;
+import com.code.server.constant.response.ResponseVo;
+import com.code.server.constant.response.UserOfResult;
 import com.code.server.game.poker.config.ServerConfig;
-import com.code.server.game.room.Room;
+import com.code.server.game.poker.service.PokerGoldRoom;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.config.IConstant;
@@ -32,7 +35,7 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class RoomXuanQiQi extends Room {
+public class RoomXuanQiQi extends PokerGoldRoom {
 
     /*
         底分  multiple

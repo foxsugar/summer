@@ -36,6 +36,14 @@ public class PokerGoldRoom extends RoomExtendGold {
 
     }
 
+    protected boolean isCanAgreeDissloution(int agreeNum) {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        if (serverConfig.getDissloutionRoomMustAllAgree() == 1) {
+            return agreeNum >= personNumber  && agreeNum >= 2;
+        }else{
+            return agreeNum >= personNumber - 1 && agreeNum >= 2;
+        }
+    }
 
     public void add2GoldPool() {
         int serverId = SpringUtil.getBean(ServerConfig.class).getServerId();

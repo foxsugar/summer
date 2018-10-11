@@ -21,6 +21,7 @@ public class ReconnectResp {
     private boolean isAllPass;
     private List<Integer> hun = new ArrayList<>();
     private int rand;
+    private long fanshiLastCatchUser = 0;
 
 
 

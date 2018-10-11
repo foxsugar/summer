@@ -14,6 +14,7 @@ public class ServerConfig {
     private int robotExeCycle = 1000;
     private int isStartRobot = 1;
     private String dataFile;
+    private int dissloutionRoomMustAllAgree = 0;
 
 
     public String getServerType() {
@@ -69,6 +70,15 @@ public class ServerConfig {
 
     public ServerConfig setDataFile(String dataFile) {
         this.dataFile = dataFile;
+        return this;
+    }
+
+    public int getDissloutionRoomMustAllAgree() {
+        return dissloutionRoomMustAllAgree;
+    }
+
+    public ServerConfig setDissloutionRoomMustAllAgree(int dissloutionRoomMustAllAgree) {
+        this.dissloutionRoomMustAllAgree = dissloutionRoomMustAllAgree;
         return this;
     }
 }

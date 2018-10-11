@@ -65,6 +65,8 @@ public class ServerConfig {
 
     private int bindRefereeReward = 0;
 
+    private int deleteRecordTask = 0;
+
 
     public String getServerType() {
         return serverType;
@@ -293,6 +295,15 @@ public class ServerConfig {
 
     public ServerConfig setBindRefereeReward(int bindRefereeReward) {
         this.bindRefereeReward = bindRefereeReward;
+        return this;
+    }
+
+    public int getDeleteRecordTask() {
+        return deleteRecordTask;
+    }
+
+    public ServerConfig setDeleteRecordTask(int deleteRecordTask) {
+        this.deleteRecordTask = deleteRecordTask;
         return this;
     }
 }
