@@ -1345,14 +1345,14 @@ public class GameClubService {
                     continue;
                 }
                 createRoom(club, roomModel);
-                //减钱
-                int moneyNow = club.getMoney() - roomModel.getMoney();
-                club.setMoney(moneyNow);
-
-                //统计
-                addStatisticeConsume(club, roomModel.getMoney());
-
-                club.getStatistics().setConsume(club.getStatistics().getConsume() + roomModel.getMoney());
+//                //减钱
+//                int moneyNow = club.getMoney() - roomModel.getMoney();
+//                club.setMoney(moneyNow);
+//
+//                //统计
+//                addStatisticeConsume(club, roomModel.getMoney());
+//
+//                club.getStatistics().setConsume(club.getStatistics().getConsume() + roomModel.getMoney());
 
             }
 
