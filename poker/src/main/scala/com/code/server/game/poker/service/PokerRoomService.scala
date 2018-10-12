@@ -61,11 +61,12 @@ object PokerRoomService {
         val time = params.path("time").asInt(10)
         val isJoinHalfWay = params.path("isJoinHalfWay").asBoolean(false)
         val wanjialiangpai = params.path("wanjialiangpai").asBoolean(false)
+        val bipaijiabei = params.path("bipaijiabei").asBoolean(true)
 
 
         return RoomHitGoldFlower.createHitGoldFlowerRoom(userId, gameNumber, personNumber, cricleNumber,
           multiple, caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel,
-          isRobot, time, isJoinHalfWay,wanjialiangpai)
+          isRobot, time, isJoinHalfWay,wanjialiangpai,bipaijiabei)
 
       case "createXuanQiQiRoom" =>
         val roomType = params.get("roomType").asText()

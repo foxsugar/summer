@@ -260,12 +260,23 @@ public class GameHitGoldFlower extends Game {
         result.put("askerId",askerId);
         result.put("winnerId",winnerId);
         result.put("loserId",winnerId==askerId?accepterId:askerId);
-        if(seeUser.contains(askerId)){
-            playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore()+chip*4);
-            result.put("addChip",chip*4);
+        if (this.room.bipaijiabei) {
+
+            if(seeUser.contains(askerId)){
+                playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore()+chip*4);
+                result.put("addChip",chip*4);
+            }else{
+                playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore()+chip*2);
+                result.put("addChip",chip*2);
+            }
         }else{
-            playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore()+chip*2);
-            result.put("addChip",chip*2);
+            if(seeUser.contains(askerId)){
+                playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore()+chip*2);
+                result.put("addChip",chip*2);
+            }else{
+                playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore()+chip*1);
+                result.put("addChip",chip*1);
+            }
         }
         ResponseVo vo = new ResponseVo("gameService", "killResponse", result);
         MsgSender.sendMsg2Player(vo, users);

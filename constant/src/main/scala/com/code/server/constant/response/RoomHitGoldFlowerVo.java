@@ -13,6 +13,7 @@ public class RoomHitGoldFlowerVo extends RoomVo {
     protected int time;
     protected boolean isJoinHalfWay;
     protected boolean wanjialiangpai;
+    protected boolean bipaijiabei;
 
     public long getBankerId() {
         return bankerId;
@@ -70,6 +71,15 @@ public class RoomHitGoldFlowerVo extends RoomVo {
 
     public RoomHitGoldFlowerVo setWanjialiangpai(boolean wanjialiangpai) {
         this.wanjialiangpai = wanjialiangpai;
+        return this;
+    }
+
+    public boolean isBipaijiabei() {
+        return bipaijiabei;
+    }
+
+    public RoomHitGoldFlowerVo setBipaijiabei(boolean bipaijiabei) {
+        this.bipaijiabei = bipaijiabei;
         return this;
     }
 }

@@ -41,6 +41,7 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
         specialHuScore.put(hu_碰碰胡, 4);
         specialHuScore.put(hu_清一色碰碰胡, 10);
 
+        this.setHasGangBlackList(false);
 
     }
 
@@ -178,11 +179,7 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
         this.addScore(allScore);
         this.roomInfo.addUserSocre(this.userId, allScore);
 
-
-
-
-
-
-
     }
+
+
 }

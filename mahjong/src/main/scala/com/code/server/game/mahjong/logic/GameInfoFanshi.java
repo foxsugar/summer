@@ -1,6 +1,7 @@
 package com.code.server.game.mahjong.logic;
 
 import com.code.server.constant.response.ResponseVo;
+import com.code.server.game.mahjong.response.ErrorCode;
 import com.code.server.game.mahjong.response.ResponseType;
 import com.code.server.game.room.kafka.MsgSender;
 
@@ -16,6 +17,7 @@ public class GameInfoFanshi extends GameInfoNew {
         if (remainCards.size() == 1) {
             ResponseVo responseVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, "lastCardIsCatch", 0);
             MsgSender.sendMsg2Player(responseVo, userId);
+            this.setLastCatchCardUser(userId);
         }else{
             super.mopai(userId, wz);
         }
@@ -24,11 +26,15 @@ public class GameInfoFanshi extends GameInfoNew {
 
     public int fanshiGetCard(long userId,boolean isGet) {
 
+        if (userId != this.getLastCatchCardUser()) {
+            return ErrorCode.NOT_TURN;
+        }
         if (isGet) {
             super.mopai(userId,null);
         } else {
             handleHuangzhuang(userId);
         }
+        this.setLastCatchCardUser(0);
         ResponseVo responseVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, "fanshiGetCard", 0);
         MsgSender.sendMsg2Player(responseVo, userId);
         return 0;
