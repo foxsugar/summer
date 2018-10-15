@@ -93,7 +93,7 @@ public class GameLogicService {
                 code = bufeng(roomId, userId, card);
                 break;
             case "fanshiGetCard":
-                boolean isGet = jsonNode.path("isGet").asBoolean();
+                boolean isGet = jsonNode.path("isGet").asBoolean(false);
                 code = fanshiGetCard(roomId, userId, isGet);
                 break;
         }
