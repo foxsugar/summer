@@ -4,7 +4,6 @@ import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.robot.ResponseRobotVo;
-import com.code.server.game.poker.zhaguzi.RoomYSZ;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.service.IRobot;
 import com.code.server.kafka.MsgProducer;
@@ -47,11 +46,11 @@ public class HitGoldFlowerRobot implements IRobot {
             //如果没在游戏中
             if (room.getCurGameNumber() > 1 && now - room.getLastOperateTime() > 1000 * r.time) {
 //
-//                r.userStatus.forEach((id,status)->{
-//                    if (status == 0) {
-//                        getReady(r, id);
-//                    }
-//                });
+                r.userStatus.forEach((id,status)->{
+                    if (status == 0) {
+                        getReady(r, id);
+                    }
+                });
             }
 
 
