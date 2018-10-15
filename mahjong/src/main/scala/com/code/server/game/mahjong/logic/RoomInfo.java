@@ -196,6 +196,7 @@ public class RoomInfo extends RoomInfoExtendGold {
                 this.setChangeBankerAfterHuangZhuang(true);
                 return new GameInfoNiuyezi();
             case "HS":
+            case "HUASHUI":
                 return new GameInfoHS().setHasJieGangHu(true);
             case "XXPB":
                 return new GameInfoXXPB().setHasJieGangHu(true);

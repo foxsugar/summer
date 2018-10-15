@@ -36,6 +36,7 @@ public class ReconnectResp {
         isAllPass = gameInfo.getWaitingforList().size() ==0;
         hun.addAll(gameInfo.getHun());
         rand = gameInfo.rand;
+        fanshiLastCatchUser = gameInfo.getLastCatchCardUser();
 
         for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
             long uid = playerCardsInfo.getUserId();

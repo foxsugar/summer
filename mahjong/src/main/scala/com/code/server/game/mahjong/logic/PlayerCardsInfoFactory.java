@@ -72,6 +72,7 @@ public class PlayerCardsInfoFactory {
                 playerCardsInfo = new PlayerCardsInfoNiuyezi();
                 break;
             case "50":
+            case "52":
                 playerCardsInfo = new PlayerCardsInfoHS();
                 break;
             case "100":

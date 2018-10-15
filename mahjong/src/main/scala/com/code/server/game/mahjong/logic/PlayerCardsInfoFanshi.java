@@ -61,7 +61,7 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
         List<String> temp = getCardsAddThisCard(card);
         List<String> noPengAndGang = getCardsNoChiPengGang(temp);
         int cardType = CardTypeUtil.getTypeByCard(card);
-        List<HuCardType> huList = HuUtil.isHu(noPengAndGang, this, cardType, null);
+        List<HuCardType> huList = HuUtil.isHu(noPengAndGang, this, cardType, new HuLimit(0));
         return huList.stream().anyMatch(huCardType -> huCardType.specialHuList.contains(hu_缺一门));
 
     }
@@ -70,7 +70,7 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
     public boolean isCanHu_zimo(String card) {
         List<String> cs = getCardsNoChiPengGang(cards);
         int cardType = CardTypeUtil.cardType.get(card);
-        List<HuCardType> huList = HuUtil.isHu(cs, this, cardType, null);
+        List<HuCardType> huList = HuUtil.isHu(cs, this, cardType, new HuLimit(0));
         return huList.stream().anyMatch(huCardType -> huCardType.specialHuList.contains(hu_缺一门));
     }
 

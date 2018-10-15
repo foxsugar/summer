@@ -95,6 +95,7 @@ public class GameLogicService {
             case "fanshiGetCard":
                 boolean isGet = jsonNode.path("isGet").asBoolean();
                 code = fanshiGetCard(roomId, userId, isGet);
+                break;
         }
         if (code == 0) {
             MsgSender.sendMsg2Player("gameLogicService",method,code, userId);
