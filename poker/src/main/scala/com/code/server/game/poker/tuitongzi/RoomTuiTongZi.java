@@ -265,9 +265,11 @@ public class RoomTuiTongZi extends PokerGoldRoom {
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameTTZBegin", "ok"), this.getUsers());
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "startTTZGameByClient", 0), userId);
 
-        GameTuiTongZi gameTuiTongZi = (GameTuiTongZi) getGameInstance();
-        this.game = gameTuiTongZi;
-        game.startGame(users, this);
+//        GameTuiTongZi gameTuiTongZi = (GameTuiTongZi) getGameInstance();
+//        this.game = gameTuiTongZi;
+
+        startGame();
+//        game.startGame(users, this);
 
         //游戏开始 代建房 去除定时解散
         if (!isOpen && !this.isCreaterJoin) GameTimer.removeNode(prepareRoomTimerNode);

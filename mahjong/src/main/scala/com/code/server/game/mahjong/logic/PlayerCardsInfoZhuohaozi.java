@@ -99,7 +99,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
         chipenggangNum++;
 
-        List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(getCardsNoChiPengGang(cards), this.gameInfo.hun, chipenggangNum, integer -> {
+        List<HuCardType> huCardTypes = getTingHuCardTypeWithHun(cards, this.gameInfo.hun, chipenggangNum, integer -> {
 
             int point = CardTypeUtil.cardTingScore.get(integer);
             if (point >= TING_MIN_SCORE || gameInfo.hun.contains(integer)) {
