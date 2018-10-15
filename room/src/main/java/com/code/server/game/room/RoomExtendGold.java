@@ -251,8 +251,9 @@ public class RoomExtendGold extends Room {
     public boolean isRobotRoom() {
         if (isGoldRoom()) {
             return true;
+        }else{
+            return super.isRobotRoom();
         }
-        return false;
     }
 
     /**
