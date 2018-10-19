@@ -211,6 +211,7 @@ public class CenterMsgService implements IkafkaMsgId {
                         ClubStatistics clubStatistics = clubMember.getStatistics().getOrDefault(date, new ClubStatistics());
                         clubMember.getStatistics().put(date, clubStatistics);
                         clubStatistics.setAllScore(clubStatistics.getAllScore() + userRecord.getScore());
+                        clubStatistics.setOpenNum(clubStatistics.getOpenNum() + 1);
                     }
 
                 }
