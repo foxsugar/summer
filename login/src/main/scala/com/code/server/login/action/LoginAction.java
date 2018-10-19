@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import scala.tools.nsc.doc.html.page.JSONObject;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
@@ -168,7 +169,7 @@ public class LoginAction {
     }
 
     @RequestMapping("/login")
-    public Map<String, Object> login(String account, String password, String token_user) {
+    public Map<String, Object> login(String account, String password, String token_user, HttpServletRequest request) {
         Map<String, Object> params = new HashMap<>();
         int code = 0;
         //redis里的数据

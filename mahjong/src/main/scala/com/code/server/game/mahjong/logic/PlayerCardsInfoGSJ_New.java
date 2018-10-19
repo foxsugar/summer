@@ -12,12 +12,13 @@ import java.util.Set;
 /**
  * Created by dajuejinxian on 2018/7/16.
  */
-public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
+public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu {
 
     //验证牌花色是否大于8张
     private static final int CHECK_CARD_POINT = 7;
     //第0位是不是1
     public static final int mode_硬八张 = 0;
+
     @Override
     public void init(List<String> cards) {
 
@@ -25,20 +26,20 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
         this.cards = cards;
         isHasTing = true;
 
-        specialHuScore.put(hu_清一色,15);
-        specialHuScore.put(hu_一条龙,15);
-        specialHuScore.put(hu_七小对,15);
-        specialHuScore.put(hu_豪华七小对,30);
-        specialHuScore.put(hu_双豪七小对,30);
-        specialHuScore.put(hu_十三幺,30);
-        specialHuScore.put(hu_清龙,30);
+        specialHuScore.put(hu_清一色, 15);
+        specialHuScore.put(hu_一条龙, 15);
+        specialHuScore.put(hu_七小对, 15);
+        specialHuScore.put(hu_豪华七小对, 30);
+        specialHuScore.put(hu_双豪七小对, 30);
+        specialHuScore.put(hu_十三幺, 30);
+        specialHuScore.put(hu_清龙, 30);
         //坎胡
-        specialHuScore.put(hu_边张,10);
-        specialHuScore.put(hu_夹张,10);
+        specialHuScore.put(hu_边张, 10);
+        specialHuScore.put(hu_夹张, 10);
     }
 
     //不带吃
-    public boolean isHasChi(String card){
+    public boolean isHasChi(String card) {
         return false;
     }
 
@@ -58,11 +59,12 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
         List<String> temp = getCardsAddThisCard(card);
         List<String> noPengAndGang = getCardsNoChiPengGang(temp);
         System.out.println("检测是否可胡点炮= " + noPengAndGang);
-        return HuUtil.isHu(noPengAndGang, this, CardTypeUtil.cardType.get(card), null).size()>0 && checkCard(tempList);
+        return HuUtil.isHu(noPengAndGang, this, CardTypeUtil.cardType.get(card), null).size() > 0 && checkCard(tempList);
     }
 
     /**
      * 是否可胡 自摸
+     *
      * @param card
      * @return
      */
@@ -72,12 +74,12 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
         if (!isTing && this.roomInfo.haveTing) return false;
 
         List<String> cs = getCardsNoChiPengGang(cards);
-        System.out.println("检测是否可胡自摸= " + cs );
-        return HuUtil.isHu(cs, this, CardTypeUtil.cardType.get(card), null).size()>0 && checkCard(cards);
+        System.out.println("检测是否可胡自摸= " + cs);
+        return HuUtil.isHu(cs, this, CardTypeUtil.cardType.get(card), null).size() > 0 && checkCard(cards);
 
     }
 
-    public boolean checkCard(List<String> cards){
+    public boolean checkCard(List<String> cards) {
 
         boolean isHas = this.roomInfo.isHasMode(mode_硬八张);
         if (!isHas) return true;
@@ -86,11 +88,11 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
         int tiaoNum = 0;
         int tongNum = 0;
         for (String string : cards) {
-            if(CardTypeUtil.getCardGroup(string)==CardTypeUtil.GROUP_WAN){
+            if (CardTypeUtil.getCardGroup(string) == CardTypeUtil.GROUP_WAN) {
                 wanNum++;
-            }else if(CardTypeUtil.getCardGroup(string)==CardTypeUtil.GROUP_TONG){
+            } else if (CardTypeUtil.getCardGroup(string) == CardTypeUtil.GROUP_TONG) {
                 tiaoNum++;
-            }else if(CardTypeUtil.getCardGroup(string)==CardTypeUtil.GROUP_TIAO){
+            } else if (CardTypeUtil.getCardGroup(string) == CardTypeUtil.GROUP_TIAO) {
                 tongNum++;
             }
         }
@@ -106,54 +108,54 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
 
         boolean isHas = this.roomInfo.isHasMode(mode_硬八张);
 
-        if (isHas){
+        if (isHas) {
 
             List<String> noPengGang = getCardsNoChiPengGang(cards);
 
-            long wanCount = noPengGang.stream().filter(x ->{
+            long wanCount = noPengGang.stream().filter(x -> {
                 return (Integer.valueOf(x) / 4 <= 8);
-                 }).count();
+            }).count();
 
-            long tongCount = noPengGang.stream().filter(x ->{
+            long tongCount = noPengGang.stream().filter(x -> {
                 return (Integer.valueOf(x) / 4 >= 18) && (Integer.valueOf(x) / 4 <= 26);
             }).count();
 
-            long tiaoCount = noPengGang.stream().filter(x ->{
+            long tiaoCount = noPengGang.stream().filter(x -> {
                 return (Integer.valueOf(x) / 4 >= 9) && (Integer.valueOf(x) / 4 <= 17);
             }).count();
 
-            for (Map.Entry<Integer,Long> entry : getPengType().entrySet()){
-                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_WAN){
+            for (Map.Entry<Integer, Long> entry : getPengType().entrySet()) {
+                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_WAN) {
                     wanCount += 3;
                 }
-                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_TIAO){
+                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_TIAO) {
                     tiaoCount += 3;
                 }
-                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_TONG){
+                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_TONG) {
                     tongCount += 3;
                 }
             }
 
-            for (Map.Entry<Integer,Long> entry : getMingGangType().entrySet()){
-                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_WAN){
+            for (Map.Entry<Integer, Long> entry : getMingGangType().entrySet()) {
+                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_WAN) {
                     wanCount += 3;
                 }
-                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_TIAO){
+                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_TIAO) {
                     tiaoCount += 3;
                 }
-                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_TONG){
+                if (CardTypeUtil.getCardGroupByCardType(entry.getKey()) == CardTypeUtil.GROUP_TONG) {
                     tongCount += 3;
                 }
             }
 
-            for (Integer i : getAnGangType()){
-                if (CardTypeUtil.getCardGroupByCardType(i) == CardTypeUtil.GROUP_WAN){
+            for (Integer i : getAnGangType()) {
+                if (CardTypeUtil.getCardGroupByCardType(i) == CardTypeUtil.GROUP_WAN) {
                     wanCount += 3;
                 }
-                if (CardTypeUtil.getCardGroupByCardType(i) == CardTypeUtil.GROUP_TIAO){
+                if (CardTypeUtil.getCardGroupByCardType(i) == CardTypeUtil.GROUP_TIAO) {
                     tiaoCount += 3;
                 }
-                if (CardTypeUtil.getCardGroupByCardType(i) == CardTypeUtil.GROUP_TONG){
+                if (CardTypeUtil.getCardGroupByCardType(i) == CardTypeUtil.GROUP_TONG) {
                     tongCount += 3;
                 }
             }
@@ -166,14 +168,14 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
                 long tiaoCountTemp = tiaoCount;
                 long tongCountTemp = tongCount;
 
-                if (huCardType.tingRemoveCard == null){
-                    if (wanCountTemp >= 7 || tiaoCountTemp >= 7 || tongCountTemp >= 7){
+                if (huCardType.tingRemoveCard == null) {
+                    if (wanCountTemp >= 7 || tiaoCountTemp >= 7 || tongCountTemp >= 7) {
                         return true;
                     }
-                }else {
+                } else {
                     int removeGroup = CardTypeUtil.getCardGroup(huCardType.tingRemoveCard);
 //                int rs = CardTypeUtil.getCardGroupByCardType(removeGroup / 4);
-                    switch (removeGroup){
+                    switch (removeGroup) {
                         case CardTypeUtil.GROUP_WAN:
                             wanCountTemp--;
                             break;
@@ -184,7 +186,7 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
                             tongCountTemp--;
                             break;
                     }
-                    if (wanCountTemp >= 7 || tiaoCountTemp >= 7 || tongCountTemp >= 7){
+                    if (wanCountTemp >= 7 || tiaoCountTemp >= 7 || tongCountTemp >= 7) {
                         return true;
                     }
                 }
@@ -192,12 +194,10 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
 
             return false;
 
-        }else {
+        } else {
 
-            return  getTingHuCardType(getCardsNoChiPengGang(cards), null).size() > 0;
+            return getTingHuCardType(getCardsNoChiPengGang(cards), null).size() > 0;
         }
-
-
 
 
     }
@@ -229,18 +229,18 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
         //this的杠分
         int gangScore = 0;
         //算因为明杠造成的分
-        for (Map.Entry<Integer,Long> entry : mingGangType.entrySet()){
+        for (Map.Entry<Integer, Long> entry : mingGangType.entrySet()) {
             //有人点杠
-            if (entry.getValue() != -1){
+            if (entry.getValue() != -1) {
                 PlayerCardsInfoMj playerCardsInfo = this.gameInfo.playerCardsInfos.get(entry.getValue());
                 playerCardsInfo.addGangScore(-gangScoreTemp);
                 playerCardsInfo.addScore(-gangScoreTemp);
                 gangScore += gangScoreTemp;
                 this.roomInfo.addUserSocre(playerCardsInfo.getUserId(), -gangScoreTemp);
 
-            }else {
+            } else {
                 //自摸明杠
-                for (PlayerCardsInfoMj playerCardsInfo : this.gameInfo.playerCardsInfos.values()){
+                for (PlayerCardsInfoMj playerCardsInfo : this.gameInfo.playerCardsInfos.values()) {
                     if (playerCardsInfo.getUserId() == this.userId) continue;
                     playerCardsInfo.addGangScore(-gangScoreTemp);
                     playerCardsInfo.addScore(-gangScoreTemp);
@@ -251,8 +251,8 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
         }
 
         //暗杠
-        for (Integer i : anGangType){
-            for (PlayerCardsInfoMj playerCardsInfo : this.gameInfo.playerCardsInfos.values()){
+        for (Integer i : anGangType) {
+            for (PlayerCardsInfoMj playerCardsInfo : this.gameInfo.playerCardsInfos.values()) {
                 if (playerCardsInfo.getUserId() == this.userId) continue;
                 this.roomInfo.addUserSocre(playerCardsInfo.getUserId(), -anGangScoreTemp);
                 playerCardsInfo.addGangScore(-anGangScoreTemp);
@@ -280,14 +280,15 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
         //这个分数是胡牌之后应该赢的分数
 //        todo
         int score = huCardType.fan == 0 ? 5 : huCardType.fan;
-        int count = bankerNumber(room.getBankerMap());
+        boolean isBanker = this.userId == gameInfo.getFirstTurn();
+        int count = isBanker ? bankerNumber(room.getBankerMap()) : 0;
         score += count;
         //加轮数
         int selfScore = 0;
 
-        if (isZimo){
+        if (isZimo) {
 
-            for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()){
+            for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
                 if (playerCardsInfoMj.getUserId() == this.userId) continue;
                 int tempScore = score;
                 selfScore += tempScore;
@@ -295,7 +296,7 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
                 this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -tempScore);
             }
 
-        }else {
+        } else {
 
             PlayerCardsInfoMj dianPao = this.gameInfo.playerCardsInfos.get(dianpaoUser);
             int temp = score;
@@ -308,31 +309,31 @@ public class PlayerCardsInfoGSJ_New extends PlayerCardsInfoDonghu{
         this.addScore(selfScore);
 //        this.addScore(gangScore);
         this.roomInfo.addUserSocre(this.userId, selfScore);
-     //   this.roomInfo.addUserSocre(this.userId, gangScore);
+        //   this.roomInfo.addUserSocre(this.userId, gangScore);
     }
 
     /**
+     * @param @param  bankerMap
+     * @param @return 设定文件
+     * @return int    返回类型
+     * @throws
      * @Title: 查询连庄次数
      * @Creater: Clark
      * @Description:
-     * @param @param bankerMap
-     * @param @return    设定文件
-     * @return int    返回类型
-     * @throws
      */
-    public static int bankerNumber(Map<Integer,Long> bankerMap){
+    public static int bankerNumber(Map<Integer, Long> bankerMap) {
         int continueNum = 0;
         int maxGameNum = 0;
         Set<Integer> number = bankerMap.keySet();
         for (Integer i : number) {
-            if(i>maxGameNum){
+            if (i > maxGameNum) {
                 maxGameNum = i;
             }
         }
         for (int i = maxGameNum; i > 1; i--) {
-            if(bankerMap.get(i).longValue()== bankerMap.get(i-1)){
+            if (bankerMap.get(i).longValue() == bankerMap.get(i - 1)) {
                 continueNum++;
-            }else{
+            } else {
                 return continueNum;
             }
         }

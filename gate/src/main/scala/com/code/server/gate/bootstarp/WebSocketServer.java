@@ -14,17 +14,15 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 
 /**
- * Created by SunXianping on 2016/6/15 0015.
+ * Created by sunxianping on 2018-10-19.
  */
-public class SocketServer implements Runnable{
-
+public class WebSocketServer implements Runnable {
     static final boolean SSL = System.getProperty("ssl") != null;
 
 
-
-    private void start() throws Exception{
+    private void start() throws Exception {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
-        int port = serverConfig.getPort();
+        int port = serverConfig.getWebSocketPort();
 
 
         final SslContext sslCtx;
@@ -44,8 +42,8 @@ public class SocketServer implements Runnable{
                     .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_BACKLOG, 100)
                     .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new SocketServerInitializer(sslCtx));
-//                    .childHandler(new WebSocketServerInitializer());
+//                    .childHandler(new SocketServerInitializer(sslCtx));
+                    .childHandler(new WebSocketServerInitializer());
 
             // Start the server.
             ChannelFuture f = b.bind(port).sync();
@@ -67,9 +65,5 @@ public class SocketServer implements Runnable{
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-
     }
 }

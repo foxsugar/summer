@@ -2,6 +2,7 @@ package com.code.server.gate;
 
 import com.code.server.constant.exception.RegisterFailedException;
 import com.code.server.gate.bootstarp.SocketServer;
+import com.code.server.gate.bootstarp.WebSocketServer;
 import com.code.server.gate.config.ServerConfig;
 import com.code.server.gate.config.ServerState;
 import com.code.server.redis.config.IConstant;
@@ -21,12 +22,18 @@ public class GateApplication {
         SpringApplication.run(GateApplication.class, args);
         SpringUtil.getBean(ServerConfig.class);
 
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         ThreadPool.getInstance().executor.execute(new SocketServer());
+
+
+        if (serverConfig.getStartWebSocket() == 1) {
+
+            ThreadPool.getInstance().executor.execute(new WebSocketServer());
+        }
 
         ServerState.isWork = true;
 
         //配置文件
-        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
         //注册服务
         RedisManager.getGateRedisService().register(serverConfig.getServerType(), serverConfig.getServerId(), serverConfig.getHost(), serverConfig.getDomain(), serverConfig.getNetPort());

@@ -919,6 +919,12 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
+
+    public static boolean isHasMode(int type, String mode) {
+        int c = Integer.parseInt(mode);
+        return (c & (1 << type)) >> type == 1;
+    }
+
     public boolean isDefaultGoldRoom() {
         return goldRoomPermission == GOLD_ROOM_PERMISSION_DEFAULT;
     }

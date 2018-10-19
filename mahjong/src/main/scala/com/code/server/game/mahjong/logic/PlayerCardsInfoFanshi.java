@@ -16,6 +16,7 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
     public void init(List<String> cards) {
         super.init(cards);
         specialHuScore.put(hu_缺一门, 0);
+        specialHuScore.put(hu_缺两门, 0);
 
         specialHuScore.put(hu_夹张, 0);
 //        specialHuScore.put(hu_边张, 0);
@@ -62,7 +63,7 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
         List<String> noPengAndGang = getCardsNoChiPengGang(temp);
         int cardType = CardTypeUtil.getTypeByCard(card);
         List<HuCardType> huList = HuUtil.isHu(noPengAndGang, this, cardType, new HuLimit(0));
-        return huList.stream().anyMatch(huCardType -> huCardType.specialHuList.contains(hu_缺一门));
+        return huList.stream().anyMatch(huCardType -> huCardType.specialHuList.contains(hu_缺一门) || huCardType.specialHuList.contains(hu_缺两门));
 
     }
 
@@ -71,7 +72,7 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
         List<String> cs = getCardsNoChiPengGang(cards);
         int cardType = CardTypeUtil.cardType.get(card);
         List<HuCardType> huList = HuUtil.isHu(cs, this, cardType, new HuLimit(0));
-        return huList.stream().anyMatch(huCardType -> huCardType.specialHuList.contains(hu_缺一门));
+        return huList.stream().anyMatch(huCardType -> huCardType.specialHuList.contains(hu_缺一门) || huCardType.specialHuList.contains(hu_缺两门));
     }
 
 

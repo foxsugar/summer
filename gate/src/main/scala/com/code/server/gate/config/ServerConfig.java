@@ -14,6 +14,8 @@ public class ServerConfig {
 
     private int port;
     private int netPort = 8002;
+    private int webSocketPort = 8005;
+    private int startWebSocket = 0;
 
 
     public String getServerType() {
@@ -68,6 +70,24 @@ public class ServerConfig {
 
     public ServerConfig setNetPort(int netPort) {
         this.netPort = netPort;
+        return this;
+    }
+
+    public int getWebSocketPort() {
+        return webSocketPort;
+    }
+
+    public ServerConfig setWebSocketPort(int webSocketPort) {
+        this.webSocketPort = webSocketPort;
+        return this;
+    }
+
+    public int getStartWebSocket() {
+        return startWebSocket;
+    }
+
+    public ServerConfig setStartWebSocket(int startWebSocket) {
+        this.startWebSocket = startWebSocket;
         return this;
     }
 }

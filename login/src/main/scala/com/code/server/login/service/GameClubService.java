@@ -1265,10 +1265,15 @@ public class GameClubService {
 
                     //统计减去消耗
                     String today = LocalDate.now().toString();
-//                    ClubStatistics clubStatistics = roomModel.getStatisticsMap().getget(today);
+                    //每个玩法的统计
+                    ClubStatistics roomModelClubStatistics = roomModel.getStatisticsMap().get(today);
+                    if (roomModelClubStatistics != null) {
+                        roomModelClubStatistics.setConsumeNum(roomModelClubStatistics.getConsumeNum() - roomModel.getMoney());
+                        roomModelClubStatistics.setOpenNum(roomModelClubStatistics.getOpenNum() - 1);
+                    }
+                    //俱乐部的统计
                     ClubStatistics clubStatistics = getClubStatistics(club);
                     if (clubStatistics != null) {
-//                        clubStatistics.setConsumeNum(clubStatistics.getConsumeNum() - roomModel.getMoney());
                         addStatisticeConsume(club, -roomModel.getMoney());
                         club.getStatistics().setConsume(club.getStatistics().getConsume() - roomModel.getMoney());
                     }
@@ -1345,15 +1350,8 @@ public class GameClubService {
                     continue;
                 }
                 createRoom(club, roomModel);
-//                //减钱
-//                int moneyNow = club.getMoney() - roomModel.getMoney();
-//                club.setMoney(moneyNow);
-//
-//                //统计
-//                addStatisticeConsume(club, roomModel.getMoney());
-//
-//                club.getStatistics().setConsume(club.getStatistics().getConsume() + roomModel.getMoney());
 
+                //不要统计
             }
 
 
