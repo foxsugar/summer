@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by sunxianping on 2018-10-15.
  */
-public class GameDouDiZhuHuaPaiNoQiang extends GameDouDiZhuLinFenLongQi{
+public class GameDouDiZhuHuaPaiNoQiang extends GameDouDiZhuHuaPai{
 
 
     /**
