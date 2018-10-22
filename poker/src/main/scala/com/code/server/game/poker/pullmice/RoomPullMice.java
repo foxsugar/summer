@@ -315,8 +315,4 @@ public class RoomPullMice extends PokerGoldRoom {
         return 0;
     }
 
-    @Override
-    protected  void dissolutionRoom() {
-        super.dissolutionRoom();
-    }
 }
