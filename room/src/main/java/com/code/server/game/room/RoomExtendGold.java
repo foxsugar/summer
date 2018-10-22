@@ -25,7 +25,7 @@ public class RoomExtendGold extends Room {
 
     public void init(int gameNumber, int multiple) throws DataNotFoundException {
         super.init(gameNumber, multiple);
-        this.isRobotRoom = true;
+//        this.isRobotRoom = true;
 
         if (isGoldRoom()) {
             this.multiple = goldRoomType;

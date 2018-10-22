@@ -1,7 +1,7 @@
 package com.code.server.gate.bootstarp;
 
 import com.code.server.gate.encoding.WsCodec;
-import com.code.server.gate.handle.GameMsgHandler;
+import com.code.server.gate.handle.WsGameMsgHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -39,7 +39,7 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
 //        pipeline.addLast("decoder", new WsDecoder());
         pipeline.addLast("handshake",new WebSocketServerProtocolHandler("/ws"));
         pipeline.addLast(new WsCodec());
-        pipeline.addLast(new GameMsgHandler());
+        pipeline.addLast(new WsGameMsgHandler());
 //        pipeline.addLast("codec", new WsEncoder());
         //websocket定义了传递数据的6中frame类型
 //        pipeline.addLast(new GameMsgHandler());
