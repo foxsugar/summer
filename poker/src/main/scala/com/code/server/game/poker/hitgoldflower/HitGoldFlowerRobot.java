@@ -48,7 +48,7 @@ public class HitGoldFlowerRobot implements IRobot {
 //
                 r.userStatus.forEach((id,status)->{
                     if (status == 0) {
-                        getReady(r, id);
+//                        getReady(r, id);
                     }
                 });
             }
