@@ -204,6 +204,8 @@ public class Room implements IfaceRoom {
         msg.put("clubModelId", this.clubRoomModel);
         ResponseVo responseVo = new ResponseVo("clubService", "clubDrawBack", msg);
         msgProducer.send("clubService", kafkaKey, responseVo);
+
+        removeClubInstance();
     }
 
     /**
@@ -684,12 +686,23 @@ public class Room implements IfaceRoom {
 
         //战绩
         genRoomRecord();
+
     }
 
+    private void removeClubInstance(){
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        KafkaMsgKey kafkaKey = new KafkaMsgKey();
+        Map<String, Object> msg = new HashMap<>();
+        msg.put("clubId", this.clubId);
+        msg.put("clubModelId", this.clubRoomModel);
+        ResponseVo responseVo = new ResponseVo("clubService", "removeClubInstance", msg);
+        msgProducer.send("clubService", kafkaKey, responseVo);
+    }
 
     public int dissolutionRoom(long userId) {
         dissolutionRoom();
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "dissolutionRoom", "ok"), userId);
+
         return 0;
     }
 

@@ -202,6 +202,13 @@ public class ClubServiceMsgDispatch {
                 return gameClubService.setAutoJoin(msgKey, clubId, userId, auto);
             }
 
+            case "removeClubInstance":{
+                clubId = params.path("clubId").asText();
+                String clubModelId4 = params.path("clubModelId").asText();
+                gameClubService.removeClubInstance(clubId, clubModelId4);
+                break;
+            }
+
 
         }
         return 0;

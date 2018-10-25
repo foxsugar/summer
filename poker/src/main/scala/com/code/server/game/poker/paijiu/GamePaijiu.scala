@@ -342,11 +342,14 @@ class GamePaijiu extends Game with PaijiuConstant {
   }
 
 
+
+
   /**
     * 最终结算版
     */
   protected def sendFinalResult(): Unit = {
-    if (this.roomPaijiu.getCurGameNumber > this.roomPaijiu.getGameNumber) {
+
+    if (this.roomPaijiu.isRoomOver()) {
       val userOfResultList = this.roomPaijiu.getUserOfResult
       // 存储返回
       val gameOfResult = new GameOfResult

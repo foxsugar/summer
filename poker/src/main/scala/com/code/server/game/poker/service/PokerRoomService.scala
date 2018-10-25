@@ -6,7 +6,7 @@ import com.code.server.game.poker.cow.RoomCow
 import com.code.server.game.poker.doudizhu.RoomDouDiZhu
 import com.code.server.game.poker.guess.RoomGuessCar
 import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower
-import com.code.server.game.poker.paijiu.{RoomGoldPaijiu, RoomPaijiu}
+import com.code.server.game.poker.paijiu.{RoomGoldPaijiu, RoomPaijiu, RoomPaijiuAce}
 import com.code.server.game.poker.playseven.RoomPlaySeven
 import com.code.server.game.poker.pullmice.RoomPullMice
 import com.code.server.game.poker.tuitongzi.RoomTuiTongZi
@@ -156,6 +156,17 @@ object PokerRoomService {
         val isGold = params.path("isGold").asInt()
         val goldType = params.path("goldType").asInt()
         return RoomGoldPaijiu.createGoldRoom(userId, roomType, gameType, gameNumber, isGold, goldType)
+
+      case "createPaijiuAceRoom" =>
+        val roomType = params.path("roomType").asText()
+        val gameType = params.path("gameType").asText()
+        val gameNumber = params.path("gameNumber").asInt()
+        val clubId = params.path("clubId").asText
+        val clubRoomModel = params.path("clubRoomModel").asText
+        val isAA = params.path("isAA").asBoolean(false)
+        val isJoin = params.path("isJoin").asBoolean(true)
+        return RoomPaijiuAce.createRoom(userId, roomType, gameType, gameNumber,isJoin,clubId,clubRoomModel, isAA)
+
 
       case "createTTZRoom" =>
         val roomType = params.path("roomType").asText()

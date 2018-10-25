@@ -19,11 +19,6 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         specialHuScore.put(hu_豪华七小对, 1);
 
 
-        if (isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_摸三胡六)) {
-            this.TING_MIN_SCORE = 6;
-            this.ZIMO_MIN_SCORE = 3;
-            this.DIANPAO_MIN_SCORE = 6;
-        }
 
         if (isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_摸四胡五)) {
             this.TING_MIN_SCORE = 5;
@@ -35,6 +30,13 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
             this.TING_MIN_SCORE = 5;
             this.ZIMO_MIN_SCORE = 1;
             this.DIANPAO_MIN_SCORE = 5;
+        }
+
+
+        if (isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_摸三胡六)) {
+            this.TING_MIN_SCORE = 6;
+            this.ZIMO_MIN_SCORE = 3;
+            this.DIANPAO_MIN_SCORE = 6;
         }
     }
 
@@ -358,30 +360,32 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
 //        String[] s = new String[]{"032", "033", "034", "036","040",  "044", "056",  "060",  "064",   "092", "093", "104", "105","135"};//092
         String[] s = new String[]{
-                "012",
-                "016",
-                "017",
+                "000",
+                "001",
+                "002",
 
-                "012",
-                "013",
+                "100",
+                "101",
+                "102",
 
-                "020",
-                "024",
+                "004",
+                "005",
+                "048",
 
-                "084",
-                "088",
-                "092",
+                "052",
+                "056",
 
-                "112",
-                "113",
-                "114",
-                "115"};//092
+                "076",
+                "080",
+                "096"};//092
 //        String[] s = new String[]{"112", "113", "114",   "024",   "028", "032",  "088", "092", "096",  "097",    "132", "133", "124", "120"};
 
 //        094, 038, 093, 063, 067, 044, 034, 106, 058, 035, 041, 104, 033, 032
 
         List<Integer> hun = new ArrayList<>();
-        hun.add(28);
+//        hun.add(28);
+        hun.add(25);
+//        hun.add(30);
 //        hun.add(31);
 //        hun.add(1);
 //        hun.add(8);
@@ -397,7 +401,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         playerCardsInfo.init(playerCardsInfo.cards);
 
 
-//        playerCardsInfo.pengType.put(19,0L);
+        playerCardsInfo.pengType.put(0,0L);
 //        playerCardsInfo.pengType.put(6,0L);
 //        playerCardsInfo.anGangType.add(32);
 
@@ -410,22 +414,22 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 //        List<HuCardType> huList = HuUtil.isHu(playerCardsInfo,
 //                playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
 //                playerCardsInfo.getChiPengGangNum(), hun, 23);
-//        boolean isCanHu = playerCardsInfo.isCanHu_dianpao("024");
-//        playerCardsInfo.isTing = true;
-        long start = System.currentTimeMillis();
-        boolean isCanHu = playerCardsInfo.isCanHu_zimo("084");
-        long end = System.currentTimeMillis();
-        System.out.println((end - start));
-//        boolean isGang = playerCardsInfo.isHasGang();
+        playerCardsInfo.isTing = true;
+//        boolean isCanHu = playerCardsInfo.isCanHu_dianpao("056");
+//        long start = System.currentTimeMillis();
+        boolean isCanHu = playerCardsInfo.isCanHu_zimo("096");
+//        long end = System.currentTimeMillis();
+//        System.out.println((end - start));
+////        boolean isGang = playerCardsInfo.isHasGang();
         System.out.println(isCanHu);
-
-
-        long start1 = System.currentTimeMillis();
-
-        boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);
-        long end1 = System.currentTimeMillis();
-        System.out.println((end1 - start1));
-        System.out.println(isCanTing);
+//
+//
+//        long start1 = System.currentTimeMillis();
+//
+//        boolean isCanTing = playerCardsInfo.isCanTing(playerCardsInfo.cards);
+//        long end1 = System.currentTimeMillis();
+//        System.out.println((end1 - start1));
+//        System.out.println(isCanTing);
 
 //        playerCardsInfo.hu_zm(roomInfo,gameInfoTJ,"133");
 //        playerCardsInfo.huCompute( roomInfo,  gameInfoTJ, true, 0, "133");

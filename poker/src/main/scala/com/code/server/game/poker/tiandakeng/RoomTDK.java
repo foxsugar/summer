@@ -14,10 +14,15 @@ import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by sunxianping on 2018-10-18.
  */
 public class RoomTDK extends PokerGoldRoom {
+
+    private List<Long> watchUser = new ArrayList<>();
 
 
     public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType,
@@ -71,5 +76,14 @@ public class RoomTDK extends PokerGoldRoom {
 
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createTDKRoom", room.toVo(userId)), userId);
         return 0;
+    }
+
+    public List<Long> getWatchUser() {
+        return watchUser;
+    }
+
+    public RoomTDK setWatchUser(List<Long> watchUser) {
+        this.watchUser = watchUser;
+        return this;
     }
 }

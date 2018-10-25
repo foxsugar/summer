@@ -205,6 +205,7 @@ public class CenterMsgService implements IkafkaMsgId {
 
 
                 String date = LocalDate.now().toString();
+                String dateBefore50 = LocalDate.now().minusDays(50).toString();
                 for (com.code.server.constant.game.UserRecord userRecord : roomRecord.getRecords()) {
                     ClubMember clubMember = club.getClubInfo().getMember().get("" + userRecord.getUserId());
                     if (clubMember != null) {
@@ -212,6 +213,9 @@ public class CenterMsgService implements IkafkaMsgId {
                         clubMember.getStatistics().put(date, clubStatistics);
                         clubStatistics.setAllScore(clubStatistics.getAllScore() + userRecord.getScore());
                         clubStatistics.setOpenNum(clubStatistics.getOpenNum() + 1);
+                        //删除50天前数据
+                        clubMember.getStatistics().remove(dateBefore50);
+
                     }
 
                 }

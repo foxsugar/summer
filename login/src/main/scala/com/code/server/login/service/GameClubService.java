@@ -721,6 +721,13 @@ public class GameClubService {
     }
 
 
+    public void removeClubInstance(String clubId, String roomModelId) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+//        RoomInstance roomInstance = club.getClubInfo().getRoomInstance().get(roomModelId);
+        club.getClubInfo().getRoomInstance().remove(roomModelId);
+    }
+
+
     public int setAutoJoin(KafkaMsgKey msgKey, String clubId, long userId, boolean auto) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {

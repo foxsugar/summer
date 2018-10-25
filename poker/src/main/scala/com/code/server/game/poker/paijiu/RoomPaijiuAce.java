@@ -26,7 +26,8 @@ public class RoomPaijiuAce extends RoomPaijiu {
     public static final int minMoney = 150;
 
 
-    public static int createRoomNotInRoom(long userId, String roomType, String gameType, Integer gameNumber, boolean isCreaterJoin, String clubId, String clubRoomModel) throws DataNotFoundException {
+    public static int createRoom(long userId, String roomType, String gameType, Integer gameNumber, boolean isCreaterJoin,
+                                          String clubId, String clubRoomModel, boolean isAA) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         RoomPaijiuAce roomPaijiu = new RoomPaijiuAce();
         roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId(serverConfig.getServerId())));
@@ -40,6 +41,7 @@ public class RoomPaijiuAce extends RoomPaijiu {
         roomPaijiu.init(gameNumber, 1);
         roomPaijiu.setClubId(clubId);
         roomPaijiu.setClubRoomModel(clubRoomModel);
+        roomPaijiu.setAA(isAA);
 
         //代建房 定时解散
         if (!isCreaterJoin && !roomPaijiu.isClubRoom()) {
@@ -56,12 +58,17 @@ public class RoomPaijiuAce extends RoomPaijiu {
         }
 
 
+        int code = roomPaijiu.joinRoom(userId, isCreaterJoin);
+        if (code != 0) {
+            return code;
+        }
+
         RoomManager.addRoom(roomPaijiu.getRoomId(), "" + serverConfig.getServerId(), roomPaijiu);
         IdWorker idword = new IdWorker(serverConfig.getServerId(), 0);
         roomPaijiu.setUuid(idword.nextId());
 
 
-        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createPaijiuRoomNotInRoom", roomPaijiu.toVo(userId)), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createPaijiuAceRoom", roomPaijiu.toVo(userId)), userId);
 
         return 0;
     }
@@ -96,8 +103,17 @@ public class RoomPaijiuAce extends RoomPaijiu {
         super.addUserSocre(userId, score);
 
         RedisManager.getUserRedisService().addUserMoney(userId, score);
+    }
 
 
+    @Override
+    public void pushScoreChange() {
+        if (isGoldRoom()) {
+            for(long userId : users){
+                userScores.put(userId, RedisManager.getUserRedisService().getUserMoney(userId));
+            }
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userScores), this.getUsers());
     }
 
 
@@ -109,6 +125,18 @@ public class RoomPaijiuAce extends RoomPaijiu {
         clearReadyAceRoom(isAddGameNum);
     }
 
+    @Override
+    public boolean isRoomOver() {
+        //有小于5房卡的游戏结束
+        for (long userId : this.users) {
+            double money = RedisManager.getUserRedisService().getUserMoney(userId);
+            if (money < 5) {
+                return true;
+            }
+        }
+        return super.isRoomOver();
+
+    }
 
     public void clearReadyAceRoom(boolean isAddGameNum) {
         if (isGoldRoom()) {
