@@ -26,10 +26,11 @@ public class PlayerCardsInfoHS extends PlayerCardsInfoMj {
 
     public boolean isCanTing(List<String> cards) {
 
-        List<HuCardType> list = getTingHuCardType(getCardsNoChiPengGang(cards), null);
-        if(isMoreOneCard())
-        tingWhatInfo = list;
-        return list.size() > 0;
+//        List<HuCardType> list = getTingHuCardType(getCardsNoChiPengGang(cards), null);
+//        if(isMoreOneCard())
+//        tingWhatInfo = list;
+//        return list.size() > 0;
+        return false;
     }
 
     public boolean isHasChi(String card) {
