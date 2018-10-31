@@ -100,9 +100,9 @@ object MahjongRoomService {
       }
 
       case "getGoldRooms" => {
-        val roomType: String = paramsjSONObject.get("roomType").asText
+//        val roomType: String = paramsjSONObject.get("roomType").asText
         val gameType: String = paramsjSONObject.get("gameType").asText
-        val goldRoomType = paramsjSONObject.path("goldRoomType").asInt()
+//        val goldRoomType = paramsjSONObject.path("goldRoomType").asInt(0)
 
         val result = RoomExtendGold.getGoldRoomsVo(gameType)
         MsgSender.sendMsg2Player("mahjongRoomService", "getGoldRooms", result, userId)

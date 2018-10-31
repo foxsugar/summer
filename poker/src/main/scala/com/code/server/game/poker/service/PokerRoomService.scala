@@ -277,7 +277,7 @@ object PokerRoomService {
       case "getGoldRooms" =>
 
         val gameType: String = params.get("gameType").asText
-        val goldRoomType = params.path("goldRoomType").asInt()
+//        val goldRoomType = params.path("goldRoomType").asInt(0)
 
         val result = RoomExtendGold.getGoldRoomsVo(gameType)
         MsgSender.sendMsg2Player("pokerRoomService", "getGoldRooms", result, userId)

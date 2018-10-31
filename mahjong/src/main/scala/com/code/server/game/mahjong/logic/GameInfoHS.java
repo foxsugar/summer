@@ -5,7 +5,6 @@ import com.code.server.game.mahjong.response.OperateReqResp;
 import com.code.server.game.mahjong.response.PlayerCardsResp;
 import com.code.server.game.mahjong.response.ResponseType;
 import com.code.server.game.mahjong.response.ResultResp;
-import com.code.server.game.mahjong.util.HuCardType;
 import com.code.server.game.room.kafka.MsgSender;
 
 import java.util.ArrayList;
@@ -143,33 +142,33 @@ public class GameInfoHS extends GameInfoNew {
         genRecord();
     }
 
-    @Override
-    public int chupai(long userId, String card) {
-        int rtn = super.chupai(userId, card);
-        if (rtn != 0) {
-            return rtn;
-        }
-
-        //
-        PlayerCardsInfoMj playerCardsInfoMj = this.playerCardsInfos.get(userId);
-        if (playerCardsInfoMj != null) {
-
-            if (playerCardsInfoMj.tingWhatInfo.size() > 0) {
-                List<HuCardType> removeList = new ArrayList<>();
-                for (HuCardType huCardType : playerCardsInfoMj.tingWhatInfo) {
-                    if (!card.equals(huCardType.tingRemoveCard)) {
-                        removeList.add(huCardType);
-                    }
-                }
-
-                playerCardsInfoMj.tingWhatInfo.removeAll(removeList);
-
-
-            }
-            MsgSender.sendMsg2Player(ResponseType.SERVICE_TYPE_GAMELOGIC,"isContinueTing",playerCardsInfoMj.tingWhatInfo.size()>0, userId);
-        }
-        return 0;
-    }
+//    @Override
+//    public int chupai(long userId, String card) {
+//        int rtn = super.chupai(userId, card);
+//        if (rtn != 0) {
+//            return rtn;
+//        }
+//
+//        //
+//        PlayerCardsInfoMj playerCardsInfoMj = this.playerCardsInfos.get(userId);
+//        if (playerCardsInfoMj != null) {
+//
+//            if (playerCardsInfoMj.tingWhatInfo.size() > 0) {
+//                List<HuCardType> removeList = new ArrayList<>();
+//                for (HuCardType huCardType : playerCardsInfoMj.tingWhatInfo) {
+//                    if (!card.equals(huCardType.tingRemoveCard)) {
+//                        removeList.add(huCardType);
+//                    }
+//                }
+//
+//                playerCardsInfoMj.tingWhatInfo.removeAll(removeList);
+//
+//
+//            }
+//            MsgSender.sendMsg2Player(ResponseType.SERVICE_TYPE_GAMELOGIC,"isContinueTing",playerCardsInfoMj.tingWhatInfo.size()>0, userId);
+//        }
+//        return 0;
+//    }
 
 
     @Override
@@ -178,7 +177,7 @@ public class GameInfoHS extends GameInfoNew {
         playerCardsInfo.setCanBeGang(false);
         playerCardsInfo.setCanBePeng(false);
         playerCardsInfo.setCanBeHu(false);
-//        playerCardsInfo.setCanBeTing(false);
+        playerCardsInfo.setCanBeTing(false);
         playerCardsInfo.setCanBeChiTing(false);
         playerCardsInfo.setCanBePengTing(false);
         playerCardsInfo.setCanBeXuanfeng(false);
