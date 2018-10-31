@@ -22,7 +22,10 @@ import java.util.List;
  */
 public class RoomTDK extends PokerGoldRoom {
 
-    private List<Long> watchUser = new ArrayList<>();
+
+    private boolean isLanGuo = false;//是否烂锅
+
+    private List<Integer> bets = new ArrayList<>();
 
 
     public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType,
@@ -84,6 +87,24 @@ public class RoomTDK extends PokerGoldRoom {
 
     public RoomTDK setWatchUser(List<Long> watchUser) {
         this.watchUser = watchUser;
+        return this;
+    }
+
+    public boolean isLanGuo() {
+        return isLanGuo;
+    }
+
+    public RoomTDK setLanGuo(boolean lanGuo) {
+        isLanGuo = lanGuo;
+        return this;
+    }
+
+    public List<Integer> getBets() {
+        return bets;
+    }
+
+    public RoomTDK setBets(List<Integer> bets) {
+        this.bets = bets;
         return this;
     }
 }

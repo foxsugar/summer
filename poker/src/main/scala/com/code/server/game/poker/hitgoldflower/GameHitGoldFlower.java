@@ -259,7 +259,10 @@ public class GameHitGoldFlower extends Game {
         Map<String, Object> result = new HashMap<>();
         result.put("askerId",askerId);
         result.put("winnerId",winnerId);
-        result.put("loserId",winnerId==askerId?accepterId:askerId);
+        long loserId = winnerId==askerId?accepterId:askerId;
+        result.put("loserId",loserId);
+        result.put("winnerCards", this.playerCardInfos.get(winnerId).handcards);
+        result.put("loserCards", this.playerCardInfos.get(loserId).handcards);
         if (this.room.bipaijiabei) {
 
             if(seeUser.contains(askerId)){

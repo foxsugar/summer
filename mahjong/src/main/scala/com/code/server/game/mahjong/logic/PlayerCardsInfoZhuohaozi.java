@@ -15,8 +15,8 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         super.init(cards);
 //        specialHuScore.put(hu_清一色,2);
         specialHuScore.put(hu_吊将, 1);
-        specialHuScore.put(hu_七小对, 1);
-        specialHuScore.put(hu_豪华七小对, 1);
+//        specialHuScore.put(hu_七小对, 1);
+//        specialHuScore.put(hu_豪华七小对, 1);
 
 
 

@@ -35,6 +35,10 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
         }
 
 
+        specialHuScore.put(hu_七小对, 1);
+        specialHuScore.put(hu_豪华七小对, 1);
+        specialHuScore.put(hu_双豪七小对_山西, 1);
+
         this.TING_MIN_SCORE = 0;
         this.ZIMO_MIN_SCORE = 0;
         this.DIANPAO_MIN_SCORE = 0;

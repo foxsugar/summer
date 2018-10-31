@@ -30,7 +30,7 @@ class GamePaijiuEndless3Bet extends GamePaijiuEndless{
     val banker = playerCardInfos(bankerId)
     //    if (banker.score <= 0 || banker.score >= roomPaijiu.bankerInitScore * roomPaijiu.getUsers.size()) {
 
-    var max:Double = 1000
+    var max:Double = 600
     val roomData = DataManager.data.getRoomDataMap.get(this.roomPaijiu.getGameType)
     if (roomData != null) {
       if (roomData.getMaxBet != 0) {

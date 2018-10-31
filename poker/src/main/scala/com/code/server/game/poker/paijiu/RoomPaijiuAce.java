@@ -34,7 +34,7 @@ public class RoomPaijiuAce extends RoomPaijiu {
         roomPaijiu.setRoomType(roomType);
         roomPaijiu.setGameType(gameType);
         roomPaijiu.setGameNumber(gameNumber);
-        roomPaijiu.setBankerId(0L);
+        roomPaijiu.setBankerId(userId);
         roomPaijiu.setCreateUser(userId);
         roomPaijiu.setPersonNumber(4);
         roomPaijiu.setCreaterJoin(isCreaterJoin);
@@ -42,6 +42,10 @@ public class RoomPaijiuAce extends RoomPaijiu {
         roomPaijiu.setClubId(clubId);
         roomPaijiu.setClubRoomModel(clubRoomModel);
         roomPaijiu.setAA(isAA);
+
+        if (!isCreaterJoin) {
+            roomPaijiu.setCreateUser(0);
+        }
 
         //代建房 定时解散
         if (!isCreaterJoin && !roomPaijiu.isClubRoom()) {
@@ -92,6 +96,10 @@ public class RoomPaijiuAce extends RoomPaijiu {
                 if (RedisManager.getUserRedisService().getUserMoney(userId) < createNeedMoney + minMoney) {
                     return false;
                 }
+            }else{
+                if (RedisManager.getUserRedisService().getUserMoney(userId) <  minMoney) {
+                    return false;
+                }
             }
         }
         return true;
@@ -122,7 +130,7 @@ public class RoomPaijiuAce extends RoomPaijiu {
 
         super.clearReadyStatus(isAddGameNum);
         //房卡不足 退出
-        clearReadyAceRoom(isAddGameNum);
+//        clearReadyAceRoom(isAddGameNum);
     }
 
     @Override

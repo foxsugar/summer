@@ -41,6 +41,7 @@ public class Room implements IfaceRoom {
     protected static Random random = new Random();
     public Map<Long, Integer> userStatus = new HashMap<>();//用户状态
     public List<Long> users = new ArrayList<>();//用户列表
+    public List<Long> watchUser = new ArrayList<>();
     public Map<Long, Double> userScores = new HashMap<>();
     protected int multiple;//倍数
     protected int maxZhaCount;//最大炸的个数
@@ -933,8 +934,8 @@ public class Room implements IfaceRoom {
     }
 
 
-    public static boolean isHasMode(int type, String mode) {
-        int c = Integer.parseInt(mode);
+    public static boolean isHasMode(int type, int mode) {
+        int c = mode;
         return (c & (1 << type)) >> type == 1;
     }
 
