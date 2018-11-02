@@ -23,11 +23,15 @@ public class PlayerInfoTDK extends PlayerCardInfo{
     //下的注
     private List<Integer> bets = new ArrayList<>();
 
+    private int allBet = 0;
+
     //每轮下注数
     private Map<Integer, Integer> roundBet = new HashMap<>();
 
     //是否弃牌
     private boolean isGiveUp = false;
+
+    private int cardScore = 0;
 
 
     /**
@@ -36,6 +40,7 @@ public class PlayerInfoTDK extends PlayerCardInfo{
      */
     public void addBet(int num, int round){
         this.bets.add(num);
+        this.allBet += num;
         roundBet.put(round, roundBet.getOrDefault(round, 0) + num);
     }
 
@@ -52,6 +57,11 @@ public class PlayerInfoTDK extends PlayerCardInfo{
             this.cards.add(card);
         }
     }
+
+    public void computeScore(boolean isGongZhuangSuiBao, boolean isABiPao, boolean isWangZhongPao) {
+        this.cardScore = getCardScore(isGongZhuangSuiBao, isABiPao, isWangZhongPao, true);
+    }
+
     /**
      *
      * @param isGongZhuangSuiBao 是否公张随豹
@@ -84,7 +94,7 @@ public class PlayerInfoTDK extends PlayerCardInfo{
             score += 60;
         }
         //再加上每张牌的分数
-        //todo 公张算不算分
+
         score += cardList.stream().mapToInt(card->CardUtil.getCardScore(card,isABiPao)).sum();
         return score;
     }
@@ -139,6 +149,24 @@ public class PlayerInfoTDK extends PlayerCardInfo{
 
     public PlayerInfoTDK setGiveUp(boolean giveUp) {
         isGiveUp = giveUp;
+        return this;
+    }
+
+    public int getAllBet() {
+        return allBet;
+    }
+
+    public PlayerInfoTDK setAllBet(int allBet) {
+        this.allBet = allBet;
+        return this;
+    }
+
+    public Map<Integer, Integer> getRoundBet() {
+        return roundBet;
+    }
+
+    public PlayerInfoTDK setRoundBet(Map<Integer, Integer> roundBet) {
+        this.roundBet = roundBet;
         return this;
     }
 }

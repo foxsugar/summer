@@ -251,7 +251,7 @@ public class GameTDK extends Game {
 
         //牌足够 每人一张
         if (isEnough) {
-            for (long userId : getMaxScoreUserList()) {
+            for (long userId : getUserListBeginWithMaxCardScoreUser()) {
                 PlayerInfoTDK playerInfoTDK = playerCardInfos.get(userId);
                 int card = cards.remove(0);
                 playerInfoTDK.deal(card, false);
@@ -260,7 +260,7 @@ public class GameTDK extends Game {
         } else {//有公张
             //需要公张的人数
             int needGZNum = remainUser - remianCards;
-            List<Long> users = getMaxScoreUserList();
+            List<Long> users = getUserListBeginWithMaxCardScoreUser();
             //正常发牌的人数  牌数-1
             int haveCardUserNum = remianCards - 1;
             //需要公张的user
@@ -311,9 +311,9 @@ public class GameTDK extends Game {
 
         //找到名牌点数最大的玩家 下注
 
-        long betUser = findFirstBetUser();
+        long betUser = findMaxCardScoreUser();
         //生成下注信息
-        List<Long> needBetUser = getAliveUserListOrder();
+        List<Long> needBetUser = getAliveUserBeginWithBanker();
         this.betInfo = new BetInfo(betUser, needBetUser);
         //通知他下注
         Map<String, Object> result = new HashMap<>();
@@ -362,6 +362,14 @@ public class GameTDK extends Game {
         }
     }
 
+
+    public int openCard(long userId) {
+        if (this.state != STATE_OPEN) {
+            return ErrorCode.CANNOT_OPEN;
+        }
+//        getUserListBeginWithMaxCardScoreUser()
+        return 0;
+    }
     /**
      * 玩家下注
      *
@@ -370,7 +378,7 @@ public class GameTDK extends Game {
      * @param isGiveUp
      * @return
      */
-    public int bet_common(long userId, int num, boolean isGiveUp) {
+    private int bet_common(long userId, int num, boolean isGiveUp) {
 
         //检测是否能下注
 
@@ -410,7 +418,7 @@ public class GameTDK extends Game {
             //把踢或者到了最后一轮或者没牌了
             if (isHasMode(model_把踢) || cards.size() == 0 || handCardNum == 5) {
                 //踢牌阶段
-                kickStart(findFirstBetUser());
+                kickStart(findMaxCardScoreUser());
 
             } else {//发牌
                 deal_round();
@@ -435,7 +443,7 @@ public class GameTDK extends Game {
      * @param isGiveUp
      * @return
      */
-    public int bet_kick(long userId, boolean isGiveUp) {
+    private int bet_kick(long userId, boolean isGiveUp) {
         //
         if (this.kickInfo == null || this.kickInfo.kickBetInfo == null || this.kickInfo.kickBetInfo.curBetUser != userId) {
             return ErrorCode.CANNOT_BET;
@@ -453,6 +461,7 @@ public class GameTDK extends Game {
             //只剩一个人 结束
             if (aliveUserList.size() == 1) {
                 gameOver();
+                return 0;
             }
         } else {//下注
             this.bets.add(num);
@@ -473,7 +482,7 @@ public class GameTDK extends Game {
                     if (isHasMode(model_末脚踢服) && aliveUserList.size() == 2) {
 
                         //开始无限踢
-                        kickTwoStart(findFirstBetUser());
+                        kickTwoStart(findMaxCardScoreUser());
 
                     } else {
                         //开牌
@@ -506,7 +515,7 @@ public class GameTDK extends Game {
      * @param isGiveUp
      * @return
      */
-    public int bet_kick_two(long userId, boolean isGiveUp) {
+    private int bet_kick_two(long userId, boolean isGiveUp) {
 
         if (this.kickInfo == null || this.kickInfo.kickBetInfo == null || this.kickInfo.kickBetInfo.curBetUser != userId) {
             return ErrorCode.CANNOT_BET;
@@ -548,7 +557,7 @@ public class GameTDK extends Game {
      * @param isKick
      * @return
      */
-    public int kick_common(long userId, int num, boolean isKick) {
+    private int kick_common(long userId, int num, boolean isKick) {
 
         //是否可以踢
         if (this.kickInfo == null || this.kickInfo.curKickUser != userId) {
@@ -609,7 +618,7 @@ public class GameTDK extends Game {
      * @param isKick
      * @return
      */
-    public int kick_two(long userId, int num, boolean isKick) {
+    private int kick_two(long userId, int num, boolean isKick) {
 
         //踢牌次数+1
         kickInfo.addCount();
@@ -637,6 +646,7 @@ public class GameTDK extends Game {
     }
 
 
+
     /**
      * 开牌阶段
      */
@@ -644,7 +654,7 @@ public class GameTDK extends Game {
         this.state = STATE_OPEN;
         this.kickInfo = null;
         //通知开牌
-        long openUser = findFirstBetUser();
+        long openUser = findMaxCardScoreUser();
         Map<String, Object> map = new HashMap<>();
         map.put("userId", openUser);
         pushToAll(new ResponseVo(SERVICE_NAME, "pleaseOpen", map));
@@ -705,6 +715,31 @@ public class GameTDK extends Game {
      */
     protected void gameOver() {
 
+        long winner = aliveUserList.get(0);
+
+        compute(winner);
+
+//        sendResult()
+//        genRecord()
+        this.room.clearReadyStatus(true);
+//        sendFinalResult()
+
+    }
+
+
+    private void compute(long winnerId) {
+        int allScore = 0;
+        for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
+            if(playerInfoTDK.getUserId() == winnerId) continue;
+            playerInfoTDK.setScore(-playerInfoTDK.getAllBet());
+            this.room.addUserSocre(playerInfoTDK.getUserId(), -playerInfoTDK.getAllBet());
+            allScore += playerInfoTDK.getAllBet();
+        }
+        //赢得人加分
+        PlayerInfoTDK winnerUser = playerCardInfos.get(winnerId);
+        winnerUser.setScore(allScore);
+        this.room.addUserSocre(winnerId, allScore);
+
     }
 
     /**
@@ -723,7 +758,7 @@ public class GameTDK extends Game {
      *
      * @return
      */
-    private List<Long> getAliveUserListOrder() {
+    private List<Long> getAliveUserBeginWithBanker() {
         long banker = this.room.getBankerId();
         List<Long> users = new ArrayList<>();
 
@@ -742,9 +777,9 @@ public class GameTDK extends Game {
      *
      * @return
      */
-    private List<Long> getMaxScoreUserList() {
+    private List<Long> getUserListBeginWithMaxCardScoreUser() {
 
-        long maxScoreUser = findFirstBetUser();
+        long maxScoreUser = findMaxCardScoreUser();
         List<Long> users = new ArrayList<>();
 
         long nextUser = maxScoreUser;
@@ -778,15 +813,15 @@ public class GameTDK extends Game {
      *
      * @return
      */
-    private long findFirstBetUser() {
+    private long findMaxCardScoreUser() {
 
-        List<Long> users = getAliveUserListOrder();
+        List<Long> users = getAliveUserBeginWithBanker();
         //按顺序比较
         int score = 0;
         long maxUser = 0;
-        boolean isGongZhangSuiBao = Room.isHasMode(model_公张随豹, this.room.getOtherMode());
-        boolean isABiPao = Room.isHasMode(model_抓A必泡, this.room.getOtherMode());
-        boolean isWangZhongPao = Room.isHasMode(model_王中炮, this.room.getOtherMode());
+        boolean isGongZhangSuiBao = isHasMode(model_公张随豹);
+        boolean isABiPao = isHasMode(model_抓A必泡);
+        boolean isWangZhongPao = isHasMode(model_王中炮);
         for (long userId : users) {
             int s = playerCardInfos.get(userId).getCardScore(isGongZhangSuiBao, isABiPao, isWangZhongPao, false);
             //分数相同 离banker近的赢
@@ -797,4 +832,6 @@ public class GameTDK extends Game {
         }
         return maxUser;
     }
+
+
 }
