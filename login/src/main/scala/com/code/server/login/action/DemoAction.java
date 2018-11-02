@@ -1074,9 +1074,6 @@ public class DemoAction extends Cors {
         Page<AgentRecords> page = homeService.findAllAgentRecords(agentId, listA, new PageRequest(curPage, 20));
         List<AgentRecords> agentRecordsList = page.getContent();
 
-        logger.info("partnerRecord==================agentId:{}", agentId);
-        logger.info("partnerRecord==================listA::::{}, agentRecords:{}", listA, agentRecordsList);
-
         Map<String, Object> rs = new HashMap<>();
         rs.put("list", agentRecordsList);
         rs.put("count", page.getTotalElements());
@@ -1099,9 +1096,6 @@ public class DemoAction extends Cors {
         Page<AgentRecords> page = homeService.findAllAgentRecords(agentId, listA, new PageRequest(curPage, 20));
         List<AgentRecords> agentRecordsList = page.getContent();
 
-        logger.info("partnerRecord==================agentId:{}", agentId);
-        logger.info("partnerRecord==================listA::::{}, agentRecords:{}", listA, agentRecordsList);
-        
         Map<String, Object> rs = new HashMap<>();
         rs.put("list", agentRecordsList);
         rs.put("count", page.getTotalElements());
