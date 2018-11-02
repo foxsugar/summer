@@ -1068,12 +1068,14 @@ public class DemoAction extends Cors {
         String end = sA[1];
 
         int agentId = (int) AgentUtil.getUserIdByToken(AgentUtil.findTokenInHeader());
-//        int agentId = 100027;
         start = DateUtil.becomeStandardSTime(start);
         end = DateUtil.becomeStandardSTime(end);
         List<String> listA = DateUtil.getDateListIn(end, start);
         Page<AgentRecords> page = homeService.findAllAgentRecords(agentId, listA, new PageRequest(curPage, 20));
         List<AgentRecords> agentRecordsList = page.getContent();
+
+        logger.info("partnerRecord==================agentId:{}", agentId);
+        logger.info("partnerRecord==================listA::::{}, agentRecords:{}", listA, agentRecordsList);
 
         Map<String, Object> rs = new HashMap<>();
         rs.put("list", agentRecordsList);
@@ -1097,6 +1099,9 @@ public class DemoAction extends Cors {
         Page<AgentRecords> page = homeService.findAllAgentRecords(agentId, listA, new PageRequest(curPage, 20));
         List<AgentRecords> agentRecordsList = page.getContent();
 
+        logger.info("partnerRecord==================agentId:{}", agentId);
+        logger.info("partnerRecord==================listA::::{}, agentRecords:{}", listA, agentRecordsList);
+        
         Map<String, Object> rs = new HashMap<>();
         rs.put("list", agentRecordsList);
         rs.put("count", page.getTotalElements());
