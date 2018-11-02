@@ -38,10 +38,11 @@ public class RoomPaijiuAce extends RoomPaijiu {
         roomPaijiu.setCreateUser(userId);
         roomPaijiu.setPersonNumber(4);
         roomPaijiu.setCreaterJoin(isCreaterJoin);
-        roomPaijiu.init(gameNumber, 1);
         roomPaijiu.setClubId(clubId);
         roomPaijiu.setClubRoomModel(clubRoomModel);
         roomPaijiu.setAA(isAA);
+        roomPaijiu.init(gameNumber, 1);
+
 
         if (!isCreaterJoin) {
             roomPaijiu.setCreateUser(0);

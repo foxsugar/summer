@@ -39,9 +39,9 @@ public class RoomPaijiuByNotInRoom extends Room {
         roomPaijiu.setCreateUser(userId);
         roomPaijiu.setPersonNumber(4);
         roomPaijiu.setCreaterJoin(isCreaterJoin);
-        roomPaijiu.init(gameNumber, 1);
         roomPaijiu.setClubId(clubId);
         roomPaijiu.setClubRoomModel(clubRoomModel);
+        roomPaijiu.init(gameNumber, 1);
 
         //代建房 定时解散
         if (!isCreaterJoin && !roomPaijiu.isClubRoom()) {

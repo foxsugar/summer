@@ -154,8 +154,11 @@ public class CowRobot implements ICowRobot,IGameConstant {
         Map<String, Object> put = new HashMap();
 
 
-        ResponseRobotVo result = new ResponseRobotVo("roomService", "getReady",put);
-        SpringUtil.getBean(MsgProducer.class).send2Partition("roomService",partition, msgKey, result);
+        if (msgKey.getUserId() != 0) {
+
+            ResponseRobotVo result = new ResponseRobotVo("roomService", "getReady",put);
+            SpringUtil.getBean(MsgProducer.class).send2Partition("roomService",partition, msgKey, result);
+        }
 
     }
 

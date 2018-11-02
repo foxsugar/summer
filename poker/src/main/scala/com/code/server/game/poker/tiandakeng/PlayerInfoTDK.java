@@ -23,6 +23,9 @@ public class PlayerInfoTDK extends PlayerCardInfo{
     //下的注
     private List<Integer> bets = new ArrayList<>();
 
+    //每轮下注数
+    private Map<Integer, Integer> roundBet = new HashMap<>();
+
     //是否弃牌
     private boolean isGiveUp = false;
 
@@ -31,8 +34,9 @@ public class PlayerInfoTDK extends PlayerCardInfo{
      * 下注
      * @param num
      */
-    public void addBet(int num){
+    public void addBet(int num, int round){
         this.bets.add(num);
+        roundBet.put(round, roundBet.getOrDefault(round, 0) + num);
     }
 
 

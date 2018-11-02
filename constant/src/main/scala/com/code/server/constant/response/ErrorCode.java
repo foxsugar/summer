@@ -140,9 +140,14 @@ public class ErrorCode {
 	//打七
 	public static final int ERROR_CARD = 1100001;//牌不对
 	public static final int ERROR_CARD_MAX = 1100002;//牌不对
+	//填大坑
+
+	public static final int CANNOT_BET = 1110000;//不能下注
+	public static final int CANNOT_KICK = 1110001;//不能踢
+
 
 	static class ErrorCodeRepeatChecker {
-    	public void check() {
+		public void check() {
     		Set<Integer> set = new HashSet<Integer>();
     		for(Field field : ErrorCode.class.getFields()) {
     			try {

@@ -149,7 +149,7 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
 
         this.winType.addAll(huCardType.specialHuList);
         if (score == 0) {
-            score = isZimo?2:3;
+            score = isZimo?2:this.roomInfo.getPersonNumber() -1;
         }
 
         if (isZimo && huCardType.fan <= 9 && isHasMode(this.roomInfo.mode, HAS_HONGZHONG) && isHas4Hongzhong()) {

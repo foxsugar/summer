@@ -677,15 +677,16 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 							gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - 1 * room.getMultiple());
 							room.setUserSocre(i, - 1 * room.getMultiple());
 						}
-						this.score = this.score + 4 *  room.getMultiple();
-						room.setUserSocre(this.userId, 4  * room.getMultiple());
-						this.fan = 3;
+						this.score = this.score + this.roomInfo.getPersonNumber() *  room.getMultiple();
+						room.setUserSocre(this.userId, this.roomInfo.getPersonNumber()  * room.getMultiple());
+						this.fan = this.roomInfo.getPersonNumber() - 1;
 					}else{
-						gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 3 * room.getMultiple());
-						this.score = this.score + 3 * room.getMultiple();
-						room.setUserSocre(dianpaoUser, - 3 * room.getMultiple());
-						room.setUserSocre(this.userId, 3 * room.getMultiple());
-						this.fan = 3;
+						int n = this.roomInfo.getPersonNumber() - 1;
+						gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - n * room.getMultiple());
+						this.score = this.score + n * room.getMultiple();
+						room.setUserSocre(dianpaoUser, - n * room.getMultiple());
+						room.setUserSocre(this.userId, n * room.getMultiple());
+						this.fan = n;
 					}
 
 				}else if(room.getModeTotal().equals("2") && (room.getMode().equals("2")||room.getMode().equals("4")||room.getMode().equals("12")||room.getMode().equals("14"))){//大胡
@@ -694,8 +695,8 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 							gameInfo.getPlayerCardsInfos().get(i).setScore(gameInfo.getPlayerCardsInfos().get(i).getScore() - room.getMultiple() * MahjongCode.HUTOSCORE4LQ2.get(""+CardUtil.huForScores(cards,huCardType))/3);
 							room.setUserSocre(i, - room.getMultiple() * MahjongCode.HUTOSCORE4LQ2.get(""+CardUtil.huForScores(cards,huCardType))/3);
 						}
-						this.score = this.score + 4 * room.getMultiple() * MahjongCode.HUTOSCORE4LQ2.get(""+CardUtil.huForScores(cards,huCardType))/3;
-						room.setUserSocre(this.userId, 4  * room.getMultiple() * MahjongCode.HUTOSCORE4LQ2.get(""+CardUtil.huForScores(cards,huCardType))/3);
+						this.score = this.score + this.roomInfo.getPersonNumber() * room.getMultiple() * MahjongCode.HUTOSCORE4LQ2.get(""+CardUtil.huForScores(cards,huCardType))/3;
+						room.setUserSocre(this.userId, this.roomInfo.getPersonNumber()  * room.getMultiple() * MahjongCode.HUTOSCORE4LQ2.get(""+CardUtil.huForScores(cards,huCardType))/3);
 					}else{
 						String s  = ""+CardUtil.huForScores(cards,huCardType);
 						System.out.println(s);
@@ -891,11 +892,11 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
             	}
         	}else{
         		if(room.getModeTotal().equals("2") && (room.getMode().equals("1")||room.getMode().equals("3")||room.getMode().equals("11")||room.getMode().equals("13"))){//平胡
-        			gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 3 * room.getMultiple());
-        			this.score = this.score + 3 * room.getMultiple();
-        			room.setUserSocre(dianpaoUser, - 3 * room.getMultiple());
-        			room.setUserSocre(this.userId, 3 * room.getMultiple());
-        			this.fan = 3;
+        			gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - (this.roomInfo.getPersonNumber() - 1) * room.getMultiple());
+        			this.score = this.score + (this.roomInfo.getPersonNumber() - 1) * room.getMultiple();
+        			room.setUserSocre(dianpaoUser, - (this.roomInfo.getPersonNumber() - 1) * room.getMultiple());
+        			room.setUserSocre(this.userId, (this.roomInfo.getPersonNumber() - 1) * room.getMultiple());
+        			this.fan = this.roomInfo.getPersonNumber() - 1;
 //        			this.winType.add(HuType.hu_普通胡);
             	}else if(room.getModeTotal().equals("2") && (room.getMode().equals("2")||room.getMode().equals("4")||room.getMode().equals("12")||room.getMode().equals("14"))){//大胡
             		System.out.println(CardUtil.huForScores(cards,huCardType));
