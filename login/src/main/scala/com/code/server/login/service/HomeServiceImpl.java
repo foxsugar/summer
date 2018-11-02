@@ -382,7 +382,7 @@ public class HomeServiceImpl implements HomeService{
                         in.value(dateStr);
                     }
                     predicates.add(in);
-                    Predicate is = cb.equal(root.get("id").as(Integer.class), agentId);
+                    Predicate is = cb.equal(root.get("agentId").as(Integer.class), agentId);
                     predicates.add(is);
                 }
 
