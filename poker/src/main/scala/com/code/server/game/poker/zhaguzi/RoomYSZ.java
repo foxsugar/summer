@@ -96,7 +96,7 @@ public class RoomYSZ extends RoomExtendGold {
         room.cricleNumber = cricleNumber;
         room.setClubId(clubId);
         room.setClubRoomModel(clubRoomModel);
-        room.isRobotRoom = true;
+//        room.isRobotRoom = true;
         room.goldRoomType = goldRoomType;
         room.goldRoomPermission = goldRoomPermission;
         room.init(gameNumber, multiple);
@@ -131,7 +131,7 @@ public class RoomYSZ extends RoomExtendGold {
         room.cricleNumber = cricleNumber;
         room.setClubId(clubId);
         room.setClubRoomModel(clubRoomModel);
-        room.isRobotRoom = true;
+//        room.isRobotRoom = true;
         room.goldRoomType = goldRoomType;
         room.goldRoomPermission = goldRoomPermission;
         room.init(gameNumber, multiple);
