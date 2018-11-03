@@ -156,6 +156,7 @@ public class CenterService {
                 AgentRecords agentRecord = new AgentRecords();
                 agentRecord.setId(agentBean.getId() + "|" + date);
                 agentRecord.setDate(date);
+                agentRecord.setAgentId((int)agentBean.getId());
                 agentRecord.setAllRebate(partnerRebate.getAllRebate());
                 agentRecord.setChildCost(partnerRebate.getCost());
                 agentRecord.setMoneyRebate(partnerRebate.getMoneyRebate());
