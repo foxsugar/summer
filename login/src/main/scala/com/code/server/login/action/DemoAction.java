@@ -36,6 +36,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -1071,7 +1072,8 @@ public class DemoAction extends Cors {
         start = DateUtil.becomeStandardSTime(start);
         end = DateUtil.becomeStandardSTime(end);
         List<String> listA = DateUtil.getDateListIn(end, start);
-        Page<AgentRecords> page = homeService.findAllAgentRecords(agentId, listA, new PageRequest(curPage, 20));
+        Sort sort = new Sort(Sort.Direction.DESC, "date");
+        Page<AgentRecords> page = homeService.findAllAgentRecords(agentId, listA, new PageRequest(curPage, 20, sort));
         List<AgentRecords> agentRecordsList = page.getContent();
 
         Map<String, Object> rs = new HashMap<>();
@@ -1092,6 +1094,7 @@ public class DemoAction extends Cors {
 //        int agentId = 100027;
         String start = DateUtil.convert2DayString(new Date());
         String end = DateUtil.convert2DayString(new Date());
+        Sort sort = new Sort(Sort.Direction.DESC, "date");
         List<String> listA = DateUtil.getDateListIn(end, start);
         Page<AgentRecords> page = homeService.findAllAgentRecords(agentId, listA, new PageRequest(curPage, 20));
         List<AgentRecords> agentRecordsList = page.getContent();
