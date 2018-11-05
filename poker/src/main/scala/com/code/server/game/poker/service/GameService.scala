@@ -39,7 +39,7 @@ object GameService {
       case x:GameZhaGuZi =>dispatchGameZhaGuZiService(userId,method,game.asInstanceOf[GameZhaGuZi],params)
       case x:GameXuanQiQi =>dispatchGameXQQService(userId,method,game.asInstanceOf[GameXuanQiQi],params)
       case x:GamePlaySeven =>dispatchGamePlaySevenService(userId,method,game.asInstanceOf[GamePlaySeven],params)
-//      case x:GameTDK => dispatchGameTDKService(userId, method, game.asInstanceOf[GameTDK], params)
+      case x:GameTDK => dispatchGameTDKService(userId, method, game.asInstanceOf[GameTDK], params)
 
     }
   }
@@ -361,7 +361,7 @@ object GameService {
   }
 
 
-  private def dispatchGameTDKService(userId:Long, method:String, game:GameTDK, params:JsonNode):Int = {
+  private def dispatchGameTDKService(userId:Long, method:String, game:GameTDK, params:JsonNode):Int = method match {
     case "bet" =>
       val num = params.path("num").asInt()
       val isGiveUp = params.path("isGiveUp").asBoolean(false)
