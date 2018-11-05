@@ -15,7 +15,8 @@ public class GameTDKVo implements IfaceGameVo {
 
     protected Map<Long, PlayerCardInfoTDKVo> playerVo = new HashMap<>();
     //所有的牌
-    protected List<Integer> cards = new ArrayList<>();
+//    protected List<Integer> cards = new ArrayList<>();
+    protected int remainCardSize = 0;
     //还存活的玩家
     protected List<Long> aliveUserList = new ArrayList<>();
     //弃牌的人
@@ -31,6 +32,8 @@ public class GameTDKVo implements IfaceGameVo {
     //手牌数
     protected int handCardNum = 0;
 
+    protected long openUser = 0;
+
 
     public Map<Long, PlayerCardInfoTDKVo> getPlayerVo() {
         return playerVo;
@@ -41,14 +44,14 @@ public class GameTDKVo implements IfaceGameVo {
         return this;
     }
 
-    public List<Integer> getCards() {
-        return cards;
-    }
-
-    public GameTDKVo setCards(List<Integer> cards) {
-        this.cards = cards;
-        return this;
-    }
+//    public List<Integer> getCards() {
+//        return cards;
+//    }
+//
+//    public GameTDKVo setCards(List<Integer> cards) {
+//        this.cards = cards;
+//        return this;
+//    }
 
     public List<Long> getAliveUserList() {
         return aliveUserList;
@@ -110,6 +113,24 @@ public class GameTDKVo implements IfaceGameVo {
 
     public GameTDKVo setHandCardNum(int handCardNum) {
         this.handCardNum = handCardNum;
+        return this;
+    }
+
+    public int getRemainCardSize() {
+        return remainCardSize;
+    }
+
+    public GameTDKVo setRemainCardSize(int remainCardSize) {
+        this.remainCardSize = remainCardSize;
+        return this;
+    }
+
+    public long getOpenUser() {
+        return openUser;
+    }
+
+    public GameTDKVo setOpenUser(long openUser) {
+        this.openUser = openUser;
         return this;
     }
 }

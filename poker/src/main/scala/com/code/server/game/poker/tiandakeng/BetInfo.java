@@ -17,11 +17,11 @@ public class BetInfo {
 
 
     boolean isBetOver(){
-        return alreadyBetUser.size() == needBetUser.size();
+        return alreadyBetUser.size() >= needBetUser.size();
     }
 
     void bet(long userId,boolean isGiveUp){
-        this.giveUpUser.add(userId);
+//        this.giveUpUser.add(userId);
         this.alreadyBetUser.add(userId);
         if (isGiveUp) {
             this.giveUpUser.add(userId);
@@ -32,4 +32,6 @@ public class BetInfo {
         this.curBetUser = firstBetUser;
         this.needBetUser.addAll(needBetUser);
     }
+
+
 }

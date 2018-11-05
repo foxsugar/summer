@@ -77,6 +77,8 @@ public class GameTDK extends Game {
     //手牌数
     protected int handCardNum = 0;
 
+    protected long openUser = 0;
+
     /**
      * 开始游戏
      *
@@ -122,6 +124,7 @@ public class GameTDK extends Game {
         //发牌
         deal();
 
+
     }
 
 
@@ -155,7 +158,7 @@ public class GameTDK extends Game {
         Map<String, Object> r = new HashMap<>();
         r.put("userId", userId);
         r.put("num", num);
-        pushToAll(new ResponseVo(SERVICE_NAME, "bet", r));
+        pushToAll(new ResponseVo(SERVICE_NAME, "pushBet", r));
     }
 
     /**
@@ -205,6 +208,7 @@ public class GameTDK extends Game {
     protected void deal_round() {
         this.state = STATE_DEAL;
         this.betInfo = null;
+        this.kickInfo = null;
 
         int remainUser = users.size() - giveUpList.size();
         int remianCards = cards.size();
@@ -243,13 +247,8 @@ public class GameTDK extends Game {
                 playerInfoTDK.deal(commonCard, true);
             }
         }
-
-
         handCardNum++;
-
-
         //通知发牌情况
-
         Map<Long, Map<String, Object>> playerCards = new HashMap<>();
         for (PlayerInfoTDK playerInfoTDK : this.playerCardInfos.values()) {
             playerCards.put(playerInfoTDK.getUserId(), playerInfoTDK.getHandCardsInfo());
@@ -257,7 +256,6 @@ public class GameTDK extends Game {
 
         //推送发牌信息
         pushToAll(new ResponseVo(SERVICE_NAME, "deal_round", playerCards));
-
 
         //发玩牌 通知下注
         betStart();
@@ -269,6 +267,7 @@ public class GameTDK extends Game {
      */
     protected void betStart() {
         this.state = STATE_BET;
+        this.kickInfo = null;
 
         //找到名牌点数最大的玩家 下注
 
@@ -285,7 +284,6 @@ public class GameTDK extends Game {
 
     /**
      * 下注
-     *
      * @param userId
      * @param num
      * @param isGiveUp
@@ -570,6 +568,7 @@ public class GameTDK extends Game {
         } else {//下注
             this.bets.add(num);
             playerInfoTDK.addBet(num, handCardNum);
+            this.kickInfo.kickBetInfo = null;
             //是否已经10轮了
             if (this.kickInfo.count >= 10) {
                 openStart();
@@ -665,7 +664,9 @@ public class GameTDK extends Game {
             playerInfoTDK.addBet(num, handCardNum);
 
             //通知下个人 下注
+            this.state = STATE_TWO_KICK_BET;
             long nextUser = nextTurnId(userId);
+            this.kickInfo.curKickUser = nextUser;
             Map<String, Object> pleaseBetResult = new HashMap<>();
             pleaseBetResult.put("userId", nextUser);
             pushToAll(new ResponseVo(SERVICE_NAME, "followBet", pleaseBetResult));
@@ -685,6 +686,7 @@ public class GameTDK extends Game {
         this.kickInfo = null;
         //通知开牌
         long openUser = findMaxCardScoreUser();
+        this.openUser = openUser;
         Map<String, Object> map = new HashMap<>();
         map.put("userId", openUser);
         pushToAll(new ResponseVo(SERVICE_NAME, "pleaseOpen", map));
@@ -730,6 +732,7 @@ public class GameTDK extends Game {
      */
     protected void kickBetStart() {
         this.state = STATE_KICK_BET;
+
     }
 
     /**
@@ -760,6 +763,10 @@ public class GameTDK extends Game {
 
     }
 
+    /**
+     * 发结算
+     * @param winnerId
+     */
     private void sendResult(long winnerId) {
         Map<String, Object> result = new HashMap<>();
         result.put("winner", winnerId);
@@ -772,6 +779,10 @@ public class GameTDK extends Game {
     }
 
 
+    /**
+     * 算分
+     * @param winnerId
+     */
     private void compute(long winnerId) {
         if (winnerId == 0) return;
         int allScore = 0;
@@ -888,6 +899,7 @@ public class GameTDK extends Game {
 
         GameTDKVo gameTDKVo = new GameTDKVo();
         BeanUtils.copyProperties(this, gameTDKVo);
+        gameTDKVo.setRemainCardSize(this.cards.size());
         for (PlayerInfoTDK playerInfoTDK : this.playerCardInfos.values()) {
             gameTDKVo.playerVo.put(playerInfoTDK.getUserId(), (PlayerCardInfoTDKVo) playerInfoTDK.toVo());
         }
@@ -904,6 +916,9 @@ public class GameTDK extends Game {
                 (Collectors.toMap(PlayerInfoTDK::getUserId, PlayerInfoTDK::getScore)), room, id);
     }
 
+    /**
+     * 发送最终结算版
+     */
     protected void sendFinalResult() {
         //所有牌局都结束
         if (room.getCurGameNumber() > room.getGameNumber()) {

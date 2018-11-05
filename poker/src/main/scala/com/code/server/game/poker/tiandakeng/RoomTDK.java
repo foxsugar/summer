@@ -85,6 +85,14 @@ public class RoomTDK extends PokerGoldRoom {
 
 
     @Override
+    public int joinRoom(long userId, boolean isJoin) {
+        if((this.isOpen || this.users.size()>this.personNumber) && isHasMode(otherMode, this.getOtherMode())){
+            return ErrorCode.CANNOT_JOIN_ROOM_WATCH;
+        }
+        return super.joinRoom(userId, isJoin);
+    }
+
+    @Override
     public int startGameByClient(long userId) {
 
         if (this.users.get(0) != userId){
