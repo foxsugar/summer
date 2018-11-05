@@ -163,7 +163,8 @@ public class YSZRobotImpl implements YSZRobot {
             }
         } else {
 
-//            System.out.println("last op " + ((RoomYSZ) room).getLastReadyTime());
+            System.out.println("last op " + room.getLastOperateTime());
+            System.out.println("now " + now);
             //如果没在游戏中
             if (room.getCurGameNumber() > 1 && now - room.getLastOperateTime() > 1000 * 10) {
 //                logger.info("xxxxxxx:now{}:lastOverTime{}==inter:{}", now, ((RoomYSZ) room).getLastReadyTime(), (now - ((RoomYSZ) room).getLastReadyTime())/ 1000.0);
@@ -173,7 +174,7 @@ public class YSZRobotImpl implements YSZRobot {
                     if ((status != Room.STATUS_READY)) {
                         boolean isOnline = RedisManager.getUserRedisService().getGateId(uid) != null;
                         if (isOnline) {
-//                            getReady(room, uid);
+                            getReady(room, uid);
                         }else{
                             quitRoom(room,uid);
                         }
