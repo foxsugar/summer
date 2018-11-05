@@ -39,7 +39,7 @@ object GameService {
       case x:GameZhaGuZi =>dispatchGameZhaGuZiService(userId,method,game.asInstanceOf[GameZhaGuZi],params)
       case x:GameXuanQiQi =>dispatchGameXQQService(userId,method,game.asInstanceOf[GameXuanQiQi],params)
       case x:GamePlaySeven =>dispatchGamePlaySevenService(userId,method,game.asInstanceOf[GamePlaySeven],params)
-      case x:GameTDK => dispatchGameTDKService(userId, method, game.asInstanceOf[GameTDK], params)
+//      case x:GameTDK => dispatchGameTDKService(userId, method, game.asInstanceOf[GameTDK], params)
 
     }
   }
