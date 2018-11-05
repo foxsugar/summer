@@ -248,6 +248,29 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
+
+    /**
+     * 加入房间观战
+     * @param userId
+     * @return
+     */
+    public int joinRoomWatch(long userId) {
+        if (userId == 0) {
+            return ErrorCode.JOIN_ROOM_USERID_IS_0;
+        }
+        if (RedisManager.getUserRedisService().getRoomId(userId) != null) {
+            return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;
+        }
+        if (!this.watchUser.contains(userId)) {
+            this.watchUser.add(userId);
+        }
+
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "joinRoomWatch", this.toVo(userId)), userId);
+        return 0;
+    }
+
+
+
     protected void addUser2RoomRedis(long userId) {
         RedisManager.getUserRedisService().setRoomId(userId, roomId);
         RedisManager.getRoomRedisService().addUser(roomId, userId);
@@ -400,6 +423,20 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
+
+    /**
+     * 退出观战房间
+     * @param userId
+     * @return
+     */
+    public int quitRoomWatch(long userId) {
+        if (!this.watchUser.contains(userId)) {
+            return ErrorCode.CANNOT_QUIT_ROOM_NOT_EXIST;
+        }
+        this.watchUser.remove(userId);
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "quitRoomWatch", "ok"), userId);
+        return 0;
+    }
 
     protected void noticeQuitRoom(long userId) {
         UserOfRoom userOfRoom = new UserOfRoom();

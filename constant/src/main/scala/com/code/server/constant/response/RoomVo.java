@@ -31,6 +31,7 @@ public class RoomVo implements IfaceRoomVo {
     public Map<Long, Integer> userStatus = new HashMap<>();//用户状态
     public List<UserVo> userList = new ArrayList<>();//用户列表
     public Map<Long, Double> userScores = new HashMap<>();
+    public List<Long> watchUser = new ArrayList<>();
     public int personNumber;
     public boolean isAA;
     public boolean isCreaterJoin;
@@ -339,6 +340,15 @@ public class RoomVo implements IfaceRoomVo {
 
     public RoomVo setOtherMode(int otherMode) {
         this.otherMode = otherMode;
+        return this;
+    }
+
+    public List<Long> getWatchUser() {
+        return watchUser;
+    }
+
+    public RoomVo setWatchUser(List<Long> watchUser) {
+        this.watchUser = watchUser;
         return this;
     }
 }

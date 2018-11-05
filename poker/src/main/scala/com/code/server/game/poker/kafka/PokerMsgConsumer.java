@@ -70,4 +70,11 @@ public class PokerMsgConsumer {
     public void listen_zhaguzi__room(ConsumerRecord<String, String> record ) {
         MsgDispatch.dispatch(record);
     }
+
+    @KafkaListener(id = "gameTDKService", topicPartitions = {
+            @TopicPartition(topic = "gameTDKService", partitions = "${serverConfig.serverId}")
+    })
+    public void listen_tdk__room(ConsumerRecord<String, String> record ) {
+        MsgDispatch.dispatch(record);
+    }
 }

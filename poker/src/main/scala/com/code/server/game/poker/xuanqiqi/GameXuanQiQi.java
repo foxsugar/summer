@@ -244,7 +244,7 @@ public class GameXuanQiQi extends Game {
             if (isAllKou) {
                 if (playerCardInfos.get(room.getBankerId()).getHandCards().size() == 8) {
                     MsgSender.sendMsg2Player(new ResponseVo("gameService", "dealAgain", null), users);
-                    room.clearReadyStatus(true);
+                    room.clearReadyStatus(false);
                 } else {
                     compute();
                     sendResult();
@@ -1041,13 +1041,13 @@ public class GameXuanQiQi extends Game {
         }
         playerCardInfos.get(finalWinnerId).getCardsType().putAll(tempCardsType);//设置罗的明/扣
 
-        /*if (playerCardInfos.get(finalWinnerId).winCards.size() / 18 >= 1) {
-            playerCardInfos.get(finalWinnerId).setGotSix(true);
-        } else if (playerCardInfos.get(finalWinnerId).winCards.size() / 15 >= 1) {
-            playerCardInfos.get(finalWinnerId).setGotFive(true);
-        } else if (playerCardInfos.get(finalWinnerId).winCards.size() / 9 >= 1) {
-            playerCardInfos.get(finalWinnerId).setGotThree(true);
-        }*/
+//        if (playerCardInfos.get(finalWinnerId).winCards.size() / 18 >= 1) {
+//            playerCardInfos.get(finalWinnerId).setGotSix(true);
+//        } else if (playerCardInfos.get(finalWinnerId).winCards.size() / 15 >= 1) {
+//            playerCardInfos.get(finalWinnerId).setGotFive(true);
+//        } else if (playerCardInfos.get(finalWinnerId).winCards.size() / 9 >= 1) {
+//            playerCardInfos.get(finalWinnerId).setGotThree(true);
+//        }
 
         chuPaiId = finalWinnerId;//设置下一个出牌的人
         operatId = finalWinnerId;

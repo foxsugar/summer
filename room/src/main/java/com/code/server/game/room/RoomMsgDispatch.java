@@ -169,6 +169,18 @@ public class RoomMsgDispatch {
                 return 0;
             }
 
+            case "joinRoomWatch":{
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                Room r = (Room)room;
+                return r.joinRoomWatch(userId);
+            }
+
+            case "quitRoomWatch":{
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                Room r = (Room)room;
+                return r.quitRoomWatch(userId);
+            }
+
 
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;

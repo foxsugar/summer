@@ -1,6 +1,9 @@
 package com.code.server.game.poker.tiandakeng;
 
+import com.code.server.constant.response.IfacePlayerInfoVo;
+import com.code.server.constant.response.PlayerCardInfoTDKVo;
 import com.code.server.game.room.PlayerCardInfo;
+import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,8 +61,9 @@ public class PlayerInfoTDK extends PlayerCardInfo{
         }
     }
 
-    public void computeScore(boolean isGongZhuangSuiBao, boolean isABiPao, boolean isWangZhongPao) {
+    public int computeScore(boolean isGongZhuangSuiBao, boolean isABiPao, boolean isWangZhongPao) {
         this.cardScore = getCardScore(isGongZhuangSuiBao, isABiPao, isWangZhongPao, true);
+        return this.cardScore;
     }
 
     /**
@@ -106,14 +110,41 @@ public class PlayerInfoTDK extends PlayerCardInfo{
     public Map<String,Object> getHandCardsInfo(){
         Map<String, Object> result = new HashMap<>();
         result.put("commonCard", commonCard);
+        result.put("cards", getCardsHideFirstTwo());
+        return result;
+    }
+
+    /**
+     * 手牌 隐藏前两张
+     * @return
+     */
+    private List<Integer> getCardsHideFirstTwo() {
         List<Integer> cards = new ArrayList<>();
         cards.add(null);
         cards.add(null);
         for(int i=2;i<this.cards.size();i++){
             cards.add(this.cards.get(i));
         }
-        result.put("cards", cards);
-        return result;
+        return cards;
+    }
+
+    @Override
+    public IfacePlayerInfoVo toVo() {
+        PlayerCardInfoTDKVo playerCardInfoTDKVo = new PlayerCardInfoTDKVo();
+        BeanUtils.copyProperties(this, playerCardInfoTDKVo);
+        playerCardInfoTDKVo.setCards(getCardsHideFirstTwo());
+        return playerCardInfoTDKVo;
+    }
+
+    @Override
+    public IfacePlayerInfoVo toVo(long watchUser) {
+        return this.toVo();
+    }
+
+    public PlayerCardInfoTDKVo toVoShowAllCard() {
+        PlayerCardInfoTDKVo playerCardInfoTDKVo = new PlayerCardInfoTDKVo();
+        BeanUtils.copyProperties(this, playerCardInfoTDKVo);
+        return playerCardInfoTDKVo;
     }
 
     public List<Integer> getCards() {
@@ -167,6 +198,15 @@ public class PlayerInfoTDK extends PlayerCardInfo{
 
     public PlayerInfoTDK setRoundBet(Map<Integer, Integer> roundBet) {
         this.roundBet = roundBet;
+        return this;
+    }
+
+    public int getCardScore() {
+        return cardScore;
+    }
+
+    public PlayerInfoTDK setCardScore(int cardScore) {
+        this.cardScore = cardScore;
         return this;
     }
 }

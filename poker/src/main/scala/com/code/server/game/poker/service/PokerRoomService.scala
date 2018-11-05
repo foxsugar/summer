@@ -9,6 +9,7 @@ import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower
 import com.code.server.game.poker.paijiu.{RoomGoldPaijiu, RoomPaijiu, RoomPaijiuAce}
 import com.code.server.game.poker.playseven.RoomPlaySeven
 import com.code.server.game.poker.pullmice.RoomPullMice
+import com.code.server.game.poker.tiandakeng.RoomTDK
 import com.code.server.game.poker.tuitongzi.RoomTuiTongZi
 import com.code.server.game.poker.xuanqiqi.RoomXuanQiQi
 import com.code.server.game.poker.zhaguzi.{RoomWzq, RoomYSZ, RoomZhaGuZi}
@@ -259,6 +260,20 @@ object PokerRoomService {
         //        if(multiple <=0 ) return ErrorCode.REQUEST_PARAM_ERROR
         return RoomWzq.createRoom(userId, roomType, gameType, multiple, personNumber, gameNumber)
 
+      case "createTDKRoom"=>
+        val roomType = params.path("roomType").asText()
+        val gameType = params.path("gameType").asText()
+        val personNumber = params.path("personNumber").asInt()
+        val multiple = params.path("multiple").asInt()
+        val gameNumber = params.path("gameNumber").asInt()
+        val clubId = params.path("clubId").asText
+        val clubRoomModel = params.path("clubRoomModel").asText
+        val isAA = params.path("isAA").asBoolean(false)
+        val isJoin = params.path("isJoin").asBoolean(false)
+        val showChat = params.path("showChat").asBoolean(false)
+        val otherMode = params.path("otherMode").asInt(0)
+
+        return RoomTDK.createRoom(userId, gameNumber,multiple,gameType, roomType,isAA,isJoin,showChat,personNumber,clubId,clubRoomModel,otherMode)
       case "getAllRoom" =>
         return RoomGuessCar.getAllRoom(userId);
 

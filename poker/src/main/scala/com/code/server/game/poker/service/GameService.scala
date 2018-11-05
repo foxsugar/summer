@@ -9,6 +9,7 @@ import com.code.server.game.poker.hitgoldflower.GameHitGoldFlower
 import com.code.server.game.poker.paijiu.{GameGoldPaijiu, GamePaijiu}
 import com.code.server.game.poker.playseven.GamePlaySeven
 import com.code.server.game.poker.pullmice.GamePullMice
+import com.code.server.game.poker.tiandakeng.GameTDK
 import com.code.server.game.poker.tuitongzi.GameTuiTongZi
 import com.code.server.game.poker.xuanqiqi.GameXuanQiQi
 import com.code.server.game.poker.zhaguzi.{GameBaseYSZ, GameWzq, GameYSZ, GameZhaGuZi}
@@ -38,6 +39,7 @@ object GameService {
       case x:GameZhaGuZi =>dispatchGameZhaGuZiService(userId,method,game.asInstanceOf[GameZhaGuZi],params)
       case x:GameXuanQiQi =>dispatchGameXQQService(userId,method,game.asInstanceOf[GameXuanQiQi],params)
       case x:GamePlaySeven =>dispatchGamePlaySevenService(userId,method,game.asInstanceOf[GamePlaySeven],params)
+      case x:GameTDK => dispatchGameTDKService(userId, method, game.asInstanceOf[GameTDK], params)
 
     }
   }
@@ -356,6 +358,24 @@ object GameService {
         ErrorCode.REQUEST_PARAM_ERROR
     }
 
+  }
+
+
+  private def dispatchGameTDKService(userId:Long, method:String, game:GameTDK, params:JsonNode):Int = {
+    case "bet" =>
+      val num = params.path("num").asInt()
+      val isGiveUp = params.path("isGiveUp").asBoolean(false)
+      game.bet(userId, num, isGiveUp);
+    case "kick"=>
+      val num = params.path("num").asInt()
+      val isKick = params.path("isKick").asBoolean(false)
+      game.kick(userId, num, isKick)
+    case "openCard"=>
+      game.openCard(userId)
+    case "look"=>
+      game.lookCard(userId)
+    case _ =>
+      ErrorCode.REQUEST_PARAM_ERROR
   }
 
   def getGame(roomId : String):IfaceGame = {

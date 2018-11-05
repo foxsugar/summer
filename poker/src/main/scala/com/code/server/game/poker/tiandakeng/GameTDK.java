@@ -1,12 +1,18 @@
 package com.code.server.game.poker.tiandakeng;
 
-import com.code.server.constant.response.ErrorCode;
-import com.code.server.constant.response.ResponseVo;
+import com.code.server.constant.response.*;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.game.room.service.RoomManager;
+import com.code.server.util.IdWorker;
+import org.springframework.beans.BeanUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by sunxianping on 2018-10-18.
@@ -14,45 +20,49 @@ import java.util.*;
 public class GameTDK extends Game {
 
     private static final String SERVICE_NAME = "gameTDKService";
-    private static final int model_带王 = 1;
-    private static final int model_王中炮 = 2;
-    private static final int model_抓A必泡 = 3;
-    private static final int model_公张随豹 = 4;
-    private static final int model_公张随点 = 5;
-    private static final int model_烂锅翻倍 = 6;
-    private static final int model_末脚踢服 = 7;
-    private static final int model_亮底 = 8;
-    private static final int model_把踢 = 9;
-    private static final int model_末踢 = 10;
+    static final int model_带王 = 1;
+    static final int model_王中炮 = 2;
+    static final int model_抓A必泡 = 3;
+    static final int model_公张随豹 = 4;
+    static final int model_公张随点 = 5;
+    static final int model_烂锅翻倍 = 6;
+    static final int model_末脚踢服 = 7;
+    static final int model_亮底 = 8;
+    static final int model_把踢 = 9;
+    static final int model_末踢 = 10;
 
-    private static final int model_无托管 = 11;
-    private static final int model_90秒托管 = 12;
-    private static final int model_180秒托管 = 13;
-    private static final int model_允许观战 = 14;
-    private static final int model_开启GPS = 15;
-    private static final int model_禁言 = 16;
+    static final int model_无托管 = 11;
+    static final int model_90秒托管 = 12;
+    static final int model_180秒托管 = 13;
+    static final int model_允许观战 = 14;
+    static final int model_开启GPS = 15;
+    static final int model_禁言 = 16;
 
-    private static final int model_半坑_8 = 17;
-    private static final int model_半坑_9 = 18;
-    private static final int model_半坑_10 = 19;
-    private static final int model_半坑_J = 20;
-    private static final int model_全坑_2 = 21;
+    static final int model_半坑_8 = 17;
+    static final int model_半坑_9 = 18;
+    static final int model_半坑_10 = 19;
+    static final int model_半坑_J = 20;
+    static final int model_全坑_2 = 21;
 
-    private static final int model_莆田半坑_5 = 22;
-    private static final int model_莆田全坑_2 = 23;
+    static final int model_莆田半坑_5 = 22;
+    static final int model_莆田全坑_2 = 23;
 
 
-    private static final int STATE_DEAL = 0;
-    private static final int STATE_BET = 1;
-    private static final int STATE_KICK = 2;
-    private static final int STATE_KICK_BET = 3;
-    private static final int STATE_TWO_KICK = 4;
-    private static final int STATE_TWO_KICK_BET = 5;
-    private static final int STATE_OPEN = 6;
+    static final int STATE_DEAL = 0;
+    static final int STATE_BET = 1;
+    static final int STATE_KICK = 2;
+    static final int STATE_KICK_BET = 3;
+    static final int STATE_TWO_KICK = 4;
+    static final int STATE_TWO_KICK_BET = 5;
+    static final int STATE_OPEN = 6;
 
+    //room
     protected RoomTDK room;
+    //玩家
     protected Map<Long, PlayerInfoTDK> playerCardInfos = new HashMap<>();
-    protected List<Integer> cards = new ArrayList<>();//牌
+    //所有的牌
+    protected List<Integer> cards = new ArrayList<>();
+    //还存活的玩家
     protected List<Long> aliveUserList = new ArrayList<>();
     //弃牌的人
     protected List<Long> giveUpList = new ArrayList<>();
@@ -60,11 +70,11 @@ public class GameTDK extends Game {
     protected List<Integer> bets = new ArrayList<>();
     //下注信息
     protected BetInfo betInfo;
-
+    //踢牌信息
     protected KickInfo kickInfo;
-
+    //状态
     protected int state = 0;
-
+    //手牌数
     protected int handCardNum = 0;
 
     /**
@@ -78,7 +88,8 @@ public class GameTDK extends Game {
         init(users, room.getBankerId());
         updateLastOperateTime();
         //通知其他人游戏已经开始
-        MsgSender.sendMsg2Player(new ResponseVo(SERVICE_NAME, "gameBegin", "ok"), this.getUsers());
+//        MsgSender.sendMsg2Player(new ResponseVo(SERVICE_NAME, "gameBegin", "ok"), this.getUsers());
+        pushToAll(new ResponseVo(SERVICE_NAME, "gameBegin", "ok"));
     }
 
     /**
@@ -105,6 +116,8 @@ public class GameTDK extends Game {
             //todo 筹码是否带过来
             //下底注
             bottomBet(1);
+        } else {
+            this.bets.addAll(this.room.getBets());
         }
         //发牌
         deal();
@@ -116,59 +129,7 @@ public class GameTDK extends Game {
      * 洗牌
      */
     protected void shuffle() {
-        //必有A
-        cards.add(1);
-        cards.add(2);
-        cards.add(3);
-        cards.add(4);
-
-        //必有J Q K
-        for (int i = 0; i < 12; i++) {
-            cards.add(41 + i);
-        }
-
-        //从10起
-        if (isHasMode(model_半坑_10)) {
-            for (int i = 0; i < 4; i++) {
-                cards.add(37 + i);
-            }
-        }
-
-        //从9起
-        if (isHasMode(model_半坑_9)) {
-            for (int i = 0; i < 8; i++) {
-                cards.add(33 + i);
-            }
-        }
-
-        //从8起
-        if (isHasMode(model_半坑_8)) {
-            for (int i = 0; i < 12; i++) {
-                cards.add(29 + i);
-            }
-        }
-
-        //从5起
-        if (isHasMode(model_莆田半坑_5)) {
-            for (int i = 0; i < 24; i++) {
-                cards.add(17 + i);
-            }
-        }
-
-        //从2起
-        if (isHasMode(model_莆田全坑_2) || isHasMode(model_全坑_2)) {
-            for (int i = 0; i < 36; i++) {
-                cards.add(5 + i);
-            }
-        }
-
-        //带王
-        if (isHasMode(model_带王)) {
-            cards.add(53);
-            cards.add(54);
-        }
-
-        Collections.shuffle(cards);
+        CardUtil.shuffleCard(this, cards);
     }
 
     /**
@@ -363,13 +324,86 @@ public class GameTDK extends Game {
     }
 
 
+    /**
+     * 看牌
+     * @param userId
+     * @return
+     */
+    public int lookCard(long userId) {
+        PlayerInfoTDK playerInfoTDK = playerCardInfos.get(userId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("userId", userId);
+        List<Integer> cards = new ArrayList<>();
+        if (playerInfoTDK.getCards().size() >= 2) {
+            cards.add(playerInfoTDK.getCards().get(0));
+            cards.add(playerInfoTDK.getCards().get(1));
+        }
+        result.put("cards", cards);
+
+        MsgSender.sendMsg2Player(SERVICE_NAME, "lookCard", result, userId);
+        Map<String, Object> r = new HashMap<>();
+        r.put("userId", userId);
+        pushToAll(new ResponseVo(SERVICE_NAME, "someoneLook", r));
+        return 0;
+    }
+
+    /**
+     * 开牌
+     *
+     * @param userId
+     * @return
+     */
     public int openCard(long userId) {
+        //todo 验证开牌
         if (this.state != STATE_OPEN) {
             return ErrorCode.CANNOT_OPEN;
         }
-//        getUserListBeginWithMaxCardScoreUser()
+        boolean isGongZhangSuiBao = isHasMode(model_公张随豹);
+        boolean isABiPao = isHasMode(model_抓A必泡);
+        boolean isWangZhongPao = isHasMode(model_王中炮);
+        //算出所有人的牌面分数
+        int maxCardScore = 0;
+        long maxUser = 0;
+        for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
+            if (aliveUserList.contains(playerInfoTDK.getUserId())) {
+                int score = playerInfoTDK.computeScore(isGongZhangSuiBao, isABiPao, isWangZhongPao);
+                if (score >= maxCardScore) {
+                    maxCardScore = score;
+                    maxUser = playerInfoTDK.getUserId();
+                }
+            }
+        }
+        long winnerId = 0;
+        //莆田玩法没有烂锅
+        if (isHasMode(model_莆田半坑_5) || isHasMode(model_莆田全坑_2)) {
+            winnerId = findMaxCardScoreUser(true);
+        } else {
+            int maxScoreCount = 0;
+            //如果找不到最大分数玩家 烂锅
+            for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
+                if (aliveUserList.contains(playerInfoTDK.getUserId())) {
+                    if (maxCardScore == playerInfoTDK.getCardScore()) {
+                        maxScoreCount++;
+                    }
+                }
+            }
+            //是否烂锅
+            if (maxScoreCount >= 2) {
+
+                this.room.setLanGuo(true);
+                this.room.getBets().addAll(this.bets);
+
+            } else {
+                winnerId = maxUser;
+            }
+        }
+
+        gameOver(winnerId);
+
         return 0;
     }
+
+
     /**
      * 玩家下注
      *
@@ -405,7 +439,7 @@ public class GameTDK extends Game {
 
             //只剩最后一个人
             if (aliveUserList.size() == 1) {
-                gameOver();
+                gameOver(aliveUserList.get(0));
                 return 0;
             }
         } else {
@@ -460,7 +494,7 @@ public class GameTDK extends Game {
             this.aliveUserList.remove(userId);
             //只剩一个人 结束
             if (aliveUserList.size() == 1) {
-                gameOver();
+                gameOver(aliveUserList.get(0));
                 return 0;
             }
         } else {//下注
@@ -531,7 +565,7 @@ public class GameTDK extends Game {
             this.giveUpList.add(userId);
             this.aliveUserList.remove(userId);
 
-            gameOver();
+            gameOver(aliveUserList.get(0));
 
         } else {//下注
             this.bets.add(num);
@@ -605,7 +639,6 @@ public class GameTDK extends Game {
                     openStart();
                 }
             }
-
         }
         return 0;
     }
@@ -637,14 +670,11 @@ public class GameTDK extends Game {
             pleaseBetResult.put("userId", nextUser);
             pushToAll(new ResponseVo(SERVICE_NAME, "followBet", pleaseBetResult));
         } else {
-
             //不踢的话 开牌
             openStart();
-
         }
         return 0;
     }
-
 
 
     /**
@@ -713,24 +743,40 @@ public class GameTDK extends Game {
     /**
      * 算分
      */
-    protected void gameOver() {
+    protected void gameOver(long winnerId) {
 
-        long winner = aliveUserList.get(0);
+        //烂锅
+        if (winnerId == 0) {
+            this.room.setLanGuo(false);
+            this.room.getBets().clear();
+        }
+//        long winner = aliveUserList.get(0);
+        compute(winnerId);
 
-        compute(winner);
-
-//        sendResult()
-//        genRecord()
+        sendResult(winnerId);
+        genRecord();
         this.room.clearReadyStatus(true);
-//        sendFinalResult()
+        sendFinalResult();
 
+    }
+
+    private void sendResult(long winnerId) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("winner", winnerId);
+        Map<Long, PlayerCardInfoTDKVo> users = new HashMap<>();
+        for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
+            users.put(playerInfoTDK.getUserId(), playerInfoTDK.toVoShowAllCard());
+        }
+        result.put("users", users);
+        pushToAll(new ResponseVo(SERVICE_NAME, "gameResult", result));
     }
 
 
     private void compute(long winnerId) {
+        if (winnerId == 0) return;
         int allScore = 0;
         for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
-            if(playerInfoTDK.getUserId() == winnerId) continue;
+            if (playerInfoTDK.getUserId() == winnerId) continue;
             playerInfoTDK.setScore(-playerInfoTDK.getAllBet());
             this.room.addUserSocre(playerInfoTDK.getUserId(), -playerInfoTDK.getAllBet());
             allScore += playerInfoTDK.getAllBet();
@@ -748,7 +794,7 @@ public class GameTDK extends Game {
      * @param mode
      * @return
      */
-    private boolean isHasMode(int mode) {
+    boolean isHasMode(int mode) {
         return Room.isHasMode(mode, this.room.getOtherMode());
     }
 
@@ -813,8 +859,11 @@ public class GameTDK extends Game {
      *
      * @return
      */
-    private long findMaxCardScoreUser() {
+    private long findMaxCardScoreUser(boolean... isAddFirstTwoCard) {
 
+        if (isAddFirstTwoCard.length == 0) {
+            isAddFirstTwoCard[0] = false;
+        }
         List<Long> users = getAliveUserBeginWithBanker();
         //按顺序比较
         int score = 0;
@@ -823,7 +872,7 @@ public class GameTDK extends Game {
         boolean isABiPao = isHasMode(model_抓A必泡);
         boolean isWangZhongPao = isHasMode(model_王中炮);
         for (long userId : users) {
-            int s = playerCardInfos.get(userId).getCardScore(isGongZhangSuiBao, isABiPao, isWangZhongPao, false);
+            int s = playerCardInfos.get(userId).getCardScore(isGongZhangSuiBao, isABiPao, isWangZhongPao, isAddFirstTwoCard[0]);
             //分数相同 离banker近的赢
             if (s > score) {
                 score = s;
@@ -834,4 +883,41 @@ public class GameTDK extends Game {
     }
 
 
+    @Override
+    public IfaceGameVo toVo(long watchUser) {
+
+        GameTDKVo gameTDKVo = new GameTDKVo();
+        BeanUtils.copyProperties(this, gameTDKVo);
+        for (PlayerInfoTDK playerInfoTDK : this.playerCardInfos.values()) {
+            gameTDKVo.playerVo.put(playerInfoTDK.getUserId(), (PlayerCardInfoTDKVo) playerInfoTDK.toVo());
+        }
+        return super.toVo(watchUser);
+    }
+
+
+    /**
+     * 生成战绩
+     */
+    protected void genRecord() {
+        long id = IdWorker.getDefaultInstance().nextId();
+        genRecord(playerCardInfos.values().stream().collect
+                (Collectors.toMap(PlayerInfoTDK::getUserId, PlayerInfoTDK::getScore)), room, id);
+    }
+
+    protected void sendFinalResult() {
+        //所有牌局都结束
+        if (room.getCurGameNumber() > room.getGameNumber()) {
+            List<UserOfResult> userOfResultList = this.room.getUserOfResult();
+            // 存储返回
+            GameOfResult gameOfResult = new GameOfResult();
+            gameOfResult.setUserList(userOfResultList);
+            MsgSender.sendMsg2Player(SERVICE_NAME, "gameFinalResult", gameOfResult, users);
+
+            RoomManager.removeRoom(room.getRoomId());
+
+            //战绩
+            this.room.genRoomRecord();
+
+        }
+    }
 }
