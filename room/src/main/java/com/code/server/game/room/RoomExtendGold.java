@@ -43,6 +43,8 @@ public class RoomExtendGold extends Room {
         }
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         this.canStartUserId = users.get(0);
+        //代开房
+        if (!isCreaterJoin ||isClubRoom()) this.bankerId = users.get(0);
 
         addUser2RoomRedis(userId);
     }

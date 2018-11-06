@@ -266,9 +266,19 @@ public class Room implements IfaceRoom {
         }
 
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "joinRoomWatch", this.toVo(userId)), userId);
+
+        pushWatchNum();
         return 0;
     }
 
+    private void pushWatchNum(){
+        List<Long> users = new ArrayList<>();
+        users.addAll(this.users);
+        users.addAll(watchUser);
+        Map<String, Object> r = new HashMap<>();
+        r.put("num", this.watchUser.size());
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "watchNum", r), users);
+    }
 
 
     protected void addUser2RoomRedis(long userId) {
@@ -289,6 +299,7 @@ public class Room implements IfaceRoom {
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         this.canStartUserId = users.get(0);
 
+        if (!isCreaterJoin ||isClubRoom()) this.bankerId = users.get(0);
         addUser2RoomRedis(userId);
     }
 
@@ -435,6 +446,7 @@ public class Room implements IfaceRoom {
         }
         this.watchUser.remove(userId);
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "quitRoomWatch", "ok"), userId);
+        pushWatchNum();
         return 0;
     }
 

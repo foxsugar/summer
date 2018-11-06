@@ -46,6 +46,9 @@ public class RoomTDK extends PokerGoldRoom {
         room.isCreaterJoin = isJoin;
         room.showChat = showChat;
         room.otherMode = otherMode;
+        room.setBankerId(userId);
+
+
 
 
         room.setClubId(clubId);

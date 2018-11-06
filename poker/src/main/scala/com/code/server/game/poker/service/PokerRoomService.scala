@@ -139,6 +139,12 @@ object PokerRoomService {
         if (room == null) return ErrorCode.CAN_NOT_NO_ROOM
         return room.startGameByClient(userId)
 
+      case "startTDKGameByClient"=>
+        val roomId = params.get("roomId").asText()
+        val room = RoomManager.getRoom(roomId)
+        if (room == null) return ErrorCode.CAN_NOT_NO_ROOM
+        return room.startGameByClient(userId)
+
       case "createPaijiuRoom" =>
         val roomType = params.path("roomType").asText()
         val gameType = params.path("gameType").asText()

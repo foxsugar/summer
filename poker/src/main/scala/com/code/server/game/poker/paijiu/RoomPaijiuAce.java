@@ -23,7 +23,7 @@ import java.util.List;
 public class RoomPaijiuAce extends RoomPaijiu {
 
 
-    public static final int minMoney = 150;
+    public static final int minMoney = 200;
 
 
     public static int createRoom(long userId, String roomType, String gameType, Integer gameNumber, boolean isCreaterJoin,
@@ -45,7 +45,7 @@ public class RoomPaijiuAce extends RoomPaijiu {
 
 
         if (!isCreaterJoin) {
-            roomPaijiu.setCreateUser(0);
+            roomPaijiu.setCreateUser(userId);
         }
 
         //代建房 定时解散

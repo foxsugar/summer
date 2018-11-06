@@ -872,8 +872,9 @@ public class GameTDK extends Game {
      */
     private long findMaxCardScoreUser(boolean... isAddFirstTwoCard) {
 
-        if (isAddFirstTwoCard.length == 0) {
-            isAddFirstTwoCard[0] = false;
+        boolean isAdd = false;
+        if (isAddFirstTwoCard.length == 1 && isAddFirstTwoCard[0]) {
+            isAdd = true;
         }
         List<Long> users = getAliveUserBeginWithBanker();
         //按顺序比较
@@ -883,7 +884,7 @@ public class GameTDK extends Game {
         boolean isABiPao = isHasMode(model_抓A必泡);
         boolean isWangZhongPao = isHasMode(model_王中炮);
         for (long userId : users) {
-            int s = playerCardInfos.get(userId).getCardScore(isGongZhangSuiBao, isABiPao, isWangZhongPao, isAddFirstTwoCard[0]);
+            int s = playerCardInfos.get(userId).getCardScore(isGongZhangSuiBao, isABiPao, isWangZhongPao, isAdd);
             //分数相同 离banker近的赢
             if (s > score) {
                 score = s;
