@@ -291,16 +291,23 @@ public class GameTDK extends Game {
      * @return
      */
     public int bet(long userId, int num, boolean isGiveUp) {
+        int rtn = 0;
         switch (state) {
             case STATE_BET:
-                return bet_common(userId, num, isGiveUp);
+                rtn = bet_common(userId, num, isGiveUp);
+                break;
             case STATE_KICK_BET:
-                return bet_kick(userId, isGiveUp);
+                rtn = bet_kick(userId, isGiveUp);
+                break;
             case STATE_TWO_KICK_BET:
-                return bet_kick_two(userId, isGiveUp);
-            default:
-                return ErrorCode.CANNOT_BET;
+                rtn = bet_kick_two(userId, isGiveUp);
+                break;
         }
+        if (rtn != 0) {
+            return rtn;
+        }
+        MsgSender.sendMsg2Player(SERVICE_NAME, "bet", 0,userId);
+        return 0;
     }
 
     /**
@@ -312,14 +319,21 @@ public class GameTDK extends Game {
      * @return
      */
     public int kick(long userId, int num, boolean isKick) {
+        int rtn = 0;
         switch (state) {
             case STATE_KICK:
-                return kick_common(userId, num, isKick);
+                rtn = kick_common(userId, num, isKick);
+                break;
             case STATE_TWO_KICK:
-                return kick_two(userId, num, isKick);
-            default:
-                return ErrorCode.CANNOT_KICK;
+                rtn = kick_two(userId, num, isKick);
+                break;
+
         }
+        if (rtn != 0) {
+            return rtn;
+        }
+        MsgSender.sendMsg2Player(SERVICE_NAME, "kick", 0,userId);
+        return 0;
     }
 
 
@@ -399,6 +413,7 @@ public class GameTDK extends Game {
 
         gameOver(winnerId);
 
+        MsgSender.sendMsg2Player(SERVICE_NAME, "openCard", 0, userId);
         return 0;
     }
 
@@ -442,6 +457,12 @@ public class GameTDK extends Game {
                 return 0;
             }
         } else {
+            //设置改下多少注
+            if (this.betInfo.betNum == 0) {
+                this.betInfo.betNum = num;
+            }
+            num = this.betInfo.betNum;
+            //下注
             this.bets.add(num);
             playerInfoTDK.addBet(num, handCardNum);
         }
@@ -460,7 +481,9 @@ public class GameTDK extends Game {
         } else {
             //通知下一个人下注
             long nextUser = nextTurnId(userId);
+            this.betInfo.curBetUser = nextUser;
             Map<String, Object> pleaseBetResult = new HashMap<>();
+
             pleaseBetResult.put("userId", nextUser);
             pushToAll(new ResponseVo(SERVICE_NAME, "followBet", pleaseBetResult));
         }
@@ -532,6 +555,7 @@ public class GameTDK extends Game {
         } else {
             //通知下一个人下注
             long nextUser = nextTurnId(userId);
+            betInfo.curBetUser = nextUser;
             Map<String, Object> pleaseBetResult = new HashMap<>();
             pleaseBetResult.put("userId", nextUser);
             pushToAll(new ResponseVo(SERVICE_NAME, "followBet", pleaseBetResult));
@@ -603,7 +627,7 @@ public class GameTDK extends Game {
         kickResp.put("userId", userId);
         kickResp.put("num", num);
         kickResp.put("isKick", isKick);
-        pushToAll(new ResponseVo(SERVICE_NAME, "kick", kickResp));
+        pushToAll(new ResponseVo(SERVICE_NAME, "kickResp", kickResp));
 
         //踢牌状态改变
         this.kickInfo.kick(userId, isKick);
@@ -621,6 +645,7 @@ public class GameTDK extends Game {
 
             //通知下个人 下注
             long nextUser = nextTurnId(userId);
+            this.kickInfo.curKickUser = nextUser;
             Map<String, Object> pleaseBetResult = new HashMap<>();
             pleaseBetResult.put("userId", nextUser);
             pushToAll(new ResponseVo(SERVICE_NAME, "followBet", pleaseBetResult));
@@ -652,6 +677,17 @@ public class GameTDK extends Game {
      * @return
      */
     private int kick_two(long userId, int num, boolean isKick) {
+
+        if (this.kickInfo == null || this.kickInfo.curKickUser != userId) {
+            return ErrorCode.CANNOT_KICK;
+        }
+
+        //踢牌返回
+        Map<String, Object> kickResp = new HashMap<>();
+        kickResp.put("userId", userId);
+        kickResp.put("num", num);
+        kickResp.put("isKick", isKick);
+        pushToAll(new ResponseVo(SERVICE_NAME, "kickResp", kickResp));
 
         //踢牌次数+1
         kickInfo.addCount();

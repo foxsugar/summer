@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class KickInfo {
     int count = 0;
-    long fristUser = 0;
+    long firstUser = 0;
     long curKickUser = 0;
     List<Long> needKickUser = new ArrayList<>();
     List<Long> alreadyKickUser = new ArrayList<>();
@@ -17,7 +17,7 @@ public class KickInfo {
 
 
     public KickInfo(long firstUser, List<Long> needKickUser) {
-        this.fristUser = firstUser;
+        this.firstUser = firstUser;
         this.curKickUser = firstUser;
         this.needKickUser.addAll(needKickUser);
     }

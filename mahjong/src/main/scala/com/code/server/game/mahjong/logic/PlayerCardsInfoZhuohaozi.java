@@ -38,6 +38,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         }
 
 
+
         if (isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_摸三胡六)) {
             this.TING_MIN_SCORE = 6;
             this.ZIMO_MIN_SCORE = 3;

@@ -14,9 +14,6 @@ import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by sunxianping on 2018-10-22.
  */
@@ -125,15 +122,24 @@ public class RoomPaijiuAce extends RoomPaijiu {
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userScores), this.getUsers());
     }
 
+    private void serviceMoney(){
+        //抽水
+        double max = this.userScores.values().stream().mapToDouble(Double::doubleValue).max().getAsDouble();
+        if (max > 0) {
+            long size = this.userScores.values().stream().filter(score -> score == max).count();
+            ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+            long each = serverConfig.getPaijiuServiceMoney()/size;
 
-    @Override
-    public void clearReadyStatus(boolean isAddGameNum) {
+            this.userScores.forEach((userId, score)->{
+                if (score == max) {
+                    RedisManager.getUserRedisService().addUserMoney(userId, -each);
+                }
+            });
+        }
 
-        super.clearReadyStatus(isAddGameNum);
-
-        //房卡不足 退出
-//        clearReadyAceRoom(isAddGameNum);
     }
+
+
 
     @Override
     public boolean isRoomOver() {
@@ -145,26 +151,14 @@ public class RoomPaijiuAce extends RoomPaijiu {
             }
         }
         return super.isRoomOver();
-
     }
 
-    public void clearReadyAceRoom(boolean isAddGameNum) {
-        if (isGoldRoom()) {
 
-            List<Long> removeList = new ArrayList<>();
-            for (long userId : this.users) {
-                double gold = RedisManager.getUserRedisService().getUserMoney(userId);
-                if (gold < 5) {
-                    removeList.add(userId);
-                }
-            }
-
-            for (long userId : removeList) {
-                this.quitRoom(userId);
-            }
-
-            //
-
-        }
+    @Override
+    public void genRoomRecord() {
+        //庄家初始分 再减掉
+        RedisManager.getUserRedisService().addUserMoney(this.getBankerId(), this.bankerInitScore());
+        serviceMoney();
+        super.genRoomRecord();
     }
 }

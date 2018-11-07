@@ -15,6 +15,7 @@ public class ServerConfig {
     private int isStartRobot = 1;
     private String dataFile;
     private int dissloutionRoomMustAllAgree = 0;
+    private int paijiuServiceMoney = 6;
 
 
     public String getServerType() {
@@ -79,6 +80,15 @@ public class ServerConfig {
 
     public ServerConfig setDissloutionRoomMustAllAgree(int dissloutionRoomMustAllAgree) {
         this.dissloutionRoomMustAllAgree = dissloutionRoomMustAllAgree;
+        return this;
+    }
+
+    public int getPaijiuServiceMoney() {
+        return paijiuServiceMoney;
+    }
+
+    public ServerConfig setPaijiuServiceMoney(int paijiuServiceMoney) {
+        this.paijiuServiceMoney = paijiuServiceMoney;
         return this;
     }
 }
