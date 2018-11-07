@@ -3,6 +3,7 @@ package com.code.server.game.poker.tiandakeng;
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.response.ErrorCode;
+import com.code.server.constant.response.IfaceRoomVo;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.service.PokerGoldRoom;
@@ -14,6 +15,7 @@ import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
+import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ public class RoomTDK extends PokerGoldRoom {
 
     private boolean isLanGuo = false;//是否烂锅
 
-    private List<Integer> bets = new ArrayList<>();
+    private List<Integer> languoBets = new ArrayList<>();
 
 
     public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType,
@@ -155,6 +157,23 @@ public class RoomTDK extends PokerGoldRoom {
         return 0;
     }
 
+    @Override
+    public IfaceRoomVo toVo(long userId) {
+        RoomTDKVo roomVo = new RoomTDKVo();
+        BeanUtils.copyProperties(this, roomVo);
+        RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
+        if (this.game != null) {
+            roomVo.game = this.game.toVo(userId);
+        }
+        if (this.getTimerNode() != null) {
+            long time = this.getTimerNode().getStart() + this.getTimerNode().getInterval() - System.currentTimeMillis();
+            roomVo.setRemainTime(time);
+        }
+        if (users.size() > 0) {
+            roomVo.setCanStartUserId(users.get(0));
+        }
+        return roomVo;
+    }
 
     public List<Long> getWatchUser() {
         return watchUser;
@@ -174,12 +193,12 @@ public class RoomTDK extends PokerGoldRoom {
         return this;
     }
 
-    public List<Integer> getBets() {
-        return bets;
+    public List<Integer> getLanguoBets() {
+        return languoBets;
     }
 
-    public RoomTDK setBets(List<Integer> bets) {
-        this.bets = bets;
+    public RoomTDK setLanguoBets(List<Integer> languoBets) {
+        this.languoBets = languoBets;
         return this;
     }
 }

@@ -119,7 +119,7 @@ public class GameTDK extends Game {
             //下底注
             bottomBet(1);
         } else {
-            this.bets.addAll(this.room.getBets());
+            this.bets.addAll(this.room.getLanguoBets());
         }
         //发牌
         deal();
@@ -142,6 +142,7 @@ public class GameTDK extends Game {
      */
     protected void bottomBet(int num) {
         for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
+            this.bets.add(num);
             playerInfoTDK.addBet(num, handCardNum);
             //通知下注
             pushBet(playerInfoTDK.getUserId(), num);
@@ -389,7 +390,7 @@ public class GameTDK extends Game {
             if (maxScoreCount >= 2) {
 
                 this.room.setLanGuo(true);
-                this.room.getBets().addAll(this.bets);
+                this.room.getLanguoBets().addAll(this.bets);
 
             } else {
                 winnerId = maxUser;
@@ -751,7 +752,7 @@ public class GameTDK extends Game {
         //烂锅
         if (winnerId == 0) {
             this.room.setLanGuo(false);
-            this.room.getBets().clear();
+            this.room.getLanguoBets().clear();
         }
 //        long winner = aliveUserList.get(0);
         compute(winnerId);
@@ -904,7 +905,7 @@ public class GameTDK extends Game {
         for (PlayerInfoTDK playerInfoTDK : this.playerCardInfos.values()) {
             gameTDKVo.playerVo.put(playerInfoTDK.getUserId(), (PlayerCardInfoTDKVo) playerInfoTDK.toVo());
         }
-        return super.toVo(watchUser);
+        return gameTDKVo;
     }
 
 
@@ -935,5 +936,104 @@ public class GameTDK extends Game {
             this.room.genRoomRecord();
 
         }
+    }
+
+    public RoomTDK getRoom() {
+        return room;
+    }
+
+    public GameTDK setRoom(RoomTDK room) {
+        this.room = room;
+        return this;
+    }
+
+    public Map<Long, PlayerInfoTDK> getPlayerCardInfos() {
+        return playerCardInfos;
+    }
+
+    public GameTDK setPlayerCardInfos(Map<Long, PlayerInfoTDK> playerCardInfos) {
+        this.playerCardInfos = playerCardInfos;
+        return this;
+    }
+
+    public List<Integer> getCards() {
+        return cards;
+    }
+
+    public GameTDK setCards(List<Integer> cards) {
+        this.cards = cards;
+        return this;
+    }
+
+    public List<Long> getAliveUserList() {
+        return aliveUserList;
+    }
+
+    public GameTDK setAliveUserList(List<Long> aliveUserList) {
+        this.aliveUserList = aliveUserList;
+        return this;
+    }
+
+    public List<Long> getGiveUpList() {
+        return giveUpList;
+    }
+
+    public GameTDK setGiveUpList(List<Long> giveUpList) {
+        this.giveUpList = giveUpList;
+        return this;
+    }
+
+    public List<Integer> getBets() {
+        return bets;
+    }
+
+    public GameTDK setBets(List<Integer> bets) {
+        this.bets = bets;
+        return this;
+    }
+
+    public BetInfo getBetInfo() {
+        return betInfo;
+    }
+
+    public GameTDK setBetInfo(BetInfo betInfo) {
+        this.betInfo = betInfo;
+        return this;
+    }
+
+    public KickInfo getKickInfo() {
+        return kickInfo;
+    }
+
+    public GameTDK setKickInfo(KickInfo kickInfo) {
+        this.kickInfo = kickInfo;
+        return this;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public GameTDK setState(int state) {
+        this.state = state;
+        return this;
+    }
+
+    public int getHandCardNum() {
+        return handCardNum;
+    }
+
+    public GameTDK setHandCardNum(int handCardNum) {
+        this.handCardNum = handCardNum;
+        return this;
+    }
+
+    public long getOpenUser() {
+        return openUser;
+    }
+
+    public GameTDK setOpenUser(long openUser) {
+        this.openUser = openUser;
+        return this;
     }
 }

@@ -130,6 +130,7 @@ public class RoomPaijiuAce extends RoomPaijiu {
     public void clearReadyStatus(boolean isAddGameNum) {
 
         super.clearReadyStatus(isAddGameNum);
+
         //房卡不足 退出
 //        clearReadyAceRoom(isAddGameNum);
     }

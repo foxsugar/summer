@@ -11,6 +11,18 @@ import java.util.List;
 public class PlayerCardsInfoZhuohaoziKX extends PlayerCardsInfoZhuohaozi {
 
 
+    @Override
+    public void init(List<String> cards) {
+        super.init(cards);
+
+        specialHuScore.put(hu_七小对,2);
+//        specialHuScore.put(hu_十三幺,4);
+        specialHuScore.put(hu_豪华七小对,4);
+        specialHuScore.put(hu_双豪七小对_山西,4);
+//        specialHuScore.remove(hu_七小对);
+//        specialHuScore.remove(hu_豪华七小对);
+//        specialHuScore.remove(hu_双豪七小对_山西);
+    }
 
     @Override
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
