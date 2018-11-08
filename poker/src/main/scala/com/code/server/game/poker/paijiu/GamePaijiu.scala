@@ -9,6 +9,7 @@ import com.code.server.constant.response._
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
 import com.code.server.game.room.{Game, Room}
+import com.code.server.redis.service.RedisManager
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
@@ -160,6 +161,13 @@ class GamePaijiu extends Game with PaijiuConstant {
 
     val bet = new Bet(one, two,three)
     if (!checkBet(bet)) return ErrorCode.BET_PARAM_ERROR
+    //金币牌九 下注不能大于身上的钱
+    if (this.roomPaijiu.isInstanceOf[RoomPaijiuAce]){
+      val myMoney = RedisManager.getUserRedisService.getUserMoney(userId)
+      if(myMoney<one + two + three) {
+        return ErrorCode.BET_PARAM_ERROR
+      }
+    }
 
     playerCardInfoPaijiu.bet = bet
 
