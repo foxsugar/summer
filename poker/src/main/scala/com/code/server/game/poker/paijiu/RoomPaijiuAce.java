@@ -20,7 +20,7 @@ import com.code.server.util.timer.TimerNode;
 public class RoomPaijiuAce extends RoomPaijiu {
 
 
-    public static final int minMoney = 200;
+    public static final int minMoney = 100;
 
 
     public static int createRoom(long userId, String roomType, String gameType, Integer gameNumber, boolean isCreaterJoin,
