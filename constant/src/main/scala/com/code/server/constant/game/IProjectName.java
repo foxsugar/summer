@@ -11,4 +11,6 @@ public interface IProjectName {
     String BAIXING = "BAIXING";
     String CHUANQI = "CHUANQI";
     String HUANLE = "HUANLE";
+    String DINGSHENG = "DINGSHENG";
+    String ACE = "ACE";
 }

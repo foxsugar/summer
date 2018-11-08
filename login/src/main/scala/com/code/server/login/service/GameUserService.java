@@ -393,6 +393,10 @@ public class GameUserService {
                 return 1;
             case IProjectName.HUANLE:
                 return 1;
+            case IProjectName.DINGSHENG:
+                return 0;
+            case IProjectName.ACE:
+                return 0;
             default:
                 return 1;
         }
