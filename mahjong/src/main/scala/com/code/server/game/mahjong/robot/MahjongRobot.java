@@ -50,7 +50,7 @@ public class MahjongRobot {
                     if ((status != Room.STATUS_READY)) {
                         boolean isOnline = RedisManager.getUserRedisService().getGateId(uid) != null;
                         if (isOnline) {
-//                            getReady(room, uid);
+                            getReady(room, uid);
                         }else{
                             quitRoom(room,uid);
                         }

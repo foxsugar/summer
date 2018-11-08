@@ -34,6 +34,8 @@ public class GameTDKVo implements IfaceGameVo {
 
     protected long openUser = 0;
 
+    protected Map<Long, String> operateDesc = new HashMap<>();
+
 
     public Map<Long, PlayerCardInfoTDKVo> getPlayerVo() {
         return playerVo;
@@ -131,6 +133,15 @@ public class GameTDKVo implements IfaceGameVo {
 
     public GameTDKVo setOpenUser(long openUser) {
         this.openUser = openUser;
+        return this;
+    }
+
+    public Map<Long, String> getOperateDesc() {
+        return operateDesc;
+    }
+
+    public GameTDKVo setOperateDesc(Map<Long, String> operateDesc) {
+        this.operateDesc = operateDesc;
         return this;
     }
 }

@@ -126,7 +126,7 @@ public class RoomExtendGold extends Room {
                 RoomManager.getInstance().moveGoldRoomNotFull2Full(this);
             }
 
-            getReady(userId);
+//            getReady(userId);
             return 0;
         } else {
             return super.joinRoom(userId, isJoin);

@@ -365,11 +365,13 @@ object GameService {
     case "bet" =>
       val num = params.path("num").asInt()
       val isGiveUp = params.path("isGiveUp").asBoolean(false)
-      game.bet(userId, num, isGiveUp);
+      val desc = params.path("desc").asText()
+      game.bet(userId, num, isGiveUp, desc);
     case "kick"=>
       val num = params.path("num").asInt()
       val isKick = params.path("isKick").asBoolean(false)
-      game.kick(userId, num, isKick)
+      val desc = params.path("desc").asText()
+      game.kick(userId, num, isKick,desc)
     case "openCard"=>
       game.openCard(userId)
     case "look"=>

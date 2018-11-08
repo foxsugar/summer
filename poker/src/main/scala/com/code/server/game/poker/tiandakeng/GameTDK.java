@@ -79,6 +79,10 @@ public class GameTDK extends Game {
 
     protected long openUser = 0;
 
+    protected Map<Long, String> operateDesc = new HashMap<>();
+
+
+
     /**
      * 开始游戏
      *
@@ -290,7 +294,7 @@ public class GameTDK extends Game {
      * @param isGiveUp
      * @return
      */
-    public int bet(long userId, int num, boolean isGiveUp) {
+    public int bet(long userId, int num, boolean isGiveUp,String desc) {
         int rtn = 0;
         switch (state) {
             case STATE_BET:
@@ -306,6 +310,7 @@ public class GameTDK extends Game {
         if (rtn != 0) {
             return rtn;
         }
+        operateDesc.put(userId, desc);
         MsgSender.sendMsg2Player(SERVICE_NAME, "bet", 0,userId);
         return 0;
     }
@@ -318,7 +323,7 @@ public class GameTDK extends Game {
      * @param isKick
      * @return
      */
-    public int kick(long userId, int num, boolean isKick) {
+    public int kick(long userId, int num, boolean isKick,String desc) {
         int rtn = 0;
         switch (state) {
             case STATE_KICK:
@@ -332,6 +337,7 @@ public class GameTDK extends Game {
         if (rtn != 0) {
             return rtn;
         }
+        operateDesc.put(userId, desc);
         MsgSender.sendMsg2Player(SERVICE_NAME, "kick", 0,userId);
         return 0;
     }
@@ -645,7 +651,7 @@ public class GameTDK extends Game {
 
             //通知下个人 下注
             long nextUser = nextTurnId(userId);
-            this.kickInfo.curKickUser = nextUser;
+            kickInfo.kickBetInfo.curBetUser = nextUser;
             Map<String, Object> pleaseBetResult = new HashMap<>();
             pleaseBetResult.put("userId", nextUser);
             pushToAll(new ResponseVo(SERVICE_NAME, "followBet", pleaseBetResult));
@@ -1070,6 +1076,15 @@ public class GameTDK extends Game {
 
     public GameTDK setOpenUser(long openUser) {
         this.openUser = openUser;
+        return this;
+    }
+
+    public Map<Long, String> getOperateDesc() {
+        return operateDesc;
+    }
+
+    public GameTDK setOperateDesc(Map<Long, String> operateDesc) {
+        this.operateDesc = operateDesc;
         return this;
     }
 }
