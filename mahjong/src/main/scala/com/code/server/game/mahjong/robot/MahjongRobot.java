@@ -12,6 +12,7 @@ import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -118,10 +119,10 @@ public class MahjongRobot {
         long userId = gameInfo.getTurnId();
         PlayerCardsInfoMj playerCardsInfoMj = gameInfo.getPlayerCardsInfos().get(userId);
         if(playerCardsInfoMj.isMoreOneCard()){
-            int cardSize = playerCardsInfoMj.getCards().size();
-            String cards = playerCardsInfoMj.getCards().get(cardSize - 1);
+            List<String> cards = playerCardsInfoMj.getCardsNoChiPengGang(playerCardsInfoMj.getCards());
+            String card = cards.get(cards.size() - 1);
             params.put("userId", userId);
-            params.put("card", cards);
+            params.put("card", card);
             ResponseVo vo = new ResponseVo("gameLogicService", "playCard", params);
 
             gameInfo.autoPlay = true;
