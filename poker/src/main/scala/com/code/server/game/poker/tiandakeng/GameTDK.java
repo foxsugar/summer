@@ -627,7 +627,8 @@ public class GameTDK extends Game {
                 openStart();
             } else {
                 long nextId = nextTurnId(userId);
-                kickTwoStart(nextId);
+                notifyNextUserKickTwo(nextId);
+
             }
 
         }
@@ -781,6 +782,15 @@ public class GameTDK extends Game {
 
     }
 
+
+    private void notifyNextUserKickTwo(long userId) {
+        this.state = STATE_TWO_KICK;
+        this.betInfo = null;
+        this.kickInfo.kickBetInfo = null;
+        this.kickInfo.alreadyKickUser.add(userId);
+        this.kickInfo.curKickUser = userId;
+        pushIsKick(userId);
+    }
     /**
      * 二人无限踢 开始
      */

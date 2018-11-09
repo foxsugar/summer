@@ -352,7 +352,7 @@ public class GameInfoNew extends GameInfo {
         lastOperateUserId = userId;//上个操作的人
         //出的牌
         this.disCard = card;
-        chupaiPlayerCardsInfo.chupai(card);
+//        chupaiPlayerCardsInfo.chupai(card);
 
 
         //通知其他玩家出牌信息
@@ -850,14 +850,6 @@ public class GameInfoNew extends GameInfo {
 
             //回放
             replay.getOperate().add(operateReqResp);
-
-            //通知其他玩家出牌信息
-//            PlayCardResp playCardResp = new PlayCardResp();
-//            playCardResp.setUserId(userId);
-//            playCardResp.setCard(card);
-//
-//            ResponseVo chupaiVo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_PLAY_CARD, playCardResp);
-//            MsgSender.sendMsg2Player(chupaiVo.toJsonObject(), users);
 
             //出牌
             chuPai_ting(playerCardsInfo.getUserId(), card);
