@@ -36,6 +36,7 @@ public class KickInfo {
         //初始化betInfo
         this.kickBetInfo = new BetInfo(firstUser, users);
         this.kickBetInfo.betNum = num;
+        this.kickBetInfo.bet(firstUser,false);
     }
 
     /**

@@ -7,11 +7,35 @@ import com.code.server.game.mahjong.response.OperateResp;
 import com.code.server.game.mahjong.response.ResponseType;
 import com.code.server.game.room.kafka.MsgSender;
 
+import java.util.List;
+
 /**
  * Created by sunxianping on 2018-10-08.
  */
 public class GameInfoFanshi extends GameInfoNew {
 
+
+    /**
+     * 初始化方法
+     *
+     * @param firstTurn
+     * @param users
+     */
+    public void init(int gameId, long firstTurn, List<Long> users, RoomInfo room) {
+        this.gameId = gameId;
+
+        this.firstTurn = firstTurn;
+        this.turnId = firstTurn;
+        remainCards.addAll(CardTypeUtil.ALL_CARD);
+        remainCards.removeAll(CardTypeUtil.FENG_CARD);
+        remainCards.removeAll(CardTypeUtil.ZI_CARD);
+        this.users.addAll(users);
+        this.room = room;
+        this.cardSize = 13;
+        this.playerSize = room.getPersonNumber();
+        //不带风
+        fapai();
+    }
 
     @Override
     protected void mopai(long userId, String... wz) {

@@ -6,6 +6,8 @@ import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.util.IdWorker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
  * Created by sunxianping on 2018-10-18.
  */
 public class GameTDK extends Game {
+
+    private static final Logger logger = LoggerFactory.getLogger(GameTDK.class);
 
     private static final String SERVICE_NAME = "gameTDKService";
     static final int model_带王 = 1;
@@ -510,9 +514,19 @@ public class GameTDK extends Game {
         if (this.kickInfo == null || this.kickInfo.kickBetInfo == null || this.kickInfo.kickBetInfo.curBetUser != userId) {
             return ErrorCode.CANNOT_BET;
         }
+
+
+
         PlayerInfoTDK playerInfoTDK = playerCardInfos.get(userId);
         BetInfo betInfo = this.kickInfo.kickBetInfo;
         int num = betInfo.betNum;
+
+        //下注推送
+        Map<String, Object> result = new HashMap<>();
+        result.put("userId", userId);
+        result.put("num", num);
+        result.put("isGiveUp", isGiveUp);
+        pushToAll(new ResponseVo(SERVICE_NAME, "betResp", result));
 
         betInfo.bet(userId, isGiveUp);
         //弃牌
@@ -531,7 +545,7 @@ public class GameTDK extends Game {
         }
 
         //都下过注 进入踢阶段
-        if (this.betInfo.isBetOver()) {
+        if (this.kickInfo.kickBetInfo.isBetOver()) {
             //踢牌阶段结束
             //是否发牌 或者 开牌
             if (this.kickInfo.isOver(aliveUserList)) {
@@ -554,8 +568,9 @@ public class GameTDK extends Game {
 
             } else {//通知下一轮踢牌
                 long nextUser = nextTurnId(this.kickInfo.curKickUser);
-                this.kickInfo.curKickUser = nextUser;
-                kickStart(nextUser);
+//                this.kickInfo.curKickUser = nextUser;
+//                kickStart(nextUser);
+                notifyNextUserKick(nextUser);
             }
 
         } else {
@@ -586,6 +601,13 @@ public class GameTDK extends Game {
         PlayerInfoTDK playerInfoTDK = playerCardInfos.get(userId);
         BetInfo betInfo = this.kickInfo.kickBetInfo;
         int num = betInfo.betNum;
+
+        //下注推送
+        Map<String, Object> result = new HashMap<>();
+        result.put("userId", userId);
+        result.put("num", num);
+        result.put("isGiveUp", isGiveUp);
+        pushToAll(new ResponseVo(SERVICE_NAME, "betResp", result));
 
         betInfo.bet(userId, isGiveUp);
         //弃牌
@@ -659,7 +681,8 @@ public class GameTDK extends Game {
         } else {
             //不踢的话 问下个人踢不踢
             long nextUser = nextTurnId(userId);
-            kickStart(nextUser);
+//            kickStart(nextUser);
+            notifyNextUserKick(nextUser);
             //所有人都选过了
             if (this.kickInfo.isOver(aliveUserList)) {
                 //发牌或者开牌
@@ -747,6 +770,16 @@ public class GameTDK extends Game {
         pushIsKick(userId);
     }
 
+
+    private void notifyNextUserKick(long userId) {
+        this.state = STATE_KICK;
+        this.betInfo = null;
+        this.kickInfo.kickBetInfo = null;
+        this.kickInfo.alreadyKickUser.add(userId);
+        this.kickInfo.curKickUser = userId;
+        pushIsKick(userId);
+
+    }
 
     /**
      * 二人无限踢 开始
