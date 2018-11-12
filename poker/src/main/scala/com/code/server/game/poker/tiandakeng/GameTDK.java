@@ -80,9 +80,9 @@ public class GameTDK extends Game {
     protected int state = 0;
     //手牌数
     protected int handCardNum = 0;
-
+    //开牌的玩家
     protected long openUser = 0;
-
+    //操作描述(客户端显示需要)
     protected Map<Long, String> operateDesc = new HashMap<>();
 
 
@@ -280,7 +280,6 @@ public class GameTDK extends Game {
         this.kickInfo = null;
 
         //找到名牌点数最大的玩家 下注
-
         long betUser = findMaxCardScoreUser();
         //生成下注信息
         List<Long> needBetUser = getAliveUserBeginWithBanker();
@@ -337,7 +336,6 @@ public class GameTDK extends Game {
             case STATE_TWO_KICK:
                 rtn = kick_two(userId, num, isKick);
                 break;
-
         }
         if (rtn != 0) {
             return rtn;
@@ -417,7 +415,6 @@ public class GameTDK extends Game {
             }
             //是否烂锅
             if (maxScoreCount >= 2) {
-
                 this.room.setLanGuo(true);
                 this.room.getLanguoBets().addAll(this.bets);
 
@@ -442,9 +439,7 @@ public class GameTDK extends Game {
      * @return
      */
     private int bet_common(long userId, int num, boolean isGiveUp) {
-
         //检测是否能下注
-
         PlayerInfoTDK playerInfoTDK = this.playerCardInfos.get(userId);
 
         if (this.betInfo == null || this.betInfo.curBetUser != userId) {
@@ -461,6 +456,7 @@ public class GameTDK extends Game {
         //下注
         this.betInfo.bet(userId, isGiveUp);
 
+        //弃牌
         if (isGiveUp) {
             playerInfoTDK.setGiveUp(isGiveUp);
             this.giveUpList.add(userId);
@@ -520,8 +516,6 @@ public class GameTDK extends Game {
             return ErrorCode.CANNOT_BET;
         }
 
-
-
         PlayerInfoTDK playerInfoTDK = playerCardInfos.get(userId);
         BetInfo betInfo = this.kickInfo.kickBetInfo;
         int num = betInfo.betNum;
@@ -561,10 +555,8 @@ public class GameTDK extends Game {
                 } else {
                     //是否是二人无限踢
                     if (isHasMode(model_末脚踢服) && aliveUserList.size() == 2) {
-
                         //开始无限踢
                         kickTwoStart(findMaxCardScoreUser());
-
                     } else {
                         //开牌
                         openStart();
@@ -573,8 +565,6 @@ public class GameTDK extends Game {
 
             } else {//通知下一轮踢牌
                 long nextUser = nextTurnId(this.kickInfo.curKickUser);
-//                this.kickInfo.curKickUser = nextUser;
-//                kickStart(nextUser);
                 notifyNextUserKick(nextUser);
             }
 
@@ -599,7 +589,6 @@ public class GameTDK extends Game {
      * @return
      */
     private int bet_kick_two(long userId, boolean isGiveUp) {
-
         if (this.kickInfo == null || this.kickInfo.kickBetInfo == null || this.kickInfo.kickBetInfo.curBetUser != userId) {
             return ErrorCode.CANNOT_BET;
         }
@@ -620,7 +609,7 @@ public class GameTDK extends Game {
             playerInfoTDK.setGiveUp(true);
             this.giveUpList.add(userId);
             this.aliveUserList.remove(userId);
-
+            //结束
             gameOver(aliveUserList.get(0));
 
         } else {//下注
@@ -631,12 +620,9 @@ public class GameTDK extends Game {
             if (this.kickInfo.count >= 10) {
                 openStart();
             } else {
-                long nextId = nextTurnId(userId);
-                //通知自己是否再踢牌
+                //通知自己是否再踢牌(二人无限踢中是依次询问,自己跟注后再问自己)
                 notifyNextUserKickTwo(userId);
-
             }
-
         }
         return 0;
     }
@@ -644,14 +630,12 @@ public class GameTDK extends Game {
 
     /**
      * 踢牌
-     *
      * @param userId
      * @param num
      * @param isKick
      * @return
      */
     private int kick_common(long userId, int num, boolean isKick) {
-
         //是否可以踢
         if (this.kickInfo == null || this.kickInfo.curKickUser != userId) {
             return ErrorCode.CANNOT_KICK;
@@ -671,7 +655,6 @@ public class GameTDK extends Game {
             //踢的话 进行踢牌下注
             kickBetStart();
             //处理
-
             kickInfo.initBetInfo(num, userId, aliveUserList);
             this.bets.add(num);
             //玩家下注
@@ -713,7 +696,6 @@ public class GameTDK extends Game {
      * @return
      */
     private int kick_two(long userId, int num, boolean isKick) {
-
         if (this.kickInfo == null || this.kickInfo.curKickUser != userId) {
             return ErrorCode.CANNOT_KICK;
         }
@@ -772,13 +754,15 @@ public class GameTDK extends Game {
     private void kickStart(long userId) {
         this.state = STATE_KICK;
         this.betInfo = null;
-
         this.kickInfo = new KickInfo(userId, aliveUserList);
-
         pushIsKick(userId);
     }
 
 
+    /**
+     * 通知下个人踢牌
+     * @param userId
+     */
     private void notifyNextUserKick(long userId) {
         this.state = STATE_KICK;
         this.betInfo = null;
@@ -790,6 +774,10 @@ public class GameTDK extends Game {
     }
 
 
+    /**
+     * 通知下个人踢牌(二人无限踢中)
+     * @param userId
+     */
     private void notifyNextUserKickTwo(long userId) {
         this.state = STATE_TWO_KICK;
         this.betInfo = null;
@@ -806,7 +794,6 @@ public class GameTDK extends Game {
         this.betInfo = null;
         this.kickInfo = new KickInfo(userId, aliveUserList);
         pushIsKick(userId);
-
     }
 
     /**
@@ -840,15 +827,14 @@ public class GameTDK extends Game {
      * 算分
      */
     protected void gameOver(long winnerId) {
-
         //烂锅
         if (winnerId == 0) {
             this.room.setLanGuo(false);
             this.room.getLanguoBets().clear();
         }
-//        long winner = aliveUserList.get(0);
-        compute(winnerId);
 
+        //结算
+        compute(winnerId);
         sendResult(winnerId);
         genRecord();
         this.room.clearReadyStatus(true);
@@ -889,7 +875,6 @@ public class GameTDK extends Game {
         PlayerInfoTDK winnerUser = playerCardInfos.get(winnerId);
         winnerUser.setScore(allScore);
         this.room.addUserSocre(winnerId, allScore);
-
     }
 
     /**
@@ -918,7 +903,6 @@ public class GameTDK extends Game {
             nextUser = nextTurnId(nextUser);
         }
         return users;
-
     }
 
 
@@ -928,17 +912,14 @@ public class GameTDK extends Game {
      * @return
      */
     private List<Long> getUserListBeginWithMaxCardScoreUser() {
-
         long maxScoreUser = findMaxCardScoreUser();
         List<Long> users = new ArrayList<>();
-
         long nextUser = maxScoreUser;
         for (int i = 0; i < this.aliveUserList.size(); i++) {
             users.add(nextUser);
             nextUser = nextTurnId(nextUser);
         }
         return users;
-
     }
 
     /**
@@ -949,7 +930,6 @@ public class GameTDK extends Game {
      */
     protected long nextTurnId(long curId) {
         int index = aliveUserList.indexOf(curId);
-
         int nextId = index + 1;
         if (nextId >= aliveUserList.size()) {
             nextId = 0;
@@ -964,7 +944,6 @@ public class GameTDK extends Game {
      * @return
      */
     private long findMaxCardScoreUser(boolean... isAddFirstTwoCard) {
-
         boolean isAdd = false;
         if (isAddFirstTwoCard.length == 1 && isAddFirstTwoCard[0]) {
             isAdd = true;
@@ -990,7 +969,6 @@ public class GameTDK extends Game {
 
     @Override
     public IfaceGameVo toVo(long watchUser) {
-
         GameTDKVo gameTDKVo = new GameTDKVo();
         BeanUtils.copyProperties(this, gameTDKVo);
         gameTDKVo.setRemainCardSize(this.cards.size());
@@ -1026,7 +1004,6 @@ public class GameTDK extends Game {
 
             //战绩
             this.room.genRoomRecord();
-
         }
     }
 

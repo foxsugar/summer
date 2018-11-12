@@ -924,6 +924,7 @@ public class Room implements IfaceRoom {
         prepareRoom.roomId = this.roomId;
         prepareRoom.multiple = this.multiple;
         prepareRoom.gameNumber = this.gameNumber;
+        prepareRoom.otherMode = this.otherMode;
         return prepareRoom;
     }
 
