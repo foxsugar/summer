@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.code.server.game.poker.tiandakeng.GameTDK.model_允许观战;
+
 /**
  * Created by sunxianping on 2018-10-18.
  */
@@ -91,7 +93,7 @@ public class RoomTDK extends PokerGoldRoom {
 
     @Override
     public int joinRoom(long userId, boolean isJoin) {
-        if((this.isOpen || this.users.size()>this.personNumber) && isHasMode(otherMode, this.getOtherMode())){
+        if((this.isOpen || this.users.size()>=this.personNumber) && isHasMode(model_允许观战, this.getOtherMode())){
             return ErrorCode.CANNOT_JOIN_ROOM_WATCH;
         }
         return super.joinRoom(userId, isJoin);

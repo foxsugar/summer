@@ -64,10 +64,13 @@ class GamePaijiuEndless extends GamePaijiu {
         max = roomData.getMaxBet
       }
     }
-    if (banker.score <= 0 || banker.score >= max) {
+    if (banker.score <= 0 || banker.score >= max || this.roomPaijiu.isAceRoomOver()) {
       sendFinalResult()
     }
+
   }
+
+
 
 
   /**

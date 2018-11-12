@@ -37,7 +37,7 @@ class GamePaijiuEndless3Bet extends GamePaijiuEndless{
         max = roomData.getMaxBet
       }
     }
-    if (banker.score <= 0 || banker.score >= max) {
+    if (banker.score <= 0 || banker.score >= max ||this.roomPaijiu.isAceRoomOver()) {
       sendFinalResult()
     }
   }

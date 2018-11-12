@@ -217,6 +217,7 @@ public class RoomInfo extends RoomInfoExtendGold {
             case "HONGZHONG3":
                 return new GameInfoHongZhong();
             case "DINGSHENG":
+            case "ACE":
                 return new GameInfoDingSheng();
             case "FANSHI":
                 return new GameInfoFanshi();
@@ -583,6 +584,7 @@ public class RoomInfo extends RoomInfoExtendGold {
         prepareRoom.canChi = this.canChi;
         prepareRoom.haveTing = this.haveTing;
         prepareRoom.clubId = this.getClubId();
+        prepareRoom.otherMode = this.otherMode;
         prepareRoom.clubRoomModel = this.getClubRoomModel();
         return prepareRoom;
     }

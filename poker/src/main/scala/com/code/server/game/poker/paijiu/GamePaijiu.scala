@@ -373,6 +373,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     }
   }
 
+
   /**
     * 比较输赢并设置分数
     *

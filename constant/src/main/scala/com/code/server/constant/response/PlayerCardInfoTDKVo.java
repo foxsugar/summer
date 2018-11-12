@@ -29,6 +29,8 @@ public class PlayerCardInfoTDKVo implements IfacePlayerInfoVo {
 
     private int cardScore = 0;
 
+    public double score;
+
 
     public List<Integer> getCards() {
         return cards;
@@ -90,6 +92,15 @@ public class PlayerCardInfoTDKVo implements IfacePlayerInfoVo {
 
     public PlayerCardInfoTDKVo setCardScore(int cardScore) {
         this.cardScore = cardScore;
+        return this;
+    }
+
+    public double getScore() {
+        return score;
+    }
+
+    public PlayerCardInfoTDKVo setScore(double score) {
+        this.score = score;
         return this;
     }
 }

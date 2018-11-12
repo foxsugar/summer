@@ -107,10 +107,14 @@ public class PlayerInfoTDK extends PlayerCardInfo{
      * 获得手牌信息
      * @return
      */
-    public Map<String,Object> getHandCardsInfo(){
+    public Map<String,Object> getHandCardsInfo(boolean isShowFirstTwoCard){
         Map<String, Object> result = new HashMap<>();
         result.put("commonCard", commonCard);
-        result.put("cards", getCardsHideFirstTwo());
+        if (isShowFirstTwoCard) {
+            result.put("cards", getCardsIncludeTwoCard());
+        } else {
+            result.put("cards", getCardsHideFirstTwo());
+        }
         return result;
     }
 
@@ -128,6 +132,12 @@ public class PlayerInfoTDK extends PlayerCardInfo{
         return cards;
     }
 
+    private List<Integer> getCardsIncludeTwoCard() {
+        List<Integer> cards = new ArrayList<>();
+        cards.addAll(this.cards);
+        return cards;
+    }
+
     @Override
     public IfacePlayerInfoVo toVo() {
         PlayerCardInfoTDKVo playerCardInfoTDKVo = new PlayerCardInfoTDKVo();
@@ -138,7 +148,13 @@ public class PlayerInfoTDK extends PlayerCardInfo{
 
     @Override
     public IfacePlayerInfoVo toVo(long watchUser) {
-        return this.toVo();
+        PlayerCardInfoTDKVo playerCardInfoTDKVo = new PlayerCardInfoTDKVo();
+        BeanUtils.copyProperties(this, playerCardInfoTDKVo);
+        if (watchUser != this.userId) {
+            playerCardInfoTDKVo.setCards(getCardsHideFirstTwo());
+        }
+        return playerCardInfoTDKVo;
+
     }
 
     public PlayerCardInfoTDKVo toVoShowAllCard() {

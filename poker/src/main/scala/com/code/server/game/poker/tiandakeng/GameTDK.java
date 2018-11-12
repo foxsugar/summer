@@ -93,14 +93,15 @@ public class GameTDK extends Game {
      * @param users
      * @param room
      */
-    public void startGame(List<Long> users, RoomTDK room) {
-        this.room = room;
+    public void startGame(List<Long> users, Room room) {
+        this.room = (RoomTDK) room;
         init(users, room.getBankerId());
         updateLastOperateTime();
         //通知其他人游戏已经开始
 //        MsgSender.sendMsg2Player(new ResponseVo(SERVICE_NAME, "gameBegin", "ok"), this.getUsers());
         pushToAll(new ResponseVo(SERVICE_NAME, "gameBegin", "ok"));
     }
+
 
     /**
      * 初始化
@@ -198,7 +199,7 @@ public class GameTDK extends Game {
 
         Map<Long, Map<String, Object>> playerCards = new HashMap<>();
         for (PlayerInfoTDK playerInfoTDK : this.playerCardInfos.values()) {
-            playerCards.put(playerInfoTDK.getUserId(), playerInfoTDK.getHandCardsInfo());
+            playerCards.put(playerInfoTDK.getUserId(), playerInfoTDK.getHandCardsInfo(true));
         }
 
         //推送发牌信息
@@ -260,7 +261,7 @@ public class GameTDK extends Game {
         //通知发牌情况
         Map<Long, Map<String, Object>> playerCards = new HashMap<>();
         for (PlayerInfoTDK playerInfoTDK : this.playerCardInfos.values()) {
-            playerCards.put(playerInfoTDK.getUserId(), playerInfoTDK.getHandCardsInfo());
+            playerCards.put(playerInfoTDK.getUserId(), playerInfoTDK.getHandCardsInfo(true));
         }
 
         //推送发牌信息
@@ -381,6 +382,10 @@ public class GameTDK extends Game {
         if (this.state != STATE_OPEN) {
             return ErrorCode.CANNOT_OPEN;
         }
+        Map<String, Object> r = new HashMap<>();
+        r.put("userId", userId);
+        pushToAll(new ResponseVo(SERVICE_NAME, "openCardNotify",r));
+
         boolean isGongZhangSuiBao = isHasMode(model_公张随豹);
         boolean isABiPao = isHasMode(model_抓A必泡);
         boolean isWangZhongPao = isHasMode(model_王中炮);
@@ -627,7 +632,8 @@ public class GameTDK extends Game {
                 openStart();
             } else {
                 long nextId = nextTurnId(userId);
-                notifyNextUserKickTwo(nextId);
+                //通知自己是否再踢牌
+                notifyNextUserKickTwo(userId);
 
             }
 
@@ -733,7 +739,8 @@ public class GameTDK extends Game {
             //通知下个人 下注
             this.state = STATE_TWO_KICK_BET;
             long nextUser = nextTurnId(userId);
-            this.kickInfo.curKickUser = nextUser;
+//            this.kickInfo.curKickUser = nextUser;
+            this.kickInfo.kickBetInfo.curBetUser = nextUser;
             Map<String, Object> pleaseBetResult = new HashMap<>();
             pleaseBetResult.put("userId", nextUser);
             pushToAll(new ResponseVo(SERVICE_NAME, "followBet", pleaseBetResult));
@@ -825,7 +832,7 @@ public class GameTDK extends Game {
      * 无限踢下注阶段
      */
     protected void kickTwoBetStart() {
-        this.state = STATE_KICK_BET;
+        this.state = STATE_TWO_KICK_BET;
     }
 
 
@@ -988,7 +995,7 @@ public class GameTDK extends Game {
         BeanUtils.copyProperties(this, gameTDKVo);
         gameTDKVo.setRemainCardSize(this.cards.size());
         for (PlayerInfoTDK playerInfoTDK : this.playerCardInfos.values()) {
-            gameTDKVo.playerVo.put(playerInfoTDK.getUserId(), (PlayerCardInfoTDKVo) playerInfoTDK.toVo());
+            gameTDKVo.playerVo.put(playerInfoTDK.getUserId(), (PlayerCardInfoTDKVo) playerInfoTDK.toVo(watchUser));
         }
         return gameTDKVo;
     }

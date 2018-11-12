@@ -144,13 +144,20 @@ public class RoomPaijiuAce extends RoomPaijiu {
     @Override
     public boolean isRoomOver() {
         //有小于5房卡的游戏结束
+
+        return super.isRoomOver() || isAceRoomOver();
+    }
+
+
+
+    public boolean isAceRoomOver() {
         for (long userId : this.users) {
             double money = RedisManager.getUserRedisService().getUserMoney(userId);
             if (money < 5) {
                 return true;
             }
         }
-        return super.isRoomOver();
+        return false;
     }
 
 

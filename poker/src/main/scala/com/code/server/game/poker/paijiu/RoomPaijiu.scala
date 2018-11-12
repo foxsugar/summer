@@ -60,6 +60,9 @@ class RoomPaijiu extends PokerGoldRoom {
     }
   }
 
+  def isAceRoomOver():Boolean = {
+    return false;
+  }
 
   override def startGameByClient(userId: Long): Int = {
     //玩家是房主
