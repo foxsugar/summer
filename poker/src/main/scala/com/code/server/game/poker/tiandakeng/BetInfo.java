@@ -21,7 +21,6 @@ public class BetInfo {
     }
 
     void bet(long userId,boolean isGiveUp){
-//        this.giveUpUser.add(userId);
         this.alreadyBetUser.add(userId);
         if (isGiveUp) {
             this.giveUpUser.add(userId);

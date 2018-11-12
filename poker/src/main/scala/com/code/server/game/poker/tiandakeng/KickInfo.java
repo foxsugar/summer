@@ -46,7 +46,6 @@ public class KickInfo {
      */
     public void kick(long userId, boolean isKick) {
         this.alreadyKickUser.add(userId);
-//        this.needKickUser.remove(userId);
         if (!isKick) {
             this.notKickUser.add(userId);
         }

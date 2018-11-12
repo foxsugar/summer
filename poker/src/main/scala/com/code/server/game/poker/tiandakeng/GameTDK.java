@@ -812,7 +812,6 @@ public class GameTDK extends Game {
      */
     protected void kickBetStart() {
         this.state = STATE_KICK_BET;
-
     }
 
     /**
