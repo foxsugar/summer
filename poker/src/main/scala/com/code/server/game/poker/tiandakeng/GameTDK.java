@@ -86,7 +86,6 @@ public class GameTDK extends Game {
     protected Map<Long, String> operateDesc = new HashMap<>();
 
 
-
     /**
      * 开始游戏
      *
@@ -132,8 +131,6 @@ public class GameTDK extends Game {
         }
         //发牌
         deal();
-
-
     }
 
 
@@ -269,7 +266,6 @@ public class GameTDK extends Game {
 
         //发玩牌 通知下注
         betStart();
-
     }
 
     /**
@@ -293,12 +289,13 @@ public class GameTDK extends Game {
 
     /**
      * 下注
+     *
      * @param userId
      * @param num
      * @param isGiveUp
      * @return
      */
-    public int bet(long userId, int num, boolean isGiveUp,String desc) {
+    public int bet(long userId, int num, boolean isGiveUp, String desc) {
         int rtn = 0;
         switch (state) {
             case STATE_BET:
@@ -315,7 +312,7 @@ public class GameTDK extends Game {
             return rtn;
         }
         operateDesc.put(userId, desc);
-        MsgSender.sendMsg2Player(SERVICE_NAME, "bet", 0,userId);
+        MsgSender.sendMsg2Player(SERVICE_NAME, "bet", 0, userId);
         return 0;
     }
 
@@ -327,7 +324,7 @@ public class GameTDK extends Game {
      * @param isKick
      * @return
      */
-    public int kick(long userId, int num, boolean isKick,String desc) {
+    public int kick(long userId, int num, boolean isKick, String desc) {
         int rtn = 0;
         switch (state) {
             case STATE_KICK:
@@ -341,13 +338,14 @@ public class GameTDK extends Game {
             return rtn;
         }
         operateDesc.put(userId, desc);
-        MsgSender.sendMsg2Player(SERVICE_NAME, "kick", 0,userId);
+        MsgSender.sendMsg2Player(SERVICE_NAME, "kick", 0, userId);
         return 0;
     }
 
 
     /**
      * 看牌
+     *
      * @param userId
      * @return
      */
@@ -382,7 +380,7 @@ public class GameTDK extends Game {
         }
         Map<String, Object> r = new HashMap<>();
         r.put("userId", userId);
-        pushToAll(new ResponseVo(SERVICE_NAME, "openCardNotify",r));
+        pushToAll(new ResponseVo(SERVICE_NAME, "openCardNotify", r));
 
         boolean isGongZhangSuiBao = isHasMode(model_公张随豹);
         boolean isABiPao = isHasMode(model_抓A必泡);
@@ -498,7 +496,6 @@ public class GameTDK extends Game {
             pleaseBetResult.put("userId", nextUser);
             pushToAll(new ResponseVo(SERVICE_NAME, "followBet", pleaseBetResult));
         }
-
         return 0;
     }
 
@@ -576,7 +573,6 @@ public class GameTDK extends Game {
             pleaseBetResult.put("userId", nextUser);
             pushToAll(new ResponseVo(SERVICE_NAME, "followBet", pleaseBetResult));
         }
-
         return 0;
     }
 
@@ -630,6 +626,7 @@ public class GameTDK extends Game {
 
     /**
      * 踢牌
+     *
      * @param userId
      * @param num
      * @param isKick
@@ -721,7 +718,6 @@ public class GameTDK extends Game {
             //通知下个人 下注
             this.state = STATE_TWO_KICK_BET;
             long nextUser = nextTurnId(userId);
-//            this.kickInfo.curKickUser = nextUser;
             this.kickInfo.kickBetInfo.curBetUser = nextUser;
             Map<String, Object> pleaseBetResult = new HashMap<>();
             pleaseBetResult.put("userId", nextUser);
@@ -761,6 +757,7 @@ public class GameTDK extends Game {
 
     /**
      * 通知下个人踢牌
+     *
      * @param userId
      */
     private void notifyNextUserKick(long userId) {
@@ -770,12 +767,12 @@ public class GameTDK extends Game {
         this.kickInfo.alreadyKickUser.add(userId);
         this.kickInfo.curKickUser = userId;
         pushIsKick(userId);
-
     }
 
 
     /**
      * 通知下个人踢牌(二人无限踢中)
+     *
      * @param userId
      */
     private void notifyNextUserKickTwo(long userId) {
@@ -786,6 +783,7 @@ public class GameTDK extends Game {
         this.kickInfo.curKickUser = userId;
         pushIsKick(userId);
     }
+
     /**
      * 二人无限踢 开始
      */
@@ -821,7 +819,6 @@ public class GameTDK extends Game {
         this.state = STATE_TWO_KICK_BET;
     }
 
-
     /**
      * 算分
      */
@@ -831,7 +828,6 @@ public class GameTDK extends Game {
             this.room.setLanGuo(false);
             this.room.getLanguoBets().clear();
         }
-
         //结算
         compute(winnerId);
         sendResult(winnerId);
@@ -842,6 +838,7 @@ public class GameTDK extends Game {
 
     /**
      * 发结算
+     *
      * @param winnerId
      */
     private void sendResult(long winnerId) {
@@ -858,6 +855,7 @@ public class GameTDK extends Game {
 
     /**
      * 算分
+     *
      * @param winnerId
      */
     private void compute(long winnerId) {
@@ -997,7 +995,6 @@ public class GameTDK extends Game {
             GameOfResult gameOfResult = new GameOfResult();
             gameOfResult.setUserList(userOfResultList);
             MsgSender.sendMsg2Player(SERVICE_NAME, "gameFinalResult", gameOfResult, users);
-
             RoomManager.removeRoom(room.getRoomId());
 
             //战绩

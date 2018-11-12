@@ -1240,7 +1240,15 @@ public class GameXuanQiQi extends Game {
                 } else if (p0.catchThree) {
                     score0 += (1 * bankerMultiple);
                 }
-            } else {
+            } else if (p2.getUserId() == room.getBankerId()) {
+                if (p0.catchSix) {
+                    score0 += (3 * bankerMultiple);
+                } else if (p0.catchFive) {
+                    score0 += (2 * bankerMultiple);
+                } else if (p0.catchThree) {
+                    score0 += (1 * bankerMultiple);
+                }
+            }
                 if (p0.catchSix) {
                     score0 += 3;
                 } else if (p0.catchFive) {
@@ -1377,7 +1385,15 @@ public class GameXuanQiQi extends Game {
                 } else if (p1.catchThree) {
                     score1 += (1 * bankerMultiple);
                 }
-            } else {
+            } else if (p2.getUserId() == room.getBankerId()) {
+                if (p0.catchSix) {
+                    score0 += (3 * bankerMultiple);
+                } else if (p0.catchFive) {
+                    score0 += (2 * bankerMultiple);
+                } else if (p0.catchThree) {
+                    score0 += (1 * bankerMultiple);
+                }
+            }else {
                 if (p1.catchSix) {
                     score1 += 3;
                 } else if (p1.catchFive) {
