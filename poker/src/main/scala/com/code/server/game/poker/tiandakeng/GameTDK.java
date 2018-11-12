@@ -839,7 +839,6 @@ public class GameTDK extends Game {
         genRecord();
         this.room.clearReadyStatus(true);
         sendFinalResult();
-
     }
 
     /**
