@@ -363,6 +363,7 @@ public class GameInfo extends Game {
                 "HONGZHONG".equals(gameType)||
                 "HONGZHONG2".equals(gameType)||
                 "HONGZHONG3".equals(gameType)||
+                "FANSHI".equals(gameType)||
                 "KXKD".equals(gameType);
     }
 

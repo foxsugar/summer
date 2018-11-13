@@ -454,6 +454,7 @@ public class GameTDK extends Game {
         //下注
         this.betInfo.bet(userId, isGiveUp);
 
+        long nextUser = nextTurnId(userId);
         //弃牌
         if (isGiveUp) {
             playerInfoTDK.setGiveUp(isGiveUp);
@@ -489,7 +490,7 @@ public class GameTDK extends Game {
 
         } else {
             //通知下一个人下注
-            long nextUser = nextTurnId(userId);
+
             this.betInfo.curBetUser = nextUser;
             Map<String, Object> pleaseBetResult = new HashMap<>();
 
@@ -525,6 +526,8 @@ public class GameTDK extends Game {
         pushToAll(new ResponseVo(SERVICE_NAME, "betResp", result));
 
         betInfo.bet(userId, isGiveUp);
+        long nextUser = nextTurnId(userId);
+        long nextKickUser = nextTurnId(this.kickInfo.curKickUser);
         //弃牌
         if (isGiveUp) {
             playerInfoTDK.setGiveUp(true);
@@ -561,13 +564,13 @@ public class GameTDK extends Game {
                 }
 
             } else {//通知下一轮踢牌
-                long nextUser = nextTurnId(this.kickInfo.curKickUser);
-                notifyNextUserKick(nextUser);
+
+                notifyNextUserKick(nextKickUser);
             }
 
         } else {
             //通知下一个人下注
-            long nextUser = nextTurnId(userId);
+
             betInfo.curBetUser = nextUser;
             Map<String, Object> pleaseBetResult = new HashMap<>();
             pleaseBetResult.put("userId", nextUser);
