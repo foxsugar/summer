@@ -73,7 +73,7 @@ public class RoomMsgDispatch {
                 return room.joinRoom(userId, true);
             }
 
-            case "dissolutionRoom":{
+            case "dissolutionRoom": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 if (room == null) {
                     return ErrorCode.CANNOT_JOIN_ROOM_NOT_EXIST;
@@ -145,42 +145,47 @@ public class RoomMsgDispatch {
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 return room.getRoomClubByUser(userId);
             }
-            case "pushScoreChange":{
+            case "pushScoreChange": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
-                Room r = (Room)room;
+                Room r = (Room) room;
                 if (r.isGoldRoom()) {
                     r.pushScoreChange();
                 }
                 return 0;
             }
-            case "changeRoom":{
+            case "changeRoom": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
-                Room r = (Room)room;
+                Room r = (Room) room;
                 return r.changeRoom(userId);
 
             }
 
-            case "startAuto":{
+            case "startAuto": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
-                Room r = (Room)room;
+                Room r = (Room) room;
                 if (r.isAllReady() && r.getUsers().size() >= 2) {
                     r.startGame();
                 }
                 return 0;
             }
 
-            case "joinRoomWatch":{
+            case "joinRoomWatch": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
-                Room r = (Room)room;
+                Room r = (Room) room;
                 return r.joinRoomWatch(userId);
             }
 
-            case "quitRoomWatch":{
+            case "quitRoomWatch": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
-                Room r = (Room)room;
+                Room r = (Room) room;
                 return r.quitRoomWatch(userId);
             }
 
+            case "getWatchUserInfo": {
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                Room r = (Room) room;
+                return r.getWatchUserInfo(userId);
+            }
 
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;

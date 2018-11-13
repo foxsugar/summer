@@ -1257,7 +1257,7 @@ public class GameXuanQiQi extends Game {
                     score0 += 1;
                 }
             }
-        }
+
 
         //第一个人不够，减分
         if (p0.winCards.size() < 9) {

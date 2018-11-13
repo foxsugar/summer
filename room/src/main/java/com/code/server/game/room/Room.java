@@ -265,6 +265,7 @@ public class Room implements IfaceRoom {
             this.watchUser.add(userId);
         }
 
+        addUser2RoomRedis(userId);
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "joinRoomWatch", this.toVo(userId)), userId);
 
         pushWatchNum();
@@ -445,8 +446,18 @@ public class Room implements IfaceRoom {
             return ErrorCode.CANNOT_QUIT_ROOM_NOT_EXIST;
         }
         this.watchUser.remove(userId);
+        removeUserRoomRedis(userId);
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "quitRoomWatch", "ok"), userId);
         pushWatchNum();
+        return 0;
+    }
+
+    public int getWatchUserInfo(long userId) {
+        List<UserVo> list = new ArrayList<>();
+        for (UserBean userBean : RedisManager.getUserRedisService().getUserBeans(this.watchUser)) {
+            list.add(userBean.toVo());
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "getWatchUserInfo", list), userId);
         return 0;
     }
 
