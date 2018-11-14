@@ -88,7 +88,7 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
             //点杠
             if (dianGangUser != -1) {
                 PlayerCardsInfoMj dianGangPlayer = this.gameInfo.getPlayerCardsInfos().get(dianGangUser);
-                int temp = 3 * this.roomInfo.getMultiple();
+                int temp = 1 * this.roomInfo.getMultiple();
                 dianGangPlayer.addScore(-temp);
                 dianGangPlayer.addGangScore(-temp);
                 roomInfo.setUserSocre(dianGangUser, -temp);
@@ -174,8 +174,8 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
 
             //是否是杠后炮
             boolean isGangHouPao =false;
-            if (dianPao.operateList.size() >= 2) {
-                isGangHouPao = dianPao.operateList.get(dianPao.operateList.size() - 2) == type_gang;
+            if (dianPao.operateList.size() >= 3) {
+                isGangHouPao = dianPao.operateList.get(dianPao.operateList.size() - 3) == type_gang;
             }
             if (isGangHouPao) {
                 score += 1;
