@@ -171,6 +171,15 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
         } else {
             PlayerCardsInfoMj dianPao = this.gameInfo.getPlayerCardsInfos().get(dianpaoUser);
 
+
+            //是否是杠后炮
+            boolean isGangHouPao =false;
+            if (dianPao.operateList.size() >= 2) {
+                isGangHouPao = dianPao.operateList.get(dianPao.operateList.size() - 2) == type_gang;
+            }
+            if (isGangHouPao) {
+                score += 1;
+            }
             dianPao.addScore(-score);
             this.roomInfo.addUserSocre(dianPao.getUserId(), -score);
             allScore += score;

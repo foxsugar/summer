@@ -18,6 +18,8 @@ public class RoomRecord {
     String gameType;
     String modelTotal;
     String mode;
+    int curGameNum;
+    int allGameNum;
 
     public void addRecord(UserRecord userRecord) {
         records.add(userRecord);
@@ -119,6 +121,24 @@ public class RoomRecord {
 
     public RoomRecord setMode(String mode) {
         this.mode = mode;
+        return this;
+    }
+
+    public int getCurGameNum() {
+        return curGameNum;
+    }
+
+    public RoomRecord setCurGameNum(int curGameNum) {
+        this.curGameNum = curGameNum;
+        return this;
+    }
+
+    public int getAllGameNum() {
+        return allGameNum;
+    }
+
+    public RoomRecord setAllGameNum(int allGameNum) {
+        this.allGameNum = allGameNum;
         return this;
     }
 }

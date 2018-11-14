@@ -958,6 +958,8 @@ public class Room implements IfaceRoom {
         roomRecord.setClubId(clubId);
         roomRecord.setClubRoomModel(clubRoomModel);
         roomRecord.setGameType(gameType);
+        roomRecord.setCurGameNum(this.curGameNumber);
+        roomRecord.setAllGameNum(this.gameNumber);
 
         this.userScores.forEach((key, value) -> {
             UserRecord userRecord = new UserRecord();

@@ -705,6 +705,7 @@ public class GameTDK extends Game {
         kickResp.put("userId", userId);
         kickResp.put("num", num);
         kickResp.put("isKick", isKick);
+        kickResp.put("count", this.kickInfo.count);
         pushToAll(new ResponseVo(SERVICE_NAME, "kickResp", kickResp));
 
         //踢牌次数+1
