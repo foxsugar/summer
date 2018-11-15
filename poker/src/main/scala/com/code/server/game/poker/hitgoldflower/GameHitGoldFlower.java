@@ -33,6 +33,7 @@ public class GameHitGoldFlower extends Game {
     protected List<Long> seeUser = new ArrayList<>();//看牌的人
     protected List<Long> loseUser = new ArrayList<>();//输牌的人
     protected Long curUserId;
+    protected List<Map<Long, Long>> killInfo = new ArrayList<>();
 
 
     protected RoomHitGoldFlower room;
@@ -243,6 +244,9 @@ public class GameHitGoldFlower extends Game {
             return ErrorCode.NOT_KILL;
         }
 
+        Map<Long, Long> killItem = new HashMap<>();
+        killItem.put(askerId, accepterId);
+        killInfo.add(killItem);
         Player asker = new Player(askerId, ListUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(0)), ListUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(1)), ListUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(2)));
         Player accepter = new Player(accepterId, ListUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(0)), ListUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(1)), ListUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(2)));
 
@@ -319,6 +323,7 @@ public class GameHitGoldFlower extends Game {
             room.clearReadyStatus(true);
             sendFinalResult();
         }
+
 
         MsgSender.sendMsg2Player("gameService", "kill", 0, askerId);
 
@@ -478,6 +483,7 @@ public class GameHitGoldFlower extends Game {
         }
         gameResultHitGoldFlower.setWinnerList(winnerList);
         gameResultHitGoldFlower.setBankerId(winnerList.get(0));
+        gameResultHitGoldFlower.setKillInfo(killInfo);
         MsgSender.sendMsg2Player("gameService", "gameResult", gameResultHitGoldFlower, this.room.users);
     }
 

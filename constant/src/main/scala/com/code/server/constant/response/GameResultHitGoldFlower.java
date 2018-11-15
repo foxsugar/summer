@@ -15,6 +15,7 @@ public class GameResultHitGoldFlower {
     public Map<Long, Double> userScores = new HashMap<>();
     public List<Long> winnerList = new ArrayList<>();
     public Long bankerId;
+    public List<Map<Long, Long>> killInfo = new ArrayList<>();
 
     public List<IfacePlayerInfoVo> getPlayerCardInfos() {
         return playerCardInfos;
@@ -68,5 +69,14 @@ public class GameResultHitGoldFlower {
 
     public void setBankerId(Long bankerId) {
         this.bankerId = bankerId;
+    }
+
+    public List<Map<Long, Long>> getKillInfo() {
+        return killInfo;
+    }
+
+    public GameResultHitGoldFlower setKillInfo(List<Map<Long, Long>> killInfo) {
+        this.killInfo = killInfo;
+        return this;
     }
 }
