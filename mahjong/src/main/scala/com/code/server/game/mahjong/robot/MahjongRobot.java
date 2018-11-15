@@ -8,7 +8,6 @@ import com.code.server.game.mahjong.logic.PlayerCardsInfoMj;
 import com.code.server.game.mahjong.logic.RoomInfo;
 import com.code.server.game.room.Room;
 import com.code.server.kafka.MsgProducer;
-import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 
 import java.util.HashMap;
@@ -21,7 +20,7 @@ import java.util.Map;
 public class MahjongRobot {
 
     private static long INTERVAL_TIME = 1000L * 30;
-    private static long READY_TIME = 1000L * 10;
+    private static long READY_TIME = 1000L * 15;
 
     public static void execute(RoomInfo room) {
         long now = System.currentTimeMillis();
@@ -49,12 +48,13 @@ public class MahjongRobot {
                 map.forEach((uid,status) ->{
 
                     if ((status != Room.STATUS_READY)) {
-                        boolean isOnline = RedisManager.getUserRedisService().getGateId(uid) != null;
-                        if (isOnline) {
-                            getReady(room, uid);
-                        }else{
-                            quitRoom(room,uid);
-                        }
+//                        boolean isOnline = RedisManager.getUserRedisService().getGateId(uid) != null;
+//                        if (isOnline) {
+//                            getReady(room, uid);
+//                        }else{
+//                            quitRoom(room,uid);
+//                        }
+                        quitRoom(room,uid);
                     }
 
                 });
