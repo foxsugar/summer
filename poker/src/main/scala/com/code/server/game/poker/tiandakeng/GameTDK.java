@@ -858,6 +858,7 @@ public class GameTDK extends Game {
             users.put(playerInfoTDK.getUserId(), playerInfoTDK.toVoShowAllCard());
         }
         result.put("users", users);
+        result.put("score", this.room.getUserScores());
         pushToAll(new ResponseVo(SERVICE_NAME, "gameResult", result));
     }
 
