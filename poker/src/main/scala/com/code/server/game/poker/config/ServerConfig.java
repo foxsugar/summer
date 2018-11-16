@@ -16,6 +16,7 @@ public class ServerConfig {
     private String dataFile;
     private int dissloutionRoomMustAllAgree = 0;
     private int paijiuServiceMoney = 6;
+    private int paijiuMinJoinMoney = 200;
 
 
     public String getServerType() {
@@ -89,6 +90,15 @@ public class ServerConfig {
 
     public ServerConfig setPaijiuServiceMoney(int paijiuServiceMoney) {
         this.paijiuServiceMoney = paijiuServiceMoney;
+        return this;
+    }
+
+    public int getPaijiuMinJoinMoney() {
+        return paijiuMinJoinMoney;
+    }
+
+    public ServerConfig setPaijiuMinJoinMoney(int paijiuMinJoinMoney) {
+        this.paijiuMinJoinMoney = paijiuMinJoinMoney;
         return this;
     }
 }

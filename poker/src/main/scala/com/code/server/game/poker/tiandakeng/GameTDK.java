@@ -188,10 +188,13 @@ public class GameTDK extends Game {
         this.state = STATE_DEAL;
 
         //每人发三张牌
-        for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
-            playerInfoTDK.deal(cards.remove(0), false);
-            playerInfoTDK.deal(cards.remove(0), false);
-            playerInfoTDK.deal(cards.remove(0), false);
+        for(int i=0;i<3;i++){
+
+            for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
+                playerInfoTDK.deal(cards.remove(0), false);
+//                playerInfoTDK.deal(cards.remove(0), false);
+//                playerInfoTDK.deal(cards.remove(0), false);
+            };
         }
 
         Map<Long, Map<String, Object>> playerCards = new HashMap<>();
@@ -768,7 +771,7 @@ public class GameTDK extends Game {
         this.state = STATE_KICK;
         this.betInfo = null;
         this.kickInfo.kickBetInfo = null;
-        this.kickInfo.alreadyKickUser.add(userId);
+//        this.kickInfo.alreadyKickUser.add(userId);
         this.kickInfo.curKickUser = userId;
         pushIsKick(userId);
     }
@@ -783,7 +786,7 @@ public class GameTDK extends Game {
         this.state = STATE_TWO_KICK;
         this.betInfo = null;
         this.kickInfo.kickBetInfo = null;
-        this.kickInfo.alreadyKickUser.add(userId);
+//        this.kickInfo.alreadyKickUser.add(userId);
         this.kickInfo.curKickUser = userId;
         pushIsKick(userId);
     }
@@ -828,7 +831,7 @@ public class GameTDK extends Game {
      */
     protected void gameOver(long winnerId) {
         //烂锅
-        if (winnerId == 0) {
+        if (winnerId != 0) {
             this.room.setLanGuo(false);
             this.room.getLanguoBets().clear();
         }

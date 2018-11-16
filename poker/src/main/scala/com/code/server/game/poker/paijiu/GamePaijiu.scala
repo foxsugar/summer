@@ -647,8 +647,8 @@ class GamePaijiu extends Game with PaijiuConstant {
       val wantTobeBankerList = playerCardInfos.filter { case (uid, playerInfo) => playerInfo.isFightForBanker }.toList
       //没人选择当庄家 则 创建者当庄家
       if (wantTobeBankerList.isEmpty) {
-        roomPaijiu.setBankerId(roomPaijiu.getCreateUser)
-        this.bankerId = roomPaijiu.getCreateUser
+        roomPaijiu.setBankerId(roomPaijiu.getBankerId)
+        this.bankerId = roomPaijiu.getBankerId
       } else {
         //随机选庄家
         val bid = new Random().shuffle(wantTobeBankerList).head._1
@@ -675,8 +675,8 @@ class GamePaijiu extends Game with PaijiuConstant {
       val wantTobeBankerList = playerCardInfos.filter { case (uid, playerInfo) => playerInfo.isFightForBanker }.toList
       //没人选择当庄家 则 创建者当庄家
       if (wantTobeBankerList.isEmpty) {
-        roomPaijiu.setBankerId(roomPaijiu.getCreateUser)
-        this.bankerId = roomPaijiu.getCreateUser
+        roomPaijiu.setBankerId(roomPaijiu.getBankerId)
+        this.bankerId = roomPaijiu.getBankerId
       } else {
         //随机选庄家
         if(!catchBanker){

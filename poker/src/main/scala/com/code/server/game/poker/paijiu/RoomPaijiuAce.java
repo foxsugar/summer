@@ -20,8 +20,6 @@ import com.code.server.util.timer.TimerNode;
 public class RoomPaijiuAce extends RoomPaijiu {
 
 
-    public static final int minMoney = 200;
-
 
     public static int createRoom(long userId, String roomType, String gameType, Integer gameNumber, boolean isCreaterJoin,
                                           String clubId, String clubRoomModel, boolean isAA) throws DataNotFoundException {
@@ -78,6 +76,8 @@ public class RoomPaijiuAce extends RoomPaijiu {
 
     protected boolean isCanJoinCheckMoney(long userId) {
 
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        int minMoney = serverConfig.getPaijiuMinJoinMoney();
         //代建房
         if (!isCreaterJoin) {
             if (RedisManager.getUserRedisService().getUserMoney(userId) < minMoney) {

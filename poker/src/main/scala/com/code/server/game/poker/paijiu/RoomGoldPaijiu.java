@@ -79,6 +79,7 @@ public class RoomGoldPaijiu extends RoomPaijiu {
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         this.canStartUserId = users.get(0);
         this.userScoresForGold.put(userId, 0.0);
+        if (!isCreaterJoin ||isClubRoom()) this.bankerId = users.get(0);
         addUser2RoomRedis(userId);
     }
 
