@@ -672,10 +672,7 @@ public class GameTDK extends Game {
             pushToAll(new ResponseVo(SERVICE_NAME, "followBet", pleaseBetResult));
 
         } else {
-            //不踢的话 问下个人踢不踢
-            long nextUser = nextTurnId(userId);
-//            kickStart(nextUser);
-            notifyNextUserKick(nextUser);
+
             //所有人都选过了
             if (this.kickInfo.isOver(aliveUserList)) {
                 //发牌或者开牌
@@ -685,6 +682,11 @@ public class GameTDK extends Game {
                 } else {
                     openStart();
                 }
+            }else{
+                //不踢的话 问下个人踢不踢
+                long nextUser = nextTurnId(userId);
+//            kickStart(nextUser);
+                notifyNextUserKick(nextUser);
             }
         }
         return 0;
