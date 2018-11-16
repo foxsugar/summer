@@ -13,4 +13,5 @@ public interface IProjectName {
     String HUANLE = "HUANLE";
     String DINGSHENG = "DINGSHENG";
     String ACE = "ACE";
+    String FANSHI = "FANSHI";
 }

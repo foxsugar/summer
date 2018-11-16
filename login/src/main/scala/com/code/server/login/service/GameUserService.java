@@ -397,6 +397,8 @@ public class GameUserService {
                 return 0;
             case IProjectName.ACE:
                 return 0;
+            case IProjectName.FANSHI:
+                return 3;
             default:
                 return 1;
         }

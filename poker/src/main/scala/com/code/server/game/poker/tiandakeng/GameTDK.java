@@ -903,8 +903,15 @@ public class GameTDK extends Game {
         List<Long> users = new ArrayList<>();
 
         long nextUser = banker;
-        for (int i = 0; i < this.aliveUserList.size(); i++) {
-            users.add(nextUser);
+//        for (int i = 0; i < this.aliveUserList.size(); i++) {
+//            users.add(nextUser);
+//            nextUser = nextTurnId(nextUser);
+//        }
+        for(int i=0;i<this.users.size();i++) {
+//            long userId = this.users.get(i);
+            if (this.aliveUserList.contains(nextUser)) {
+                users.add(nextUser);
+            }
             nextUser = nextTurnId(nextUser);
         }
         return users;
