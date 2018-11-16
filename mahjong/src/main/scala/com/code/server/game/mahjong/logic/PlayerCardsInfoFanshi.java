@@ -137,11 +137,14 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
         this.winType.addAll(huCardType.specialHuList);
         int score = huCardType.fan == 0 ? 1 : huCardType.fan;
         if (huCardType.fan == 0) {
-            if(huCardType.specialHuList.contains(hu_夹张) || huCardType.specialHuList.contains(hu_吊张)){
-                score = 3;
-            }else{
+//            if(huCardType.specialHuList.contains(hu_夹张) || huCardType.specialHuList.contains(hu_吊张)){
+//                score = 3;
+//            }else{
                 score = 2;
-            }
+//            }
+        }
+        if(huCardType.specialHuList.contains(hu_夹张) || huCardType.specialHuList.contains(hu_吊张)){
+            score += 1;
         }
         //杠开 +1
         boolean isGangkai = isGangKai();

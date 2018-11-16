@@ -619,8 +619,8 @@ public class FanUtil implements HuType {
         int jiangGroup = CardTypeUtil.getCardGroupByCardType(huCardType.jiang);
 
         return isHasLong1 && jiangGroup == CardTypeUtil.GROUP_WAN ||
-                isHasLong2 && jiangGroup == CardTypeUtil.GROUP_TONG ||
-                isHasLong3 && jiangGroup == CardTypeUtil.GROUP_TIAO;
+                isHasLong2 && jiangGroup == CardTypeUtil.GROUP_TIAO ||
+                isHasLong3 && jiangGroup == CardTypeUtil.GROUP_TONG;
     }
 
     private static boolean isHasThisGroup(Set<Integer> set, int group) {
