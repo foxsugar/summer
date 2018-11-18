@@ -57,9 +57,9 @@ public class RoomWzq extends Room {
     }
 
 
-    protected boolean isCanAgreeDissloution(int agreeNum) {
-        return false;
-    }
+//    protected boolean isCanAgreeDissloution(int agreeNum) {
+//        return false;
+//    }
 
     protected void roomAddUser(long userId) {
 
