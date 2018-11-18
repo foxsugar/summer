@@ -1,11 +1,6 @@
 package com.code.server.game.mahjong.logic;
 
-import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.mahjong.response.OperateReqResp;
-import com.code.server.game.mahjong.response.PlayerCardsResp;
-import com.code.server.game.mahjong.response.ResponseType;
-import com.code.server.game.mahjong.response.ResultResp;
-import com.code.server.game.room.kafka.MsgSender;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,43 +99,7 @@ public class GameInfoHS extends GameInfoNew {
     }
 
 
-    /**
-     * 发送结果
-     *
-     * @param isHasWinner
-     * @param winnerId
-     * @param yipaoduoxiang
-     */
-    protected void sendResult(boolean isHasWinner, Long winnerId, List<Long> yipaoduoxiang) {
-        ResultResp result = new ResultResp();
-        ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_RESULT, result);
 
-        if (isHasWinner) {
-            if (yipaoduoxiang == null) {
-                result.setWinnerId(winnerId);
-            } else {
-                result.setYipaoduoxiang(yipaoduoxiang);
-            }
-            result.setBaoCard(baoCard);
-        }
-        List<PlayerCardsResp> list = new ArrayList<>();
-        for (PlayerCardsInfoMj info : playerCardsInfos.values()) {
-            PlayerCardsResp resp = new PlayerCardsResp(info);
-            resp.setAllScore(room.getUserScores().get(info.getUserId()));
-            list.add(resp);
-        }
-        result.setUserInfos(list);
-        result.setLaZhuang(this.room.laZhuang);
-        result.setLaZhuangStatus(this.room.laZhuangStatus);
-        result.setYu("" + PlayerCardsInfoHS.getYuNum(this.room.getMode()));
-        MsgSender.sendMsg2Player(vo, users);
-
-
-        //回放
-        replay.setResult(result);
-        //生成记录
-        genRecord();
-    }
 
 //    @Override
 //    public int chupai(long userId, String card) {
@@ -171,15 +130,5 @@ public class GameInfoHS extends GameInfoNew {
 //    }
 
 
-    @Override
-    protected void resetCanBeOperate(PlayerCardsInfoMj playerCardsInfo) {
-        playerCardsInfo.setCanBeChi(false);
-        playerCardsInfo.setCanBeGang(false);
-        playerCardsInfo.setCanBePeng(false);
-        playerCardsInfo.setCanBeHu(false);
-        playerCardsInfo.setCanBeTing(false);
-        playerCardsInfo.setCanBeChiTing(false);
-        playerCardsInfo.setCanBePengTing(false);
-        playerCardsInfo.setCanBeXuanfeng(false);
-    }
+
 }
