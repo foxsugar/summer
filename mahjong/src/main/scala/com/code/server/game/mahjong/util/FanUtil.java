@@ -531,7 +531,7 @@ public class FanUtil implements HuType {
 
 
     private static boolean isPengpenghu(List<String> cards, HuCardType huCardType) {
-        if (huCardType.peng.size() + huCardType.anGang.size() + huCardType.mingGang.size() == 4) {
+        if (huCardType.peng.size() + huCardType.anGang.size() + huCardType.mingGang.size() + huCardType.ke.size() == 4) {
             return true;
         }
         return false;
