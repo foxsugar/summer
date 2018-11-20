@@ -14,6 +14,10 @@ public class RoomTDKVo extends RoomVo {
 
     private List<Integer> languoBets = new ArrayList<>();
 
+    private int xifen;
+
+    private int noComputeXifen;
+
     public boolean isLanGuo() {
         return isLanGuo;
     }
@@ -29,6 +33,24 @@ public class RoomTDKVo extends RoomVo {
 
     public RoomTDKVo setLanguoBets(List<Integer> languoBets) {
         this.languoBets = languoBets;
+        return this;
+    }
+
+    public int getXifen() {
+        return xifen;
+    }
+
+    public RoomTDKVo setXifen(int xifen) {
+        this.xifen = xifen;
+        return this;
+    }
+
+    public int getNoComputeXifen() {
+        return noComputeXifen;
+    }
+
+    public RoomTDKVo setNoComputeXifen(int noComputeXifen) {
+        this.noComputeXifen = noComputeXifen;
         return this;
     }
 }

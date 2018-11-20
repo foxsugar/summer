@@ -83,8 +83,6 @@ public class Room implements IfaceRoom {
     protected int otherMode;
 
 
-
-
     public static String getRoomIdStr(int roomId) {
         String s = "000000" + roomId;
         int len = s.length();
@@ -251,6 +249,7 @@ public class Room implements IfaceRoom {
 
     /**
      * 加入房间观战
+     *
      * @param userId
      * @return
      */
@@ -272,7 +271,7 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
-    private void pushWatchNum(){
+    private void pushWatchNum() {
         List<Long> users = new ArrayList<>();
         users.addAll(this.users);
         users.addAll(watchUser);
@@ -300,7 +299,7 @@ public class Room implements IfaceRoom {
         this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
         this.canStartUserId = users.get(0);
 
-        if (!isCreaterJoin ||isClubRoom()) this.bankerId = users.get(0);
+        if (!isCreaterJoin || isClubRoom()) this.bankerId = users.get(0);
         addUser2RoomRedis(userId);
     }
 
@@ -438,6 +437,7 @@ public class Room implements IfaceRoom {
 
     /**
      * 退出观战房间
+     *
      * @param userId
      * @return
      */
@@ -460,6 +460,32 @@ public class Room implements IfaceRoom {
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "getWatchUserInfo", list), userId);
         return 0;
     }
+
+    public int getRoomInfo(long userId) {
+        Map<String, Object> result = new HashMap<>();
+        RoomVo roomVo = new RoomVo();
+        BeanUtils.copyProperties(this, roomVo);
+        RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
+        result.put("room", roomVo);
+        Map<Long, Boolean> onlineStatus = new HashMap<>();
+        //在线状态
+        for (long uid : this.getUsers()) {
+            onlineStatus.put(uid, RedisManager.getUserRedisService().getGateId(uid) != null);
+        }
+        result.put("onlineStatus", onlineStatus);
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "getRoomInfo", result), userId);
+        return 0;
+    }
+
+    public int kickPlayer(long userId, long kickUser) {
+        if (this.users.contains(kickUser)) {
+            quitRoom(kickUser);
+            MsgSender.sendMsg2Player(new ResponseVo("roomService", "beKick", 0), kickUser);
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "kickPlayer", 0), userId);
+        return 0;
+    }
+
 
     protected void noticeQuitRoom(long userId) {
         UserOfRoom userOfRoom = new UserOfRoom();
@@ -485,9 +511,9 @@ public class Room implements IfaceRoom {
         n.setMessage("quit room success!");
 
         MsgSender.sendMsg2Player("roomService", "quitRoom", n, userId);
-        if (isGoldRoom()) {
-            MsgSender.sendMsg2Player("roomService", "quitGoldRoom", n, userId);
-        }
+//        if (isGoldRoom()) {
+//            MsgSender.sendMsg2Player("roomService", "quitGoldRoom", n, userId);
+//        }
 
 
         if (isClubRoom()) {
@@ -750,7 +776,7 @@ public class Room implements IfaceRoom {
 
     }
 
-    private void removeClubInstance(){
+    private void removeClubInstance() {
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
         KafkaMsgKey kafkaKey = new KafkaMsgKey();
         Map<String, Object> msg = new HashMap<>();
@@ -837,7 +863,7 @@ public class Room implements IfaceRoom {
         }
 
         //先退出
-        this.quitRoom(userId);
+//        this.quitRoom(userId);
 
 
         List<Room> rooms = RoomManager.getInstance().getNotFullRoom(gameType, goldRoomType);
@@ -865,6 +891,13 @@ public class Room implements IfaceRoom {
         }
         if (room == null) {
             room = this;
+        } else {
+            this.quitRoom(userId);
+            int rtn = room.joinRoom(userId, true);
+            if (rtn != 0) {
+                return rtn;
+            }
+            room.getReady(userId);
         }
 //        if (room == null) {
 //            isAdd = true;
@@ -872,19 +905,19 @@ public class Room implements IfaceRoom {
 //
 //        }
 
-        int rtn = room.joinRoom(userId, true);
-        if (rtn != 0) {
-            return rtn;
-        } else {
+//        int rtn = room.joinRoom(userId, true);
+//        if (rtn != 0) {
+//            return rtn;
+//        } else {
 //            if (isAdd) {
 //                room.add2GoldPool();
 //            }
 
 
-            MsgSender.sendMsg2Player(new ResponseVo("roomService", "changeRoom", room.toVo(userId)), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "changeRoom", room.toVo(userId)), userId);
 
 //            room.getReady(userId);
-        }
+//        }
         return 0;
     }
 

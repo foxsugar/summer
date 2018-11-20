@@ -33,6 +33,10 @@ public class RoomTDK extends PokerGoldRoom {
 
     private List<Integer> languoBets = new ArrayList<>();
 
+    private int xifen = 0;
+
+    private int noComputeXifen = 0;
+
 
     public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType,
                                  boolean isAA, boolean isJoin, boolean showChat, int personNum,
@@ -202,5 +206,27 @@ public class RoomTDK extends PokerGoldRoom {
     public RoomTDK setLanguoBets(List<Integer> languoBets) {
         this.languoBets = languoBets;
         return this;
+    }
+
+    public int getXifen() {
+        return xifen;
+    }
+
+    public RoomTDK setXifen(int xifen) {
+        this.xifen = xifen;
+        return this;
+    }
+
+    public int getNoComputeXifen() {
+        return noComputeXifen;
+    }
+
+    public RoomTDK setNoComputeXifen(int noComputeXifen) {
+        this.noComputeXifen = noComputeXifen;
+        return this;
+    }
+
+    public void addNoComputeXifen(int xifen) {
+        this.noComputeXifen += xifen;
     }
 }

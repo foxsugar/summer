@@ -51,6 +51,9 @@ public class GameTDK extends Game {
     static final int model_莆田半坑_5 = 22;
     static final int model_莆田全坑_2 = 23;
 
+    static final int model_喜分_5 = 24;
+    static final int model_喜分_10 = 25;
+
 
     static final int STATE_DEAL = 0;
     static final int STATE_BET = 1;
@@ -468,6 +471,11 @@ public class GameTDK extends Game {
             if (aliveUserList.size() == 1) {
                 gameOver(aliveUserList.get(0));
                 return 0;
+            }else{
+                //下注的人全是弃牌 下个牌面最大的叫牌
+                if (this.betInfo.giveUpUser.size() == this.betInfo.alreadyBetUser.size()) {
+                    nextUser = findMaxCardScoreUser();
+                }
             }
         } else {
             //设置改下多少注
@@ -869,18 +877,35 @@ public class GameTDK extends Game {
      * @param winnerId
      */
     private void compute(long winnerId) {
-        if (winnerId == 0) return;
+        if (winnerId == 0){
+            this.room.addNoComputeXifen(getXifen());
+            return;
+        }
         int allScore = 0;
+        int xifenNum = 0;
         for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
+            //是否有喜分
+            if (playerInfoTDK.isHasXifen(isHasMode(model_公张随豹))) {
+                xifenNum += 1;
+            }
+
             if (playerInfoTDK.getUserId() == winnerId) continue;
             playerInfoTDK.setScore(-playerInfoTDK.getAllBet());
             this.room.addUserSocre(playerInfoTDK.getUserId(), -playerInfoTDK.getAllBet());
             allScore += playerInfoTDK.getAllBet();
         }
+        if (xifenNum >= 1) {
+            this.room.addNoComputeXifen(getXifen());
+        }
         //赢得人加分
         PlayerInfoTDK winnerUser = playerCardInfos.get(winnerId);
         winnerUser.setScore(allScore);
         this.room.addUserSocre(winnerId, allScore);
+
+        //赢得人减去喜分
+        winnerUser.setScore(allScore - this.room.getNoComputeXifen());
+        this.room.addUserSocre(winnerId, -this.room.getNoComputeXifen());
+        this.room.setNoComputeXifen(0);
     }
 
     /**
@@ -961,6 +986,29 @@ public class GameTDK extends Game {
         if (isAddFirstTwoCard.length == 1 && isAddFirstTwoCard[0]) {
             isAdd = true;
         }
+        if (!isAdd) {
+            return findMaxCardScoreUserLastCard();
+        }else{
+            List<Long> users = getAliveUserBeginWithBanker();
+            //按顺序比较
+            int score = 0;
+            long maxUser = 0;
+            boolean isGongZhangSuiBao = isHasMode(model_公张随豹);
+            boolean isABiPao = isHasMode(model_抓A必泡);
+            boolean isWangZhongPao = isHasMode(model_王中炮);
+            for (long userId : users) {
+                int s = playerCardInfos.get(userId).getCardScore(isGongZhangSuiBao, isABiPao, isWangZhongPao, isAdd);
+                //分数相同 离banker近的赢
+                if (s > score) {
+                    score = s;
+                    maxUser = userId;
+                }
+            }
+            return maxUser;
+        }
+    }
+
+    private long findMaxCardScoreUserLastCard() {
         List<Long> users = getAliveUserBeginWithBanker();
         //按顺序比较
         int score = 0;
@@ -969,7 +1017,7 @@ public class GameTDK extends Game {
         boolean isABiPao = isHasMode(model_抓A必泡);
         boolean isWangZhongPao = isHasMode(model_王中炮);
         for (long userId : users) {
-            int s = playerCardInfos.get(userId).getCardScore(isGongZhangSuiBao, isABiPao, isWangZhongPao, isAdd);
+            int s = playerCardInfos.get(userId).getLastCardScore( isABiPao);
             //分数相同 离banker近的赢
             if (s > score) {
                 score = s;
@@ -979,6 +1027,21 @@ public class GameTDK extends Game {
         return maxUser;
     }
 
+
+    /**
+     * 获得喜分
+     * @return
+     */
+    private int getXifen() {
+        int result = 0;
+        if (isHasMode(model_喜分_5)) {
+            result += 5;
+        }
+        if (isHasMode(model_喜分_10)) {
+            result += 10;
+        }
+        return result;
+    }
 
     @Override
     public IfaceGameVo toVo(long watchUser) {

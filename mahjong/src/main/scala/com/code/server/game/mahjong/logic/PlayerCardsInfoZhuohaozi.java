@@ -129,6 +129,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 
     @Override
     public boolean isCanHu_dianpao(String card) {
+
         if (!isTing ) return false;
         //混牌 不能点炮
         int cardType = CardTypeUtil.getTypeByCard(card);

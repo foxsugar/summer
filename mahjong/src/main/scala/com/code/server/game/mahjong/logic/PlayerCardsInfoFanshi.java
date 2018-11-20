@@ -19,7 +19,7 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
         specialHuScore.put(hu_缺两门, 0);
 
         specialHuScore.put(hu_夹张, 0);
-//        specialHuScore.put(hu_边张, 0);
+        specialHuScore.put(hu_边张, 0);
         specialHuScore.put(hu_吊张, 0);
 
 
@@ -39,7 +39,7 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
         specialHuScore.put(hu_清一色双豪华七小对, 29);
 
 
-        specialHuScore.put(hu_碰碰胡, 4);
+        specialHuScore.put(hu_碰碰胡, 3);
         specialHuScore.put(hu_清一色碰碰胡, 10);
 
         this.setHasGangBlackList(false);

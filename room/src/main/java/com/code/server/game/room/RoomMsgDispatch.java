@@ -48,24 +48,7 @@ public class RoomMsgDispatch {
 
 
         switch (method) {
-
-//            case "createRoom":{
-//
-//                int gameNumber = params.getInt("gameNumber");
-//                int multiple = params.getInt("maxMultiple");
-//                String gameType = params.optString("gameType", "0");
-//                return RoomDouDiZhu.createRoom(player, gameNumber, multiple,gameType);
-//            }
-//            case "createRoomTDK":{
-//
-//                int gameNumber = params.getInt("gameNumber");
-//                double multiple = params.getDouble("maxMultiple");
-//                int personNumber = params.getInt("personNumber");
-//                int hasNine = params.getInt("hasNine");
-//                return RoomTanDaKeng.createRoom(player, gameNumber,multiple,personNumber,hasNine);
-//            }
             case "joinRoom": {
-
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 if (room == null) {
                     return ErrorCode.CANNOT_JOIN_ROOM_NOT_EXIST;
@@ -81,13 +64,6 @@ public class RoomMsgDispatch {
                 return room.dissolutionRoom(userId);
 
             }
-
-//            case "joinRoomQuick":{
-//                double type = params.getDouble("type");
-//                return GoldRoomPool.getInstance().addRoom(player, type);
-//
-//
-//            }
             case "quitRoom": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 if (room == null) {
@@ -157,7 +133,6 @@ public class RoomMsgDispatch {
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 Room r = (Room) room;
                 return r.changeRoom(userId);
-
             }
 
             case "startAuto": {
@@ -186,6 +161,19 @@ public class RoomMsgDispatch {
                 Room r = (Room) room;
                 return r.getWatchUserInfo(userId);
             }
+            case "kickPlayer": {
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                Room r = (Room) room;
+                long kickUser = params.path("kickUser").asLong();
+                return r.kickPlayer(userId, kickUser);
+            }
+
+            case "getRoomInfo": {
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                Room r = (Room) room;
+                return r.getRoomInfo(userId);
+            }
+
 
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
