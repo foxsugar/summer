@@ -141,6 +141,18 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         int lastCard = CardTypeUtil.getTypeByCard(card);
         List<HuCardType> huList = HuUtil.isHu(this, noPengAndGang, getChiPengGangNum(), this.gameInfo.hun, lastCard);
         for (HuCardType huCardType : huList) {
+            if (huCardType.specialHuList.contains(hu_吊将)) {
+                return false;
+            }
+            if (huCardType.hun3.size() > 0) {
+                return false;
+            }
+            for (int ct : huCardType.hun2) {
+                if (ct == cardType) {
+                    return false;
+                }
+            }
+
             if (getMaxPoint(huCardType, true) >= DIANPAO_MIN_SCORE) {
                 return true;
             }

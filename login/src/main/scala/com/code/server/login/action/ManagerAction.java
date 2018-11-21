@@ -1,7 +1,11 @@
 package com.code.server.login.action;
 
+import com.code.server.constant.game.UserBean;
+import com.code.server.db.Service.UserService;
+import com.code.server.db.model.User;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.service.ClubManager;
+import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.ServerManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
@@ -29,6 +33,9 @@ public class ManagerAction extends Cors {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("/getOnlineUser")
     public Map<String, Object> getOnlineUser() {
@@ -107,6 +114,27 @@ public class ManagerAction extends Cors {
         System.out.println("clubs = " + clubs);
         clubs.remove(clubId);
         System.out.println("remove clubs = " + clubs);
+        return "ok";
+    }
+
+
+    @RequestMapping("/openCheat")
+    public String openCheat(String userId, int flag) {
+
+        long uid = Long.valueOf(userId);
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(uid);
+        if (userBean != null) {
+            userBean.setVip(flag);
+            RedisManager.getUserRedisService().updateUserBean(uid, userBean);
+            User user = GameUserService.userBean2User(userBean);
+            userService.save(user);
+        }else{
+            User user = userService.getUserByUserId(uid);
+            if (user != null) {
+                user.setVip(flag);
+                userService.save(user);
+            }
+        }
         return "ok";
     }
 }

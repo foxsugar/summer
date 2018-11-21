@@ -581,6 +581,7 @@ public class GameUserService {
         if (userBean != null) {
             userBean.getUserInfo().setName(name);
             userBean.getUserInfo().setIdCard(idCard);
+            RedisManager.getUserRedisService().updateUserBean(userId, userBean);
         }
         ResponseVo vo = new ResponseVo("userService", "authenticate", 0);
         sendMsg(msgKey, vo);
