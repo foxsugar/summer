@@ -233,7 +233,11 @@ public class Room implements IfaceRoom {
             return ErrorCode.CANNOT_CREATE_ROOM_USER_HAS_IN_ROOM;
         }
         if (!isCanJoinCheckMoney(userId)) {
-            return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
+            if (isGoldRoom()) {
+                return ErrorCode.CANNOT_JOIN_ROOM_NO_GOLD;
+            }else{
+                return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
+            }
         }
 
 
