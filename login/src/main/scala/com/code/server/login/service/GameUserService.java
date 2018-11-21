@@ -568,6 +568,25 @@ public class GameUserService {
         return 0;
     }
 
+    /**
+     * 验证
+     * @param msgKey
+     * @param name
+     * @param idCard
+     * @return
+     */
+    public int authenticate(KafkaMsgKey msgKey, String name, String idCard) {
+        long userId = msgKey.getUserId();
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+            userBean.getUserInfo().setName(name);
+            userBean.getUserInfo().setIdCard(idCard);
+        }
+        ResponseVo vo = new ResponseVo("userService", "authenticate", 0);
+        sendMsg(msgKey, vo);
+        return 0;
+    }
+
     public int getRecordsByRoom(KafkaMsgKey msgKey, long roomUid) {
         List<com.code.server.db.model.GameRecord> list = gameRecordService.gameRecordDao.getGameRecordByUuid(roomUid);
 

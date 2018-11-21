@@ -96,7 +96,10 @@ public class UserServiceMsgDispatch {
             case "getUserSimpleInfo":
                 long userId = params.get("userId").asLong();
                 return gameUserService.getUserSimpleInfo(msgKey, userId);
-
+            case "authenticate":
+                String name = params.path("name").asText();
+                String idCard = params.path("idCard").asText();
+                return gameUserService.authenticate(msgKey, name, idCard);
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

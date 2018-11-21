@@ -143,7 +143,7 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
                 score = 2;
 //            }
         }
-        if(huCardType.specialHuList.contains(hu_夹张) || huCardType.specialHuList.contains(hu_吊张)){
+        if(huCardType.specialHuList.contains(hu_夹张) || huCardType.specialHuList.contains(hu_吊张) || huCardType.specialHuList.contains(hu_边张)){
             score += 1;
         }
         //杠开 +1

@@ -11,6 +11,10 @@ public class UserInfo {
     private long lastShareTime = 0;
     private boolean isInputAccessCode = false;
     private boolean isHasAppleCharge = false;
+    private double chargeMoneyNum = 0;
+    private double chargeGoldNum = 0;
+    private String name;
+    private String idCard;
 
     public int getTotalPlayGameNumber() {
         return totalPlayGameNumber;
@@ -63,6 +67,42 @@ public class UserInfo {
 
     public UserInfo setHasAppleCharge(boolean hasAppleCharge) {
         isHasAppleCharge = hasAppleCharge;
+        return this;
+    }
+
+    public double getChargeMoneyNum() {
+        return chargeMoneyNum;
+    }
+
+    public UserInfo setChargeMoneyNum(double chargeMoneyNum) {
+        this.chargeMoneyNum = chargeMoneyNum;
+        return this;
+    }
+
+    public double getChargeGoldNum() {
+        return chargeGoldNum;
+    }
+
+    public UserInfo setChargeGoldNum(double chargeGoldNum) {
+        this.chargeGoldNum = chargeGoldNum;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public UserInfo setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public UserInfo setIdCard(String idCard) {
+        this.idCard = idCard;
         return this;
     }
 }
