@@ -28,6 +28,7 @@ public class ErrorCode {
 	public static final int BLACK_LIST = 1000019;
 	public static final int ROOM_CAN_NOT_CHANGE = 1000020;
 	public static final int CANNOT_JOIN_ROOM_WATCH = 1000021;
+	public static final int CANNOT_JOIN_ROOM_NO_GOLD = 1000022;
 
 
 
