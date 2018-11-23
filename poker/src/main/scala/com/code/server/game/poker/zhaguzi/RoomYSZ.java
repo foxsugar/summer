@@ -208,6 +208,30 @@ public class RoomYSZ extends RoomExtendGold {
 //
 //    }
 
+
+    protected void goldRoomStart() {
+        if (isGoldRoom()) {
+            if (!this.users.contains(this.bankerId)) {
+                this.bankerId = this.users.get(0);
+            }
+            double cost = this.getGoldRoomType() / 10;
+            //50底分 抽成翻倍
+            if (this.getGoldRoomType() == 50) {
+                cost *= 2;
+            }
+
+            for (long userId : users) {
+                //扣除费用
+                RedisManager.getUserRedisService().addUserGold(userId, -cost);
+                //返利
+                UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+                RedisManager.getAgentRedisService().addRebate(userId, userBean.getReferee(), 1, cost / 100,cost);
+            }
+            //
+            RedisManager.getLogRedisService().addGoldIncome(getGameLogKeyStr(), cost * users.size());
+        }
+    }
+
     /**
      * 快速开始
      * @param userId

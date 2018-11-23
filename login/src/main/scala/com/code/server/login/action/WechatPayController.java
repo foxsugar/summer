@@ -1,5 +1,6 @@
 package com.code.server.login.action;
 
+import com.code.server.constant.db.UserInfo;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.KafkaMsgKey;
@@ -438,7 +439,7 @@ public class WechatPayController {
 
                             UserBean userBeanRedis = userRedisService.getUserBean(userId);
 
-
+                            double rmb = charge.getMoney();
                             double addMoney = charge.getMoney_point();
 
                             double before = 0;
@@ -449,10 +450,13 @@ public class WechatPayController {
                             long a3 = 0;
                             if (userBeanRedis != null) {
                                 referee = userBeanRedis.getReferee();
+                                UserInfo userInfo = userBeanRedis.getUserInfo();
                                 if (charge.getChargeType() == 0) {
+                                    userInfo.setChargeMoneyNum(userInfo.getChargeMoneyNum() + rmb);
                                     before = userBeanRedis.getMoney();
                                     after = userRedisService.addUserMoney(userId, addMoney);
                                 } else {
+                                    userInfo.setChargeGoldNum(userInfo.getChargeGoldNum() + rmb);
                                     before = userBeanRedis.getGold();
                                     after = userRedisService.addUserGold(userId, addMoney);
                                 }
@@ -461,15 +465,18 @@ public class WechatPayController {
                                 //查询玩家
                                 User user = userService.getUserByUserId(userId);
                                 referee = user.getReferee();
+                                UserInfo userInfo = user.getUserInfo();
                                 //修改玩家货币
                                 if (charge.getChargeType() == 0) {
                                     before = user.getMoney();
                                     user.setMoney(user.getMoney() + addMoney);
                                     after = user.getMoney() + addMoney;
+                                    userInfo.setChargeMoneyNum(userInfo.getChargeMoneyNum() + rmb);
                                 } else {
                                     before = user.getGold();
                                     user.setGold(user.getGold() + addMoney);
                                     after = user.getGold() + addMoney;
+                                    userInfo.setChargeGoldNum(userInfo.getChargeGoldNum() + rmb);
                                 }
                                 userService.save(user);
                             }

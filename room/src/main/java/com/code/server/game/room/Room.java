@@ -482,6 +482,9 @@ public class Room implements IfaceRoom {
     }
 
     public int kickPlayer(long userId, long kickUser) {
+        if (this.isOpen) {
+            return ErrorCode.CANNOT_KICK_USER;
+        }
         if (this.users.contains(kickUser)) {
             quitRoom(kickUser);
             MsgSender.sendMsg2Player(new ResponseVo("roomService", "beKick", 0), kickUser);

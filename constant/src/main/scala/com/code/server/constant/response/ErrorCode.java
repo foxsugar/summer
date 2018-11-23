@@ -147,6 +147,7 @@ public class ErrorCode {
 	public static final int CANNOT_BET = 1110000;//不能下注
 	public static final int CANNOT_KICK = 1110001;//不能踢
 	public static final int CANNOT_OPEN = 1110002;//不能踢
+	public static final int CANNOT_KICK_USER = 1110003;//不能踢
 
 
 	static class ErrorCodeRepeatChecker {

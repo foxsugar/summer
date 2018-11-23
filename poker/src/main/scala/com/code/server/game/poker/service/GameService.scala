@@ -376,6 +376,12 @@ object GameService {
       game.openCard(userId)
     case "look"=>
       game.lookCard(userId)
+    case "toukanwuchi"=>
+      val uid = params.path("uid").asLong()
+      game.toukanwuchi(userId, uid)
+    case "huanpaixialiu"=>
+      val huanpai = params.path("huanpaiType").asInt()
+      game.huanpaixialiu(userId, huanpai)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

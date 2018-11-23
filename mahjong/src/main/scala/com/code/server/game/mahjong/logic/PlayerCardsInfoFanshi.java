@@ -4,8 +4,7 @@ import com.code.server.game.mahjong.util.HuCardType;
 import com.code.server.game.mahjong.util.HuLimit;
 import com.code.server.game.mahjong.util.HuUtil;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by sunxianping on 2018-10-09.
@@ -53,6 +52,73 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
     public boolean isHasChi(String card) {
         return false;
     }
+
+    /**
+     * 能否碰这张牌
+     *
+     * @param card
+     * @return
+     */
+    public boolean isCanPengAddThisCard(String card) {
+        int group = CardTypeUtil.getCardGroup(card);
+        Set<Integer> groupList = getGroupSet();
+        groupList.add(group);
+        if (groupList.size() > 2) {
+            return false;
+        }
+        return super.isCanPengAddThisCard(card);
+    }
+
+    private Set<Integer> getGroupSet() {
+        Set<Integer> set = new HashSet<>();
+        this.pengType.keySet().forEach(cardType -> set.add(CardTypeUtil.getCardGroupByCardType(cardType)));
+        this.mingGangType.keySet().forEach(cardType -> set.add(CardTypeUtil.getCardGroupByCardType(cardType)));
+        this.anGangType.forEach(cardType -> set.add(CardTypeUtil.getCardGroupByCardType(cardType)));
+        return set;
+    }
+
+
+    /**
+     * 是否有杠
+     *
+     * @return
+     */
+    public boolean isHasGang() {
+        List<String> temp = new ArrayList<>();
+        temp.addAll(cards);
+
+        Set<Integer> set = getHasGangList(temp);
+        if (set.size() == 0) {
+            return false;
+        }
+        for(Integer type : set){
+            Set<Integer> s = getGroupSet();
+            int group = CardTypeUtil.getCardGroupByCardType(type);
+            s.add(group);
+            if (s.size() < 3) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 加上这张牌能否杠
+     *
+     * @param card
+     * @return
+     */
+    public boolean isCanGangAddThisCard(String card) {
+
+        int group = CardTypeUtil.getCardGroup(card);
+        Set<Integer> groupList = getGroupSet();
+        groupList.add(group);
+        if (groupList.size() > 2) {
+            return false;
+        }
+        return super.isCanGangAddThisCard(card);
+    }
+
 
 
     @Override

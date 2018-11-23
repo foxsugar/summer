@@ -10,10 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -190,14 +187,16 @@ public class GameTDK extends Game {
         //切换状态
         this.state = STATE_DEAL;
 
-        //每人发三张牌
-        for(int i=0;i<3;i++){
+        if (this.room.getShamelessUser() != 0) {
+            dealProxy();
+        }else{
 
+            //每人发三张牌
             for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
                 playerInfoTDK.deal(cards.remove(0), false);
-//                playerInfoTDK.deal(cards.remove(0), false);
-//                playerInfoTDK.deal(cards.remove(0), false);
-            };
+                playerInfoTDK.deal(cards.remove(0), false);
+                playerInfoTDK.deal(cards.remove(0), false);
+            }
         }
 
         Map<Long, Map<String, Object>> playerCards = new HashMap<>();
@@ -213,6 +212,43 @@ public class GameTDK extends Game {
         //开始下注
         betStart();
     }
+
+
+    protected void dealProxy(){
+        if (this.room.getShamelessUser() != 0) {
+            List<Integer> list = new ArrayList<>();
+            list.add(1);
+            list.add(41);
+            list.add(45);
+            list.add(49);
+            int card = list.get(new Random().nextInt(4));
+//            int card = list.get(index);
+            PlayerInfoTDK shameless = playerCardInfos.get(this.room.getShamelessUser());
+
+            //换双王
+            if (this.room.getHuanpai() == 1) {
+                card = 52;
+            }
+            shameless.deal(card, false);
+            shameless.deal(card + 1, false);
+            shameless.deal(card + 2, false);
+
+            this.cards.remove((Integer)card);
+            this.cards.remove((Integer)(card + 1));
+            this.cards.remove((Integer)(card + 2));
+
+
+            for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
+                if(playerInfoTDK.getUserId() == this.room.getShamelessUser()) continue;
+                playerInfoTDK.deal(cards.remove(0), false);
+                playerInfoTDK.deal(cards.remove(0), false);
+                playerInfoTDK.deal(cards.remove(0), false);
+            }
+
+            this.room.setShamelessUser(0);
+        }
+    }
+
 
 
     /**
@@ -374,6 +410,34 @@ public class GameTDK extends Game {
     }
 
     /**
+     * 偷看无耻
+     *
+     * @param userId
+     * @param uid
+     * @return
+     */
+    public int toukanwuchi(long userId, long uid) {
+        PlayerInfoTDK playerInfoTDK = playerCardInfos.get(uid);
+        Map<String, Object> result = new HashMap<>();
+        result.put("cards", playerInfoTDK.getCards());
+
+        Map<String, Object> r = new HashMap<>();
+        r.put("userId", userId);
+        pushToAll(new ResponseVo(SERVICE_NAME, "someoneLook", r));
+
+        MsgSender.sendMsg2Player(SERVICE_NAME, "toukanwuchi", result, userId);
+        return 0;
+    }
+
+    public int huanpaixialiu(long userId,int huanpai) {
+
+        this.room.setShamelessUser(userId);
+        this.room.setHuanpai(huanpai);
+        MsgSender.sendMsg2Player(SERVICE_NAME, "huanpaixialiu", 0, userId);
+        return 0;
+    }
+
+    /**
      * 开牌
      *
      * @param userId
@@ -471,7 +535,7 @@ public class GameTDK extends Game {
             if (aliveUserList.size() == 1) {
                 gameOver(aliveUserList.get(0));
                 return 0;
-            }else{
+            } else {
                 //下注的人全是弃牌 下个牌面最大的叫牌
                 if (this.betInfo.giveUpUser.size() == this.betInfo.alreadyBetUser.size()) {
                     nextUser = findMaxCardScoreUser();
@@ -690,7 +754,7 @@ public class GameTDK extends Game {
                 } else {
                     openStart();
                 }
-            }else{
+            } else {
                 //不踢的话 问下个人踢不踢
                 long nextUser = nextTurnId(userId);
 //            kickStart(nextUser);
@@ -867,6 +931,7 @@ public class GameTDK extends Game {
         }
         result.put("users", users);
         result.put("score", this.room.getUserScores());
+        result.put("xifen", this.room.getXifen());
         pushToAll(new ResponseVo(SERVICE_NAME, "gameResult", result));
     }
 
@@ -877,7 +942,7 @@ public class GameTDK extends Game {
      * @param winnerId
      */
     private void compute(long winnerId) {
-        if (winnerId == 0){
+        if (winnerId == 0) {
             this.room.addNoComputeXifen(getXifen());
             return;
         }
@@ -933,7 +998,7 @@ public class GameTDK extends Game {
 //            users.add(nextUser);
 //            nextUser = nextTurnId(nextUser);
 //        }
-        for(int i=0;i<this.users.size();i++) {
+        for (int i = 0; i < this.users.size(); i++) {
 //            long userId = this.users.get(i);
             if (this.aliveUserList.contains(nextUser)) {
                 users.add(nextUser);
@@ -988,7 +1053,7 @@ public class GameTDK extends Game {
         }
         if (!isAdd) {
             return findMaxCardScoreUserLastCard();
-        }else{
+        } else {
             List<Long> users = getAliveUserBeginWithBanker();
             //按顺序比较
             int score = 0;
@@ -1017,7 +1082,7 @@ public class GameTDK extends Game {
         boolean isABiPao = isHasMode(model_抓A必泡);
         boolean isWangZhongPao = isHasMode(model_王中炮);
         for (long userId : users) {
-            int s = playerCardInfos.get(userId).getLastCardScore( isABiPao);
+            int s = playerCardInfos.get(userId).getLastCardScore(isABiPao);
             //分数相同 离banker近的赢
             if (s > score) {
                 score = s;
@@ -1030,6 +1095,7 @@ public class GameTDK extends Game {
 
     /**
      * 获得喜分
+     *
      * @return
      */
     private int getXifen() {

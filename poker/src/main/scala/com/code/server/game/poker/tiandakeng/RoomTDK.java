@@ -37,6 +37,10 @@ public class RoomTDK extends PokerGoldRoom {
 
     private int noComputeXifen = 0;
 
+    private long shamelessUser = 0;
+
+    private int huanpai = 0;
+
 
     public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType,
                                  boolean isAA, boolean isJoin, boolean showChat, int personNum,
@@ -228,5 +232,24 @@ public class RoomTDK extends PokerGoldRoom {
 
     public void addNoComputeXifen(int xifen) {
         this.noComputeXifen += xifen;
+        this.xifen += xifen;
+    }
+
+    public long getShamelessUser() {
+        return shamelessUser;
+    }
+
+    public RoomTDK setShamelessUser(long shamelessUser) {
+        this.shamelessUser = shamelessUser;
+        return this;
+    }
+
+    public int getHuanpai() {
+        return huanpai;
+    }
+
+    public RoomTDK setHuanpai(int huanpai) {
+        this.huanpai = huanpai;
+        return this;
     }
 }
