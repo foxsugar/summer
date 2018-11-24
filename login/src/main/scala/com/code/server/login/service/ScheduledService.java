@@ -55,7 +55,7 @@ public class ScheduledService {
             logger.info("=====>>>>>定时任务 删除游戏记录  {}",System.currentTimeMillis());
 
             LocalDate date = LocalDate.now();
-            date.minusDays(7);
+            date = date.minusDays(7);
 
             ZoneId zoneId = ZoneId.systemDefault();
             ZonedDateTime zdt = date.atStartOfDay(zoneId);
@@ -64,5 +64,16 @@ public class ScheduledService {
             gameRecordService.gameRecordDao.deleteAllByDateBefore(d);
             gameRecordService.replayDao.deleteAllByDateBefore(d);
         }
+    }
+
+    public static void main(String[] args) {
+        LocalDate date = LocalDate.now();
+        date = date.minusDays(7);
+
+        ZoneId zoneId = ZoneId.systemDefault();
+        ZonedDateTime zdt = date.atStartOfDay(zoneId);
+
+        Date d = Date.from(zdt.toInstant());
+        System.out.println(d);
     }
 }
