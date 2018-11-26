@@ -191,6 +191,13 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
 
 
+        //先去掉胡的这张牌
+        this.cards.remove(card);
+        //判断听什么
+        Set<Integer> tingSet = getTingCardType(getCardsNoChiPengGang(this.cards), new HuLimit(0));
+        boolean isYizhangying = tingSet.size() == 1;
+        //把牌加回来
+        this.cards.add(card);
 
         this.gameInfo.computeAllGang();
 
@@ -209,7 +216,7 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
                 score = 2;
 //            }
         }
-        if(huCardType.specialHuList.contains(hu_夹张) || huCardType.specialHuList.contains(hu_吊张) || huCardType.specialHuList.contains(hu_边张)){
+        if(isYizhangying){
             score += 1;
         }
         //杠开 +1
@@ -243,12 +250,18 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
 
             //是否是杠后炮
             boolean isGangHouPao =false;
+            boolean isjiegangpao = false;
             if (dianPao.operateList.size() >= 3) {
                 isGangHouPao = dianPao.operateList.get(dianPao.operateList.size() - 3) == type_gang;
+                isjiegangpao = dianPao.operateList.get(dianPao.operateList.size() - 1) == type_mopai;
             }
             if (isGangHouPao) {
                 score += 1;
             }
+            if (isjiegangpao) {
+                score += 1;
+            }
+
             dianPao.addScore(-score);
             this.roomInfo.addUserSocre(dianPao.getUserId(), -score);
             allScore += score;

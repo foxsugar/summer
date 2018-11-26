@@ -913,7 +913,9 @@ public class GameTDK extends Game {
         compute(winnerId);
         sendResult(winnerId);
         genRecord();
-        this.room.clearReadyStatus(true);
+        //如果烂锅并且最后一局 不加局数
+        boolean isNotAdd = this.room.curGameNumber == this.room.getGameNumber() && winnerId == 0;
+        this.room.clearReadyStatus(!isNotAdd);
         sendFinalResult();
     }
 
