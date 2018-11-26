@@ -7,6 +7,7 @@ import com.code.server.game.mahjong.logic.GameInfo;
 import com.code.server.game.mahjong.logic.PlayerCardsInfoMj;
 import com.code.server.game.mahjong.logic.RoomInfo;
 import com.code.server.game.room.Room;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.util.SpringUtil;
 
@@ -55,6 +56,7 @@ public class MahjongRobot {
 //                            quitRoom(room,uid);
 //                        }
                         quitRoom(room,uid);
+                        MsgSender.sendMsg2Player("roomService", "quitRoomKick", "quit", uid);
                     }
 
                 });
