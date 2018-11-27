@@ -157,7 +157,7 @@ public class AgentRedisService implements IAgentRedis, IConstant {
 
         //设置返利数
         HashOperations<String, String, Double> agent_rebate = redisTemplate.opsForHash();
-        agent_rebate.put(AGENT_REBATE,""+agentBean.getId(), agentBean.getRebate());
+        agent_rebate.increment(AGENT_REBATE,""+agentBean.getId(), agentBean.getRebate());
     }
 
     @Override
