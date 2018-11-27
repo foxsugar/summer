@@ -154,6 +154,10 @@ public class AgentRedisService implements IAgentRedis, IConstant {
     public void setAgentBean(AgentBean agentBean) {
         BoundHashOperations<String, String, String> agent_bean = redisTemplate.boundHashOps(AGENT_BEAN);
         agent_bean.put(String.valueOf(agentBean.getId()), JsonUtil.toJson(agentBean));
+
+        //设置返利数
+        HashOperations<String, String, Double> agent_rebate = redisTemplate.opsForHash();
+        agent_rebate.put(AGENT_REBATE,""+agentBean.getId(), agentBean.getRebate());
     }
 
     @Override

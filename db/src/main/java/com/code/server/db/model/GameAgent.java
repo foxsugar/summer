@@ -45,6 +45,7 @@ public class GameAgent extends BaseEntity {
 
     private String phone;
 
+
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
