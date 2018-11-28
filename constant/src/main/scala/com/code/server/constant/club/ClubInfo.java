@@ -18,6 +18,8 @@ public class ClubInfo {
     private List<RoomInstance> playingRoom = new CopyOnWriteArrayList<>();
     private List<String> floorDesc = new ArrayList<>();
     private List<Long> admin = new ArrayList<>();
+    //合伙人
+    private List<Long> partner = new ArrayList<>();
     private boolean autoJoin = false;
 
     public Map<String, ClubMember> getMember() {
@@ -89,6 +91,15 @@ public class ClubInfo {
 
     public ClubInfo setAutoJoin(boolean autoJoin) {
         this.autoJoin = autoJoin;
+        return this;
+    }
+
+    public List<Long> getPartner() {
+        return partner;
+    }
+
+    public ClubInfo setPartner(List<Long> partner) {
+        this.partner = partner;
         return this;
     }
 }

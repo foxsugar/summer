@@ -68,8 +68,6 @@ public class GameClubService {
     @Autowired
     private UserService userService;
 
-    private static final int JOIN_LIMIT = 5;
-
     /**
      * 查看俱乐部
      *
@@ -726,6 +724,7 @@ public class GameClubService {
 //        RoomInstance roomInstance = club.getClubInfo().getRoomInstance().get(roomModelId);
         club.getClubInfo().getRoomInstance().remove(roomModelId);
     }
+
 
 
     public int setAutoJoin(KafkaMsgKey msgKey, String clubId, long userId, boolean auto) {

@@ -16,6 +16,7 @@ public class ClubMember {
     private Map<String,ClubStatistics> statistics= new HashMap<>();
     private String lastLoginTime;
     private int sex;
+    private double money;
 
     public long getUserId() {
         return userId;
@@ -95,6 +96,15 @@ public class ClubMember {
 
     public ClubMember setSex(int sex) {
         this.sex = sex;
+        return this;
+    }
+
+    public double getMoney() {
+        return money;
+    }
+
+    public ClubMember setMoney(double money) {
+        this.money = money;
         return this;
     }
 }

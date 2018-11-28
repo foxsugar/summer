@@ -22,6 +22,9 @@ public class ClubServiceMsgDispatch {
     @Autowired
     GameClubService gameClubService;
 
+    @Autowired
+    GameClubHasMoneyService gameClubHasMoneyService;
+
 
     @Autowired
     MsgProducer kafkaMsgProducer;
@@ -202,11 +205,17 @@ public class ClubServiceMsgDispatch {
                 return gameClubService.setAutoJoin(msgKey, clubId, userId, auto);
             }
 
-            case "removeClubInstance":{
+            case "removeClubInstance": {
                 clubId = params.path("clubId").asText();
                 String clubModelId4 = params.path("clubModelId").asText();
                 gameClubService.removeClubInstance(clubId, clubModelId4);
                 break;
+            }
+
+            case "transfer": {
+                userId = params.path("userId").asLong();
+                long toUser = params.path("toUser").asLong();
+                return gameClubHasMoneyService.transfer(msgKey,clubId, userId, toUser);
             }
 
 
