@@ -5,7 +5,6 @@ import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.service.PokerGoldRoom;
-import com.code.server.game.poker.tiandakeng.RoomTDK;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.config.IConstant;
@@ -21,10 +20,18 @@ import com.code.server.util.timer.TimerNode;
 public class RoomYuxiaxie extends PokerGoldRoom {
 
 
+    //单压限分
+    private int danya;
+    //串联限分
+    private int chuanlian;
+    //豹子限分
+    private int baozi;
+    //挪次数
+    private int nuo;
 
     public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType,
                                  boolean isAA, boolean isJoin, boolean showChat, int personNum,
-                                 String clubId, String clubRoomModel,int otherMode) throws DataNotFoundException {
+                                 String clubId, String clubRoomModel,int otherMode,int danya, int chuanlian, int baozi, int nuo) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         RoomYuxiaxie room = new RoomYuxiaxie();
 
@@ -76,5 +83,41 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createTDKRoom", room.toVo(userId)), userId);
         return 0;
+    }
+
+    public int getDanya() {
+        return danya;
+    }
+
+    public RoomYuxiaxie setDanya(int danya) {
+        this.danya = danya;
+        return this;
+    }
+
+    public int getChuanlian() {
+        return chuanlian;
+    }
+
+    public RoomYuxiaxie setChuanlian(int chuanlian) {
+        this.chuanlian = chuanlian;
+        return this;
+    }
+
+    public int getBaozi() {
+        return baozi;
+    }
+
+    public RoomYuxiaxie setBaozi(int baozi) {
+        this.baozi = baozi;
+        return this;
+    }
+
+    public int getNuo() {
+        return nuo;
+    }
+
+    public RoomYuxiaxie setNuo(int nuo) {
+        this.nuo = nuo;
+        return this;
     }
 }

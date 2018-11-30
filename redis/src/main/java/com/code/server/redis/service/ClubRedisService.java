@@ -5,12 +5,14 @@ import com.code.server.redis.dao.IClubRedis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
 /**
  * Created by sunxianping on 2018-11-23.
  */
+@Service
 public class ClubRedisService implements IClubRedis, IConstant {
 
     @Autowired

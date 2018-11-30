@@ -12,6 +12,7 @@ import com.code.server.game.poker.pullmice.RoomPullMice
 import com.code.server.game.poker.tiandakeng.RoomTDK
 import com.code.server.game.poker.tuitongzi.RoomTuiTongZi
 import com.code.server.game.poker.xuanqiqi.RoomXuanQiQi
+import com.code.server.game.poker.yuxiaxie.RoomYuxiaxie
 import com.code.server.game.poker.zhaguzi.{RoomWzq, RoomYSZ, RoomZhaGuZi}
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
@@ -63,12 +64,13 @@ object PokerRoomService {
         val isJoinHalfWay = params.path("isJoinHalfWay").asBoolean(false)
         val wanjialiangpai = params.path("wanjialiangpai").asBoolean(false)
         val bipaijiabei = params.path("bipaijiabei").asBoolean(true)
-        val autoReady = params.path("autoReady").asBoolean(false)
+        val otherMode = params.path("otherMode").asInt(0)
+
 
 
         return RoomHitGoldFlower.createHitGoldFlowerRoom(userId, gameNumber, personNumber, cricleNumber,
           multiple, caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel,
-          isRobot, time, isJoinHalfWay,wanjialiangpai,bipaijiabei,autoReady)
+          isRobot, time, isJoinHalfWay,wanjialiangpai,bipaijiabei,otherMode)
 
       case "createXuanQiQiRoom" =>
         val roomType = params.get("roomType").asText()
@@ -281,6 +283,25 @@ object PokerRoomService {
         val otherMode = params.path("otherMode").asInt(0)
 
         return RoomTDK.createRoom(userId, gameNumber,multiple,gameType, roomType,isAA,isJoin,showChat,personNumber,clubId,clubRoomModel,otherMode)
+
+      case "createYXXRoom"=>
+        val roomType = params.path("roomType").asText()
+        val gameType = params.path("gameType").asText()
+        val personNumber = params.path("personNumber").asInt()
+        val multiple = params.path("multiple").asInt()
+        val gameNumber = params.path("gameNumber").asInt()
+        val clubId = params.path("clubId").asText
+        val clubRoomModel = params.path("clubRoomModel").asText
+        val isAA = params.path("isAA").asBoolean(false)
+        val isJoin = params.path("isJoin").asBoolean(false)
+        val showChat = params.path("showChat").asBoolean(false)
+        val otherMode = params.path("otherMode").asInt(0)
+        val danya = params.path("danya").asInt()
+        val chuanlian = params.path("chuanlian").asInt()
+        val baozi = params.path("baozi").asInt()
+        val nuo = params.path("nuo").asInt()
+        return RoomYuxiaxie.createRoom(userId, gameNumber,multiple,gameType, roomType,isAA,isJoin,showChat,personNumber,
+          clubId,clubRoomModel,otherMode,danya, chuanlian, baozi, nuo)
       case "getAllRoom" =>
         return RoomGuessCar.getAllRoom(userId);
 
