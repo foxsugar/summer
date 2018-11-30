@@ -2,6 +2,7 @@ package com.code.server.db.model;
 
 import com.code.server.constant.club.ClubInfo;
 import com.code.server.constant.club.Statistics;
+import com.code.server.constant.club.UpScoreInfo;
 import com.code.server.db.utils.BaseEntity;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
@@ -52,6 +53,11 @@ public class Club extends BaseEntity {
     @Column(columnDefinition = "json")
     private Statistics statistics = new Statistics();
 
+    //上下分记录
+    @Type(type = "json")
+    @Lob
+    @Column(columnDefinition = "json")
+    private UpScoreInfo upScoreInfo = new UpScoreInfo();
 
 
     public transient final Object lock = new Object();
@@ -153,6 +159,15 @@ public class Club extends BaseEntity {
 
     public Club setStatistics(Statistics statistics) {
         this.statistics = statistics;
+        return this;
+    }
+
+    public UpScoreInfo getUpScoreInfo() {
+        return upScoreInfo;
+    }
+
+    public Club setUpScoreInfo(UpScoreInfo upScoreInfo) {
+        this.upScoreInfo = upScoreInfo;
         return this;
     }
 }

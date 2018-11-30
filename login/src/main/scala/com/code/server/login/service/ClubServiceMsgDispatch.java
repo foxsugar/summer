@@ -175,7 +175,9 @@ public class ClubServiceMsgDispatch {
             }
             case "addUser": {
                 long user = params.get("userId").asLong();
-                return gameClubService.addUser(msgKey, clubId, user);
+                //todo 对协议 新增字段
+                long referee = params.path("referee").asLong(0);
+                return gameClubService.addUser(msgKey, clubId, user,referee);
             }
             case "removeFloor": {
                 int floor = params.get("floor").asInt();
@@ -213,11 +215,27 @@ public class ClubServiceMsgDispatch {
             }
 
             case "transfer": {
-                userId = params.path("userId").asLong();
                 long toUser = params.path("toUser").asLong();
                 return gameClubHasMoneyService.transfer(msgKey,clubId, userId, toUser);
             }
 
+            case "setPartner":{
+                long partnerId = params.path("partnerId").asLong();
+                return gameClubHasMoneyService.setPartner(msgKey, clubId, userId, partnerId);
+            }
+
+            case "changePartner":{
+                long newPartner = params.path("newPartner").asLong();
+                long changeUser = params.path("changeUser").asLong();
+                return gameClubHasMoneyService.changePartner(msgKey, clubId, userId, newPartner, changeUser);
+
+            }
+
+            case "upScore":{
+                long toUser = params.path("toUser").asLong();
+                int num = params.path("num").asInt();
+                return gameClubHasMoneyService.upScore(msgKey, clubId, userId, toUser,num);
+            }
 
         }
         return 0;

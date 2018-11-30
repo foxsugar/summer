@@ -16,7 +16,10 @@ public class ClubMember {
     private Map<String,ClubStatistics> statistics= new HashMap<>();
     private String lastLoginTime;
     private int sex;
+    //俱乐部计分
     private double money;
+    //推荐人
+    private long referrer;
 
     public long getUserId() {
         return userId;
@@ -105,6 +108,15 @@ public class ClubMember {
 
     public ClubMember setMoney(double money) {
         this.money = money;
+        return this;
+    }
+
+    public long getReferrer() {
+        return referrer;
+    }
+
+    public ClubMember setReferrer(long referrer) {
+        this.referrer = referrer;
         return this;
     }
 }

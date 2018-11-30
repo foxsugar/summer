@@ -44,13 +44,16 @@ public class HitGoldFlowerRobot implements IRobot {
 
 //            System.out.println("last op " + ((RoomYSZ) room).getLastReadyTime());
             //如果没在游戏中
-            if (room.getCurGameNumber() > 1 && now - room.getLastOperateTime() > 1000 * r.time) {
+            if (r.autoReady) {
+
+                if (room.getCurGameNumber() > 1 && now - room.getLastOperateTime() > 1000 * r.time) {
 //
-                r.userStatus.forEach((id,status)->{
-                    if (status == 0) {
-//                        getReady(r, id);
-                    }
-                });
+                    r.userStatus.forEach((id,status)->{
+                        if (status == 0) {
+                        getReady(r, id);
+                        }
+                    });
+                }
             }
 
 

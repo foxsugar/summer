@@ -66,5 +66,7 @@ public interface IConstant {
     String LOG_CHARGE_REBATE = "log_chargeRebate";
     String LOG_OTHER_INFO = "log_otherInfo";
 
+    String CLUB_MONEY = "club_money:";
+
 
 }
