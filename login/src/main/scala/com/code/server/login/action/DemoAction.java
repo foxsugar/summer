@@ -443,7 +443,7 @@ public class DemoAction extends Cors {
             User user = userDao.findOne(gameAgent.getId());
             gameAgentVo.setName(user.getUsername());
 
-            AgentUser agentUser = agentUserDao.findAgentUserByInvite_code(gameAgent.getId() + "");
+            AgentUser agentUser = agentUserDao.findAgentUserByUsername(gameAgent.getId() + "");
             System.out.println("agent user is " + agentUser);
             if (agentUser != null) {
                 gameAgentVo.setPassword(agentUser.getPassword());
@@ -1052,7 +1052,7 @@ public class DemoAction extends Cors {
 
     @DemoChecker
     @RequestMapping("/partnerRecord")
-    public AgentResponse getChargeRecord(String time, int curPage) {
+    public AgentResponse getChargeRecord(String time, int curPage, int userId) {
         if (curPage > 0) {
             curPage--;
         }
@@ -1073,8 +1073,19 @@ public class DemoAction extends Cors {
         end = DateUtil.becomeStandardSTime(end);
         List<String> listA = DateUtil.getDateListIn(end, start);
         Sort sort = new Sort(Sort.Direction.DESC, "date");
-        Page<AgentRecords> page = homeService.findAllAgentRecords(agentId, listA, new PageRequest(curPage, 20, sort));
-        List<AgentRecords> agentRecordsList = page.getContent();
+
+        Page<AgentRecords> page = null;
+        List<AgentRecords> agentRecordsList = null;
+
+        if (agentId == 1){
+            page  = homeService.findAllAgentRecords(userId, listA, new PageRequest(curPage, 20, sort));
+            agentRecordsList = page.getContent();
+        }else {
+            page  = homeService.findAllAgentRecords(agentId, listA, new PageRequest(curPage, 20, sort));
+            agentRecordsList = page.getContent();
+        }
+
+
 
         Map<String, Object> rs = new HashMap<>();
         rs.put("list", agentRecordsList);
@@ -1102,6 +1113,7 @@ public class DemoAction extends Cors {
         Map<String, Object> rs = new HashMap<>();
         rs.put("list", agentRecordsList);
         rs.put("count", page.getTotalElements());
+        rs.put("userId", agentId);
         AgentResponse agentResponse = new AgentResponse();
         agentResponse.setData(rs);
         return agentResponse;
