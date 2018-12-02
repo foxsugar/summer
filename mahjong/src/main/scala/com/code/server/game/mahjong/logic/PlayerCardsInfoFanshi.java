@@ -29,13 +29,13 @@ public class PlayerCardsInfoFanshi extends PlayerCardsInfoMj {
         specialHuScore.put(hu_清一色架龙, 18);
 
 
-        specialHuScore.put(hu_七小对, 6);
-        specialHuScore.put(hu_豪华七小对, 10);
-        specialHuScore.put(hu_双豪七小对_山西, 20);
+        specialHuScore.put(hu_七小对, 5);
+        specialHuScore.put(hu_豪华七小对, 9);
+        specialHuScore.put(hu_双豪七小对_山西, 19);
 
-        specialHuScore.put(hu_清一色七小对, 15);
-        specialHuScore.put(hu_清一色豪华七小对, 19);
-        specialHuScore.put(hu_清一色双豪华七小对, 29);
+        specialHuScore.put(hu_清一色七小对, 14);
+        specialHuScore.put(hu_清一色豪华七小对, 18);
+        specialHuScore.put(hu_清一色双豪华七小对, 28);
 
 
         specialHuScore.put(hu_碰碰胡, 3);

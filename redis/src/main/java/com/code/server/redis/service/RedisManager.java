@@ -39,6 +39,10 @@ public class RedisManager {
         return SpringUtil.getBean(AgentRedisService.class);
     }
 
+    public static ClubRedisService getClubRedisService(){
+        return SpringUtil.getBean(ClubRedisService.class);
+    }
+
     public static LogRedisService getLogRedisService(){
         return SpringUtil.getBean(LogRedisService.class);}
 

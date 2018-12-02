@@ -597,7 +597,7 @@ public class GameClubService {
         return 0;
     }
 
-    public int addUser(KafkaMsgKey msgKey, String clubId, long userId) {
+    public int addUser(KafkaMsgKey msgKey, String clubId, long userId, long referee) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
@@ -629,7 +629,11 @@ public class GameClubService {
             clubAddMember(club, clubMember);
 
         }
-        //
+        //推荐人不为0
+        if (referee!=0) {
+            ClubMember clubMember = club.getClubInfo().getMember().get(""+userId);
+            clubMember.setReferrer(referee);
+        }
         sendMsg(msgKey, new ResponseVo("clubService", "addUser", "ok"));
         return 0;
     }

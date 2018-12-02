@@ -648,13 +648,13 @@ public class GameXuanQiQi extends Game {
             } else {
                 setWinCardAndCardTypeNoCard();//存记录分罗
 
-                if(playerCardInfos.get(lastWinner).winCards.size()==9 && !playerCardInfos.get(lastWinner).gotThree){
+                if (playerCardInfos.get(lastWinner).winCards.size() == 9 && !playerCardInfos.get(lastWinner).gotThree) {
                     playerCardInfos.get(lastWinner).setCatchThree(true);
-                }else if(playerCardInfos.get(lastWinner).winCards.size()==15  && !playerCardInfos.get(lastWinner).gotFive){
+                } else if (playerCardInfos.get(lastWinner).winCards.size() == 15 && !playerCardInfos.get(lastWinner).gotFive) {
                     playerCardInfos.get(lastWinner).setCatchFive(true);
-                }else if(playerCardInfos.get(lastWinner).winCards.size()>=18  && !playerCardInfos.get(lastWinner).gotSix){
+                } else if (playerCardInfos.get(lastWinner).winCards.size() >= 18 && !playerCardInfos.get(lastWinner).gotSix) {
                     playerCardInfos.get(lastWinner).setCatchSix(true);
-                }else if(playerCardInfos.get(lastWinner).winCards.size()==12  && !playerCardInfos.get(lastWinner).gotThree && playerCardInfos.get(lastWinner).playCards.size()==2){
+                } else if (playerCardInfos.get(lastWinner).winCards.size() == 12 && !playerCardInfos.get(lastWinner).gotThree && playerCardInfos.get(lastWinner).playCards.size() == 2) {
                     playerCardInfos.get(lastWinner).setCatchThree(true);
                 }
                 playerCardInfos.get(lastWinner).setCanSendCard("1");
@@ -1053,7 +1053,7 @@ public class GameXuanQiQi extends Game {
         operatId = finalWinnerId;
     }
 
-    private void sendMessage(){
+    private void sendMessage() {
 
     }
 
@@ -1149,61 +1149,65 @@ public class GameXuanQiQi extends Game {
         }*/
 
         //算包的人
-        Map<Long,Long> xuanedAndFinalXuan = new HashMap<>();
-        for (long l:users){
-            xuanedAndFinalXuan.put(l,null);
+        Map<Long, Long> xuanedAndFinalXuan = new HashMap<>();
+        for (long l : users) {
+            xuanedAndFinalXuan.put(l, null);
         }
-        for (XuanParam xuanParam :xuanList) {
+        for (XuanParam xuanParam : xuanList) {
             //第一个人
             if (xuanParam.xuaned_UserId == p0.userId && xuanParam.xuan_UserId == p1.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p0.winCards.size() >= 15) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId,p1.getUserId());
+                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p1.getUserId());
             }
             if (xuanParam.xuaned_UserId == p0.userId && xuanParam.xuan_UserId == p1.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p0.winCards.size() >= 18) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId,p1.getUserId());
+                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p1.getUserId());
             }
             if (xuanParam.xuaned_UserId == p0.userId && xuanParam.xuan_UserId == p2.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p0.winCards.size() >= 15) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId,p2.getUserId());
+                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p2.getUserId());
             }
             if (xuanParam.xuaned_UserId == p0.userId && xuanParam.xuan_UserId == p2.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p0.winCards.size() >= 18) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId,p2.getUserId());
+                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p2.getUserId());
             }
 
             //第2个人
             if (xuanParam.xuaned_UserId == p1.userId && xuanParam.xuan_UserId == p0.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p1.winCards.size() >= 15) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId,p0.getUserId());
+                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p0.getUserId());
             }
             if (xuanParam.xuaned_UserId == p1.userId && xuanParam.xuan_UserId == p0.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p1.winCards.size() >= 18) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId,p0.getUserId());
+                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p0.getUserId());
             }
             if (xuanParam.xuaned_UserId == p1.userId && xuanParam.xuan_UserId == p2.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p1.winCards.size() >= 15) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId,p2.getUserId());
+                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p2.getUserId());
             }
             if (xuanParam.xuaned_UserId == p1.userId && xuanParam.xuan_UserId == p2.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p1.winCards.size() >= 18) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId,p2.getUserId());
+                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p2.getUserId());
             }
 
             //第3个人
             if (xuanParam.xuaned_UserId == p2.userId && xuanParam.xuan_UserId == p0.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p2.winCards.size() >= 15) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId,p0.getUserId());
+                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p0.getUserId());
             }
             if (xuanParam.xuaned_UserId == p2.userId && xuanParam.xuan_UserId == p0.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p2.winCards.size() >= 18) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId,p0.getUserId());
+                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p0.getUserId());
             }
             if (xuanParam.xuaned_UserId == p2.userId && xuanParam.xuan_UserId == p1.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p2.winCards.size() >= 15) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId,p1.getUserId());
+                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p1.getUserId());
             }
             if (xuanParam.xuaned_UserId == p2.userId && xuanParam.xuan_UserId == p1.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p2.winCards.size() >= 18) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId,p1.getUserId());
+                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p1.getUserId());
             }
         }
 
-        for (Long l:xuanedAndFinalXuan.values()) {
-            if(l!=null){
-                if(l==p0.userId && p0.winCards.size()<9){
+        List<Long> baoUser = new ArrayList<>();
+        for (Long l : xuanedAndFinalXuan.values()) {
+            if (l != null) {
+                if (l == p0.userId && p0.winCards.size() < 9) {
+                    baoUser.add(p0.userId);
                     bao0 = true;
-                }else if(l==p1.userId && p1.winCards.size()<9){
+                } else if (l == p1.userId && p1.winCards.size() < 9) {
+                    baoUser.add(p1.userId);
                     bao1 = true;
-                }else if(l==p2.userId && p2.winCards.size()<9){
+                } else if (l == p2.userId && p2.winCards.size() < 9) {
+                    baoUser.add(p2.userId);
                     bao2 = true;
                 }
             }
@@ -1249,14 +1253,14 @@ public class GameXuanQiQi extends Game {
                     score0 += (1 * bankerMultiple);
                 }
             }
-                if (p0.catchSix) {
-                    score0 += 3;
-                } else if (p0.catchFive) {
-                    score0 += 2;
-                } else if (p0.catchThree) {
-                    score0 += 1;
-                }
+            if (p0.catchSix) {
+                score0 += 3;
+            } else if (p0.catchFive) {
+                score0 += 2;
+            } else if (p0.catchThree) {
+                score0 += 1;
             }
+        }
 
 
         //第一个人不够，减分
@@ -1264,11 +1268,11 @@ public class GameXuanQiQi extends Game {
             if (bao0) {
                 if (p1.getUserId() == room.getBankerId()) {
                     if (p1.catchSix) {
-                        score0 -= (6* bankerMultiple);
+                        score0 -= (6 * bankerMultiple);
                     } else if (p1.catchFive) {
-                        score0 -= (4* bankerMultiple);
+                        score0 -= (4 * bankerMultiple);
                     } else if (p1.catchThree) {
-                        score0 -= (2* bankerMultiple);
+                        score0 -= (2 * bankerMultiple);
                     }
                 } else {
                     if (p1.catchSix) {
@@ -1281,11 +1285,11 @@ public class GameXuanQiQi extends Game {
                 }
                 if (p2.getUserId() == room.getBankerId()) {
                     if (p2.catchSix) {
-                        score0 -= (6* bankerMultiple);
+                        score0 -= (6 * bankerMultiple);
                     } else if (p2.catchFive) {
-                        score0 -= (4* bankerMultiple);
+                        score0 -= (4 * bankerMultiple);
                     } else if (p2.catchThree) {
-                        score0 -= (2* bankerMultiple);
+                        score0 -= (2 * bankerMultiple);
                     }
                 } else {
                     if (p2.catchSix) {
@@ -1299,22 +1303,22 @@ public class GameXuanQiQi extends Game {
             } else {
                 if (p1.getUserId() == room.getBankerId()) {
                     if (p1.catchSix) {
-                        score0 -= (3* bankerMultiple);
+                        score0 -= (3 * bankerMultiple);
                     } else if (p1.catchFive) {
-                        score0 -= (2* bankerMultiple);
+                        score0 -= (2 * bankerMultiple);
                     } else if (p1.catchThree) {
-                        score0 -= (1* bankerMultiple);
+                        score0 -= (1 * bankerMultiple);
                     }
                 } else {
-                    if(p0.getUserId() == room.getBankerId()){//算分的庄
+                    if (p0.getUserId() == room.getBankerId()) {//算分的庄
                         if (p1.catchSix) {
-                            score0 -= (3* bankerMultiple);
+                            score0 -= (3 * bankerMultiple);
                         } else if (p1.catchFive) {
-                            score0 -= (2* bankerMultiple);
+                            score0 -= (2 * bankerMultiple);
                         } else if (p1.catchThree) {
-                            score0 -= (1* bankerMultiple);
+                            score0 -= (1 * bankerMultiple);
                         }
-                    }else{
+                    } else {
                         if (p1.catchSix) {
                             score0 -= 3;
                         } else if (p1.catchFive) {
@@ -1326,22 +1330,22 @@ public class GameXuanQiQi extends Game {
                 }
                 if (p2.getUserId() == room.getBankerId()) {
                     if (p2.catchSix) {
-                        score0 -= (3* bankerMultiple);
+                        score0 -= (3 * bankerMultiple);
                     } else if (p2.catchFive) {
-                        score0 -= (2* bankerMultiple);
+                        score0 -= (2 * bankerMultiple);
                     } else if (p2.catchThree) {
-                        score0 -= (1* bankerMultiple);
+                        score0 -= (1 * bankerMultiple);
                     }
                 } else {
-                    if(p0.getUserId() == room.getBankerId()){//算分的庄
+                    if (p0.getUserId() == room.getBankerId()) {//算分的庄
                         if (p2.catchSix) {
-                            score0 -= (3* bankerMultiple);
+                            score0 -= (3 * bankerMultiple);
                         } else if (p2.catchFive) {
-                            score0 -= (2* bankerMultiple);
+                            score0 -= (2 * bankerMultiple);
                         } else if (p2.catchThree) {
-                            score0 -= (1* bankerMultiple);
+                            score0 -= (1 * bankerMultiple);
                         }
-                    }else{
+                    } else {
                         if (p2.catchSix) {
                             score0 -= 3;
                         } else if (p2.catchFive) {
@@ -1393,7 +1397,7 @@ public class GameXuanQiQi extends Game {
                 } else if (p0.catchThree) {
                     score0 += (1 * bankerMultiple);
                 }
-            }else {
+            } else {
                 if (p1.catchSix) {
                     score1 += 3;
                 } else if (p1.catchFive) {
@@ -1409,11 +1413,11 @@ public class GameXuanQiQi extends Game {
             if (bao1) {
                 if (p0.getUserId() == room.getBankerId()) {
                     if (p0.catchSix) {
-                        score1 -= (6* bankerMultiple);
+                        score1 -= (6 * bankerMultiple);
                     } else if (p0.catchFive) {
-                        score1 -= (4* bankerMultiple);
+                        score1 -= (4 * bankerMultiple);
                     } else if (p0.catchThree) {
-                        score1 -= (2* bankerMultiple);
+                        score1 -= (2 * bankerMultiple);
                     }
                 } else {
                     if (p0.catchSix) {
@@ -1426,11 +1430,11 @@ public class GameXuanQiQi extends Game {
                 }
                 if (p2.getUserId() == room.getBankerId()) {
                     if (p2.catchSix) {
-                        score1 -= (6* bankerMultiple);
+                        score1 -= (6 * bankerMultiple);
                     } else if (p2.catchFive) {
-                        score1 -= (4* bankerMultiple);
+                        score1 -= (4 * bankerMultiple);
                     } else if (p2.catchThree) {
-                        score1 -= (2* bankerMultiple);
+                        score1 -= (2 * bankerMultiple);
                     }
                 } else {
                     if (p2.catchSix) {
@@ -1444,22 +1448,22 @@ public class GameXuanQiQi extends Game {
             } else {
                 if (p0.getUserId() == room.getBankerId()) {
                     if (p0.catchSix) {
-                        score1 -= (3* bankerMultiple);
+                        score1 -= (3 * bankerMultiple);
                     } else if (p0.catchFive) {
-                        score1 -= (2* bankerMultiple);
+                        score1 -= (2 * bankerMultiple);
                     } else if (p0.catchThree) {
-                        score1 -= (1* bankerMultiple);
+                        score1 -= (1 * bankerMultiple);
                     }
                 } else {
-                    if(p1.getUserId() == room.getBankerId()){//算分的庄
+                    if (p1.getUserId() == room.getBankerId()) {//算分的庄
                         if (p0.catchSix) {
-                            score1 -= (3* bankerMultiple);
+                            score1 -= (3 * bankerMultiple);
                         } else if (p0.catchFive) {
-                            score1 -= (2* bankerMultiple);
+                            score1 -= (2 * bankerMultiple);
                         } else if (p0.catchThree) {
-                            score1 -= (1* bankerMultiple);
+                            score1 -= (1 * bankerMultiple);
                         }
-                    }else{
+                    } else {
                         if (p0.catchSix) {
                             score1 -= 3;
                         } else if (p0.catchFive) {
@@ -1471,22 +1475,22 @@ public class GameXuanQiQi extends Game {
                 }
                 if (p2.getUserId() == room.getBankerId()) {
                     if (p2.catchSix) {
-                        score1 -= (3* bankerMultiple);
+                        score1 -= (3 * bankerMultiple);
                     } else if (p2.catchFive) {
-                        score1 -= (2* bankerMultiple);
+                        score1 -= (2 * bankerMultiple);
                     } else if (p2.catchThree) {
-                        score1 -= (1* bankerMultiple);
+                        score1 -= (1 * bankerMultiple);
                     }
                 } else {
-                    if(p1.getUserId() == room.getBankerId()){//算分的庄
+                    if (p1.getUserId() == room.getBankerId()) {//算分的庄
                         if (p2.catchSix) {
-                            score1 -= (3* bankerMultiple);
+                            score1 -= (3 * bankerMultiple);
                         } else if (p2.catchFive) {
-                            score1 -= (2* bankerMultiple);
+                            score1 -= (2 * bankerMultiple);
                         } else if (p2.catchThree) {
-                            score1 -= (1* bankerMultiple);
+                            score1 -= (1 * bankerMultiple);
                         }
-                    }else{
+                    } else {
                         if (p2.catchSix) {
                             score1 -= 3;
                         } else if (p2.catchFive) {
@@ -1501,11 +1505,11 @@ public class GameXuanQiQi extends Game {
 
         score2 = -(score0 + score1);
 
-        if(bao2){
-            if(score0>0){
+        if (bao2) {
+            if (score0 > 0) {
                 score1 = 0;
                 score2 = -score0;
-            }else if(score1>0){
+            } else if (score1 > 0) {
                 score0 = 0;
                 score2 = -score1;
             }
@@ -1520,15 +1524,13 @@ public class GameXuanQiQi extends Game {
 
         //算分：宣起
 
-        for (XuanParam x:xuanList) {
-            int lastWinLuo = playerCardInfos.get(x.xuan_UserId).winCards.size()/3;
-            if(x.xuan_LuoNum<3 && lastWinLuo>=3){
+        for (XuanParam x : xuanList) {
+            int lastWinLuo = playerCardInfos.get(x.xuan_UserId).winCards.size() / 3;
+            if (x.xuan_LuoNum < 3 && lastWinLuo >= 3) {
                 x.setGotLuo(true);
-            }
-            else if(x.xuan_LuoNum<=4 && x.xuan_LuoNum>=3 && lastWinLuo>=5){
+            } else if (x.xuan_LuoNum <= 4 && x.xuan_LuoNum >= 3 && lastWinLuo >= 5) {
                 x.setGotLuo(true);
-            }
-            else if(x.xuan_LuoNum==5 && lastWinLuo>=6){
+            } else if (x.xuan_LuoNum == 5 && lastWinLuo >= 6) {
                 x.setGotLuo(true);
             }
         }
@@ -1541,8 +1543,8 @@ public class GameXuanQiQi extends Game {
                 playerCardInfos.get(x.xuaned_UserId).addScore(2);
             }
         }
-        for (Long l:playerCardInfos.keySet()) {
-            if(playerCardInfos.get(l).score>0){
+        for (Long l : playerCardInfos.keySet()) {
+            if (playerCardInfos.get(l).score > 0) {
                 roomXuanQiQi.addWinNumXQQ(l);
             }
         }
@@ -1550,6 +1552,94 @@ public class GameXuanQiQi extends Game {
     }
 
 
+    private boolean isBao(PlayerCardInfoXuanQiQi xuanUser, PlayerCardInfoXuanQiQi beixuanUser) {
+        boolean flag = false;
+        if (xuanList.size() > 0) {
+            XuanParam xp = xuanList.get(xuanList.size() - 1);
+            if (xp.xuan_UserId != xuanUser.userId || xp.xuaned_UserId != beixuanUser.userId) {
+                return false;
+            }
+        }
+        for (XuanParam xuanParam : xuanList) {
+            if(xuanParam.xuaned_UserId != beixuanUser.userId || xuanParam.xuan_UserId != xuanUser.userId ) continue;
+            //第一个人
+            if (xuanParam.getXuaned_LuoNum() < 5 && beixuanUser.winCards.size() >= 15 && xuanUser.winCards.size()<9) {
+                flag = true;
+            }
+        }
+        return flag;
+    }
+    private int playerScore(PlayerCardInfoXuanQiQi playerInfo) {
+        if (playerInfo.catchSix) {
+            return 3;
+        }
+        if (playerInfo.catchFive) {
+            return 2;
+        }
+        if (playerInfo.catchThree) {
+            return 1;
+        }
+        return 0;
+    }
+
+
+    private void computeall(){
+        for (PlayerCardInfoXuanQiQi playerCardInfoXuanQiQi : playerCardInfos.values()) {
+            compute1(playerCardInfoXuanQiQi);
+        }
+    }
+
+
+    private void compute1(PlayerCardInfoXuanQiQi playerInfo) {
+        int score = playerScore(playerInfo);
+        int allScore = 0;
+        if (playerInfo.userId == room.getBankerId()) {
+            score *= bankerMultiple;
+        }
+
+        boolean isHasBao = false;
+        PlayerCardInfoXuanQiQi baoUser = null;
+
+        for(PlayerCardInfoXuanQiQi other : playerCardInfos.values()){
+            if (other.userId == playerInfo.userId) continue;
+            if (isBao(other, playerInfo)) {
+                isHasBao = true;
+                baoUser = other;
+            }
+        }
+
+
+        for (PlayerCardInfoXuanQiQi other : playerCardInfos.values()) {
+            if (other.userId == playerInfo.userId) continue;
+
+            if (other.winCards.size() < 9) {
+                int temp = score;
+                if(other.userId == room.getBankerId()){
+                    temp *= bankerMultiple;
+                }
+                allScore += temp;
+
+
+                //没有包的情况 减分
+                if (!isHasBao) {
+                    room.addUserSocre(other.userId, -temp);
+                    other.addScore(-temp);
+                }
+            }
+
+
+        }
+
+        //包
+        if (baoUser != null) {
+            room.addUserSocre(baoUser.userId, -allScore);
+            baoUser.addScore(-allScore);
+        }
+
+        //赢的加分
+        room.addUserSocre(playerInfo.userId, allScore);
+        playerInfo.addScore(allScore);
+    }
 
 
     /**
@@ -1558,33 +1648,33 @@ public class GameXuanQiQi extends Game {
     protected void sendResult() {
         //计算下一轮庄
         Map<Long, Double> userScores = new HashMap<>();
-        for (PlayerCardInfoXuanQiQi p:playerCardInfos.values()) {
-            userScores.put(p.getUserId(),p.getScore());
+        for (PlayerCardInfoXuanQiQi p : playerCardInfos.values()) {
+            userScores.put(p.getUserId(), p.getScore());
         }
         List<Long> userList = new ArrayList<>();
-        for (Long l :userScores.keySet()){
+        for (Long l : userScores.keySet()) {
             userList.add(l);
         }
         long bankerId = 0l;
         long u0 = userList.get(0);
         long u1 = userList.get(1);
         long u2 = userList.get(2);
-        if(userScores.get(u0)==0&&userScores.get(u1)==0&&userScores.get(u2)==0){
+        if (userScores.get(u0) == 0 && userScores.get(u1) == 0 && userScores.get(u2) == 0) {
             bankerId = room.getBankerId();
-        }else{
-            if(userScores.get(u0)*userScores.get(u1)>0){
+        } else {
+            if (userScores.get(u0) * userScores.get(u1) > 0) {
                 bankerId = u2;
-            }else if(userScores.get(u0)*userScores.get(u2)>0){
+            } else if (userScores.get(u0) * userScores.get(u2) > 0) {
                 bankerId = u1;
-            }else if(userScores.get(u1)*userScores.get(u2)>0){
+            } else if (userScores.get(u1) * userScores.get(u2) > 0) {
                 bankerId = u0;
             }
         }
 
         Map<String, Object> gameResult = new HashMap<>();
-        gameResult.put("bankerId",bankerId);
-        gameResult.put("userScores",userScores);
-        MsgSender.sendMsg2Player("gameService", "gameResult",gameResult, users);
+        gameResult.put("bankerId", bankerId);
+        gameResult.put("userScores", userScores);
+        MsgSender.sendMsg2Player("gameService", "gameResult", gameResult, users);
 
         room.setBankerId(bankerId);
     }
@@ -1631,25 +1721,15 @@ public class GameXuanQiQi extends Game {
         vo.bankerId = room.getBankerId();
 
         for (PlayerCardInfoXuanQiQi playerCardInfo : this.getPlayerCardInfos().values()) {
-            if(userId == playerCardInfo.getUserId()){
+            if (userId == playerCardInfo.getUserId()) {
                 vo.playerCardInfos.put(playerCardInfo.userId, playerCardInfo.toVo(userId));
-            }else{
+            } else {
                 vo.playerCardInfos.put(playerCardInfo.userId, playerCardInfo.toVo());
             }
         }
 
         return vo;
     }
-
-
-
-
-
-
-
-
-
-
 
 
     //==========================getter and setter============================

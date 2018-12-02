@@ -4,6 +4,8 @@ import com.code.server.db.Service.ClubService;
 import com.code.server.db.Service.UserClubService;
 import com.code.server.db.model.Club;
 import com.code.server.db.model.UserClub;
+import com.code.server.login.config.ServerConfig;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 
 import java.util.*;
@@ -47,18 +49,35 @@ public class ClubManager {
 
     }
 
+    /**
+     * 从数据库读取俱乐部数据
+     */
     public void loadAll() {
+        //是否带钱的俱乐部
+        boolean loadClubMoney = SpringUtil.getBean(ServerConfig.class).getHasClubMoney() == 1;
         ClubService clubService = SpringUtil.getBean(ClubService.class);
-        clubService.getClubDao().findAll().forEach(club-> {
+        clubService.getClubDao().findAll().forEach(club -> {
             clubMap.put(club.getId(), club);
-            //
-//            GameClubService.initRoomInstance(club);
+            //redis里没数据
+            if (loadClubMoney && RedisManager.getClubRedisService().getUserMoneyCount(club.getId()) == 0) {
+                clubMoneyWrite2Redis(club);
+            }
 
         });
     }
 
+    /**
+     * 俱乐部钱写进redis
+     *
+     * @param club
+     */
+    private void clubMoneyWrite2Redis(Club club) {
+        club.getClubInfo().getMember().values().forEach(clubMember -> {
+            RedisManager.getClubRedisService().addClubUserMoney(club.getId(), clubMember.getUserId(), clubMember.getMoney());
+        });
+    }
 
-    public void saveAll(){
+    public void saveAll() {
         //存 玩家 俱乐部 映射关系
         if (userClub != null) {
 
@@ -68,13 +87,37 @@ public class ClubManager {
 
         //存俱乐部
         ClubService clubService = SpringUtil.getBean(ClubService.class);
+
+        boolean saveClubMoney = SpringUtil.getBean(ServerConfig.class).getHasClubMoney() == 1;
+        if (saveClubMoney) {
+            for (Club club : clubMap.values()) {
+                redis2ClubMoney(club);
+            }
+        }
+
         clubService.getClubDao().save(clubMap.values());
 
     }
 
-    public Club getClubById(String id){
+
+    /**
+     * redis 写入俱乐部钱
+     *
+     * @param club
+     */
+    private void redis2ClubMoney(Club club) {
+        Map<String, Double> money = RedisManager.getClubRedisService().getMoneyMap(club.getId());
+        club.getClubInfo().getMember().values().forEach(clubMember -> {
+            if (money.containsKey("" + clubMember.getUserId())) {
+                clubMember.setMoney(money.get("" + clubMember.getUserId()));
+            }
+        });
+    }
+
+    public Club getClubById(String id) {
         return clubMap.get(id);
     }
+
     /**
      * 获得玩家俱乐部
      *
@@ -90,7 +133,7 @@ public class ClubManager {
                 userClub.setId(1);
                 userClub.setUser_club(new HashMap<>());
                 userClubService.save(userClub);
-            }else{
+            } else {
                 for (Map.Entry<String, List<String>> entry : userClub.getUser_club().entrySet()) {
                     Set<String> set = new HashSet<>();
                     set.addAll(entry.getValue());
@@ -114,8 +157,8 @@ public class ClubManager {
     public int getUserClubNum(long userId) {
         UserClub userClub = getUserClub();
         int size = 0;
-        if (userClub.getUser_club().containsKey(""+userId)) {
-            size = userClub.getUser_club().get(""+userId).size();
+        if (userClub.getUser_club().containsKey("" + userId)) {
+            size = userClub.getUser_club().get("" + userId).size();
         }
         return size;
     }
@@ -128,8 +171,8 @@ public class ClubManager {
      */
     public List<String> getUserClubs(long userId) {
         UserClub userClub = getUserClub();
-        if(userClub.getUser_club().containsKey(""+userId)){
-            return userClub.getUser_club().get(""+userId);
+        if (userClub.getUser_club().containsKey("" + userId)) {
+            return userClub.getUser_club().get("" + userId);
         }
         return new ArrayList<>();
     }
@@ -142,18 +185,18 @@ public class ClubManager {
      */
     public void userAddClub(long userId, String clubId) {
         UserClub userClub = getUserClub();
-        if (!userClub.getUser_club().containsKey(""+userId)) {
+        if (!userClub.getUser_club().containsKey("" + userId)) {
             List<String> li = new ArrayList<>();
             li.add(clubId);
-            userClub.getUser_club().put(""+userId, li);
+            userClub.getUser_club().put("" + userId, li);
         } else {
-            List<String> l = userClub.getUser_club().get(""+userId);
+            List<String> l = userClub.getUser_club().get("" + userId);
             l.add(clubId);
-            userClub.getUser_club().put(""+userId, l);
+            userClub.getUser_club().put("" + userId, l);
         }
     }
 
-    public void userRemoveClub(long userId, String clubId){
+    public void userRemoveClub(long userId, String clubId) {
         List<String> clubs = getUserClubs(userId);
         if (clubs != null) {
             clubs.remove(clubId);

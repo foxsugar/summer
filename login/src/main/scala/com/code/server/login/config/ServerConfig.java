@@ -67,6 +67,8 @@ public class ServerConfig {
 
     private int deleteRecordTask = 0;
 
+    private int hasClubMoney = 0;
+
 
     public String getServerType() {
         return serverType;
@@ -304,6 +306,15 @@ public class ServerConfig {
 
     public ServerConfig setDeleteRecordTask(int deleteRecordTask) {
         this.deleteRecordTask = deleteRecordTask;
+        return this;
+    }
+
+    public int getHasClubMoney() {
+        return hasClubMoney;
+    }
+
+    public ServerConfig setHasClubMoney(int hasClubMoney) {
+        this.hasClubMoney = hasClubMoney;
         return this;
     }
 }

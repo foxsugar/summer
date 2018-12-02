@@ -46,6 +46,7 @@ public class RoomHitGoldFlower extends PokerGoldRoom {
     protected boolean isJoinHalfWay;
     protected boolean wanjialiangpai;
     protected boolean bipaijiabei;
+    protected boolean autoReady;
 
     protected Map<Long, Integer> baoziNum = new HashMap<>();
     protected Map<Long, Integer> tonghuashunNum = new HashMap<>();
@@ -83,7 +84,7 @@ public class RoomHitGoldFlower extends PokerGoldRoom {
     public static int createHitGoldFlowerRoom(long userId, int gameNumber, int personNumber,int cricleNumber,int multiple,
                                               int caiFen,int menPai, String gameType, String roomType, boolean isAA,
                                               boolean isJoin, String clubId, String clubRoomModel,
-                                                boolean isRobot, int time, boolean isJoinHalfWay,boolean wanjialiangpai,boolean bipaijiabei) throws DataNotFoundException {
+                                                boolean isRobot, int time, boolean isJoinHalfWay,boolean wanjialiangpai,boolean bipaijiabei,int otherMode) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
         RoomHitGoldFlower room = getRoomInstance(roomType);
@@ -107,6 +108,8 @@ public class RoomHitGoldFlower extends PokerGoldRoom {
         room.isJoinHalfWay = isJoinHalfWay;
         room.wanjialiangpai = wanjialiangpai;
         room.bipaijiabei = bipaijiabei;
+        room.otherMode = otherMode;
+        room.autoReady = otherMode == 1;
 
         room.init(gameNumber, multiple);
 
