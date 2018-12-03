@@ -1148,380 +1148,382 @@ public class GameXuanQiQi extends Game {
             }
         }*/
 
-        //算包的人
-        Map<Long, Long> xuanedAndFinalXuan = new HashMap<>();
-        for (long l : users) {
-            xuanedAndFinalXuan.put(l, null);
-        }
-        for (XuanParam xuanParam : xuanList) {
-            //第一个人
-            if (xuanParam.xuaned_UserId == p0.userId && xuanParam.xuan_UserId == p1.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p0.winCards.size() >= 15) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p1.getUserId());
-            }
-            if (xuanParam.xuaned_UserId == p0.userId && xuanParam.xuan_UserId == p1.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p0.winCards.size() >= 18) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p1.getUserId());
-            }
-            if (xuanParam.xuaned_UserId == p0.userId && xuanParam.xuan_UserId == p2.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p0.winCards.size() >= 15) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p2.getUserId());
-            }
-            if (xuanParam.xuaned_UserId == p0.userId && xuanParam.xuan_UserId == p2.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p0.winCards.size() >= 18) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p2.getUserId());
-            }
+//        //算包的人
+//        Map<Long, Long> xuanedAndFinalXuan = new HashMap<>();
+//        for (long l : users) {
+//            xuanedAndFinalXuan.put(l, null);
+//        }
+//        for (XuanParam xuanParam : xuanList) {
+//            //第一个人
+//            if (xuanParam.xuaned_UserId == p0.userId && xuanParam.xuan_UserId == p1.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p0.winCards.size() >= 15) {
+//                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p1.getUserId());
+//            }
+//            if (xuanParam.xuaned_UserId == p0.userId && xuanParam.xuan_UserId == p1.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p0.winCards.size() >= 18) {
+//                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p1.getUserId());
+//            }
+//            if (xuanParam.xuaned_UserId == p0.userId && xuanParam.xuan_UserId == p2.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p0.winCards.size() >= 15) {
+//                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p2.getUserId());
+//            }
+//            if (xuanParam.xuaned_UserId == p0.userId && xuanParam.xuan_UserId == p2.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p0.winCards.size() >= 18) {
+//                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p2.getUserId());
+//            }
+//
+//            //第2个人
+//            if (xuanParam.xuaned_UserId == p1.userId && xuanParam.xuan_UserId == p0.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p1.winCards.size() >= 15) {
+//                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p0.getUserId());
+//            }
+//            if (xuanParam.xuaned_UserId == p1.userId && xuanParam.xuan_UserId == p0.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p1.winCards.size() >= 18) {
+//                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p0.getUserId());
+//            }
+//            if (xuanParam.xuaned_UserId == p1.userId && xuanParam.xuan_UserId == p2.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p1.winCards.size() >= 15) {
+//                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p2.getUserId());
+//            }
+//            if (xuanParam.xuaned_UserId == p1.userId && xuanParam.xuan_UserId == p2.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p1.winCards.size() >= 18) {
+//                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p2.getUserId());
+//            }
+//
+//            //第3个人
+//            if (xuanParam.xuaned_UserId == p2.userId && xuanParam.xuan_UserId == p0.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p2.winCards.size() >= 15) {
+//                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p0.getUserId());
+//            }
+//            if (xuanParam.xuaned_UserId == p2.userId && xuanParam.xuan_UserId == p0.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p2.winCards.size() >= 18) {
+//                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p0.getUserId());
+//            }
+//            if (xuanParam.xuaned_UserId == p2.userId && xuanParam.xuan_UserId == p1.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p2.winCards.size() >= 15) {
+//                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p1.getUserId());
+//            }
+//            if (xuanParam.xuaned_UserId == p2.userId && xuanParam.xuan_UserId == p1.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p2.winCards.size() >= 18) {
+//                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p1.getUserId());
+//            }
+//        }
+//
+//        List<Long> baoUser = new ArrayList<>();
+//        for (Long l : xuanedAndFinalXuan.values()) {
+//            if (l != null) {
+//                if (l == p0.userId && p0.winCards.size() < 9) {
+//                    baoUser.add(p0.userId);
+//                    bao0 = true;
+//                } else if (l == p1.userId && p1.winCards.size() < 9) {
+//                    baoUser.add(p1.userId);
+//                    bao1 = true;
+//                } else if (l == p2.userId && p2.winCards.size() < 9) {
+//                    baoUser.add(p2.userId);
+//                    bao2 = true;
+//                }
+//            }
+//        }
+//
+//        //=======================score0分数计算=============================
+//        //第二个人不够
+//        if (p1.winCards.size() < 9) {
+//            if (p0.getUserId() == room.getBankerId()) {
+//                if (p0.catchSix) {
+//                    score0 += (3 * bankerMultiple);
+//                } else if (p0.catchFive) {
+//                    score0 += (2 * bankerMultiple);
+//                } else if (p0.catchThree) {
+//                    score0 += (1 * bankerMultiple);
+//                }
+//            } else {
+//                if (p0.catchSix) {
+//                    score0 += 3;
+//                } else if (p0.catchFive) {
+//                    score0 += 2;
+//                } else if (p0.catchThree) {
+//                    score0 += 1;
+//                }
+//            }
+//        }
+//        //第三个人不够
+//        if (p2.winCards.size() < 9) {
+//            if (p0.getUserId() == room.getBankerId()) {
+//                if (p0.catchSix) {
+//                    score0 += (3 * bankerMultiple);
+//                } else if (p0.catchFive) {
+//                    score0 += (2 * bankerMultiple);
+//                } else if (p0.catchThree) {
+//                    score0 += (1 * bankerMultiple);
+//                }
+//            } else if (p2.getUserId() == room.getBankerId()) {
+//                if (p0.catchSix) {
+//                    score0 += (3 * bankerMultiple);
+//                } else if (p0.catchFive) {
+//                    score0 += (2 * bankerMultiple);
+//                } else if (p0.catchThree) {
+//                    score0 += (1 * bankerMultiple);
+//                }
+//            }
+//            if (p0.catchSix) {
+//                score0 += 3;
+//            } else if (p0.catchFive) {
+//                score0 += 2;
+//            } else if (p0.catchThree) {
+//                score0 += 1;
+//            }
+//        }
+//
+//
+//        //第一个人不够，减分
+//        if (p0.winCards.size() < 9) {
+//            if (bao0) {
+//                if (p1.getUserId() == room.getBankerId()) {
+//                    if (p1.catchSix) {
+//                        score0 -= (6 * bankerMultiple);
+//                    } else if (p1.catchFive) {
+//                        score0 -= (4 * bankerMultiple);
+//                    } else if (p1.catchThree) {
+//                        score0 -= (2 * bankerMultiple);
+//                    }
+//                } else {
+//                    if (p1.catchSix) {
+//                        score0 -= 9;
+//                    } else if (p1.catchFive) {
+//                        score0 -= 6;
+//                    } else if (p1.catchThree) {
+//                        score0 -= 3;
+//                    }
+//                }
+//                if (p2.getUserId() == room.getBankerId()) {
+//                    if (p2.catchSix) {
+//                        score0 -= (6 * bankerMultiple);
+//                    } else if (p2.catchFive) {
+//                        score0 -= (4 * bankerMultiple);
+//                    } else if (p2.catchThree) {
+//                        score0 -= (2 * bankerMultiple);
+//                    }
+//                } else {
+//                    if (p2.catchSix) {
+//                        score0 -= 9;
+//                    } else if (p2.catchFive) {
+//                        score0 -= 6;
+//                    } else if (p2.catchThree) {
+//                        score0 -= 3;
+//                    }
+//                }
+//            } else {
+//                if (p1.getUserId() == room.getBankerId()) {
+//                    if (p1.catchSix) {
+//                        score0 -= (3 * bankerMultiple);
+//                    } else if (p1.catchFive) {
+//                        score0 -= (2 * bankerMultiple);
+//                    } else if (p1.catchThree) {
+//                        score0 -= (1 * bankerMultiple);
+//                    }
+//                } else {
+//                    if (p0.getUserId() == room.getBankerId()) {//算分的庄
+//                        if (p1.catchSix) {
+//                            score0 -= (3 * bankerMultiple);
+//                        } else if (p1.catchFive) {
+//                            score0 -= (2 * bankerMultiple);
+//                        } else if (p1.catchThree) {
+//                            score0 -= (1 * bankerMultiple);
+//                        }
+//                    } else {
+//                        if (p1.catchSix) {
+//                            score0 -= 3;
+//                        } else if (p1.catchFive) {
+//                            score0 -= 2;
+//                        } else if (p1.catchThree) {
+//                            score0 -= 1;
+//                        }
+//                    }
+//                }
+//                if (p2.getUserId() == room.getBankerId()) {
+//                    if (p2.catchSix) {
+//                        score0 -= (3 * bankerMultiple);
+//                    } else if (p2.catchFive) {
+//                        score0 -= (2 * bankerMultiple);
+//                    } else if (p2.catchThree) {
+//                        score0 -= (1 * bankerMultiple);
+//                    }
+//                } else {
+//                    if (p0.getUserId() == room.getBankerId()) {//算分的庄
+//                        if (p2.catchSix) {
+//                            score0 -= (3 * bankerMultiple);
+//                        } else if (p2.catchFive) {
+//                            score0 -= (2 * bankerMultiple);
+//                        } else if (p2.catchThree) {
+//                            score0 -= (1 * bankerMultiple);
+//                        }
+//                    } else {
+//                        if (p2.catchSix) {
+//                            score0 -= 3;
+//                        } else if (p2.catchFive) {
+//                            score0 -= 2;
+//                        } else if (p2.catchThree) {
+//                            score0 -= 1;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        //=======================score1分数计算=============================
+//        //第一个人不够
+//        if (p0.winCards.size() < 9) {
+//            if (p1.getUserId() == room.getBankerId()) {
+//                if (p1.catchSix) {
+//                    score1 += (3 * bankerMultiple);
+//                } else if (p1.catchFive) {
+//                    score1 += (2 * bankerMultiple);
+//                } else if (p1.catchThree) {
+//                    score1 += (1 * bankerMultiple);
+//                }
+//            } else {
+//                if (p1.catchSix) {
+//                    score1 += 3;
+//                } else if (p1.catchFive) {
+//                    score1 += 2;
+//                } else if (p1.catchThree) {
+//                    score1 += 1;
+//                }
+//            }
+//        }
+//        //第三个人不够
+//        if (p2.winCards.size() < 9) {
+//            if (p1.getUserId() == room.getBankerId()) {
+//                if (p1.catchSix) {
+//                    score1 += (3 * bankerMultiple);
+//                } else if (p1.catchFive) {
+//                    score1 += (2 * bankerMultiple);
+//                } else if (p1.catchThree) {
+//                    score1 += (1 * bankerMultiple);
+//                }
+//            } else if (p2.getUserId() == room.getBankerId()) {
+//                if (p0.catchSix) {
+//                    score0 += (3 * bankerMultiple);
+//                } else if (p0.catchFive) {
+//                    score0 += (2 * bankerMultiple);
+//                } else if (p0.catchThree) {
+//                    score0 += (1 * bankerMultiple);
+//                }
+//            } else {
+//                if (p1.catchSix) {
+//                    score1 += 3;
+//                } else if (p1.catchFive) {
+//                    score1 += 2;
+//                } else if (p1.catchThree) {
+//                    score1 += 1;
+//                }
+//            }
+//        }
+//
+//        //第二个人不够罗，减分
+//        if (p1.winCards.size() < 9) {
+//            if (bao1) {
+//                if (p0.getUserId() == room.getBankerId()) {
+//                    if (p0.catchSix) {
+//                        score1 -= (6 * bankerMultiple);
+//                    } else if (p0.catchFive) {
+//                        score1 -= (4 * bankerMultiple);
+//                    } else if (p0.catchThree) {
+//                        score1 -= (2 * bankerMultiple);
+//                    }
+//                } else {
+//                    if (p0.catchSix) {
+//                        score1 -= 9;
+//                    } else if (p0.catchFive) {
+//                        score1 -= 6;
+//                    } else if (p0.catchThree) {
+//                        score1 -= 3;
+//                    }
+//                }
+//                if (p2.getUserId() == room.getBankerId()) {
+//                    if (p2.catchSix) {
+//                        score1 -= (6 * bankerMultiple);
+//                    } else if (p2.catchFive) {
+//                        score1 -= (4 * bankerMultiple);
+//                    } else if (p2.catchThree) {
+//                        score1 -= (2 * bankerMultiple);
+//                    }
+//                } else {
+//                    if (p2.catchSix) {
+//                        score1 -= 9;
+//                    } else if (p2.catchFive) {
+//                        score1 -= 6;
+//                    } else if (p2.catchThree) {
+//                        score1 -= 3;
+//                    }
+//                }
+//            } else {
+//                if (p0.getUserId() == room.getBankerId()) {
+//                    if (p0.catchSix) {
+//                        score1 -= (3 * bankerMultiple);
+//                    } else if (p0.catchFive) {
+//                        score1 -= (2 * bankerMultiple);
+//                    } else if (p0.catchThree) {
+//                        score1 -= (1 * bankerMultiple);
+//                    }
+//                } else {
+//                    if (p1.getUserId() == room.getBankerId()) {//算分的庄
+//                        if (p0.catchSix) {
+//                            score1 -= (3 * bankerMultiple);
+//                        } else if (p0.catchFive) {
+//                            score1 -= (2 * bankerMultiple);
+//                        } else if (p0.catchThree) {
+//                            score1 -= (1 * bankerMultiple);
+//                        }
+//                    } else {
+//                        if (p0.catchSix) {
+//                            score1 -= 3;
+//                        } else if (p0.catchFive) {
+//                            score1 -= 2;
+//                        } else if (p0.catchThree) {
+//                            score1 -= 1;
+//                        }
+//                    }
+//                }
+//                if (p2.getUserId() == room.getBankerId()) {
+//                    if (p2.catchSix) {
+//                        score1 -= (3 * bankerMultiple);
+//                    } else if (p2.catchFive) {
+//                        score1 -= (2 * bankerMultiple);
+//                    } else if (p2.catchThree) {
+//                        score1 -= (1 * bankerMultiple);
+//                    }
+//                } else {
+//                    if (p1.getUserId() == room.getBankerId()) {//算分的庄
+//                        if (p2.catchSix) {
+//                            score1 -= (3 * bankerMultiple);
+//                        } else if (p2.catchFive) {
+//                            score1 -= (2 * bankerMultiple);
+//                        } else if (p2.catchThree) {
+//                            score1 -= (1 * bankerMultiple);
+//                        }
+//                    } else {
+//                        if (p2.catchSix) {
+//                            score1 -= 3;
+//                        } else if (p2.catchFive) {
+//                            score1 -= 2;
+//                        } else if (p2.catchThree) {
+//                            score1 -= 1;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        score2 = -(score0 + score1);
+//
+//        if (bao2) {
+//            if (score0 > 0) {
+//                score1 = 0;
+//                score2 = -score0;
+//            } else if (score1 > 0) {
+//                score0 = 0;
+//                score2 = -score1;
+//            }
+//        }
+//
+//        roomXuanQiQi.addUserSocre(playerCardInfos.get(p0.getUserId()).getUserId(), score0);
+//        roomXuanQiQi.addUserSocre(playerCardInfos.get(p1.getUserId()).getUserId(), score1);
+//        roomXuanQiQi.addUserSocre(playerCardInfos.get(p2.getUserId()).getUserId(), score2);
+//        playerCardInfos.get(p0.getUserId()).addScore(score0);
+//        playerCardInfos.get(p1.getUserId()).addScore(score1);
+//        playerCardInfos.get(p2.getUserId()).addScore(score2);
 
-            //第2个人
-            if (xuanParam.xuaned_UserId == p1.userId && xuanParam.xuan_UserId == p0.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p1.winCards.size() >= 15) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p0.getUserId());
-            }
-            if (xuanParam.xuaned_UserId == p1.userId && xuanParam.xuan_UserId == p0.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p1.winCards.size() >= 18) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p0.getUserId());
-            }
-            if (xuanParam.xuaned_UserId == p1.userId && xuanParam.xuan_UserId == p2.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p1.winCards.size() >= 15) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p2.getUserId());
-            }
-            if (xuanParam.xuaned_UserId == p1.userId && xuanParam.xuan_UserId == p2.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p1.winCards.size() >= 18) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p2.getUserId());
-            }
 
-            //第3个人
-            if (xuanParam.xuaned_UserId == p2.userId && xuanParam.xuan_UserId == p0.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p2.winCards.size() >= 15) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p0.getUserId());
-            }
-            if (xuanParam.xuaned_UserId == p2.userId && xuanParam.xuan_UserId == p0.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p2.winCards.size() >= 18) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p0.getUserId());
-            }
-            if (xuanParam.xuaned_UserId == p2.userId && xuanParam.xuan_UserId == p1.getUserId() && xuanParam.getXuaned_LuoNum() < 5 && p2.winCards.size() >= 15) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p1.getUserId());
-            }
-            if (xuanParam.xuaned_UserId == p2.userId && xuanParam.xuan_UserId == p1.getUserId() && xuanParam.getXuaned_LuoNum() < 6 && p2.winCards.size() >= 18) {
-                xuanedAndFinalXuan.put(xuanParam.xuaned_UserId, p1.getUserId());
-            }
-        }
-
-        List<Long> baoUser = new ArrayList<>();
-        for (Long l : xuanedAndFinalXuan.values()) {
-            if (l != null) {
-                if (l == p0.userId && p0.winCards.size() < 9) {
-                    baoUser.add(p0.userId);
-                    bao0 = true;
-                } else if (l == p1.userId && p1.winCards.size() < 9) {
-                    baoUser.add(p1.userId);
-                    bao1 = true;
-                } else if (l == p2.userId && p2.winCards.size() < 9) {
-                    baoUser.add(p2.userId);
-                    bao2 = true;
-                }
-            }
-        }
-
-        //=======================score0分数计算=============================
-        //第二个人不够
-        if (p1.winCards.size() < 9) {
-            if (p0.getUserId() == room.getBankerId()) {
-                if (p0.catchSix) {
-                    score0 += (3 * bankerMultiple);
-                } else if (p0.catchFive) {
-                    score0 += (2 * bankerMultiple);
-                } else if (p0.catchThree) {
-                    score0 += (1 * bankerMultiple);
-                }
-            } else {
-                if (p0.catchSix) {
-                    score0 += 3;
-                } else if (p0.catchFive) {
-                    score0 += 2;
-                } else if (p0.catchThree) {
-                    score0 += 1;
-                }
-            }
-        }
-        //第三个人不够
-        if (p2.winCards.size() < 9) {
-            if (p0.getUserId() == room.getBankerId()) {
-                if (p0.catchSix) {
-                    score0 += (3 * bankerMultiple);
-                } else if (p0.catchFive) {
-                    score0 += (2 * bankerMultiple);
-                } else if (p0.catchThree) {
-                    score0 += (1 * bankerMultiple);
-                }
-            } else if (p2.getUserId() == room.getBankerId()) {
-                if (p0.catchSix) {
-                    score0 += (3 * bankerMultiple);
-                } else if (p0.catchFive) {
-                    score0 += (2 * bankerMultiple);
-                } else if (p0.catchThree) {
-                    score0 += (1 * bankerMultiple);
-                }
-            }
-            if (p0.catchSix) {
-                score0 += 3;
-            } else if (p0.catchFive) {
-                score0 += 2;
-            } else if (p0.catchThree) {
-                score0 += 1;
-            }
-        }
-
-
-        //第一个人不够，减分
-        if (p0.winCards.size() < 9) {
-            if (bao0) {
-                if (p1.getUserId() == room.getBankerId()) {
-                    if (p1.catchSix) {
-                        score0 -= (6 * bankerMultiple);
-                    } else if (p1.catchFive) {
-                        score0 -= (4 * bankerMultiple);
-                    } else if (p1.catchThree) {
-                        score0 -= (2 * bankerMultiple);
-                    }
-                } else {
-                    if (p1.catchSix) {
-                        score0 -= 9;
-                    } else if (p1.catchFive) {
-                        score0 -= 6;
-                    } else if (p1.catchThree) {
-                        score0 -= 3;
-                    }
-                }
-                if (p2.getUserId() == room.getBankerId()) {
-                    if (p2.catchSix) {
-                        score0 -= (6 * bankerMultiple);
-                    } else if (p2.catchFive) {
-                        score0 -= (4 * bankerMultiple);
-                    } else if (p2.catchThree) {
-                        score0 -= (2 * bankerMultiple);
-                    }
-                } else {
-                    if (p2.catchSix) {
-                        score0 -= 9;
-                    } else if (p2.catchFive) {
-                        score0 -= 6;
-                    } else if (p2.catchThree) {
-                        score0 -= 3;
-                    }
-                }
-            } else {
-                if (p1.getUserId() == room.getBankerId()) {
-                    if (p1.catchSix) {
-                        score0 -= (3 * bankerMultiple);
-                    } else if (p1.catchFive) {
-                        score0 -= (2 * bankerMultiple);
-                    } else if (p1.catchThree) {
-                        score0 -= (1 * bankerMultiple);
-                    }
-                } else {
-                    if (p0.getUserId() == room.getBankerId()) {//算分的庄
-                        if (p1.catchSix) {
-                            score0 -= (3 * bankerMultiple);
-                        } else if (p1.catchFive) {
-                            score0 -= (2 * bankerMultiple);
-                        } else if (p1.catchThree) {
-                            score0 -= (1 * bankerMultiple);
-                        }
-                    } else {
-                        if (p1.catchSix) {
-                            score0 -= 3;
-                        } else if (p1.catchFive) {
-                            score0 -= 2;
-                        } else if (p1.catchThree) {
-                            score0 -= 1;
-                        }
-                    }
-                }
-                if (p2.getUserId() == room.getBankerId()) {
-                    if (p2.catchSix) {
-                        score0 -= (3 * bankerMultiple);
-                    } else if (p2.catchFive) {
-                        score0 -= (2 * bankerMultiple);
-                    } else if (p2.catchThree) {
-                        score0 -= (1 * bankerMultiple);
-                    }
-                } else {
-                    if (p0.getUserId() == room.getBankerId()) {//算分的庄
-                        if (p2.catchSix) {
-                            score0 -= (3 * bankerMultiple);
-                        } else if (p2.catchFive) {
-                            score0 -= (2 * bankerMultiple);
-                        } else if (p2.catchThree) {
-                            score0 -= (1 * bankerMultiple);
-                        }
-                    } else {
-                        if (p2.catchSix) {
-                            score0 -= 3;
-                        } else if (p2.catchFive) {
-                            score0 -= 2;
-                        } else if (p2.catchThree) {
-                            score0 -= 1;
-                        }
-                    }
-                }
-            }
-        }
-
-        //=======================score1分数计算=============================
-        //第一个人不够
-        if (p0.winCards.size() < 9) {
-            if (p1.getUserId() == room.getBankerId()) {
-                if (p1.catchSix) {
-                    score1 += (3 * bankerMultiple);
-                } else if (p1.catchFive) {
-                    score1 += (2 * bankerMultiple);
-                } else if (p1.catchThree) {
-                    score1 += (1 * bankerMultiple);
-                }
-            } else {
-                if (p1.catchSix) {
-                    score1 += 3;
-                } else if (p1.catchFive) {
-                    score1 += 2;
-                } else if (p1.catchThree) {
-                    score1 += 1;
-                }
-            }
-        }
-        //第三个人不够
-        if (p2.winCards.size() < 9) {
-            if (p1.getUserId() == room.getBankerId()) {
-                if (p1.catchSix) {
-                    score1 += (3 * bankerMultiple);
-                } else if (p1.catchFive) {
-                    score1 += (2 * bankerMultiple);
-                } else if (p1.catchThree) {
-                    score1 += (1 * bankerMultiple);
-                }
-            } else if (p2.getUserId() == room.getBankerId()) {
-                if (p0.catchSix) {
-                    score0 += (3 * bankerMultiple);
-                } else if (p0.catchFive) {
-                    score0 += (2 * bankerMultiple);
-                } else if (p0.catchThree) {
-                    score0 += (1 * bankerMultiple);
-                }
-            } else {
-                if (p1.catchSix) {
-                    score1 += 3;
-                } else if (p1.catchFive) {
-                    score1 += 2;
-                } else if (p1.catchThree) {
-                    score1 += 1;
-                }
-            }
-        }
-
-        //第二个人不够罗，减分
-        if (p1.winCards.size() < 9) {
-            if (bao1) {
-                if (p0.getUserId() == room.getBankerId()) {
-                    if (p0.catchSix) {
-                        score1 -= (6 * bankerMultiple);
-                    } else if (p0.catchFive) {
-                        score1 -= (4 * bankerMultiple);
-                    } else if (p0.catchThree) {
-                        score1 -= (2 * bankerMultiple);
-                    }
-                } else {
-                    if (p0.catchSix) {
-                        score1 -= 9;
-                    } else if (p0.catchFive) {
-                        score1 -= 6;
-                    } else if (p0.catchThree) {
-                        score1 -= 3;
-                    }
-                }
-                if (p2.getUserId() == room.getBankerId()) {
-                    if (p2.catchSix) {
-                        score1 -= (6 * bankerMultiple);
-                    } else if (p2.catchFive) {
-                        score1 -= (4 * bankerMultiple);
-                    } else if (p2.catchThree) {
-                        score1 -= (2 * bankerMultiple);
-                    }
-                } else {
-                    if (p2.catchSix) {
-                        score1 -= 9;
-                    } else if (p2.catchFive) {
-                        score1 -= 6;
-                    } else if (p2.catchThree) {
-                        score1 -= 3;
-                    }
-                }
-            } else {
-                if (p0.getUserId() == room.getBankerId()) {
-                    if (p0.catchSix) {
-                        score1 -= (3 * bankerMultiple);
-                    } else if (p0.catchFive) {
-                        score1 -= (2 * bankerMultiple);
-                    } else if (p0.catchThree) {
-                        score1 -= (1 * bankerMultiple);
-                    }
-                } else {
-                    if (p1.getUserId() == room.getBankerId()) {//算分的庄
-                        if (p0.catchSix) {
-                            score1 -= (3 * bankerMultiple);
-                        } else if (p0.catchFive) {
-                            score1 -= (2 * bankerMultiple);
-                        } else if (p0.catchThree) {
-                            score1 -= (1 * bankerMultiple);
-                        }
-                    } else {
-                        if (p0.catchSix) {
-                            score1 -= 3;
-                        } else if (p0.catchFive) {
-                            score1 -= 2;
-                        } else if (p0.catchThree) {
-                            score1 -= 1;
-                        }
-                    }
-                }
-                if (p2.getUserId() == room.getBankerId()) {
-                    if (p2.catchSix) {
-                        score1 -= (3 * bankerMultiple);
-                    } else if (p2.catchFive) {
-                        score1 -= (2 * bankerMultiple);
-                    } else if (p2.catchThree) {
-                        score1 -= (1 * bankerMultiple);
-                    }
-                } else {
-                    if (p1.getUserId() == room.getBankerId()) {//算分的庄
-                        if (p2.catchSix) {
-                            score1 -= (3 * bankerMultiple);
-                        } else if (p2.catchFive) {
-                            score1 -= (2 * bankerMultiple);
-                        } else if (p2.catchThree) {
-                            score1 -= (1 * bankerMultiple);
-                        }
-                    } else {
-                        if (p2.catchSix) {
-                            score1 -= 3;
-                        } else if (p2.catchFive) {
-                            score1 -= 2;
-                        } else if (p2.catchThree) {
-                            score1 -= 1;
-                        }
-                    }
-                }
-            }
-        }
-
-        score2 = -(score0 + score1);
-
-        if (bao2) {
-            if (score0 > 0) {
-                score1 = 0;
-                score2 = -score0;
-            } else if (score1 > 0) {
-                score0 = 0;
-                score2 = -score1;
-            }
-        }
-
-        roomXuanQiQi.addUserSocre(playerCardInfos.get(p0.getUserId()).getUserId(), score0);
-        roomXuanQiQi.addUserSocre(playerCardInfos.get(p1.getUserId()).getUserId(), score1);
-        roomXuanQiQi.addUserSocre(playerCardInfos.get(p2.getUserId()).getUserId(), score2);
-        playerCardInfos.get(p0.getUserId()).addScore(score0);
-        playerCardInfos.get(p1.getUserId()).addScore(score1);
-        playerCardInfos.get(p2.getUserId()).addScore(score2);
-
+        computeall();
         //算分：宣起
 
         for (XuanParam x : xuanList) {

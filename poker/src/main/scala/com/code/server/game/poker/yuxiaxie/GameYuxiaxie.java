@@ -4,9 +4,7 @@ import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by sunxianping on 2018-11-30.
@@ -21,6 +19,7 @@ public class GameYuxiaxie extends Game {
     private RoomYuxiaxie room;
     protected Map<Long, PlayerInfoYuxiaxie> playerCardInfos = new HashMap<>();
     private int state;
+    private List<Integer> dice = new ArrayList<>();
 
 
     /**
@@ -61,12 +60,45 @@ public class GameYuxiaxie extends Game {
 
     protected void betStart() {
         this.state = STATE_BET;
+        MsgSender.sendMsg2Player("gameService", "betStart", "ok",this.users);
     }
 
 
-    public int bet(long userId, int bet1, int bet2) {
+    public int bet(long userId, int index1, int num1, int index2, int num2) {
 
+        PlayerInfoYuxiaxie playerInfoYuxiaxie = playerCardInfos.get(userId);
+
+        playerInfoYuxiaxie.bet(index1, num1);
+        playerInfoYuxiaxie.bet(index2, num2);
+
+        MsgSender.sendMsg2Player("gameService", "betResp", playerInfoYuxiaxie.getBets(),this.users);
+        MsgSender.sendMsg2Player("gameService", "bet", "ok",userId);
        return 0;
+    }
+
+
+    public void crapStart(){
+        this.state = STATE_CRAP;
+        MsgSender.sendMsg2Player("gameService", "crapStart", "ok",this.users);
+    }
+
+
+    public int crap(long userId) {
+        this.state = STATE_CRAP;
+        Random random = new Random();
+        int num1 = random.nextInt(6);
+        int num2 = random.nextInt(6);
+        dice.add(num1);
+        dice.add(num2);
+
+        MsgSender.sendMsg2Player("gameService", "crapResp", dice,this.users);
+        MsgSender.sendMsg2Player("gameService", "crap", 0,userId);
+
+        return 0;
+    }
+
+    public void open() {
+
     }
 
     /**

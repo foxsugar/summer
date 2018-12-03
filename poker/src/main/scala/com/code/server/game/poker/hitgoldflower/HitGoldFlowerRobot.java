@@ -36,7 +36,7 @@ public class HitGoldFlowerRobot implements IRobot {
         if (r.getGame() != null) {
             GameHitGoldFlower game = (GameHitGoldFlower) r.getGame();
             //执行
-            if (now > game.lastOperateTime + r.time * 1000) {
+            if (r.time !=0 && now > game.lastOperateTime + r.time * 1000) {
 //                pass(game);
                 pass(game);
             }
