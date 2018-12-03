@@ -31,8 +31,8 @@ public class ClubRedisService implements IClubRedis, IConstant {
         return clubMoney.increment(getClubMoneyKey(clubId), "" + userId, money);
     }
 
-    public Map<String, Double> getMoneyMap(String clubId) {
-        HashOperations<String, String, Double> clubMoney = redisTemplate.opsForHash();
+    public Map<String, String> getMoneyMap(String clubId) {
+        HashOperations<String, String, String> clubMoney = redisTemplate.opsForHash();
         return clubMoney.entries(getClubMoneyKey(clubId));
     }
 

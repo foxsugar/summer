@@ -106,10 +106,10 @@ public class ClubManager {
      * @param club
      */
     private void redis2ClubMoney(Club club) {
-        Map<String, Double> money = RedisManager.getClubRedisService().getMoneyMap(club.getId());
+        Map<String, String> money = RedisManager.getClubRedisService().getMoneyMap(club.getId());
         club.getClubInfo().getMember().values().forEach(clubMember -> {
             if (money.containsKey("" + clubMember.getUserId())) {
-                clubMember.setMoney(money.get("" + clubMember.getUserId()));
+                clubMember.setMoney(Double.valueOf(money.get("" + clubMember.getUserId())));
             }
         });
     }

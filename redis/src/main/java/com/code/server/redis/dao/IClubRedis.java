@@ -11,7 +11,7 @@ public interface IClubRedis {
 
     double addClubUserMoney(String clubId, long userId, double money);
 
-    Map<String, Double> getMoneyMap(String clubId);
+    Map<String, String> getMoneyMap(String clubId);
 
     long getUserMoneyCount(String clubId);
 
