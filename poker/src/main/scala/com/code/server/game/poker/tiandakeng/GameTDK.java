@@ -51,6 +51,10 @@ public class GameTDK extends Game {
     static final int model_喜分_5 = 24;
     static final int model_喜分_10 = 25;
 
+    static final int model_喜分_1 = 26;
+    static final int model_喜分_2 = 27;
+    static final int model_喜分_3 = 28;
+
 
     static final int STATE_DEAL = 0;
     static final int STATE_BET = 1;
@@ -189,7 +193,7 @@ public class GameTDK extends Game {
 
         if (this.room.getShamelessUser() != 0) {
             dealProxy();
-        }else{
+        } else {
 
             //每人发三张牌
             for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
@@ -214,7 +218,7 @@ public class GameTDK extends Game {
     }
 
 
-    protected void dealProxy(){
+    protected void dealProxy() {
         if (this.room.getShamelessUser() != 0) {
             List<Integer> list = new ArrayList<>();
             list.add(1);
@@ -233,13 +237,13 @@ public class GameTDK extends Game {
             shameless.deal(card + 1, false);
             shameless.deal(card + 2, false);
 
-            this.cards.remove((Integer)card);
-            this.cards.remove((Integer)(card + 1));
-            this.cards.remove((Integer)(card + 2));
+            this.cards.remove((Integer) card);
+            this.cards.remove((Integer) (card + 1));
+            this.cards.remove((Integer) (card + 2));
 
 
             for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
-                if(playerInfoTDK.getUserId() == this.room.getShamelessUser()) continue;
+                if (playerInfoTDK.getUserId() == this.room.getShamelessUser()) continue;
                 playerInfoTDK.deal(cards.remove(0), false);
                 playerInfoTDK.deal(cards.remove(0), false);
                 playerInfoTDK.deal(cards.remove(0), false);
@@ -248,7 +252,6 @@ public class GameTDK extends Game {
             this.room.setShamelessUser(0);
         }
     }
-
 
 
     /**
@@ -429,7 +432,7 @@ public class GameTDK extends Game {
         return 0;
     }
 
-    public int huanpaixialiu(long userId,int huanpai) {
+    public int huanpaixialiu(long userId, int huanpai) {
 
         this.room.setShamelessUser(userId);
         this.room.setHuanpai(huanpai);
@@ -952,9 +955,10 @@ public class GameTDK extends Game {
         int xifenNum = 0;
         for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
             //是否有喜分
-            if (playerInfoTDK.isHasXifen(isHasMode(model_公张随豹))) {
-                xifenNum += 1;
-            }
+//            if (playerInfoTDK.isHasXifen(isHasMode(model_公张随豹))) {
+//                xifenNum += 1;
+//            }
+            xifenNum += getCommonXifen() * playerInfoTDK.isHasXifen(isHasMode(model_公张随豹));
 
             if (playerInfoTDK.getUserId() == winnerId) continue;
             playerInfoTDK.setScore(-playerInfoTDK.getAllBet());
@@ -962,7 +966,7 @@ public class GameTDK extends Game {
             allScore += playerInfoTDK.getAllBet();
         }
         if (xifenNum >= 1) {
-            this.room.addNoComputeXifen(getXifen());
+            this.room.addNoComputeXifen(xifenNum);
         }
         //赢得人加分
         PlayerInfoTDK winnerUser = playerCardInfos.get(winnerId);
@@ -1109,6 +1113,19 @@ public class GameTDK extends Game {
             result += 10;
         }
         return result;
+    }
+
+    private int getCommonXifen() {
+        if (isHasMode(model_喜分_1)) {
+            return 1;
+        }
+        if (isHasMode(model_喜分_2)) {
+            return 2;
+        }
+        if (isHasMode(model_喜分_3)) {
+            return 3;
+        }
+        return 0;
     }
 
     @Override

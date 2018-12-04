@@ -115,4 +115,13 @@ public class GameInfoFanshi extends GameInfoNew {
 
 
 
+    /**
+     * 设置庄家
+     *
+     * @param winnerId
+     */
+    public void setBanker(long winnerId) {
+        room.setBankerId(winnerId);
+    }
+
 }

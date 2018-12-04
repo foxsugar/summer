@@ -14,6 +14,8 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
     protected static final int MODE_BANKER_2 = 1;
     protected static final int MODE_BANKER_3 = 2;
     protected static final int MODE_BANKER_4 = 3;
+    protected static final int MODE_NO_FENG = 4;
+    protected static final int MODE_ANTING = 5;
 
 //    /**
 //     * 是否荒庄
@@ -25,7 +27,7 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
 //
 //        int remainSize = 12;
 //        int gangSize = this.gameInfo.getAllGangNum();
-//        remainSize += gangSize * 2;
+//        remainSize += gangSize * 2
 //        remainSize = remainSize >= 18 ? 18 : remainSize;
 //        return gameInfo.getRemainCards().size() <= remainSize;
 //    }
@@ -283,7 +285,11 @@ public class PlayerCardsInfoNiuyezi extends PlayerCardsInfoHM {
     public void ting(String card) {
         //出牌 弃牌置为空(客户端扣牌)
         this.cards.remove(card);
-        this.disCards.add(card);
+        if (this.roomInfo.isHasMode(MODE_ANTING)) {
+            this.disCards.add(null);
+        }else{
+            this.disCards.add(card);
+        }
         this.isTing = true;
         tingSet = getTingCardType(cards, null);
         this.lastOperate = type_ting;

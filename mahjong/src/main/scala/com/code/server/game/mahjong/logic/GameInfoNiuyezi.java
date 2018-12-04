@@ -25,8 +25,12 @@ public class GameInfoNiuyezi extends GameInfo {
         this.firstTurn = firstTurn;
         this.turnId = firstTurn;
         remainCards.addAll(CardTypeUtil.ALL_CARD);
-        this.users.addAll(users);
         this.room = room;
+        if (this.room.isHasMode(PlayerCardsInfoNiuyezi.MODE_NO_FENG)) {
+            remainCards.removeAll(CardTypeUtil.FENG_CARD);
+            remainCards.removeAll(CardTypeUtil.ZI_CARD);
+        }
+        this.users.addAll(users);
         this.cardSize = 13;
         this.playerSize = room.getPersonNumber();
         fapai();
@@ -146,13 +150,14 @@ public class GameInfoNiuyezi extends GameInfo {
 
                 //其他玩家的处理 碰杠等 如果有加入等待列表(要等待这些玩家"过")
                 if (userId != entry.getKey()) {
+                    boolean isMingting = !this.room.isHasMode(PlayerCardsInfoNiuyezi.MODE_ANTING);
                     //通知其他玩家出了什么牌 自己能有什么操作
                     PlayerCardsInfoMj playerInfo = entry.getValue();
-                    boolean isCanGang = playerInfo.isCanGangAddThisCard(card);
-                    boolean isCanPeng = playerInfo.isCanPengAddThisCard(card);
+                    boolean isCanGang = isMingting && playerInfo.isCanGangAddThisCard(card) ;
+                    boolean isCanPeng = isMingting && playerInfo.isCanPengAddThisCard(card) ;
                     boolean isCanHu;
 
-                    isCanHu = playerInfo.isCanHu_dianpao(card);
+                    isCanHu = isMingting && playerInfo.isCanHu_dianpao(card);
 
 
                     boolean isCanChi = playerInfo.isHasChi(card);

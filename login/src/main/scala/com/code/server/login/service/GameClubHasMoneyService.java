@@ -92,6 +92,33 @@ public class GameClubHasMoneyService {
     }
 
 
+    /**
+     * 删除代理
+     * @param msgKey
+     * @param clubId
+     * @param userId
+     * @param partnerId
+     * @return
+     */
+    public int removePartner(KafkaMsgKey msgKey, String clubId, long userId, long partnerId){
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+
+        club.getClubInfo().getPartner().remove(partnerId);
+
+        //删掉玩家身上的referee
+        for (ClubMember clubMember : club.getClubInfo().getMember().values()) {
+            if (clubMember.getReferrer() == partnerId) {
+                clubMember.setReferrer(0);
+            }
+        }
+
+        sendMsg(msgKey, new ResponseVo("clubService", "removePartner", "ok"));
+        return 0;
+    }
+
     public int changePartner(KafkaMsgKey msgKey, String clubId, long userId, long newPartner, long changeUser){
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {

@@ -108,20 +108,23 @@ public class PlayerInfoTDK extends PlayerCardInfo{
      * @param isGongZhuangSuiBao
      * @return
      */
-    public boolean isHasXifen(boolean isGongZhuangSuiBao){
+    public int isHasXifen(boolean isGongZhuangSuiBao){
         List<Integer> cardList = new ArrayList<>();
         cardList.addAll(cards);
         if (isGongZhuangSuiBao && commonCard != 0) {
             cardList.add(commonCard);
         }
-        boolean flag = false;
+        int result = 0;
         if(CardUtil.hasBaozi(cardList)){
-            flag = true;
+            result++;
         }
         if(CardUtil.hasSiTiao(cardList)){
-            flag = true;
+            result++;
         }
-        return flag;
+        if (CardUtil.hasShuangWang(cardList)) {
+            result++;
+        }
+        return result;
     }
 
     public int getLastCardScore(boolean isABiPao) {

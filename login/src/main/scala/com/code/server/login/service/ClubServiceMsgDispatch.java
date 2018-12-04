@@ -224,6 +224,10 @@ public class ClubServiceMsgDispatch {
                 return gameClubHasMoneyService.setPartner(msgKey, clubId, userId, partnerId);
             }
 
+            case "removePartner":{
+                long partnerId = params.path("partnerId").asLong();
+                return gameClubHasMoneyService.removePartner(msgKey, clubId, userId, partnerId);
+            }
             case "changePartner":{
                 long newPartner = params.path("newPartner").asLong();
                 long changeUser = params.path("changeUser").asLong();
