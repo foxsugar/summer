@@ -17,9 +17,12 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 //        specialHuScore.put(hu_清一色,2);
         specialHuScore.put(hu_吊将, 1);
 
-        specialHuScore.remove(hu_七小对);
-        specialHuScore.remove(hu_豪华七小对);
-        specialHuScore.remove(hu_双豪七小对_山西);
+        if (isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_不带七小对)) {
+
+            specialHuScore.remove(hu_七小对);
+            specialHuScore.remove(hu_豪华七小对);
+            specialHuScore.remove(hu_双豪七小对_山西);
+        }
 //        specialHuScore.put(hu_七小对, 1);
 //        specialHuScore.put(hu_豪华七小对, 1);
 

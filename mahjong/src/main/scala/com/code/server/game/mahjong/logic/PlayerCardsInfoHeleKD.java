@@ -137,14 +137,19 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
         int chiPengGangNum = getChiPengGangNum();
         List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), chiPengGangNum, this.gameInfo.hun, lastCard);
         int maxPoint = 0;
+        HuCardType hct = null;
         for (HuCardType huCardType : huList) {
 
             int temp = getMaxPoint(huCardType, !isZimo);
             if(temp > maxPoint){
                 maxPoint = temp;
+                hct = huCardType;
             }
 
         }
+
+        setWinTypeResult(hct);
+
         boolean bankerIsZhuang = this.userId == this.gameInfo.getFirstTurn();
 
         //显庄 并且 赢得人是庄家

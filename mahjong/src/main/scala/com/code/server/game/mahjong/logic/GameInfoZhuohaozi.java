@@ -23,6 +23,8 @@ public class GameInfoZhuohaozi extends GameInfoNew {
     public static final int mode_明听 = 10;
     public static final int mode_大包 = 11;
     public static final int mode_不带耗子 = 12;
+    public static final int mode_不带七小对 = 13;
+
 
     /**
      * 初始化方法
