@@ -113,10 +113,10 @@ public class CardUtil {
     protected static int getCardScore(int card, boolean isABiPao) {
         int cardType = getCardType(card);
         if (card == 54) {
-            return isABiPao?16:18;
+            return isABiPao?14:16;
         }
         if (card == 53) {
-            return 16;
+            return 14;
         }
         if (cardType == 1) {
             return 15;
