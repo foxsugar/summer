@@ -1,18 +1,28 @@
 package com.code.server.game.poker.yuxiaxie;
 
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.game.RoomRecord;
+import com.code.server.constant.game.UserBean;
+import com.code.server.constant.game.UserRecord;
+import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.service.PokerGoldRoom;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
+import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2018-11-30.
@@ -28,6 +38,9 @@ public class RoomYuxiaxie extends PokerGoldRoom {
     private int baozi;
     //挪次数
     private int nuo;
+
+    List<List<Integer>> diceHistory = new ArrayList<>();
+
 
     public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType,
                                  boolean isAA, boolean isJoin, boolean showChat, int personNum,
@@ -81,9 +94,57 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         IdWorker idWorker = new IdWorker(serverConfig.getServerId(), 0);
         room.setUuid(idWorker.nextId());
 
-        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createTDKRoom", room.toVo(userId)), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createYXXRoom", room.toVo(userId)), userId);
         return 0;
     }
+
+
+    private long getWinner(){
+        double score = 0;
+        long uid = 0;
+        for (Map.Entry<Long, Double> entry : userScores.entrySet()) {
+            if (entry.getKey() != this.bankerId) {
+                if (entry.getValue() > score) {
+                    score = entry.getValue();
+                    uid = entry.getKey();
+                }
+            }
+        }
+        return uid;
+    }
+
+    public void genRoomRecord() {
+        if (!isOpen) return;
+        RoomRecord roomRecord = new RoomRecord();
+        roomRecord.setRoomId(this.roomId);
+        roomRecord.setId(this.getUuid());
+        roomRecord.setType(this.roomType);
+        roomRecord.setTime(System.currentTimeMillis());
+        roomRecord.setClubId(clubId);
+        roomRecord.setClubRoomModel(clubRoomModel);
+        roomRecord.setGameType(gameType);
+        roomRecord.setCurGameNum(this.curGameNumber);
+        roomRecord.setAllGameNum(this.gameNumber);
+        //winner
+        roomRecord.setWinnerId(getWinner());
+
+        this.userScores.forEach((key, value) -> {
+            UserRecord userRecord = new UserRecord();
+            userRecord.setScore(value);
+            userRecord.setUserId(key);
+            UserBean userBean = RedisManager.getUserRedisService().getUserBean(key);
+            if (userBean != null) {
+                userRecord.setName(userBean.getUsername());
+            }
+            roomRecord.getRecords().add(userRecord);
+        });
+
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ROOM_RECORD);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord);
+
+    }
+
 
     public int getDanya() {
         return danya;
@@ -118,6 +179,15 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
     public RoomYuxiaxie setNuo(int nuo) {
         this.nuo = nuo;
+        return this;
+    }
+
+    public List<List<Integer>> getDiceHistory() {
+        return diceHistory;
+    }
+
+    public RoomYuxiaxie setDiceHistory(List<List<Integer>> diceHistory) {
+        this.diceHistory = diceHistory;
         return this;
     }
 }

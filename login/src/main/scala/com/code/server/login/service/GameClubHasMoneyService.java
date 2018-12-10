@@ -2,18 +2,11 @@ package com.code.server.login.service;
 
 import com.code.server.constant.club.ClubMember;
 import com.code.server.constant.club.UpScoreItem;
-import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
-import com.code.server.db.Service.ClubChargeService;
-import com.code.server.db.Service.ClubRecordService;
-import com.code.server.db.Service.ClubService;
-import com.code.server.db.Service.UserService;
 import com.code.server.db.model.Club;
-import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,23 +17,9 @@ import java.util.List;
  * Created by sunxianping on 2018-11-28.
  */
 @Service
-public class GameClubHasMoneyService {
+public class GameClubHasMoneyService extends GameClubService{
 
 
-    @Autowired
-    private ClubService clubService;
-
-    @Autowired
-    private MsgProducer kafkaMsgProducer;
-
-    @Autowired
-    private ClubRecordService clubRecordService;
-
-    @Autowired
-    private ClubChargeService clubChargeService;
-
-    @Autowired
-    private UserService userService;
 
 
 
@@ -168,13 +147,4 @@ public class GameClubHasMoneyService {
 
 
 
-    /**
-     * 发送消息
-     *
-     * @param msgKey
-     * @param msg
-     */
-    private void sendMsg(KafkaMsgKey msgKey, Object msg) {
-        kafkaMsgProducer.send2Partition(IKafaTopic.GATE_TOPIC, msgKey.getPartition(), "" + msgKey.getUserId(), msg);
-    }
 }

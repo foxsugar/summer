@@ -1,8 +1,10 @@
 package com.code.server.game.poker.yuxiaxie;
 
+import com.code.server.constant.response.IfaceGameVo;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
+import org.springframework.beans.BeanUtils;
 
 import java.util.*;
 
@@ -54,7 +56,9 @@ public class GameYuxiaxie extends Game {
         this.users.addAll(users);
 
 
-        betStart();
+//        betStart();
+
+        crapStart();
     }
 
 
@@ -64,12 +68,19 @@ public class GameYuxiaxie extends Game {
     }
 
 
-    public int bet(long userId, int index1, int num1, int index2, int num2) {
+    /**
+     * 下注
+     * @param userId
+     * @param index1
+     * @param index2
+     * @param num
+     * @return
+     */
+    public int bet(long userId,int type, int index1,  int index2, int num) {
 
         PlayerInfoYuxiaxie playerInfoYuxiaxie = playerCardInfos.get(userId);
 
-        playerInfoYuxiaxie.bet(index1, num1);
-        playerInfoYuxiaxie.bet(index2, num2);
+        playerInfoYuxiaxie.bet(type, index1, index2, num);
 
         MsgSender.sendMsg2Player("gameService", "betResp", playerInfoYuxiaxie.getBets(),this.users);
         MsgSender.sendMsg2Player("gameService", "bet", "ok",userId);
@@ -83,6 +94,11 @@ public class GameYuxiaxie extends Game {
     }
 
 
+    /**
+     * 摇色子
+     * @param userId
+     * @return
+     */
     public int crap(long userId) {
         this.state = STATE_CRAP;
         Random random = new Random();
@@ -94,10 +110,20 @@ public class GameYuxiaxie extends Game {
         MsgSender.sendMsg2Player("gameService", "crapResp", dice,this.users);
         MsgSender.sendMsg2Player("gameService", "crap", 0,userId);
 
+        //开始下注
+        betStart();
+
         return 0;
     }
 
+    /**
+     * 开局
+     */
     public void open() {
+        //开局
+        this.state = STATE_OPEN;
+
+
 
     }
 
@@ -109,5 +135,19 @@ public class GameYuxiaxie extends Game {
      */
     boolean isHasMode(int mode) {
         return Room.isHasMode(mode, this.room.getOtherMode());
+    }
+
+
+
+
+    @Override
+    public IfaceGameVo toVo(long watchUser) {
+        GameYuxiaxieVo game = new GameYuxiaxieVo();
+        BeanUtils.copyProperties(this, game);
+
+        for (PlayerInfoYuxiaxie playerInfo : this.playerCardInfos.values()) {
+            game.getPlayerCardInfos().put(playerInfo.getUserId(), (PlayerInfoYuxiaxieVo) playerInfo.toVo(watchUser));
+        }
+        return game;
     }
 }

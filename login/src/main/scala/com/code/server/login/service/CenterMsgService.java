@@ -213,9 +213,13 @@ public class CenterMsgService implements IkafkaMsgId {
                         clubMember.getStatistics().put(date, clubStatistics);
                         clubStatistics.setAllScore(clubStatistics.getAllScore() + userRecord.getScore());
                         clubStatistics.setOpenNum(clubStatistics.getOpenNum() + 1);
+
                         //删除50天前数据
                         clubMember.getStatistics().remove(dateBefore50);
 
+                        //设置总统计
+                        clubMember.getAllStatistics().setOpenNum(clubMember.getAllStatistics().getOpenNum() + 1);
+                        clubMember.getAllStatistics().setAllScore(clubMember.getAllStatistics().getAllScore() + userRecord.getScore());
                     }
 
                 }

@@ -204,7 +204,7 @@ public class Room implements IfaceRoom {
         ResponseVo responseVo = new ResponseVo("clubService", "clubDrawBack", msg);
         msgProducer.send("clubService", kafkaKey, responseVo);
 
-        removeClubInstance();
+//        removeClubInstance();
     }
 
     /**

@@ -20,6 +20,7 @@ public class RoomRecord {
     String mode;
     int curGameNum;
     int allGameNum;
+    long winnerId;
 
     public void addRecord(UserRecord userRecord) {
         records.add(userRecord);
@@ -139,6 +140,15 @@ public class RoomRecord {
 
     public RoomRecord setAllGameNum(int allGameNum) {
         this.allGameNum = allGameNum;
+        return this;
+    }
+
+    public long getWinnerId() {
+        return winnerId;
+    }
+
+    public RoomRecord setWinnerId(long winnerId) {
+        this.winnerId = winnerId;
         return this;
     }
 }

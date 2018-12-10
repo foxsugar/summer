@@ -356,6 +356,7 @@ public class GameInfo extends Game {
                 ("THREEA2".equals(gameType) && "2".equals(modeTotal)) ||
                 ("THREEA3".equals(gameType) && "2".equals(modeTotal)) ||
                 "SS".equals(gameType) ||
+                "SS3".equals(gameType) ||
                 "HS".equals(gameType)||
                 "KXHY".equals(gameType)||
                 "KXZHZ".equals(gameType)||
@@ -363,6 +364,8 @@ public class GameInfo extends Game {
                 "HONGZHONG".equals(gameType)||
                 "HONGZHONG2".equals(gameType)||
                 "HONGZHONG3".equals(gameType)||
+                "HONGZHONGSS".equals(gameType)||
+                "HONGZHONGSS3".equals(gameType)||
                 "FANSHI".equals(gameType)||
                 "KXKD".equals(gameType);
     }

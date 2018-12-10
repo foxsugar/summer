@@ -43,6 +43,13 @@ public class ClubServiceMsgDispatch {
 
 
     private int dispatchUserService(KafkaMsgKey msgKey, String method, JsonNode params, JsonNode allParams) {
+        //todo 放开
+//        boolean hasClubMoney = SpringUtil.getBean(ServerConfig.class).getHasClubMoney() == 1;
+//        if (hasClubMoney) {
+//            gameClubService = SpringUtil.getBean(GameClubHasMoneyService.class);
+//        }else{
+//            gameClubService = SpringUtil.getBean(GameClubService.class);
+//        }
         long userId = msgKey.getUserId();
         String clubId = params.path("clubId").asText();
         switch (method) {

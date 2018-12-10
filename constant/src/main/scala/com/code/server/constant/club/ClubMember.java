@@ -20,6 +20,8 @@ public class ClubMember {
     private double money;
     //推荐人
     private long referrer;
+    //统计总和
+    private ClubStatistics allStatistics = new ClubStatistics();
 
     public long getUserId() {
         return userId;
@@ -117,6 +119,15 @@ public class ClubMember {
 
     public ClubMember setReferrer(long referrer) {
         this.referrer = referrer;
+        return this;
+    }
+
+    public ClubStatistics getAllStatistics() {
+        return allStatistics;
+    }
+
+    public ClubMember setAllStatistics(ClubStatistics allStatistics) {
+        this.allStatistics = allStatistics;
         return this;
     }
 }

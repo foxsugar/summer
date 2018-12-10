@@ -54,19 +54,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class GameClubService {
 
     @Autowired
-    private ClubService clubService;
+    ClubService clubService;
 
     @Autowired
-    private MsgProducer kafkaMsgProducer;
+    MsgProducer kafkaMsgProducer;
 
     @Autowired
-    private ClubRecordService clubRecordService;
+    ClubRecordService clubRecordService;
 
     @Autowired
-    private ClubChargeService clubChargeService;
+    ClubChargeService clubChargeService;
 
     @Autowired
-    private UserService userService;
+    UserService userService;
 
     /**
      * 查看俱乐部
@@ -1008,11 +1008,15 @@ public class GameClubService {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club != null) {
             synchronized (club.lock) {
-                //加入已开房间
-                addPlayingRoom(club, club.getClubInfo().getRoomInstance().get(clubModelId));
-                //删除一个房间
-                club.getClubInfo().getRoomInstance().remove(clubModelId);
-                //统计
+                RoomInstance roomInstance = club.getClubInfo().getRoomInstance().get(clubModelId);
+                if (roomInstance.getRoomId().equals(roomId)) {
+
+                    //加入已开房间
+                    addPlayingRoom(club, roomInstance);
+                    //删除一个房间
+                    club.getClubInfo().getRoomInstance().remove(clubModelId);
+                    //统计
+                }
 
                 RoomModel roomModel = getRoomModel(club, clubModelId);
                 if (roomModel != null) {
@@ -1089,6 +1093,7 @@ public class GameClubService {
             RequestConfig requestConfig = RequestConfig.custom()
                     .setConnectTimeout(5000).setConnectionRequestTimeout(5000)
                     .setSocketTimeout(5000).build();
+
 
             String url1 = "http://long7.l7jqr.com/RoomResult_club_info.php?strContext=" + json;
 
@@ -1530,7 +1535,7 @@ public class GameClubService {
      * @param msgKey
      * @param msg
      */
-    private void sendMsg(KafkaMsgKey msgKey, Object msg) {
+    void sendMsg(KafkaMsgKey msgKey, Object msg) {
         kafkaMsgProducer.send2Partition(IKafaTopic.GATE_TOPIC, msgKey.getPartition(), "" + msgKey.getUserId(), msg);
     }
 

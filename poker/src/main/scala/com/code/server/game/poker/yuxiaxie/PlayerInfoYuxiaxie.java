@@ -16,16 +16,13 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
     private Map<Integer, Integer> bets = new HashMap<>();
 
 
-    public void bet(int index, int num) {
-        bets.put(index, bets.getOrDefault(index, 0) + num);
+
+    public void bet(int type, int index1, int index2, int num) {
+        this.bet = new Bet(type, index1, index2, num);
     }
 
 
 
-    class Bet{
-        int bet1;
-        int bet2;
-    }
 
 
     public Map<Integer, Integer> getBets() {

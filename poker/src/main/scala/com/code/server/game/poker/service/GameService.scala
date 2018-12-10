@@ -12,6 +12,7 @@ import com.code.server.game.poker.pullmice.GamePullMice
 import com.code.server.game.poker.tiandakeng.GameTDK
 import com.code.server.game.poker.tuitongzi.GameTuiTongZi
 import com.code.server.game.poker.xuanqiqi.GameXuanQiQi
+import com.code.server.game.poker.yuxiaxie.GameYuxiaxie
 import com.code.server.game.poker.zhaguzi.{GameBaseYSZ, GameWzq, GameYSZ, GameZhaGuZi}
 import com.code.server.game.room.IfaceGame
 import com.code.server.game.room.service.RoomManager
@@ -40,6 +41,7 @@ object GameService {
       case x:GameXuanQiQi =>dispatchGameXQQService(userId,method,game.asInstanceOf[GameXuanQiQi],params)
       case x:GamePlaySeven =>dispatchGamePlaySevenService(userId,method,game.asInstanceOf[GamePlaySeven],params)
       case x:GameTDK => dispatchGameTDKService(userId, method, game.asInstanceOf[GameTDK], params)
+      case x:GameYuxiaxie => dispatchGameYXXService(userId, method, game.asInstanceOf[GameYuxiaxie], params)
 
     }
   }
@@ -382,6 +384,23 @@ object GameService {
     case "huanpaixialiu"=>
       val huanpai = params.path("huanpaiType").asInt()
       game.huanpaixialiu(userId, huanpai)
+    case _ =>
+      ErrorCode.REQUEST_PARAM_ERROR
+  }
+
+  private def dispatchGameYXXService(userId:Long, method:String, game:GameYuxiaxie, params:JsonNode):Int = method match{
+    case "crap"=>
+      game.crap(userId);
+
+    case "bet" =>
+      val betType = params.path("type").asInt(0)
+      val index1 = params.path("index1").asInt(0)
+      val index2 = params.path("index2").asInt(0)
+      val num = params.path("num").asInt(0)
+      game.bet(userId,betType, index1, index2, num)
+
+
+
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

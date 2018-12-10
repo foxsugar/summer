@@ -163,6 +163,7 @@ public class RoomInfo extends RoomInfoExtendGold {
             case "JC"://进城麻将
                 return new GameInfoJinCheng().setHasJieGangHu(true);
             case "SS"://盛世麻将
+            case "SS3"://盛世麻将
                 return new GameInfoShengShi().setHasJieGangHu(true);
             case "124"://进城124麻将
                 return new GameInfoJinCheng124().setHasJieGangHu(true);
@@ -215,6 +216,8 @@ public class RoomInfo extends RoomInfoExtendGold {
             case "HONGZHONG":
             case "HONGZHONG2":
             case "HONGZHONG3":
+            case "HONGZHONGSS3":
+            case "HONGZHONGSS":
                 return new GameInfoHongZhong();
             case "DINGSHENG":
             case "ACE":
@@ -256,6 +259,9 @@ public class RoomInfo extends RoomInfoExtendGold {
 
         if (this.gameType.equals("LQ2")) {
             this.gameType = "LQ";
+        }
+        if (this.gameType.equals("SS3")) {
+            this.gameType = "SS";
         }
 
         if (!isOpen && isCreaterJoin) {

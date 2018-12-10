@@ -696,13 +696,18 @@ public class GameHitGoldFlower extends Game {
      * 发牌
      */
     protected void deal() {
-        for (PlayerCardInfoHitGoldFlower playerCardInfo : playerCardInfos.values()) {
+
+
             for (int i = 0; i < INIT_CARD_NUM; i++) {
-                playerCardInfo.handcards.add(cards.remove(0));
+
+                for (PlayerCardInfoHitGoldFlower playerCardInfo : playerCardInfos.values()) {
+                    playerCardInfo.handcards.add(cards.remove(0));
+                    if (i == INIT_CARD_NUM - 1) {
+                        MsgSender.sendMsg2Player(new ResponseVo("gameService", "deal", playerCardInfo.handcards), playerCardInfo.userId);
+                    }
+                }
             }
-            //通知发牌
-            MsgSender.sendMsg2Player(new ResponseVo("gameService", "deal", playerCardInfo.handcards), playerCardInfo.userId);
-        }
+        //通知发牌
 
         //底牌
         leaveCards.addAll(cards);
