@@ -695,10 +695,11 @@ public class RoomYSZ extends RoomExtendGold {
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.game != null) {
             Map<Long,Double> userScoresTemp = new HashMap<>();
-            GameBaseYSZ gameTemp = (GameBaseYSZ)this.getGame();
+            GameBaseYSZ gameTemp = (GameBaseYSZ)this.getGame();//暂时这样写
             if(gameTemp!=null){
                 for (Long l: gameTemp.getPlayerCardInfos().keySet()){
-                    userScoresTemp.put(l,this.userScores.get(l)-gameTemp.getPlayerCardInfos().get(l).getAllScore());
+//                    userScoresTemp.put(l,gameTemp.startUserScores.get(l)-gameTemp.getPlayerCardInfos().get(l).getAllScore());
+                    userScoresTemp.put(l, this.userScores.get(l));
                 }
             }
             roomVo.setUserScores(userScoresTemp);
