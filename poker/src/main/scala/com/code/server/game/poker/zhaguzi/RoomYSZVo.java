@@ -7,7 +7,6 @@ import com.code.server.constant.response.RoomVo;
  */
 public class RoomYSZVo extends RoomVo{
 
-    public long bankerId = 0;
     protected double caiFen;
     protected int menPai;
     protected int cricleNumber;
@@ -15,14 +14,7 @@ public class RoomYSZVo extends RoomVo{
     protected long timerTick;
     protected long leaveSecond;
 
-    public long getBankerId() {
-        return bankerId;
-    }
 
-    public RoomYSZVo setBankerId(long bankerId) {
-        this.bankerId = bankerId;
-        return this;
-    }
 
     public double getCaiFen() {
         return caiFen;

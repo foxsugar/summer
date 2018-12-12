@@ -16,6 +16,7 @@ public class RoomVo implements IfaceRoomVo {
     public int multiple;//倍数
     public int gameNumber;
     public long createUser;
+    public long bankerId;
     public IfaceGameVo game;
     public int curGameNumber;
     public int createType;
@@ -349,6 +350,15 @@ public class RoomVo implements IfaceRoomVo {
 
     public RoomVo setWatchUser(List<Long> watchUser) {
         this.watchUser = watchUser;
+        return this;
+    }
+
+    public long getBankerId() {
+        return bankerId;
+    }
+
+    public RoomVo setBankerId(long bankerId) {
+        this.bankerId = bankerId;
         return this;
     }
 }

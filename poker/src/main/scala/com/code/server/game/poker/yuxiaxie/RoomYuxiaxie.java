@@ -7,6 +7,7 @@ import com.code.server.constant.game.UserRecord;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
+import com.code.server.constant.response.IfaceRoomVo;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.service.PokerGoldRoom;
@@ -19,8 +20,10 @@ import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
+import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,10 +39,14 @@ public class RoomYuxiaxie extends PokerGoldRoom {
     private int chuanlian;
     //豹子限分
     private int baozi;
+
+
     //挪次数
     private int nuo;
 
     List<List<Integer>> diceHistory = new ArrayList<>();
+
+    Map<Long, Map<Integer,Bet>> betHistory = new HashMap<>();
 
 
     public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType,
@@ -67,6 +74,14 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         room.setClubRoomModel(clubRoomModel);
         room.init(gameNumber, multiple);
 
+        if (room.isClubRoom()) {
+            room.setBankerId(0);
+        }
+
+        room.setDanya(danya);
+        room.setBaozi(baozi);
+        room.setChuanlian(chuanlian);
+        room.setNuo(nuo);
 
         int code = room.joinRoom(userId, isJoin);
         if (code != 0) {
@@ -113,6 +128,17 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         return uid;
     }
 
+
+    public int getYXXDiceHistory(long userId){
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "getYXXDiceHistory", diceHistory), userId);
+        return 0;
+    }
+
+    public int getYXXBetHistory(long userId){
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "getYXXBetHistory", this.betHistory.get(userId)), userId);
+        return 0;
+    }
+
     public void genRoomRecord() {
         if (!isOpen) return;
         RoomRecord roomRecord = new RoomRecord();
@@ -145,6 +171,33 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
     }
 
+
+    @Override
+    public void addUserSocre(long userId, double score) {
+        super.addUserSocre(userId, score);
+        //todo 俱乐部房间 加减俱乐部分数
+        if (isClubRoom()) {
+            RedisManager.getClubRedisService().addClubUserMoney(this.clubId, userId, score);
+        }
+    }
+
+    @Override
+    public IfaceRoomVo toVo(long userId) {
+        RoomYuxiaxieVo roomVo = new RoomYuxiaxieVo();
+        BeanUtils.copyProperties(this, roomVo);
+        RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
+        if (this.game != null) {
+            roomVo.game = this.game.toVo(userId);
+        }
+        if (this.getTimerNode() != null) {
+            long time = this.getTimerNode().getStart() + this.getTimerNode().getInterval() - System.currentTimeMillis();
+            roomVo.setRemainTime(time);
+        }
+        if (users.size() > 0) {
+            roomVo.setCanStartUserId(users.get(0));
+        }
+        return roomVo;
+    }
 
     public int getDanya() {
         return danya;
@@ -188,6 +241,15 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
     public RoomYuxiaxie setDiceHistory(List<List<Integer>> diceHistory) {
         this.diceHistory = diceHistory;
+        return this;
+    }
+
+    public Map<Long, Map<Integer, Bet>> getBetHistory() {
+        return betHistory;
+    }
+
+    public RoomYuxiaxie setBetHistory(Map<Long, Map<Integer, Bet>> betHistory) {
+        this.betHistory = betHistory;
         return this;
     }
 }

@@ -5,6 +5,9 @@ package com.code.server.game.poker.yuxiaxie;
  */
 public class Bet {
 
+    static final int TYPE_DANYA = 0;
+    static final int TYPE_BAOZI = 1;
+    static final int TYPE_CHUANLIAN = 2;
     int type;
     int index1;
     int index2;

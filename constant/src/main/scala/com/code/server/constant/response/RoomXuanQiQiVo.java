@@ -14,16 +14,8 @@ package com.code.server.constant.response;
  */
 public class RoomXuanQiQiVo  extends RoomVo {
 
-    public long bankerId = 0;
     protected int cricleNumber;//轮数
 
-    public long getBankerId() {
-        return bankerId;
-    }
-
-    public void setBankerId(long bankerId) {
-        this.bankerId = bankerId;
-    }
 
     public int getCricleNumber() {
         return cricleNumber;

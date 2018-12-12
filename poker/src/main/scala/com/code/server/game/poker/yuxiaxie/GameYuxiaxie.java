@@ -82,7 +82,13 @@ public class GameYuxiaxie extends Game {
 
         playerInfoYuxiaxie.bet(type, index1, index2, num);
 
-        MsgSender.sendMsg2Player("gameService", "betResp", playerInfoYuxiaxie.getBets(),this.users);
+        //下注历史记录
+        Map<Integer,Bet> betInfo = this.room.getBetHistory().getOrDefault(userId, new HashMap<>());
+        betInfo.put(this.room.curGameNumber, playerInfoYuxiaxie.getBet());
+        this.room.getBetHistory().put(userId, betInfo);
+
+
+        MsgSender.sendMsg2Player("gameService", "betResp", playerInfoYuxiaxie.getBet(),this.users);
         MsgSender.sendMsg2Player("gameService", "bet", "ok",userId);
        return 0;
     }
@@ -125,6 +131,24 @@ public class GameYuxiaxie extends Game {
 
 
 
+
+    }
+
+    public void compute(){
+        int allScore = 0;
+        for (PlayerInfoYuxiaxie playerInfoYuxiaxie : this.playerCardInfos.values()) {
+            //
+            if (this.room.getBankerId() == playerInfoYuxiaxie.getUserId()) {
+                continue;
+            }
+
+            int score = playerInfoYuxiaxie.settle(this.dice.get(0), this.dice.get(1));
+
+            this.room.addUserSocre(playerInfoYuxiaxie.getUserId(), score);
+
+            allScore += score;
+
+        }
     }
 
     /**

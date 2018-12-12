@@ -41,7 +41,7 @@ public class GameDouDiZhuPlus extends GameDouDiZhu {
             userScores.put(l,0.0);
         }
         room.setUserScores(userScores);
-        this.room = room;
+        this.room = roomDouDiZhuPlus;
         init(users, room.getBankerId());
         updateLastOperateTime();
         //通知其他人游戏已经开始

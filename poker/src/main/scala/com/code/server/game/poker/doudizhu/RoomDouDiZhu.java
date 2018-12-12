@@ -18,6 +18,7 @@ import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
 import org.springframework.beans.BeanUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +31,8 @@ public class RoomDouDiZhu extends Room {
     protected int shuanglong = 0;
     protected List<Integer> testNextCards ;
     protected long testUserId;
+    private boolean userLastGameCards = false;
+    private List<Integer> lastGameCards = new ArrayList<>();
 
 
     protected boolean isCanAgreeDissloution(int agreeNum){
@@ -126,4 +129,21 @@ public class RoomDouDiZhu extends Room {
     }
 
 
+    public boolean isUserLastGameCards() {
+        return userLastGameCards;
+    }
+
+    public RoomDouDiZhu setUserLastGameCards(boolean userLastGameCards) {
+        this.userLastGameCards = userLastGameCards;
+        return this;
+    }
+
+    public List<Integer> getLastGameCards() {
+        return lastGameCards;
+    }
+
+    public RoomDouDiZhu setLastGameCards(List<Integer> lastGameCards) {
+        this.lastGameCards = lastGameCards;
+        return this;
+    }
 }

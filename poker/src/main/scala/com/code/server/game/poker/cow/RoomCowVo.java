@@ -21,7 +21,6 @@ public class RoomCowVo extends RoomVo {
 
     public List<PlayerCowVo> playerList = new ArrayList<>();//用户列表
 
-    public Long bankerId;
 
     public long countDown;
 
@@ -33,13 +32,7 @@ public class RoomCowVo extends RoomVo {
         this.playerList = playerList;
     }
 
-    public Long getBankerId() {
-        return bankerId;
-    }
 
-    public void setBankerId(Long bankerId) {
-        this.bankerId = bankerId;
-    }
 
     public long getCountDown() {
         return countDown;

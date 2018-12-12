@@ -8,7 +8,15 @@ import com.code.server.constant.response.IfacePlayerInfoVo;
 public class PlayerInfoYuxiaxieVo implements IfacePlayerInfoVo {
 
 
+    private Bet bet;
 
+    public Bet getBet() {
+        return bet;
+    }
 
+    public PlayerInfoYuxiaxieVo setBet(Bet bet) {
+        this.bet = bet;
+        return this;
+    }
 
 }
