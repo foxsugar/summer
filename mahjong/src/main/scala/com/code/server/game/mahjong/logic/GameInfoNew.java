@@ -136,6 +136,9 @@ public class GameInfoNew extends GameInfo {
         if (isHasGuoHu()) {
             playerCardsInfo.setGuoHu(false);
         }
+        if (isHasGuoPeng()) {
+            playerCardsInfo.guoPengSet.clear();
+        }
         if (isHuangzhuang(playerCardsInfo)) {
             handleHuangzhuang(userId);
             return;
@@ -474,6 +477,9 @@ public class GameInfoNew extends GameInfo {
                 PlayerCardsInfoMj playerCardsInfo = entry.getValue();
                 boolean isCanGang = playerCardsInfo.isCanGangAddThisCard(card);
                 boolean isCanPeng = playerCardsInfo.isCanPengAddThisCard(card);
+                if (isHasGuoPeng()) {
+                    isCanPeng = isCanPeng && !playerCardsInfo.isGuoPeng(card);
+                }
                 boolean isCanHu;
                 if (isHasGuoHu() && playerCardsInfo.isGuoHu()) {
                     isCanHu = false;

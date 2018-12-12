@@ -252,7 +252,7 @@ public class GameInfoLuanGuaFeng extends GameInfoNew {
             return ErrorCode.CAN_NOT_GUO;
         }
         //过胡逻辑
-        if (playerCardsInfos.get(userId).isCanHu_dianpao(disCard)) {
+        if (this.isHasGuoHu() && playerCardsInfos.get(userId).isCanHu_dianpao(disCard)) {
             playerCardsInfos.get(userId).setGuoHu(true);
         }
         if (waitingforList.size() > 0) {

@@ -75,6 +75,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     protected boolean isJieGangHu = false;
     protected List<HuCardType> tingWhatInfo = new ArrayList<>();
+    protected Set<Integer> guoPengSet = new HashSet<>();
 
     /**
      * 根据发的牌初始化
@@ -184,6 +185,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     /**
      * 亮
+     *
      * @param cardType
      * @param cards
      */
@@ -284,6 +286,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
                 && cardsNum.containsKey(twoType) && cardsNum.get(twoType) > 0;
     }
 
+    protected void addGuoPeng(String card) {
+        int type = CardTypeUtil.getTypeByCard(card);
+        this.guoPengSet.add(type);
+    }
+
+    protected boolean isGuoPeng(String card) {
+        int type = CardTypeUtil.getTypeByCard(card);
+        return this.guoPengSet.contains(type);
+    }
 
     public boolean isHasChi(String card) {
         return getChiList(getCardsNoChiPengGang(cards), card).size() > 0;
@@ -422,7 +433,6 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     }
 
 
-
     /**
      * 是否可以胡这张牌
      *
@@ -495,7 +505,6 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         }
 
 
-
         for (Map.Entry<Integer, Integer> entry : getCardNum(temp).entrySet()) {
             if (gangBlackList.contains(entry.getKey())) {
                 continue;
@@ -534,7 +543,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         return false;
     }
 
-    public boolean isCanBufeng(String card){
+    public boolean isCanBufeng(String card) {
         return false;
     }
 
@@ -619,7 +628,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     }
 
 
-    public List<HuCardType> getTingHuCardTypeWithHun(List<String> cards, List<Integer> hun,int chiPengGangNum,Predicate<Integer> predicate) {
+    public List<HuCardType> getTingHuCardTypeWithHun(List<String> cards, List<Integer> hun, int chiPengGangNum, Predicate<Integer> predicate) {
         List<String> handCards = new ArrayList<>();
         handCards.addAll(cards);
 
@@ -635,10 +644,10 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
                 List<String> tempCards = new ArrayList<>();
                 tempCards.addAll(handCards);
                 tempCards.remove(card);
-                tingList.addAll(HuUtil.getTingHuListWithHun(tempCards, this, hun, card,chiPengGangNum,predicate));
+                tingList.addAll(HuUtil.getTingHuListWithHun(tempCards, this, hun, card, chiPengGangNum, predicate));
             }
         } else {
-            tingList.addAll(HuUtil.getTingHuListWithHun(handCards, this, hun, null,chiPengGangNum, predicate));
+            tingList.addAll(HuUtil.getTingHuListWithHun(handCards, this, hun, null, chiPengGangNum, predicate));
         }
         return tingList;
     }
@@ -717,7 +726,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
         if (isMing) {
             this.roomInfo.addMingGangNum(this.getUserId());
-        }else{
+        } else {
             this.roomInfo.addAnGangNum(this.getUserId());
         }
 
@@ -976,16 +985,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 //        playerCardsInfo.init(playerCardsInfo.cards);
 ////        System.out.println(playerCardsInfo.getTingCardType(playerCardsInfo.cards,null));
 //        System.out.println(playerCardsInfo.isCanHu_zimo("033"));
-        System.out.println(isHasMode("32",5));
+        System.out.println(isHasMode("32", 5));
 
         System.out.println(getNum(5));
 
     }
 
-    private static int getNum(int weishu){
+    private static int getNum(int weishu) {
         return 1 << weishu;
     }
-
 
 
     public long getUserId() {

@@ -53,7 +53,7 @@ public class GameDouDiZhu extends Game {
 
     protected int zhaCount;//炸的个数
     protected int multiple = 1;
-    protected Room room;
+    protected RoomDouDiZhu room;
     protected boolean isSpring;//是否春天
     protected Set<Long> userPlayCount = new HashSet<>();
     protected int tableScore;//底分
@@ -62,7 +62,7 @@ public class GameDouDiZhu extends Game {
 
 
     public void startGame(List<Long> users, Room room) {
-        this.room = room;
+        this.room = (RoomDouDiZhu)room;
         init(users, room.getBankerId());
         updateLastOperateTime();
         //通知其他人游戏已经开始
@@ -77,6 +77,10 @@ public class GameDouDiZhu extends Game {
             playerCardInfos.put(uid, playerCardInfo);
         }
         this.users.addAll(users);
+
+        if (!this.room.isUserLastGameCards()) {
+            this.room.getLastGameCards().clear();
+        }
 
 
         shuffle();
@@ -241,6 +245,11 @@ public class GameDouDiZhu extends Game {
             cards.add(i);
         }
         Collections.shuffle(cards);
+
+        RoomDouDiZhu roomDouDiZhu = (RoomDouDiZhu)room;
+        if (roomDouDiZhu.isUserLastGameCards() && roomDouDiZhu.getLastGameCards().size()>0) {
+            cards = roomDouDiZhu.getLastGameCards();
+        }
     }
 
     protected void testDeal() {
@@ -832,11 +841,12 @@ public class GameDouDiZhu extends Game {
         return this;
     }
 
-    public Room getRoom() {
+    public RoomDouDiZhu getRoom() {
         return room;
     }
 
-    public void setRoom(Room room) {
+    public GameDouDiZhu setRoom(RoomDouDiZhu room) {
         this.room = room;
+        return this;
     }
 }

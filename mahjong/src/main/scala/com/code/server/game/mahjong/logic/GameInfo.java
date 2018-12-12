@@ -272,6 +272,9 @@ public class GameInfo extends Game {
         if (isHasGuoHu()) {
             playerCardsInfo.setGuoHu(false);
         }
+        if (isHasGuoPeng()) {
+            playerCardsInfo.guoPengSet.clear();
+        }
         if (isHuangzhuang(playerCardsInfo)) {
             handleHuangzhuang(userId);
             return;
@@ -358,6 +361,7 @@ public class GameInfo extends Game {
                 "SS".equals(gameType) ||
                 "SS3".equals(gameType) ||
                 "HS".equals(gameType)||
+                "HUASHUI".equals(gameType)||
                 "KXHY".equals(gameType)||
                 "KXZHZ".equals(gameType)||
                 "XYKD".equals(gameType)||
@@ -368,6 +372,14 @@ public class GameInfo extends Game {
                 "HONGZHONGSS3".equals(gameType)||
                 "FANSHI".equals(gameType)||
                 "KXKD".equals(gameType);
+    }
+
+    public boolean isHasGuoPeng(){
+        String gameType = this.room.getGameType();
+        String modeTotal = this.room.getModeTotal();
+        return "HS".equals(gameType)||
+                "HUASHUI".equals(gameType);
+
     }
 
     /**
@@ -416,6 +428,9 @@ public class GameInfo extends Game {
                 PlayerCardsInfoMj playerCardsInfo = entry.getValue();
                 boolean isCanGang = playerCardsInfo.isCanGangAddThisCard(card);
                 boolean isCanPeng = playerCardsInfo.isCanPengAddThisCard(card);
+                if (isHasGuoPeng()) {
+                    isCanPeng = isCanPeng && !playerCardsInfo.isGuoPeng(card);
+                }
                 boolean isCanHu;
                 if (isHasGuoHu() && playerCardsInfo.isGuoHu()) {
                     isCanHu = false;
@@ -689,6 +704,9 @@ public class GameInfo extends Game {
         //过胡逻辑
         if (playerCardsInfos.get(userId).isCanHu_dianpao(disCard)) {
             playerCardsInfos.get(userId).setGuoHu(true);
+        }
+        if (isHasGuoPeng() && playerCardsInfos.get(userId).isCanPengAddThisCard(disCard)) {
+            playerCardsInfos.get(userId).addGuoPeng(disCard);
         }
 
         if (waitingforList.size() > 0) {
