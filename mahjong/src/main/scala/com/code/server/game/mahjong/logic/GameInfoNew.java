@@ -768,6 +768,9 @@ public class GameInfoNew extends GameInfo {
         if (playerCardsInfos.get(userId).isCanHu_dianpao(disCard)) {
             playerCardsInfos.get(userId).setGuoHu(true);
         }
+        if (isHasGuoPeng() && playerCardsInfos.get(userId).isCanPengAddThisCard(disCard)) {
+            playerCardsInfos.get(userId).addGuoPeng(disCard);
+        }
         if (waitingforList.size() > 0) {
 
             List<WaitDetail> removeList = new ArrayList<>();
