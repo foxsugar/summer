@@ -723,10 +723,12 @@ public class GameClubService {
     }
 
 
-    public void removeClubInstance(String clubId, String roomModelId) {
+    public void removeClubInstance(String clubId, String roomModelId, String roomId) {
         Club club = ClubManager.getInstance().getClubById(clubId);
-//        RoomInstance roomInstance = club.getClubInfo().getRoomInstance().get(roomModelId);
-        club.getClubInfo().getRoomInstance().remove(roomModelId);
+        RoomInstance roomInstance = club.getClubInfo().getRoomInstance().get(roomModelId);
+        if (roomInstance != null && roomInstance.getRoomId().equals(roomId)) {
+            club.getClubInfo().getRoomInstance().remove(roomModelId);
+        }
     }
 
 

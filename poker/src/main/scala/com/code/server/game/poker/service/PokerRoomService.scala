@@ -303,7 +303,7 @@ object PokerRoomService {
         return RoomYuxiaxie.createRoom(userId, gameNumber,multiple,gameType, roomType,isAA,isJoin,showChat,personNumber,
           clubId,clubRoomModel,otherMode,danya, chuanlian, baozi, nuo)
 
-        //鱼虾蟹 色子记录
+        //鱼虾蟹 色子记录 todo 对协议
       case "getYXXDiceHistory"=>
         val roomId = params.get("roomId").asText()
         val roomYXX = RoomManager.getRoom(roomId)

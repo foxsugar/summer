@@ -217,7 +217,8 @@ public class ClubServiceMsgDispatch {
             case "removeClubInstance": {
                 clubId = params.path("clubId").asText();
                 String clubModelId4 = params.path("clubModelId").asText();
-                gameClubService.removeClubInstance(clubId, clubModelId4);
+                String rid = params.path("roomId").asText();
+                gameClubService.removeClubInstance(clubId, clubModelId4,rid);
                 break;
             }
 

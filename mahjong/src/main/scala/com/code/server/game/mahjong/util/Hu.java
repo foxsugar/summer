@@ -47,6 +47,7 @@ public class Hu {
     public static final int CARD_GROUP_TYPE_TWO_HUN_JIANG = 8;//两个 将
     public static final int CARD_GROUP_TYPE_ONE_HUN_JIANG = 9;//带一个混的将
     public static final int CARD_GROUP_TYPE_SHUN_ONE_HUN = 10;//带一个混的顺
+    public static final int CARD_GROUP_TYPE_YAO_JIU_SHUN = 11;//幺九顺
 
 
     /**
@@ -319,7 +320,7 @@ public class Hu {
             if (cards[i] >= 2 && !isHasJiang(list)) {
                 int[] newCards = Arrays.copyOf(cards, cards.length);
                 newCards[i] -= 2;
-                List<CardGroup> newList = new ArrayList(list);
+                List<CardGroup> newList = new ArrayList<>(list);
                 newList.add(new CardGroup(CARD_GROUP_TYPE_JIANG, i));
                 if (isEmpty(newCards)) {
                     add2List(all, newList);
@@ -333,7 +334,7 @@ public class Hu {
             if (cards[i] >= 3) {
                 int[] newCards = Arrays.copyOf(cards, cards.length);
                 newCards[i] -= 3;
-                List<CardGroup> newList = new ArrayList(list);
+                List<CardGroup> newList = new ArrayList<>(list);
                 newList.add(new CardGroup(CARD_GROUP_TYPE_KE, i));
                 if (isEmpty(newCards)) {
                     add2List(all, newList);
@@ -347,7 +348,7 @@ public class Hu {
                 newCards[i] -= 1;
                 newCards[i + 1] -= 1;
                 newCards[i + 2] -= 1;
-                List<CardGroup> newList = new ArrayList(list);
+                List<CardGroup> newList = new ArrayList<>(list);
                 newList.add(new CardGroup(CARD_GROUP_TYPE_SHUN, i));
                 if (isEmpty(newCards)) {
                     add2List(all, newList);
@@ -361,7 +362,7 @@ public class Hu {
                 if (isHasFengShun(cards, i, feng_shun_array[0])) {
                     int[] newCards = Arrays.copyOf(cards, cards.length);
                     removeFengShun(newCards, feng_shun_array[0]);
-                    List<CardGroup> newList = new ArrayList(list);
+                    List<CardGroup> newList = new ArrayList<>(list);
                     newList.add(new CardGroup(CARD_GROUP_TYPE_FENG_SHUN, 0));
                     if (isEmpty(newCards)) {
                         add2List(all, newList);
@@ -372,7 +373,7 @@ public class Hu {
                 if (isHasFengShun(cards, i, feng_shun_array[1])) {
                     int[] newCards = Arrays.copyOf(cards, cards.length);
                     removeFengShun(newCards, feng_shun_array[1]);
-                    List<CardGroup> newList = new ArrayList(list);
+                    List<CardGroup> newList = new ArrayList<>(list);
                     newList.add(new CardGroup(CARD_GROUP_TYPE_FENG_SHUN, 1));
                     if (isEmpty(newCards)) {
                         add2List(all, newList);
@@ -383,7 +384,7 @@ public class Hu {
                 if (isHasFengShun(cards, i, feng_shun_array[2])) {
                     int[] newCards = Arrays.copyOf(cards, cards.length);
                     removeFengShun(newCards, feng_shun_array[2]);
-                    List<CardGroup> newList = new ArrayList(list);
+                    List<CardGroup> newList = new ArrayList<>(list);
                     newList.add(new CardGroup(CARD_GROUP_TYPE_FENG_SHUN, 2));
                     if (isEmpty(newCards)) {
                         add2List(all, newList);
@@ -394,7 +395,7 @@ public class Hu {
                 if (isHasFengShun(cards, i, feng_shun_array[3])) {
                     int[] newCards = Arrays.copyOf(cards, cards.length);
                     removeFengShun(newCards, feng_shun_array[3]);
-                    List<CardGroup> newList = new ArrayList(list);
+                    List<CardGroup> newList = new ArrayList<>(list);
                     newList.add(new CardGroup(CARD_GROUP_TYPE_FENG_SHUN, 3));
                     if (isEmpty(newCards)) {
                         add2List(all, newList);
@@ -406,7 +407,7 @@ public class Hu {
                 if (isHasZFB(cards, i)) {
                     int[] newCards = Arrays.copyOf(cards, cards.length);
                     removeZFB(newCards);
-                    List<CardGroup> newList = new ArrayList(list);
+                    List<CardGroup> newList = new ArrayList<>(list);
                     newList.add(new CardGroup(CARD_GROUP_TYPE_ZFB, 31));
                     if (isEmpty(newCards)) {
                         add2List(all, newList);
@@ -415,6 +416,10 @@ public class Hu {
                     }
                 }
             }
+
+//            if (isHasYaoJiuShun) {
+//
+//            }
 
 
         }
@@ -483,6 +488,27 @@ public class Hu {
             return false;
         }
         return cards[index] >= 1 && cards[index + 1] >= 1 && cards[index + 2] >= 1;
+    }
+
+    /**
+     * 是否有幺九顺
+     * @param cards
+     * @param index
+     * @param yaojiu
+     * @return
+     */
+    public static boolean isHasYJShun(int[] cards, int index,int[] yaojiu) {
+        //以index开头的才可以
+        if (index != yaojiu[0]) {
+            return false;
+        }
+
+        for (int fengIndex : yaojiu) {
+            if (cards[fengIndex] == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static boolean isHasJiang(List<CardGroup> list) {

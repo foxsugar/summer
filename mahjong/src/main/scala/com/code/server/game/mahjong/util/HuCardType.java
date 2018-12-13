@@ -29,6 +29,8 @@ public class HuCardType implements HuType {
 
     public List<List<Integer>> feng_shun = new ArrayList<>();
     public int zi_shun;//有几个中发白组合
+    //幺九顺
+    public List<List<Integer>> yao_jiu_shun = new ArrayList<>();
 
     public int fan;
 

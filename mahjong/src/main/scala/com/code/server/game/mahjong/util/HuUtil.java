@@ -56,6 +56,31 @@ public class HuUtil implements HuType {
             {27, 29, 30}
     };
 
+    static int[][] yao_jiu_shun = new int[][]{
+            {0, 8, 9},
+            {0, 17, 18},
+            {0, 9, 17},
+            {0, 18, 26},
+            {0, 8, 17},
+            {8, 17, 18},
+            {0, 17, 26},
+            {0, 8, 18},
+            {9, 17, 18},
+            {8, 9, 17},
+            {8, 18, 26},
+            {0, 9, 26},
+            {8, 9, 18},
+            {9, 18, 26},
+            {0, 8, 26},
+            {9, 17, 26},
+            {8, 9, 26},
+            {17, 18, 26}
+    };
+
+    static int[] yaojiu = new int[]{
+        0, 8, 9, 17, 18, 26
+    };
+
     static Integer[] zi_shun_array = new Integer[]{
             31, 32, 33
     };
@@ -159,7 +184,7 @@ public class HuUtil implements HuType {
                 huList.add(HuCardType.getSpecialHuInstance(hu_清一色七小对).setFan(playerCardsInfo.getSpecialHuScore(hu_清一色七小对)));
             }
 
-            if (playerCardsInfo.isHasSpecialHu(hu_清一色豪华七小对) && isHaoHuaQixiaodui(cards, playerCardsInfo,1) && isYiSe_wtt(cards)) {
+            if (playerCardsInfo.isHasSpecialHu(hu_清一色豪华七小对) && isHaoHuaQixiaodui(cards, playerCardsInfo, 1) && isYiSe_wtt(cards)) {
                 huList.add(HuCardType.getSpecialHuInstance(hu_清一色豪华七小对).setFan(playerCardsInfo.getSpecialHuScore(hu_清一色豪华七小对)));
             }
             if (playerCardsInfo.isHasSpecialHu(hu_清一色双豪华七小对) && isShuangHaoQixiaodui(cards, playerCardsInfo) && isYiSe_wtt(cards)) {
@@ -219,9 +244,7 @@ public class HuUtil implements HuType {
         }
 
 
-
-
-        huList.addAll(HuWithHun.getHuCardType(playerCardsInfo, cards,analyse(convert(cards)), chiPengGangNum, hun, lastCard));
+        huList.addAll(HuWithHun.getHuCardType(playerCardsInfo, cards, analyse(convert(cards)), chiPengGangNum, hun, lastCard));
 
         for (HuCardType huCardType : huList) {
             //设置胡的类型
@@ -316,7 +339,7 @@ public class HuUtil implements HuType {
         Set<Integer> tingSet = new HashSet<>();
 //        int chiPengGangNum = playerCardsInfo.getChiPengGangNum();
         for (int i = 0; i < n_zero.length; i++) {
-            if(!predicate.test(i)) continue;
+            if (!predicate.test(i)) continue;
             String addCard = CardTypeUtil.getCardStrByType(i);
             List<String> newCards = new ArrayList<>();
             newCards.addAll(cards);
@@ -350,99 +373,6 @@ public class HuUtil implements HuType {
         boolean isHasF = isHasFengShun.length != 0 && isHasFengShun[0];
         Hu.isHu(n, list, groups, isHasF);
         return Hu.convert(list);
-//        for (int i = 0; i < 34; i++) {
-//
-//            for (int ke_first = 0; ke_first < 2; ke_first++) {
-//                Integer[] jiang = new Integer[1];
-//                ArrayList<Integer> ke = new ArrayList<Integer>();
-//                ArrayList<Integer> shun = new ArrayList<Integer>();
-//                ArrayList<List<Integer>> feng = new ArrayList<>();
-//                int zi_num = 0;
-//
-//                int[] t = n.clone();
-//                if (t[i] >= 2) {
-//                    // 循环可以做将的牌
-//                    t[i] -= 2;
-//                    jiang[0] = i;
-//
-//                    if (ke_first == 0) {//先找刻
-//                        // 寻找刻
-//                        for (int j = 0; j < 34; j++) {
-//                            if (t[j] >= 3) {
-//                                t[j] -= 3;
-//                                ke.add(j);
-//                            }
-//                        }
-//                        // 顺
-//                        for (int a = 0; a < 3; a++) {
-//                            for (int b = 0; b < 7; ) {//8万以后不能成顺
-//                                if (t[9 * a + b] >= 1 && t[9 * a + b + 1] >= 1 && t[9 * a + b + 2] >= 1) {
-//                                    int one = 9 * a + b;
-//                                    int two = 9 * a + b + 1;
-//                                    int three = 9 * a + b + 2;
-//                                    t[one]--;
-//                                    t[two]--;
-//                                    t[three]--;
-//                                    shun.add(9 * a + b);
-//                                } else {
-//                                    b++;
-//                                }
-//                            }
-//                        }
-//                        if (isHasFengShun.length > 0 && isHasFengShun[0]) {
-//
-//                            //处理风
-//                            disposeFENG(t, feng);
-//                            //处理字
-//                            zi_num = disposeZFB(t);
-//                        }
-//                    } else {//先找顺
-//                        if (isHasFengShun.length > 0 && isHasFengShun[0]) {
-//                            //处理风
-//                            disposeFENG(t, feng);
-//                            //处理字
-//                            zi_num = disposeZFB(t);
-//                        }
-//
-//                        // 找顺
-//                        for (int a = 0; a < 3; a++) {
-//                            for (int b = 0; b < 7; ) {
-//                                if (t[9 * a + b] >= 1 &&
-//                                        t[9 * a + b + 1] >= 1 &&
-//                                        t[9 * a + b + 2] >= 1) {
-//                                    t[9 * a + b]--;
-//                                    t[9 * a + b + 1]--;
-//                                    t[9 * a + b + 2]--;
-//                                    shun.add(9 * a + b);
-//                                } else {
-//                                    b++;
-//                                }
-//                            }
-//                        }
-//                        // 找刻
-//                        for (int j = 0; j < 34; j++) {
-//                            if (t[j] >= 3) {
-//                                t[j] -= 3;
-//                                ke.add(j);
-//                            }
-//                        }
-//                    }
-//
-//                    //
-//                    if (Arrays.equals(t, n_zero)) {
-//                        HuCardType huCardType = new HuCardType();
-//                        huCardType.jiang = jiang[0];
-//                        huCardType.shun = shun;
-//                        huCardType.ke = ke;
-//                        huCardType.feng_shun = feng;
-//                        huCardType.zi_shun = zi_num;
-//
-//                        add(ret, huCardType);
-//                    }
-//                }
-//            }
-//        }
-//        return ret;
     }
 
     private static void add(List<HuCardType> ret, HuCardType huCardType) {
@@ -1003,124 +933,41 @@ public class HuUtil implements HuType {
     public static void main(String[] args) {
 
 
-        int[] hai = {
-                TIAO2, TIAO3, TIAO4,
-                TIAO6, TIAO7, TIAO8,
-                dong, nan, bei,
-                dong, xi, bei,
-                zhong, zhong};
-
-        int[] n = null;
-        List<HuCardType> ret = null;
-
-        n = analyse(hai);
-        ret = agari(n, true);
-        System.out.println(ret);
-//        }
-//        System.out.println("耗时 = "+(System.currentTimeMillis() - time));
-
-        for (HuCardType r : ret) {
-
-            System.out.println(r);
-            System.out.println();
+        int[] yao = new int[]{0, 9, 18};
+        int[] jiu = new int[]{8, 17, 26};
+        int[] yaojiu = new int[]{0, 9, 18, 8, 17, 26};
+        List<List<Integer>> all = new ArrayList<>();
+        for (int i = 0; i < yao.length; i++) {
+            for (int j = 0; j < jiu.length; j++) {
+                List one = new ArrayList();
+                one.add(yao[i]);
+                one.add(jiu[j]);
+                all.add(one);
+            }
         }
 
-        List<String> list = new ArrayList<String>();
-
-//        list.add("108");
-//        list.add("112");
-//        list.add("116");
-//        list.add("120");
-//        list.add("124");
-//        list.add("128");
-//        list.add("132");
-//        list.add("133");
-
-
-//        list.add("000");
-//        list.add("024");
-//        list.add("012");
-
-//        list.add("036");
-//        list.add("048");
-//        list.add("060");
-
-//        list.add("040");
-//        list.add("052");
-//        list.add("064");
-
-//        list.add("044");
-//        list.add("056");
-//        list.add("068");
-
-//            boolean res =  is13BuKao(list, null);
-//
-//            System.out.println(res);
-
-//        Scanner sc = new Scanner(System.in);
-//
-//
-//        while (true){
-//
-//            System.out.println("1请输入第一张牌");
-//            String a = sc.next();
-//            System.out.println("1请输入第二张牌");
-//            String b = sc.next();
-//            System.out.println("1请输入第三张牌");
-//            String c = sc.next();
-//
-//            System.out.println("2请输入第一张牌");
-//            String d = sc.next();
-//            System.out.println("2请输入第二张牌");
-//            String e = sc.next();
-//            System.out.println("2请输入第三张牌");
-//            String f = sc.next();
-//
-//            list.clear();
-//            list.add("108");
-//            list.add("109");
-//            list.add("112");
-//            list.add("116");
-//            list.add("120");
-//            list.add("124");
-//            list.add("128");
-//            list.add("132");
-////            list.add("133");
-//
-//            list.add(a);
-//            list.add(b);
-//            list.add(c);
-//
-//            list.add(d);
-//            list.add(e);
-//            list.add(f);
-//
-//            boolean res =  is13BuKao(list, null);
-//            System.out.println("==================");
-//            System.out.println(res);
-//        }
+        Set<List<Integer>> result = new HashSet<>();
+        for (int i = 0; i < yaojiu.length; i++) {
+            for (List<Integer> one : all) {
+                if (!one.contains(yaojiu[i])) {
+                    List<Integer> temp = new ArrayList<>();
+                    temp.addAll(one);
+                    temp.add(yaojiu[i]);
+                    Collections.sort(temp);
+                    result.add(temp);
+                }
+            }
+        }
 
 
-        list.clear();
-        list.add("081");
-        list.add("121");
-        list.add("115");
-        list.add("116");
-        list.add("110");
-        list.add("126");
-        list.add("130");
-        list.add("134");
+        System.out.println(result.size());
+        System.out.println(result);
 
-        list.add("003");
-        list.add("014");
-        list.add("024");
-        list.add("093");
-        list.add("107");
-        list.add("119");
+    }
 
-        boolean res = is13BuKao(list, null);
-        System.out.println("==================");
-        System.out.println(res);
+    private void isEqual(List<Integer> a, List<Integer> b) {
+        Collections.sort(a);
+        Collections.sort(b);
 
     }
 
@@ -1190,4 +1037,6 @@ public class HuUtil implements HuType {
 
         return results;
     }
+
+
 }
