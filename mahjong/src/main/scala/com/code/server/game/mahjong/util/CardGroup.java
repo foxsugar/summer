@@ -13,6 +13,7 @@ public class CardGroup {
     public int huType;
     public int card;
     public int hunNum;
+    public List<Integer> yaojiuCards;
 
     //带一个混的顺结构
     public ShunHaveHun shunHaveHun;
@@ -33,6 +34,11 @@ public class CardGroup {
         this.card = card;
         this.shunHaveHun = shunHaveHun;
         this.hunNum = 1;
+    }
+
+    public CardGroup(int huType, List<Integer> yaojiuCards) {
+        this.yaojiuCards = yaojiuCards;
+        this.huType = huType;
     }
 
     public int getHunReplaceCard() {

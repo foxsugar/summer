@@ -21,7 +21,7 @@ public class PlayerCardsInfoFactory {
                 playerCardsInfo = new PlayerCardsInfoTDH().setIsHasSpecialHu(isHasSpecialHu);
                 break;
             case "3":
-                playerCardsInfo = new PlayerCardsInfoSZ().setIsHasFengShun(true);
+                playerCardsInfo = new PlayerCardsInfoSZ().setIsHasFengShun(true).setHasZiShun(true);
                 break;
             case "4":
                 playerCardsInfo = new PlayerCardsInfoGSJ();
@@ -51,7 +51,7 @@ public class PlayerCardsInfoFactory {
                 playerCardsInfo = new PlayerCardsInfoJC124();
                 break;
             case "15":
-                playerCardsInfo = new PlayerCardsInfoSZ_LQ().setIsHasFengShun(true);
+                playerCardsInfo = new PlayerCardsInfoSZ_LQ().setIsHasFengShun(true).setHasZiShun(true);
                 //设置荒庄轮庄
                 room.setChangeBankerAfterHuangZhuang(true);
                 break;

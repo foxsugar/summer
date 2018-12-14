@@ -25,6 +25,27 @@ public class PlayerCardsInfoZhuohaoziKX extends PlayerCardsInfoZhuohaozi {
     }
 
     @Override
+    public boolean isCanHu_dianpao(String card) {
+
+        if (!isTing ) return false;
+        //混牌 不能点炮
+        int cardType = CardTypeUtil.getTypeByCard(card);
+        if (this.gameInfo.hun.contains(cardType)) {
+            return false;
+        }
+        List<String> temp = getCardsAddThisCard(card);
+        List<String> noPengAndGang = getCardsNoChiPengGang(temp);
+        int lastCard = CardTypeUtil.getTypeByCard(card);
+        List<HuCardType> huList = HuUtil.isHu(this, noPengAndGang, getChiPengGangNum(), this.gameInfo.hun, lastCard);
+        for (HuCardType huCardType : huList) {
+            if (getMaxPoint(huCardType, true) >= DIANPAO_MIN_SCORE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
 
         //显庄 庄家输赢每家多10分

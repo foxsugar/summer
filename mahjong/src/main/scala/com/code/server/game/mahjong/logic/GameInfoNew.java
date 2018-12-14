@@ -327,7 +327,11 @@ public class GameInfoNew extends GameInfo {
      * @param userId
      */
     protected void handleHuangzhuang(long userId) {
-        computeAllGang();
+        if (this.isTurnZeroAfterHuangZhuang()) {
+            turnResultToZeroOnHuangZhuang();
+        }else{
+            computeAllGang();
+        }
         sendResult(false, userId, null);
         noticeDissolutionResult();
         //通知所有玩家结束

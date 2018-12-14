@@ -13,7 +13,7 @@ public interface HuType {
     int hu_清七对 = 5;//双豪七小对
     int hu_普通七小对 = 6;//普通七小对
     int hu_三豪七小对 = 7;//三豪华七小对
-    int hu_双豪七小对 = 8;//双豪七小对_山西
+    int hu_双豪七小对 = 8;//双豪七小对
     int hu_十三不靠 = 9;//十三不靠
 
     int hu_缺一门 = 10;
@@ -97,6 +97,15 @@ public interface HuType {
     int hu_清一色七小对 = 190;
     int hu_清一色豪华七小对 = 191;
     int hu_清一色双豪华七小对 = 192;
+
+    //没有1 9
+    int hu_中张 = 200;
+    //所有附子里都有1 9
+    int hu_幺九= 201;
+    //全是2 5 8
+    int hu_将对= 202;
+    //四个碰
+    int hu_四碰 = 203;
 
 
 

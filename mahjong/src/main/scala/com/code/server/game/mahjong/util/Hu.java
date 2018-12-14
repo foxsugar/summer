@@ -307,7 +307,7 @@ public class Hu {
     }
 
 
-    static void isHu(int[] cards, List all, List<CardGroup> list, boolean isHasFengShun) {
+    static void isHu(int[] cards, List all, List<CardGroup> list, boolean isHasFengShun,boolean isHasZiShun, boolean isHasYaojiuShun) {
 //        count++;
 //           System.out.println("====: " + count);
 
@@ -325,7 +325,7 @@ public class Hu {
                 if (isEmpty(newCards)) {
                     add2List(all, newList);
                 } else {
-                    isHu(newCards, all, newList, isHasFengShun);
+                    isHu(newCards, all, newList, isHasFengShun,isHasZiShun,isHasYaojiuShun);
 
                 }
             }
@@ -339,7 +339,7 @@ public class Hu {
                 if (isEmpty(newCards)) {
                     add2List(all, newList);
                 } else {
-                    isHu(newCards, all, newList, isHasFengShun);
+                    isHu(newCards, all, newList, isHasFengShun,isHasZiShun,isHasYaojiuShun);
                 }
             }
             //顺
@@ -353,7 +353,7 @@ public class Hu {
                 if (isEmpty(newCards)) {
                     add2List(all, newList);
                 } else {
-                    isHu(newCards, all, newList, isHasFengShun);
+                    isHu(newCards, all, newList, isHasFengShun,isHasZiShun,isHasYaojiuShun);
                 }
             }
 
@@ -367,7 +367,7 @@ public class Hu {
                     if (isEmpty(newCards)) {
                         add2List(all, newList);
                     } else {
-                        isHu(newCards, all, newList, isHasFengShun);
+                        isHu(newCards, all, newList, isHasFengShun,isHasZiShun,isHasYaojiuShun);
                     }
                 }
                 if (isHasFengShun(cards, i, feng_shun_array[1])) {
@@ -378,7 +378,7 @@ public class Hu {
                     if (isEmpty(newCards)) {
                         add2List(all, newList);
                     } else {
-                        isHu(newCards, all, newList, isHasFengShun);
+                        isHu(newCards, all, newList, isHasFengShun,isHasZiShun,isHasYaojiuShun);
                     }
                 }
                 if (isHasFengShun(cards, i, feng_shun_array[2])) {
@@ -389,7 +389,7 @@ public class Hu {
                     if (isEmpty(newCards)) {
                         add2List(all, newList);
                     } else {
-                        isHu(newCards, all, newList, isHasFengShun);
+                        isHu(newCards, all, newList, isHasFengShun,isHasZiShun,isHasYaojiuShun);
                     }
                 }
                 if (isHasFengShun(cards, i, feng_shun_array[3])) {
@@ -400,26 +400,42 @@ public class Hu {
                     if (isEmpty(newCards)) {
                         add2List(all, newList);
                     } else {
-                        isHu(newCards, all, newList, isHasFengShun);
-                    }
-                }
-                //是中发白
-                if (isHasZFB(cards, i)) {
-                    int[] newCards = Arrays.copyOf(cards, cards.length);
-                    removeZFB(newCards);
-                    List<CardGroup> newList = new ArrayList<>(list);
-                    newList.add(new CardGroup(CARD_GROUP_TYPE_ZFB, 31));
-                    if (isEmpty(newCards)) {
-                        add2List(all, newList);
-                    } else {
-                        isHu(newCards, all, newList, isHasFengShun);
+                        isHu(newCards, all, newList, isHasFengShun,isHasZiShun,isHasYaojiuShun);
                     }
                 }
             }
+            //是中发白
+            if (isHasZiShun && isHasZFB(cards, i)) {
+                int[] newCards = Arrays.copyOf(cards, cards.length);
+                removeZFB(newCards);
+                List<CardGroup> newList = new ArrayList<>(list);
+                newList.add(new CardGroup(CARD_GROUP_TYPE_ZFB, 31));
+                if (isEmpty(newCards)) {
+                    add2List(all, newList);
+                } else {
+                    isHu(newCards, all, newList, isHasFengShun,isHasZiShun,isHasYaojiuShun);
+                }
+            }
 
-//            if (isHasYaoJiuShun) {
-//
-//            }
+            if (isHasYaojiuShun) {
+                for(int[] yaojiu : HuUtil.yao_jiu_shun){
+                    if (isHasFengShun(cards, i, yaojiu)) {
+                        int[] newCards = Arrays.copyOf(cards, cards.length);
+                        removeFengShun(newCards, yaojiu);
+                        List<CardGroup> newList = new ArrayList<>(list);
+                        List<Integer> temp = new ArrayList<>();
+                        temp.add(yaojiu[0]);
+                        temp.add(yaojiu[1]);
+                        temp.add(yaojiu[2]);
+                        newList.add(new CardGroup(CARD_GROUP_TYPE_YAO_JIU_SHUN, temp));
+                        if (isEmpty(newCards)) {
+                            add2List(all, newList);
+                        } else {
+                            isHu(newCards, all, newList, isHasFengShun,isHasZiShun,isHasYaojiuShun);
+                        }
+                    }
+                }
+            }
 
 
         }
@@ -473,6 +489,9 @@ public class Hu {
                     break;
                 case CARD_GROUP_TYPE_SHUN_ONE_HUN:
                     huCardType.shunHaveHuns.add(cardGroup.shunHaveHun);
+                    break;
+                case CARD_GROUP_TYPE_YAO_JIU_SHUN:
+                    huCardType.yao_jiu_shun.add(cardGroup.yaojiuCards);
                     break;
 
 

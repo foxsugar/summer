@@ -84,6 +84,8 @@ public class GameInfo extends Game {
 
     private long lastCatchCardUser = 0;//最后抓牌的玩家 繁峙下雨
 
+    private boolean isTurnZeroAfterHuangZhuang = false;
+
     public int rand = 0;
 //    private Set<Long> noCanHuList = new HashSet<>();//本轮不能胡的人
 
@@ -1824,6 +1826,15 @@ public class GameInfo extends Game {
 
     public GameInfo setLastCatchCardUser(long lastCatchCardUser) {
         this.lastCatchCardUser = lastCatchCardUser;
+        return this;
+    }
+
+    public boolean isTurnZeroAfterHuangZhuang() {
+        return isTurnZeroAfterHuangZhuang;
+    }
+
+    public GameInfo setTurnZeroAfterHuangZhuang(boolean turnZeroAfterHuangZhuang) {
+        isTurnZeroAfterHuangZhuang = turnZeroAfterHuangZhuang;
         return this;
     }
 }

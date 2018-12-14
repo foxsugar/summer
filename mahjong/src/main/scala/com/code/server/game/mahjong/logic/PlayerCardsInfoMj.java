@@ -38,6 +38,8 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     protected String catchCard;//上次摸得牌
     protected Set<Integer> winType = new HashSet<>();//胡牌类型
     protected boolean isHasFengShun;//有没有带风能当顺的玩法
+    protected boolean isHasZiShun;
+    protected boolean isHasYaojiuShun;
     protected boolean isHasSpecialHu = true;//带不带特殊胡法
     protected String huCard;//胡的牌
     protected int fan;//番数
@@ -1372,6 +1374,24 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     public PlayerCardsInfoMj setCanBeBufeng(boolean canBeBufeng) {
         this.canBeBufeng = canBeBufeng;
+        return this;
+    }
+
+    public boolean isHasZiShun() {
+        return isHasZiShun;
+    }
+
+    public PlayerCardsInfoMj setHasZiShun(boolean hasZiShun) {
+        isHasZiShun = hasZiShun;
+        return this;
+    }
+
+    public boolean isHasYaojiuShun() {
+        return isHasYaojiuShun;
+    }
+
+    public PlayerCardsInfoMj setHasYaojiuShun(boolean hasYaojiuShun) {
+        isHasYaojiuShun = hasYaojiuShun;
         return this;
     }
 }

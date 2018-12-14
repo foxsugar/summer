@@ -193,6 +193,27 @@ public class FanUtil implements HuType {
             fan += playerCardsInfo.getSpecialHuScore(hu_清一色碰碰胡);
         }
 
+        if (playerCardsInfo.isHasSpecialHu(HuType.hu_中张) && isHasZhongZhang(cards, playerCardsInfo, huCardType)) {
+            huCardType.specialHuList.add(hu_中张);
+            fan += playerCardsInfo.getSpecialHuScore(hu_中张);
+        }
+
+
+        if (playerCardsInfo.isHasSpecialHu(HuType.hu_幺九) && isHuYaoJiu( huCardType)) {
+            huCardType.specialHuList.add(hu_幺九);
+            fan += playerCardsInfo.getSpecialHuScore(hu_幺九);
+        }
+
+        if (playerCardsInfo.isHasSpecialHu(HuType.hu_将对) && isHu258( cards, playerCardsInfo) && isPengpenghu(cards, huCardType)) {
+            huCardType.specialHuList.add(hu_将对);
+            fan += playerCardsInfo.getSpecialHuScore(hu_将对);
+        }
+
+        if (playerCardsInfo.isHasSpecialHu(HuType.hu_四碰) && huCardType.peng.size()==4) {
+            huCardType.specialHuList.add(hu_四碰);
+            fan += playerCardsInfo.getSpecialHuScore(hu_四碰);
+        }
+
 
         fan = huCardType.clearRepeat(playerCardsInfo, fan);
         return fan;
@@ -537,6 +558,99 @@ public class FanUtil implements HuType {
         return false;
     }
 
+    /**
+     * 是否是中张
+     * @param cards
+     * @param playerCardsInfoMj
+     * @param huCardType
+     * @return
+     */
+    private static boolean isHasZhongZhang(List<String> cards, PlayerCardsInfoMj playerCardsInfoMj, HuCardType huCardType) {
+        for (String card : cards) {
+            if (isYaoJiu(card)) {
+                return false;
+            }
+        }
+
+        for (String card : playerCardsInfoMj.getCards()) {
+            if (isYaoJiu(card)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 是否胡1 9
+     * @param huCardType
+     * @return
+     */
+    private static boolean isHuYaoJiu(HuCardType huCardType) {
+        //将 不是1 9
+        if (!isYaoJiu(huCardType.jiang)) {
+            return false;
+        }
+        Set<Integer> ke = new HashSet<>();
+        ke.addAll(huCardType.ke);
+        ke.addAll(huCardType.peng);
+        ke.addAll(huCardType.anGang);
+        ke.addAll(huCardType.mingGang);
+
+        //刻不是1 9
+        for (int keType : ke) {
+            if (!isYaoJiu(keType)) {
+                return false;
+            }
+        }
+
+        //顺没有1 9
+        for (int shunType : huCardType.shun) {
+            if (shunType != 0 && shunType != 6 && shunType != 9 && shunType != 15 && shunType != 18 && shunType != 24) {
+                return false;
+            }
+        }
+
+        if (huCardType.feng_shun.size() > 0) {
+            return false;
+        }
+        if (huCardType.zi_shun > 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    private static boolean isHu258(List<String> cards, PlayerCardsInfoMj playerCardsInfoMj){
+        Set<String> allCards = new HashSet<>();
+        allCards.addAll(cards);
+        allCards.addAll(playerCardsInfoMj.getCards());
+        for (String card : allCards) {
+            int cardType = CardTypeUtil.getTypeByCard(card);
+            if (cardType != 1 && cardType != 4 && cardType != 7 &&
+                    cardType != 10 && cardType != 13 && cardType != 16 &&
+                    cardType != 18 && cardType != 22 && cardType != 25) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+
+    private static boolean isYaoJiu(String card) {
+        int cardType = CardTypeUtil.getTypeByCard(card);
+        return isYaoJiu(cardType);
+    }
+
+    private static boolean isYaoJiu(int cardType) {
+        for (int yaojiu : HuUtil.yaojiu) {
+            if (cardType == yaojiu) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static boolean isYiSe_wtt(List<String> cards, HuCardType huCardType) {
         Set<Integer> set = new HashSet<>();

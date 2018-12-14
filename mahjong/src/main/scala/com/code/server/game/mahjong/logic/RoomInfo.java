@@ -44,6 +44,7 @@ public class RoomInfo extends RoomInfoExtendGold {
     protected Map<Long, Integer> zimoNum = new HashMap<>();
     //荒庄后是否换庄家
     private boolean isChangeBankerAfterHuangZhuang = false;
+
     protected boolean isYipaoduoxiang = false;
 
 
@@ -216,9 +217,10 @@ public class RoomInfo extends RoomInfoExtendGold {
             case "HONGZHONG":
             case "HONGZHONG2":
             case "HONGZHONG3":
+                return new GameInfoHongZhong();
             case "HONGZHONGSS3":
             case "HONGZHONGSS":
-                return new GameInfoHongZhong();
+                return new GameInfoHongZhong().setTurnZeroAfterHuangZhuang(true);
             case "DINGSHENG":
             case "ACE":
                 return new GameInfoDingSheng();
@@ -799,4 +801,6 @@ public class RoomInfo extends RoomInfoExtendGold {
         this.zimoNum = zimoNum;
         return this;
     }
+
+
 }

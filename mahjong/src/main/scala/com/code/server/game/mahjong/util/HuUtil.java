@@ -194,7 +194,7 @@ public class HuUtil implements HuType {
 
 
         //普通胡法
-        List<HuCardType> huCardTypes = agari(analyse(convert(cards)), playerCardsInfo.isHasFengShun());
+        List<HuCardType> huCardTypes = agari(analyse(convert(cards)), playerCardsInfo.isHasFengShun(),playerCardsInfo.isHasZiShun(), playerCardsInfo.isHasYaojiuShun());
         huList.addAll(huCardTypes);
 
         for (HuCardType huCardType : huList) {
@@ -365,13 +365,13 @@ public class HuUtil implements HuType {
 
 
     //胡牌
-    static List<HuCardType> agari(int[] n, boolean... isHasFengShun) {
+    static List<HuCardType> agari(int[] n, boolean isHasFengShun, boolean isHasZiShun, boolean isHasYaojiuShun) {
         List<HuCardType> ret = new ArrayList<>();
 
         List<List<CardGroup>> list = new ArrayList();
         List<CardGroup> groups = new ArrayList<>();
-        boolean isHasF = isHasFengShun.length != 0 && isHasFengShun[0];
-        Hu.isHu(n, list, groups, isHasF);
+//        boolean isHasF = isHasFengShun.length != 0 && isHasFengShun[0];
+        Hu.isHu(n, list, groups, isHasFengShun, isHasZiShun, isHasYaojiuShun);
         return Hu.convert(list);
     }
 
