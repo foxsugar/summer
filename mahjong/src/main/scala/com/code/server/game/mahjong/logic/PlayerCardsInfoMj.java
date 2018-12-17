@@ -78,6 +78,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     protected boolean isJieGangHu = false;
     protected List<HuCardType> tingWhatInfo = new ArrayList<>();
     protected Set<Integer> guoPengSet = new HashSet<>();
+    protected int paofen = -1;
 
     /**
      * 根据发的牌初始化
@@ -1392,6 +1393,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     public PlayerCardsInfoMj setHasYaojiuShun(boolean hasYaojiuShun) {
         isHasYaojiuShun = hasYaojiuShun;
+        return this;
+    }
+
+    public int getPaofen() {
+        return paofen;
+    }
+
+    public PlayerCardsInfoMj setPaofen(int paofen) {
+        this.paofen = paofen;
         return this;
     }
 }

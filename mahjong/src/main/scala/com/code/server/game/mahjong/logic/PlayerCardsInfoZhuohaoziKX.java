@@ -15,6 +15,9 @@ public class PlayerCardsInfoZhuohaoziKX extends PlayerCardsInfoZhuohaozi {
     public void init(List<String> cards) {
         super.init(cards);
 
+        specialHuScore.remove(hu_七小对);
+        specialHuScore.remove(hu_豪华七小对);
+        specialHuScore.remove(hu_双豪七小对_山西);
 //        specialHuScore.put(hu_七小对,1);
 //        specialHuScore.put(hu_十三幺,4);
 //        specialHuScore.put(hu_豪华七小对,1);

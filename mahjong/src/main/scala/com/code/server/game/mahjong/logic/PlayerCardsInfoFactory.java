@@ -120,6 +120,9 @@ public class PlayerCardsInfoFactory {
             case "114":
                 playerCardsInfo = new PlayerCardsInfoFanshi();
                 break;
+            case "115":
+                playerCardsInfo = new PlayerCardsInfoLongxiang();
+                break;
             default:
                 logger.error("初始化 playercardsInfo 错误");
                 return null;

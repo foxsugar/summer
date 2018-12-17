@@ -226,6 +226,14 @@ public class RoomInfo extends RoomInfoExtendGold {
                 return new GameInfoDingSheng();
             case "FANSHI":
                 return new GameInfoFanshi();
+            case "LONGXIANGA":
+            case "LONGXIANG2A":
+            case "LONGXIANGB":
+            case "LONGXIANG2B":
+            case "LONGXIANGC":
+            case "LONGXIANG2C":
+                return new GameInfoLongxiang();
+
             default:
                 return new GameInfo();
         }

@@ -220,6 +220,15 @@ public class GameInfo extends Game {
 //        }
     }
 
+    /**
+     * 跑分
+     * @param userId
+     * @return
+     */
+    protected int paofen(long userId, int status) {
+        return 0;
+    }
+
     protected void computeAllGang() {
         if(this.isAlreadyComputeGang) return;
         this.isAlreadyComputeGang = true;

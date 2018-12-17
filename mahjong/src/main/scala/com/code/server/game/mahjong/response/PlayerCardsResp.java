@@ -44,6 +44,7 @@ public class PlayerCardsResp {
     private double gangScore;
     private Set<Integer> baoMingDan = new HashSet<>();
     private Set<Integer> baoAnDan = new HashSet<>();
+    private int paofen = -1;
 
     
 
@@ -73,6 +74,7 @@ public class PlayerCardsResp {
             this.canBePengTing = info.isCanBePengTing();
             this.canBeXuanfengDan = info.isCanBeXuanfeng();
             this.canBeBufeng = info.isCanBeBufeng();
+            this.paofen = info.getPaofen();
          
             if(info instanceof PlayerCardsInfoLS){
             	PlayerCardsInfoLS infols = (PlayerCardsInfoLS)info;
@@ -354,6 +356,15 @@ public class PlayerCardsResp {
 
     public PlayerCardsResp setCanBeBufeng(boolean canBeBufeng) {
         this.canBeBufeng = canBeBufeng;
+        return this;
+    }
+
+    public int getPaofen() {
+        return paofen;
+    }
+
+    public PlayerCardsResp setPaofen(int paofen) {
+        this.paofen = paofen;
         return this;
     }
 }
