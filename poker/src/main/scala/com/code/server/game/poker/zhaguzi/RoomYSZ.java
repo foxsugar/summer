@@ -409,9 +409,6 @@ public class RoomYSZ extends RoomExtendGold {
 
     }
 
-    public void spendMoney() {
-        RedisManager.getUserRedisService().addUserMoney(this.createUser, -createNeedMoney);
-    }
 
     @Override
     public PrepareRoom getPrepareRoomVo() {
