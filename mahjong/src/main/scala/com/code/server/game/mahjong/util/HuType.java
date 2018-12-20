@@ -30,6 +30,8 @@ public interface HuType {
     int hu_三元两副自摸 = 21;//三元两副
     int hu_三元三副 = 22;//三元两副
     int hu_三元三副自摸 = 23;//三元两副自摸
+    int hu_缺两门严格 = 24;
+    int hu_缺三门 = 25;
 
     int hu_清一色 = 30;//清一色
     int hu_一条龙 = 31;//一条龙
@@ -106,6 +108,21 @@ public interface HuType {
     int hu_将对= 202;
     //四个碰
     int hu_四碰 = 203;
+
+    int hu_风谱1 = 204;
+    int hu_风谱2 = 205;
+    int hu_风谱3 = 206;
+    int hu_风谱4 = 207;
+
+    int hu_将谱1 = 208;
+    int hu_将谱2 = 209;
+    int hu_将谱3 = 210;
+    int hu_将谱4 = 211;
+
+    int hu_幺九谱1 = 212;
+    int hu_幺九谱2 = 213;
+    int hu_幺九谱3 = 214;
+    int hu_幺九谱4 = 215;
 
 
 

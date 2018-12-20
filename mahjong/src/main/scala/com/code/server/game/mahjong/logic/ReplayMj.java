@@ -23,6 +23,9 @@ public class ReplayMj {
 
     private List<Integer> hun = new ArrayList<>();
 
+    private Map<Long, String> koutingCard = new HashMap<>();
+    private Map<Long, Integer> paofen = new HashMap<>();
+
     private int rand;
 
     // 不能加gameInfo进来 会循环引用
@@ -105,6 +108,24 @@ public class ReplayMj {
 
     public ReplayMj setRand(int rand) {
         this.rand = rand;
+        return this;
+    }
+
+    public Map<Long, String> getKoutingCard() {
+        return koutingCard;
+    }
+
+    public ReplayMj setKoutingCard(Map<Long, String> koutingCard) {
+        this.koutingCard = koutingCard;
+        return this;
+    }
+
+    public Map<Long, Integer> getPaofen() {
+        return paofen;
+    }
+
+    public ReplayMj setPaofen(Map<Long, Integer> paofen) {
+        this.paofen = paofen;
         return this;
     }
 }

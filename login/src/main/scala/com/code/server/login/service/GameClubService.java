@@ -82,8 +82,10 @@ public class GameClubService {
 
         for (String clubId : clubs) {
             Club club = ClubManager.getInstance().getClubById(clubId);
-            club.getClubInfo().getMember().get("" + userId).setLastLoginTime("" + System.currentTimeMillis());
-            list.add(getClubVo_simple(club));
+            if (club != null) {
+                club.getClubInfo().getMember().get("" + userId).setLastLoginTime("" + System.currentTimeMillis());
+                list.add(getClubVo_simple(club));
+            }
         }
 
         sendMsg(msgKey, new ResponseVo("clubService", "lookClub", list));

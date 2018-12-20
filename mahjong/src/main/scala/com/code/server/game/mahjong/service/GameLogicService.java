@@ -96,6 +96,10 @@ public class GameLogicService {
                 boolean isGet = jsonNode.path("isGet").asBoolean(false);
                 code = fanshiGetCard(roomId, userId, isGet);
                 break;
+            case "paofen":
+                int status = jsonNode.path("status").asInt(0);
+                code = paofen(roomId, userId, status);
+                break;
         }
         if (code == 0) {
             MsgSender.sendMsg2Player("gameLogicService",method,code, userId);
@@ -194,6 +198,10 @@ public class GameLogicService {
     public static int fanshiGetCard(String roomId, long userId,boolean isGet) {
         GameInfoFanshi gameInfoFanshi = (GameInfoFanshi) getGameInfo(roomId);
         return gameInfoFanshi.fanshiGetCard(userId, isGet);
+    }
+
+    public static int paofen(String roomId, long userId, int status){
+        return getGameInfo(roomId).paofen(userId, status);
     }
 
 }

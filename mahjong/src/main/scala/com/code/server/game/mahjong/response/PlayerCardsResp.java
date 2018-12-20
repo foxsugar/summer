@@ -45,6 +45,7 @@ public class PlayerCardsResp {
     private Set<Integer> baoMingDan = new HashSet<>();
     private Set<Integer> baoAnDan = new HashSet<>();
     private int paofen = -1;
+    private String koutingCard;
 
     
 
@@ -75,12 +76,13 @@ public class PlayerCardsResp {
             this.canBeXuanfengDan = info.isCanBeXuanfeng();
             this.canBeBufeng = info.isCanBeBufeng();
             this.paofen = info.getPaofen();
-         
+
             if(info instanceof PlayerCardsInfoLS){
-            	PlayerCardsInfoLS infols = (PlayerCardsInfoLS)info;
-            	this.firstfourLS.addAll(infols.getFirst_four());
+                PlayerCardsInfoLS infols = (PlayerCardsInfoLS)info;
+                this.firstfourLS.addAll(infols.getFirst_four());
             }
         }
+        this.koutingCard = info.getKoutingCard();
         this.userId = info.getUserId();
         this.disCards.addAll(info.getDisCards());
         this.pengType = getGroup(info.getPengType());
@@ -365,6 +367,15 @@ public class PlayerCardsResp {
 
     public PlayerCardsResp setPaofen(int paofen) {
         this.paofen = paofen;
+        return this;
+    }
+
+    public String getKoutingCard() {
+        return koutingCard;
+    }
+
+    public PlayerCardsResp setKoutingCard(String koutingCard) {
+        this.koutingCard = koutingCard;
         return this;
     }
 }

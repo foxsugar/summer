@@ -419,7 +419,7 @@ public class Hu {
 
             if (isHasYaojiuShun) {
                 for(int[] yaojiu : HuUtil.yao_jiu_shun){
-                    if (isHasFengShun(cards, i, yaojiu)) {
+                    if (isHasYJShun(cards, i, yaojiu)) {
                         int[] newCards = Arrays.copyOf(cards, cards.length);
                         removeFengShun(newCards, yaojiu);
                         List<CardGroup> newList = new ArrayList<>(list);

@@ -1,8 +1,11 @@
 package com.code.server.login.action;
 
 import com.code.server.constant.game.UserBean;
+import com.code.server.constant.kafka.KafkaMsgKey;
+import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.model.User;
+import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.service.ClubManager;
 import com.code.server.login.service.GameUserService;
@@ -136,5 +139,36 @@ public class ManagerAction extends Cors {
             }
         }
         return "ok";
+    }
+
+
+    @RequestMapping("/dissolveRoom")
+    public AgentResponse dissolveRoom(String roomId) {
+        System.out.println("admin解散房间");
+        Map<String, Object> rs = new HashMap<>();
+        AgentResponse agentResponse = new AgentResponse();
+        agentResponse.setData(rs);
+        String serverId = RedisManager.getRoomRedisService().getServerId(roomId);
+        if (serverId == null) {
+            rs.put("result", "ok");
+//            rs.put("")
+//            agentResponse.setMsg("房间不存在");
+//            agentResponse.setCode(com.code.server.login.action.ErrorCode.ERROR);
+
+            RedisManager.removeRoomAllInfo(roomId);
+            return agentResponse;
+        }
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        Map<String, Object> result = new HashMap<>();
+        result.put("roomId", roomId);
+        KafkaMsgKey msgKey = new KafkaMsgKey();
+        msgKey.setUserId(0);
+        msgKey.setRoomId(roomId);
+        msgKey.setPartition(Integer.valueOf(serverId));
+        ResponseVo responseVo = new ResponseVo("roomService", "dissolutionRoom", result);
+        msgProducer.send2Partition("roomService", Integer.valueOf(serverId), msgKey, responseVo);
+
+        rs.put("result", "ok");
+        return agentResponse;
     }
 }

@@ -77,7 +77,7 @@ public class HuUtil implements HuType {
             {17, 18, 26}
     };
 
-    static int[] yaojiu = new int[]{
+    public static int[] yaojiu = new int[]{
         0, 8, 9, 17, 18, 26
     };
 

@@ -73,11 +73,19 @@ public class FanUtil implements HuType {
         int fan = huCardType.fan;
         if (playerCardsInfo.isHasSpecialHu(hu_缺一门) && no_group_num(cards, huCardType) == 1) {//缺一门
             huCardType.specialHuList.add(hu_缺一门);
-            fan += playerCardsInfo.getSpecialHuScore(hu_缺一门);
+            fan += playerCardsInfo.getSpecialHuScore(hu_缺一门)  * playerCardsInfo.getPuMutiple();
         }
         if (playerCardsInfo.isHasSpecialHu(hu_缺两门) && no_group_num(cards, huCardType) >= 2) {//缺两门
             huCardType.specialHuList.add(hu_缺两门);
             fan += playerCardsInfo.getSpecialHuScore(hu_缺两门);
+        }
+        if (playerCardsInfo.isHasSpecialHu(hu_缺两门严格) && no_group_num(cards, huCardType) == 2) {//缺两门
+            huCardType.specialHuList.add(hu_缺两门严格);
+            fan += playerCardsInfo.getSpecialHuScore(hu_缺两门严格) * playerCardsInfo.getPuMutiple();
+        }
+        if (playerCardsInfo.isHasSpecialHu(hu_缺三门) && no_group_num(cards, huCardType) == 3) {//缺两门
+            huCardType.specialHuList.add(hu_缺三门);
+            fan += playerCardsInfo.getSpecialHuScore(hu_缺三门)* playerCardsInfo.getPuMutiple();
         }
         if (playerCardsInfo.isHasSpecialHu(hu_孤将) && is_gujiang(cards, huCardType)) {//孤将
             huCardType.specialHuList.add(hu_孤将);
@@ -212,6 +220,25 @@ public class FanUtil implements HuType {
         if (playerCardsInfo.isHasSpecialHu(HuType.hu_四碰) && huCardType.peng.size()==4) {
             huCardType.specialHuList.add(hu_四碰);
             fan += playerCardsInfo.getSpecialHuScore(hu_四碰);
+        }
+
+        if (playerCardsInfo.isHasSpecialHu(hu_风谱1)) {
+            int size = huCardType.feng_shun.size() - 1;
+            huCardType.specialHuList.add(hu_风谱1 + size);
+            fan += playerCardsInfo.getSpecialHuScore(hu_风谱1 + size) * playerCardsInfo.getPuMutiple();
+        }
+
+        if (playerCardsInfo.isHasSpecialHu(hu_将谱1) && huCardType.zi_shun!=0) {
+            int size = huCardType.zi_shun - 1;
+            huCardType.specialHuList.add(hu_将谱1 + size);
+            fan += playerCardsInfo.getSpecialHuScore(hu_将谱1 + size) * playerCardsInfo.getPuMutiple();
+        }
+
+        if (playerCardsInfo.isHasSpecialHu(hu_幺九谱1) && huCardType.yao_jiu_shun.size()>0) {
+
+            int size = huCardType.yao_jiu_shun.size() - 1;
+            huCardType.specialHuList.add(hu_幺九谱1 + size);
+            fan += playerCardsInfo.getSpecialHuScore(hu_幺九谱1 + size) * playerCardsInfo.getPuMutiple();
         }
 
 
@@ -643,7 +670,7 @@ public class FanUtil implements HuType {
         return isYaoJiu(cardType);
     }
 
-    private static boolean isYaoJiu(int cardType) {
+    public static boolean isYaoJiu(int cardType) {
         for (int yaojiu : HuUtil.yaojiu) {
             if (cardType == yaojiu) {
                 return true;

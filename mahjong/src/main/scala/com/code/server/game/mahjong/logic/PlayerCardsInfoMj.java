@@ -79,6 +79,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     protected List<HuCardType> tingWhatInfo = new ArrayList<>();
     protected Set<Integer> guoPengSet = new HashSet<>();
     protected int paofen = -1;
+    protected String koutingCard = "";
 
     /**
      * 根据发的牌初始化
@@ -972,6 +973,10 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         return (c & (1 << type)) >> type == 1;
     }
 
+    public int getPuMutiple(){
+        return 1;
+    }
+
     public static void main(String[] args) {
 
 //        PlayerCardsInfoMj playerCardsInfo = new PlayerCardsInfoMj();
@@ -1402,6 +1407,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     public PlayerCardsInfoMj setPaofen(int paofen) {
         this.paofen = paofen;
+        return this;
+    }
+
+    public String getKoutingCard() {
+        return koutingCard;
+    }
+
+    public PlayerCardsInfoMj setKoutingCard(String koutingCard) {
+        this.koutingCard = koutingCard;
         return this;
     }
 }

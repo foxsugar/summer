@@ -1,12 +1,11 @@
 package com.code.server.game.mahjong.logic;
 
 import com.code.server.constant.response.ResponseVo;
+import com.code.server.game.mahjong.response.HandCardsResp;
 import com.code.server.game.mahjong.response.ResponseType;
 import com.code.server.game.room.kafka.MsgSender;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by sunxianping on 2018-12-14.
@@ -53,6 +52,17 @@ public class GameInfoLongxiang extends GameInfoNew {
         this.users.addAll(users);
         this.playerSize = room.getPersonNumber();
 
+        for (int i = 0; i < playerSize; i++) {
+            PlayerCardsInfoMj playerCardsInfo = PlayerCardsInfoFactory.getInstance(room);
+            playerCardsInfo.setGameInfo(this);
+            long userId = users.get(i);
+            //设置id
+            playerCardsInfo.setUserId(userId);
+
+            //放进map
+            playerCardsInfos.put(userId, playerCardsInfo);
+        }
+
         if (this.room.isHasMode(mode_跑分)) {
             pushPaofen();
         }else{
@@ -60,6 +70,48 @@ public class GameInfoLongxiang extends GameInfoNew {
         }
     }
 
+    /**
+     * 发牌
+     */
+    public void fapai() {
+        //打乱顺序
+        Collections.shuffle(remainCards);
+        for (int i = 0; i < playerSize; i++) {
+//            PlayerCardsInfoMj playerCardsInfo = PlayerCardsInfoFactory.getInstance(room);
+//            playerCardsInfo.setGameInfo(this);
+            long userId = users.get(i);
+            //设置id
+            PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
+            playerCardsInfo.setUserId(userId);
+            List<String> playerCards = new ArrayList<>();
+            //发牌
+            for (int j = 0; j < cardSize; j++) {
+                playerCards.add(remainCards.remove(0));
+            }
+            //初始化
+            playerCardsInfo.init(playerCards);
+
+
+            //发牌状态通知
+            HandCardsResp resp = new HandCardsResp();
+            resp.setCards(playerCards);
+            ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_GET_HAND_CARDS, resp);
+
+            MsgSender.sendMsg2Player(vo, userId);
+
+
+        }
+        doAfterFapai();
+        //回放的牌信息
+        for (PlayerCardsInfoMj playerCardsInfoMj : playerCardsInfos.values()) {
+            List<String> cs = new ArrayList<>();
+            cs.addAll(playerCardsInfoMj.getCards());
+            replay.getCards().put(playerCardsInfoMj.getUserId(), cs);
+        }
+        //第一个人抓牌
+        mopai(firstTurn, "发牌");
+
+    }
 
     private void pushPaofen() {
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, "choosePaofen", 0);
@@ -75,9 +127,12 @@ public class GameInfoLongxiang extends GameInfoNew {
      * @param userId
      * @return
      */
-    protected int paofen(long userId, int status) {
+    public int paofen(long userId, int status) {
         PlayerCardsInfoMj playerCardsInfoMj = playerCardsInfos.get(userId);
         playerCardsInfoMj.setPaofen(status);
+
+        //回放
+        replay.getPaofen().put(userId, status);
 
         Map<String, Object> result = new HashMap<>();
         result.put("userId", userId);
@@ -89,11 +144,13 @@ public class GameInfoLongxiang extends GameInfoNew {
 
 
         //全部选择 就发牌
-        if (playerCardsInfos.values().stream().filter(playerCardsInfoMj1 -> playerCardsInfoMj.paofen == -1).count() == 0) {
+        if (playerCardsInfos.values().stream().filter(playerCardsInfoMj1 -> playerCardsInfoMj1.paofen == -1).count() == 0) {
             fapai();
         }
         return 0;
     }
+
+
 
 
 

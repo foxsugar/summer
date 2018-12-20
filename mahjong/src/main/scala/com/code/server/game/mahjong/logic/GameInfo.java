@@ -225,7 +225,7 @@ public class GameInfo extends Game {
      * @param userId
      * @return
      */
-    protected int paofen(long userId, int status) {
+    public int paofen(long userId, int status) {
         return 0;
     }
 
