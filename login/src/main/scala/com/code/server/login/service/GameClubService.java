@@ -1495,6 +1495,7 @@ public class GameClubService {
         clubVo.setPresidentWx(club.getPresidentWx());
         clubVo.setApplyNum(club.getClubInfo().getApplyList().size());
         clubVo.setImage(club.getImage());
+        clubVo.setRoomModelNum(club.getClubInfo().getRoomModels().size());
 
 
         return clubVo;

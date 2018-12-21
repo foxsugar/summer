@@ -21,6 +21,7 @@ public class ClubVo {
     private String presidentWx;
     private int applyNum;
     private String image;
+    private int roomModelNum;
     private List<String> floorDesc = new ArrayList<>();
 
     private List<ClubMember> member = new ArrayList<>();//成员
@@ -211,6 +212,15 @@ public class ClubVo {
 
     public ClubVo setAutoJoin(boolean autoJoin) {
         this.autoJoin = autoJoin;
+        return this;
+    }
+
+    public int getRoomModelNum() {
+        return roomModelNum;
+    }
+
+    public ClubVo setRoomModelNum(int roomModelNum) {
+        this.roomModelNum = roomModelNum;
         return this;
     }
 }
