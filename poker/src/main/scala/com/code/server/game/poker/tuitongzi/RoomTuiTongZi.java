@@ -299,7 +299,10 @@ public class RoomTuiTongZi extends PokerGoldRoom {
 //        if (this.game != null){
 //            this.addUserSocre(this.getBankerId(), this.getPotBottom() - ((GameTuiTongZi)this.game).offset());
 //        }
-        this.addUserSocre(this.getBankerId(), this.getPotBottom() - this.offset);
+        if (this.users.contains(this.getBankerId())) {
+
+            this.addUserSocre(this.getBankerId(), this.getPotBottom() - this.offset);
+        }
         super.dissolutionRoom();
     }
 

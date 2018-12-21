@@ -766,9 +766,9 @@ public class Room implements IfaceRoom {
             drawBack();
             GameTimer.removeNode(this.prepareRoomTimerNode);
         }
-        if (isClubRoom() && !this.isInGame && this.curGameNumber == 1 && this.users.size() == 0) {
-            clubDrawBack();
-        }
+//        if (isClubRoom() && !this.isInGame && this.curGameNumber == 1 && this.users.size() == 0) {
+//            clubDrawBack();
+//        }
         this.isInGame = false;
 
         // 存储返回
