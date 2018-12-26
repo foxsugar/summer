@@ -20,6 +20,7 @@ public class PlayerCardInfoDouDiZhu implements IfacePlayerInfo {
     protected boolean isQiang;
     protected double score;
     protected int playCount;
+    protected int zhaCount;
 
     //检测出牌是否合法
     public boolean checkPlayCard(CardStruct lastcardStruct , CardStruct currentCardStruct , int lasttype){
@@ -288,6 +289,8 @@ public class PlayerCardInfoDouDiZhu implements IfacePlayerInfo {
         vo.allCards.addAll(this.allCards);
         vo.isQiang = this.isQiang();
         vo.score = this.getScore();
+        vo.zhaCount = this.zhaCount;
+
         return vo;
     }
 
@@ -385,6 +388,15 @@ public class PlayerCardInfoDouDiZhu implements IfacePlayerInfo {
 
     public PlayerCardInfoDouDiZhu setAllCards(List<Integer> allCards) {
         this.allCards = allCards;
+        return this;
+    }
+
+    public int getZhaCount() {
+        return zhaCount;
+    }
+
+    public PlayerCardInfoDouDiZhu setZhaCount(int zhaCount) {
+        this.zhaCount = zhaCount;
         return this;
     }
 }

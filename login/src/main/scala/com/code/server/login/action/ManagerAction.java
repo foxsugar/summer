@@ -1,9 +1,12 @@
 package com.code.server.login.action;
 
+import com.code.server.constant.club.ClubMember;
+import com.code.server.constant.club.ClubStatistics;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.UserService;
+import com.code.server.db.model.Club;
 import com.code.server.db.model.User;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
@@ -19,10 +22,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import static com.code.server.redis.config.IConstant.ROOM_USER;
 import static com.code.server.redis.config.IConstant.USER_GATE;
@@ -171,4 +173,45 @@ public class ManagerAction extends Cors {
         rs.put("result", "ok");
         return agentResponse;
     }
+
+
+    @RequestMapping("/clearClub")
+    public AgentResponse clearClub(String clubId) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club != null) {
+            for (ClubMember clubMember : club.getClubInfo().getMember().values()) {
+                clearClubMember(clubMember);
+            }
+        }
+        AgentResponse agentResponse = new AgentResponse();
+        return agentResponse;
+    }
+
+    private void clearClubMember(ClubMember clubMember) {
+        LocalDate localDate = LocalDate.now();
+        List<String> removeDate = new ArrayList<>();
+        for (Map.Entry<String, ClubStatistics> entry : clubMember.getStatistics().entrySet()) {
+            String key = entry.getKey();
+            LocalDate beginDateTime = LocalDate.parse(key, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            if (localDate.compareTo(beginDateTime) > 3) {
+                removeDate.add(key);
+            }
+
+        }
+
+        for (String key : removeDate) {
+            clubMember.getStatistics().remove(key);
+        }
+
+    }
+
+
+    public static void main(String[] args) {
+        LocalDate localDate = LocalDate.now();
+        LocalDate beginDateTime = LocalDate.parse("2017-10-10", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate beginDateTime1 = LocalDate.parse("2018-12-30", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        int rtn = localDate.compareTo(beginDateTime1);
+        System.out.println(rtn);
+    }
+
 }

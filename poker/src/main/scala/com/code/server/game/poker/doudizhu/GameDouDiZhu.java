@@ -53,6 +53,7 @@ public class GameDouDiZhu extends Game {
 
     protected int zhaCount;//炸的个数
     protected int multiple = 1;
+    protected int maxZha;
     protected RoomDouDiZhu room;
     protected boolean isSpring;//是否春天
     protected Set<Long> userPlayCount = new HashSet<>();
@@ -516,7 +517,9 @@ public class GameDouDiZhu extends Game {
         this.dizhu = dizhu;
         this.step = STEP_PLAY;
         this.playTurn = dizhu;
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameBegin", 0), users);
+        Map<String, Object> whoPlay = new HashMap<>();
+        whoPlay.put("userId", dizhu);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameBegin", whoPlay), users);
 
     }
 
