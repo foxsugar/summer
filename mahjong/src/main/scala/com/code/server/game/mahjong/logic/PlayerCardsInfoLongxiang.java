@@ -78,6 +78,64 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
     }
 
 
+    public boolean isCanPengAddThisCard(String card) {
+        if (isTing) {
+            return false;
+        }else{
+            return super.isCanPengAddThisCard(card);
+        }
+    }
+
+    @Override
+    public boolean isHasGang() {
+        System.out.println("是否能杠: "+" isTing = "+isTing +"  cards = "+cards);
+        if (isTing) {
+            Set<Integer> canGangType = getHasGangList(cards);
+            for (int gt : canGangType) {
+                List<String> temp = new ArrayList<>();
+                temp.addAll(cards);
+                if (isCanTingAfterGang(temp, gt,false)) {
+                    return true;
+                }
+            }
+            return false;
+
+        }else return super.isHasGang();
+    }
+
+    @Override
+    public boolean isCanGangAddThisCard(String card) {
+        //听之后 杠后的牌还能听
+        if (isTing && super.isCanGangAddThisCard(card)) {
+            List<String> temp = getCardsAddThisCard(card);
+            //去掉 这张杠牌
+            int ct = CardTypeUtil.cardType.get(card);
+            return isCanTingAfterGang(temp, ct,true);
+
+        } else return super.isCanGangAddThisCard(card);
+
+    }
+
+    protected boolean isCanTingAfterGang(List<String> cards,int cardType,boolean isDianGang){
+        //先删除这次杠的
+        removeCardByType(cards,cardType,4);
+        boolean isMing = false;
+        //去除碰
+        for(int pt : pengType.keySet()){//如果杠的是之前碰过的牌
+            if (pt != cardType) {
+                removeCardByType(cards, pt, 3);
+            } else {
+                isMing = true;
+            }
+        }
+        //去掉杠的牌
+        cards = getCardsNoGang(cards);
+        isMing = isMing||isDianGang;
+
+        //胡牌类型加上杠
+        List<HuCardType> list = getTingHuCardType(cards,null);
+        return list.size()>0;
+    }
 
     public boolean isCanTing(List<String> cards) {
         if (isTing || !isHasMode(this.roomInfo.mode, mode_扣听)) {
