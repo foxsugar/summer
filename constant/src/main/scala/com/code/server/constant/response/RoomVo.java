@@ -33,6 +33,7 @@ public class RoomVo implements IfaceRoomVo {
     public List<UserVo> userList = new ArrayList<>();//用户列表
     public Map<Long, Double> userScores = new HashMap<>();
     public List<Long> watchUser = new ArrayList<>();
+    public Map<Long, Integer> autoPlayStatus = new HashMap<>();
     public int personNumber;
     public boolean isAA;
     public boolean isCreaterJoin;
@@ -359,6 +360,15 @@ public class RoomVo implements IfaceRoomVo {
 
     public RoomVo setBankerId(long bankerId) {
         this.bankerId = bankerId;
+        return this;
+    }
+
+    public Map<Long, Integer> getAutoPlayStatus() {
+        return autoPlayStatus;
+    }
+
+    public RoomVo setAutoPlayStatus(Map<Long, Integer> autoPlayStatus) {
+        this.autoPlayStatus = autoPlayStatus;
         return this;
     }
 }

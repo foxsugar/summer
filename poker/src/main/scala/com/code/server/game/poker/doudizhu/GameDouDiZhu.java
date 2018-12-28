@@ -85,10 +85,27 @@ public class GameDouDiZhu extends Game {
 
 
         shuffle();
+        handleNoShuffle();
         deal();
         //第一局 第一个玩家做地主
         dizhuUser = dizhuUser != 0 ? dizhuUser : users.get(0);
         chooseDizhu(dizhuUser);
+    }
+
+    protected void putCard2LastGameCards(List<Integer> cards) {
+        if (isNoShuffle()) {
+            this.room.getLastGameCards().addAll(cards);
+        }
+
+    }
+
+    protected void handleNoShuffle(){
+        if (isNoShuffle() && this.room.getLastGameCards().size()>0) {
+            this.cards.clear();
+            this.cards.addAll(this.room.getLastGameCards());
+            //清空 不洗牌的牌堆
+            this.room.getLastGameCards().clear();
+        }
     }
 
     public PlayerCardInfoDouDiZhu getGameTypePlayerCardInfo() {
@@ -115,6 +132,20 @@ public class GameDouDiZhu extends Game {
         }
     }
 
+    protected boolean isNoShuffle(){
+
+        return isHasModel(1);
+    }
+
+
+    /**
+     * 是否有此模式
+     * @param type
+     * @return
+     */
+    protected boolean isHasModel(int type) {
+        return Room.isHasMode(type,this.room.getOtherMode());
+    }
 
     /**
      * 出牌
@@ -127,6 +158,9 @@ public class GameDouDiZhu extends Game {
         if (!playerCardInfo.checkPlayCard(lastCardStruct, cardStruct, lasttype)) {
             return ErrorCode.CAN_NOT_PLAY;
         }
+
+        //记录这局的出牌
+        putCard2LastGameCards(cardStruct.cards);
 
         userPlayCount.add(userId);
         playerCardInfo.setPlayCount(playerCardInfo.getPlayCount() + 1);

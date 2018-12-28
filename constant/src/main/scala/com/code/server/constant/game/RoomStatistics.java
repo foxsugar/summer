@@ -12,6 +12,7 @@ public class RoomStatistics {
     public int loseAllTime;
     public String maxCardGroup;
     public String ext;
+    public int zhaCount;
 
     public RoomStatistics() {
     }

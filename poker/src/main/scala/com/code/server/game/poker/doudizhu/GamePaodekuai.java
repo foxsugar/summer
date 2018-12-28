@@ -38,6 +38,14 @@ public class GamePaodekuai extends GameDouDiZhu {
     int curCircleZhaCount = 0;
 
 
+    public void startGame(List<Long> users, Room room) {
+        this.room = (RoomDouDiZhu)room;
+        init(users, room.getBankerId());
+        updateLastOperateTime();
+        //通知其他人游戏已经开始
+//        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gameBegin", "ok"), this.getUsers());
+    }
+
     public void init(List<Long> users, long dizhuUser) {
         //没人16张牌
         initCardNum = 16;
@@ -49,12 +57,10 @@ public class GamePaodekuai extends GameDouDiZhu {
         }
         this.users.addAll(users);
 
-        if (!this.room.isUserLastGameCards()) {
-            this.room.getLastGameCards().clear();
-        }
 
 
         shuffle();
+        handleNoShuffle();
         deal();
         //第一局 第一个玩家做地主
         dizhuUser = dizhuUser != 0 ? dizhuUser : users.get(0);
@@ -73,13 +79,17 @@ public class GamePaodekuai extends GameDouDiZhu {
 
 
         long userId = cardStruct.getUserId();
-        if (isHasModel(mode_单圈最大炸弹算分)) {
-            //判断这圈是否结束
-            curCircleZhaCount++;
+        if (cardStruct.getType() == CardStruct.type_炸) {
 
-        }else{
-            PlayerCardPaodekuai playerCardPaodekuai = (PlayerCardPaodekuai) playerCardInfos.get(userId);
-            playerCardPaodekuai.setZhaCount(playerCardPaodekuai.getZhaCount() + 1);
+            if (isHasModel(mode_单圈最大炸弹算分)) {
+                //判断这圈是否结束
+                curCircleZhaCount++;
+
+            }else{
+                PlayerCardPaodekuai playerCardPaodekuai = (PlayerCardPaodekuai) playerCardInfos.get(userId);
+                playerCardPaodekuai.setZhaCount(playerCardPaodekuai.getZhaCount() + 1);
+                this.room.getRoomStatisticsMap().get(userId).zhaCount += 1;
+            }
         }
 
         if (zhaCount < room.getMultiple() || room.getMultiple() == -1) {
@@ -98,11 +108,12 @@ public class GamePaodekuai extends GameDouDiZhu {
     protected void handleBomb2People(long userId){
         if(isHasModel(mode_单圈每个炸弹算分)) return;
         //判断是不是一圈了
-        if (playList.size() >= 1) {
+        if (playList.size() >= 1 && curCircleZhaCount>0) {
             //
             if (userId == playList.get(playList.size() - 1)) {
                 PlayerCardInfoDouDiZhu playerCardPaodekuai =  playerCardInfos.get(userId);
                 playerCardPaodekuai.setZhaCount(playerCardPaodekuai.getZhaCount() + 1);
+                this.room.getRoomStatisticsMap().get(userId).zhaCount += 1;
 
                 this.curCircleZhaCount = 0;
             }
@@ -121,6 +132,9 @@ public class GamePaodekuai extends GameDouDiZhu {
         if (!playerCardInfo.checkPlayCard(lastCardStruct, cardStruct, lasttype)) {
             return ErrorCode.CAN_NOT_PLAY;
         }
+
+        //记录这局的出牌
+        putCard2LastGameCards(cardStruct.cards);
 
         userPlayCount.add(userId);
         playerCardInfo.setPlayCount(playerCardInfo.getPlayCount() + 1);
@@ -213,12 +227,16 @@ public class GamePaodekuai extends GameDouDiZhu {
                 subScore += score;
                 playerCardInfo.setScore(-score);
                 room.addUserSocre(playerCardInfo.getUserId(), -score);
+
+                //手里的牌 加到不洗牌中
+                //记录这局的出牌
+                putCard2LastGameCards(playerCardInfo.cards);
             }
         }
 
         PlayerCardInfoDouDiZhu winner = playerCardInfos.get(winnerId);
-        winner.setScore(-subScore);
-        room.addUserSocre(dizhu, -subScore);
+        winner.setScore(subScore);
+        room.addUserSocre(winnerId, subScore);
 
     }
 
@@ -268,15 +286,15 @@ public class GamePaodekuai extends GameDouDiZhu {
         return 0;
     }
 
-    /**
-     * 是否有此模式
-     * @param type
-     * @return
-     */
-    protected boolean isHasModel(int type) {
-        return Room.isHasMode(this.room.getOtherMode(), type);
+
+
+    protected boolean isNoShuffle(){
+        return isHasModel(mode_不洗牌);
     }
 
+    public static void main(String[] args) {
+        System.out.println(Room.isHasMode(1,10914));
+    }
     /**
      * 开始打牌
      *
@@ -305,9 +323,5 @@ public class GamePaodekuai extends GameDouDiZhu {
 
         Collections.shuffle(cards);
 
-        RoomDouDiZhu roomDouDiZhu = (RoomDouDiZhu)room;
-        if (roomDouDiZhu.isUserLastGameCards() && roomDouDiZhu.getLastGameCards().size()>0) {
-            cards = roomDouDiZhu.getLastGameCards();
-        }
     }
 }

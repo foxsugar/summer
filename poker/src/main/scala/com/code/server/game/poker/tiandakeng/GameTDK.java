@@ -196,10 +196,13 @@ public class GameTDK extends Game {
         } else {
 
             //每人发三张牌
-            for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
-                playerInfoTDK.deal(cards.remove(0), false);
-                playerInfoTDK.deal(cards.remove(0), false);
-                playerInfoTDK.deal(cards.remove(0), false);
+            for(int i=0;i<3;i++) {
+
+                for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
+                    playerInfoTDK.deal(cards.remove(0), false);
+//                    playerInfoTDK.deal(cards.remove(0), false);
+//                    playerInfoTDK.deal(cards.remove(0), false);
+                }
             }
         }
 

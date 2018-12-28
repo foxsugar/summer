@@ -82,6 +82,9 @@ public class Room implements IfaceRoom {
 
     protected int otherMode;
 
+    //托管状态
+    protected Map<Long, Integer> autoPlayStatus = new HashMap<>();
+
 
     public static String getRoomIdStr(int roomId) {
         String s = "000000" + roomId;
@@ -478,6 +481,20 @@ public class Room implements IfaceRoom {
         }
         result.put("onlineStatus", onlineStatus);
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "getRoomInfo", result), userId);
+        return 0;
+    }
+
+    /**
+     * 设置托管状态
+     * @param userId
+     * @param status
+     * @return
+     */
+    public int setAutoStatus(long userId, int status) {
+        this.autoPlayStatus.put(userId, status);
+
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "autoPlayStatus", this.autoPlayStatus), users);
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "setAutoStatus", 0), userId);
         return 0;
     }
 
@@ -1449,6 +1466,15 @@ public class Room implements IfaceRoom {
 
     public Room setOtherMode(int otherMode) {
         this.otherMode = otherMode;
+        return this;
+    }
+
+    public Map<Long, Integer> getAutoPlayStatus() {
+        return autoPlayStatus;
+    }
+
+    public Room setAutoPlayStatus(Map<Long, Integer> autoPlayStatus) {
+        this.autoPlayStatus = autoPlayStatus;
         return this;
     }
 }

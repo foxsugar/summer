@@ -174,6 +174,13 @@ public class RoomMsgDispatch {
                 return r.getRoomInfo(userId);
             }
 
+            case "setAutoStatus":{
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                Room r = (Room) room;
+                int status = params.path("status").asInt();
+                return r.setAutoStatus(userId,status);
+            }
+
 
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
