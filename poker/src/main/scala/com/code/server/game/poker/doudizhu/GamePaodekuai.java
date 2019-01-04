@@ -224,6 +224,10 @@ public class GamePaodekuai extends GameDouDiZhu {
                 }
                 score += playerCardInfo.getZhaCount() * getZhaDifen();
 
+                if (playerCardInfo.getCards().size() == 1) {
+                    score = 0;
+                }
+
                 subScore += score;
                 playerCardInfo.setScore(-score);
                 room.addUserSocre(playerCardInfo.getUserId(), -score);

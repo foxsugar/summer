@@ -399,6 +399,14 @@ object GameService {
       val num = params.path("num").asInt(0)
       game.bet(userId,betType, index1, index2, num)
 
+    case "nuo"=>
+      val index1 = params.path("index1").asInt(0)
+      val index2 = params.path("index2").asInt(0)
+      val num = params.path("num").asInt(0)
+      game.nuo(userId, index1, index2, num)
+
+    case "gameOver"=>
+      game.gameOver()
 
 
     case _ =>

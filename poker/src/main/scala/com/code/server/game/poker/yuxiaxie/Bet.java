@@ -8,6 +8,7 @@ public class Bet {
     static final int TYPE_DANYA = 0;
     static final int TYPE_BAOZI = 1;
     static final int TYPE_CHUANLIAN = 2;
+    static final int TYPE_NUO = 3;
     int type;
     int index1;
     int index2;
@@ -19,6 +20,12 @@ public class Bet {
         this.index1 = index1;
         this.index2 = index2;
         this.num = num;
+    }
+
+
+    public int addNum(int num) {
+        this.num += num;
+        return this.num;
     }
 
     public Bet() {

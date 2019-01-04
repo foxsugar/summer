@@ -150,6 +150,12 @@ public class ErrorCode {
 	public static final int CANNOT_OPEN = 1110002;//不能踢
 	public static final int CANNOT_KICK_USER = 1110003;//不能踢
 
+	public static final int CANNOT_BET_LIMIT = 1110010;//不能下注
+	public static final int CANNOT_NUO = 1110011;//不能下注
+
+
+
+
 
 	static class ErrorCodeRepeatChecker {
 		public void check() {
@@ -168,7 +174,7 @@ public class ErrorCode {
 				}
     		}
     	}
-    }
+	}
     
     public static void checkRepeat() {
     	ErrorCodeRepeatChecker checker = new ErrorCodeRepeatChecker();

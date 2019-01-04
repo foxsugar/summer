@@ -1,12 +1,17 @@
 package com.code.server.game.poker.yuxiaxie;
 
+import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.IfaceGameVo;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.redis.service.RedisManager;
 import org.springframework.beans.BeanUtils;
 
 import java.util.*;
+
+import static com.code.server.game.poker.yuxiaxie.Bet.TYPE_DANYA;
+import static com.code.server.game.poker.yuxiaxie.Bet.TYPE_NUO;
 
 /**
  * Created by sunxianping on 2018-11-30.
@@ -14,14 +19,16 @@ import java.util.*;
 public class GameYuxiaxie extends Game {
 
     static final int STATE_START_GAME = 0;
-    static final int STATE_BET = 1;
-    static final int STATE_CRAP = 2;
+    static final int STATE_CRAP = 1;
+    static final int STATE_BET = 2;
     static final int STATE_OPEN = 3;
 
     private RoomYuxiaxie room;
     protected Map<Long, PlayerInfoYuxiaxie> playerCardInfos = new HashMap<>();
     private int state;
     private List<Integer> dice = new ArrayList<>();
+    List<Bet> allBets = new ArrayList<>();
+    private int nuoCount;
 
 
     /**
@@ -62,6 +69,9 @@ public class GameYuxiaxie extends Game {
     }
 
 
+    /**
+     * 下注开始
+     */
     protected void betStart() {
         this.state = STATE_BET;
         MsgSender.sendMsg2Player("gameService", "betStart", "ok",this.users);
@@ -78,9 +88,21 @@ public class GameYuxiaxie extends Game {
      */
     public int bet(long userId,int type, int index1,  int index2, int num) {
 
+        //判断有没有到上限
+
+        //记录总下注
+        Bet bet = getBetAndSet(type, index1, index2);
+
+        if (bet.getNum() + num > getBetLimit(type)) {
+            return ErrorCode.CANNOT_BET_LIMIT;
+        }
+
         PlayerInfoYuxiaxie playerInfoYuxiaxie = playerCardInfos.get(userId);
 
-        playerInfoYuxiaxie.bet(type, index1, index2, num);
+        playerInfoYuxiaxie.bet(this.room, type, index1, index2, num);
+
+
+        bet.addNum(num);
 
         //下注历史记录
         Map<Integer,Bet> betInfo = this.room.getBetHistory().getOrDefault(userId, new HashMap<>());
@@ -88,16 +110,112 @@ public class GameYuxiaxie extends Game {
         this.room.getBetHistory().put(userId, betInfo);
 
 
-        MsgSender.sendMsg2Player("gameService", "betResp", playerInfoYuxiaxie.getBet(),this.users);
+        MsgSender.sendMsg2Player("gameService", "betResp", new Bet(type, index1, index2, num),this.users);
         MsgSender.sendMsg2Player("gameService", "bet", "ok",userId);
        return 0;
     }
 
 
+    /**
+     * 挪
+     * @param userId
+     * @param index1
+     * @param index2
+     * @param num
+     * @return
+     */
+    public int nuo(long userId, int index1, int index2, int num) {
+        Bet bet1 = getBetAndSet(TYPE_DANYA, index1, 0);
+        Bet bet2 = getBetAndSet(TYPE_DANYA, index2, 0);
+
+        if (num > bet1.getNum()) {
+            return ErrorCode.CANNOT_NUO;
+        }
+        if (bet2.num + num > getBetLimit(TYPE_DANYA)) {
+            return ErrorCode.CANNOT_NUO;
+        }
+        //挪次数限制
+        if (this.nuoCount >= this.room.getNuo()) {
+            return ErrorCode.CANNOT_NUO;
+        }
+        this.nuoCount ++;
+
+        PlayerInfoYuxiaxie playerInfoYuxiaxie = playerCardInfos.get(userId);
+
+        playerInfoYuxiaxie.bet(this.room, TYPE_NUO, index1, index2, num);
+
+
+        bet1.addNum(-num);
+        bet2.addNum(num);
+
+
+        MsgSender.sendMsg2Player("gameService", "nuoResp", new Bet(3, index1, index2, num),this.users);
+        MsgSender.sendMsg2Player("gameService", "nuo", "ok",userId);
+
+        return 0;
+    }
+
+    /**
+     * 获得下注限制
+     * @param type
+     * @return
+     */
+    private int getBetLimit(int type) {
+        if (type == 0) {
+            return this.room.getDanya();
+        }
+        if (type == 1) {
+            return this.room.getBaozi();
+        }
+        if (type == 2) {
+            return this.room.getChuanlian();
+        }
+        return 0;
+    }
+
+    /**
+     * 通过type获得下注
+     * @param type
+     * @param index1
+     * @param index2
+     * @return
+     */
+    private Bet getBetByType(int type, int index1, int index2) {
+        for (Bet bet : allBets) {
+            if (bet.type == type && bet.index1 == index1 && bet.index2 == index2) {
+                return bet;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 通过type获得下注,没有的话设置
+     * @param type
+     * @param index1
+     * @param index2
+     * @return
+     */
+    private Bet getBetAndSet(int type, int index1, int index2) {
+        Bet bet = getBetByType(type, index1, index2);
+        if (bet == null) {
+            bet = new Bet(type, index1, index2, 0);
+        }
+        this.allBets.add(bet);
+        return bet;
+    }
+
+    /**
+     * 摇色子阶段
+     */
     public void crapStart(){
         this.state = STATE_CRAP;
+        this.room.setLastOperateTime(System.currentTimeMillis());
         MsgSender.sendMsg2Player("gameService", "crapStart", "ok",this.users);
     }
+
+
 
 
     /**
@@ -108,8 +226,8 @@ public class GameYuxiaxie extends Game {
     public int crap(long userId) {
         this.state = STATE_CRAP;
         Random random = new Random();
-        int num1 = random.nextInt(6);
-        int num2 = random.nextInt(6);
+        int num1 = random.nextInt(6) + 1;
+        int num2 = random.nextInt(6) + 1;
         dice.add(num1);
         dice.add(num2);
 
@@ -122,18 +240,21 @@ public class GameYuxiaxie extends Game {
         return 0;
     }
 
+
     /**
-     * 开局
+     * 结束
+     * @return
      */
-    public void open() {
-        //开局
+    public int gameOver() {
         this.state = STATE_OPEN;
-
-
-
-
+        compute();
+        return 0;
     }
 
+
+    /**
+     * 结算
+     */
     public void compute(){
         int allScore = 0;
         for (PlayerInfoYuxiaxie playerInfoYuxiaxie : this.playerCardInfos.values()) {
@@ -142,24 +263,23 @@ public class GameYuxiaxie extends Game {
                 continue;
             }
 
-            int score = playerInfoYuxiaxie.settle(this.dice.get(0), this.dice.get(1));
+            int score = playerInfoYuxiaxie.settle(this.room,this.dice.get(0), this.dice.get(1));
 
-            this.room.addUserSocre(playerInfoYuxiaxie.getUserId(), score);
+//            this.room.addUserSocre(playerInfoYuxiaxie.getUserId(), score);
 
             allScore += score;
 
         }
+        //
+        PlayerInfoYuxiaxie banker = playerCardInfos.get(this.room.getBankerId());
+        banker.setScore(banker.getScore() - allScore);
+        this.room.addUserSocre(banker.getUserId(), -allScore);
+        if (this.room.isClubRoom()) {
+            RedisManager.getClubRedisService().addClubUserMoney(this.room.getClubId(), banker.getUserId(), -allScore);
+        }
+
     }
 
-    /**
-     * 是否有模式
-     *
-     * @param mode
-     * @return
-     */
-    boolean isHasMode(int mode) {
-        return Room.isHasMode(mode, this.room.getOtherMode());
-    }
 
 
 
@@ -173,5 +293,14 @@ public class GameYuxiaxie extends Game {
             game.getPlayerCardInfos().put(playerInfo.getUserId(), (PlayerInfoYuxiaxieVo) playerInfo.toVo(watchUser));
         }
         return game;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public GameYuxiaxie setState(int state) {
+        this.state = state;
+        return this;
     }
 }

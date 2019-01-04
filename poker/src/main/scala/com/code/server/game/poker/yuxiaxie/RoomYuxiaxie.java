@@ -1,6 +1,7 @@
 package com.code.server.game.poker.yuxiaxie;
 
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.game.RoomRecord;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.game.UserRecord;
@@ -173,6 +174,67 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
 
     @Override
+    public int startGameByClient(long userId) {
+
+        if (this.users.get(0) != userId){
+            return ErrorCode.ROOM_START_NOT_CREATEUSER;
+        }
+
+        //第一局
+        if (this.curGameNumber != 1) return ErrorCode.ROOM_START_CAN_NOT;
+
+        if (userStatus.get(userId) != IGameConstant.STATUS_READY) return ErrorCode.ROOM_START_CAN_NOT;
+
+        //防止多次点开始
+        if(this.game != null) return ErrorCode.ROOM_START_CAN_NOT;
+
+        int readyCount = 0;
+        for (Map.Entry<Long, Integer> entry : userStatus.entrySet()) {
+
+            Integer status = entry.getValue();
+            if(status == IGameConstant.STATUS_READY) readyCount++;
+        }
+
+        if (readyCount < 2) return ErrorCode.READY_NUM_ERROR;
+
+        this.setPersonNumber(userScores.size());
+//        this.setPersonNumber(PERSONNUM);
+        //没准备的人
+        ArrayList<Long> removeList = new ArrayList<>();
+
+        for (Map.Entry<Long, Integer> entry : userStatus.entrySet()){
+            Integer status = entry.getValue();
+
+            if (status != IGameConstant.STATUS_READY){
+                removeList.add(entry.getKey());
+            }
+        }
+
+        for (Long removeId : removeList){
+            roomRemoveUser(removeId);
+        }
+
+        //通知其他人游戏已经开始
+//        MsgSender.sendMsg2Player(new ResponseVo("gameService", "gamePullMiceBegin", "ok"), this.getUsers());
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "startGameByClient", 0), userId);
+
+        GameYuxiaxie game = new GameYuxiaxie();
+        this.game = game;
+        game.startGame(users, this);
+        notifyCludGameStart();
+
+        //游戏开始 代建房 去除定时解散
+        if (!isOpen && !this.isCreaterJoin) GameTimer.removeNode(prepareRoomTimerNode);
+
+        //扣钱
+        if (!isOpen && isCreaterJoin) spendMoney();
+        this.isInGame = true;
+        this.isOpen = true;
+        return 0;
+    }
+
+
+    @Override
     public void addUserSocre(long userId, double score) {
         super.addUserSocre(userId, score);
         //todo 俱乐部房间 加减俱乐部分数
@@ -188,6 +250,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.game != null) {
             roomVo.game = this.game.toVo(userId);
+            roomVo.setRemainTime(this.game.lastOperateTime + 60 - System.currentTimeMillis());
         }
         if (this.getTimerNode() != null) {
             long time = this.getTimerNode().getStart() + this.getTimerNode().getInterval() - System.currentTimeMillis();
