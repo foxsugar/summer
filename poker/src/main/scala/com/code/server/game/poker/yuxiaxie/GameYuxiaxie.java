@@ -43,7 +43,7 @@ public class GameYuxiaxie extends Game {
     public void startGame(List<Long> users, Room room) {
         this.room = (RoomYuxiaxie) room;
         init(users, room.getBankerId());
-        updateLastOperateTime();
+//        updateLastOperateTime();
         //通知其他人游戏已经开始
 //        MsgSender.sendMsg2Player(new ResponseVo(SERVICE_NAME, "gameBegin", "ok"), this.getUsers());
         MsgSender.sendMsg2Player("gameService", "gameBegin", "ok",this.users);
@@ -77,7 +77,7 @@ public class GameYuxiaxie extends Game {
      */
     protected void betStart() {
         this.state = STATE_BET;
-        this.lastOperateTime = System.currentTimeMillis();
+        updateLastOperateTime();
         MsgSender.sendMsg2Player("gameService", "betStart", "ok",this.users);
     }
 

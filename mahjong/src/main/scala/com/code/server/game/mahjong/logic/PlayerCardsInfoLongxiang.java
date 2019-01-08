@@ -200,7 +200,7 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
             }
         }
 
-        return true;
+        return false;
 
     }
 
