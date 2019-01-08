@@ -4,6 +4,7 @@ import com.code.server.constant.response.IfacePlayerInfoVo;
 import com.code.server.game.room.PlayerCardInfo;
 import com.code.server.game.room.Room;
 import com.code.server.redis.service.RedisManager;
+import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ import static com.code.server.game.poker.yuxiaxie.Bet.TYPE_NUO;
  */
 public class PlayerInfoYuxiaxie extends PlayerCardInfo {
 
-    private Bet bet;
+
 
     private List<Bet> bets = new ArrayList<>();
 
@@ -94,12 +95,12 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
     }
 
 
-    public Bet getBet() {
-        return bet;
+    public List<Bet> getBets() {
+        return bets;
     }
 
-    public PlayerInfoYuxiaxie setBet(Bet bet) {
-        this.bet = bet;
+    public PlayerInfoYuxiaxie setBets(List<Bet> bets) {
+        this.bets = bets;
         return this;
     }
 
@@ -107,10 +108,16 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
     public IfacePlayerInfoVo toVo(long watchUser) {
 
         PlayerInfoYuxiaxieVo vo = new PlayerInfoYuxiaxieVo();
-        vo.setBet(this.bet);
 
+        BeanUtils.copyProperties(this, vo);
         return vo;
     }
 
+    @Override
+    public IfacePlayerInfoVo toVo() {
+        PlayerInfoYuxiaxieVo vo = new PlayerInfoYuxiaxieVo();
 
+        BeanUtils.copyProperties(this, vo);
+        return vo;
+    }
 }

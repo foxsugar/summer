@@ -748,7 +748,7 @@ public class GameClubService {
     /**
      * 初始化数据 懒加载
      */
-    private void initRoomData() {
+    public void initRoomData() {
         //加载数据
         if (DataManager.data == null) {
 
@@ -1342,13 +1342,8 @@ public class GameClubService {
         return roomModel;
     }
 
-    /**
-     * 初始化俱乐部
-     *
-     * @param club
-     */
-    public static void initRoomInstance(Club club) {
-        System.out.println("init------------------");
+
+    public static void initRoomInstanceStatic(Club club) {
 
         synchronized (club.lock) {
 
@@ -1399,6 +1394,17 @@ public class GameClubService {
 
         }
     }
+    /**
+     * 初始化俱乐部
+     *
+     * @param club
+     */
+    public  void initRoomInstance(Club club) {
+        System.out.println("init------------------");
+
+        initRoomInstanceStatic(club);
+
+    }
 
 
     /**
@@ -1407,7 +1413,7 @@ public class GameClubService {
      * @param club
      * @param roomModel
      */
-    private static void createRoom(Club club, RoomModel roomModel) {
+    public static void createRoom(Club club, RoomModel roomModel) {
         RoomInstance roomInstance = new RoomInstance();
         roomInstance.setRoomModelId(roomModel.getId());
         //放进 房间实例 列表
@@ -1452,7 +1458,7 @@ public class GameClubService {
      * @param modelId
      * @return
      */
-    private String setRoomModelCommand(String createCommand, String clubId, String modelId) {
+    public String setRoomModelCommand(String createCommand, String clubId, String modelId) {
         Map<String, Object> map = JsonUtil.readValue(createCommand, Map.class);
         Object pa = map.get("params");
         Map<String, Object> room = (Map<String, Object>) pa;

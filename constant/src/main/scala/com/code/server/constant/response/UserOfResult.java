@@ -2,6 +2,8 @@ package com.code.server.constant.response;
 
 import com.code.server.constant.game.RoomStatistics;
 
+import java.util.Map;
+
 public class UserOfResult {
 
     private long userId;//id
@@ -46,6 +48,8 @@ public class UserOfResult {
     private int numSix;
 
     private int winNumXQQ;
+
+    private Map<Integer,Integer> historyScore;
 
 
 
@@ -322,5 +326,14 @@ public class UserOfResult {
 
     public void setWinNumXQQ(int winNumXQQ) {
         this.winNumXQQ = winNumXQQ;
+    }
+
+    public Map<Integer, Integer> getHistoryScore() {
+        return historyScore;
+    }
+
+    public UserOfResult setHistoryScore(Map<Integer, Integer> historyScore) {
+        this.historyScore = historyScore;
+        return this;
     }
 }

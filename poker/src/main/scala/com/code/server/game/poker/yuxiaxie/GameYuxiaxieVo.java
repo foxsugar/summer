@@ -17,6 +17,7 @@ public class GameYuxiaxieVo extends GameVo {
     protected Map<Long, PlayerInfoYuxiaxieVo> playerCardInfos = new HashMap<>();
     private int state;
     private List<Integer> dice = new ArrayList<>();
+    private List<Bet> allBets = new ArrayList<>();
 
 
     public RoomYuxiaxie getRoom() {
@@ -52,6 +53,15 @@ public class GameYuxiaxieVo extends GameVo {
 
     public GameYuxiaxieVo setDice(List<Integer> dice) {
         this.dice = dice;
+        return this;
+    }
+
+    public List<Bet> getAllBets() {
+        return allBets;
+    }
+
+    public GameYuxiaxieVo setAllBets(List<Bet> allBets) {
+        this.allBets = allBets;
         return this;
     }
 }

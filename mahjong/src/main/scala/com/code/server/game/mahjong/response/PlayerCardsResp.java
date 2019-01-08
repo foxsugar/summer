@@ -75,7 +75,7 @@ public class PlayerCardsResp {
             this.canBePengTing = info.isCanBePengTing();
             this.canBeXuanfengDan = info.isCanBeXuanfeng();
             this.canBeBufeng = info.isCanBeBufeng();
-            this.paofen = info.getPaofen();
+
 
             if(info instanceof PlayerCardsInfoLS){
                 PlayerCardsInfoLS infols = (PlayerCardsInfoLS)info;
@@ -99,6 +99,7 @@ public class PlayerCardsResp {
         this.baoMingDan.addAll(info.getBaoMingDan());
         this.xuanfengdan.putAll(info.getXuanfengDan());
         this.gangScore = info.getGangScore();
+        this.paofen = info.getPaofen();
 
     }
 

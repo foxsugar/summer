@@ -88,7 +88,7 @@ public class CenterMsgService implements IkafkaMsgId {
         String roomId = jsonNode.path("roomId").asText();
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club != null) {
-            GameClubService.initRoomInstance(club);
+            GameClubService.initRoomInstanceStatic(club);
         }
     }
 

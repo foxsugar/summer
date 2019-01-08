@@ -10,6 +10,7 @@ import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.IfaceRoomVo;
 import com.code.server.constant.response.ResponseVo;
+import com.code.server.constant.response.UserOfResult;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.service.PokerGoldRoom;
 import com.code.server.game.room.kafka.MsgSender;
@@ -47,7 +48,9 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
     List<List<Integer>> diceHistory = new ArrayList<>();
 
-    Map<Long, Map<Integer,Bet>> betHistory = new HashMap<>();
+    Map<Long, Map<Integer,List<Bet>>> betHistory = new HashMap<>();
+
+    Map<Long, Map<Integer, Integer>> userScoreHistory = new HashMap<>();
 
 
     public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType,
@@ -66,6 +69,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         room.isCreaterJoin = isJoin;
         room.showChat = showChat;
         room.otherMode = otherMode;
+        room.setRobotRoom(true);
         room.setBankerId(userId);
 
 
@@ -170,6 +174,26 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
         msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord);
 
+    }
+
+
+
+    public List<UserOfResult> getUserOfResult() {
+        ArrayList<UserOfResult> userOfResultList = new ArrayList<>();
+        long time = System.currentTimeMillis();
+        for (UserBean eachUser : RedisManager.getUserRedisService().getUserBeans(this.users)) {
+            UserOfResult resultObj = new UserOfResult();
+            resultObj.setUsername(eachUser.getUsername());
+            resultObj.setImage(eachUser.getImage());
+            resultObj.setScores(this.userScores.get(eachUser.getId()) + "");
+            resultObj.setUserId(eachUser.getId());
+            resultObj.setTime(time);
+            resultObj.setRoomStatistics(roomStatisticsMap.get(eachUser.getId()));
+            resultObj.setHistoryScore(this.userScoreHistory.get(eachUser.getId()));
+            userOfResultList.add(resultObj);
+
+        }
+        return userOfResultList;
     }
 
 
@@ -307,11 +331,11 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         return this;
     }
 
-    public Map<Long, Map<Integer, Bet>> getBetHistory() {
+    public Map<Long, Map<Integer, List<Bet>>> getBetHistory() {
         return betHistory;
     }
 
-    public RoomYuxiaxie setBetHistory(Map<Long, Map<Integer, Bet>> betHistory) {
+    public RoomYuxiaxie setBetHistory(Map<Long, Map<Integer, List<Bet>>> betHistory) {
         this.betHistory = betHistory;
         return this;
     }

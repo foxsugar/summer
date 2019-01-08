@@ -249,6 +249,8 @@ public class ClubServiceMsgDispatch {
                 return gameClubHasMoneyService.upScore(msgKey, clubId, userId, toUser,num);
             }
 
+
+
         }
         return 0;
     }

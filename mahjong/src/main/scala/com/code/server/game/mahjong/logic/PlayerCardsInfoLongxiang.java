@@ -170,7 +170,7 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
         List<String> temp = getCardsAddThisCard(card);
         List<String> noPengAndGang = getCardsNoChiPengGang(temp);
         int cardType = CardTypeUtil.cardType.get(card);
-        List<HuCardType> huList =  HuUtil.isHu(noPengAndGang, this, cardType, null);
+        List<HuCardType> huList =  HuUtil.isHu(noPengAndGang, this, cardType, new HuLimit(0));
         if (huList.size() == 0) {
             return false;
         }
@@ -207,7 +207,14 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
 
     @Override
     public void ting(String card) {
-        super.ting(card);
+        this.cards.remove(card);
+        this.disCards.add(card);
+
+        this.isTing = true;
+        tingSet = getTingCardType(cards, null);
+        this.lastOperate = type_ting;
+        operateList.add(type_ting);
+        this.gameInfo.addUserOperate(this.userId, type_ting);
 
         this.koutingCard = this.cards.get(this.cards.size() - 1);
 

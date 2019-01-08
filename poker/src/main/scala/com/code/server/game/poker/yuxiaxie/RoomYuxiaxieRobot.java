@@ -36,7 +36,7 @@ public class RoomYuxiaxieRobot implements IRobot {
         if (roomYuxiaxie.getGame() != null ) {
 
             long now = System.currentTimeMillis();
-            if (roomYuxiaxie.getLastOperateTime() + time > now) {
+            if (roomYuxiaxie.getLastOperateTime() + time < now) {
                 GameYuxiaxie gameYuxiaxie = (GameYuxiaxie)room.getGame();
                 if (gameYuxiaxie.getState() == GameYuxiaxie.STATE_BET) {
                     gameOver(room);
@@ -56,7 +56,7 @@ public class RoomYuxiaxieRobot implements IRobot {
         msgKey.setPartition(partition);
         msgKey.setUserId(room.getBankerId());
 
-        Map<String, Object> put = new HashMap();
+        Map<String, Object> put = new HashMap<>();
 
 
         ResponseVo result = new ResponseVo("gameService", "gameOver", put);

@@ -1,10 +1,13 @@
 package com.code.server.game.poker.yuxiaxie;
 
 import com.code.server.constant.response.ErrorCode;
+import com.code.server.constant.response.GameOfResult;
 import com.code.server.constant.response.IfaceGameVo;
+import com.code.server.constant.response.UserOfResult;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 import org.springframework.beans.BeanUtils;
 
@@ -74,6 +77,7 @@ public class GameYuxiaxie extends Game {
      */
     protected void betStart() {
         this.state = STATE_BET;
+        this.lastOperateTime = System.currentTimeMillis();
         MsgSender.sendMsg2Player("gameService", "betStart", "ok",this.users);
     }
 
@@ -105,8 +109,8 @@ public class GameYuxiaxie extends Game {
         bet.addNum(num);
 
         //下注历史记录
-        Map<Integer,Bet> betInfo = this.room.getBetHistory().getOrDefault(userId, new HashMap<>());
-        betInfo.put(this.room.curGameNumber, playerInfoYuxiaxie.getBet());
+        Map<Integer,List<Bet>> betInfo = this.room.getBetHistory().getOrDefault(userId, new HashMap<>());
+        betInfo.put(this.room.curGameNumber, playerInfoYuxiaxie.getBets());
         this.room.getBetHistory().put(userId, betInfo);
 
 
@@ -201,8 +205,8 @@ public class GameYuxiaxie extends Game {
         Bet bet = getBetByType(type, index1, index2);
         if (bet == null) {
             bet = new Bet(type, index1, index2, 0);
+            this.allBets.add(bet);
         }
-        this.allBets.add(bet);
         return bet;
     }
 
@@ -230,6 +234,9 @@ public class GameYuxiaxie extends Game {
         int num2 = random.nextInt(6) + 1;
         dice.add(num1);
         dice.add(num2);
+        List<Integer> diceHis = new ArrayList<>();
+        diceHis.addAll(dice);
+        this.room.getDiceHistory().add(diceHis);
 
         MsgSender.sendMsg2Player("gameService", "crapResp", dice,this.users);
         MsgSender.sendMsg2Player("gameService", "crap", 0,userId);
@@ -248,9 +255,52 @@ public class GameYuxiaxie extends Game {
     public int gameOver() {
         this.state = STATE_OPEN;
         compute();
+
+
+        sendResult();
+        room.clearReadyStatus(true);
+        sendFinalResult();
+
+
+
+
         return 0;
     }
 
+
+    private void sendResult() {
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("dice", this.dice);
+        List<PlayerInfoYuxiaxieVo> players = new ArrayList<>();
+        for (PlayerInfoYuxiaxie playerInfoYuxiaxie : playerCardInfos.values()) {
+            players.add((PlayerInfoYuxiaxieVo) playerInfoYuxiaxie.toVo());
+        }
+        result.put("players", players);
+
+
+        MsgSender.sendMsg2Player("gameService", "gameResult", result, users);
+
+    }
+
+
+
+    protected void sendFinalResult() {
+        //所有牌局都结束
+        if (room.getCurGameNumber() > room.getGameNumber()) {
+            List<UserOfResult> userOfResultList = this.room.getUserOfResult();
+            // 存储返回
+            GameOfResult gameOfResult = new GameOfResult();
+            gameOfResult.setUserList(userOfResultList);
+            MsgSender.sendMsg2Player("gameService", "gameFinalResult", gameOfResult, users);
+
+            RoomManager.removeRoom(room.getRoomId());
+
+            //战绩
+            this.room.genRoomRecord();
+
+        }
+    }
 
     /**
      * 结算
@@ -264,6 +314,10 @@ public class GameYuxiaxie extends Game {
             }
 
             int score = playerInfoYuxiaxie.settle(this.room,this.dice.get(0), this.dice.get(1));
+
+            this.room.userScoreHistory.putIfAbsent(playerInfoYuxiaxie.getUserId(), new HashMap<>());
+            this.room.userScoreHistory.get(playerInfoYuxiaxie.getUserId()).put(this.room.curGameNumber, score);
+
 
 //            this.room.addUserSocre(playerInfoYuxiaxie.getUserId(), score);
 
@@ -301,6 +355,15 @@ public class GameYuxiaxie extends Game {
 
     public GameYuxiaxie setState(int state) {
         this.state = state;
+        return this;
+    }
+
+    public List<Bet> getAllBets() {
+        return allBets;
+    }
+
+    public GameYuxiaxie setAllBets(List<Bet> allBets) {
+        this.allBets = allBets;
         return this;
     }
 }
