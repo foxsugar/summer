@@ -16,6 +16,8 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
     public static final int HUN_RAND = 3;
     public static final int HUN_NO = 4;
     public static final int NO_FENG = 5;
+    public static final int TWO_HUN = 6;
+
 
     @Override
     public void init(List<String> cards) {

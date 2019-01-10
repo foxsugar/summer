@@ -180,6 +180,7 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
                     return true;
                 }
             }
+            return false;
         }
 
         if (CardTypeUtil.ZI_CARD.contains(card)) {
@@ -188,6 +189,7 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
                     return true;
                 }
             }
+            return false;
         }
 
         if (CardTypeUtil.FENG_CARD.contains(card)) {
@@ -198,9 +200,10 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
                     }
                 }
             }
+            return false;
         }
 
-        return false;
+        return true;
 
     }
 

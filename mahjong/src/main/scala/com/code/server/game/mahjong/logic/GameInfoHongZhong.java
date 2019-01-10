@@ -1,8 +1,10 @@
 package com.code.server.game.mahjong.logic;
 
+import com.code.server.game.mahjong.util.HuWithHun;
 import com.code.server.game.room.kafka.MsgSender;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by sunxianping on 2018/8/14.
@@ -22,7 +24,7 @@ public class GameInfoHongZhong extends GameInfoNew {
         this.cardSize = 13;
         this.playerSize = room.getPersonNumber();
 
-        if(this.room.isHasMode(PlayerCardsInfoHongZhong.NO_FENG)){
+        if (this.room.isHasMode(PlayerCardsInfoHongZhong.NO_FENG)) {
             remainCards.removeAll(CardTypeUtil.FENG_CARD);
             remainCards.removeAll(CardTypeUtil.ZI_CARD);
             remainCards.add("124");
@@ -39,15 +41,18 @@ public class GameInfoHongZhong extends GameInfoNew {
 
     public void initHun() {
 
-//        int hunIndex = 0;
-//        if (this.room.isHasMode(PlayerCardsInfoHongZhong.HUN_RAND)) {
-//            Random rand = new Random();
-//
-//            hunIndex = rand.nextInt(31);
-//            this.hun.add(hunIndex);
-//        } else {
-        this.hun.add(31);
-//        }
+        int hunIndex = 0;
+        Random rand = new Random();
+        hunIndex = rand.nextInt(31);
+        if (this.room.isHasMode(PlayerCardsInfoHongZhong.HUN_RAND)) {
+            this.hun.add(hunIndex);
+        } else {
+            this.hun.add(31);
+        }
+
+        if (this.room.isHasMode(PlayerCardsInfoHongZhong.TWO_HUN)) {
+            this.hun = HuWithHun.getHunType(hunIndex);
+        }
 
         if (this.room.isHasMode(PlayerCardsInfoHongZhong.HUN_NO)) {
             this.hun.clear();

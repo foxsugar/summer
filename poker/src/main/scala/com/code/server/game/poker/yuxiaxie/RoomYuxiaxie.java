@@ -178,6 +178,16 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
 
 
+
+    public void pushScoreChange() {
+        if (isClubRoom()) {
+            for(long userId : users){
+                userScores.put(userId, RedisManager.getClubRedisService().getClubUserMoney(this.clubId, userId));
+            }
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userScores), this.getUsers());
+    }
+
     public List<UserOfResult> getUserOfResult() {
         ArrayList<UserOfResult> userOfResultList = new ArrayList<>();
         long time = System.currentTimeMillis();
@@ -260,12 +270,14 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
     @Override
     public void addUserSocre(long userId, double score) {
-        super.addUserSocre(userId, score);
-        //todo 俱乐部房间 加减俱乐部分数
+        double s = userScores.get(userId);
+        userScores.put(userId, s + score);
         if (isClubRoom()) {
             RedisManager.getClubRedisService().addClubUserMoney(this.clubId, userId, score);
         }
     }
+
+
 
     @Override
     public IfaceRoomVo toVo(long userId) {
@@ -274,7 +286,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.game != null) {
             roomVo.game = this.game.toVo(userId);
-            roomVo.setRemainTime(this.game.lastOperateTime + 60 - System.currentTimeMillis());
+            roomVo.setBetRemainTime( 60000 +this.game.lastOperateTime-System.currentTimeMillis() );
         }
         if (this.getTimerNode() != null) {
             long time = this.getTimerNode().getStart() + this.getTimerNode().getInterval() - System.currentTimeMillis();

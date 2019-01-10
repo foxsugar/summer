@@ -36,7 +36,7 @@ public class RoomYuxiaxieRobot implements IRobot {
         if (roomYuxiaxie.getGame() != null ) {
 
             long now = System.currentTimeMillis();
-            if (roomYuxiaxie.getLastOperateTime() + time < now) {
+            if (roomYuxiaxie.getGame().getLastOperateTime() + time < now) {
                 GameYuxiaxie gameYuxiaxie = (GameYuxiaxie)room.getGame();
                 if (gameYuxiaxie.getState() == GameYuxiaxie.STATE_BET) {
                     gameOver(room);

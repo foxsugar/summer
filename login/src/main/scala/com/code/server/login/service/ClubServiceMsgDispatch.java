@@ -4,7 +4,9 @@ import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.kafka.MsgProducer;
+import com.code.server.login.config.ServerConfig;
 import com.code.server.util.JsonUtil;
+import com.code.server.util.SpringUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +46,12 @@ public class ClubServiceMsgDispatch {
 
     private int dispatchUserService(KafkaMsgKey msgKey, String method, JsonNode params, JsonNode allParams) {
         //todo 放开
-//        boolean hasClubMoney = SpringUtil.getBean(ServerConfig.class).getHasClubMoney() == 1;
-//        if (hasClubMoney) {
-//            gameClubService = SpringUtil.getBean(GameClubHasMoneyService.class);
-//        }else{
-//            gameClubService = SpringUtil.getBean(GameClubService.class);
-//        }
+        boolean hasClubMoney = SpringUtil.getBean(ServerConfig.class).getHasClubMoney() == 1;
+        if (hasClubMoney) {
+            gameClubService = SpringUtil.getBean(GameClubHasMoneyService.class);
+        }else{
+            gameClubService = SpringUtil.getBean(GameClubService.class);
+        }
         long userId = msgKey.getUserId();
         String clubId = params.path("clubId").asText();
         switch (method) {
@@ -224,29 +226,29 @@ public class ClubServiceMsgDispatch {
 
             case "transfer": {
                 long toUser = params.path("toUser").asLong();
-                return gameClubHasMoneyService.transfer(msgKey,clubId, userId, toUser);
+                return gameClubService.transfer(msgKey,clubId, userId, toUser);
             }
 
             case "setPartner":{
                 long partnerId = params.path("partnerId").asLong();
-                return gameClubHasMoneyService.setPartner(msgKey, clubId, userId, partnerId);
+                return gameClubService.setPartner(msgKey, clubId, userId, partnerId);
             }
 
             case "removePartner":{
                 long partnerId = params.path("partnerId").asLong();
-                return gameClubHasMoneyService.removePartner(msgKey, clubId, userId, partnerId);
+                return gameClubService.removePartner(msgKey, clubId, userId, partnerId);
             }
             case "changePartner":{
                 long newPartner = params.path("newPartner").asLong();
                 long changeUser = params.path("changeUser").asLong();
-                return gameClubHasMoneyService.changePartner(msgKey, clubId, userId, newPartner, changeUser);
+                return gameClubService.changePartner(msgKey, clubId, userId, newPartner, changeUser);
 
             }
 
             case "upScore":{
                 long toUser = params.path("toUser").asLong();
                 int num = params.path("num").asInt();
-                return gameClubHasMoneyService.upScore(msgKey, clubId, userId, toUser,num);
+                return gameClubService.upScore(msgKey, clubId, userId, toUser,num);
             }
 
 

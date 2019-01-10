@@ -18,7 +18,7 @@ public class RoomYuxiaxieVo extends RoomVo{
     //挪次数
     private int nuo;
 
-    private long remainTime;
+    private long betRemainTime;
 
 
     public int getDanya() {
@@ -65,6 +65,15 @@ public class RoomYuxiaxieVo extends RoomVo{
     @Override
     public RoomYuxiaxieVo setRemainTime(long remainTime) {
         this.remainTime = remainTime;
+        return this;
+    }
+
+    public long getBetRemainTime() {
+        return betRemainTime;
+    }
+
+    public RoomYuxiaxieVo setBetRemainTime(long betRemainTime) {
+        this.betRemainTime = betRemainTime;
         return this;
     }
 }

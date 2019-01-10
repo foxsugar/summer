@@ -307,6 +307,7 @@ public class GameYuxiaxie extends Game {
      */
     public void compute(){
         int allScore = 0;
+        int allBetNum = 0;
         for (PlayerInfoYuxiaxie playerInfoYuxiaxie : this.playerCardInfos.values()) {
             //
             if (this.room.getBankerId() == playerInfoYuxiaxie.getUserId()) {
@@ -320,16 +321,19 @@ public class GameYuxiaxie extends Game {
 
 
 //            this.room.addUserSocre(playerInfoYuxiaxie.getUserId(), score);
-
             allScore += score;
+            allBetNum += playerInfoYuxiaxie.getAllBetNum();
 
         }
         //
+        int rs = allBetNum - allScore;
         PlayerInfoYuxiaxie banker = playerCardInfos.get(this.room.getBankerId());
-        banker.setScore(banker.getScore() - allScore);
-        this.room.addUserSocre(banker.getUserId(), -allScore);
+//        banker.setScore(banker.getScore() - allScore);
+        banker.setScore(banker.getScore() + rs);
+//        this.room.addUserSocre(banker.getUserId(), -allScore);
+        this.room.addUserSocre(banker.getUserId(), rs);
         if (this.room.isClubRoom()) {
-            RedisManager.getClubRedisService().addClubUserMoney(this.room.getClubId(), banker.getUserId(), -allScore);
+            RedisManager.getClubRedisService().addClubUserMoney(this.room.getClubId(), banker.getUserId(), rs);
         }
 
     }
