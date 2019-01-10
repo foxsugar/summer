@@ -31,6 +31,8 @@ public interface IfaceRoom extends IGameConstant {
     int ROOMTYPE_扎谷子 = 10;
     int ROOMTYPE_打七 = 11;
     int ROOMTYPE_填大坑 = 12;
+    int ROOMTYPE_跑得快 = 13;
+    int ROOMTYPE_鱼虾蟹 = 14;
     int ROOMTYPE_wzq = 20;
 
     /**
