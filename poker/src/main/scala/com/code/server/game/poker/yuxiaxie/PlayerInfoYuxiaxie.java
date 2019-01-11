@@ -73,6 +73,9 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
             if (bet.index1 == dice1 || bet.index1 == dice2) {
                 multiple = 2;
             }
+            if (bet.index1 == dice1 && bet.index1 == dice2) {
+                multiple = 4;
+            }
         } else if (bet.type == Bet.TYPE_BAOZI) {
 
             if (bet.index1 == dice1 && bet.index1 == dice2) {
@@ -89,6 +92,9 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
 //            }
             if (bet.index2 == dice1 || bet.index2 == dice2) {
                 multiple = 2;
+            }
+            if (bet.index2 == dice1 && bet.index2 == dice2) {
+                multiple = 4;
             }
         }
 //        if (multiple != 0) {

@@ -152,6 +152,7 @@ public class ErrorCode {
 
 	public static final int CANNOT_BET_LIMIT = 1110010;//不能下注
 	public static final int CANNOT_NUO = 1110011;//不能下注
+	public static final int CANNOT_CRAP = 1110012;//不能下注
 
 
 

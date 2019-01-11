@@ -228,6 +228,13 @@ public class GameYuxiaxie extends Game {
      * @return
      */
     public int crap(long userId) {
+
+        //不可为负值
+        if (this.room.isClubRoom() && Room.isHasMode(1, this.room.getOtherMode())) {
+            if (RedisManager.getClubRedisService().getClubUserMoney(this.room.getClubId(), userId) < this.room.getDanya() * 10) {
+                return ErrorCode.CANNOT_CRAP;
+            }
+        }
         this.state = STATE_CRAP;
         Random random = new Random();
         int num1 = random.nextInt(6) + 1;
@@ -246,6 +253,8 @@ public class GameYuxiaxie extends Game {
 
         return 0;
     }
+
+
 
 
     /**

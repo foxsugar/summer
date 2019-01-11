@@ -312,6 +312,15 @@ object PokerRoomService {
         }
         return roomYXX.asInstanceOf[RoomYuxiaxie].getYXXDiceHistory(userId)
 
+      case "setBankerByClient"=>
+        val roomId = params.get("roomId").asText()
+        val bankerId = params.get("bankerId").asLong()
+        val roomYXX = RoomManager.getRoom(roomId)
+        if (roomYXX == null) {
+          return ErrorCode.CAN_NOT_NO_ROOM
+        }
+        return roomYXX.asInstanceOf[RoomYuxiaxie].setBankerByClient(userId, bankerId)
+
         //鱼虾蟹 下注记录
       case "getYXXBetHistory"=>
         val roomId = params.get("roomId").asText()

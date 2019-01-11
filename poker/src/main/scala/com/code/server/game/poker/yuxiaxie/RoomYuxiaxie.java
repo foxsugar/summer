@@ -133,9 +133,27 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         return uid;
     }
 
+    @Override
+    public int joinRoom(long userId, boolean isJoin) {
+        int rtn = super.joinRoom(userId, isJoin);
+        if (rtn != 0) {
+            return rtn;
+        }
+        getReady(userId);
+        return 0;
+    }
 
     public int getYXXDiceHistory(long userId){
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "getYXXDiceHistory", diceHistory), userId);
+        return 0;
+    }
+
+    public int setBankerByClient(long userId, long bankerId) {
+        this.setBankerId(userId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("bankerId", bankerId);
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "setBanker", result), users);
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "setBankerByClient", 0), userId);
         return 0;
     }
 

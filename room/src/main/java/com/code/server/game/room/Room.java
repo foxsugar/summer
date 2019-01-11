@@ -288,6 +288,7 @@ public class Room implements IfaceRoom {
     }
 
 
+
     protected void addUser2RoomRedis(long userId) {
         RedisManager.getUserRedisService().setRoomId(userId, roomId);
         RedisManager.getRoomRedisService().addUser(roomId, userId);
