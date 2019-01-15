@@ -143,6 +143,7 @@ public class ErrorCode {
 	//打七
 	public static final int ERROR_CARD = 1100001;//牌不对
 	public static final int ERROR_CARD_MAX = 1100002;//牌不对
+	public static final int ERROR_CANNOT_FANZHU = 1100003;//牌不对
 	//填大坑
 
 	public static final int CANNOT_BET = 1110000;//不能下注

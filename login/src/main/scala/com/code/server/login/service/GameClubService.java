@@ -425,7 +425,7 @@ public class GameClubService {
         adminList.addAll(club.getClubInfo().getAdmin());
         Map<String, Object> r = new HashMap<>();
         r.put("clubId", club.getId());
-        adminList.forEach(uid->sendMsg2Player(new ResponseVo("clubService", "joinClubPush2Admin",r),uid));
+        adminList.forEach(uid -> sendMsg2Player(new ResponseVo("clubService", "joinClubPush2Admin", r), uid));
 //        sendMsg2Player(new ResponseVo("clubService", "joinClubPush2Admin",0), );
 
         return 0;
@@ -480,7 +480,7 @@ public class GameClubService {
 
         //加入俱乐部
         ClubMember apply = getApply(club, agreeId);
-        if (isAgree && !club.getClubInfo().getMember().containsKey(""+agreeId)) {
+        if (isAgree && !club.getClubInfo().getMember().containsKey("" + agreeId)) {
             if (apply != null) {
 
                 clubAddMember(club, apply);
@@ -629,8 +629,8 @@ public class GameClubService {
 
         }
         //推荐人不为0
-        if (referee!=0) {
-            ClubMember clubMember = club.getClubInfo().getMember().get(""+userId);
+        if (referee != 0) {
+            ClubMember clubMember = club.getClubInfo().getMember().get("" + userId);
             clubMember.setReferrer(referee);
         }
         sendMsg(msgKey, new ResponseVo("clubService", "addUser", "ok"));
@@ -718,7 +718,7 @@ public class GameClubService {
             us.addAll(RedisManager.getRoomRedisService().getUsers(roomId));
             send_Lq_start(club, roomId, roomModelId, us, 0);
         }
-        System.out.println("user: " + userId +" quitClub = " + clubId);
+        System.out.println("user: " + userId + " quitClub = " + clubId);
     }
 
 
@@ -729,7 +729,6 @@ public class GameClubService {
             club.getClubInfo().getRoomInstance().remove(roomModelId);
         }
     }
-
 
 
     public int setAutoJoin(KafkaMsgKey msgKey, String clubId, long userId, boolean auto) {
@@ -817,7 +816,7 @@ public class GameClubService {
         Set<String> set = new HashSet();
         club.getClubInfo().getRoomModels().forEach(roomModel -> set.add(roomModel.getId()));
         if (set.size() != 8) {
-            System.out.println("set =====================   "+set);
+            System.out.println("set =====================   " + set);
         }
 
 
@@ -1391,12 +1390,13 @@ public class GameClubService {
 
         }
     }
+
     /**
      * 初始化俱乐部
      *
      * @param club
      */
-    public  void initRoomInstance(Club club) {
+    public void initRoomInstance(Club club) {
         System.out.println("init------------------");
 
         initRoomInstanceStatic(club);
@@ -1507,6 +1507,7 @@ public class GameClubService {
 
     /**
      * 转让俱乐部
+     *
      * @param clubId
      * @param userId
      * @param toUser
@@ -1518,7 +1519,7 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
         ClubMember clubMember = club.getClubInfo().getMember().get("" + toUser);
-        if(clubMember == null){
+        if (clubMember == null) {
             return ErrorCode.CLUB_NOT_TRANSFER;
         }
         club.setImage(clubMember.getImage());
@@ -1531,10 +1532,9 @@ public class GameClubService {
     }
 
 
-
-
     /**
      * 设置合伙人
+     *
      * @param msgKey
      * @param clubId
      * @param userId
@@ -1557,13 +1557,14 @@ public class GameClubService {
 
     /**
      * 删除代理
+     *
      * @param msgKey
      * @param clubId
      * @param userId
      * @param partnerId
      * @return
      */
-    public int removePartner(KafkaMsgKey msgKey, String clubId, long userId, long partnerId){
+    public int removePartner(KafkaMsgKey msgKey, String clubId, long userId, long partnerId) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
@@ -1582,7 +1583,7 @@ public class GameClubService {
         return 0;
     }
 
-    public int changePartner(KafkaMsgKey msgKey, String clubId, long userId, long newPartner, long changeUser){
+    public int changePartner(KafkaMsgKey msgKey, String clubId, long userId, long newPartner, long changeUser) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
@@ -1597,6 +1598,7 @@ public class GameClubService {
 
     /**
      * 上下分
+     *
      * @param msgKey
      * @param clubId
      * @param userId
@@ -1615,8 +1617,8 @@ public class GameClubService {
         //上下分记录
         LocalDate date = LocalDate.now();
         LocalDate dateBefore = date.minusDays(4);
-        List<UpScoreItem> list = club.getUpScoreInfo().getInfo().getOrDefault(date.toString(),new ArrayList<>());
-        int type = num>=0?1:0;
+        List<UpScoreItem> list = club.getUpScoreInfo().getInfo().getOrDefault(date.toString(), new ArrayList<>());
+        int type = num >= 0 ? 1 : 0;
         UpScoreItem upScoreItem = new UpScoreItem().setSrcUserId(userId).setDesUserId(toUser).setNum(num)
                 .setTime(System.currentTimeMillis()).setType(type).setName(clubMember.getName());
 
@@ -1629,6 +1631,26 @@ public class GameClubService {
         return 0;
     }
 
+
+    /**
+     * 上下分记录
+     * @param msgKey
+     * @param clubId
+     * @param userId
+     * @return
+     */
+    public int getUpScoreLog(KafkaMsgKey msgKey, String clubId, long userId) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+
+        List<UpScoreItem> list = new ArrayList<>();
+        club.getUpScoreInfo().getInfo().values().forEach(list::addAll);
+        sendMsg(msgKey, new ResponseVo("clubService", "getUpScoreLog", list));
+        return 0;
+
+    }
 
 
     /**

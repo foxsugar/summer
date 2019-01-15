@@ -103,6 +103,19 @@ public class PlayerInfoTDK extends PlayerCardInfo{
         return score;
     }
 
+    public int getAllCardScoreWeight(boolean isABiPao) {
+        int result = 0;
+        for(int i=0;i<cards.size();i++) {
+            int cardScore = CardUtil.getCardScore(cards.get(i), isABiPao);
+            result += cardScore << (i * 5);
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(15<<25);
+    }
+
     /**
      * 是否有喜分
      * @param isGongZhuangSuiBao

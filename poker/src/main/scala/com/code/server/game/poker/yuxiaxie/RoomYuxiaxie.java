@@ -177,6 +177,11 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         //winner
         roomRecord.setWinnerId(getWinner());
 
+        roomRecord.getOtherInfo().put("diceHistory", this.diceHistory);
+        roomRecord.getOtherInfo().put("betHistory", this.betHistory);
+        roomRecord.getOtherInfo().put("userScoreHistory", this.userScoreHistory);
+
+
         this.userScores.forEach((key, value) -> {
             UserRecord userRecord = new UserRecord();
             userRecord.setScore(value);

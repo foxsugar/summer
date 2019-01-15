@@ -328,9 +328,15 @@ public class GameTDK extends Game {
         //生成下注信息
         List<Long> needBetUser = getAliveUserBeginWithBanker();
         this.betInfo = new BetInfo(betUser, needBetUser);
+        // fix 2019.1.14 改变庄家
+        this.room.setBankerId(betUser);
+
+
         //通知他下注
         Map<String, Object> result = new HashMap<>();
         result.put("userId", betUser);
+//        result.put("newBanker", betUser);
+
         pushToAll(new ResponseVo(SERVICE_NAME, "betStart", result));
     }
 
@@ -479,18 +485,45 @@ public class GameTDK extends Game {
             winnerId = findMaxCardScoreUser(true);
         } else {
             int maxScoreCount = 0;
+            int maxScoreWeight = 0;
+            long maxScoreWeightUser = 0;
+            int maxScoreWeightCount = 0;
+            List<PlayerInfoTDK> maxList = new ArrayList<>();
             //如果找不到最大分数玩家 烂锅
             for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
                 if (aliveUserList.contains(playerInfoTDK.getUserId())) {
                     if (maxCardScore == playerInfoTDK.getCardScore()) {
                         maxScoreCount++;
+                        maxList.add(playerInfoTDK);
+                        if (playerInfoTDK.getAllCardScoreWeight(isABiPao) > maxScoreWeight) {
+                            maxScoreWeight = playerInfoTDK.getAllCardScoreWeight(isABiPao);
+                        }
                     }
                 }
             }
             //是否烂锅
             if (maxScoreCount >= 2) {
-                this.room.setLanGuo(true);
-                this.room.getLanguoBets().addAll(this.bets);
+
+                for (PlayerInfoTDK playerInfoTDK : maxList) {
+                    if( maxScoreWeight == playerInfoTDK.getAllCardScoreWeight(isABiPao)){
+                        maxScoreWeightCount++;
+                        maxScoreWeightUser = playerInfoTDK.getUserId();
+                    }
+
+                }
+
+                //每张牌的权重都相同的人数大于等于2 则烂锅
+                if (maxScoreWeightCount >= 2) {
+
+                    this.room.setLanGuo(true);
+                    this.room.getLanguoMap().put(this.room.curGameNumber, true);
+                    this.room.getLanguoBets().addAll(this.bets);
+                }else{
+                    winnerId = maxScoreWeightUser;
+                }
+
+
+
 
             } else {
                 winnerId = maxUser;
@@ -503,6 +536,12 @@ public class GameTDK extends Game {
         return 0;
     }
 
+
+//    private PlayerInfoTDK getMaxUserByEachCard(List<PlayerInfoTDK> list,boolean isABiPao) {
+//        for (PlayerInfoTDK playerInfoTDK : list) {
+//            playerInfoTDK.getEveryCardScore(isABiPao);
+//        }
+//    }
 
     /**
      * 玩家下注

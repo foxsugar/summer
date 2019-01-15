@@ -21,11 +21,11 @@ import java.util.List;
 public class ClubServiceMsgDispatch {
 
 
-    @Autowired
+    //    @Autowired
     GameClubService gameClubService;
 
-    @Autowired
-    GameClubHasMoneyService gameClubHasMoneyService;
+//    @Autowired
+//    GameClubHasMoneyService gameClubHasMoneyService;
 
 
     @Autowired
@@ -47,11 +47,11 @@ public class ClubServiceMsgDispatch {
     private int dispatchUserService(KafkaMsgKey msgKey, String method, JsonNode params, JsonNode allParams) {
         //todo 放开
         boolean hasClubMoney = SpringUtil.getBean(ServerConfig.class).getHasClubMoney() == 1;
-//        if (hasClubMoney) {
-//            gameClubService = SpringUtil.getBean(GameClubHasMoneyService.class);
-//        }else{
-//            gameClubService = SpringUtil.getBean(GameClubService.class);
-//        }
+        if (hasClubMoney) {
+            gameClubService = SpringUtil.getBean(GameClubHasMoneyService.class);
+        } else {
+            gameClubService = SpringUtil.getBean(GameClubService.class);
+        }
         long userId = msgKey.getUserId();
         String clubId = params.path("clubId").asText();
         switch (method) {
@@ -186,7 +186,7 @@ public class ClubServiceMsgDispatch {
                 long user = params.get("userId").asLong();
                 //todo 对协议 新增字段
                 long referee = params.path("referee").asLong(0);
-                return gameClubService.addUser(msgKey, clubId, user,referee);
+                return gameClubService.addUser(msgKey, clubId, user, referee);
             }
             case "removeFloor": {
                 int floor = params.get("floor").asInt();
@@ -220,37 +220,40 @@ public class ClubServiceMsgDispatch {
                 clubId = params.path("clubId").asText();
                 String clubModelId4 = params.path("clubModelId").asText();
                 String rid = params.path("roomId").asText();
-                gameClubService.removeClubInstance(clubId, clubModelId4,rid);
+                gameClubService.removeClubInstance(clubId, clubModelId4, rid);
                 break;
             }
 
             case "transfer": {
                 long toUser = params.path("toUser").asLong();
-                return gameClubService.transfer(msgKey,clubId, userId, toUser);
+                return gameClubService.transfer(msgKey, clubId, userId, toUser);
             }
 
-            case "setPartner":{
+            case "setPartner": {
                 long partnerId = params.path("partnerId").asLong();
                 return gameClubService.setPartner(msgKey, clubId, userId, partnerId);
             }
 
-            case "removePartner":{
+            case "removePartner": {
                 long partnerId = params.path("partnerId").asLong();
                 return gameClubService.removePartner(msgKey, clubId, userId, partnerId);
             }
-            case "changePartner":{
+            case "changePartner": {
                 long newPartner = params.path("newPartner").asLong();
                 long changeUser = params.path("changeUser").asLong();
                 return gameClubService.changePartner(msgKey, clubId, userId, newPartner, changeUser);
 
             }
 
-            case "upScore":{
+            case "upScore": {
                 long toUser = params.path("toUser").asLong();
                 int num = params.path("num").asInt();
-                return gameClubService.upScore(msgKey, clubId, userId, toUser,num);
+                return gameClubService.upScore(msgKey, clubId, userId, toUser, num);
             }
 
+            case "getUpScoreLog": {
+                return gameClubService.getUpScoreLog(msgKey, clubId, userId);
+            }
 
 
         }

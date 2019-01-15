@@ -794,7 +794,10 @@ public class Room implements IfaceRoom {
 
         gameOfResult.setUserList(userOfResultList);
         gameOfResult.setEndTime(LocalDateTime.now().toString());
-        MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), users);
+        List<Long> all = new ArrayList<>();
+        all.addAll(users);
+        all.addAll(watchUser);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), all);
 
         //战绩
         genRoomRecord();

@@ -1,7 +1,9 @@
 package com.code.server.constant.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2017/9/6.
@@ -21,6 +23,10 @@ public class RoomRecord {
     int curGameNum;
     int allGameNum;
     long winnerId;
+
+
+    Map<String, Object> otherInfo = new HashMap<>();
+
 
     public void addRecord(UserRecord userRecord) {
         records.add(userRecord);
@@ -149,6 +155,15 @@ public class RoomRecord {
 
     public RoomRecord setWinnerId(long winnerId) {
         this.winnerId = winnerId;
+        return this;
+    }
+
+    public Map<String, Object> getOtherInfo() {
+        return otherInfo;
+    }
+
+    public RoomRecord setOtherInfo(Map<String, Object> otherInfo) {
+        this.otherInfo = otherInfo;
         return this;
     }
 }

@@ -275,7 +275,8 @@ public class GamePlaySeven extends Game{
                     opreaterMsg.put("fanZhu", "1");
                     this.step = STEP_FANZHU;
                 }
-            }if((playerCardInfos.get(l).handCards.contains(49)&&playerCardInfos.get(l).handCards.contains(-49))||
+            }
+            if((playerCardInfos.get(l).handCards.contains(49)&&playerCardInfos.get(l).handCards.contains(-49))||
                     (playerCardInfos.get(l).handCards.contains(50)&&playerCardInfos.get(l).handCards.contains(-50))||
                     (playerCardInfos.get(l).handCards.contains(51)&&playerCardInfos.get(l).handCards.contains(-51))||
                     (playerCardInfos.get(l).handCards.contains(52)&&playerCardInfos.get(l).handCards.contains(-52))||
@@ -459,6 +460,10 @@ public class GamePlaySeven extends Game{
     }
 
     public int fanZhu(long userId,boolean fan,Integer card){
+        //todo 已经反过就不能再反了
+        if (this.fanzhu) {
+            return ErrorCode.ERROR_CANNOT_FANZHU;
+        }
         if(fan){//反主
             if(Math.abs(card)>52){
                 this.huaSe = -1;

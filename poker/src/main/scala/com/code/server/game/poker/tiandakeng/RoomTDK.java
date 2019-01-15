@@ -18,6 +18,7 @@ import com.code.server.util.timer.TimerNode;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,8 @@ public class RoomTDK extends PokerGoldRoom {
 
 
     private boolean isLanGuo = false;//是否烂锅
+
+    private Map<Integer, Boolean> languoMap = new HashMap<>();
 
     private List<Integer> languoBets = new ArrayList<>();
 
@@ -250,6 +253,15 @@ public class RoomTDK extends PokerGoldRoom {
 
     public RoomTDK setHuanpai(int huanpai) {
         this.huanpai = huanpai;
+        return this;
+    }
+
+    public Map<Integer, Boolean> getLanguoMap() {
+        return languoMap;
+    }
+
+    public RoomTDK setLanguoMap(Map<Integer, Boolean> languoMap) {
+        this.languoMap = languoMap;
         return this;
     }
 }
