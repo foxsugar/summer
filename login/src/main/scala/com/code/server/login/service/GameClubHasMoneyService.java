@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * Created by sunxianping on 2018-11-28.
  */
-@Service
+@Service("gameClubHasMoneyService")
 public class GameClubHasMoneyService extends GameClubService {
 
 

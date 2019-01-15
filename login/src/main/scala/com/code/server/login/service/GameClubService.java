@@ -47,7 +47,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Created by sunxianping on 2018/1/15.
  */
-@Service
+@Service("gameClubService")
 public class GameClubService {
 
     @Autowired

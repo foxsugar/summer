@@ -196,7 +196,7 @@ public class GameTDK extends Game {
         } else {
 
             //每人发三张牌
-            for(int i=0;i<3;i++) {
+            for (int i = 0; i < 3; i++) {
 
                 for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
                     playerInfoTDK.deal(cards.remove(0), false);
@@ -481,54 +481,68 @@ public class GameTDK extends Game {
         }
         long winnerId = 0;
         //莆田玩法没有烂锅
-        if (isHasMode(model_莆田半坑_5) || isHasMode(model_莆田全坑_2)) {
-            winnerId = findMaxCardScoreUser(true);
-        } else {
-            int maxScoreCount = 0;
-            int maxScoreWeight = 0;
-            long maxScoreWeightUser = 0;
-            int maxScoreWeightCount = 0;
-            List<PlayerInfoTDK> maxList = new ArrayList<>();
-            //如果找不到最大分数玩家 烂锅
-            for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
-                if (aliveUserList.contains(playerInfoTDK.getUserId())) {
-                    if (maxCardScore == playerInfoTDK.getCardScore()) {
-                        maxScoreCount++;
-                        maxList.add(playerInfoTDK);
-                        if (playerInfoTDK.getAllCardScoreWeight(isABiPao) > maxScoreWeight) {
-                            maxScoreWeight = playerInfoTDK.getAllCardScoreWeight(isABiPao);
-                        }
+//        if (isHasMode(model_莆田半坑_5) || isHasMode(model_莆田全坑_2)) {
+//            winnerId = findMaxCardScoreUser(true);
+//        } else {
+        int maxScoreCount = 0;
+        int maxScoreWeight = 0;
+        long maxScoreWeightUser = 0;
+        int maxScoreWeightCount = 0;
+        List<PlayerInfoTDK> maxScoreList = new ArrayList<>();
+        List<Long> maxScoreWeightList = new ArrayList<>();
+        //如果找不到最大分数玩家 烂锅
+        for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {
+            if (aliveUserList.contains(playerInfoTDK.getUserId())) {
+                if (maxCardScore == playerInfoTDK.getCardScore()) {
+                    maxScoreCount++;
+                    maxScoreList.add(playerInfoTDK);
+                    if (playerInfoTDK.getAllCardScoreWeight(isABiPao) > maxScoreWeight) {
+                        maxScoreWeight = playerInfoTDK.getAllCardScoreWeight(isABiPao);
                     }
                 }
             }
-            //是否烂锅
-            if (maxScoreCount >= 2) {
+        }
+        //是否烂锅
+        if (maxScoreCount >= 2) {
 
-                for (PlayerInfoTDK playerInfoTDK : maxList) {
-                    if( maxScoreWeight == playerInfoTDK.getAllCardScoreWeight(isABiPao)){
+            //莆田玩法继续比
+            if (isHasMode(model_莆田半坑_5) || isHasMode(model_莆田全坑_2)) {
+
+                for (PlayerInfoTDK playerInfoTDK : maxScoreList) {
+                    if (maxScoreWeight == playerInfoTDK.getAllCardScoreWeight(isABiPao)) {
                         maxScoreWeightCount++;
                         maxScoreWeightUser = playerInfoTDK.getUserId();
+                        maxScoreWeightList.add(playerInfoTDK.getUserId());
                     }
 
                 }
 
-                //每张牌的权重都相同的人数大于等于2 则烂锅
+                //每张牌的权重都相同的人数大于等于2 谁离庄家近谁赢
                 if (maxScoreWeightCount >= 2) {
-
-                    this.room.setLanGuo(true);
-                    this.room.getLanguoMap().put(this.room.curGameNumber, true);
-                    this.room.getLanguoBets().addAll(this.bets);
-                }else{
+                    List<Long> users = getAliveUserBeginWithBanker();
+                    for (Long uid : users) {
+                        if (maxScoreWeightList.contains(uid)) {
+                            if (winnerId == 0) {
+                                winnerId = uid;
+                            }
+                        }
+                    }
+                } else {
                     winnerId = maxScoreWeightUser;
                 }
 
-
-
-
             } else {
-                winnerId = maxUser;
+                //烂锅
+                this.room.setLanGuo(true);
+                this.room.getLanguoMap().put(this.room.curGameNumber, true);
+                this.room.getLanguoBets().addAll(this.bets);
             }
+
+
+        } else {
+            winnerId = maxUser;
         }
+//        }
 
         gameOver(winnerId);
 
@@ -1120,6 +1134,7 @@ public class GameTDK extends Game {
             return maxUser;
         }
     }
+
 
     private long findMaxCardScoreUserLastCard() {
         List<Long> users = getAliveUserBeginWithBanker();
