@@ -40,6 +40,7 @@ public class ClubVo {
     private Statistics statistics;
 
     private List<Long> admin = new ArrayList<>();
+    private List<Long> partner = new ArrayList<>();
 
     private boolean autoJoin = false;
 
@@ -221,6 +222,15 @@ public class ClubVo {
 
     public ClubVo setRoomModelNum(int roomModelNum) {
         this.roomModelNum = roomModelNum;
+        return this;
+    }
+
+    public List<Long> getPartner() {
+        return partner;
+    }
+
+    public ClubVo setPartner(List<Long> partner) {
+        this.partner = partner;
         return this;
     }
 }

@@ -5,7 +5,6 @@ import com.code.server.constant.data.DataManager;
 import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
-import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.model.Club;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.util.IdWorker;
@@ -14,10 +13,7 @@ import com.code.server.util.SpringUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by sunxianping on 2018-11-28.
@@ -96,29 +92,29 @@ public class GameClubHasMoneyService extends GameClubService {
             club.getClubInfo().getRoomModels().add(roomModel);
 
         }
-        Set<String> set = new HashSet();
-        club.getClubInfo().getRoomModels().forEach(roomModel -> set.add(roomModel.getId()));
+//        Set<String> set = new HashSet();
+//        club.getClubInfo().getRoomModels().forEach(roomModel -> set.add(roomModel.getId()));
 
 
         //实例化房间
-        initRoomInstance(club);
-
-
-        RoomModel roomModel = club.getClubInfo().getRoomModels().get(club.getClubInfo().getRoomModels().size() - 1);
-        sendMsg(msgKey, new ResponseVo("clubService", "createRoomModel", roomModel));
-        createRoom(club, roomModel);
+//        initRoomInstance(club);
+//
+//
+//        RoomModel roomModel = club.getClubInfo().getRoomModels().get(club.getClubInfo().getRoomModels().size() - 1);
+//        sendMsg(msgKey, new ResponseVo("clubService", "createRoomModel", roomModel));
+//        createRoom(club, roomModel);
 
         //删除没用的model
-        List<RoomModel> removeList = new ArrayList<>();
-        for (RoomModel roomModel1 : club.getClubInfo().getRoomModels()) {
-            if (!roomModel1.getId().equals(roomModel.getId())) {
-                if (!club.getClubInfo().getRoomInstance().containsKey(roomModel1.getId())) {
-                    removeList.add(roomModel1);
-                }
-            }
-        }
-
-        club.getClubInfo().getRoomModels().removeAll(removeList);
+//        List<RoomModel> removeList = new ArrayList<>();
+//        for (RoomModel roomModel1 : club.getClubInfo().getRoomModels()) {
+//            if (!roomModel1.getId().equals(roomModel.getId())) {
+//                if (!club.getClubInfo().getRoomInstance().containsKey(roomModel1.getId())) {
+//                    removeList.add(roomModel1);
+//                }
+//            }
+//        }
+//
+//        club.getClubInfo().getRoomModels().removeAll(removeList);
         return 0;
     }
 

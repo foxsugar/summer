@@ -122,6 +122,8 @@ public class GameClubService {
 //            clubVo.setMember(clubVo.getMember().subList(0, 100));
 //        }
         clubVo.getAdmin().addAll(club.getClubInfo().getAdmin());
+        clubVo.getPartner().addAll(club.getClubInfo().getPartner());
+
         clubVo.getMember().forEach(clubMember -> {
             String gateId = RedisManager.getUserRedisService().getGateId(clubMember.getUserId());
             boolean online = gateId != null;
@@ -256,6 +258,11 @@ public class GameClubService {
 
         ResponseVo vo = new ResponseVo("clubService", "createClub", club);
         sendMsg(msgKey, vo);
+
+        boolean loadClubMoney = SpringUtil.getBean(ServerConfig.class).getHasClubMoney() == 1;
+        if (loadClubMoney ) {
+            ClubManager.getInstance().clubMoneyWrite2Redis(club);
+        }
         return 0;
     }
 
@@ -1403,6 +1410,59 @@ public class GameClubService {
 
     }
 
+    /**
+     * 创建实例
+     * @param clubId
+     * @param userId
+     * @param clubModelId
+     * @return
+     */
+    public int createInstance(KafkaMsgKey msgKey, String clubId, long userId, String clubModelId) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+
+        RoomModel roomModel = getRoomModel(club, clubModelId);
+
+        RoomInstance roomInstance = new RoomInstance();
+        roomInstance.setRoomModelId(roomModel.getId());
+        //放进 房间实例 列表
+        club.getClubInfo().getRoomInstance().put(roomInstance.getRoomModelId(), roomInstance);
+
+        //发消息创建房间
+        sendMsgForCreateRoom(roomModel.getServiceName(), roomModel.getCreateCommand());
+
+
+        sendMsg(msgKey, new ResponseVo("clubService", "createInstance", "ok"));
+
+        return 0;
+    }
+
+
+    /**
+     * 后的某合伙人的玩家
+     * @param msgKey
+     * @param clubId
+     * @param userId
+     * @param partnerId
+     * @return
+     */
+    public int getUserByPartner(KafkaMsgKey msgKey, String clubId, long userId, long partnerId){
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        List<ClubMember> result = new ArrayList<>();
+        club.getClubInfo().getMember().values().forEach(clubMember -> {
+            if (clubMember.getReferrer() == partnerId) {
+                clubMember.setMoney(RedisManager.getClubRedisService().getClubUserMoney(clubId, clubMember.getUserId()));
+                result.add(clubMember);
+            }
+        });
+        sendMsg(msgKey, new ResponseVo("clubService", "getUserByPartner", result));
+        return 0;
+    }
 
     /**
      * 创建房间
@@ -1410,7 +1470,7 @@ public class GameClubService {
      * @param club
      * @param roomModel
      */
-    public static void createRoom(Club club, RoomModel roomModel) {
+    public  static void createRoom(Club club, RoomModel roomModel) {
         RoomInstance roomInstance = new RoomInstance();
         roomInstance.setRoomModelId(roomModel.getId());
         //放进 房间实例 列表

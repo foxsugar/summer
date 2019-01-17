@@ -309,7 +309,7 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
         System.out.println("牌型分数 : " + score);
 
         if (isZimo) {
-            score *= 2;
+            score *= 1;
             System.out.println("自摸 : " + score);
             for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
                 PlayerCardsInfoLongxiang player = (PlayerCardsInfoLongxiang)playerCardsInfoMj;

@@ -6,8 +6,6 @@ import com.code.server.constant.response.IfaceRoomVo;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.tuitongzi.GameTuiTongZi;
-import com.code.server.game.poker.tuitongzi.RoomTuiTongZi;
-import com.code.server.game.poker.tuitongzi.RoomTuiTongZiVo;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
@@ -67,7 +65,9 @@ public class RoomZhaGuZi extends Room{
         return roomVo;
     }
 
-    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, String clubId, String clubRoomModel, String isShowCard) throws DataNotFoundException {
+    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber,
+                                 boolean isJoin, int multiple, String clubId,
+                                 String clubRoomModel, String isShowCard, int otherMode) throws DataNotFoundException {
 
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         RoomZhaGuZi room = new RoomZhaGuZi();
@@ -81,6 +81,7 @@ public class RoomZhaGuZi extends Room{
         room.roomType = roomType;
         room.showCard = isShowCard;
         room.isRobotRoom = true;
+        room.otherMode = otherMode;
         room.setClubId(clubId);
 
         room.setClubRoomModel(clubRoomModel);

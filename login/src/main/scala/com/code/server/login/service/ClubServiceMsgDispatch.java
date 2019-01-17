@@ -255,6 +255,16 @@ public class ClubServiceMsgDispatch {
                 return gameClubService.getUpScoreLog(msgKey, clubId, userId);
             }
 
+            case "createInstance":{
+                String roomModelId1 = params.path("roomModelId").asText();
+                return gameClubService.createInstance(msgKey, clubId, userId, roomModelId1);
+            }
+
+            case "getUserByPartner":{
+                long partnerId = params.get("partnerId").asLong();
+                return gameClubService.getUserByPartner(msgKey, clubId, userId, partnerId);
+            }
+
 
         }
         return 0;

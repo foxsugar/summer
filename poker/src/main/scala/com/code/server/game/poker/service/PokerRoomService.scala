@@ -201,7 +201,8 @@ object PokerRoomService {
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
         val isShowCard = params.path("showCard").asText
-        return RoomZhaGuZi.createRoom(userId, roomType, gameType, gameNumber, personNumber, isJoin, multiple, clubId, clubRoomModel, isShowCard)
+        val otherMode = params.path("otherMode").asInt(0)
+        return RoomZhaGuZi.createRoom(userId, roomType, gameType, gameNumber, personNumber, isJoin, multiple, clubId, clubRoomModel, isShowCard,otherMode)
 
 
       case "createYSZRoom" =>

@@ -71,7 +71,7 @@ public class ClubManager {
      *
      * @param club
      */
-    private void clubMoneyWrite2Redis(Club club) {
+    public void clubMoneyWrite2Redis(Club club) {
         club.getClubInfo().getMember().values().forEach(clubMember -> {
             RedisManager.getClubRedisService().addClubUserMoney(club.getId(), clubMember.getUserId(), clubMember.getMoney());
         });

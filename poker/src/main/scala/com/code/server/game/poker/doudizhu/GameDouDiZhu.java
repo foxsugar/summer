@@ -79,9 +79,6 @@ public class GameDouDiZhu extends Game {
         }
         this.users.addAll(users);
 
-        if (!this.room.isUserLastGameCards()) {
-            this.room.getLastGameCards().clear();
-        }
 
 
         shuffle();
@@ -280,11 +277,6 @@ public class GameDouDiZhu extends Game {
             cards.add(i);
         }
         Collections.shuffle(cards);
-
-        RoomDouDiZhu roomDouDiZhu = (RoomDouDiZhu)room;
-        if (roomDouDiZhu.isUserLastGameCards() && roomDouDiZhu.getLastGameCards().size()>0) {
-            cards = roomDouDiZhu.getLastGameCards();
-        }
     }
 
     protected void testDeal() {
