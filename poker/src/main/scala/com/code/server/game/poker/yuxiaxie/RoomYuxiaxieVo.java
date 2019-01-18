@@ -2,6 +2,9 @@ package com.code.server.game.poker.yuxiaxie;
 
 import com.code.server.constant.response.RoomVo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by sunxianping on 2018-12-12.
  */
@@ -19,6 +22,9 @@ public class RoomYuxiaxieVo extends RoomVo{
     private int nuo;
 
     private long betRemainTime;
+
+
+    List<List<Integer>> diceHistory = new ArrayList<>();
 
 
     public int getDanya() {
@@ -74,6 +80,15 @@ public class RoomYuxiaxieVo extends RoomVo{
 
     public RoomYuxiaxieVo setBetRemainTime(long betRemainTime) {
         this.betRemainTime = betRemainTime;
+        return this;
+    }
+
+    public List<List<Integer>> getDiceHistory() {
+        return diceHistory;
+    }
+
+    public RoomYuxiaxieVo setDiceHistory(List<List<Integer>> diceHistory) {
+        this.diceHistory = diceHistory;
         return this;
     }
 }

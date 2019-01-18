@@ -1,5 +1,6 @@
 package com.code.server.login.service;
 
+import com.code.server.constant.club.RoomInstance;
 import com.code.server.constant.club.RoomModel;
 import com.code.server.constant.data.DataManager;
 import com.code.server.constant.data.StaticDataProto;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2018-11-28.
@@ -34,6 +36,16 @@ public class GameClubHasMoneyService extends GameClubService {
 
         //do nothing
 //        initRoomInstanceStatic(club);
+
+
+        //清理房间状态 如果房间已不存在 则去掉roomId (比如逻辑服务器重启)
+        List<String> removeList = new ArrayList<>();
+        for (Map.Entry<String, RoomInstance> entry : club.getClubInfo().getRoomInstance().entrySet()) {
+            if (entry.getValue().getRoomId() != null && RedisManager.getRoomRedisService().getServerId(entry.getValue().getRoomId()) == null) {
+                removeList.add(entry.getKey());
+            }
+        }
+        removeList.forEach(modelKey -> club.getClubInfo().getRoomInstance().remove(modelKey));
 
     }
 

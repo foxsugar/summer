@@ -243,7 +243,7 @@ public class GameYuxiaxie extends Game {
         dice.add(num2);
         List<Integer> diceHis = new ArrayList<>();
         diceHis.addAll(dice);
-        this.room.getDiceHistory().add(diceHis);
+        this.room.getDiceHistory().put(this.room.curGameNumber, diceHis);
 
         MsgSender.sendMsg2Player("gameService", "crapResp", dice,this.users);
         MsgSender.sendMsg2Player("gameService", "crap", 0,userId);

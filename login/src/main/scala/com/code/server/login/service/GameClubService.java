@@ -1493,6 +1493,20 @@ public class GameClubService {
 
     }
 
+
+    public int getClubAdmin(KafkaMsgKey msgKey, String clubId) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        List<Long> admin = new ArrayList<>();
+        admin.add(club.getPresident());
+        admin.addAll(club.getClubInfo().getAdmin());
+
+        sendMsg(msgKey, new ResponseVo("clubService", "getClubAdmin", admin));
+        return 0;
+    }
+
     /**
      * 创建房间
      *

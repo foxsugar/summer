@@ -43,7 +43,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
     //挪次数
     private int nuo;
 
-    List<List<Integer>> diceHistory = new ArrayList<>();
+    Map<Integer,List<Integer>> diceHistory = new HashMap<>();
 
     Map<Long, Map<Integer,List<Bet>>> betHistory = new HashMap<>();
 
@@ -141,7 +141,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
             this.canStartUserId = users.get(0);
         }
 
-        if (!isCreaterJoin || isClubRoom()) this.bankerId = users.get(0);
+        if (!isCreaterJoin ) this.bankerId = users.get(0);
         addUser2RoomRedis(userId);
     }
 
@@ -156,13 +156,20 @@ public class RoomYuxiaxie extends PokerGoldRoom {
     }
 
     public int getYXXDiceHistory(long userId){
-        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "getYXXDiceHistory", diceHistory), userId);
+        List<List<Integer>> result = new ArrayList<>();
+        diceHistory.forEach((key,value)->{
+            if (key != this.curGameNumber) {
+                result.add(value);
+            }
+        });
+
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "getYXXDiceHistory", result), userId);
         return 0;
     }
 
     public int setBankerByClient(long userId, long bankerId) {
-        this.setBankerId(userId);
-        this.canStartUserId = userId;
+        this.setBankerId(bankerId);
+        this.canStartUserId = bankerId;
         Map<String, Object> result = new HashMap<>();
         result.put("bankerId", bankerId);
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "setBanker", result), users);
@@ -170,8 +177,17 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         return 0;
     }
 
-    public int getYXXBetHistory(long userId){
-        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "getYXXBetHistory", this.betHistory.get(userId)), userId);
+    public int getYXXBetHistory(long userId, boolean all){
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("all", all);
+        if(all){
+            Map<Long, List<Bet>> bets = new HashMap<>();
+            this.betHistory.forEach((uid, bs) -> bets.put(uid, bs.getOrDefault(this.curGameNumber, new ArrayList<>())));
+        }else{
+            this.betHistory.getOrDefault(userId, new HashMap<>()).getOrDefault(this.curGameNumber, new ArrayList<>());
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "getYXXBetHistory", result), userId);
         return 0;
     }
 
@@ -246,7 +262,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
     @Override
     public int startGameByClient(long userId) {
 
-        if (this.users.get(0) != userId){
+        if (this.bankerId != userId){
             return ErrorCode.ROOM_START_NOT_CREATEUSER;
         }
 
@@ -331,6 +347,15 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         if (users.size() > 0) {
             roomVo.setCanStartUserId(users.get(0));
         }
+
+        List<List<Integer>> result = new ArrayList<>();
+        diceHistory.forEach((key,value)->{
+            if (key != this.curGameNumber) {
+                result.add(value);
+            }
+        });
+        roomVo.diceHistory.addAll(result);
+
         return roomVo;
     }
 
@@ -370,11 +395,11 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         return this;
     }
 
-    public List<List<Integer>> getDiceHistory() {
+    public Map<Integer, List<Integer>> getDiceHistory() {
         return diceHistory;
     }
 
-    public RoomYuxiaxie setDiceHistory(List<List<Integer>> diceHistory) {
+    public RoomYuxiaxie setDiceHistory(Map<Integer, List<Integer>> diceHistory) {
         this.diceHistory = diceHistory;
         return this;
     }

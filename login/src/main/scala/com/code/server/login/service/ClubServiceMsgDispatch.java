@@ -270,6 +270,10 @@ public class ClubServiceMsgDispatch {
 
             }
 
+            case "getClubAdmin":{
+                return gameClubService.getClubAdmin(msgKey, clubId);
+            }
+
 
         }
         return 0;

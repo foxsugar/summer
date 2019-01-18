@@ -21,7 +21,11 @@ public class ClubRedisService implements IClubRedis, IConstant {
     @Override
     public double getClubUserMoney(String clubId, long userId) {
         HashOperations<String, String, String> clubMoney = redisTemplate.opsForHash();
-        return Double.parseDouble(clubMoney.get(getClubMoneyKey(clubId), "" + userId));
+        String s = clubMoney.get(getClubMoneyKey(clubId), "" + userId);
+        if (s == null) {
+            return 0;
+        }
+        return Double.parseDouble(s);
     }
 
     @Override
