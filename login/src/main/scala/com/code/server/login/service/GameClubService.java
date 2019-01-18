@@ -25,6 +25,7 @@ import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -186,6 +187,7 @@ public class GameClubService {
         String roomId = roomInstance.getRoomId();
         vo.setRoomId(roomId);
         vo.setClubRoomModel(roomInstance.getRoomModelId());
+        vo.setCreateCommand(roomInstance.getCreateCommand());
         RedisManager.getRoomRedisService().getUsers(roomId).forEach(uid -> {
             Map<String, Object> player = new HashMap<>();
             UserBean userBean = RedisManager.getUserRedisService().getUserBean(uid);
@@ -1411,7 +1413,7 @@ public class GameClubService {
     }
 
     /**
-     * 创建实例
+     * 创建实例  只有鱼虾蟹用到
      * @param clubId
      * @param userId
      * @param clubModelId
@@ -1427,11 +1429,19 @@ public class GameClubService {
 
         RoomInstance roomInstance = new RoomInstance();
         roomInstance.setRoomModelId(roomModel.getId());
+
+        long newId = IdWorker.getDefaultInstance().nextId();
+        JsonNode jsonNode = JsonUtil.readTree(roomModel.getCreateCommand());
+        JsonNode paramNode = jsonNode.path("params");
+        ObjectNode objectNode = (ObjectNode) paramNode;
+        objectNode.put("clubRoomModel", newId);
         //放进 房间实例 列表
-        club.getClubInfo().getRoomInstance().put(roomInstance.getRoomModelId(), roomInstance);
+        club.getClubInfo().getRoomInstance().put(""+newId, roomInstance);
+        roomInstance.setCreateCommand(jsonNode.toString());
+        System.out.println(jsonNode.toString());
 
         //发消息创建房间
-        sendMsgForCreateRoom(roomModel.getServiceName(), roomModel.getCreateCommand());
+        sendMsgForCreateRoom(roomModel.getServiceName(), jsonNode.toString());
 
 
         sendMsg(msgKey, new ResponseVo("clubService", "createInstance", "ok"));
@@ -1455,13 +1465,32 @@ public class GameClubService {
         }
         List<ClubMember> result = new ArrayList<>();
         club.getClubInfo().getMember().values().forEach(clubMember -> {
-            if (clubMember.getReferrer() == partnerId) {
+            if (partnerId == 0 || clubMember.getReferrer() == partnerId) {
                 clubMember.setMoney(RedisManager.getClubRedisService().getClubUserMoney(clubId, clubMember.getUserId()));
                 result.add(clubMember);
             }
         });
         sendMsg(msgKey, new ResponseVo("clubService", "getUserByPartner", result));
         return 0;
+    }
+
+
+    public int getPartner(KafkaMsgKey msgKey, String clubId) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        List<ClubMember> result = new ArrayList<>();
+        club.getClubInfo().getMember().values().forEach(clubMember -> {
+            if (club.getClubInfo().getPartner().contains(clubMember.getUserId())) {
+                clubMember.setMoney(RedisManager.getClubRedisService().getClubUserMoney(clubId, clubMember.getUserId()));
+                result.add(clubMember);
+            }
+        });
+        sendMsg(msgKey, new ResponseVo("clubService", "getPartner", result));
+        return 0;
+
+
     }
 
     /**
@@ -1807,7 +1836,7 @@ public class GameClubService {
      * @param club
      * @param userId
      */
-    private void clubRemoveMember(Club club, long userId) {
+    public void clubRemoveMember(Club club, long userId) {
         club.getClubInfo().getMember().remove("" + userId);
 
         //全局列表

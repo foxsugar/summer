@@ -5,14 +5,17 @@ import com.code.server.constant.data.DataManager;
 import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
+import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.model.Club;
 import com.code.server.login.config.ServerConfig;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -92,6 +95,9 @@ public class GameClubHasMoneyService extends GameClubService {
             club.getClubInfo().getRoomModels().add(roomModel);
 
         }
+
+        RoomModel roomModel = club.getClubInfo().getRoomModels().get(club.getClubInfo().getRoomModels().size() - 1);
+        sendMsg(msgKey, new ResponseVo("clubService", "createRoomModel", roomModel));
 //        Set<String> set = new HashSet();
 //        club.getClubInfo().getRoomModels().forEach(roomModel -> set.add(roomModel.getId()));
 
@@ -119,4 +125,52 @@ public class GameClubHasMoneyService extends GameClubService {
     }
 
 
+
+
+    /**
+     * 解散
+     *
+     * @param msgKey
+     * @param userId
+     * @param clubId
+     * @return
+     */
+    public int dissolve(KafkaMsgKey msgKey, long userId, String clubId) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+
+        if (userId != club.getPresident() && !club.getClubInfo().getAdmin().contains(userId)) {
+            return ErrorCode.CLUB_CANNOT_NO_PRESIDENT;
+        }
+
+
+        //玩家删除id
+        List<String> removeList = new ArrayList<>();
+        removeList.addAll(club.getClubInfo().getMember().keySet());
+
+        for (String uid : removeList) {
+            clubRemoveMember(club, Long.valueOf(uid));
+
+        }
+
+        //删除club
+        ClubManager.getInstance().getClubMap().remove(clubId);
+
+        //把钱加回去
+        RedisManager.getUserRedisService().addUserMoney(userId, club.getMoney());
+
+//        //todo 在建的房间 是否退钱
+//        for (RoomInstance roomInstance : club.getClubInfo().getRoomInstance().values()) {
+//            String roomId = roomInstance.getRoomId();
+//            if (RedisManager.getRoomRedisService().getUsers(roomId).size() == 0) {
+//                RoomModel roomModel = GameClubService.getRoomModel(club, roomInstance.getRoomModelId());
+//                RedisManager.getUserRedisService().addUserMoney(userId, roomModel.getMoney());
+//            }
+//        }
+
+        sendMsg(msgKey, new ResponseVo("clubService", "dissolve", club));
+        return 0;
+    }
 }

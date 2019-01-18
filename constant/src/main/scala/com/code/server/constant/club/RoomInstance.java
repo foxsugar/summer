@@ -6,6 +6,7 @@ package com.code.server.constant.club;
 public class RoomInstance {
     private String roomModelId;
     private String roomId;
+    private String createCommand;
 
     public String getRoomModelId() {
         return roomModelId;
@@ -22,6 +23,15 @@ public class RoomInstance {
 
     public RoomInstance setRoomId(String roomId) {
         this.roomId = roomId;
+        return this;
+    }
+
+    public String getCreateCommand() {
+        return createCommand;
+    }
+
+    public RoomInstance setCreateCommand(String createCommand) {
+        this.createCommand = createCommand;
         return this;
     }
 }

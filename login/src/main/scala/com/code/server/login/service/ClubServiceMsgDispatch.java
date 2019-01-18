@@ -265,6 +265,11 @@ public class ClubServiceMsgDispatch {
                 return gameClubService.getUserByPartner(msgKey, clubId, userId, partnerId);
             }
 
+            case "getPartner":{
+                return gameClubService.getPartner(msgKey, clubId);
+
+            }
+
 
         }
         return 0;

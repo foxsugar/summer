@@ -11,6 +11,7 @@ public class RoomInstanceVo {
     private int num;
     private String roomId;
     private String clubRoomModel;
+    private String createCommand;
     private List<Map<String, Object>> players = new ArrayList<>();
 
 
@@ -48,6 +49,15 @@ public class RoomInstanceVo {
 
     public RoomInstanceVo setPlayers(List<Map<String, Object>> players) {
         this.players = players;
+        return this;
+    }
+
+    public String getCreateCommand() {
+        return createCommand;
+    }
+
+    public RoomInstanceVo setCreateCommand(String createCommand) {
+        this.createCommand = createCommand;
         return this;
     }
 }

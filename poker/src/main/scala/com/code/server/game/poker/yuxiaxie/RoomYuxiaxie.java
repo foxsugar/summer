@@ -1,10 +1,7 @@
 package com.code.server.game.poker.yuxiaxie;
 
 import com.code.server.constant.exception.DataNotFoundException;
-import com.code.server.constant.game.IGameConstant;
-import com.code.server.constant.game.RoomRecord;
-import com.code.server.constant.game.UserBean;
-import com.code.server.constant.game.UserRecord;
+import com.code.server.constant.game.*;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
@@ -133,6 +130,21 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         return uid;
     }
 
+
+    protected void roomAddUser(long userId) {
+
+        this.users.add(userId);
+        this.userStatus.put(userId, 0);
+        this.userScores.put(userId, 0D);
+        this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
+        if (!isClubRoom()) {
+            this.canStartUserId = users.get(0);
+        }
+
+        if (!isCreaterJoin || isClubRoom()) this.bankerId = users.get(0);
+        addUser2RoomRedis(userId);
+    }
+
     @Override
     public int joinRoom(long userId, boolean isJoin) {
         int rtn = super.joinRoom(userId, isJoin);
@@ -150,6 +162,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
     public int setBankerByClient(long userId, long bankerId) {
         this.setBankerId(userId);
+        this.canStartUserId = userId;
         Map<String, Object> result = new HashMap<>();
         result.put("bankerId", bankerId);
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "setBanker", result), users);
