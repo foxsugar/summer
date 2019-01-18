@@ -4,12 +4,10 @@ import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.*;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
-import com.code.server.constant.response.ErrorCode;
-import com.code.server.constant.response.IfaceRoomVo;
-import com.code.server.constant.response.ResponseVo;
-import com.code.server.constant.response.UserOfResult;
+import com.code.server.constant.response.*;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.service.PokerGoldRoom;
+import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
@@ -181,11 +179,12 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
         Map<String, Object> result = new HashMap<>();
         result.put("all", all);
+        Map<Long, List<Bet>> bets = new HashMap<>();
+        result.put("bets", bets);
         if(all){
-            Map<Long, List<Bet>> bets = new HashMap<>();
             this.betHistory.forEach((uid, bs) -> bets.put(uid, bs.getOrDefault(this.curGameNumber, new ArrayList<>())));
         }else{
-            this.betHistory.getOrDefault(userId, new HashMap<>()).getOrDefault(this.curGameNumber, new ArrayList<>());
+            bets.put(userId,this.betHistory.getOrDefault(userId, new HashMap<>()).getOrDefault(this.curGameNumber, new ArrayList<>()));
         }
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "getYXXBetHistory", result), userId);
         return 0;
@@ -259,12 +258,66 @@ public class RoomYuxiaxie extends PokerGoldRoom {
     }
 
 
+
+    public int quitRoom(long userId) {
+        if (!this.users.contains(userId)) {
+            return ErrorCode.CANNOT_QUIT_ROOM_NOT_EXIST;
+
+        }
+
+        if (!isClubRoom()) {
+
+            if (isInGame) {
+                return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME;
+            }
+        }
+
+        if (isClubRoom()) {
+            GameYuxiaxie gameYuxiaxie = (GameYuxiaxie) this.game;
+            PlayerInfoYuxiaxie playerInfoYuxiaxie = gameYuxiaxie.playerCardInfos.get(userId);
+            if (playerInfoYuxiaxie.getBets().size() > 0 ) {
+                return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME;
+            }
+
+            //从game中退出
+            gameYuxiaxie.playerCardInfos.remove(userId);
+
+        }
+        List<Long> noticeList = new ArrayList<>();
+        noticeList.addAll(this.getUsers());
+
+        //删除玩家房间映射关系
+        roomRemoveUser(userId);
+
+//        GameManager.getInstance().getUserRoom().remove(userId);
+
+        if (this.createUser == userId) {//房主解散
+
+            Notice n = new Notice();
+            n.setMessage("roomNum " + this.getRoomId() + " :has destroy success!");
+            MsgSender.sendMsg2Player(new ResponseVo("roomService", "destroyRoom", n), noticeList);
+            //代开房 并且游戏未开始
+            if (!isCreaterJoin && this.curGameNumber == 1) {
+                dissolutionRoom();
+            }
+
+            Room room_ = (Room) RoomManager.getRoom(this.roomId);
+            if (room_ != null) {
+                RoomManager.removeRoom(this.roomId);
+            }
+        }
+
+        noticeQuitRoom(userId);
+
+        return 0;
+    }
+
     @Override
     public int startGameByClient(long userId) {
 
-        if (this.bankerId != userId){
-            return ErrorCode.ROOM_START_NOT_CREATEUSER;
-        }
+//        if (this.bankerId != userId){
+//            return ErrorCode.ROOM_START_NOT_CREATEUSER;
+//        }
 
         //第一局
         if (this.curGameNumber != 1) return ErrorCode.ROOM_START_CAN_NOT;
@@ -322,10 +375,13 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
     @Override
     public void addUserSocre(long userId, double score) {
-        double s = userScores.get(userId);
-        userScores.put(userId, s + score);
-        if (isClubRoom()) {
-            RedisManager.getClubRedisService().addClubUserMoney(this.clubId, userId, score);
+        if (userScores.containsKey(userId)) {
+
+            double s = userScores.get(userId);
+            userScores.put(userId, s + score);
+            if (isClubRoom()) {
+                RedisManager.getClubRedisService().addClubUserMoney(this.clubId, userId, score);
+            }
         }
     }
 
