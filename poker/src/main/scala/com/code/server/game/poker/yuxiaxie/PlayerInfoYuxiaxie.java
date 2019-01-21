@@ -1,5 +1,6 @@
 package com.code.server.game.poker.yuxiaxie;
 
+import com.code.server.constant.game.Bet;
 import com.code.server.constant.response.IfacePlayerInfoVo;
 import com.code.server.game.room.PlayerCardInfo;
 import com.code.server.game.room.Room;
@@ -8,7 +9,7 @@ import org.springframework.beans.BeanUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.code.server.game.poker.yuxiaxie.Bet.TYPE_NUO;
+import static com.code.server.constant.game.Bet.TYPE_NUO;
 
 /**
  * Created by sunxianping on 2018-11-30.
@@ -29,7 +30,7 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
     }
 
     public void bet(Room room, int type, int index1, int index2, int num) {
-        this.bets.add(new Bet(type, index1, index2, num));
+        this.bets.add(new Bet(0,type, index1, index2, num));
 
         this.setScore(score - num);
 
@@ -97,9 +98,9 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
                 multiple = 4;
             }
         }
-//        if (multiple != 0) {
-//            multiple += 1;
-//        }
+        if (multiple != 0) {
+            multiple += 1;
+        }
 
         if (bet.type == Bet.TYPE_NUO) {
             if (room.isClubRoom()) {

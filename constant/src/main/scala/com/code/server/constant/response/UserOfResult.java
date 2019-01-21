@@ -1,7 +1,9 @@
 package com.code.server.constant.response;
 
+import com.code.server.constant.game.Bet;
 import com.code.server.constant.game.RoomStatistics;
 
+import java.util.List;
 import java.util.Map;
 
 public class UserOfResult {
@@ -50,6 +52,7 @@ public class UserOfResult {
     private int winNumXQQ;
 
     private Map<Integer,Integer> historyScore;
+    private Map<Integer,List<Bet>> betHistory;
 
 
 
@@ -334,6 +337,15 @@ public class UserOfResult {
 
     public UserOfResult setHistoryScore(Map<Integer, Integer> historyScore) {
         this.historyScore = historyScore;
+        return this;
+    }
+
+    public Map<Integer, List<Bet>> getBetHistory() {
+        return betHistory;
+    }
+
+    public UserOfResult setBetHistory(Map<Integer, List<Bet>> betHistory) {
+        this.betHistory = betHistory;
         return this;
     }
 }

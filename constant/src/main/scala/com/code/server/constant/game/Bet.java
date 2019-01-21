@@ -1,21 +1,23 @@
-package com.code.server.game.poker.yuxiaxie;
+package com.code.server.constant.game;
 
 /**
  * Created by sunxianping on 2018-12-10.
  */
 public class Bet {
 
-    static final int TYPE_DANYA = 0;
-    static final int TYPE_BAOZI = 1;
-    static final int TYPE_CHUANLIAN = 2;
-    static final int TYPE_NUO = 3;
-    int type;
-    int index1;
-    int index2;
-    int num;
+    public static final int TYPE_DANYA = 0;
+    public static final int TYPE_BAOZI = 1;
+    public static final int TYPE_CHUANLIAN = 2;
+    public static final int TYPE_NUO = 3;
+    public int type;
+    public int index1;
+    public int index2;
+    public int num;
+    public long userId;
 
 
-    public Bet(int type, int index1, int index2, int num) {
+    public Bet(long userId, int type, int index1, int index2, int num) {
+        this.userId = userId;
         this.type = type;
         this.index1 = index1;
         this.index2 = index2;

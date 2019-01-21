@@ -326,11 +326,12 @@ object PokerRoomService {
       case "getYXXBetHistory"=>
         val roomId = params.get("roomId").asText()
         val all = params.get("all").asBoolean()
+        val gameNum =  params.get("gameNum").asInt(0)
         val roomYXX = RoomManager.getRoom(roomId)
         if (roomYXX == null) {
           return ErrorCode.CAN_NOT_NO_ROOM
         }
-        return roomYXX.asInstanceOf[RoomYuxiaxie].getYXXBetHistory(userId,all)
+        return roomYXX.asInstanceOf[RoomYuxiaxie].getYXXBetHistory(userId,all, gameNum)
       case "getAllRoom" =>
         return RoomGuessCar.getAllRoom(userId);
 

@@ -474,9 +474,9 @@ public class GameDouDiZhu extends Game {
                 subScore += score;
                 playerCardInfo.setScore(score);
                 room.addUserSocre(playerCardInfo.getUserId(), score);
-                //加入上把出的牌
-                putCard2LastGameCards(playerCardInfo.cards);
             }
+            //加入上把出的牌
+            putCard2LastGameCards(playerCardInfo.cards);
         }
 
         playerCardInfoDizhu.setScore(-subScore);

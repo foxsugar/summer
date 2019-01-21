@@ -138,6 +138,9 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         if (!isClubRoom()) {
             this.canStartUserId = users.get(0);
         }
+        if (isClubRoom()) {
+            this.userScores.put(userId, RedisManager.getClubRedisService().getClubUserMoney(this.clubId, userId));
+        }
 
         if (!isCreaterJoin ) this.bankerId = users.get(0);
         addUser2RoomRedis(userId);
@@ -175,16 +178,20 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         return 0;
     }
 
-    public int getYXXBetHistory(long userId, boolean all){
+    public int getYXXBetHistory(long userId, boolean all, int gameNum){
 
+        if (gameNum == 0) {
+            gameNum = this.curGameNumber;
+        }
         Map<String, Object> result = new HashMap<>();
         result.put("all", all);
         Map<Long, List<Bet>> bets = new HashMap<>();
         result.put("bets", bets);
         if(all){
-            this.betHistory.forEach((uid, bs) -> bets.put(uid, bs.getOrDefault(this.curGameNumber, new ArrayList<>())));
+            int finalGameNum = gameNum;
+            this.betHistory.forEach((uid, bs) -> bets.put(uid, bs.getOrDefault(finalGameNum, new ArrayList<>())));
         }else{
-            bets.put(userId,this.betHistory.getOrDefault(userId, new HashMap<>()).getOrDefault(this.curGameNumber, new ArrayList<>()));
+            bets.put(userId,this.betHistory.getOrDefault(userId, new HashMap<>()).getOrDefault(gameNum ,new ArrayList<>()));
         }
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "getYXXBetHistory", result), userId);
         return 0;
@@ -251,6 +258,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
             resultObj.setTime(time);
             resultObj.setRoomStatistics(roomStatisticsMap.get(eachUser.getId()));
             resultObj.setHistoryScore(this.userScoreHistory.get(eachUser.getId()));
+            resultObj.setBetHistory(this.betHistory.get(eachUser.getId()));
             userOfResultList.add(resultObj);
 
         }
@@ -273,14 +281,18 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         }
 
         if (isClubRoom()) {
-            GameYuxiaxie gameYuxiaxie = (GameYuxiaxie) this.game;
-            PlayerInfoYuxiaxie playerInfoYuxiaxie = gameYuxiaxie.playerCardInfos.get(userId);
-            if (playerInfoYuxiaxie.getBets().size() > 0 ) {
-                return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME;
-            }
+            if (this.game != null) {
 
-            //从game中退出
-            gameYuxiaxie.playerCardInfos.remove(userId);
+                GameYuxiaxie gameYuxiaxie = (GameYuxiaxie) this.game;
+                PlayerInfoYuxiaxie playerInfoYuxiaxie = gameYuxiaxie.playerCardInfos.get(userId);
+                if (playerInfoYuxiaxie.getBets().size() > 0 ) {
+                    return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME;
+                }
+
+                //从game中退出
+                gameYuxiaxie.playerCardInfos.remove(userId);
+                gameYuxiaxie.users.remove(userId);
+            }
 
         }
         List<Long> noticeList = new ArrayList<>();

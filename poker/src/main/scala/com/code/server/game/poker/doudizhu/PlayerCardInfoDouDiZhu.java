@@ -72,6 +72,11 @@ public class PlayerCardInfoDouDiZhu implements IfacePlayerInfo {
 
     }
 
+
+    public double addScore(double score) {
+        this.score += score;
+        return this.score;
+    }
     public Integer getListByIsType(List<Integer> cards) {
         int len = cards.size();
         if (len <= 4) {

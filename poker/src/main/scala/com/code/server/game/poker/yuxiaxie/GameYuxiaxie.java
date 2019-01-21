@@ -1,5 +1,6 @@
 package com.code.server.game.poker.yuxiaxie;
 
+import com.code.server.constant.game.Bet;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.GameOfResult;
 import com.code.server.constant.response.IfaceGameVo;
@@ -13,8 +14,8 @@ import org.springframework.beans.BeanUtils;
 
 import java.util.*;
 
-import static com.code.server.game.poker.yuxiaxie.Bet.TYPE_DANYA;
-import static com.code.server.game.poker.yuxiaxie.Bet.TYPE_NUO;
+import static com.code.server.constant.game.Bet.TYPE_DANYA;
+import static com.code.server.constant.game.Bet.TYPE_NUO;
 
 /**
  * Created by sunxianping on 2018-11-30.
@@ -114,7 +115,7 @@ public class GameYuxiaxie extends Game {
         this.room.getBetHistory().put(userId, betInfo);
 
 
-        MsgSender.sendMsg2Player("gameService", "betResp", new Bet(type, index1, index2, num),this.users);
+        MsgSender.sendMsg2Player("gameService", "betResp", new Bet(userId, type, index1, index2, num),this.users);
         MsgSender.sendMsg2Player("gameService", "bet", "ok",userId);
        return 0;
     }
@@ -153,7 +154,7 @@ public class GameYuxiaxie extends Game {
         bet2.addNum(num);
 
 
-        MsgSender.sendMsg2Player("gameService", "nuoResp", new Bet(3, index1, index2, num),this.users);
+        MsgSender.sendMsg2Player("gameService", "nuoResp", new Bet(userId, 3, index1, index2, num),this.users);
         MsgSender.sendMsg2Player("gameService", "nuo", "ok",userId);
 
         return 0;
@@ -204,7 +205,7 @@ public class GameYuxiaxie extends Game {
     private Bet getBetAndSet(int type, int index1, int index2) {
         Bet bet = getBetByType(type, index1, index2);
         if (bet == null) {
-            bet = new Bet(type, index1, index2, 0);
+            bet = new Bet(0, type, index1, index2, 0);
             this.allBets.add(bet);
         }
         return bet;
@@ -339,6 +340,10 @@ public class GameYuxiaxie extends Game {
         PlayerInfoYuxiaxie banker = playerCardInfos.get(this.room.getBankerId());
 //        banker.setScore(banker.getScore() - allScore);
         banker.setScore(banker.getScore() + rs);
+
+        this.room.userScoreHistory.putIfAbsent(banker.getUserId(), new HashMap<>());
+        this.room.userScoreHistory.get(banker.getUserId()).put(this.room.curGameNumber, rs);
+
 //        this.room.addUserSocre(banker.getUserId(), -allScore);
         this.room.addUserSocre(banker.getUserId(), rs);
         if (this.room.isClubRoom()) {

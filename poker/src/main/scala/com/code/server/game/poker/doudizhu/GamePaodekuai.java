@@ -66,7 +66,7 @@ public class GamePaodekuai extends GameDouDiZhu {
         dizhuUser = dizhuUser != 0 ? dizhuUser : users.get(0);
 //        chooseDizhu(dizhuUser);
 
-        if (isHasModel(mode_红桃3先出)) {
+        if (this.room.curGameNumber == 1 || isHasModel(mode_红桃3先出)) {
 
             dizhuUser = getHas3User();
         }
@@ -92,16 +92,7 @@ public class GamePaodekuai extends GameDouDiZhu {
             }
         }
 
-        if (zhaCount < room.getMultiple() || room.getMultiple() == -1) {
-            if (cardStruct.getType() == CardStruct.type_炸) {
-                List<Integer> cards = cardStruct.getCards();
-                zhaCount += 1;//记录炸的数量
-                multiple *= 2;//记录倍数
-            } else if (cardStruct.getType() == CardStruct.type_火箭) {
-                zhaCount += 1;//记录炸的数量
-                multiple *= 2;//记录倍数
-            }
-        }
+
     }
 
 
@@ -156,10 +147,10 @@ public class GamePaodekuai extends GameDouDiZhu {
 
         //打牌列表 加上玩家
         this.playList.add(userId);
-        //炸是否加到个人身上
-        handleBomb2People(userId);
         //处理炸
         handleBomb(cardStruct);
+        //炸是否加到个人身上
+        handleBomb2People(userId);
 
 
 
@@ -177,6 +168,11 @@ public class GamePaodekuai extends GameDouDiZhu {
 //                if (zhaCount < room.getMultiple() || room.getMultiple() == -1) {
 //                    multiple *= 2;
 //                }
+            }
+
+            //算炸
+            for (PlayerCardInfoDouDiZhu playerCardInfoDouDiZhu : this.playerCardInfos.values()) {
+                computeBoom(playerCardInfoDouDiZhu);
             }
 
             compute(userId);
@@ -209,6 +205,21 @@ public class GamePaodekuai extends GameDouDiZhu {
     }
 
 
+    private void computeBoom(PlayerCardInfoDouDiZhu playerCardInfo) {
+        int score = playerCardInfo.getZhaCount() * getZhaDifen();
+        int allScore = 0;
+        for (PlayerCardInfoDouDiZhu playerCardPaodekuai : playerCardInfos.values()) {
+            if (playerCardInfo.getUserId() != playerCardPaodekuai.getUserId()) {
+                playerCardPaodekuai.addScore(-score);
+                room.addUserSocre(playerCardPaodekuai.getUserId(), -score);
+                allScore += score;
+            }
+        }
+        playerCardInfo.addScore(allScore);
+        room.addUserSocre(playerCardInfo.getUserId(), allScore);
+
+    }
+
 
     protected void compute(long winnerId) {
 
@@ -222,14 +233,14 @@ public class GamePaodekuai extends GameDouDiZhu {
                 if (isSpring) {
                     score *= 2;
                 }
-                score += playerCardInfo.getZhaCount() * getZhaDifen();
+//                score += playerCardInfo.getZhaCount() * getZhaDifen();
 
                 if (playerCardInfo.getCards().size() == 1) {
                     score = 0;
                 }
 
                 subScore += score;
-                playerCardInfo.setScore(-score);
+                playerCardInfo.addScore(-score);
                 room.addUserSocre(playerCardInfo.getUserId(), -score);
 
                 //手里的牌 加到不洗牌中
@@ -239,7 +250,7 @@ public class GamePaodekuai extends GameDouDiZhu {
         }
 
         PlayerCardInfoDouDiZhu winner = playerCardInfos.get(winnerId);
-        winner.setScore(subScore);
+        winner.addScore(subScore);
         room.addUserSocre(winnerId, subScore);
 
     }

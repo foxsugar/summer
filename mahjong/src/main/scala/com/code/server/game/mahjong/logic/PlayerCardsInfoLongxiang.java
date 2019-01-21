@@ -194,6 +194,9 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
 
         if (CardTypeUtil.FENG_CARD.contains(card)) {
             for (HuCardType huCardType : huList) {
+                if (huCardType.feng_shun.size() == 0) {
+                    return true;
+                }
                 for (List<Integer> list : huCardType.feng_shun) {
                     if (!list.contains(cardType)) {
                         return true;
@@ -442,19 +445,19 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
         playerCardsInfo.isHasYaojiuShun = true;
 
 
-        String[] s = new String[]{  "003",
-                "019",
-                "060",
+        String[] s = new String[]{  "024",
+                "025",
+                "026",
+                "032",
+                "033",
+                "034",
+                "104",
+                "105",
                 "106",
-                "125",
-                "040",
-                "059",
-                "041",
-                "135",
-                "021",
-                "054",
-                "131",
-                "013",
+                "108",
+                "109",
+                "028",
+                "029",
                 };
 //        String[] s = new String[]{"112", "113", "114",   "024",   "028", "032",  "088", "092", "096",  "097",    "132", "133", "124", "120"};
 
@@ -484,7 +487,7 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
 //                playerCardsInfo.getCardsNoChiPengGang(playerCardsInfo.cards),
 //                playerCardsInfo.getChiPengGangNum(), hun, 23);
 //        boolean isCanHu = playerCardsInfo.isCanHu_zimo("068");
-        boolean isCanHu = playerCardsInfo.isCanHu_dianpao("068");
+        boolean isCanHu = playerCardsInfo.isCanHu_dianpao("111");
 
 
         System.out.println("是否可以胡: " + isCanHu);

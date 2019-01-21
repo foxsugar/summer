@@ -312,7 +312,7 @@ public class GameTDK extends Game {
         //推送发牌信息
         pushToAll(new ResponseVo(SERVICE_NAME, "deal_round", playerCards));
 
-        //发玩牌 通知下注
+        //发完牌 通知下注
         betStart();
     }
 
@@ -441,6 +441,12 @@ public class GameTDK extends Game {
         return 0;
     }
 
+    /**
+     * 换牌下流
+     * @param userId
+     * @param huanpai
+     * @return
+     */
     public int huanpaixialiu(long userId, int huanpai) {
 
         this.room.setShamelessUser(userId);
@@ -698,13 +704,10 @@ public class GameTDK extends Game {
                 }
 
             } else {//通知下一轮踢牌
-
                 notifyNextUserKick(nextKickUser);
             }
-
         } else {
             //通知下一个人下注
-
             betInfo.curBetUser = nextUser;
             Map<String, Object> pleaseBetResult = new HashMap<>();
             pleaseBetResult.put("userId", nextUser);
@@ -801,9 +804,7 @@ public class GameTDK extends Game {
             Map<String, Object> pleaseBetResult = new HashMap<>();
             pleaseBetResult.put("userId", nextUser);
             pushToAll(new ResponseVo(SERVICE_NAME, "followBet", pleaseBetResult));
-
         } else {
-
             //所有人都选过了
             if (this.kickInfo.isOver(aliveUserList)) {
                 //发牌或者开牌
