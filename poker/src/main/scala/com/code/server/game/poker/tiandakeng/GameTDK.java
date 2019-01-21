@@ -1066,7 +1066,8 @@ public class GameTDK extends Game {
             if (this.aliveUserList.contains(nextUser)) {
                 users.add(nextUser);
             }
-            nextUser = nextTurnId(nextUser);
+            //fixme 要从父类的方法获取 取所有玩家
+            nextUser = super.nextTurnId(nextUser);
         }
         return users;
     }
@@ -1089,7 +1090,7 @@ public class GameTDK extends Game {
     }
 
     /**
-     * 下一个
+     * 下一个 fixme
      *
      * @param curId
      * @return
