@@ -461,9 +461,9 @@ public class GamePlaySeven extends Game{
 
     public int fanZhu(long userId,boolean fan,Integer card){
         //todo 已经反过就不能再反了
-        if (this.fanzhu) {
-            return ErrorCode.ERROR_CANNOT_FANZHU;
-        }
+//        if (this.fanzhu) {
+//            return ErrorCode.ERROR_CANNOT_FANZHU;
+//        }
         if(fan){//反主
             if(Math.abs(card)>52){
                 this.huaSe = -1;

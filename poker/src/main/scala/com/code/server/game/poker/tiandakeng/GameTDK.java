@@ -220,6 +220,16 @@ public class GameTDK extends Game {
         betStart();
     }
 
+    private int randACard() {
+
+        for (int i = 0; i < this.cards.size(); i++) {
+            int c = this.cards.get(i);
+            if (c % 4 == 1) {
+                return c;
+            }
+        }
+        return 41;
+    }
 
     protected void dealProxy() {
         if (this.room.getShamelessUser() != 0) {
@@ -228,21 +238,28 @@ public class GameTDK extends Game {
             list.add(41);
             list.add(45);
             list.add(49);
-            int card = list.get(new Random().nextInt(4));
+            int card = randACard();
 //            int card = list.get(index);
             PlayerInfoTDK shameless = playerCardInfos.get(this.room.getShamelessUser());
 
+
+            int card2;
+            int card3;
             //换双王
             if (this.room.getHuanpai() == 1) {
-                card = 52;
+                card2 = 53;
+                card3 = 54;
+            }else{
+                card2 = card + 1;
+                card3 = card + 2;
             }
             shameless.deal(card, false);
-            shameless.deal(card + 1, false);
-            shameless.deal(card + 2, false);
+            shameless.deal(card2, false);
+            shameless.deal(card3, false);
 
             this.cards.remove((Integer) card);
-            this.cards.remove((Integer) (card + 1));
-            this.cards.remove((Integer) (card + 2));
+            this.cards.remove((Integer) card2);
+            this.cards.remove((Integer) card3);
 
 
             for (PlayerInfoTDK playerInfoTDK : playerCardInfos.values()) {

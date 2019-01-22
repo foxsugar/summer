@@ -48,7 +48,7 @@ public class SevenRobot implements ISevenRobot,IGameConstant {
             GamePlaySeven game = (GamePlaySeven) room.getGame();
             long now = System.currentTimeMillis();
             //执行
-            if(now > game.lastOperateTime + SECOND * 10){
+            if(now > game.lastOperateTime + SECOND * 3){
                 switch (game.step) {
                     case STEP_RENSHU:
                         renShu(game);
@@ -61,7 +61,7 @@ public class SevenRobot implements ISevenRobot,IGameConstant {
                         break;*/
                 }
             }
-            if(now > game.lastOperateTime + SECOND * 25){
+            if(now > game.lastOperateTime + SECOND * 5){
                 switch (game.step) {
                     case STEP_GET_CARD_FINISH:
                     noticeGetCardAgain(game);//无操作自动开牌

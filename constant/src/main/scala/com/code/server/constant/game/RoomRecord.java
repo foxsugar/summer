@@ -23,6 +23,7 @@ public class RoomRecord {
     int curGameNum;
     int allGameNum;
     long winnerId;
+    long bankerId;
 
 
     Map<String, Object> otherInfo = new HashMap<>();
@@ -164,6 +165,15 @@ public class RoomRecord {
 
     public RoomRecord setOtherInfo(Map<String, Object> otherInfo) {
         this.otherInfo = otherInfo;
+        return this;
+    }
+
+    public long getBankerId() {
+        return bankerId;
+    }
+
+    public RoomRecord setBankerId(long bankerId) {
+        this.bankerId = bankerId;
         return this;
     }
 }

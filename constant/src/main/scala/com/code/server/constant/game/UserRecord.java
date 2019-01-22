@@ -11,6 +11,7 @@ public class UserRecord {
     private String name;
     private double score;
     private String roomId;
+    private String image;
 
 
     public long getUserId() {
@@ -49,5 +50,12 @@ public class UserRecord {
         return this;
     }
 
+    public String getImage() {
+        return image;
+    }
 
+    public UserRecord setImage(String image) {
+        this.image = image;
+        return this;
+    }
 }

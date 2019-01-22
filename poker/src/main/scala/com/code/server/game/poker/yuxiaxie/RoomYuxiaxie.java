@@ -211,10 +211,13 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         roomRecord.setAllGameNum(this.gameNumber);
         //winner
         roomRecord.setWinnerId(getWinner());
+        roomRecord.setBankerId(this.bankerId);
 
         roomRecord.getOtherInfo().put("diceHistory", this.diceHistory);
         roomRecord.getOtherInfo().put("betHistory", this.betHistory);
         roomRecord.getOtherInfo().put("userScoreHistory", this.userScoreHistory);
+        roomRecord.getOtherInfo().put("playerNum", 10);
+        roomRecord.getOtherInfo().put("otherMode", this.otherMode);
 
 
         this.userScores.forEach((key, value) -> {
@@ -224,6 +227,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
             UserBean userBean = RedisManager.getUserRedisService().getUserBean(key);
             if (userBean != null) {
                 userRecord.setName(userBean.getUsername());
+                userRecord.setImage(userBean.getImage());
             }
             roomRecord.getRecords().add(userRecord);
         });
@@ -292,6 +296,9 @@ public class RoomYuxiaxie extends PokerGoldRoom {
                 //从game中退出
                 gameYuxiaxie.playerCardInfos.remove(userId);
                 gameYuxiaxie.users.remove(userId);
+
+
+                this.setPersonNumber(userScores.size());
             }
 
         }

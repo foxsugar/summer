@@ -199,7 +199,9 @@ public class CenterMsgService implements IkafkaMsgId {
             if (club != null) {
                 String roomModel = roomRecord.getClubRoomModel();
                 RoomModel rm = GameClubService.getRoomModel(club, roomModel);
-                roomRecord.setName(rm.getDesc());
+                if (rm != null) {
+                    roomRecord.setName(rm.getDesc());
+                }
 
                 //数据统计
 
@@ -245,7 +247,10 @@ public class CenterMsgService implements IkafkaMsgId {
                 sendLq_http(roomRecord, club);
 
             }
-            clubRecordService.addRecord(clubId, roomRecord);
+            ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+            if(serverConfig.getHasClubMoney()!=1){
+                clubRecordService.addRecord(clubId, roomRecord);
+            }
         }
     }
 

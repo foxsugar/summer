@@ -54,6 +54,7 @@ public class ClubServiceMsgDispatch {
         }
         long userId = msgKey.getUserId();
         String clubId = params.path("clubId").asText();
+        boolean clubHasMoney = params.path("clubHasMoney").asBoolean(false);
         switch (method) {
             case "lookClub":
                 return gameClubService.lookClub(msgKey, userId);
@@ -82,6 +83,9 @@ public class ClubServiceMsgDispatch {
             case "joinClub":
                 String mark = params.get("mark").asText();
                 return gameClubService.joinClub(msgKey, userId, clubId, mark);
+            case "partnerRecommend":
+                long recommendId = params.path("recommendId").asLong();
+                return gameClubService.partnerRecommend(msgKey, userId, clubId, recommendId);
             case "quitClub":
                 return gameClubService.quitClub(msgKey, userId, clubId);
             case "agree":

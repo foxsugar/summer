@@ -20,6 +20,7 @@ import com.code.server.db.model.ClubRecord;
 import com.code.server.db.model.User;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
+import com.code.server.login.kafka.MsgSender;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
@@ -262,7 +263,7 @@ public class GameClubService {
         sendMsg(msgKey, vo);
 
         boolean loadClubMoney = SpringUtil.getBean(ServerConfig.class).getHasClubMoney() == 1;
-        if (loadClubMoney ) {
+        if (loadClubMoney) {
             ClubManager.getInstance().clubMoneyWrite2Redis(club);
         }
         return 0;
@@ -440,6 +441,65 @@ public class GameClubService {
         return 0;
     }
 
+
+    public int partnerRecommend(KafkaMsgKey msgKey, long partnerId, String clubId, long recommendId) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        //自己加入了几个俱乐部
+        List<String> joinList = ClubManager.getInstance().getUserClubs(recommendId);
+        int limit = SpringUtil.getBean(ServerConfig.class).getClubJoinLimit();
+        if (joinList.size() >= limit) {
+            return ErrorCode.CLUB_CANNOT_NUM;
+        }
+        if (joinList.contains(clubId)) {
+            return ErrorCode.CLUB_CANNOT_JOIN;
+        }
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(recommendId);
+        String name = "";
+        String image = "";
+        int sex = 0;
+        if (userBean != null) {
+
+            name = userBean.getUsername();
+            image = userBean.getImage();
+            sex = userBean.getSex();
+        } else {
+            User user = userService.getUserByUserId(recommendId);
+            if (user == null) {
+                return ErrorCode.CLUB_CANNOT_JOIN;
+            }
+            name = user.getUsername();
+            image = user.getImage();
+            sex = user.getSex();
+        }
+        ClubMember apply = new ClubMember().setTime(System.currentTimeMillis()).setUserId(recommendId).setMark("" + partnerId)
+                .setName(name).setImage(image).setSex(sex).setReferrer(partnerId);
+
+        //自动加入
+
+        //加入申请列表
+        if (isInApplyList(club, recommendId)) {
+            return ErrorCode.CLUB_CANNOT_JOIN;
+        }
+        club.getClubInfo().getApplyList().add(apply);
+
+
+        Map<String, Object> result = new HashMap<>();
+        sendMsg(msgKey, new ResponseVo("clubService", "partnerRecommend", result));
+
+        //给管理员推送 申请列表
+        List<Long> adminList = new ArrayList<>();
+        adminList.add(club.getPresident());
+        adminList.addAll(club.getClubInfo().getAdmin());
+        Map<String, Object> r = new HashMap<>();
+        r.put("clubId", club.getId());
+        adminList.forEach(uid -> sendMsg2Player(new ResponseVo("clubService", "joinClubPush2Admin", r), uid));
+//        sendMsg2Player(new ResponseVo("clubService", "joinClubPush2Admin",0), );
+        return 0;
+    }
 
     /**
      * 退出俱乐部
@@ -1414,6 +1474,7 @@ public class GameClubService {
 
     /**
      * 创建实例  只有鱼虾蟹用到
+     *
      * @param clubId
      * @param userId
      * @param clubModelId
@@ -1436,7 +1497,7 @@ public class GameClubService {
         ObjectNode objectNode = (ObjectNode) paramNode;
         objectNode.put("clubRoomModel", newId);
         //放进 房间实例 列表
-        club.getClubInfo().getRoomInstance().put(""+newId, roomInstance);
+        club.getClubInfo().getRoomInstance().put("" + newId, roomInstance);
         roomInstance.setCreateCommand(jsonNode.toString());
         System.out.println(jsonNode.toString());
 
@@ -1452,13 +1513,14 @@ public class GameClubService {
 
     /**
      * 后的某合伙人的玩家
+     *
      * @param msgKey
      * @param clubId
      * @param userId
      * @param partnerId
      * @return
      */
-    public int getUserByPartner(KafkaMsgKey msgKey, String clubId, long userId, long partnerId){
+    public int getUserByPartner(KafkaMsgKey msgKey, String clubId, long userId, long partnerId) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
@@ -1513,7 +1575,7 @@ public class GameClubService {
      * @param club
      * @param roomModel
      */
-    public  static void createRoom(Club club, RoomModel roomModel) {
+    public static void createRoom(Club club, RoomModel roomModel) {
         RoomInstance roomInstance = new RoomInstance();
         roomInstance.setRoomModelId(roomModel.getId());
         //放进 房间实例 列表
@@ -1730,6 +1792,9 @@ public class GameClubService {
         club.getUpScoreInfo().getInfo().put(date.toString(), list);
         club.getUpScoreInfo().getInfo().remove(dateBefore.toString());
 
+        Map<String, String> rs = new HashMap<>();
+        MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), toUser);
+
         sendMsg(msgKey, new ResponseVo("clubService", "upScore", "ok"));
         return 0;
     }
@@ -1737,6 +1802,7 @@ public class GameClubService {
 
     /**
      * 上下分记录
+     *
      * @param msgKey
      * @param clubId
      * @param userId
@@ -1811,6 +1877,7 @@ public class GameClubService {
         member.setImage(apply.getImage());
         member.setName(apply.getName());
         member.setSex(apply.getSex());
+        member.setReferrer(apply.getReferrer());
 
         club.getClubInfo().getMember().put("" + apply.getUserId(), member);
 
