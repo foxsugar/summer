@@ -224,7 +224,7 @@ public class GameTDK extends Game {
 
         for (int i = 0; i < this.cards.size(); i++) {
             int c = this.cards.get(i);
-            if (c % 4 == 1) {
+            if (c % 4 == 1 && c != 53 && c!=54) {
                 return c;
             }
         }

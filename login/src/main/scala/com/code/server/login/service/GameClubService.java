@@ -20,7 +20,6 @@ import com.code.server.db.model.ClubRecord;
 import com.code.server.db.model.User;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
-import com.code.server.login.kafka.MsgSender;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
@@ -368,7 +367,22 @@ public class GameClubService {
         }
 
         sendMsg(msgKey, new ResponseVo("clubService", "dissolve", club));
+
+        Map<String, Object> r = new HashMap<>();
+        r.put("clubId", club.getId());
+
+        sendMsg(new ResponseVo("clubService", "dissolvePush", r), getClubUser(club));
+
         return 0;
+    }
+
+
+    private List<Long> getClubUser(Club club) {
+        List<Long> users = new ArrayList<>();
+        club.getClubInfo().getMember().forEach((id,clubMember)->{
+            users.add(clubMember.getUserId());
+        });
+        return users;
     }
 
     /**
@@ -1507,6 +1521,8 @@ public class GameClubService {
 
         sendMsg(msgKey, new ResponseVo("clubService", "createInstance", "ok"));
 
+        sendMsg( new ResponseVo("clubService", "createInstancePush", "ok"), getClubUser(club) );
+
         return 0;
     }
 
@@ -1792,8 +1808,26 @@ public class GameClubService {
         club.getUpScoreInfo().getInfo().put(date.toString(), list);
         club.getUpScoreInfo().getInfo().remove(dateBefore.toString());
 
-        Map<String, String> rs = new HashMap<>();
-        MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), toUser);
+//        Map<String, String> rs = new HashMap<>();
+//        MsgSender.sendMsg2Player(new ResponseVo("roomService", "pushScoreChange", rs), toUser);
+
+        String rid = RedisManager.getUserRedisService().getRoomId(toUser);
+        if (rid != null) {
+            KafkaMsgKey msgKey1 = new KafkaMsgKey();
+
+            msgKey1.setRoomId(rid);
+            String sid = RedisManager.getRoomRedisService().getServerId(rid);
+            int partitionId = Integer.valueOf(sid);
+            msgKey1.setPartition(partitionId);
+            msgKey1.setUserId(userId);
+            MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+
+            ResponseVo responseVo = new ResponseVo();
+            responseVo.setService("roomService");
+            responseVo.setMethod("pushScoreChange");
+            responseVo.setParams("inner");
+            msgProducer.send2Partition("roomService", partitionId, msgKey1, responseVo);
+        }
 
         sendMsg(msgKey, new ResponseVo("clubService", "upScore", "ok"));
         return 0;
@@ -1862,6 +1896,15 @@ public class GameClubService {
      */
     void sendMsg(KafkaMsgKey msgKey, Object msg) {
         kafkaMsgProducer.send2Partition(IKafaTopic.GATE_TOPIC, msgKey.getPartition(), "" + msgKey.getUserId(), msg);
+    }
+
+    void sendMsg(Object msg, List<Long> users){
+        for (long userId : users) {
+            String gate = RedisManager.getUserRedisService().getGateId(userId);
+            if (gate != null) {
+                kafkaMsgProducer.send2Partition(IKafaTopic.GATE_TOPIC, Integer.valueOf(gate), userId, msg);
+            }
+        }
     }
 
     /**
