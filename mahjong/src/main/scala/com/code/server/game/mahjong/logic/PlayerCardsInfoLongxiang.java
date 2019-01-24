@@ -284,6 +284,7 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
 
 
 
+
     @Override
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
         this.gameInfo.computeAllGang();
@@ -370,7 +371,7 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
      * @return
      */
     public int getPf(){
-        if (this.paofen != -1) {
+        if (this.paofen != -1 && this.paofen != 0) {
             if (isHasMode(this.roomInfo.mode, mode_跑分_2)) {
                 return 2;
             }
