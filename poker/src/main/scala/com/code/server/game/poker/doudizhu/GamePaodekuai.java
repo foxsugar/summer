@@ -9,7 +9,6 @@ import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -84,9 +83,10 @@ public class GamePaodekuai extends GameDouDiZhu {
             if (isHasModel(mode_单圈最大炸弹算分)) {
                 //判断这圈是否结束
                 curCircleZhaCount++;
+                System.out.println("单圈炸的个数: " + curCircleZhaCount);
 
             }else{
-                PlayerCardPaodekuai playerCardPaodekuai = (PlayerCardPaodekuai) playerCardInfos.get(userId);
+                PlayerCardInfoDouDiZhu playerCardPaodekuai = playerCardInfos.get(userId);
                 playerCardPaodekuai.setZhaCount(playerCardPaodekuai.getZhaCount() + 1);
                 this.room.getRoomStatisticsMap().get(userId).zhaCount += 1;
             }
@@ -99,14 +99,16 @@ public class GamePaodekuai extends GameDouDiZhu {
     protected void handleBomb2People(long userId){
         if(isHasModel(mode_单圈每个炸弹算分)) return;
         //判断是不是一圈了
-        if (playList.size() >= 1 && curCircleZhaCount>0) {
+        if (playList.size() >= 2 && curCircleZhaCount>0) {
             //
-            if (userId == playList.get(playList.size() - 1)) {
+            if (userId == playList.get(playList.size() - 2)) {
                 PlayerCardInfoDouDiZhu playerCardPaodekuai =  playerCardInfos.get(userId);
                 playerCardPaodekuai.setZhaCount(playerCardPaodekuai.getZhaCount() + 1);
                 this.room.getRoomStatisticsMap().get(userId).zhaCount += 1;
 
                 this.curCircleZhaCount = 0;
+                System.out.println("炸加到了玩家: " +playerCardPaodekuai.getUserId() );
+                System.out.println("此时" +playerCardPaodekuai.getUserId() + "炸的个数: " + playerCardPaodekuai.getZhaCount() );
             }
         }
     }
@@ -147,10 +149,18 @@ public class GamePaodekuai extends GameDouDiZhu {
 
         //打牌列表 加上玩家
         this.playList.add(userId);
-        //处理炸
-        handleBomb(cardStruct);
+
         //炸是否加到个人身上
         handleBomb2People(userId);
+
+        //处理炸
+        handleBomb(cardStruct);
+
+        if (this.playList.size() >= 2) {
+            if (userId == this.playList.get(this.playList.size() - 2)) {
+                this.playList.clear();
+            }
+        }
 
 
 
@@ -336,7 +346,7 @@ public class GamePaodekuai extends GameDouDiZhu {
         cards.remove((Integer) 8);
         cards.remove((Integer) 4);
 
-        Collections.shuffle(cards);
+//        Collections.shuffle(cards);
 
     }
 }
