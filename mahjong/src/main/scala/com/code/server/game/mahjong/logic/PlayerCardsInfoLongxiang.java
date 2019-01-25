@@ -297,6 +297,7 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
         //跑分
         score += getPf();
         System.out.println("跑分 : " + score);
+        boolean isAddPaofen = getPf() != 0;
 
         //扣听
         score += getKoutingScore();
@@ -320,7 +321,9 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
                 if (player.getUserId() != userId) {
                     int temp = score;
                     //跑分
-                    temp += player.getPf();
+                    if (isAddPaofen) {
+                        temp += player.getPf();
+                    }
                     //减分
                     player.addScore(-temp);
                     this.roomInfo.addUserSocre(player.getUserId(), -temp);
@@ -331,7 +334,9 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
         }else{
             PlayerCardsInfoLongxiang player = (PlayerCardsInfoLongxiang) this.gameInfo.playerCardsInfos.get(dianpaoUser);
             int temp = score;
-            temp += player.getPf();
+            if (isAddPaofen) {
+                temp += player.getPf();
+            }
             System.out.println("点炮 userId : " + player.getUserId() + "  输的分数: " + temp);
             player.addScore(-temp);
             this.roomInfo.addUserSocre(player.getUserId(), -temp);
