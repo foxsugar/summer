@@ -238,7 +238,7 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
         //明杠1分
         int sub = 0;
         int gangFan = 0;
-        gangFan += this.anGangType.size() * 2;
+        gangFan += this.anGangType.size() * 1;
 
 
 
