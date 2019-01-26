@@ -9,6 +9,7 @@ import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -346,7 +347,7 @@ public class GamePaodekuai extends GameDouDiZhu {
         cards.remove((Integer) 8);
         cards.remove((Integer) 4);
 
-//        Collections.shuffle(cards);
+        Collections.shuffle(cards);
 
     }
 }
