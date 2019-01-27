@@ -4,6 +4,7 @@ import com.code.server.constant.game.Bet;
 import com.code.server.constant.response.IfacePlayerInfoVo;
 import com.code.server.game.room.PlayerCardInfo;
 import com.code.server.game.room.Room;
+import com.code.server.redis.service.RedisManager;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
@@ -70,6 +71,10 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
     private int settle(Room room, Bet bet, int dice1, int dice2) {
         if (bet == null) return 0;
         int multiple = 0;
+        if (bet.type != Bet.TYPE_NUO) {
+            room.addUserSocre(userId, bet.getNum());
+            this.setScore(this.getScore() + bet.getNum());
+        }
         if (bet.type == Bet.TYPE_DANYA) {
             if (bet.index1 == dice1 || bet.index1 == dice2) {
                 multiple = 2;
@@ -77,42 +82,53 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
             if (bet.index1 == dice1 && bet.index1 == dice2) {
                 multiple = 4;
             }
+            if (bet.index1 != dice1 && bet.index1 != dice2) {
+                multiple = -1;
+            }
         } else if (bet.type == Bet.TYPE_BAOZI) {
 
             if (bet.index1 == dice1 && bet.index1 == dice2) {
                 multiple = 25;
+            }else{
+                multiple = -1;
             }
         } else if (bet.type == Bet.TYPE_CHUANLIAN) {
             if((bet.index1 == dice1 && bet.index2 == dice2) ||
                     (bet.index1 == dice2 && bet.index2 == dice1)){
                 multiple = 12;
+            }else{
+                multiple = -1;
             }
         } else if (bet.type == Bet.TYPE_NUO) {
 //            if (room.isClubRoom()) {
 //                RedisManager.getClubRedisService().addClubUserMoney(room.getClubId(), this.getUserId(), 5* bet.num);
 //            }
-            if (bet.index2 == dice1 || bet.index2 == dice2) {
-                multiple = 2;
-            }
             if (bet.index2 == dice1 && bet.index2 == dice2) {
-                multiple = 4;
+                multiple += 5;
+            }else
+            if (bet.index2 == dice1 || bet.index2 == dice2) {
+                multiple += 3;
             }
+
+            if (bet.index1 == dice1 && bet.index1 == dice2) {
+                multiple -= 5;
+            }else
+            if (bet.index1 == dice1 || bet.index1 == dice2) {
+                multiple -= 3;
+            }
+
         }
-        if (multiple != 0) {
-            multiple += 1;
-        }
+
 
         if (bet.type == Bet.TYPE_NUO) {
             if (room.isClubRoom()) {
-//                RedisManager.getClubRedisService().addClubUserMoney(room.getClubId(), this.getUserId(), 5* bet.num);
-                multiple += 5;
+                RedisManager.getClubRedisService().addClubUserMoney(room.getClubId(), this.getUserId(), 5* bet.num);
+//                multiple += 5;
             }
 
         }
 
-//        if (room.isClubRoom()) {
-//            RedisManager.getClubRedisService().addClubUserMoney(room.getClubId(), this.getUserId(), multiple * bet.getNum());
-//        }
+
         //设置分数
         this.setScore(this.getScore() + multiple * bet.getNum());
 

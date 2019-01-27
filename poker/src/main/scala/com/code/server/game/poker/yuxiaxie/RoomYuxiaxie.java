@@ -169,6 +169,9 @@ public class RoomYuxiaxie extends PokerGoldRoom {
     }
 
     public int setBankerByClient(long userId, long bankerId) {
+        if (!this.users.contains(bankerId)) {
+            return ErrorCode.CANNOT_SET_BANKER;
+        }
         this.setBankerId(bankerId);
         this.canStartUserId = bankerId;
         Map<String, Object> result = new HashMap<>();
@@ -214,7 +217,9 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         roomRecord.setBankerId(this.bankerId);
 
         roomRecord.getOtherInfo().put("diceHistory", this.diceHistory);
-        roomRecord.getOtherInfo().put("betHistory", this.betHistory);
+        if (!this.isClubRoom()) {
+            roomRecord.getOtherInfo().put("betHistory", this.betHistory);
+        }
         roomRecord.getOtherInfo().put("userScoreHistory", this.userScoreHistory);
         roomRecord.getOtherInfo().put("playerNum", 10);
         roomRecord.getOtherInfo().put("otherMode", this.otherMode);
@@ -263,6 +268,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
             resultObj.setRoomStatistics(roomStatisticsMap.get(eachUser.getId()));
             resultObj.setHistoryScore(this.userScoreHistory.get(eachUser.getId()));
             resultObj.setBetHistory(this.betHistory.get(eachUser.getId()));
+            resultObj.setDiceHistory(this.diceHistory);
             userOfResultList.add(resultObj);
 
         }

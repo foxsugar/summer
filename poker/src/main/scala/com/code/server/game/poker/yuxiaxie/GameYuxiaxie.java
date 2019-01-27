@@ -328,7 +328,7 @@ public class GameYuxiaxie extends Game {
 
             this.room.userScoreHistory.putIfAbsent(playerInfoYuxiaxie.getUserId(), new HashMap<>());
             this.room.userScoreHistory.get(playerInfoYuxiaxie.getUserId()).put(this.room.curGameNumber, score);
-
+            System.out.println("userId : " + playerInfoYuxiaxie.getUserId() + "  score : " + score);
 
 //            this.room.addUserSocre(playerInfoYuxiaxie.getUserId(), score);
             allScore += score;
@@ -336,7 +336,7 @@ public class GameYuxiaxie extends Game {
 
         }
         //
-        int rs = allBetNum - allScore;
+        int rs =  - allScore;
         PlayerInfoYuxiaxie banker = playerCardInfos.get(this.room.getBankerId());
 //        banker.setScore(banker.getScore() - allScore);
         banker.setScore(banker.getScore() + rs);
@@ -346,9 +346,9 @@ public class GameYuxiaxie extends Game {
 
 //        this.room.addUserSocre(banker.getUserId(), -allScore);
         this.room.addUserSocre(banker.getUserId(), rs);
-        if (this.room.isClubRoom()) {
-            RedisManager.getClubRedisService().addClubUserMoney(this.room.getClubId(), banker.getUserId(), rs);
-        }
+//        if (this.room.isClubRoom()) {
+//            RedisManager.getClubRedisService().addClubUserMoney(this.room.getClubId(), banker.getUserId(), rs);
+//        }
 
     }
 

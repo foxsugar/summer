@@ -377,7 +377,7 @@ public class GameClubService {
     }
 
 
-    private List<Long> getClubUser(Club club) {
+    public List<Long> getClubUser(Club club) {
         List<Long> users = new ArrayList<>();
         club.getClubInfo().getMember().forEach((id,clubMember)->{
             users.add(clubMember.getUserId());
@@ -1294,14 +1294,14 @@ public class GameClubService {
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
         }
-        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+//        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
         Map<String, Object> result = new HashMap<>();
         result.put("clubId", clubId);
         result.put("roomId", roomId);
         result.put("inviteUser", inviteUser);
         result.put("roomModelInfo", getRoomModel(club, roomModel));
         result.put("name", name);
-        msgProducer.send();
+//        msgProducer.send();
         sendMsg2Player(new ResponseVo("clubService", "inviteUser", result), Long.valueOf(inviteUser));
 
         sendMsg(msgKey, new ResponseVo("clubService", "invite", "ok"));

@@ -185,4 +185,60 @@ public class GameClubHasMoneyService extends GameClubService {
         sendMsg(msgKey, new ResponseVo("clubService", "dissolve", club));
         return 0;
     }
+
+
+
+
+    public int addUser(KafkaMsgKey msgKey, String clubId, long userId, long referee) {
+        int rtn = super.addUser(msgKey, clubId, userId, referee);
+        if (rtn == 0) {
+            sendMsg(new ResponseVo("clubService", "addUserPush",0 ),getClubUser( ClubManager.getInstance().getClubById(clubId)));
+        }
+        return rtn;
+    }
+
+
+
+
+    /**
+     * 同意加入俱乐部
+     *
+     * @param msgKey
+     * @param userId
+     * @param clubId
+     * @param agreeId
+     * @param isAgree
+     * @return
+     */
+    public int agree(KafkaMsgKey msgKey, long userId, String clubId, long agreeId, boolean isAgree) {
+        int rtn = super.agree(msgKey, userId, clubId, agreeId, isAgree);
+        if (rtn != 0) {
+            return rtn;
+        }
+        sendMsg(new ResponseVo("clubService", "addUserPush",0 ),getClubUser( ClubManager.getInstance().getClubById(clubId)));
+
+        return 0;
+    }
+
+
+
+
+    /**
+     * 邀请其他玩家
+     *
+     * @param msgKey
+     * @param clubId
+     * @param roomId
+     * @param inviteUser
+     * @return
+     */
+    public int invite(KafkaMsgKey msgKey, String clubId, String roomId, String inviteUser, String roomModel, String name) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        super.invite(msgKey, clubId, roomId, inviteUser, roomModel, name);
+        sendMsg(new ResponseVo("clubService", "addUserPush",0 ),getClubUser( ClubManager.getInstance().getClubById(clubId)));
+        return 0;
+    }
 }

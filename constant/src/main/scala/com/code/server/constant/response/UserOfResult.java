@@ -3,6 +3,7 @@ package com.code.server.constant.response;
 import com.code.server.constant.game.Bet;
 import com.code.server.constant.game.RoomStatistics;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +54,7 @@ public class UserOfResult {
 
     private Map<Integer,Integer> historyScore;
     private Map<Integer,List<Bet>> betHistory;
+    Map<Integer,List<Integer>> diceHistory = new HashMap<>();
 
 
 
@@ -346,6 +348,15 @@ public class UserOfResult {
 
     public UserOfResult setBetHistory(Map<Integer, List<Bet>> betHistory) {
         this.betHistory = betHistory;
+        return this;
+    }
+
+    public Map<Integer, List<Integer>> getDiceHistory() {
+        return diceHistory;
+    }
+
+    public UserOfResult setDiceHistory(Map<Integer, List<Integer>> diceHistory) {
+        this.diceHistory = diceHistory;
         return this;
     }
 }

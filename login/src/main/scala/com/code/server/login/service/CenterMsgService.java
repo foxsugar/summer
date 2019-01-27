@@ -247,10 +247,9 @@ public class CenterMsgService implements IkafkaMsgId {
                 sendLq_http(roomRecord, club);
 
             }
-            ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
-            if(serverConfig.getHasClubMoney()!=1){
-                clubRecordService.addRecord(clubId, roomRecord);
-            }
+
+            clubRecordService.addRecord(clubId, roomRecord);
+
         }
     }
 
