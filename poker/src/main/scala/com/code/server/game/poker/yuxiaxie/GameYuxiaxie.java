@@ -1,10 +1,7 @@
 package com.code.server.game.poker.yuxiaxie;
 
 import com.code.server.constant.game.Bet;
-import com.code.server.constant.response.ErrorCode;
-import com.code.server.constant.response.GameOfResult;
-import com.code.server.constant.response.IfaceGameVo;
-import com.code.server.constant.response.UserOfResult;
+import com.code.server.constant.response.*;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
@@ -72,7 +69,31 @@ public class GameYuxiaxie extends Game {
         crapStart();
     }
 
+    /**
+     * 给所有人推送 包括观战的人
+     *
+     * @param responseVo
+     */
+    protected void pushToAll(ResponseVo responseVo) {
+        List<Long> allUser = new ArrayList<>();
+        allUser.addAll(users);
+        allUser.addAll(this.room.watchUser);
+        MsgSender.sendMsg2Player(responseVo, allUser);
+    }
 
+
+    /**
+     * 给所有人推送 包括观战的人
+     *
+     *
+     */
+    protected void pushToAll(String service,String method, Object params) {
+        ResponseVo responseVo = new ResponseVo(service, method, params);
+        List<Long> allUser = new ArrayList<>();
+        allUser.addAll(users);
+        allUser.addAll(this.room.watchUser);
+        MsgSender.sendMsg2Player(responseVo, allUser);
+    }
     /**
      * 下注开始
      */
@@ -391,13 +412,5 @@ public class GameYuxiaxie extends Game {
         return this;
     }
 
-    @Override
-    public RoomYuxiaxie getRoom() {
-        return room;
-    }
 
-    public GameYuxiaxie setRoom(RoomYuxiaxie room) {
-        this.room = room;
-        return this;
-    }
 }
