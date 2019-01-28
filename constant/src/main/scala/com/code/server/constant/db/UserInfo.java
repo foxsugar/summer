@@ -1,5 +1,8 @@
 package com.code.server.constant.db;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by sunxianping on 2017/5/26.
  */
@@ -15,6 +18,9 @@ public class UserInfo {
     private double chargeGoldNum = 0;
     private String name;
     private String idCard;
+    private Map<String, Integer> playGameNum = new HashMap<>();
+    private int coupon = 0;
+    private Map<String, Map<Integer, Integer>> taskComplete = new HashMap<>();
 
     public int getTotalPlayGameNumber() {
         return totalPlayGameNumber;
@@ -103,6 +109,33 @@ public class UserInfo {
 
     public UserInfo setIdCard(String idCard) {
         this.idCard = idCard;
+        return this;
+    }
+
+    public Map<String, Integer> getPlayGameNum() {
+        return playGameNum;
+    }
+
+    public UserInfo setPlayGameNum(Map<String, Integer> playGameNum) {
+        this.playGameNum = playGameNum;
+        return this;
+    }
+
+    public int getCoupon() {
+        return coupon;
+    }
+
+    public UserInfo setCoupon(int coupon) {
+        this.coupon = coupon;
+        return this;
+    }
+
+    public Map<String, Map<Integer, Integer>> getTaskComplete() {
+        return taskComplete;
+    }
+
+    public UserInfo setTaskComplete(Map<String, Map<Integer, Integer>> taskComplete) {
+        this.taskComplete = taskComplete;
         return this;
     }
 }

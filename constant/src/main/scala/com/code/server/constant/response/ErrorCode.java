@@ -156,6 +156,8 @@ public class ErrorCode {
 	public static final int CANNOT_CRAP = 1110012;//不能下注
 	public static final int CANNOT_SET_BANKER = 1110013;//不能下注
 
+	public static final int CANNOT_GET_COUPON_ERROR = 1110014;//不能下注
+
 
 
 

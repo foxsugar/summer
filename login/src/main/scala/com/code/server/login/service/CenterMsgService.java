@@ -173,9 +173,29 @@ public class CenterMsgService implements IkafkaMsgId {
         }
     }
 
+
+    /**
+     * 增加游戏数记录
+     * @param date
+     * @param userId
+     */
+    private static void addPlayNum(String date, long userId) {
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+            int before = userBean.getUserInfo().getPlayGameNum().getOrDefault(date, 0);
+            int num = before + 1;
+            if (userBean.getUserInfo().getPlayGameNum().size() > 1) {
+                userBean.getUserInfo().getPlayGameNum().clear();
+            }
+            userBean.getUserInfo().getPlayGameNum().put(date, num);
+
+            RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+        }
+    }
     private static void genRoomRecord(String msg) {
         RoomRecord roomRecord = JsonUtil.readValue(msg, RoomRecord.class);
 
+        boolean isAddGameNum = roomRecord.getCurGameNum()>1;
         List<com.code.server.constant.game.UserRecord> lists = roomRecord.getRecords();
         for (com.code.server.constant.game.UserRecord userRecord : lists) {
             UserRecord addRecord = userRecordService.getUserRecordByUserId(userRecord.getUserId());
@@ -189,6 +209,10 @@ public class CenterMsgService implements IkafkaMsgId {
                 newRecord.setId(userRecord.getUserId());
                 newRecord.setRecord(record);
                 userRecordService.save(newRecord);
+            }
+            if (isAddGameNum) {
+                String date = LocalDate.now().toString();
+                addPlayNum(date, userRecord.getUserId());
             }
         }
 
@@ -252,6 +276,9 @@ public class CenterMsgService implements IkafkaMsgId {
 
         }
     }
+
+
+
 
 
     private static void sendLq_http(RoomRecord roomRecord, Club club) {

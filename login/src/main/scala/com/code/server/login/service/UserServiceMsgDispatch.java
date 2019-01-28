@@ -100,6 +100,18 @@ public class UserServiceMsgDispatch {
                 String name = params.path("name").asText();
                 String idCard = params.path("idCard").asText();
                 return gameUserService.authenticate(msgKey, name, idCard);
+            case "getCoupon":
+                int index = params.path("index").asInt();
+                return gameUserService.getCoupon(msgKey, index);
+
+            case "goodExchange":
+                String userName = params.path("name").asText();
+                String location = params.path("location").asText();
+                int id = params.path("id").asInt();
+
+                return gameUserService.goodExchange(msgKey, userName, location, id);
+
+
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

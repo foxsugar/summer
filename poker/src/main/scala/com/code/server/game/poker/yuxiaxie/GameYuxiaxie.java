@@ -47,7 +47,7 @@ public class GameYuxiaxie extends Game {
 //        updateLastOperateTime();
         //通知其他人游戏已经开始
 //        MsgSender.sendMsg2Player(new ResponseVo(SERVICE_NAME, "gameBegin", "ok"), this.getUsers());
-        MsgSender.sendMsg2Player("gameService", "gameBegin", "ok",this.users);
+        pushToAll("gameService", "gameBegin", "ok");
     }
 
 
@@ -79,7 +79,7 @@ public class GameYuxiaxie extends Game {
     protected void betStart() {
         this.state = STATE_BET;
         updateLastOperateTime();
-        MsgSender.sendMsg2Player("gameService", "betStart", "ok",this.users);
+        pushToAll("gameService", "betStart", "ok");
     }
 
 
@@ -115,7 +115,7 @@ public class GameYuxiaxie extends Game {
         this.room.getBetHistory().put(userId, betInfo);
 
 
-        MsgSender.sendMsg2Player("gameService", "betResp", new Bet(userId, type, index1, index2, num),this.users);
+        pushToAll("gameService", "betResp", new Bet(userId, type, index1, index2, num));
         MsgSender.sendMsg2Player("gameService", "bet", "ok",userId);
        return 0;
     }
@@ -153,8 +153,13 @@ public class GameYuxiaxie extends Game {
         bet1.addNum(-num);
         bet2.addNum(num);
 
+        //下注历史记录
+        Map<Integer,List<Bet>> betInfo = this.room.getBetHistory().getOrDefault(userId, new HashMap<>());
+        betInfo.put(this.room.curGameNumber, playerInfoYuxiaxie.getBets());
+        this.room.getBetHistory().put(userId, betInfo);
 
-        MsgSender.sendMsg2Player("gameService", "nuoResp", new Bet(userId, 3, index1, index2, num),this.users);
+
+        pushToAll("gameService", "nuoResp", new Bet(userId, 3, index1, index2, num));
         MsgSender.sendMsg2Player("gameService", "nuo", "ok",userId);
 
         return 0;
@@ -217,7 +222,7 @@ public class GameYuxiaxie extends Game {
     public void crapStart(){
         this.state = STATE_CRAP;
         this.room.setLastOperateTime(System.currentTimeMillis());
-        MsgSender.sendMsg2Player("gameService", "crapStart", "ok",this.users);
+        pushToAll("gameService", "crapStart", "ok");
     }
 
 
@@ -246,7 +251,7 @@ public class GameYuxiaxie extends Game {
         diceHis.addAll(dice);
         this.room.getDiceHistory().put(this.room.curGameNumber, diceHis);
 
-        MsgSender.sendMsg2Player("gameService", "crapResp", dice,this.users);
+        pushToAll("gameService", "crapResp", dice);
         MsgSender.sendMsg2Player("gameService", "crap", 0,userId);
 
         //开始下注
@@ -289,7 +294,7 @@ public class GameYuxiaxie extends Game {
         result.put("players", players);
 
 
-        MsgSender.sendMsg2Player("gameService", "gameResult", result, users);
+        pushToAll("gameService", "gameResult", result);
 
     }
 
@@ -302,7 +307,7 @@ public class GameYuxiaxie extends Game {
             // 存储返回
             GameOfResult gameOfResult = new GameOfResult();
             gameOfResult.setUserList(userOfResultList);
-            MsgSender.sendMsg2Player("gameService", "gameFinalResult", gameOfResult, users);
+            pushToAll("gameService", "gameFinalResult", gameOfResult);
 
             RoomManager.removeRoom(room.getRoomId());
 
@@ -328,6 +333,7 @@ public class GameYuxiaxie extends Game {
 
             this.room.userScoreHistory.putIfAbsent(playerInfoYuxiaxie.getUserId(), new HashMap<>());
             this.room.userScoreHistory.get(playerInfoYuxiaxie.getUserId()).put(this.room.curGameNumber, score);
+            playerInfoYuxiaxie.setScore(score);
             System.out.println("userId : " + playerInfoYuxiaxie.getUserId() + "  score : " + score);
 
 //            this.room.addUserSocre(playerInfoYuxiaxie.getUserId(), score);
@@ -339,7 +345,7 @@ public class GameYuxiaxie extends Game {
         int rs =  - allScore;
         PlayerInfoYuxiaxie banker = playerCardInfos.get(this.room.getBankerId());
 //        banker.setScore(banker.getScore() - allScore);
-        banker.setScore(banker.getScore() + rs);
+        banker.setScore(rs);
 
         this.room.userScoreHistory.putIfAbsent(banker.getUserId(), new HashMap<>());
         this.room.userScoreHistory.get(banker.getUserId()).put(this.room.curGameNumber, rs);
@@ -382,6 +388,16 @@ public class GameYuxiaxie extends Game {
 
     public GameYuxiaxie setAllBets(List<Bet> allBets) {
         this.allBets = allBets;
+        return this;
+    }
+
+    @Override
+    public RoomYuxiaxie getRoom() {
+        return room;
+    }
+
+    public GameYuxiaxie setRoom(RoomYuxiaxie room) {
+        this.room = room;
         return this;
     }
 }

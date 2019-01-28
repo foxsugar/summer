@@ -7,6 +7,8 @@ import com.code.server.constant.game.UserRecord;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.IfaceGameVo;
+import com.code.server.constant.response.ResponseVo;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.JsonUtil;
@@ -36,6 +38,33 @@ public class Game implements IfaceGame{
 
     public void updateLastOperateTime() {
         this.lastOperateTime = System.currentTimeMillis();
+    }
+
+
+    /**
+     * 给所有人推送 包括观战的人
+     *
+     * @param responseVo
+     */
+    protected void pushToAll(ResponseVo responseVo) {
+        List<Long> allUser = new ArrayList<>();
+        allUser.addAll(users);
+        allUser.addAll(this.getRoom().watchUser);
+        MsgSender.sendMsg2Player(responseVo, allUser);
+    }
+
+
+    /**
+     * 给所有人推送 包括观战的人
+     *
+     *
+     */
+    protected void pushToAll(String service,String method, Object params) {
+        ResponseVo responseVo = new ResponseVo(service, method, params);
+        List<Long> allUser = new ArrayList<>();
+        allUser.addAll(users);
+        allUser.addAll(this.getRoom().watchUser);
+        MsgSender.sendMsg2Player(responseVo, allUser);
     }
 
     /**
@@ -114,5 +143,9 @@ public class Game implements IfaceGame{
     public Game setLastOperateTime(long lastOperateTime) {
         this.lastOperateTime = lastOperateTime;
         return this;
+    }
+
+    public Room getRoom(){
+        return null;
     }
 }

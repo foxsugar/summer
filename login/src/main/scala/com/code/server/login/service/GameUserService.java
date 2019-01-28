@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -587,6 +588,61 @@ public class GameUserService {
         }
         ResponseVo vo = new ResponseVo("userService", "authenticate", 0);
         sendMsg(msgKey, vo);
+        return 0;
+    }
+
+    private static Map<Integer, Integer> index_coupon = new HashMap<>();
+    static{
+        index_coupon.put(0, 50);
+        index_coupon.put(1, 30);
+        index_coupon.put(5, 50);
+        index_coupon.put(10, 50);
+        index_coupon.put(30, 50);
+        index_coupon.put(50, 100);
+        index_coupon.put(80, 120);
+    }
+
+    /**
+     * 获得卡券
+     * @param msgKey
+     * @param index
+     * @return
+     */
+    public int getCoupon(KafkaMsgKey msgKey, int index) {
+        long userId = msgKey.getUserId();
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (!index_coupon.containsKey(index)) {
+            return ErrorCode.CANNOT_GET_COUPON_ERROR;
+        }
+        if (userBean != null) {
+            String date = LocalDate.now().toString();
+            //场数 大于目标
+            if (userBean.getUserInfo().getPlayGameNum().getOrDefault(date,0) >= index) {
+                //如果未领过
+                Map<Integer,Integer> taskInfo = userBean.getUserInfo().getTaskComplete().getOrDefault(date, new HashMap<>());
+                //没领过
+                if (!taskInfo.containsKey(index)) {
+                    //加礼券
+                    userBean.getUserInfo().setCoupon(userBean.getUserInfo().getCoupon() + index_coupon.get(index));
+                    taskInfo.put(index, 1);
+                    if (userBean.getUserInfo().getTaskComplete().size() > 1) {
+                        userBean.getUserInfo().getTaskComplete().clear();
+                    }
+                    userBean.getUserInfo().getTaskComplete().put(date, taskInfo);
+                }
+                RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+            }else{
+                return ErrorCode.CANNOT_GET_COUPON_ERROR;
+            }
+        }
+
+        sendMsg(msgKey, new ResponseVo("userService", "getCoupon", 0));
+        return 0;
+    }
+
+
+    public int goodExchange(KafkaMsgKey msgKey,String name, String location, int id){
+
         return 0;
     }
 

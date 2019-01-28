@@ -4,7 +4,6 @@ import com.code.server.constant.game.Bet;
 import com.code.server.constant.response.IfacePlayerInfoVo;
 import com.code.server.game.room.PlayerCardInfo;
 import com.code.server.game.room.Room;
-import com.code.server.redis.service.RedisManager;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
@@ -33,17 +32,18 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
     public void bet(Room room, int type, int index1, int index2, int num) {
         this.bets.add(new Bet(0,type, index1, index2, num));
 
-        this.setScore(score - num);
 
 
-        if (room.isClubRoom()) {
+
+//        if (room.isClubRoom()) {
             if (type == TYPE_NUO) {
 //                RedisManager.getClubRedisService().addClubUserMoney(room.getClubId(), this.getUserId(), -5 * num);
                 room.addUserSocre(this.userId, -5*num);
-            }else{
+                this.setScore(score - 5*num);
+//            }else{
 //                RedisManager.getClubRedisService().addClubUserMoney(room.getClubId(), this.getUserId(), -num);
-                room.addUserSocre(this.userId, -num);
-            }
+//                room.addUserSocre(this.userId, -num);
+//            }
         }else{
             room.addUserSocre(this.userId, -num);
         }
@@ -64,6 +64,7 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
         }
 
         room.addUserSocre(userId, sum);
+        this.setScore(this.getScore() + sum);
         return sum;
     }
 
@@ -121,16 +122,18 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
 
 
         if (bet.type == Bet.TYPE_NUO) {
-            if (room.isClubRoom()) {
-                RedisManager.getClubRedisService().addClubUserMoney(room.getClubId(), this.getUserId(), 5* bet.num);
-//                multiple += 5;
-            }
+            room.addUserSocre(userId, 5* bet.num);
+//            if (room.isClubRoom()) {
+//                RedisManager.getClubRedisService().addClubUserMoney(room.getClubId(), this.getUserId(), 5* bet.num);
+////                multiple += 5;
+//            }
+            this.setScore(this.getScore() + 5 * bet.getNum());
 
         }
 
 
         //设置分数
-        this.setScore(this.getScore() + multiple * bet.getNum());
+//        this.setScore(this.getScore() + multiple * bet.getNum());
 
         return multiple * bet.getNum();
 
