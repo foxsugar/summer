@@ -101,7 +101,7 @@ public class GameClubHasMoneyService extends GameClubService {
             roomModel.setDesc(desc);
             roomModel.setTime(System.currentTimeMillis());
             //不花钱
-//            roomModel.setMoney(roomData.getMoneyMap().get(gameNumber));
+            roomModel.setMoney(roomData.getMoneyMap().get(gameNumber));
             roomModel.setServiceName(serviceName);
 
             club.getClubInfo().getRoomModels().add(roomModel);

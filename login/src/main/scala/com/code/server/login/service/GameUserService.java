@@ -54,6 +54,11 @@ public class GameUserService {
     @Autowired
     ChargeService chargeService;
 
+    @Autowired
+    GoodExchangeService goodExchangeService;
+
+
+
     /**
      * 给人充钱
      *
@@ -641,10 +646,44 @@ public class GameUserService {
     }
 
 
-    public int goodExchange(KafkaMsgKey msgKey,String name, String location, int id){
+    /**
+     * 换物品
+     * @param msgKey
+     * @param name
+     * @param location
+     * @param id
+     * @param phone
+     * @return
+     */
+    public int goodExchange(KafkaMsgKey msgKey,String name, String location, int id, String phone){
 
+        long userId = msgKey.getUserId();
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        double needCoupon = goodExchangeService.goodsExchangeRecordDao.getGoodVoucher(id);
+        //减去
+        if (userBean.getUserInfo().getCoupon() < needCoupon) {
+            return ErrorCode.CANNOT_GOOD_EXCHANGE_ERROR;
+        }
+        userBean.getUserInfo().setCoupon(userBean.getUserInfo().getCoupon() - (int)needCoupon);
+        RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+
+        //插入兑换记录
+
+        GoodsExchangeRecord goodsExchangeRecord = new GoodsExchangeRecord();
+        goodsExchangeRecord.setCreateDate(new Date()).setGoodsId(id).setUsersId(userId).setName(name)
+                .setLocation(location).setPhone(phone);
+        goodExchangeService.goodsExchangeRecordDao.save(goodsExchangeRecord);
+
+        sendMsg(msgKey, new ResponseVo("userService", "goodExchange", 0));
         return 0;
     }
+
+    public int getChargeRecord(KafkaMsgKey msgKey) {
+        long userId = msgKey.getUserId();
+        sendMsg(msgKey, new ResponseVo("userService", "getChargeRecord", chargeService.chargeDao.getChargesByUserid(userId)));
+        return 0;
+    }
+
 
     public int getRecordsByRoom(KafkaMsgKey msgKey, long roomUid) {
         List<com.code.server.db.model.GameRecord> list = gameRecordService.gameRecordDao.getGameRecordByUuid(roomUid);

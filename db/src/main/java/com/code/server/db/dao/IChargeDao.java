@@ -4,7 +4,6 @@ import com.code.server.db.model.Charge;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import scala.Char;
 
 import java.util.Date;
 import java.util.List;
@@ -33,4 +32,8 @@ public interface IChargeDao extends PagingAndSortingRepository<Charge, Long>, Jp
 
     @Query(value = "select coalesce(sum(c.money), 0) from Charge c where c.userid = ?1 AND c.chargeType=?2")
     double getSumMoneyByUseridAndChargeType(Long uid, int chargeType);
+
+
+    @Query(value="select '*' from charge where userid=?1 and recharge_source=1", nativeQuery = true)
+    List<Charge> getChargesByUserid(long userId);
 }

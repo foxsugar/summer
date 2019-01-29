@@ -123,6 +123,13 @@ public class GameYuxiaxie extends Game {
             return ErrorCode.CANNOT_BET_LIMIT;
         }
 
+        //不可为负值
+        if (this.room.isClubRoom() && Room.isHasMode(1, this.room.getOtherMode())) {
+            if (RedisManager.getClubRedisService().getClubUserMoney(this.room.getClubId(), userId) < num * 1) {
+                return ErrorCode.CANNOT_CRAP;
+            }
+        }
+
         PlayerInfoYuxiaxie playerInfoYuxiaxie = playerCardInfos.get(userId);
 
         playerInfoYuxiaxie.bet(this.room, type, index1, index2, num);
@@ -164,6 +171,14 @@ public class GameYuxiaxie extends Game {
         if (this.nuoCount >= this.room.getNuo()) {
             return ErrorCode.CANNOT_NUO;
         }
+
+        //不可为负值
+        if (this.room.isClubRoom() && Room.isHasMode(1, this.room.getOtherMode())) {
+            if (RedisManager.getClubRedisService().getClubUserMoney(this.room.getClubId(), userId) < num * 5) {
+                return ErrorCode.CANNOT_CRAP;
+            }
+        }
+
         this.nuoCount ++;
 
         PlayerInfoYuxiaxie playerInfoYuxiaxie = playerCardInfos.get(userId);

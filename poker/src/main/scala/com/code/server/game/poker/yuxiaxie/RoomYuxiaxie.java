@@ -201,7 +201,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
     }
 
     public void genRoomRecord() {
-        if (!isOpen) return;
+//        if (!isOpen) return;
         RoomRecord roomRecord = new RoomRecord();
         roomRecord.setRoomId(this.roomId);
         roomRecord.setId(this.getUuid());
@@ -212,6 +212,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         roomRecord.setGameType(gameType);
         roomRecord.setCurGameNum(this.curGameNumber);
         roomRecord.setAllGameNum(this.gameNumber);
+        roomRecord.setOpen(isOpen);
         //winner
         roomRecord.setWinnerId(getWinner());
         roomRecord.setBankerId(this.bankerId);

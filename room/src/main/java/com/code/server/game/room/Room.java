@@ -1022,6 +1022,7 @@ public class Room implements IfaceRoom {
         roomRecord.setGameType(gameType);
         roomRecord.setCurGameNum(this.curGameNumber);
         roomRecord.setAllGameNum(this.gameNumber);
+        roomRecord.setOpen(isOpen);
 
         this.userScores.forEach((key, value) -> {
             UserRecord userRecord = new UserRecord();

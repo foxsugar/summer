@@ -107,9 +107,13 @@ public class UserServiceMsgDispatch {
             case "goodExchange":
                 String userName = params.path("name").asText();
                 String location = params.path("location").asText();
+                String phone = params.path("phone").asText();
                 int id = params.path("id").asInt();
 
-                return gameUserService.goodExchange(msgKey, userName, location, id);
+                return gameUserService.goodExchange(msgKey, userName, location, id, phone);
+
+            case "getChargeRecord":
+                return gameUserService.getChargeRecord(msgKey);
 
 
             default:

@@ -24,6 +24,7 @@ public class RoomRecord {
     int allGameNum;
     long winnerId;
     long bankerId;
+    boolean isOpen = true;
 
 
     Map<String, Object> otherInfo = new HashMap<>();
@@ -174,6 +175,15 @@ public class RoomRecord {
 
     public RoomRecord setBankerId(long bankerId) {
         this.bankerId = bankerId;
+        return this;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public RoomRecord setOpen(boolean open) {
+        isOpen = open;
         return this;
     }
 }

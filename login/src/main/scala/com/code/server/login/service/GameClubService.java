@@ -1323,9 +1323,9 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
-            return ErrorCode.CLUB_NOT_PRESIDENT;
-        }
+//        if (club.getPresident() != userId && !club.getClubInfo().getAdmin().contains(userId)) {
+//            return ErrorCode.CLUB_NOT_PRESIDENT;
+//        }
 
         ClubRecord clubRecord = clubRecordService.getClubRecordDao().getClubRecordById(unionId);
 
@@ -1502,6 +1502,10 @@ public class GameClubService {
 
         RoomModel roomModel = getRoomModel(club, clubModelId);
 
+        if (club.getMoney() < roomModel.getMoney()) {
+            return ErrorCode.CLUB_CANNOT_MONEY;
+        }
+
         RoomInstance roomInstance = new RoomInstance();
         roomInstance.setRoomModelId(roomModel.getId());
 
@@ -1517,6 +1521,9 @@ public class GameClubService {
 
         //发消息创建房间
         sendMsgForCreateRoom(roomModel.getServiceName(), jsonNode.toString());
+
+        //减掉钱
+        club.setMoney(club.getMoney() - roomModel.getMoney());
 
 
         sendMsg(msgKey, new ResponseVo("clubService", "createInstance", "ok"));
