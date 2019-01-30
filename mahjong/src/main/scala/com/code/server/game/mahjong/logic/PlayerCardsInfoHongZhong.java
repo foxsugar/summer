@@ -31,13 +31,13 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
 
         if (isHasMode(this.roomInfo.mode, DA_HU)) {
 
-            specialHuScore.put(hu_七小对, 7);
-            specialHuScore.put(hu_豪华七小对, 15);
-            specialHuScore.put(hu_双豪七小对_山西, 15);
+            specialHuScore.put(hu_七小对, 3);
+            specialHuScore.put(hu_豪华七小对, 6);
+            specialHuScore.put(hu_双豪七小对_山西, 6);
 
-            specialHuScore.put(hu_清一色, 7);
-            specialHuScore.put(hu_一条龙, 7);
-            specialHuScore.put(hu_清龙, 7);
+            specialHuScore.put(hu_清一色, 3);
+            specialHuScore.put(hu_一条龙, 3);
+            specialHuScore.put(hu_清龙, 3);
 
         }
 
