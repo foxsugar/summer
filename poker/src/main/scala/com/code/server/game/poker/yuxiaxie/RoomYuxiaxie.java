@@ -212,7 +212,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         roomRecord.setGameType(gameType);
         roomRecord.setCurGameNum(this.curGameNumber);
         roomRecord.setAllGameNum(this.gameNumber);
-        roomRecord.setOpen(isOpen);
+        roomRecord.setOpen(this.isOpen);
         //winner
         roomRecord.setWinnerId(getWinner());
         roomRecord.setBankerId(this.bankerId);
@@ -348,7 +348,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         //第一局
         if (this.curGameNumber != 1) return ErrorCode.ROOM_START_CAN_NOT;
 
-        if (userStatus.get(userId) != IGameConstant.STATUS_READY) return ErrorCode.ROOM_START_CAN_NOT;
+//        if (userStatus.get(userId) != IGameConstant.STATUS_READY) return ErrorCode.ROOM_START_CAN_NOT;
 
         //防止多次点开始
         if(this.game != null) return ErrorCode.ROOM_START_CAN_NOT;
