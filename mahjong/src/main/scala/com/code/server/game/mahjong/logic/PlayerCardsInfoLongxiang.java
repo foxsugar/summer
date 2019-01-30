@@ -174,39 +174,70 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
         if (huList.size() == 0) {
             return false;
         }
-        if (FanUtil.isYaoJiu(cardType)) {
-            for (HuCardType huCardType : huList) {
-                if (huCardType.yao_jiu_shun.size() == 0) {
-                    return true;
-                }
-            }
-            return false;
-        }
 
-        if (CardTypeUtil.ZI_CARD.contains(card)) {
-            for (HuCardType huCardType : huList) {
-                if (huCardType.zi_shun == 0) {
-                    return true;
-                }
-            }
-            return false;
-        }
 
-        if (CardTypeUtil.FENG_CARD.contains(card)) {
-            for (HuCardType huCardType : huList) {
-                if (huCardType.feng_shun.size() == 0) {
-                    return true;
-                }
-                for (List<Integer> list : huCardType.feng_shun) {
-                    if (!list.contains(cardType)) {
+        for(HuCardType huCardType : huList){
+            if (huCardType.ke.contains(cardType)) {
+                return true;
+            }
+            if (huCardType.jiang == cardType) {
+                return true;
+            }
+            if (FanUtil.isYaoJiu(cardType)) {
+
+                for (int shunBegin : huCardType.shun) {
+                    if (shunBegin == cardType) {
                         return true;
                     }
+                    if (shunBegin == cardType - 2) {
+                        return true;
+                    }
+
                 }
             }
-            return false;
         }
 
-        return true;
+        return false;
+
+
+//        if (FanUtil.isYaoJiu(cardType)) {
+//            for (HuCardType huCardType : huList) {
+//                if (huCardType.yao_jiu_shun.size() == 0) {
+//                    return true;
+//                }
+//                for(List<Integer> l : huCardType.yao_jiu_shun){
+//                    if (l.contains(cardType)) {
+//                        return true;
+//                    }
+//                }
+//            }
+//            return false;
+//        }
+//
+//        if (CardTypeUtil.ZI_CARD.contains(card)) {
+//            for (HuCardType huCardType : huList) {
+//                if (huCardType.zi_shun == 0) {
+//                    return true;
+//                }
+//            }
+//            return false;
+//        }
+//
+//        if (CardTypeUtil.FENG_CARD.contains(card)) {
+//            for (HuCardType huCardType : huList) {
+//                if (huCardType.feng_shun.size() == 0) {
+//                    return true;
+//                }
+//                for (List<Integer> list : huCardType.feng_shun) {
+//                    if (!list.contains(cardType)) {
+//                        return true;
+//                    }
+//                }
+//            }
+//            return false;
+//        }
+//
+//        return true;
 
     }
 
