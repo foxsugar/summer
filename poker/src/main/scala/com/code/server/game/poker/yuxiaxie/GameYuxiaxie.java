@@ -90,7 +90,7 @@ public class GameYuxiaxie extends Game {
     protected void pushToAll(String service,String method, Object params) {
         ResponseVo responseVo = new ResponseVo(service, method, params);
         List<Long> allUser = new ArrayList<>();
-        allUser.addAll(users);
+        allUser.addAll(this.room.users);
         allUser.addAll(this.room.watchUser);
         MsgSender.sendMsg2Player(responseVo, allUser);
     }
