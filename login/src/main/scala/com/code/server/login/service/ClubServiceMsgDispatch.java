@@ -166,7 +166,8 @@ public class ClubServiceMsgDispatch {
                 return gameClubService.getClubRecordByDate(msgKey, userId, clubId, date);
             case "clubDrawBack":
                 String clubModelId2 = params.get("clubModelId").asText();
-                return gameClubService.clubDrawBack(clubId, clubModelId2);
+                String rid1 = params.path("roomId").asText();
+                return gameClubService.clubDrawBack(clubId, clubModelId2, rid1);
             case "kickUser":
                 long kickUser = params.get("kickUserId").asLong();
                 return gameClubService.kickUser(msgKey, userId, clubId, kickUser);

@@ -204,6 +204,7 @@ public class Room implements IfaceRoom {
         Map<String, Object> msg = new HashMap<>();
         msg.put("clubId", this.clubId);
         msg.put("clubModelId", this.clubRoomModel);
+        msg.put("roomId", this.roomId);
         ResponseVo responseVo = new ResponseVo("clubService", "clubDrawBack", msg);
         msgProducer.send("clubService", kafkaKey, responseVo);
 

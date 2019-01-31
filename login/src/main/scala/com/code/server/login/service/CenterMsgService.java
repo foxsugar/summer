@@ -104,7 +104,6 @@ public class CenterMsgService implements IkafkaMsgId {
         List<String> clubs = ClubManager.getInstance().getUserClubs(userId);
         map.put("clubs", clubs);
 
-        System.out.println("send ===============");
         sendMsg2Player(new ResponseVo("roomService", "getRoomClubByUser", map), userId);
 
     }

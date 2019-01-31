@@ -189,6 +189,27 @@ public class GameClubHasMoneyService extends GameClubService {
 
 
 
+
+
+    /**
+     * 俱乐部房间退钱
+     *
+     * @param clubId
+     * @param clubModelId
+     */
+    public int clubDrawBack(String clubId, String clubModelId,String roomId) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club != null) {
+            for(RoomInstance roomInstance : club.getClubInfo().getRoomInstance().values()){
+                if (roomInstance.getRoomId().equals(roomId)) {
+                    int money = roomInstance.getMoney();
+                    club.setMoney(club.getMoney() + money);
+                }
+            }
+        }
+        return 0;
+    }
+
     public int addUser(KafkaMsgKey msgKey, String clubId, long userId, long referee) {
         int rtn = super.addUser(msgKey, clubId, userId, referee);
         if (rtn == 0) {

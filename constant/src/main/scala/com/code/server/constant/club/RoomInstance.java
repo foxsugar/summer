@@ -7,6 +7,7 @@ public class RoomInstance {
     private String roomModelId;
     private String roomId;
     private String createCommand;
+    private int money;
 
     public String getRoomModelId() {
         return roomModelId;
@@ -32,6 +33,15 @@ public class RoomInstance {
 
     public RoomInstance setCreateCommand(String createCommand) {
         this.createCommand = createCommand;
+        return this;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public RoomInstance setMoney(int money) {
+        this.money = money;
         return this;
     }
 }

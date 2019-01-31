@@ -176,7 +176,10 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         this.canStartUserId = bankerId;
         Map<String, Object> result = new HashMap<>();
         result.put("bankerId", bankerId);
-        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "setBanker", result), users);
+        List<Long> all = new ArrayList<>();
+        all.addAll(users);
+        all.addAll(watchUser);
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "setBanker", result), all);
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "setBankerByClient", 0), userId);
         return 0;
     }
@@ -309,8 +312,14 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
         //开始游戏
         //开始游戏
-        if (readyNum >= this.users.size() && this.curGameNumber>1 ) {
-            startGame();
+        if (this.curGameNumber == 1) {
+            if (readyNum > this.users.size()  ) {
+                startGame();
+            }
+        }else{
+            if (readyNum >= 1 ) {
+                startGame();
+            }
         }
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "getReady", 0), userId);
         if (isGoldRoom()) {

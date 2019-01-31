@@ -1352,7 +1352,7 @@ public class GameClubService {
      * @param clubId
      * @param clubModelId
      */
-    public int clubDrawBack(String clubId, String clubModelId) {
+    public int clubDrawBack(String clubId, String clubModelId,String roomId) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club != null) {
             RoomModel roomModel = getRoomModel(club, clubModelId);
@@ -1507,6 +1507,7 @@ public class GameClubService {
         }
 
         RoomInstance roomInstance = new RoomInstance();
+        roomInstance.setMoney(roomModel.getMoney());
         roomInstance.setRoomModelId(roomModel.getId());
 
         long newId = IdWorker.getDefaultInstance().nextId();
