@@ -17,6 +17,7 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
     public static final int HUN_NO = 4;
     public static final int NO_FENG = 5;
     public static final int TWO_HUN = 6;
+    public static final int DIANPAOSANJIACHU = 7;//点炮三家出
 
 
     @Override
@@ -153,8 +154,16 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
         int score = huCardType.fan;
 
         this.winType.addAll(huCardType.specialHuList);
-        if (score == 0) {
-            score = isZimo?2:3;
+
+
+        if (isHasMode(this.roomInfo.mode, DIANPAOSANJIACHU)) {
+            if (score == 0) {
+                score = isZimo?2:1;
+            }
+        }else{
+            if (score == 0) {
+                score = isZimo?2:3;
+            }
         }
 
         if (isZimo && huCardType.fan <= 9 && isHasMode(this.roomInfo.mode, HAS_HONGZHONG) && isHas4Hongzhong()) {
@@ -174,10 +183,32 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
             }
         } else {
             PlayerCardsInfoMj dianPao = this.gameInfo.getPlayerCardsInfos().get(dianpaoUser);
+            //点炮三家出
+            if (isHasMode(this.roomInfo.mode, DIANPAOSANJIACHU)) {
+                boolean isBao = !dianPao.isTing;
+                for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
+                    if (playerCardsInfoMj.userId != this.userId) {
+                        if (!isBao) {
+                            playerCardsInfoMj.addScore(-score);
+                            this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -score);
+                        }
+                        allScore += score;
+                    }
+                }
 
-            dianPao.addScore(-score);
-            this.roomInfo.addUserSocre(dianpaoUser, -score);
-            allScore += score;
+                if (isBao) {
+                    dianPao.addScore(-allScore);
+                    this.roomInfo.addUserSocre(dianPao.getUserId(), -allScore);
+                }
+
+
+
+            }else{//点炮一个人出
+                //不带包听
+                dianPao.addScore(-score);
+                this.roomInfo.addUserSocre(dianpaoUser, -score);
+                allScore += score;
+            }
         }
 
         this.addScore(allScore);

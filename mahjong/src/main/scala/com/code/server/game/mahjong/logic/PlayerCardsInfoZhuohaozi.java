@@ -15,7 +15,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         super.init(cards);
 
 //        specialHuScore.put(hu_清一色,2);
-        specialHuScore.put(hu_吊将, 1);
+        specialHuScore.put(hu_吊将, 0);
 
         if (isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_不带七小对)) {
 
@@ -46,6 +46,18 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
             this.TING_MIN_SCORE = 6;
             this.ZIMO_MIN_SCORE = 3;
             this.DIANPAO_MIN_SCORE = 6;
+        }
+
+        if (isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_七小对翻倍)) {
+
+        }else{
+            specialHuScore.put(hu_清一色,1);
+            specialHuScore.put(hu_一条龙,1);
+            specialHuScore.put(hu_七小对,1);
+            specialHuScore.put(hu_十三幺,1);
+            specialHuScore.put(hu_豪华七小对,1);
+            specialHuScore.put(hu_双豪七小对_山西,1);
+            specialHuScore.put(hu_清龙,1);
         }
     }
 
@@ -244,6 +256,9 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         room.pushScoreChange();
     }
 
+    protected int getTimes( HuCardType huCardType){
+        return huCardType.fan==0?1:huCardType.fan;
+    }
 
     @Override
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
@@ -262,12 +277,13 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         int maxPoint = 0;
         for (HuCardType huCardType : huList) {
 
-            int temp = getMaxPoint(huCardType, !isZimo);
+            int temp = getMaxPoint(huCardType, !isZimo) * getTimes(huCardType);
             if (temp > maxPoint) {
                 maxPoint = temp;
             }
 
         }
+
         boolean bankerIsZhuang = this.userId == this.gameInfo.getFirstTurn();
 
         //显庄 并且 赢得人是庄家
