@@ -200,10 +200,14 @@ public class ManagerAction extends Cors {
         }
 
         for (String key : removeDate) {
+            System.out.println("删除 " + key);
             clubMember.getStatistics().remove(key);
         }
 
     }
+//    INSERT INTO `summer`.`agent_user` (`id`, `address`, `area`, `cell`, `create_time`, `email`, `gold`, `id_card`, `invite_code`, `level`, `money`, `parent_id`, `parent_pay_deduct`, `parent_share_deduct`, `password`, `pay_deduct`, `real_name`, `share_deduct`, `username`, `agent_info`, `agent_info_record`) VALUES ('1', '1', '1', '13800000000', '2018-07-10 15:05:13', '1234567890@qq.com', '944599988', '120223100000000000', '11', '1', '90180748', '111111', '0.01', '0.02', '111111', '1', '1', '1', 'admin', '{\"allRebate\": 0, \"everyDayCost\": {}, \"everyDayRebate\": {}, \"everyPartnerRebate\": {}}', '{\"clearingRecord\": []}');
+//
+//    INSERT INTO `summer`.`agent_user` (`id`, `address`, `area`, `cell`, `create_time`, `email`, `gold`, `id_card`, `invite_code`, `level`, `money`, `parent_id`, `parent_pay_deduct`, `parent_share_deduct`, `password`, `pay_deduct`, `real_name`, `share_deduct`, `username`, `agent_info`, `agent_info_record`) VALUES ('2', NULL, NULL, NULL, '2018-09-16 20:32:48', NULL, '0', NULL, NULL, '1', '0', '0', '0', '0', '100003', '0', NULL, '0', '100003', '{\"allRebate\": 0, \"everyDayCost\": {}, \"everyDayRebate\": {}, \"everyPartnerRebate\": {}}', '{\"clearingRecord\": []}');
 
 
     public static void main(String[] args) {
