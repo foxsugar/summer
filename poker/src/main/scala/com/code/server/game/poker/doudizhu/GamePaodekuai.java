@@ -110,6 +110,11 @@ public class GamePaodekuai extends GameDouDiZhu {
                 this.curCircleZhaCount = 0;
                 System.out.println("炸加到了玩家: " +playerCardPaodekuai.getUserId() );
                 System.out.println("此时" +playerCardPaodekuai.getUserId() + "炸的个数: " + playerCardPaodekuai.getZhaCount() );
+
+                playList.clear();
+                playList.add(userId);
+
+
             }
         }
     }
@@ -157,11 +162,11 @@ public class GamePaodekuai extends GameDouDiZhu {
         //处理炸
         handleBomb(cardStruct);
 
-        if (this.playList.size() >= 2) {
-            if (userId == this.playList.get(this.playList.size() - 2)) {
-                this.playList.clear();
-            }
-        }
+//        if (this.playList.size() >= 2) {
+//            if (userId == this.playList.get(this.playList.size() - 2)) {
+//                this.playList.clear();
+//            }
+//        }
 
 
 
@@ -173,7 +178,7 @@ public class GamePaodekuai extends GameDouDiZhu {
             PlayerCardInfoDouDiZhu playerCardInfoDizhu = playerCardInfos.get(dizhu);
             //是否是春天
 
-            if (userPlayCount.size() == 1 || playerCardInfoDizhu.getPlayCount() == 1) {
+            if (userPlayCount.size() == 1) {
                 isSpring = true;
                 //炸 封顶的情况
 //                if (zhaCount < room.getMultiple() || room.getMultiple() == -1) {

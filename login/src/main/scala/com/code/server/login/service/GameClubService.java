@@ -1393,6 +1393,10 @@ public class GameClubService {
         clubRemoveMember(club, kickUser);
         sendMsg(msgKey, new ResponseVo("clubService", "kickUser", "ok"));
         System.out.println("kickUser : " + " src = " + userId + " des = " + kickUser);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("clubId", clubId);
+        sendMsg(new ResponseVo("clubService", "pushKickUser", map), kickUser);
         return 0;
     }
 
@@ -1906,6 +1910,12 @@ public class GameClubService {
         kafkaMsgProducer.send2Partition(IKafaTopic.GATE_TOPIC, msgKey.getPartition(), "" + msgKey.getUserId(), msg);
     }
 
+    void sendMsg(Object msg, long userId) {
+        String gate = RedisManager.getUserRedisService().getGateId(userId);
+        if (gate != null) {
+            kafkaMsgProducer.send2Partition(IKafaTopic.GATE_TOPIC, Integer.valueOf(gate), userId, msg);
+        }
+    }
     void sendMsg(Object msg, List<Long> users){
         for (long userId : users) {
             String gate = RedisManager.getUserRedisService().getGateId(userId);
