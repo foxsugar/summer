@@ -598,13 +598,13 @@ public class GameUserService {
 
     private static Map<Integer, Integer> index_coupon = new HashMap<>();
     static{
-        index_coupon.put(0, 50);
-        index_coupon.put(1, 30);
-        index_coupon.put(5, 50);
-        index_coupon.put(10, 50);
-        index_coupon.put(30, 50);
-        index_coupon.put(50, 100);
-        index_coupon.put(80, 120);
+        index_coupon.put(0, 5);
+        index_coupon.put(1, 3);
+        index_coupon.put(5, 5);
+        index_coupon.put(10, 5);
+        index_coupon.put(30, 5);
+        index_coupon.put(50, 10);
+        index_coupon.put(80, 12);
     }
 
     /**
