@@ -1692,6 +1692,7 @@ public class GameClubService {
         clubVo.setApplyNum(club.getClubInfo().getApplyList().size());
         clubVo.setImage(club.getImage());
         clubVo.setRoomModelNum(club.getClubInfo().getRoomModels().size());
+        clubVo.getAdmin().addAll(club.getClubInfo().getAdmin());
 
 
         return clubVo;

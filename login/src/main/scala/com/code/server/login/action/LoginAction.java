@@ -342,6 +342,25 @@ public class LoginAction {
         return result;
     }
 
+
+    @RequestMapping("/editVIP")
+    public Map<String, Object> editVIP(long userId, int vip) {
+
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+            userBean.setVip(vip);
+            RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+        }else{
+            User user = userService.getUserByUserId(userId);
+            user.setVip(vip);
+            userService.save(user);
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("vip", vip);
+        return result;
+    }
+
     @RequestMapping("/removeRecord")
     public Map<String, Object> removeRecord(String roomUid) {
 

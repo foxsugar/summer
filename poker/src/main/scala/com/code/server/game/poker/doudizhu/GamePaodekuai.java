@@ -246,13 +246,16 @@ public class GamePaodekuai extends GameDouDiZhu {
             if (winnerId != playerCardInfo.getUserId()) {
 
                 double score = getDifen() * playerCardInfo.getCards().size() ;
-                if (isSpring) {
-                    score *= 2;
-                }
+//                if (isSpring) {
+//                    score *= 2;
+//                }
 //                score += playerCardInfo.getZhaCount() * getZhaDifen();
 
                 if (playerCardInfo.getCards().size() == 1) {
                     score = 0;
+                }
+                if (playerCardInfo.getCards().size() == 17) {
+                    score *= 2;
                 }
 
                 subScore += score;

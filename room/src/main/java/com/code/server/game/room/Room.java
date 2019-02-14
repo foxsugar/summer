@@ -341,6 +341,7 @@ public class Room implements IfaceRoom {
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "joinRoom", this.toVo(userId)), userId);
 
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "roomNotice", userOfRoom), this.getUsers());
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "roomNotice", userOfRoom), watchUser);
 
         if (isClubRoom()) {
             noticeClubJoinRoom(userId);
@@ -532,6 +533,7 @@ public class Room implements IfaceRoom {
 
         ResponseVo noticeResult = new ResponseVo("roomService", "roomNotice", userOfRoom);
         MsgSender.sendMsg2Player(noticeResult, noticeList);
+        MsgSender.sendMsg2Player(noticeResult, watchUser);
 
         Notice n = new Notice();
         n.setMessage("quit room success!");
