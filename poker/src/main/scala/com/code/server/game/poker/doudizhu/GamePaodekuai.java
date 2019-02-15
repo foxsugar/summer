@@ -254,7 +254,7 @@ public class GamePaodekuai extends GameDouDiZhu {
                 if (playerCardInfo.getCards().size() == 1) {
                     score = 0;
                 }
-                if (playerCardInfo.getCards().size() == 17) {
+                if (playerCardInfo.getCards().size() == 16) {
                     score *= 2;
                 }
 
