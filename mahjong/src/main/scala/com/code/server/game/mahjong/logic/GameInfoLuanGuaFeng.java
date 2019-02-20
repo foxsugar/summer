@@ -54,6 +54,8 @@ public class GameInfoLuanGuaFeng extends GameInfoNew {
         }
     }
 
+
+
     @Override
     protected void mopai(long userId, String... wz) {
         logger.info("摸牌: " + userId);

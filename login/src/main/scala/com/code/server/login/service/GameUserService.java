@@ -684,6 +684,12 @@ public class GameUserService {
         return 0;
     }
 
+    public int getDiscount(KafkaMsgKey msgKey) {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        sendMsg(msgKey, new ResponseVo("userService", "getDiscount", serverConfig.getDiscount()));
+        return 0;
+    }
+
 
     public int getRecordsByRoom(KafkaMsgKey msgKey, long roomUid) {
         List<com.code.server.db.model.GameRecord> list = gameRecordService.gameRecordDao.getGameRecordByUuid(roomUid);

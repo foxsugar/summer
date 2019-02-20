@@ -69,6 +69,11 @@ public class ServerConfig {
 
     private int hasClubMoney = 0;
 
+    private Map<Integer, Integer> discount = new HashMap<>();
+
+    private Map<Integer, Integer> agentFirstRebate = new HashMap<>();
+    private Map<Integer, Integer> agentSecondRebate = new HashMap<>();
+
 
     public String getServerType() {
         return serverType;
@@ -315,6 +320,33 @@ public class ServerConfig {
 
     public ServerConfig setHasClubMoney(int hasClubMoney) {
         this.hasClubMoney = hasClubMoney;
+        return this;
+    }
+
+    public Map<Integer, Integer> getDiscount() {
+        return discount;
+    }
+
+    public ServerConfig setDiscount(Map<Integer, Integer> discount) {
+        this.discount = discount;
+        return this;
+    }
+
+    public Map<Integer, Integer> getAgentFirstRebate() {
+        return agentFirstRebate;
+    }
+
+    public ServerConfig setAgentFirstRebate(Map<Integer, Integer> agentFirstRebate) {
+        this.agentFirstRebate = agentFirstRebate;
+        return this;
+    }
+
+    public Map<Integer, Integer> getAgentSecondRebate() {
+        return agentSecondRebate;
+    }
+
+    public ServerConfig setAgentSecondRebate(Map<Integer, Integer> agentSecondRebate) {
+        this.agentSecondRebate = agentSecondRebate;
         return this;
     }
 }

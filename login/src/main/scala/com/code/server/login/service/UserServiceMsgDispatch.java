@@ -115,6 +115,8 @@ public class UserServiceMsgDispatch {
             case "getChargeRecord":
                 return gameUserService.getChargeRecord(msgKey);
 
+            case "getDiscount":
+                return gameUserService.getDiscount(msgKey);
 
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;

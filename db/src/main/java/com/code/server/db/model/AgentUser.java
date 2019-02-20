@@ -36,6 +36,7 @@ public class AgentUser {
     private double shareDeduct;//分享提成
     private double parentPayDeduct;//上级支付提成
     private double parentShareDeduct;//上级分享提成
+    private int agentType;
 
     @Type(type = "json")
     @Lob
@@ -231,6 +232,15 @@ public class AgentUser {
 
     public AgentUser setParentShareDeduct(double parentShareDeduct) {
         this.parentShareDeduct = parentShareDeduct;
+        return this;
+    }
+
+    public int getAgentType() {
+        return agentType;
+    }
+
+    public AgentUser setAgentType(int agentType) {
+        this.agentType = agentType;
         return this;
     }
 

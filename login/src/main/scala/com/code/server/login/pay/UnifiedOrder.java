@@ -1,12 +1,15 @@
 package com.code.server.login.pay;
 
 
+import com.code.server.constant.game.UserBean;
 import com.code.server.db.Service.ChargeService;
 import com.code.server.db.model.Charge;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.util.PayUtil;
 import com.code.server.login.util.TestGetPost;
 import com.code.server.login.util.WxPayHelper;
+import com.code.server.redis.service.RedisManager;
+import com.code.server.util.SpringUtil;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,6 +61,16 @@ public class UnifiedOrder {
         //微信
 
         int money100 = money * 100;
+
+        //有折扣的情况
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        if (serverConfig.getDiscount() != null && serverConfig.getDiscount().size() > 0) {
+            UserBean userBean = RedisManager.getUserRedisService().getUserBean(Long.valueOf(userId));
+            if (userBean != null) {
+                int vip = userBean.getVip();
+                money100 = money * serverConfig.getDiscount().get(vip);
+            }
+        }
 
         String body = "充值";
 
