@@ -491,8 +491,10 @@ public class GamePlaySeven extends Game{
                     if((playerCardInfos.get(l).handCards.contains(53)&&playerCardInfos.get(l).handCards.contains(-53))||
                             (playerCardInfos.get(l).handCards.contains(54)&&playerCardInfos.get(l).handCards.contains(-54))){
                     /*if(l!=userId){*/
-                        playerCardInfos.get(l).setFanZhu("1");
-                        opreaterMsg.put("fanZhu", "1");
+//                        playerCardInfos.get(l).setFanZhu("1");
+//                        opreaterMsg.put("fanZhu", "1");
+
+                        playerCardInfos.get(l).setFanZhu("3");
                     /*}*/
                     }else{
                         playerCardInfos.get(l).setFanZhu("3");
@@ -1180,18 +1182,29 @@ public class GamePlaySeven extends Game{
     protected void compute(long winnerId) {
         int allScore = kouDiBeiShu*tableCardFen+jianFen;
         int temp = 0;//正分为庄
-        if(allScore>=40&&allScore<80){
-            temp=1;
-        }else if(allScore>=5&&allScore<40){
-            temp=2;
-        }else if(allScore==0){
-            if(5==room.fengDing){
-                temp=5;
-            }else {
-                temp=3;
+
+        if (room.kouDiJiaJi && winnerId!=zhuId&&winnerId!=secondBanker) {
+            if(allScore<80){
+                temp=-1;
+            }else{//大于80的情况
+                temp = -(allScore-40)/40 - 1;
             }
+
         }else{
-            temp = -(allScore-40)/40;
+
+            if(allScore>=40&&allScore<80){
+                temp=1;
+            }else if(allScore>=5&&allScore<40){
+                temp=2;
+            }else if(allScore==0){
+                if(5==room.fengDing){
+                    temp=5;
+                }else {
+                    temp=3;
+                }
+            }else{//大于80的情况
+                temp = -(allScore-40)/40;
+            }
         }
         if(shuangLiangDouble||fanzhu){
             if(room.zhuangDanDaJiaBei && winnerId==room.getBankerId()){
