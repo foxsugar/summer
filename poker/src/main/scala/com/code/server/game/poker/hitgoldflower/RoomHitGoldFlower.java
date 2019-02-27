@@ -289,9 +289,7 @@ public class RoomHitGoldFlower extends PokerGoldRoom {
 
     }
 
-    public void spendMoney() {
-        RedisManager.getUserRedisService().addUserMoney(this.createUser, -createNeedMoney);
-    }
+
 
     @Override
     public PrepareRoom getPrepareRoomVo() {

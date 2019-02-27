@@ -213,6 +213,8 @@ public class RoomInfo extends RoomInfoExtendGold {
             case "FANSHIKD":
                 return new GameInfoHeleKD().setTurnZeroAfterHuangZhuang(true);
             case "ZHANGLEBAO":
+            case "ZHANGLEBAO2":
+            case "ZHANGLEBAO3":
                 return new GameInfoZhanglebao();
             case "LUANGUAF":
                 return new GameInfoLuanGuaFeng();
