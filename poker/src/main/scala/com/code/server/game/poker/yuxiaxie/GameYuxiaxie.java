@@ -69,6 +69,15 @@ public class GameYuxiaxie extends Game {
         crapStart();
     }
 
+
+    protected void returnBet(){
+        if (room.getClubId() == null) {
+            return;
+        }
+        for (PlayerInfoYuxiaxie playerInfoYuxiaxie : playerCardInfos.values()) {
+            playerInfoYuxiaxie.returnBet(this.room);
+        }
+    }
     /**
      * 给所有人推送 包括观战的人
      *
@@ -257,7 +266,7 @@ public class GameYuxiaxie extends Game {
      */
     public void crapStart(){
         this.state = STATE_CRAP;
-        this.room.setLastOperateTime(System.currentTimeMillis());
+        updateLastOperateTime();
         pushToAll("gameService", "crapStart", "ok");
     }
 

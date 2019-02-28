@@ -19,6 +19,7 @@ import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
 import org.springframework.beans.BeanUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -153,6 +154,17 @@ public class RoomYuxiaxie extends PokerGoldRoom {
             return rtn;
         }
         getReady(userId);
+
+        if (this.game != null) {
+
+            if (!this.game.getUsers().contains(userId)) {
+
+                this.game.users.add(userId);
+                PlayerInfoYuxiaxie playerInfoYuxiaxie = new PlayerInfoYuxiaxie();
+                playerInfoYuxiaxie.setUserId(userId);
+                ((GameYuxiaxie) this.game).playerCardInfos.put(userId, playerInfoYuxiaxie);
+            }
+        }
         return 0;
     }
 
@@ -231,7 +243,10 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
         this.userScores.forEach((key, value) -> {
             UserRecord userRecord = new UserRecord();
-            userRecord.setScore(value);
+            //总分
+
+            int sum = this.userScoreHistory.getOrDefault(key, new HashMap<>()).values().stream().mapToInt(Integer::intValue).sum();
+            userRecord.setScore(sum);
             userRecord.setUserId(key);
             UserBean userBean = RedisManager.getUserRedisService().getUserBean(key);
             if (userBean != null) {
@@ -257,6 +272,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
             }
         }
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userScores), this.getUsers());
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userScores), this.watchUser);
     }
 
     public List<UserOfResult> getUserOfResult() {
@@ -461,6 +477,51 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         }
     }
 
+
+    /**
+     * 解散房间
+     */
+    protected void dissolutionRoom() {
+        if (RoomManager.getRoom(this.roomId) == null) {
+            return;
+        }
+        RoomManager.removeRoom(this.roomId);
+        // 结果类
+        List<UserOfResult> userOfResultList = getUserOfResult();
+
+        //代开房 并且游戏未开始
+//        if (!isCreaterJoin && !this.isInGame && this.curGameNumber == 1) {
+        if (this.curGameNumber == 1) {
+            drawBack();
+            GameTimer.removeNode(this.prepareRoomTimerNode);
+        }
+//        if (isClubRoom() && !this.isInGame && this.curGameNumber == 1 && this.users.size() == 0) {
+//            clubDrawBack();
+//        }
+        this.isInGame = false;
+
+        //返还下注
+        if (this.game != null) {
+            GameYuxiaxie gameYuxiaxie = (GameYuxiaxie) this.game;
+            if (gameYuxiaxie.getState() == GameYuxiaxie.STATE_BET) {
+                gameYuxiaxie.returnBet();
+            }
+        }
+
+        // 存储返回
+        GameOfResult gameOfResult = new GameOfResult();
+
+        gameOfResult.setUserList(userOfResultList);
+        gameOfResult.setEndTime(LocalDateTime.now().toString());
+        List<Long> all = new ArrayList<>();
+        all.addAll(users);
+        all.addAll(watchUser);
+        MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), all);
+
+        //战绩
+        genRoomRecord();
+
+    }
 
 
     @Override

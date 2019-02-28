@@ -1506,7 +1506,8 @@ public class GameClubService {
 
         RoomModel roomModel = getRoomModel(club, clubModelId);
 
-        if (club.getMoney() < roomModel.getMoney()) {
+
+        if (getUserMoney(club.getPresident()) < roomModel.getMoney()) {
             return ErrorCode.CLUB_CANNOT_MONEY;
         }
 
@@ -1528,7 +1529,10 @@ public class GameClubService {
         sendMsgForCreateRoom(roomModel.getServiceName(), jsonNode.toString());
 
         //减掉钱
-        club.setMoney(club.getMoney() - roomModel.getMoney());
+//        club.setMoney(club.getMoney() - roomModel.getMoney());
+
+
+        addPresidentMoney(club.getPresident(), -roomModel.getMoney());
 
 
         sendMsg(msgKey, new ResponseVo("clubService", "createInstance", "ok"));
@@ -1538,6 +1542,27 @@ public class GameClubService {
         return 0;
     }
 
+
+    protected void addPresidentMoney(long userId, double money) {
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+            RedisManager.getUserRedisService().addUserMoney(userId, money);
+        }else{
+            User user = userService.getUserByUserId(userId);
+            user.setMoney(user.getMoney() + money);
+            userService.save(user);
+        }
+    }
+
+    protected double getUserMoney(long userId) {
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+            return userBean.getMoney();
+        }else{
+            User user = userService.getUserByUserId(userId);
+            return user.getMoney();
+        }
+    }
 
     /**
      * 后的某合伙人的玩家

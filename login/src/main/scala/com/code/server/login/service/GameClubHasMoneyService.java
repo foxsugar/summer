@@ -203,7 +203,8 @@ public class GameClubHasMoneyService extends GameClubService {
             for(RoomInstance roomInstance : club.getClubInfo().getRoomInstance().values()){
                 if (roomInstance.getRoomId().equals(roomId)) {
                     int money = roomInstance.getMoney();
-                    club.setMoney(club.getMoney() + money);
+//                    club.setMoney(club.getMoney() + money);
+                    addPresidentMoney(club.getPresident(), money);
                 }
             }
         }

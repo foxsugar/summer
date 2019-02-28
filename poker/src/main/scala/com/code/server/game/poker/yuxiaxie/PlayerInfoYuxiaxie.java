@@ -17,7 +17,6 @@ import static com.code.server.constant.game.Bet.TYPE_NUO;
 public class PlayerInfoYuxiaxie extends PlayerCardInfo {
 
 
-
     private List<Bet> bets = new ArrayList<>();
 
 
@@ -29,30 +28,42 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
         return num;
     }
 
+
+    public void returnBet(Room room) {
+        int num = 0;
+        for (Bet bet : bets) {
+            if (bet.type == TYPE_NUO) {
+
+                num += 5 * bet.num;
+            }else{
+
+                num += bet.num;
+            }
+        }
+        room.addUserSocre(this.userId, num);
+    }
     public void bet(Room room, int type, int index1, int index2, int num) {
-        this.bets.add(new Bet(0,type, index1, index2, num));
-
-
+        this.bets.add(new Bet(0, type, index1, index2, num));
 
 
 //        if (room.isClubRoom()) {
-            if (type == TYPE_NUO) {
+        if (type == TYPE_NUO) {
 //                RedisManager.getClubRedisService().addClubUserMoney(room.getClubId(), this.getUserId(), -5 * num);
-                room.addUserSocre(this.userId, -5*num);
-                this.setScore(score - 5*num);
+            room.addUserSocre(this.userId, -5 * num);
+            this.setScore(score - 5 * num);
 //            }else{
 //                RedisManager.getClubRedisService().addClubUserMoney(room.getClubId(), this.getUserId(), -num);
 //                room.addUserSocre(this.userId, -num);
 //            }
-        }else{
+        } else {
             room.addUserSocre(this.userId, -num);
         }
     }
 
 
-
     /**
      * 结算
+     *
      * @param dice1
      * @param dice2
      * @return
@@ -90,14 +101,14 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
 
             if (bet.index1 == dice1 && bet.index1 == dice2) {
                 multiple = 25;
-            }else{
+            } else {
                 multiple = -1;
             }
         } else if (bet.type == Bet.TYPE_CHUANLIAN) {
-            if((bet.index1 == dice1 && bet.index2 == dice2) ||
-                    (bet.index1 == dice2 && bet.index2 == dice1)){
+            if ((bet.index1 == dice1 && bet.index2 == dice2) ||
+                    (bet.index1 == dice2 && bet.index2 == dice1)) {
                 multiple = 12;
-            }else{
+            } else {
                 multiple = -1;
             }
         } else if (bet.type == Bet.TYPE_NUO) {
@@ -106,15 +117,13 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
 //            }
             if (bet.index2 == dice1 && bet.index2 == dice2) {
                 multiple += 5;
-            }else
-            if (bet.index2 == dice1 || bet.index2 == dice2) {
+            } else if (bet.index2 == dice1 || bet.index2 == dice2) {
                 multiple += 3;
             }
 
             if (bet.index1 == dice1 && bet.index1 == dice2) {
                 multiple -= 5;
-            }else
-            if (bet.index1 == dice1 || bet.index1 == dice2) {
+            } else if (bet.index1 == dice1 || bet.index1 == dice2) {
                 multiple -= 3;
             }
 
@@ -122,7 +131,7 @@ public class PlayerInfoYuxiaxie extends PlayerCardInfo {
 
 
         if (bet.type == Bet.TYPE_NUO) {
-            room.addUserSocre(userId, 5* bet.num);
+            room.addUserSocre(userId, 5 * bet.num);
 //            if (room.isClubRoom()) {
 //                RedisManager.getClubRedisService().addClubUserMoney(room.getClubId(), this.getUserId(), 5* bet.num);
 ////                multiple += 5;
