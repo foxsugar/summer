@@ -155,7 +155,12 @@ public class PayCallback {
 
                         logger.info("childCost1  is :{}", childCost1);
                         //今日来源于玩家的收入
-                        childCost1.firstLevel += rebateMoney * serverConfig.getAgentFirstRebate().get(agentUser1.getAgentType()) * 0.01;
+                        if (u.getVip() == 0) {
+                            childCost1.firstLevel += rebateMoney * serverConfig.getAgentFirstRebate().get(agentUser1.getAgentType()) * 0.01;
+                        } else {
+                            childCost1.firstLevel += rebateMoney * serverConfig.getAgentSecondRebate().get(agentUser1.getAgentType()) * 0.01;
+
+                        }
                         rs1.put(dayStr, childCost1);
                         agentUserDao.save(agentUser1);
                     }
@@ -167,7 +172,7 @@ public class PayCallback {
 
                     logger.info("AgentUser2 is :{}", agentUser2);
 
-                    if (agentUser2 != null){
+                    if (agentUser2 != null && u.getVip() == 0){
                         AgentInfo agentInfo2 = agentUser2.getAgentInfo();
                         logger.info("AgentInfo2 is :{}", agentInfo2);
                         Map<String, ChildCost> rs2 = agentInfo2.getEveryDayCost();
