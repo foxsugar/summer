@@ -27,7 +27,6 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
 //        specialHuScore.put(hu_豪华七小对, 1);
 
 
-
         if (isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_摸四胡五)) {
             this.TING_MIN_SCORE = 5;
             this.ZIMO_MIN_SCORE = 4;
@@ -41,23 +40,32 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         }
 
 
-
         if (isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_摸三胡六)) {
             this.TING_MIN_SCORE = 6;
             this.ZIMO_MIN_SCORE = 3;
             this.DIANPAO_MIN_SCORE = 6;
         }
 
-        if (isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_七小对翻倍)) {
+        specialHuScore.put(hu_清一色, 1);
+        specialHuScore.put(hu_一条龙, 1);
+        specialHuScore.put(hu_七小对, 1);
+        specialHuScore.put(hu_十三幺, 1);
+        specialHuScore.put(hu_豪华七小对, 1);
+        specialHuScore.put(hu_双豪七小对_山西, 1);
+        specialHuScore.put(hu_清龙, 1);
 
-        }else{
-            specialHuScore.put(hu_清一色,1);
-            specialHuScore.put(hu_一条龙,1);
-            specialHuScore.put(hu_七小对,1);
-            specialHuScore.put(hu_十三幺,1);
-            specialHuScore.put(hu_豪华七小对,1);
-            specialHuScore.put(hu_双豪七小对_山西,1);
-            specialHuScore.put(hu_清龙,1);
+        if (isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_七小对翻倍)) {
+            specialHuScore.put(hu_清一色, 2);
+            specialHuScore.put(hu_一条龙, 2);
+            specialHuScore.put(hu_七小对, 2);
+        }
+
+
+        if (isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_豪七翻2倍)) {
+            specialHuScore.put(hu_十三幺, 4);
+            specialHuScore.put(hu_豪华七小对, 4);
+            specialHuScore.put(hu_双豪七小对_山西, 4);
+            specialHuScore.put(hu_清龙, 4);
         }
     }
 
@@ -145,7 +153,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
     @Override
     public boolean isCanHu_dianpao(String card) {
 
-        if (!isTing ) return false;
+        if (!isTing) return false;
         //混牌 不能点炮
         int cardType = CardTypeUtil.getTypeByCard(card);
         if (this.gameInfo.hun.contains(cardType)) {
@@ -256,8 +264,8 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         room.pushScoreChange();
     }
 
-    protected int getTimes( HuCardType huCardType){
-        return huCardType.fan==0?1:huCardType.fan;
+    protected int getTimes(HuCardType huCardType) {
+        return huCardType.fan == 0 ? 1 : huCardType.fan;
     }
 
     @Override
@@ -447,7 +455,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         playerCardsInfo.init(playerCardsInfo.cards);
 
 
-        playerCardsInfo.pengType.put(0,0L);
+        playerCardsInfo.pengType.put(0, 0L);
 //        playerCardsInfo.pengType.put(6,0L);
 //        playerCardsInfo.anGangType.add(32);
 

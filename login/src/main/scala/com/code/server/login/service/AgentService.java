@@ -127,12 +127,19 @@ public class AgentService {
      * @param unionId
      */
     private AgentBean player2Agnet(long userId, String unionId) {
+        //fixme 修复如果成为代理前就已经是下级的情况
         GameAgent gameAgent = new GameAgent();
         gameAgent.setCreateDate(new Date());
         gameAgent.setId(userId);
         gameAgent.setUnionId(unionId);
+
         gameAgent.setIsPartner(0);
         gameAgent.setParentId(0);
+
+        User user = userService.getUserByUserId(userId);
+        if (user != null) {
+            gameAgent.setParentId(user.getReferee());
+        }
 
         AgentBean agentBean = gameAgent2AgentBean(gameAgent);
         //保存到redis

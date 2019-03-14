@@ -74,6 +74,10 @@ public class ServerConfig {
     private Map<Integer, Integer> agentFirstRebate = new HashMap<>();
     private Map<Integer, Integer> agentSecondRebate = new HashMap<>();
 
+    private String paysapiUrl = "";
+    private String paysapiNotifyUrl = "";
+    private String paysapiReturnUrl = "";
+
 
     public String getServerType() {
         return serverType;
@@ -347,6 +351,33 @@ public class ServerConfig {
 
     public ServerConfig setAgentSecondRebate(Map<Integer, Integer> agentSecondRebate) {
         this.agentSecondRebate = agentSecondRebate;
+        return this;
+    }
+
+    public String getPaysapiUrl() {
+        return paysapiUrl;
+    }
+
+    public ServerConfig setPaysapiUrl(String paysapiUrl) {
+        this.paysapiUrl = paysapiUrl;
+        return this;
+    }
+
+    public String getPaysapiNotifyUrl() {
+        return paysapiNotifyUrl;
+    }
+
+    public ServerConfig setPaysapiNotifyUrl(String paysapiNotifyUrl) {
+        this.paysapiNotifyUrl = paysapiNotifyUrl;
+        return this;
+    }
+
+    public String getPaysapiReturnUrl() {
+        return paysapiReturnUrl;
+    }
+
+    public ServerConfig setPaysapiReturnUrl(String paysapiReturnUrl) {
+        this.paysapiReturnUrl = paysapiReturnUrl;
         return this;
     }
 }

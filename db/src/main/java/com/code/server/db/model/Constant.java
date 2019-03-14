@@ -36,6 +36,9 @@ public class Constant extends BaseEntity {
     @Column(columnDefinition = "json")
     private Set<String> blackList = new HashSet<>();
 
+    private String payUid;
+    private String payToken;
+
 
     public long getId() {
         return id;
@@ -178,6 +181,24 @@ public class Constant extends BaseEntity {
 
     public void setIncome2(int income2) {
         this.income2 = income2;
+    }
+
+    public String getPayUid() {
+        return payUid;
+    }
+
+    public Constant setPayUid(String payUid) {
+        this.payUid = payUid;
+        return this;
+    }
+
+    public String getPayToken() {
+        return payToken;
+    }
+
+    public Constant setPayToken(String payToken) {
+        this.payToken = payToken;
+        return this;
     }
 
     @Override
