@@ -55,6 +55,9 @@ public class UserService {
         return user;
     }
 
+    public List<User> findAllRobotUser() {
+        return userDao.findAllByRobot(1);
+    }
 
 
 

@@ -71,6 +71,9 @@ public class User extends BaseEntity{
 
     private Date lastLoginDate;
 
+    @Column(columnDefinition = "int default 0")
+    private int robot;
+
 
     @Type(type = "json")
     @Lob
@@ -268,6 +271,15 @@ public class User extends BaseEntity{
 
     public User setUnionId(String unionId) {
         this.unionId = unionId;
+        return this;
+    }
+
+    public int getRobot() {
+        return robot;
+    }
+
+    public User setRobot(int robot) {
+        this.robot = robot;
         return this;
     }
 

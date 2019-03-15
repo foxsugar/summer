@@ -168,6 +168,23 @@ public class LoginAction {
         RedisManager.getUserRedisService().setUserIdOpenId(user.getId(), user.getOpenId());//userId-openid
     }
 
+
+    /**
+     * 加载机器人
+     */
+    public static void loadRobot() {
+        UserService userService = SpringUtil.getBean(UserService.class);
+        List<User> list =  userService.findAllRobotUser();
+
+        for (User user : list) {
+            UserBean userBean = RedisManager.getUserRedisService().getUserBean(user.getId());
+            if (userBean == null) {
+                String token = getToken(user.getId());
+                saveUser2Redis(user, token);
+            }
+        }
+    }
+
     @RequestMapping("/login")
     public Map<String, Object> login(String account, String password, String token_user, HttpServletRequest request) {
         Map<String, Object> params = new HashMap<>();

@@ -1,5 +1,6 @@
 package com.code.server.login;
 
+import com.code.server.login.action.LoginAction;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.rpc.RpcManager;
 import com.code.server.login.service.AgentService;
@@ -51,6 +52,9 @@ public class LoginApplication extends SpringBootServletInitializer {
 			SpringUtil.getBean(AgentService.class).loadAllAgent2Redis();
 
 			CenterService.loadLogInfo();
+
+			//
+			LoginAction.loadRobot();
 
 		}
 

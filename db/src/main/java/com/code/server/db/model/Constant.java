@@ -1,5 +1,6 @@
 package com.code.server.db.model;
 
+import com.code.server.constant.db.OtherConstant;
 import com.code.server.db.utils.BaseEntity;
 import org.hibernate.annotations.Type;
 
@@ -36,8 +37,14 @@ public class Constant extends BaseEntity {
     @Column(columnDefinition = "json")
     private Set<String> blackList = new HashSet<>();
 
-    private String payUid;
-    private String payToken;
+    private String payUid;//paysa uid
+    private String payToken;//paysa token
+
+    @Type(type = "json")
+    @Lob
+    @Column(columnDefinition = "json")
+    private OtherConstant other;
+
 
 
     public long getId() {
@@ -201,6 +208,15 @@ public class Constant extends BaseEntity {
         return this;
     }
 
+    public OtherConstant getOther() {
+        return other;
+    }
+
+    public Constant setOther(OtherConstant other) {
+        this.other = other;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Constant{" +
@@ -217,7 +233,12 @@ public class Constant extends BaseEntity {
                 ", appleCheck=" + appleCheck +
                 ", shareMoney=" + shareMoney +
                 ", AccessCode='" + AccessCode + '\'' +
+                ", income1=" + income1 +
+                ", income2=" + income2 +
                 ", blackList=" + blackList +
+                ", payUid='" + payUid + '\'' +
+                ", payToken='" + payToken + '\'' +
+                ", other=" + other +
                 '}';
     }
 }

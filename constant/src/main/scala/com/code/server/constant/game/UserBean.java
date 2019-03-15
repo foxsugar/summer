@@ -26,6 +26,7 @@ public class UserBean implements IUserBean {
     private int referee;
     private UserInfo userInfo;
     private String coord = "";
+    private int robot;
 
     private Date registDate;
     private Date lastLoginDate;
@@ -214,6 +215,15 @@ public class UserBean implements IUserBean {
 
     public UserBean setUnionId(String unionId) {
         this.unionId = unionId;
+        return this;
+    }
+
+    public int getRobot() {
+        return robot;
+    }
+
+    public UserBean setRobot(int robot) {
+        this.robot = robot;
         return this;
     }
 }

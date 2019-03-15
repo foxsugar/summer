@@ -78,6 +78,8 @@ public class ServerConfig {
     private String paysapiNotifyUrl = "";
     private String paysapiReturnUrl = "";
 
+    private int startRobot = 0;
+
 
     public String getServerType() {
         return serverType;
@@ -378,6 +380,15 @@ public class ServerConfig {
 
     public ServerConfig setPaysapiReturnUrl(String paysapiReturnUrl) {
         this.paysapiReturnUrl = paysapiReturnUrl;
+        return this;
+    }
+
+    public int getStartRobot() {
+        return startRobot;
+    }
+
+    public ServerConfig setStartRobot(int startRobot) {
+        this.startRobot = startRobot;
         return this;
     }
 }

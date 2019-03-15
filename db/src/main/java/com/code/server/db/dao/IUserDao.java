@@ -37,4 +37,6 @@ public interface IUserDao extends PagingAndSortingRepository<User, Long>, JpaSpe
 
     List<User> findUsersByIdIn(List<Long> list);
 
+    List<User> findAllByRobot(int robot);
+
 }
