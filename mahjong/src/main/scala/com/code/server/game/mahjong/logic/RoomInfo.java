@@ -421,6 +421,7 @@ public class RoomInfo extends RoomInfoExtendGold {
         roomRecord.setGameType(gameType);
         roomRecord.setModelTotal(modeTotal);
         roomRecord.setMode(mode);
+        roomRecord.setCurGameNum(curGameNumber);
 
         this.userScores.forEach((key, value) -> {
             UserRecord userRecord = new UserRecord();
