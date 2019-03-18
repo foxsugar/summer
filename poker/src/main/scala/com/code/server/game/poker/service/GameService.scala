@@ -215,7 +215,11 @@ object GameService {
       val one = params.path("one").asInt(0)
       val two = params.path("two").asInt(0)
       val three = params.path("three").asInt(0)
-      game.bet(userId,one,two,three)
+      //todo 加了个参数 index
+      val index = params.path("index").asInt(0)
+      game.bet(userId,one,two,three,index)
+
+
     case "crap"=>
       game.crap(userId)
     case "open"=>

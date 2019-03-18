@@ -1808,6 +1808,9 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
         ClubMember clubMember = club.getClubInfo().getMember().get("" + changeUser);
+        if (clubMember == null) {
+            return ErrorCode.CLUB_NOT_CHANGE_USER;
+        }
         clubMember.setReferrer(newPartner);
 
         sendMsg(msgKey, new ResponseVo("clubService", "changePartner", "ok"));

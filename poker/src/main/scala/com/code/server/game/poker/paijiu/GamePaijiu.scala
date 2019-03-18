@@ -35,7 +35,11 @@ class GamePaijiu extends Game with PaijiuConstant {
   //状态
   var state: Int = STATE_START
 
-  var catchBanker : Boolean = false;
+  var catchBanker : Boolean = false
+
+  var commonCards:Map[Int,List[Int]] = Map()
+
+
 
   //  var room: RoomPaijiu = _
   def setCatchBankerTrue(): Unit ={
@@ -150,7 +154,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     * @param two
     * @return
     */
-  def bet(userId: Long, one: Int, two: Int,three : Int): Int = {
+  def bet(userId: Long, one: Int, two: Int,three : Int, index:Int): Int = {
     val playerInfo_option = playerCardInfos.get(userId)
     //玩家不存在
     if (playerInfo_option.isEmpty) return ErrorCode.NO_USER
@@ -159,7 +163,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     if (playerCardInfoPaijiu.bet != null) return ErrorCode.ALREADY_BET
     //下注不合法
 
-    val bet = new Bet(one, two,three)
+    val bet = new Bet(one, two,three,index)
     if (!checkBet(bet)) return ErrorCode.BET_PARAM_ERROR
     //金币牌九 下注不能大于身上的钱
     if (this.roomPaijiu.isInstanceOf[RoomPaijiuAce]){
@@ -184,6 +188,8 @@ class GamePaijiu extends Game with PaijiuConstant {
     }
     0
   }
+
+
 
 
   /**

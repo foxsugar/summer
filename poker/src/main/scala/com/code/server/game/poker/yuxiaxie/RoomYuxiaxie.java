@@ -115,6 +115,92 @@ public class RoomYuxiaxie extends PokerGoldRoom {
     }
 
 
+
+    public int dissolution(long userId, boolean agreeOrNot, String methodName) {
+        if (!this.users.contains(userId)) {
+            return ErrorCode.CANNOT_FIND_THIS_USER;
+
+        }
+
+        this.userStatus.put(userId, agreeOrNot ? STATUS_AGREE_DISSOLUTION : STATUS_DISSOLUTION);
+
+        //第一个点解散
+        if (agreeOrNot && !isHasDissolutionRequest) {
+            dissloutionUser = userId;
+            isCanDissloution = true;
+            this.isHasDissolutionRequest = true;
+            //第一次申请 五分钟后解散
+            long start = System.currentTimeMillis();
+            TimerNode node = new TimerNode(start, 1000 * 60, false, () -> {
+
+                if (isCanDissloution) {
+                    dissolutionRoom();
+                }
+
+            });
+            this.timerNode = node;
+            GameTimer.addTimerNode(node);
+        }
+
+
+        ArrayList<AnswerUser> answerUsers = new ArrayList<>();
+        for (int i = 0; i < this.users.size(); i++) {
+            AnswerUser answerUser = new AnswerUser();
+            answerUser.setUserId(this.users.get(i) + "");
+            if (this.userStatus.get(this.users.get(i)) == STATUS_DISSOLUTION) {
+                answerUser.setAnswer("3");
+            } else if (this.userStatus.get(this.users.get(i)) == STATUS_AGREE_DISSOLUTION) {
+                answerUser.setAnswer("2");
+            } else {
+                answerUser.setAnswer("1");
+            }
+            answerUsers.add(answerUser);
+        }
+
+        AskQuitRoom accept = new AskQuitRoom();
+        accept.setUserId(userId + "");
+        accept.setAnswerList(answerUsers);
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "noticeAnswerIfDissolveRoom", accept), this.users);
+
+
+        int agreeNum = 0;
+        int disAgreeNum = 0;
+        for (int status : userStatus.values()) {
+            if (status == STATUS_AGREE_DISSOLUTION) {
+                agreeNum += 1;
+            }
+            if (status == STATUS_DISSOLUTION) {
+                disAgreeNum += 1;
+            }
+        }
+
+        //同意解散
+        if (isCanAgreeDissloution(agreeNum)) {
+            GameTimer.removeNode(timerNode);
+            dissolutionRoom();
+        }
+        //不同意的人数大于等于1 解散取消
+        if (disAgreeNum >= 1) {
+            for (Map.Entry<Long, Integer> entry : userStatus.entrySet()) {
+                //回到游戏状态
+                entry.setValue(STATUS_IN_GAME);
+                this.isHasDissolutionRequest = false;
+                GameTimer.removeNode(timerNode);
+            }
+        }
+
+
+        AskQuitRoom accept1 = new AskQuitRoom();
+        accept1.setUserId("" + userId);
+        MsgSender.sendMsg2Player("roomService", "noticeDissolveRoom", accept1, users);
+
+        AskQuitRoom send = new AskQuitRoom();
+        send.setNote("ok");
+        MsgSender.sendMsg2Player("roomService", methodName, send, userId);
+
+        return 0;
+    }
+
     private long getWinner(){
         double score = 0;
         long uid = 0;

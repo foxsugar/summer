@@ -69,6 +69,7 @@ public class ErrorCode {
 	public static final int CLUB_PARAM_ERROR = 1500008;
 	public static final int CLUB_NOT_MEMBER = 1500009;
 	public static final int CLUB_NOT_TRANSFER = 1500010;
+	public static final int CLUB_NOT_CHANGE_USER = 1500011;
 
 
 	public static final int REQUEST_PARAM_ERROR = 190000;

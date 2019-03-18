@@ -114,9 +114,10 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
 }
 
 
-class Bet(o: Int, t: Int ,th :Int) {
+class Bet(o: Int, t: Int ,th :Int, ind:Int) {
   val one: Int = o
   val two: Int = t
   val three : Int = th
+  val index: Int = ind
 
 }
