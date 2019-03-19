@@ -36,6 +36,8 @@ public class AgentUser {
     private double shareDeduct;//分享提成
     private double parentPayDeduct;//上级支付提成
     private double parentShareDeduct;//上级分享提成
+
+    @Column(columnDefinition = "int default 0")
     private int agentType;
 
     @Type(type = "json")
