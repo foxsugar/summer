@@ -71,8 +71,8 @@ public class User extends BaseEntity{
 
     private Date lastLoginDate;
 
-    @Column(columnDefinition = "int default 0")
-    private int robot;
+//    @Column(columnDefinition = "int default 0")
+//    private int robot;
 
 
     @Type(type = "json")
@@ -274,14 +274,14 @@ public class User extends BaseEntity{
         return this;
     }
 
-    public int getRobot() {
-        return robot;
-    }
-
-    public User setRobot(int robot) {
-        this.robot = robot;
-        return this;
-    }
+//    public int getRobot() {
+//        return robot;
+//    }
+//
+//    public User setRobot(int robot) {
+//        this.robot = robot;
+//        return this;
+//    }
 
     @Override
     public String toString() {

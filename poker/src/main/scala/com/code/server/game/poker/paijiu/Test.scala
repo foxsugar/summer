@@ -33,7 +33,7 @@ object Test {
   def test1() = {
     val playerCardInfoPaijiu = new PlayerCardInfoPaijiu
     println(playerCardInfoPaijiu.bet)
-    playerCardInfoPaijiu.bet = new Bet(1,1,1)
+    playerCardInfoPaijiu.bet = new Bet(1,1,1,1)
     println(playerCardInfoPaijiu.bet)
   }
 
