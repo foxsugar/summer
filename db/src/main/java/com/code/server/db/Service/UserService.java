@@ -56,7 +56,7 @@ public class UserService {
     }
 
     public List<User> findAllRobotUser() {
-        return userDao.findAllByRobot(1);
+        return userDao.findAllByVip(1);
     }
 
 
