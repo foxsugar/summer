@@ -137,11 +137,12 @@ public class PaysapiOrder {
 
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
+
+
         String str = p1_yingyongnum + "&" +
                 p2_ordernumber + "&" +
                 p3_money + "&" +
                 p4_zfstate + "&" +
-                p5_orderid + "&" +
                 p5_orderid + "&" +
                 p6_productcode + "&" +
                 p7_bank_card_code + "&" +
