@@ -32,6 +32,22 @@ class RoomPaijiu extends PokerGoldRoom {
 
   var testUserId: Long = 0
 
+  //机器人类型 0:没有 1:占位 2:玩牌
+  var robotType:Int = 0
+  //机器人数量
+  var robotNum:Int = 0
+  //机器人赢得数量
+  var robotWinner:Int = 0
+  //是否重开
+  var isReOpen:Boolean = false
+
+  //机器人列表
+  var robotList:List[Long] = List()
+  //上庄列表
+  var bankerList:List[Long] = List()
+
+
+
 
   //  override protected def getGameInstance: Game = gameType match {
   //    case "11" => new GamePaijiuEndless
@@ -123,7 +139,23 @@ class RoomPaijiu extends PokerGoldRoom {
     this.canStartUserId = users.get(0)
     //代开房
     if (!isCreaterJoin ||isClubRoom) this.bankerId = users.get(0)
+    //如果是机器人
+    if(RedisManager.getUserRedisService.getUserBean(userId).getRobot == 1) {
+      this.robotList = this.robotList.+:(userId)
+    }
     addUser2RoomRedis(userId)
+  }
+
+
+  override def roomRemoveUser(userId: Long): Unit = {
+    this.users.remove(userId)
+    this.userStatus.remove(userId)
+    this.userScores.remove(userId)
+    this.roomStatisticsMap.remove(userId)
+    //如果在上庄列表里 删掉
+    this.bankerList = this.bankerList.filter(_!=userId)
+    this.robotList = this.robotList.filter(_!=userId)
+    removeUserRoomRedis(userId)
   }
 
   override def toVo(userId: Long): IfaceRoomVo = {

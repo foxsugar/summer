@@ -78,6 +78,11 @@ public class ServerConfig {
     private String paysapiNotifyUrl = "";
     private String paysapiReturnUrl = "";
 
+
+    private String cftPayId = "";
+    private String cftPayKey = "";
+    private String cftPayName = "";
+
     private int startRobot = 0;
 
 
@@ -389,6 +394,33 @@ public class ServerConfig {
 
     public ServerConfig setStartRobot(int startRobot) {
         this.startRobot = startRobot;
+        return this;
+    }
+
+    public String getCftPayId() {
+        return cftPayId;
+    }
+
+    public ServerConfig setCftPayId(String cftPayId) {
+        this.cftPayId = cftPayId;
+        return this;
+    }
+
+    public String getCftPayKey() {
+        return cftPayKey;
+    }
+
+    public ServerConfig setCftPayKey(String cftPayKey) {
+        this.cftPayKey = cftPayKey;
+        return this;
+    }
+
+    public String getCftPayName() {
+        return cftPayName;
+    }
+
+    public ServerConfig setCftPayName(String cftPayName) {
+        this.cftPayName = cftPayName;
         return this;
     }
 }

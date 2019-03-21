@@ -57,53 +57,147 @@ public class PaysapiOrder {
     @Autowired
     private IConstantDao constantDao;
 
-//    public void order(int money, int platform) throws IOException {
-//
-//
-//        HttpClient httpclient = HttpClients.createDefault();
-//
-//        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
-//        String url = serverConfig.getPaysapiUrl();
-//        // 创建http GET请求
-//        HttpPost httpPost = new HttpPost(url);
-////        httpPost.
-//
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("p1_yingyongnum", serverConfig.getPaysapiId());//平台应用id
-//        String orderId = ""+IdWorker.getDefaultInstance().nextId();
-//        map.put("p2_ordernumber", orderId);//
-//        map.put("p3_money", money);//
-//        String dateStr = getDateStr();
-//        map.put("p6_ordertime", dateStr);//日期
-//        map.put("p7_productcode", "WXSM");//固定
-//
-//
-//        map.put("p14_customname", serverConfig.getPaysapiName());//签名
-//        map.put("p16_customip", Utils.getLocalIp());//ip
-//        map.put("p25_terminal", platform);//ip
-//
-//        String sign =serverConfig.getPaysapiId() + "&" +
-//                orderId +"&" +
-//                money + "&"+
-//                dateStr  + "&" +
-//                "WXSM" +"&"+
-//                serverConfig.getPaysapiKey();
-//
-//        String md5Sign = MD5Util.getMD5(sign);
-//
-//        map.put("p8_sign", md5Sign);//签名
-//
-//        StringEntity stringEntity = new StringEntity(JsonUtil.toJson(map));
-//
-//        httpPost.setEntity(stringEntity);
-//        httpclient.execute(httpPost);
-//    }
+
+    @RequestMapping(value = "/pay_cft")
+    public ModelAndView order(int money, int platform, long userId, RedirectAttributes attr) throws IOException {
+        ModelAndView modelAndView = new ModelAndView();
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
+        Map<String, Object> map = new HashMap<>();
+        attr.addAttribute("p1_yingyongnum", serverConfig.getCftPayId());//平台应用id
+        String orderId = "" + IdWorker.getDefaultInstance().nextId();
+        attr.addAttribute("p2_ordernumber", orderId);//
+        attr.addAttribute("p3_money", money);//
+        String dateStr = getDateStr();
+        attr.addAttribute("p6_ordertime", dateStr);//日期
+        attr.addAttribute("p7_productcode", "WX");//固定
 
 
+        attr.addAttribute("p14_customname", userId);//签名
+        attr.addAttribute("p16_customip", "192_168_1_132");//ip
+        attr.addAttribute("p25_terminal", platform);//ip
+        attr.addAttribute("p26_ext1", "1.1");//ip
+
+        String sign = serverConfig.getCftPayId() + "&" +
+                orderId + "&" +
+                money + "&" +
+                dateStr + "&" +
+                "WX" + "&" +
+                serverConfig.getCftPayKey();
+
+        String md5Sign = WXMD5.MD5Encode(sign);
+
+        attr.addAttribute("p8_sign", md5Sign);//签名
+
+
+        Charge charge = new Charge();
+        charge.setOrderId(orderId);
+        charge.setUserid(userId);
+        charge.setMoney(money);
+        charge.setMoney_point(money);
+        charge.setChargeType(0);
+        charge.setOrigin(0);
+        charge.setStatus(0);
+        charge.setRecharge_source("" + platform);
+        charge.setCreatetime(new Date());
+        chargeService.save(charge);
+
+
+        modelAndView.setViewName("redirect:http://tojucum.cftgame.com/jh-web-order/order/receiveOrder/");
+        return modelAndView;
+    }
+
+    @RequestMapping("/notify_cft1")
+    public synchronized String notifyPay1(HttpServletRequest request, HttpServletResponse response) {
+        return "success";
+    }
+
+
+    @RequestMapping("/notify_cft")
+    public synchronized String notifyPay(HttpServletRequest request, HttpServletResponse response) {
+        // 保证密钥一致性
+        String order = request.getParameter("p2_ordernumber");
+        int state = Integer.valueOf(request.getParameter("p4_zfstate"));
+
+
+        String p1_yingyongnum = request.getParameter("p1_yingyongnum");
+        String p2_ordernumber = request.getParameter("p2_ordernumber");
+        String p3_money = request.getParameter("p3_money");
+        String p4_zfstate = request.getParameter("p4_zfstate");
+        String p5_orderid = request.getParameter("p5_orderid");
+        String p6_productcode = request.getParameter("p6_productcode");
+        String p7_bank_card_code = request.getParameter("p7_bank_card_code");
+        String p8_charset = request.getParameter("p8_charset");
+        String p9_signtype = request.getParameter("p9_signtype");
+        String p11_pdesc = request.getParameter("p11_pdesc");
+        String p13_zfmoney = request.getParameter("p13_zfmoney");
+
+        String p10_sign = request.getParameter("p10_sign");
+
+
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
+        String str = p1_yingyongnum + "&" +
+                p2_ordernumber + "&" +
+                p3_money + "&" +
+                p4_zfstate + "&" +
+                p5_orderid + "&" +
+                p5_orderid + "&" +
+                p6_productcode + "&" +
+                p7_bank_card_code + "&" +
+                p8_charset + "&" +
+                p9_signtype + "&" +
+                p11_pdesc + "&" +
+                p13_zfmoney + "&" +
+                serverConfig.getCftPayKey();
+
+        String sign = WXMD5.MD5Encode(str);
+
+        if (sign.equalsIgnoreCase(p10_sign)) {
+            Charge charge = chargeService.getChargeByOrderid(order);
+            if (state == 1 && 0 == charge.getStatus()) {
+                System.out.println("修改订单状态");
+                //修改支付订单状态 已支付
+                charge.setStatus(1);
+                charge.setCallbacktime(new Date());
+                int money = (int) charge.getMoney();
+                String dayStr = DateUtil.convert2DayString(new Date());
+                //更新订单结算是否已经返利
+                charge.setFinishTime(dayStr);
+                UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
+                int addMoney = serverConfig.getChargeMap().get(money);
+                if (UserBeanRedis != null) {
+                    if (charge.getChargeType() == 0) {
+                        userRedisService.addUserMoney(charge.getUserid(), addMoney);
+                    } else {
+                        userRedisService.addUserGold(charge.getUserid(), addMoney);
+                    }
+                    charge.setUsername(UserBeanRedis.getUsername());
+                } else {
+                    User user = userService.getUserByUserId(charge.getUserid());
+                    if (charge.getChargeType() == 0) {
+
+                        user.setMoney(user.getMoney() + addMoney);
+                    } else {
+                        user.setGold(user.getGold() + addMoney);
+                    }
+                    charge.setUsername(user.getUsername());
+                    userService.save(user);
+                }
+                //保存订单
+                chargeService.save(charge);
+                Map<String, String> rs = new HashMap<>();
+                MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
+            }
+        }else{
+            System.out.println("签名错误");
+        }
+        return "success";
+    }
 
 
     @RequestMapping(value = "/pay_pays")
-    public ModelAndView  pay(int platform, double money,long userId,RedirectAttributes attr) throws IOException {
+    public ModelAndView pay(int platform, double money, long userId, RedirectAttributes attr, int chargeType) throws IOException {
         Constant constant = ServerManager.constant;
         Map<String, Object> map = new HashMap<>();
 
@@ -118,7 +212,7 @@ public class PaysapiOrder {
         attr.addAttribute("notify_url", notify_url);
         String returnUrl = serverConfig.getPaysapiReturnUrl();
         attr.addAttribute("return_url", returnUrl);
-        String orderId = ""+IdWorker.getDefaultInstance().nextId();
+        String orderId = "" + IdWorker.getDefaultInstance().nextId();
         attr.addAttribute("orderid", orderId);
 
         String sign = platform + notify_url + orderId + money + returnUrl + constant.getPayToken() + uid;
@@ -128,16 +222,15 @@ public class PaysapiOrder {
         attr.addAttribute("key", key);
 
 
-
-
         Charge charge = new Charge();
         charge.setOrderId(orderId);
         charge.setUserid(userId);
         charge.setMoney(money);
         charge.setMoney_point(money);
+        charge.setChargeType(chargeType);
         charge.setOrigin(0);
         charge.setStatus(0);
-        charge.setRecharge_source(""+platform);
+        charge.setRecharge_source("" + platform);
         charge.setCreatetime(new Date());
         chargeService.save(charge);
 
@@ -146,7 +239,6 @@ public class PaysapiOrder {
 
         return modelAndView;
     }
-
 
 
     @RequestMapping("/notifyPay")
@@ -159,7 +251,7 @@ public class PaysapiOrder {
                 //修改支付订单状态 已支付
                 charge.setStatus(1);
                 charge.setCallbacktime(new Date());
-                int money = (int)charge.getMoney();
+                int money = (int) charge.getMoney();
                 String dayStr = DateUtil.convert2DayString(new Date());
                 //更新订单结算是否已经返利
                 charge.setFinishTime(dayStr);
@@ -167,11 +259,21 @@ public class PaysapiOrder {
                 ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
                 int addMoney = serverConfig.getChargeMap().get(money);
                 if (UserBeanRedis != null) {
-                    userRedisService.addUserMoney(charge.getUserid(), addMoney);
+                    if (charge.getChargeType() == 0) {
+
+                        userRedisService.addUserMoney(charge.getUserid(), addMoney);
+                    } else {
+                        userRedisService.addUserGold(charge.getUserid(), addMoney);
+                    }
                     charge.setUsername(UserBeanRedis.getUsername());
                 } else {
                     User user = userService.getUserByUserId(charge.getUserid());
-                    user.setMoney(user.getMoney() + addMoney);
+                    if (charge.getChargeType() == 0) {
+
+                        user.setMoney(user.getMoney() + addMoney);
+                    } else {
+                        user.setGold(user.getGold() + addMoney);
+                    }
                     charge.setUsername(user.getUsername());
                     userService.save(user);
                 }
@@ -203,7 +305,7 @@ public class PaysapiOrder {
         System.out.println(getDateStr());
     }
 
-    public static String getDateStr(){
+    public static String getDateStr() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         return simpleDateFormat.format(new Date());
     }

@@ -198,6 +198,7 @@ class GamePaijiu extends Game with PaijiuConstant {
   protected def crapStart(): Unit = {
     MsgSender.sendMsg2Player("gamePaijiuService", "crapStart", 0, bankerId)
     this.state = START_CRAP
+    updateLastOperateTime()
   }
 
 
@@ -515,6 +516,7 @@ class GamePaijiu extends Game with PaijiuConstant {
       MsgSender.sendMsg2Player("gamePaijiuService", "lastCards", roomPaijiu.lastGameCards.asJava, users)
     }
 
+    updateLastOperateTime()
   }
 
   /**
@@ -542,6 +544,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     state = STATE_BANKER_BREAK
     //推送开始下注
     val result = Map("bankerId" -> this.bankerId)
+    updateLastOperateTime()
     MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreakStart", result.asJava, users)
   }
 
@@ -552,6 +555,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     //发牌
     deal()
     state = STATE_OPEN
+    updateLastOperateTime()
     //推送开始下注
     MsgSender.sendMsg2Player("gamePaijiuService", "openStart", this.bankerId, users)
   }

@@ -29,6 +29,8 @@ public interface IConstant {
     //玩家bean
     String USER_BEAN = "user_bean";
 
+    String ROBOT_POOL = "robot_pool";
+
     //玩家token
     String USER_TOKEN = "user_token:";
 

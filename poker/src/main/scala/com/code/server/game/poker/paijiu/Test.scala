@@ -33,7 +33,7 @@ object Test {
   def test1() = {
     val playerCardInfoPaijiu = new PlayerCardInfoPaijiu
     println(playerCardInfoPaijiu.bet)
-    playerCardInfoPaijiu.bet = new Bet(1,1,1)
+    playerCardInfoPaijiu.bet = new Bet(1,1,1,1)
     println(playerCardInfoPaijiu.bet)
   }
 
@@ -41,6 +41,8 @@ object Test {
     var l1 = List(1)
     var l2 = List(2)
     l1.+:(2)
+    l1++= l2
+
     print(l1)
   }
   def testMap()={
@@ -76,6 +78,8 @@ object Test {
     val list = List(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
 //    val list = List(1,2,3,4,5,6,7,8,9,10,11,12)
     print(list.sliding(2,2).toList)
+    print(list)
+    print(list.sliding(2,2).toList(1))
   }
   def testslice(): Unit ={
     val list = List(0,1,2,3,4,5,6,7,8)
@@ -127,10 +131,19 @@ object Test {
 
   }
 
+
+
+  def testFilter():Unit = {
+    var list = List(1,2,3)
+    list = list.filter(_!=2)
+    println(list)
+  }
+
+
   def main(args: Array[String]): Unit = {
 //    test1()
 //    testSame()
-//    testAdd()
+    testAdd()
 //    testMap()
 //    testMuList
 //    testList
@@ -140,6 +153,7 @@ object Test {
 //    testPlayerVo
 //    testCardGroup()
 //    testslice
-    testIn
+//    testIn
+//    testFilter
   }
 }

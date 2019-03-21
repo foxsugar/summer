@@ -284,4 +284,15 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
         BoundHashOperations<String,String,String> user_gate = redisTemplate.boundHashOps(USER_GATE);
         return user_gate.size().intValue();
     }
+
+    @Override
+    public void addRobotPool(long userId) {
+        BoundSetOperations<String,String> robot_pool = redisTemplate.boundSetOps(ROBOT_POOL);
+        robot_pool.add("" + userId);
+    }
+
+    @Override
+    public Set<String> getRobotPoolUser() {
+        return redisTemplate.boundSetOps(ROBOT_POOL).members();
+    }
 }

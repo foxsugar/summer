@@ -28,6 +28,8 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
   //是否选择过抢庄
   var isHasFightForBanker:Boolean = false
 
+  var robot:Boolean = false
+
 
   /**
     * 得到押注的分

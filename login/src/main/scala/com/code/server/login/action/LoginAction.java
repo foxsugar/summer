@@ -181,6 +181,7 @@ public class LoginAction {
             if (userBean == null) {
                 String token = getToken(user.getId());
                 saveUser2Redis(user, token);
+                RedisManager.getUserRedisService().addRobotPool(user.getId());
             }
         }
     }
