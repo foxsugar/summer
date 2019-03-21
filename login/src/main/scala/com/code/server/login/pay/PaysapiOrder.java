@@ -14,6 +14,7 @@ import com.code.server.login.kafka.MsgSender;
 import com.code.server.login.service.ServerManager;
 import com.code.server.login.util.PaySaPi;
 import com.code.server.login.util.PayUtil_paysapi;
+import com.code.server.login.util.Utils;
 import com.code.server.login.util.WXMD5;
 import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.DateUtil;
@@ -114,56 +115,59 @@ public class PaysapiOrder {
 
 
     @RequestMapping("/notify_cft")
-    public synchronized String notifyPay(HttpServletRequest request, HttpServletResponse response) {
-        // 保证密钥一致性
-        String order = request.getParameter("p2_ordernumber");
-        int state = Integer.valueOf(request.getParameter("p4_zfstate"));
+    public synchronized String notifyPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String ip = Utils.getIpAddr(request);
+        if (ip.equals("47.93.41.216") || ip.equals("59.110.172.177") || ip.equals("47.93.230.132")) {
 
 
-        String p1_yingyongnum = request.getParameter("p1_yingyongnum");
-        String p2_ordernumber = request.getParameter("p2_ordernumber");
-        String p3_money = request.getParameter("p3_money");
-        String p4_zfstate = request.getParameter("p4_zfstate");
-        String p5_orderid = request.getParameter("p5_orderid");
-        String p6_productcode = request.getParameter("p6_productcode");
-        p6_productcode = "WX";
-        String p7_bank_card_code = request.getParameter("p7_bank_card_code");
-        String p8_charset = request.getParameter("p8_charset");
-        String p9_signtype = request.getParameter("p9_signtype");
-        String p11_pdesc = request.getParameter("p11_pdesc");
-        String p13_zfmoney = request.getParameter("p13_zfmoney");
-
-        String p10_sign = request.getParameter("p10_sign");
+            // 保证密钥一致性
+            String order = request.getParameter("p2_ordernumber");
+            int state = Integer.valueOf(request.getParameter("p4_zfstate"));
 
 
-        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+            String p1_yingyongnum = request.getParameter("p1_yingyongnum");
+            String p2_ordernumber = request.getParameter("p2_ordernumber");
+            String p3_money = request.getParameter("p3_money");
+            String p4_zfstate = request.getParameter("p4_zfstate");
+            String p5_orderid = request.getParameter("p5_orderid");
+            String p6_productcode = request.getParameter("p6_productcode");
+            p6_productcode = "WX";
+            String p7_bank_card_code = request.getParameter("p7_bank_card_code");
+            String p8_charset = request.getParameter("p8_charset");
+            String p9_signtype = request.getParameter("p9_signtype");
+            String p11_pdesc = request.getParameter("p11_pdesc");
+            String p13_zfmoney = request.getParameter("p13_zfmoney");
+
+            String p10_sign = request.getParameter("p10_sign");
+
+
+            ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 //        需要签名的字符串: 68019026133901&6514401188497596416&10.00&1&6802019032115443596457&WXZZPCFD&&UTF-8&1&&9.84&046809172632GPAN4nvs
 //        签名值: beff9e27fa7c98656c5fd81998cabace
 //        传过来的签名值: E1703E8E0CE09A46BDCE4C80D66DF132
 //                签名错误
 
 
+            String str = p1_yingyongnum + "&" +
+                    p2_ordernumber + "&" +
+                    p3_money + "&" +
+                    p4_zfstate + "&" +
+                    p5_orderid + "&" +
+                    p6_productcode + "&" +
+                    p7_bank_card_code + "&" +
+                    p8_charset + "&" +
+                    p9_signtype + "&" +
+                    p11_pdesc + "&" +
+                    p13_zfmoney + "&" +
+                    serverConfig.getCftPayKey();
 
-        String str = p1_yingyongnum + "&" +
-                p2_ordernumber + "&" +
-                p3_money + "&" +
-                p4_zfstate + "&" +
-                p5_orderid + "&" +
-                p6_productcode + "&" +
-                p7_bank_card_code + "&" +
-                p8_charset + "&" +
-                p9_signtype + "&" +
-                p11_pdesc + "&" +
-                p13_zfmoney + "&" +
-                serverConfig.getCftPayKey();
-
-        String sign = WXMD5.MD5Encode(str);
-        System.out.println("需要签名的字符串: " + str);
-        System.out.println("签名值: " + sign);
-        System.out.println("传过来的签名值: " + p10_sign);
+            String sign = WXMD5.MD5Encode(str);
+            System.out.println("需要签名的字符串: " + str);
+            System.out.println("签名值: " + sign);
+            System.out.println("传过来的签名值: " + p10_sign);
 
 
-        if (sign.equalsIgnoreCase(p10_sign)) {
+//        if (sign.equalsIgnoreCase(p10_sign)) {
             Charge charge = chargeService.getChargeByOrderid(order);
             if (state == 1 && 0 == charge.getStatus()) {
                 System.out.println("修改订单状态");
@@ -199,12 +203,18 @@ public class PaysapiOrder {
                 Map<String, String> rs = new HashMap<>();
                 MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
             }
+//        }else{
+//            System.out.println("签名错误");
+//        }
         }else{
-            System.out.println("签名错误");
+            System.out.println("ip不合法");
         }
         return "success";
     }
 
+    public static void main(String[] args) {
+        System.out.println(WXMD5.MD5Encode("68019026133901&6514401188497596416&10.00&1&6802019032115443596457&WX&&UTF-8&1&&9.84&046809172632GPAN4nvs"));
+    }
 
     @RequestMapping(value = "/pay_pays")
     public ModelAndView pay(int platform, double money, long userId, RedirectAttributes attr, int chargeType) throws IOException {
@@ -311,9 +321,6 @@ public class PaysapiOrder {
         return view;
     }
 
-    public static void main(String[] args) {
-        System.out.println(getDateStr());
-    }
 
     public static String getDateStr() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
