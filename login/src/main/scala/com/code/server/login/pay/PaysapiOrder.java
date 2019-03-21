@@ -152,6 +152,10 @@ public class PaysapiOrder {
                 serverConfig.getCftPayKey();
 
         String sign = WXMD5.MD5Encode(str);
+        System.out.println("需要签名的字符串: " + str);
+        System.out.println("签名值: " + sign);
+        System.out.println("传过来的签名值: " + p10_sign);
+
 
         if (sign.equalsIgnoreCase(p10_sign)) {
             Charge charge = chargeService.getChargeByOrderid(order);
