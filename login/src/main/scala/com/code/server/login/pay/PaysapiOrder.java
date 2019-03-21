@@ -73,7 +73,7 @@ public class PaysapiOrder {
         attr.addAttribute("p7_productcode", "WX");//固定
 
 
-        attr.addAttribute("p14_customname", userId);//签名
+        attr.addAttribute("p14_customname", userId);//
         attr.addAttribute("p16_customip", "192_168_1_132");//ip
         attr.addAttribute("p25_terminal", platform);//ip
         attr.addAttribute("p26_ext1", "1.1");//ip
@@ -126,6 +126,7 @@ public class PaysapiOrder {
         String p4_zfstate = request.getParameter("p4_zfstate");
         String p5_orderid = request.getParameter("p5_orderid");
         String p6_productcode = request.getParameter("p6_productcode");
+        p6_productcode = "WX";
         String p7_bank_card_code = request.getParameter("p7_bank_card_code");
         String p8_charset = request.getParameter("p8_charset");
         String p9_signtype = request.getParameter("p9_signtype");
@@ -136,6 +137,10 @@ public class PaysapiOrder {
 
 
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+//        需要签名的字符串: 68019026133901&6514401188497596416&10.00&1&6802019032115443596457&WXZZPCFD&&UTF-8&1&&9.84&046809172632GPAN4nvs
+//        签名值: beff9e27fa7c98656c5fd81998cabace
+//        传过来的签名值: E1703E8E0CE09A46BDCE4C80D66DF132
+//                签名错误
 
 
 
