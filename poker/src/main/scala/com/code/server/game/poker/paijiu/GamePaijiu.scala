@@ -714,21 +714,23 @@ class GamePaijiu extends Game with PaijiuConstant {
     */
   def getCardsMaxScore(cards: List[Int]): (Int,String) = {
 
+    var cardList:List[String] = List()
     if (cards.size == 2) {
-      val cardGroup = cards.head + "," + cards(1)
-      return (getGroupScore(cardGroup),cardGroup)
+      cardList = cardList.+:(cards.head + "," + cards(1))
+      cardList = cardList.+:(cards(1) + "," + cards.head)
     } else  {
-      var max = 0
-      var group = ""
-      for (x <- getGroupList(cards)) {
-        val score = getGroupScore(x)
-        if (score > max) {
-          max = score
-          group = x
-        }
-      }
-      return (max,group)
+      cardList = cardList:::getGroupList(cards)
     }
+    var max = 0
+    var group = ""
+    for (x <- cardList) {
+      val score = getGroupScore(x)
+      if (score > max) {
+        max = score
+        group = x
+      }
+    }
+    (max,group)
   }
 
   /**
@@ -756,12 +758,18 @@ class GamePaijiu extends Game with PaijiuConstant {
     */
   def getGroupList(cards: List[Int]): List[String] = {
     var list: List[String] = List(
-      cards.head + "," + cards(1),
-      cards.head + "," + cards(2),
-      cards.head + "," + cards(3),
+      cards(0) + "," + cards(1),
+      cards(1) + "," + cards(0),
+      cards(0) + "," + cards(2),
+      cards(2) + "," + cards(0),
+      cards(0) + "," + cards(3),
+      cards(3) + "," + cards(0),
       cards(1) + "," + cards(2),
+      cards(2) + "," + cards(1),
       cards(1) + "," + cards(3),
-      cards(2) + "," + cards(3)
+      cards(3) + "," + cards(1),
+      cards(2) + "," + cards(3),
+      cards(3) + "," + cards(2)
     )
     list
   }

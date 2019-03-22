@@ -40,8 +40,9 @@ object Test {
   def testAdd()={
     var l1 = List(1)
     var l2 = List(2)
-    l1.+:(2)
-    l1++= l2
+//    l1.+:(2)
+//    l1++= l2
+     l1 = l1:::l2
 
     print(l1)
   }
@@ -161,7 +162,7 @@ object Test {
   def main(args: Array[String]): Unit = {
 //    test1()
 //    testSame()
-//    testAdd()
+    testAdd()
 //    testMap()
 //    testMuList
 //    testList
@@ -173,6 +174,6 @@ object Test {
 //    testslice
 //    testIn
 //    testFilter
-    testGetScore("17,19")
+//    testGetScore("17,19")
   }
 }

@@ -36,7 +36,7 @@ class GamePaijiuCrazy extends GamePaijiu{
       set = set.+("ghost")
     }
     if(!Room.isHasMode(MODE_ZHADAN,roomPaijiu.getOtherMode)) {
-      set = set.+("zhandan")
+      set = set.+("zhadan")
     }
 
     if(!Room.isHasMode(MODE_TIANJIU,roomPaijiu.getOtherMode)) {
