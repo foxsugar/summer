@@ -5,16 +5,19 @@ import java.lang.Long
 import com.code.server.constant.kafka.KafkaMsgKey
 import com.code.server.constant.response.ResponseVo
 import com.code.server.game.room.Room
+import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.IRobot
 import com.code.server.kafka.MsgProducer
 import com.code.server.redis.service.RedisManager
 import com.code.server.util.SpringUtil
+
 import scala.collection.JavaConverters._
+import scala.util.Random
 
 /**
   * Created by sunxianping on 2019-03-20.
   */
-class PaijiuRobot extends IRobot{
+class PaijiuRobot extends IRobot with PaijiuConstant{
   override def execute(): Unit = {}
 
 
@@ -42,10 +45,12 @@ class PaijiuRobot extends IRobot{
 
       if(roomPaijiu.getGame == null) return
 
-      var gamePaijiu = room.getGame.asInstanceOf[GamePaijiu]
+      val gamePaijiu = room.getGame.asInstanceOf[GamePaijiu]
 
       val now = System.currentTimeMillis()
 
+      //机器人下注
+      doRobotBet(roomPaijiu, gamePaijiu, now)
 
 
 
@@ -60,29 +65,73 @@ class PaijiuRobot extends IRobot{
     */
   def doRobotBet(room:RoomPaijiu, game:GamePaijiu, time:Long): Unit ={
     if(!game.isInstanceOf[GamePaijiu100]) return
+    if(game.state != STATE_BET) return
     val gamePaijiu = game.asInstanceOf[GamePaijiu100]
 
     //下注阶段5秒后机器人下注
-    if(time - gamePaijiu.lastOperateTime > 1000 * 5){
+    if(!gamePaijiu.isRobotBet && time - gamePaijiu.lastOperateTime > 1000 * 5){
       //没下注的机器人开始下注
       var count = 0
+      val winIndex = gamePaijiu.getMaxScoreCardIndex()
+      gamePaijiu.isRobotBet = true
+      val loseIndex = List(1,2,3).filter(_!=winIndex)
+      //下注选择
+      val betNum = List(5, 10, 50)
+
       for(userId <- room.robotList){
-
         val playerInfo = gamePaijiu.playerCardInfos(userId)
-
         //没下注
         if(playerInfo != null && playerInfo.bet == null){
 
-          if(count<room.robotWinner){
+          val one = Random.shuffle(betNum).head
+          val two = Random.shuffle(betNum).head
 
+          //下赢得注
+          if(count<room.robotWinner){
+            sendBet(playerInfo.userId, room.getRoomId, one, two, 0, winIndex)
+            count += 1
+          }else{//下输的注
+            val index = Random.shuffle(loseIndex).head
+            sendBet(playerInfo.userId, room.getRoomId, one, two, 0, index)
           }
         }
+      }
+    }
+  }
 
+
+  /**
+    * 自动开牌
+    * @param room
+    * @param game
+    * @param time
+    */
+  def doAutoOpen(room:RoomPaijiu, game:GamePaijiu, time:Long): Unit ={
+//    if(!game.isInstanceOf[GamePaijiu100]) return
+    if(game.state != STATE_OPEN) return
+
+    //10秒自动开牌
+    if(time - game.lastOperateTime <= 1000 * 10) return
+
+    for(playerInfo <- game.playerCardInfos.values){
+
+      if(playerInfo.cards.nonEmpty && playerInfo.group1==null) {
+
+        var group1 = ""
+        var group2 = ""
+        //是机器人的话
+        if(room.robotList.contains(playerInfo.userId)){
+
+          group1 = game.getCardsMaxScore(playerInfo.cards)._2
+        }else{//默认
+
+        }
       }
     }
 
 
   }
+
 
   /**
     * 获得所需的机器人
@@ -108,6 +157,33 @@ class PaijiuRobot extends IRobot{
   }
 
 
+  /**
+    * 下注
+    * @param userId
+    * @param roomId
+    * @param one
+    * @param two
+    * @param three
+    * @param index
+    */
+  private def sendBet(userId:Long,roomId:String,one:Int, two:Int, three:Int,index:Int): Unit ={
+
+
+    MsgSender.sendMsg2Player("gamePaijiuService", "bet", 0, userId)
+    val partition: Int = RedisManager.getRoomRedisService.getServerId(roomId).toInt
+    val msgKey: KafkaMsgKey = new KafkaMsgKey
+    msgKey.setRoomId(roomId)
+    msgKey.setPartition(partition)
+    msgKey.setUserId(userId)
+    val param = Map("one"->one, "two"->two, "three"->three,"index"->index)
+    val result: ResponseVo = new ResponseVo("gamePaijiuService", "bet", param.asJava)
+    SpringUtil.getBean(classOf[MsgProducer]).send2Partition("gamePaijiuService", partition, msgKey, result)
+  }
+  /**
+    * 发送加入房间
+    * @param userId
+    * @param roomId
+    */
   private def sendJoinRoom(userId:Long, roomId:String): Unit ={
 
       val partition: Int = RedisManager.getRoomRedisService.getServerId(roomId).toInt

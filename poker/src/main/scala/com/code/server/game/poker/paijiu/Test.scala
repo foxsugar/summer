@@ -70,7 +70,8 @@ object Test {
     val rand = Random
 //    rand.setSeed(rand.nextInt(100))
 //    rand.shuffle(list)
-    print( rand.shuffle(list))
+    print( rand.shuffle(list).head)
+    print(list)
     print( rand.shuffle(list))
 
   }
@@ -132,6 +133,23 @@ object Test {
   }
 
 
+  def testGetScore(group:String) = {
+    DataManager.initData("E:\\summer\\data\\static_data.json")
+    val d: StaticDataProto.DataManager = DataManager.data
+//    val dataStr = DataManager.data.getRoomDataMap.get(this.roomPaijiu.getGameType).getPaijiuDataName
+//    val dataMethodName = "get" + dataStr + "GroupDataMap"
+    val method = d.getClass.getDeclaredMethod("getLaotiePaijiuCardGroupDataMap")
+    val m = method.invoke(d)
+    val mp = m.asInstanceOf[java.util.Map[String,Object]]
+    val o = mp.get(group)
+    val nameMethod = o.getClass.getDeclaredMethod("getName")
+    val name = nameMethod.invoke(o)
+    print(name)
+    //    name.asInstanceOf[String]
+//    getGroupScoreByName(name.asInstanceOf[String])
+  }
+
+
 
   def testFilter():Unit = {
     var list = List(1,2,3)
@@ -143,7 +161,7 @@ object Test {
   def main(args: Array[String]): Unit = {
 //    test1()
 //    testSame()
-    testAdd()
+//    testAdd()
 //    testMap()
 //    testMuList
 //    testList
@@ -155,5 +173,6 @@ object Test {
 //    testslice
 //    testIn
 //    testFilter
+    testGetScore("17,19")
   }
 }

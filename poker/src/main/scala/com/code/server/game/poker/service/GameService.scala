@@ -412,6 +412,9 @@ object GameService {
     case "gameOver"=>
       game.gameOver()
 
+    case "prepareOpen"=>
+      game.prepareOpen(userId)
+
 
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR

@@ -315,15 +315,23 @@ public class GameYuxiaxie extends Game {
     public int gameOver() {
         this.state = STATE_OPEN;
         compute();
-
-
         sendResult();
         room.clearReadyStatus(true);
         sendFinalResult();
+        return 0;
+    }
 
-
-
-
+    public int prepareOpen(long userId){
+        if (this.state == STATE_BET) {
+//            long end = lastOperateTime + 60000;
+            long fix = lastOperateTime - 55000;
+            long now = System.currentTimeMillis();
+//            if (now < fix) {
+                this.lastOperateTime = fix;
+//            }
+        }
+        MsgSender.sendMsg2Player("gameService", "prepareOpen", 0,userId);
+        pushToAll("gameService", "pushOpen", 0);
         return 0;
     }
 

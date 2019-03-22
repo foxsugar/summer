@@ -42,7 +42,7 @@ public class RoomYuxiaxieRobot implements IRobot {
 
 
             if (gameYuxiaxie.getState() == GameYuxiaxie.STATE_CRAP) {
-                if (roomYuxiaxie.getGame().getLastOperateTime() + 10000 < now) {
+                if (roomYuxiaxie.getGame().getLastOperateTime() + 5000 < now) {
                     crap(gameYuxiaxie,room);
                 }
 

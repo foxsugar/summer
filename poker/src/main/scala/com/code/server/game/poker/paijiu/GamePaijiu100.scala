@@ -6,7 +6,7 @@ import scala.collection.JavaConverters._
 /**
   * Created by sunxianping on 2019-03-18.
   */
-class GamePaijiu100 extends GamePaijiu {
+class GamePaijiu100 extends GamePaijiuCrazy {
 
 
   override protected def initCards(): Unit = {
@@ -85,48 +85,6 @@ class GamePaijiu100 extends GamePaijiu {
   }
 
 
-  /**
-    * 获得牌型的最大分数
-    *
-    * @param cards
-    * @return
-    */
-  def getCardsMaxScore(cards: List[Int]): (Int,String) = {
 
-    if (cards.size == 2) {
-      val cardGroup = cards.head + "," + cards(1)
-      return (getGroupScore(cardGroup),cardGroup)
-    } else  {
-      var max = 0
-      var group = ""
-      for (x <- getGroupList(cards)) {
-        val score = getGroupScore(x)
-        if (score > max) {
-          max = score
-          group = x
-        }
-      }
-      return (max,group)
-    }
-
-  }
-
-  /**
-    * 获得牌型组合
-    *
-    * @param cards
-    * @return
-    */
-  def getGroupList(cards: List[Int]): List[String] = {
-    var list: List[String] = List(
-      cards(0) + "," + cards(1),
-      cards(0) + "," + cards(2),
-      cards(0) + "," + cards(3),
-      cards(1) + "," + cards(2),
-      cards(1) + "," + cards(3),
-      cards(2) + "," + cards(3)
-    )
-    list
-  }
 
 }

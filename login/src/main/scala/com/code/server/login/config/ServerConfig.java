@@ -81,7 +81,6 @@ public class ServerConfig {
 
     private String cftPayId = "";
     private String cftPayKey = "";
-    private String cftPayName = "";
 
     private int startRobot = 0;
 
@@ -415,12 +414,5 @@ public class ServerConfig {
         return this;
     }
 
-    public String getCftPayName() {
-        return cftPayName;
-    }
 
-    public ServerConfig setCftPayName(String cftPayName) {
-        this.cftPayName = cftPayName;
-        return this;
-    }
 }

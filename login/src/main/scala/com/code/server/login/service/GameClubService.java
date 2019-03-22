@@ -1765,6 +1765,9 @@ public class GameClubService {
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
         }
+        if (!club.getClubInfo().getMember().containsKey("" + partnerId)) {
+            return ErrorCode.CLUB_NO_USER;
+        }
         if (!club.getClubInfo().getPartner().contains(partnerId)) {
             club.getClubInfo().getPartner().add(partnerId);
         }

@@ -23,4 +23,12 @@ trait PaijiuConstant {
   val LOSE: Int = -1
   val DRAW:Int = 0
 
+
+  val MODE_GUIZI = 1
+  val MODE_ZHADAN = 2
+  val MODE_TIANJIU = 3
+  val MODE_DIJIU = 4
+
+  val CARDSCORE = Map(1->1)
+
 }

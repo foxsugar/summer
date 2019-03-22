@@ -39,6 +39,8 @@ class GamePaijiu extends Game with PaijiuConstant {
 
   var commonCards:Map[Int,List[Int]] = Map()
 
+  var isRobotBet:Boolean = false
+
 
 
   //  var room: RoomPaijiu = _
@@ -704,6 +706,65 @@ class GamePaijiu extends Game with PaijiuConstant {
     }
   }
 
+  /**
+    * 获得牌型的最大分数
+    *
+    * @param cards
+    * @return
+    */
+  def getCardsMaxScore(cards: List[Int]): (Int,String) = {
+
+    if (cards.size == 2) {
+      val cardGroup = cards.head + "," + cards(1)
+      return (getGroupScore(cardGroup),cardGroup)
+    } else  {
+      var max = 0
+      var group = ""
+      for (x <- getGroupList(cards)) {
+        val score = getGroupScore(x)
+        if (score > max) {
+          max = score
+          group = x
+        }
+      }
+      return (max,group)
+    }
+  }
+
+  /**
+    * 获得默认牌组
+    * @param cards
+    * @return
+    */
+  def getCardsDefaultGroup(cards:List[Int]):(String,String) = {
+    var g1 = ""
+    var g2 = ""
+    if(cards.size == 2){
+      g1 = cards.head + "," + cards(1)
+    }else{
+      g1 = cards.head + "," + cards(1)
+      g2 = cards(2) + "," + cards(3)
+    }
+    (g1, g2)
+  }
+
+  /**
+    * 获得牌型组合
+    *
+    * @param cards
+    * @return
+    */
+  def getGroupList(cards: List[Int]): List[String] = {
+    var list: List[String] = List(
+      cards.head + "," + cards(1),
+      cards.head + "," + cards(2),
+      cards.head + "," + cards(3),
+      cards(1) + "," + cards(2),
+      cards(1) + "," + cards(3),
+      cards(2) + "," + cards(3)
+    )
+    list
+  }
 
   override def toVo(watchUser: scala.Long): IfaceGameVo = {
     val gamePaijiuVo = new GamePaijiuVo

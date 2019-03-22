@@ -217,7 +217,7 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
 
     }
 
-    private boolean isHas4Hongzhong() {
+    protected boolean isHas4Hongzhong() {
         return this.cards.stream().filter(card -> CardTypeUtil.getTypeByCard(card) == 31).count() == 4;
     }
 
