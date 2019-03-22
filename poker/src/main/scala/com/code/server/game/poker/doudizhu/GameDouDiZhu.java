@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.code.server.game.poker.doudizhu.GamePaodekuai.mode_不洗牌;
+
 /**
  * Created by sunxianping on 2017/3/13.
  */
@@ -130,8 +132,7 @@ public class GameDouDiZhu extends Game {
     }
 
     protected boolean isNoShuffle(){
-
-        return isHasModel(1);
+        return isHasModel(mode_不洗牌);
     }
 
 
