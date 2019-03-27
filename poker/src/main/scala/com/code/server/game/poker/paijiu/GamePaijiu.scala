@@ -13,6 +13,7 @@ import com.code.server.redis.service.RedisManager
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
 
@@ -731,6 +732,24 @@ class GamePaijiu extends Game with PaijiuConstant {
       }
     }
     (max,group)
+  }
+
+
+
+  def getMaxOpenGroup(cards:List[Int]):(String,String) = {
+    val group1 = getCardsMaxScore(cards)._2
+    if(cards.size == 2) {
+      (group1, null)
+    }else{
+      val cl = group1.split(",")
+      var cs:ListBuffer[Int] = ListBuffer()
+      cs.++=(cards)
+      for(c<-cl){
+        cs -= c.toInt
+      }
+      val group2 = getCardsMaxScore(cs.toList)._2
+      (group1,group2)
+    }
   }
 
   /**

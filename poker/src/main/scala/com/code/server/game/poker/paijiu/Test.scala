@@ -6,7 +6,7 @@ import com.code.server.util.JsonUtil
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import scala.util.Random
 
 /**
@@ -159,10 +159,16 @@ object Test {
   }
 
 
+  def testListBuff():Unit = {
+    var list = ListBuffer(1,2,2,3)
+    list -= (2)
+    println(list)
+  }
+
   def main(args: Array[String]): Unit = {
 //    test1()
 //    testSame()
-    testAdd()
+//    testAdd()
 //    testMap()
 //    testMuList
 //    testList
@@ -175,5 +181,6 @@ object Test {
 //    testIn
 //    testFilter
 //    testGetScore("17,19")
+    testListBuff()
   }
 }

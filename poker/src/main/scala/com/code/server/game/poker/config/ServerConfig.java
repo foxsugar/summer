@@ -17,6 +17,7 @@ public class ServerConfig {
     private int dissloutionRoomMustAllAgree = 0;
     private int paijiuServiceMoney = 6;
     private int paijiuMinJoinMoney = 200;
+    private int addClubMoney = 0;
 
 
     public String getServerType() {
@@ -99,6 +100,15 @@ public class ServerConfig {
 
     public ServerConfig setPaijiuMinJoinMoney(int paijiuMinJoinMoney) {
         this.paijiuMinJoinMoney = paijiuMinJoinMoney;
+        return this;
+    }
+
+    public int getAddClubMoney() {
+        return addClubMoney;
+    }
+
+    public ServerConfig setAddClubMoney(int addClubMoney) {
+        this.addClubMoney = addClubMoney;
         return this;
     }
 }

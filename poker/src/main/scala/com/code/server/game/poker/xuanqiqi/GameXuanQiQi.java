@@ -1568,6 +1568,9 @@ public class GameXuanQiQi extends Game {
             if (xuanParam.getXuaned_LuoNum() < 5 && beixuanUser.winCards.size() >= 15 && xuanUser.winCards.size()<9) {
                 flag = true;
             }
+            if (xuanParam.getXuaned_LuoNum() < 6 && beixuanUser.winCards.size() >= 18 && xuanUser.winCards.size() < 9) {
+                flag = true;
+            }
         }
         return flag;
     }

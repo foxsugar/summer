@@ -364,6 +364,10 @@ public class RoomInfo extends RoomInfoExtendGold {
         return userOfResultList;
     }
 
+    protected boolean isAddClubMoney() {
+        return SpringUtil.getBean(ServerConfig.class).getAddClubMoney() == 1;
+    }
+
     public void dissolutionRoom() {
 
         //算杠

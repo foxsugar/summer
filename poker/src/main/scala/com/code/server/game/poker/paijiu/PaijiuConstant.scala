@@ -24,10 +24,13 @@ trait PaijiuConstant {
   val DRAW:Int = 0
 
 
-  val MODE_GUIZI = 1
-  val MODE_ZHADAN = 2
-  val MODE_TIANJIU = 3
-  val MODE_DIJIU = 4
+  val MODE_2CARD = 1
+  val MODE_GUIZI = 2
+  val MODE_ZHADAN = 3
+  val MODE_TIANJIU = 4
+  val MODE_DIJIU = 5
+
+  val MODE_WINNER_PAY = 10//大赢家付
 
   val CARDSCORE = Map(1->1)
 

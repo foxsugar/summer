@@ -1187,7 +1187,7 @@ public class GamePlaySeven extends Game{
             if(allScore<80){
                 temp=-1;
             }else{//大于80的情况
-                temp = -(allScore-40)/40 - 1;
+//                temp = -(allScore-40)/40 - 1;
             }
 
         }else{

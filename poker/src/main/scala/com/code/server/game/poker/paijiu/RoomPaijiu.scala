@@ -1,7 +1,7 @@
 package com.code.server.game.poker.paijiu
 
 import com.code.server.constant.game.{IGameConstant, RoomStatistics}
-import com.code.server.constant.response.{ErrorCode, IfaceRoomVo, ResponseVo, RoomPaijiuVo}
+import com.code.server.constant.response._
 import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.poker.service.PokerGoldRoom
 import com.code.server.game.room.Room
@@ -13,6 +13,8 @@ import com.code.server.util.{IdWorker, SpringUtil}
 import org.springframework.beans.BeanUtils
 
 import scala.beans.BeanProperty
+import scala.collection.mutable.ListBuffer
+import scala.collection.JavaConverters._
 
 /**
   * Created by sunxianping on 2017/7/24.
@@ -45,6 +47,12 @@ class RoomPaijiu extends PokerGoldRoom {
   var robotList:List[Long] = List()
   //上庄列表
   var bankerList:List[Long] = List()
+  var bankerScoreMap:Map[Long,Int] = Map()
+
+  //赢得索引
+  var winnerIndex:ListBuffer[GamePaijiuResult] = ListBuffer()
+  //三门获胜场次
+  var winnerCountMap:Map[Int,Int] = Map()
 
 
 
@@ -154,6 +162,7 @@ class RoomPaijiu extends PokerGoldRoom {
     this.roomStatisticsMap.remove(userId)
     //如果在上庄列表里 删掉
     this.bankerList = this.bankerList.filter(_!=userId)
+    this.bankerScoreMap = this.bankerScoreMap.filter(_!=userId)
     this.robotList = this.robotList.filter(_!=userId)
     removeUserRoomRedis(userId)
   }
@@ -164,6 +173,8 @@ class RoomPaijiu extends PokerGoldRoom {
     roomVo.setBankerInitScore(this.bankerInitScore)
     roomVo.setBankerScore(this.bankerScore)
     roomVo.setBankerId(this.bankerId)
+    roomVo.setWinnerIndex(this.winnerIndex.toList.asJava)
+    roomVo.setWinnerCountMap(this.winnerCountMap.asJava)
     roomVo
 
   }
@@ -208,9 +219,9 @@ class RoomPaijiu extends PokerGoldRoom {
 
 
 object RoomPaijiu extends Room {
-  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,clubId:String,clubRoomModel:String,isAA:Boolean): Int = {
+  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,clubId:String,clubRoomModel:String,isAA:Boolean,
+                robotType:Int, robotNum:Int, robotWinner:Int, isReOpen:Boolean, otherMode:Int, personNum:Int): Int = {
     val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
-    val serverCount = RedisManager.getGameRedisService.getAllServer.size()
     val roomPaijiu = new RoomPaijiu
     roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId(serverConfig.getServerId)))
     roomPaijiu.setRoomType(roomType)
@@ -218,10 +229,21 @@ object RoomPaijiu extends Room {
     roomPaijiu.setGameNumber(gameNumber)
     roomPaijiu.setBankerId(userId)
     roomPaijiu.setCreateUser(userId)
-    roomPaijiu.setPersonNumber(4)
+    roomPaijiu.setPersonNumber(personNum)
     roomPaijiu.setClubId(clubId)
     roomPaijiu.setClubRoomModel(clubRoomModel)
     roomPaijiu.setAA(isAA)
+
+    roomPaijiu.robotType = robotType
+    roomPaijiu.robotNum = robotNum
+    roomPaijiu.robotWinner = robotWinner
+    roomPaijiu.isReOpen = isReOpen
+    roomPaijiu.otherMode = otherMode
+    roomPaijiu.setRobotRoom(robotType!=0)
+
+
+
+
     roomPaijiu.init(gameNumber, 1)
     val code = roomPaijiu.joinRoom(userId, true)
     if (code != 0) return code

@@ -16,6 +16,7 @@ public class ServerConfig {
     private String dataFile;
     private String domain;
     private int dissloutionRoomMustAllAgree = 0;
+    private int addClubMoney = 0;
 
     public String getServerType() {
         return serverType;
@@ -88,6 +89,15 @@ public class ServerConfig {
 
     public ServerConfig setDissloutionRoomMustAllAgree(int dissloutionRoomMustAllAgree) {
         this.dissloutionRoomMustAllAgree = dissloutionRoomMustAllAgree;
+        return this;
+    }
+
+    public int getAddClubMoney() {
+        return addClubMoney;
+    }
+
+    public ServerConfig setAddClubMoney(int addClubMoney) {
+        this.addClubMoney = addClubMoney;
         return this;
     }
 }

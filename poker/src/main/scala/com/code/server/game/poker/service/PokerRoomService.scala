@@ -6,7 +6,7 @@ import com.code.server.game.poker.cow.RoomCow
 import com.code.server.game.poker.doudizhu.RoomDouDiZhu
 import com.code.server.game.poker.guess.RoomGuessCar
 import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower
-import com.code.server.game.poker.paijiu.{RoomGoldPaijiu, RoomPaijiu, RoomPaijiuAce}
+import com.code.server.game.poker.paijiu.{RoomGoldPaijiu, RoomPaijiu, RoomPaijiuAce, RoomPaijiuCrazy}
 import com.code.server.game.poker.playseven.RoomPlaySeven
 import com.code.server.game.poker.pullmice.RoomPullMice
 import com.code.server.game.poker.tiandakeng.RoomTDK
@@ -155,7 +155,24 @@ object PokerRoomService {
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
         val isAA = params.path("isAA").asBoolean(false)
-        return RoomPaijiu.createRoom(userId, roomType, gameType, gameNumber, clubId, clubRoomModel, isAA)
+        val personNum = params.path("personNumber").asInt(4)
+
+
+        //todo paijiu 新添参数
+        //机器人类型 0:没有 1:占位 2:玩牌
+        val robotType:Int = params.path("robotType").asInt()
+        //机器人数量
+        val robotNum:Int = params.path("robotNum").asInt()
+        //机器人赢得数量
+        val robotWinner:Int = params.path("robotWinner").asInt()
+        //是否重开
+        val isReOpen:Boolean = params.path("isReOpen").asBoolean(false)
+
+        val otherMode =  params.path("otherMode").asInt()
+
+
+        return RoomPaijiu.createRoom(userId, roomType, gameType, gameNumber, clubId, clubRoomModel, isAA,
+          robotType,robotNum, robotWinner, isReOpen, otherMode,personNum)
 
       case "createPaijiuGoldRoom" =>
         val roomType = params.path("roomType").asText()
@@ -177,6 +194,31 @@ object PokerRoomService {
         val isJoin = params.path("isJoin").asBoolean(true)
         return RoomPaijiuAce.createRoom(userId, roomType, gameType, gameNumber,isJoin,clubId,clubRoomModel, isAA)
 
+      case "createPaijiuCrazyRoom" =>
+        val roomType = params.path("roomType").asText()
+        val gameType = params.path("gameType").asText()
+        val gameNumber = params.path("gameNumber").asInt()
+        val clubId = params.path("clubId").asText
+        val clubRoomModel = params.path("clubRoomModel").asText
+        val isAA = params.path("isAA").asBoolean(false)
+        val personNum = params.path("personNumber").asInt(4)
+
+
+        //todo paijiu 新添参数
+        //机器人类型 0:没有 1:占位 2:玩牌
+        val robotType:Int = params.path("robotType").asInt()
+        //机器人数量
+        val robotNum:Int = params.path("robotNum").asInt()
+        //机器人赢得数量
+        val robotWinner:Int = params.path("robotWinner").asInt()
+        //是否重开
+        val isReOpen:Boolean = params.path("isReOpen").asBoolean(false)
+
+        val otherMode =  params.path("otherMode").asInt()
+
+
+        return RoomPaijiuCrazy.createRoom(userId, roomType, gameType, gameNumber, clubId, clubRoomModel, isAA,
+          robotType,robotNum, robotWinner, isReOpen, otherMode,personNum)
 
       case "createTTZRoom" =>
         val roomType = params.path("roomType").asText()
@@ -356,6 +398,15 @@ object PokerRoomService {
         MsgSender.sendMsg2Player("pokerRoomService", "getGoldRooms", result, userId)
         0
 
+
+      case "paijiuTobeBanker"=>
+        val roomId = params.get("roomId").asText()
+        val score =  params.get("score").asInt(0)
+        var roomPaijiu = RoomManager.getRoom(roomId)
+        val roomCrazy = roomPaijiu.asInstanceOf[RoomPaijiuCrazy]
+        roomCrazy.tobeBanker(userId, score)
+
+        0
 
       case _ =>
         return -1

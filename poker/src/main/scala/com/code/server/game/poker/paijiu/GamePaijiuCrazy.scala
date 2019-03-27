@@ -1,12 +1,19 @@
 package com.code.server.game.poker.paijiu
 
+import java.lang
+
 import com.code.server.constant.data.{DataManager, StaticDataProto}
+import com.code.server.constant.response.ErrorCode
 import com.code.server.game.room.Room
+import com.code.server.game.room.kafka.MsgSender
+import com.code.server.redis.service.RedisManager
 
 /**
   * Created by sunxianping on 2019-03-22.
   */
 class GamePaijiuCrazy extends GamePaijiu{
+
+
 
 
 
@@ -26,29 +33,6 @@ class GamePaijiuCrazy extends GamePaijiu{
     val score = scoreMethod.invoke(o)
     score.asInstanceOf[Int]
   }
-
-
-
-  def getNoGroupName(): Set[String] ={
-    val mode = this.roomPaijiu.getOtherMode
-    var set :Set[String] = Set()
-    if(!Room.isHasMode(MODE_GUIZI,roomPaijiu.getOtherMode)) {
-      set = set.+("ghost")
-    }
-    if(!Room.isHasMode(MODE_ZHADAN,roomPaijiu.getOtherMode)) {
-      set = set.+("zhadan")
-    }
-
-    if(!Room.isHasMode(MODE_TIANJIU,roomPaijiu.getOtherMode)) {
-      set = set.+("skynineking")
-    }
-
-    if(!Room.isHasMode(MODE_DIJIU,roomPaijiu.getOtherMode)) {
-      set = set.+("fieldnine")
-    }
-    set
-  }
-
 
 
   /**
@@ -74,5 +58,74 @@ class GamePaijiuCrazy extends GamePaijiu{
   }
 
 
+  def getNoGroupName(): Set[String] ={
+    var set :Set[String] = Set()
+    if(!Room.isHasMode(MODE_GUIZI,roomPaijiu.getOtherMode)) {
+      set = set.+("ghost")
+    }
+    if(!Room.isHasMode(MODE_ZHADAN,roomPaijiu.getOtherMode)) {
+      set = set.+("zhadan")
+    }
 
+    if(!Room.isHasMode(MODE_TIANJIU,roomPaijiu.getOtherMode)) {
+      set = set.+("skynineking")
+    }
+
+    if(!Room.isHasMode(MODE_DIJIU,roomPaijiu.getOtherMode)) {
+      set = set.+("fieldnine")
+    }
+    set
+  }
+
+
+
+
+
+  /**
+    * 牌局结束
+    */
+  override protected def gameOver(): Unit = {
+    compute()
+    sendResult()
+    genRecord()
+    //切庄开始
+    bankerBreakStart()
+    //如果到了条件 自动切庄
+
+
+    //大于10倍 小于20% 自动切庄
+
+    sendFinalResult()
+  }
+
+
+
+
+
+  /**
+    * 庄家切庄(牌局结束)
+    *
+    * @param userId
+    * @return
+    */
+  override def bankerBreak(userId: lang.Long, flag: Boolean): Int = {
+    if(state != STATE_BANKER_BREAK) return ErrorCode.NOT_BANKER
+    if (userId != bankerId) return ErrorCode.NOT_BANKER
+    if (flag) {
+      //换庄家
+      //把钱加到庄身上
+      RedisManager.getUserRedisService.addUserMoney(bankerId,this.roomPaijiu.bankerScore)
+      this.roomPaijiu.setBankerId(0)
+      this.roomPaijiu.bankerScore = 0
+      this.roomPaijiu.clearReadyStatus(true)
+      sendFinalResult()
+
+    } else {
+      this.roomPaijiu.clearReadyStatus(true)
+      this.roomPaijiu.startGame()
+    }
+
+    MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreak", 0, userId)
+    0
+  }
 }

@@ -128,6 +128,10 @@ public class RoomDouDiZhu extends Room {
         return roomVo;
     }
 
+    protected boolean isAddClubMoney() {
+        return SpringUtil.getBean(ServerConfig.class).getAddClubMoney() == 1;
+    }
+
 
     public boolean isUserLastGameCards() {
         return userLastGameCards;

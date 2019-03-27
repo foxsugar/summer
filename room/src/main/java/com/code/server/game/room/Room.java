@@ -849,6 +849,18 @@ public class Room implements IfaceRoom {
                 roomStatistics.failedTime += 1;
             }
         }
+        if (isAddClubMoney() && this.clubId!=null) {
+            RedisManager.getClubRedisService().addClubUserMoney(this.clubId, userId, score);
+        }
+
+    }
+
+    public void updateLastOperateTime() {
+        this.lastOperateTime = System.currentTimeMillis();
+    }
+
+    protected boolean isAddClubMoney() {
+        return false;
     }
 
     public boolean scoreIsChange() {

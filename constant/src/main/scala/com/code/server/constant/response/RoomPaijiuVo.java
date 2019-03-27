@@ -1,5 +1,10 @@
 package com.code.server.constant.response;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by sunxianping on 2017/8/17.
  */
@@ -7,6 +12,12 @@ public class RoomPaijiuVo extends RoomVo {
     //庄家设置的分
     public int bankerScore = 0;
     public int bankerInitScore = 0;
+
+
+    public List<GamePaijiuResult> winnerIndex = new ArrayList<>();
+
+    public Map winnerCountMap = new HashMap<>();
+
 
 
     public int getBankerScore() {
@@ -27,5 +38,21 @@ public class RoomPaijiuVo extends RoomVo {
         return this;
     }
 
+    public List<GamePaijiuResult> getWinnerIndex() {
+        return winnerIndex;
+    }
 
+    public RoomPaijiuVo setWinnerIndex(List<GamePaijiuResult> winnerIndex) {
+        this.winnerIndex = winnerIndex;
+        return this;
+    }
+
+    public Map getWinnerCountMap() {
+        return winnerCountMap;
+    }
+
+    public RoomPaijiuVo setWinnerCountMap(Map winnerCountMap) {
+        this.winnerCountMap = winnerCountMap;
+        return this;
+    }
 }

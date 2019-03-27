@@ -4,8 +4,8 @@ import java.lang.Long
 
 import com.code.server.constant.kafka.KafkaMsgKey
 import com.code.server.constant.response.ResponseVo
+import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.room.Room
-import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.IRobot
 import com.code.server.kafka.MsgProducer
 import com.code.server.redis.service.RedisManager
@@ -43,14 +43,23 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
         }
       }
 
+      val now = System.currentTimeMillis()
+
+      //开始游戏
+      doStartGame(roomPaijiu,now)
+
       if(roomPaijiu.getGame == null) return
+
 
       val gamePaijiu = room.getGame.asInstanceOf[GamePaijiu]
 
-      val now = System.currentTimeMillis()
-
       //机器人下注
       doRobotBet(roomPaijiu, gamePaijiu, now)
+
+      //开牌
+      doAutoOpen(roomPaijiu, gamePaijiu, now)
+
+      //自动切锅 或者继续
 
 
 
@@ -58,6 +67,35 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
     }
   }
 
+
+  /**
+    * 开始游戏
+    * @param room
+    * @param now
+    */
+  def doStartGame(room:RoomPaijiu, now:Long): Unit ={
+    if(room.getGame == null) {
+      room match {
+        case roomPaijiu100: RoomPaijiu100 =>{
+          //更新banker
+          roomPaijiu100.updateBanker()
+          //选定庄家后10秒开局
+          if((now - roomPaijiu100.getLastOperateTime) > 10000 && roomPaijiu100.getBankerId != 0){
+            sendStartGame(roomPaijiu100)
+          }
+        }
+      }
+    }
+  }
+
+  def doBreakBanker(room:RoomPaijiu, game:GamePaijiu, now :Long): Unit ={
+    if(game.state == STATE_BANKER_BREAK){
+      //10秒自动 继续
+      if(now - game.lastOperateTime > 1000 * 10){
+        sendBreakBanker(game.bankerId, room.getRoomId)
+      }
+    }
+  }
   /**
     * 机器人下注
     * @param room
@@ -84,7 +122,8 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
         if(playerInfo != null && playerInfo.bet == null){
 
           val one = Random.shuffle(betNum).head
-          val two = Random.shuffle(betNum).head
+          //只下一道
+          val two = 0
 
           //下赢得注
           if(count<room.robotWinner){
@@ -117,15 +156,10 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
 
       if(playerInfo.cards.nonEmpty && playerInfo.group1==null) {
 
-        var group1 = ""
-        var group2 = ""
-        //是机器人的话
-        if(room.robotList.contains(playerInfo.userId)){
+        val finalGroup = game.getMaxOpenGroup(playerInfo.cards)
 
-          group1 = game.getCardsMaxScore(playerInfo.cards)._2
-        }else{//默认
+        sendOpenMsg(playerInfo.userId, room.getRoomId, finalGroup._1, finalGroup._2)
 
-        }
       }
     }
 
@@ -167,9 +201,6 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
     * @param index
     */
   private def sendBet(userId:Long,roomId:String,one:Int, two:Int, three:Int,index:Int): Unit ={
-
-
-    MsgSender.sendMsg2Player("gamePaijiuService", "bet", 0, userId)
     val partition: Int = RedisManager.getRoomRedisService.getServerId(roomId).toInt
     val msgKey: KafkaMsgKey = new KafkaMsgKey
     msgKey.setRoomId(roomId)
@@ -196,4 +227,55 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
       SpringUtil.getBean(classOf[MsgProducer]).send2Partition("roomService", partition, msgKey, result)
     }
 
+
+  /**
+    * 发送开牌消息
+    * @param userId
+    * @param roomId
+    * @param group1
+    * @param group2
+    */
+  private def sendOpenMsg(userId:Long, roomId:String, group1:String, group2:String ): Unit ={
+    val partition: Int = RedisManager.getRoomRedisService.getServerId(roomId).toInt
+    val msgKey: KafkaMsgKey = new KafkaMsgKey
+    msgKey.setRoomId(roomId)
+    msgKey.setPartition(partition)
+    msgKey.setUserId(userId)
+    val param = Map("group1"->group1, "group2"->group2)
+    val result: ResponseVo = new ResponseVo("gamePaijiuService", "open", param.asJava)
+    SpringUtil.getBean(classOf[MsgProducer]).send2Partition("gamePaijiuService", partition, msgKey, result)
+  }
+
+
+  /**
+    * 发送开始游戏消息
+    * @param room
+    */
+  def sendStartGame(room: Room): Unit = {
+    val roomId: String = room.getRoomId
+    val partition: Int = SpringUtil.getBean(classOf[ServerConfig]).getServerId
+    val msgKey: KafkaMsgKey = new KafkaMsgKey
+    msgKey.setRoomId(roomId)
+    msgKey.setPartition(partition)
+    msgKey.setUserId(0)
+    val result: ResponseVo = new ResponseVo("roomService", "startAuto", Map().asJava)
+    SpringUtil.getBean(classOf[MsgProducer]).send2Partition("roomService", partition, msgKey, result)
+  }
+
+
+  /**
+    * 发送切庄
+    * @param userId
+    * @param roomId
+    */
+  def sendBreakBanker(userId:Long, roomId:String): Unit ={
+    val partition: Int = RedisManager.getRoomRedisService.getServerId(roomId).toInt
+    val msgKey: KafkaMsgKey = new KafkaMsgKey
+    msgKey.setRoomId(roomId)
+    msgKey.setPartition(partition)
+    msgKey.setUserId(userId)
+    val param = Map("flag"->false)
+    val result: ResponseVo = new ResponseVo("gamePaijiuService", "bankerBreak", param.asJava)
+    SpringUtil.getBean(classOf[MsgProducer]).send2Partition("gamePaijiuService", partition, msgKey, result)
+  }
 }

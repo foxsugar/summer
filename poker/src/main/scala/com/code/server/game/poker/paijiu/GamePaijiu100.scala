@@ -1,6 +1,11 @@
 package com.code.server.game.poker.paijiu
 
+import java.lang
+
+import com.code.server.constant.response.ErrorCode
 import com.code.server.game.room.kafka.MsgSender
+import com.code.server.redis.service.RedisManager
+
 import scala.collection.JavaConverters._
 
 /**
@@ -22,6 +27,28 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     }
 
   }
+
+
+
+  /**
+    * 牌局结束
+    */
+  override protected def gameOver(): Unit = {
+    compute()
+    sendResult()
+    genRecord()
+    //切庄开始
+    bankerBreakStart()
+    //如果到了条件 自动切庄
+
+
+    //大于10倍 小于20% 自动切庄
+    if(this.roomPaijiu.bankerScore > 10 * this.roomPaijiu.bankerInitScore || this.roomPaijiu.bankerScore < this.roomPaijiu.bankerInitScore * 20 /100){
+      bankerBreak(this.bankerId, true)
+    }
+
+  }
+
 
 
   /**
@@ -84,6 +111,36 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     index
   }
 
+
+
+  /**
+    * 庄家切庄(牌局结束)
+    *
+    * @param userId
+    * @return
+    */
+  override def bankerBreak(userId: lang.Long, flag: Boolean): Int = {
+    if (userId != bankerId) return ErrorCode.NOT_BANKER
+    if (flag) {
+      //换庄家
+      //把钱加到庄身上
+      RedisManager.getUserRedisService.addUserMoney(bankerId,this.roomPaijiu.bankerScore)
+      this.roomPaijiu.setBankerId(0)
+      this.roomPaijiu.bankerScore = 0
+      this.roomPaijiu.clearReadyStatus(true)
+
+      val room100 = roomPaijiu.asInstanceOf[RoomPaijiu100]
+      room100.updateBanker()
+
+      //百人不结束
+    } else {
+      this.roomPaijiu.clearReadyStatus(true)
+      this.roomPaijiu.startGame()
+    }
+
+    MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreak", 0, userId)
+    0
+  }
 
 
 
