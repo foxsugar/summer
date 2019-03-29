@@ -14,5 +14,6 @@ class RoomPaijiu100 extends RoomPaijiuCrazy{
     return 0
   }
 
+  override def isRoomOver: Boolean = false
 
 }

@@ -1,5 +1,6 @@
 package com.code.server.game.poker.paijiu
 
+
 import java.lang.Long
 
 import com.code.server.constant.kafka.KafkaMsgKey
@@ -36,10 +37,13 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
         val needRobotNum = roomPaijiu.robotNum - robotNum
         val needPeopleNum = roomPaijiu.getPersonNumber  - roomPaijiu.users.size()
         val needNum = if (needRobotNum<needPeopleNum) needRobotNum else needPeopleNum
-        val newRobotList = getRobotList(needNum)
-        for(robot <- newRobotList){
-          //发送加入房间
-          sendJoinRoom(robot, roomPaijiu.getRoomId)
+        if(needNum != 0){
+
+          val newRobotList = getRobotList(needNum)
+          for(robot <- newRobotList){
+            //发送加入房间
+            sendJoinRoom(robot, roomPaijiu.getRoomId)
+          }
         }
       }
 
@@ -75,16 +79,16 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
     */
   def doStartGame(room:RoomPaijiu, now:Long): Unit ={
     if(room.getGame == null) {
-      room match {
-        case roomPaijiu100: RoomPaijiu100 =>{
-          //更新banker
-          roomPaijiu100.updateBanker()
-          //选定庄家后10秒开局
-          if((now - roomPaijiu100.getLastOperateTime) > 10000 && roomPaijiu100.getBankerId != 0){
-            sendStartGame(roomPaijiu100)
-          }
+      if(room.isInstanceOf[RoomPaijiu100]){
+        val rp = room.asInstanceOf[RoomPaijiu100]
+        //更新banker
+        rp.updateBanker()
+        //选定庄家后10秒开局
+        if((now - rp.getLastOperateTime) > 10000 && rp.getBankerId != 0){
+          sendStartGame(rp)
         }
       }
+
     }
   }
 
@@ -176,17 +180,20 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
     val set:java.util.Set[String] =  RedisManager.getUserRedisService.getRobotPoolUser
     var robotList:List[Long] = List()
     var count = 0
-    for(userId <- set.asScala){
+    import scala.collection.JavaConversions._
+    for(userId <- set){
       val uid:Long = Long.parseLong(userId)
       val roomId = RedisManager.getUserRedisService.getRoomId(uid)
       if(roomId == null){
-        robotList = robotList.+:(uid)
         count+=1
         if(count>=num){
-          robotList
+          return robotList
         }
+        robotList = robotList.+:(uid)
       }
     }
+
+
     robotList
   }
 

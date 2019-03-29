@@ -36,19 +36,30 @@ class GamePaijiu100 extends GamePaijiuCrazy {
   override protected def gameOver(): Unit = {
     compute()
     sendResult()
-    genRecord()
+    //不记记录日志
+//    genRecord()
     //切庄开始
-    bankerBreakStart()
+    if(isAutoBreakBanker()) {
+      bankerBreak(this.bankerId, flag = true)
+    }else{
+      bankerBreakStart()
+    }
     //如果到了条件 自动切庄
 
 
     //大于10倍 小于20% 自动切庄
     if(this.roomPaijiu.bankerScore > 10 * this.roomPaijiu.bankerInitScore || this.roomPaijiu.bankerScore < this.roomPaijiu.bankerInitScore * 20 /100){
-      bankerBreak(this.bankerId, true)
+      bankerBreak(this.bankerId, flag = true)
     }
 
   }
 
+
+  override def isAutoBreakBanker():Boolean ={
+    //大于10倍 小于20% 自动切庄
+    this.roomPaijiu.bankerScore > 10 * this.roomPaijiu.bankerInitScore || this.roomPaijiu.bankerScore < this.roomPaijiu.bankerInitScore * 20 /100
+
+  }
 
 
   /**

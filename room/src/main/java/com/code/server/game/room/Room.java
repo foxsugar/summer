@@ -80,7 +80,7 @@ public class Room implements IfaceRoom {
 
     protected long lastOperateTime;
 
-    protected int otherMode;
+    public int otherMode;
 
     //托管状态
     protected Map<Long, Integer> autoPlayStatus = new HashMap<>();
@@ -384,6 +384,21 @@ public class Room implements IfaceRoom {
         }
     }
 
+    /**
+     * 得到最大分数的人
+     * @return
+     */
+    public long getMaxScoreUser(){
+        long userId = 0;
+        double score = 0;
+        for(Map.Entry<Long,Double> en : this.userScores.entrySet()){
+            if (en.getValue() > score) {
+                score = en.getValue();
+                userId = en.getKey();
+            }
+        }
+        return userId;
+    }
 
     protected boolean isCanJoinCheckMoney(long userId) {
         //代建房

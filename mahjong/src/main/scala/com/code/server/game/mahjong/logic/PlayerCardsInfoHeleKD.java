@@ -154,7 +154,7 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
 
         //显庄 并且 赢得人是庄家
         boolean isBankerWinMore = bankerIsZhuang && isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_显庄);
-        if(isBankerWinMore) maxPoint += 10;
+        if(isBankerWinMore &&(isZimo || !isBaoAll)) maxPoint += 10;
 
         if(isZimo) maxPoint *= 2;
 
@@ -195,6 +195,9 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
             if (this.gameInfo.getFirstTurn() == dianpaoUser && isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_显庄)) {
                 int temp = (this.gameInfo.getUsers().size() - 2) * 10;
                 allScore += temp;
+            }
+            if (isBankerWinMore && this.gameInfo.getFirstTurn() != dianpaoUser) {
+                allScore += 10;
             }
             dpUser.addScore(-allScore);
             this.roomInfo.addUserSocre(dpUser.getUserId(), -allScore);

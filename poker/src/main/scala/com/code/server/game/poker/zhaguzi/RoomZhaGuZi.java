@@ -67,7 +67,7 @@ public class RoomZhaGuZi extends Room{
 
     public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber,
                                  boolean isJoin, int multiple, String clubId,
-                                 String clubRoomModel, String isShowCard, int otherMode) throws DataNotFoundException {
+                                 String clubRoomModel, String isShowCard, int otherMode,boolean isAA) throws DataNotFoundException {
 
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         RoomZhaGuZi room = new RoomZhaGuZi();
@@ -82,6 +82,7 @@ public class RoomZhaGuZi extends Room{
         room.showCard = isShowCard;
         room.isRobotRoom = true;
         room.otherMode = otherMode;
+        room.isAA = isAA;
         room.setClubId(clubId);
 
         room.setClubRoomModel(clubRoomModel);

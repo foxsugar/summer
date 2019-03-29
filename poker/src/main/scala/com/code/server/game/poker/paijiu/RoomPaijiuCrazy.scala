@@ -36,16 +36,18 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant{
   }
 
 
-  /**
-    * 开房消费
-    * @return
-    */
-  override def getNeedMoney: Int = {
-    if(Room.isHasMode(MODE_WINNER_PAY, this.otherMode)) {
-      return 0
+
+  override def spendMoney(): Unit = {
+    //大赢家最后付钱
+    if(!isAA && Room.isHasMode(MODE_WINNER_PAY, this.otherMode)){
+
+    }else{
+      super.spendMoney()
     }
-    super.getNeedMoney
   }
+
+
+
 
   /**
     * 排队上庄

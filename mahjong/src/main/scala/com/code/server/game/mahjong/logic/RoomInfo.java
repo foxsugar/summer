@@ -237,7 +237,7 @@ public class RoomInfo extends RoomInfoExtendGold {
             case "LONGXIANGC":
             case "LONGXIANG2C":
                 return new GameInfoLongxiang().setAfterTingShowCard(true);
-            case "KXHY":
+            case "BEIJING":
                 return new GameInfoHasChi().setHasJieGangHu(true);
             default:
                 return new GameInfo();

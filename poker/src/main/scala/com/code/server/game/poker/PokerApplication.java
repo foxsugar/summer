@@ -6,6 +6,7 @@ import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.cow.CowRobot;
 import com.code.server.game.poker.doudizhu.DouDiZhuGoldRobot;
 import com.code.server.game.poker.hitgoldflower.HitGoldFlowerRobot;
+import com.code.server.game.poker.paijiu.PaijiuRobot;
 import com.code.server.game.poker.playseven.SevenRobot;
 import com.code.server.game.poker.robot.RobotManager;
 import com.code.server.game.poker.tuitongzi.TTZRobot;
@@ -49,6 +50,7 @@ public class PokerApplication {
 		robotManager.addRobot(new SevenRobot());
 		robotManager.addRobot(new HitGoldFlowerRobot());
 		robotManager.addRobot(new RoomYuxiaxieRobot());
+		robotManager.addRobot(new PaijiuRobot());
 		ThreadPool.getInstance().executor.execute(robotManager);
 
 //		MsgConsumer.startAConsumer("gameService", serverConfig.getServerId(), MsgDispatch::dispatch);

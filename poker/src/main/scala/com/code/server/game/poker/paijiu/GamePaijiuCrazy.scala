@@ -89,18 +89,60 @@ class GamePaijiuCrazy extends GamePaijiu{
     sendResult()
     genRecord()
     //切庄开始
-    bankerBreakStart()
+
+    if(isAutoBreakBanker()) {
+      bankerBreak(this.bankerId, true)
+    }else{
+      bankerBreakStart()
+    }
     //如果到了条件 自动切庄
 
 
-    //大于10倍 小于20% 自动切庄
 
-    sendFinalResult()
+    //大于10倍 小于20% 自动切庄
+  }
+
+
+  /**
+    * 最终结算版
+    */
+  override protected def sendFinalResult(): Unit ={
+
+   super.sendFinalResult()
+
+    //大赢家付房费
+    if(this.roomPaijiu.isRoomOver ) {
+
+      if(Room.isHasMode(MODE_WINNER_PAY, this.roomPaijiu.getOtherMode)) {
+        //找到大赢家
+        val winner = this.roomPaijiu.getMaxScoreUser
+        //付房费
+        RedisManager.getUserRedisService.addUserMoney(winner, -this.roomPaijiu.getNeedMoney)
+      }
+      //重开一个一样的房间
+      if(this.roomPaijiu.isReOpen) {
+        doCreateNewRoom(this.roomPaijiu)
+      }
+    }
+
+
+  }
+
+  /**
+    * 发送建房请求
+    * @param room
+    */
+  def doCreateNewRoom(room:RoomPaijiu): Unit ={
+    RoomPaijiuCrazy.createRoom(0,room.getRoomType, room.getGameType, room.getGameNumber, room.getClubId, room.getClubRoomModel,
+      room.isAA,room.robotType, room.robotNum, room.robotWinner,room.isReOpen, room.getOtherMode, room.getPersonNumber)
   }
 
 
 
-
+  def isAutoBreakBanker():Boolean ={
+    //大于10倍 小于20% 自动切庄
+    return false
+  }
 
   /**
     * 庄家切庄(牌局结束)
