@@ -5,6 +5,7 @@ import com.code.server.constant.response.PlayerCardInfoPaijiuVo
 import com.code.server.util.JsonUtil
 
 import scala.collection.JavaConverters._
+import scala.collection.JavaConversions._
 import scala.collection.mutable
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import scala.util.Random
@@ -165,6 +166,15 @@ object Test {
     println(list)
   }
 
+  def testFor(): Unit ={
+    var set = new java.util.HashSet[Integer]()
+    set.add(1)
+    set.add(2)
+    for(s <- set){
+      println(s)
+    }
+  }
+
   def main(args: Array[String]): Unit = {
 //    test1()
 //    testSame()
@@ -181,6 +191,7 @@ object Test {
 //    testIn
 //    testFilter
 //    testGetScore("17,19")
-    testListBuff()
+//    testListBuff()
+    testFor()
   }
 }
