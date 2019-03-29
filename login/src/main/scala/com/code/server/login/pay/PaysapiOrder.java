@@ -309,16 +309,16 @@ public class PaysapiOrder {
     }
 
     @RequestMapping("/returnPay")
-    public ModelAndView returnPay(HttpServletRequest request, HttpServletResponse response, String orderid) {
+    public String returnPay(HttpServletRequest request, HttpServletResponse response, String orderid) {
         boolean isTrue = false;
         ModelAndView view = null;
-        // 根据订单号查找相应的记录:根据结果跳转到不同的页面
-        if (isTrue) {
-            view = new ModelAndView("");
-        } else {
-            view = new ModelAndView("/success.html");
-        }
-        return view;
+//        // 根据订单号查找相应的记录:根据结果跳转到不同的页面
+//        if (isTrue) {
+//            view = new ModelAndView("");
+//        } else {
+//            view = new ModelAndView("/success.html");
+//        }
+        return "支付成功";
     }
 
 
