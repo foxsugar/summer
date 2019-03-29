@@ -6,6 +6,7 @@ import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
 import com.code.server.redis.service.RedisManager
+import com.code.server.util.timer.GameTimer
 import com.code.server.util.{IdWorker, SpringUtil}
 
 import scala.collection.JavaConverters._
@@ -13,7 +14,7 @@ import scala.collection.JavaConverters._
 /**
   * Created by sunxianping on 2019-03-25.
   */
-class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant{
+class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
 
   override def roomRemoveUser(userId: Long): Unit = {
@@ -36,17 +37,34 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant{
   }
 
 
+  override def startGame(): Unit = {
+    //do nothing
+
+    MsgSender.sendMsg2Player(new ResponseVo("gameService", "gamePaijiuBegin", "ok"), this.getUsers)
+    //开始游戏
+    val game = getGameInstance
+    this.game = game
+    game.startGame(users, this)
+
+    //游戏开始 代建房 去除定时解散
+    if (!isOpen && !this.isCreaterJoin) GameTimer.removeNode(prepareRoomTimerNode)
+
+    //扣钱
+    if (!isOpen && isCreaterJoin) spendMoney()
+    this.isInGame = true
+    this.isOpen = true
+    pushScoreChange()
+
+  }
 
   override def spendMoney(): Unit = {
     //大赢家最后付钱
-    if(!isAA && Room.isHasMode(MODE_WINNER_PAY, this.otherMode)){
+    if (!isAA && Room.isHasMode(MODE_WINNER_PAY, this.otherMode)) {
 
-    }else{
+    } else {
       super.spendMoney()
     }
   }
-
-
 
 
   /**
@@ -74,6 +92,8 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant{
 
     //更新庄家
     updateBanker()
+
+    MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "paijiuTobeBanker", 0), userId)
     0
   }
 
@@ -102,15 +122,18 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant{
   }
 
 
-
 }
 
 
-object RoomPaijiuCrazy extends Room {
-  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,clubId:String,clubRoomModel:String,isAA:Boolean,
-                 robotType:Int, robotNum:Int, robotWinner:Int, isReOpen:Boolean, otherMode:Int, personNum:Int): Int = {
+object RoomPaijiuCrazy extends Room with PaijiuConstant {
+
+  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int, clubId: String, clubRoomModel: String, isAA: Boolean,
+                 robotType: Int, robotNum: Int, robotWinner: Int, isReOpen: Boolean, otherMode: Int, personNum: Int): Int = {
     val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
-    val roomPaijiu = new RoomPaijiuCrazy
+    var roomPaijiu = new RoomPaijiuCrazy
+    if (Room.isHasMode(MODE_100, otherMode)) {
+      roomPaijiu = new RoomPaijiu100
+    }
     roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId(serverConfig.getServerId)))
     roomPaijiu.setRoomType(roomType)
     roomPaijiu.setGameType(gameType)
@@ -127,7 +150,7 @@ object RoomPaijiuCrazy extends Room {
     roomPaijiu.robotWinner = robotWinner
     roomPaijiu.isReOpen = isReOpen
     roomPaijiu.otherMode = otherMode
-    roomPaijiu.setRobotRoom(robotType!=0)
+    roomPaijiu.setRobotRoom(robotType != 0)
 
     roomPaijiu.init(gameNumber, 1)
     val code = roomPaijiu.joinRoom(userId, true)

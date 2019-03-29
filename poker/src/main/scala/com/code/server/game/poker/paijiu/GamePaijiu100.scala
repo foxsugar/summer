@@ -44,14 +44,6 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     }else{
       bankerBreakStart()
     }
-    //如果到了条件 自动切庄
-
-
-    //大于10倍 小于20% 自动切庄
-    if(this.roomPaijiu.bankerScore > 10 * this.roomPaijiu.bankerInitScore || this.roomPaijiu.bankerScore < this.roomPaijiu.bankerInitScore * 20 /100){
-      bankerBreak(this.bankerId, flag = true)
-    }
-
   }
 
 

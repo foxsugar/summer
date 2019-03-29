@@ -554,7 +554,7 @@ class GamePaijiu extends Game with PaijiuConstant {
   /**
     * 转换为开牌状态
     */
-  protected def openStart(): Unit = {
+  def openStart(): Unit = {
     //发牌
     deal()
     state = STATE_OPEN
@@ -648,6 +648,8 @@ class GamePaijiu extends Game with PaijiuConstant {
     MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreak", 0, userId)
     0
   }
+
+
 
 
   /**

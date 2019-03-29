@@ -30,22 +30,8 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
 
     //机器人加入的逻辑
     //机器人可加入 并且 game为空时 机器人加入
-    if(roomPaijiu.robotType !=0 && roomPaijiu.getGame == null) {
-      val robotNum = roomPaijiu.robotList.size
-      //小于所需机器人数量
-      if(robotNum<roomPaijiu.robotNum) {
-        val needRobotNum = roomPaijiu.robotNum - robotNum
-        val needPeopleNum = roomPaijiu.getPersonNumber  - roomPaijiu.users.size()
-        val needNum = if (needRobotNum<needPeopleNum) needRobotNum else needPeopleNum
-        if(needNum != 0){
 
-          val newRobotList = getRobotList(needNum)
-          for(robot <- newRobotList){
-            //发送加入房间
-            sendJoinRoom(robot, roomPaijiu.getRoomId)
-          }
-        }
-      }
+      doAddRobot(roomPaijiu)
 
       val now = System.currentTimeMillis()
 
@@ -59,6 +45,13 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
 
       //机器人下注
       doRobotBet(roomPaijiu, gamePaijiu, now)
+      //百人牌九 15秒自动发牌
+
+      //四人牌九强制下注
+      doForceBet(roomPaijiu, gamePaijiu, now)
+      //规定时间下注
+
+      doAutoDealCard(roomPaijiu, gamePaijiu, now)
 
       //开牌
       doAutoOpen(roomPaijiu, gamePaijiu, now)
@@ -68,9 +61,31 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
 
 
 
-    }
+
   }
 
+  /**
+    * 添加机器人
+    * @param roomPaijiu
+    */
+  def doAddRobot(roomPaijiu :RoomPaijiu): Unit ={
+    if(roomPaijiu.robotType !=0 && roomPaijiu.getGame == null) {
+      val robotNum = roomPaijiu.robotList.size
+      //小于所需机器人数量
+      if (robotNum < roomPaijiu.robotNum) {
+        val needRobotNum = roomPaijiu.robotNum - robotNum
+        val needPeopleNum = roomPaijiu.getPersonNumber - roomPaijiu.users.size()
+        val needNum = if (needRobotNum < needPeopleNum) needRobotNum else needPeopleNum
+        if (needNum != 0) {
+          val newRobotList = getRobotList(needNum)
+          for (robot <- newRobotList) {
+            //发送加入房间
+            sendJoinRoom(robot, roomPaijiu.getRoomId)
+          }
+        }
+      }
+    }
+  }
 
   /**
     * 开始游戏
@@ -80,6 +95,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
   def doStartGame(room:RoomPaijiu, now:Long): Unit ={
     if(room.getGame == null) {
       if(room.isInstanceOf[RoomPaijiu100]){
+        println("托管: 开始游戏")
         val rp = room.asInstanceOf[RoomPaijiu100]
         //更新banker
         rp.updateBanker()
@@ -92,10 +108,17 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
     }
   }
 
+  /**
+    * 切庄
+    * @param room
+    * @param game
+    * @param now
+    */
   def doBreakBanker(room:RoomPaijiu, game:GamePaijiu, now :Long): Unit ={
     if(game.state == STATE_BANKER_BREAK){
       //10秒自动 继续
       if(now - game.lastOperateTime > 1000 * 10){
+        println("托管: 切庄")
         sendBreakBanker(game.bankerId, room.getRoomId)
       }
     }
@@ -112,13 +135,14 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
 
     //下注阶段5秒后机器人下注
     if(!gamePaijiu.isRobotBet && time - gamePaijiu.lastOperateTime > 1000 * 5){
+      println("托管: 下注")
       //没下注的机器人开始下注
       var count = 0
       val winIndex = gamePaijiu.getMaxScoreCardIndex()
       gamePaijiu.isRobotBet = true
       val loseIndex = List(1,2,3).filter(_!=winIndex)
       //下注选择
-      val betNum = List(5, 10, 50)
+      val betNum = List(1, 5, 10, 50)
 
       for(userId <- room.robotList){
         val playerInfo = gamePaijiu.playerCardInfos(userId)
@@ -142,6 +166,37 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
     }
   }
 
+  /**
+    * 强制下注
+    * @param room
+    * @param game
+    * @param time
+    */
+  def doForceBet(room:RoomPaijiu, game:GamePaijiu, time:Long): Unit ={
+    if(game.isInstanceOf[GamePaijiu100]) return
+    if(game.state != STATE_BET) return
+
+    if(time - game.lastOperateTime < 1000 * 20) return
+
+    for(playerInfo <- game.playerCardInfos.values){
+
+      if(playerInfo.bet == null){
+        //默认下10
+        sendBet(playerInfo.userId, room.getRoomId, 10, 0, 0, 0)
+      }
+    }
+  }
+
+  def doAutoDealCard(room:RoomPaijiu, game:GamePaijiu, time:Long): Unit ={
+    if(!game.isInstanceOf[GamePaijiu100]) return
+    if(game.state != STATE_BET) return
+    if(time - game.lastOperateTime < 1000 * 15) return
+    println("托管: 自动发牌")
+
+    sendOpenStart(game.bankerId, room.getRoomId)
+
+  }
+
 
   /**
     * 自动开牌
@@ -155,6 +210,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
 
     //10秒自动开牌
     if(time - game.lastOperateTime <= 1000 * 10) return
+    println("托管: 自动开牌")
 
     for(playerInfo <- game.playerCardInfos.values){
 
@@ -192,8 +248,6 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
         robotList = robotList.+:(uid)
       }
     }
-
-
     robotList
   }
 
@@ -283,6 +337,23 @@ class PaijiuRobot extends IRobot with PaijiuConstant{
     msgKey.setUserId(userId)
     val param = Map("flag"->false)
     val result: ResponseVo = new ResponseVo("gamePaijiuService", "bankerBreak", param.asJava)
+    SpringUtil.getBean(classOf[MsgProducer]).send2Partition("gamePaijiuService", partition, msgKey, result)
+  }
+
+
+  /**
+    * 发送open
+    * @param userId
+    * @param roomId
+    */
+  def sendOpenStart(userId:Long, roomId:String): Unit ={
+    val partition: Int = RedisManager.getRoomRedisService.getServerId(roomId).toInt
+    val msgKey: KafkaMsgKey = new KafkaMsgKey
+    msgKey.setRoomId(roomId)
+    msgKey.setPartition(partition)
+    msgKey.setUserId(userId)
+    val param = Map("userId"->userId)
+    val result: ResponseVo = new ResponseVo("gamePaijiuService", "autoOpenStart", param.asJava)
     SpringUtil.getBean(classOf[MsgProducer]).send2Partition("gamePaijiuService", partition, msgKey, result)
   }
 }

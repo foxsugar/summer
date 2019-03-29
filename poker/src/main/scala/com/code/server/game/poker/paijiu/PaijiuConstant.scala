@@ -24,14 +24,50 @@ trait PaijiuConstant {
   val DRAW:Int = 0
 
 
-  val MODE_2CARD = 1
-  val MODE_GUIZI = 2
-  val MODE_ZHADAN = 3
-  val MODE_TIANJIU = 4
-  val MODE_DIJIU = 5
+  val MODE_100 = 1//百人
+  val MODE_2CARD = 2//两张牌
+  val MODE_BET_3 = 3//三道
+  val MODE_WINNER_PAY = 4//大赢家付
 
-  val MODE_WINNER_PAY = 10//大赢家付
+  val MODE_GUIZI = 10
+  val MODE_ZHADAN = 11
+  val MODE_TIANJIU = 12
+  val MODE_DIJIU = 13
 
-  val CARDSCORE = Map(1->1)
+
+  val CARDSCORE = Map(
+    1->12,
+    2->12,
+    3->2,
+    4->2,
+    5->8,
+    6->8,
+    7->4,
+    8->4,
+    9->10,
+    10->10,
+    11->6,
+    12->6,
+    13->4,
+    14->4,
+    15->11,
+    16->11,
+    17->10,
+    18->10,
+    19->7,
+    20->7,
+    21->6,
+    22->6,
+    23->9,
+    24->9,
+    25->8,
+    26->8,
+    27->7,
+    28->7,
+    29->5,
+    30->5,
+    31->6,
+    32->3
+  )
 
 }

@@ -78,7 +78,20 @@ class GamePaijiuCrazy extends GamePaijiu{
   }
 
 
+  /**
+    * 转换为开牌状态
+    */
+  override def openStart(): Unit = {
+    //发牌
+    deal()
+    state = STATE_OPEN
+    updateLastOperateTime()
+    //推送开始下注
+    MsgSender.sendMsg2Player("gamePaijiuService", "openStart", this.bankerId, users)
 
+    //自动摇色子
+    crap(this.bankerId)
+  }
 
 
   /**

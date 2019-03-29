@@ -148,7 +148,7 @@ class RoomPaijiu extends PokerGoldRoom {
     //代开房
     if (!isCreaterJoin ||isClubRoom) this.bankerId = users.get(0)
     //如果是机器人
-    if(RedisManager.getUserRedisService.getUserBean(userId).getRobot == 1) {
+    if(RedisManager.getUserRedisService.getUserBean(userId).getVip == 1) {
       this.robotList = this.robotList.+:(userId)
     }
     addUser2RoomRedis(userId)
