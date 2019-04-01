@@ -123,6 +123,9 @@ public class PlayerCardsInfoTDH extends PlayerCardsInfoMj {
 		if(!this.roomInfo.isCanChi()){
 			return false;
 		}
+		if (this.isTing) {
+			return false;
+		}
 		return super.isHasChi(card);
 //		return false;
 	}
