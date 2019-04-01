@@ -83,6 +83,12 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
   }
 
 
+  def getBetNum(): Int ={
+    if(bet != null) {
+      return bet.one + bet.two + bet.three
+    }
+    0
+  }
 
 
   override def toVo(watchUser: Long): IfacePlayerInfoVo = {

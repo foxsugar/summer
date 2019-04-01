@@ -2,6 +2,7 @@ package com.code.server.game.poker.paijiu
 
 import java.util
 
+import com.code.server.constant.game.IGameConstant
 import com.code.server.constant.response.{ErrorCode, ResponseVo}
 import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.room.Room
@@ -60,7 +61,13 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
   }
 
+
+
   override def spendMoney(): Unit = {
+    if(this.game != null) {
+      val gamePaijiu:GamePaijiuCrazy = this.game.asInstanceOf[GamePaijiuCrazy]
+      createNeedMoney = gamePaijiu.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[Integer]
+    }
     //大赢家最后付钱
     if (!isAA && Room.isHasMode(MODE_WINNER_PAY, this.otherMode)) {
 
@@ -144,6 +151,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
     }
   }
+
 
 
 }

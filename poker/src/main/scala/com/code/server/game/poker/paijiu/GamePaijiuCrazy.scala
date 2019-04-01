@@ -3,6 +3,7 @@ package com.code.server.game.poker.paijiu
 import java.{lang, util}
 
 import com.code.server.constant.data.{DataManager, StaticDataProto}
+import com.code.server.constant.game.IGameConstant
 import com.code.server.constant.kafka.{IKafaTopic, IkafkaMsgId, KafkaMsgKey}
 import com.code.server.constant.response.ErrorCode
 import com.code.server.game.room.Room
@@ -10,6 +11,7 @@ import com.code.server.game.room.kafka.MsgSender
 import com.code.server.kafka.MsgProducer
 import com.code.server.redis.service.RedisManager
 import com.code.server.util.SpringUtil
+
 import scala.collection.JavaConverters._
 /**
   * Created by sunxianping on 2019-03-22.
@@ -196,8 +198,9 @@ class GamePaijiuCrazy extends GamePaijiu{
       if(Room.isHasMode(MODE_WINNER_PAY, this.roomPaijiu.getOtherMode)) {
         //找到大赢家
         val winner = this.roomPaijiu.getMaxScoreUser
+        val money = this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[Integer]
         //付房费
-        RedisManager.getUserRedisService.addUserMoney(winner, -this.roomPaijiu.getNeedMoney)
+        RedisManager.getUserRedisService.addUserMoney(winner, -money)
       }
       //重开一个一样的房间
       if(this.roomPaijiu.isReOpen) {

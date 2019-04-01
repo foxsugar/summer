@@ -9,6 +9,8 @@ import com.code.server.util.SpringUtil;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.code.server.constant.game.IGameConstant.*;
+
 /**
  * Created by sunxianping on 2017/6/19.
  */
@@ -41,11 +43,11 @@ public class ServerManager {
             constant.getOther().setRebateData(new HashMap<>());
         }
 
-        data.put("bet", constant.getOther().getRebateData().getOrDefault("bet",5));
-        data.put("rebate100", constant.getOther().getRebateData().getOrDefault("bet",2.5));
-        data.put("rebate4", constant.getOther().getRebateData().getOrDefault("bet",2));
-        data.put("pay_one", constant.getOther().getRebateData().getOrDefault("bet",10));
-        data.put("pay_aa", constant.getOther().getRebateData().getOrDefault("bet",3));
+        data.put(PAIJIU_BET, constant.getOther().getRebateData().getOrDefault("bet",5));
+        data.put(PAIJIU_REBATE100, constant.getOther().getRebateData().getOrDefault("bet",2.5));
+        data.put(PAIJIU_REBATE4, constant.getOther().getRebateData().getOrDefault("bet",2));
+        data.put(PAIJIU_PAY_ONE, constant.getOther().getRebateData().getOrDefault("bet",10));
+        data.put(PAIJIU_PAY_AA, constant.getOther().getRebateData().getOrDefault("bet",3));
 
         RedisManager.getConstantRedisService().updateConstant(data);
     }

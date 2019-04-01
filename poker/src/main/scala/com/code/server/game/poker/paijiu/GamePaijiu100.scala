@@ -2,6 +2,7 @@ package com.code.server.game.poker.paijiu
 
 import java.{lang, util}
 
+import com.code.server.constant.game.IGameConstant
 import com.code.server.constant.response.ErrorCode
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
@@ -48,6 +49,8 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     bankerId = roomPaijiu.getBankerId
     //下注阶段开始
     betStart()
+
+    val money = this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[Integer]
   }
 
 
@@ -83,6 +86,50 @@ class GamePaijiu100 extends GamePaijiuCrazy {
         bankerBreakStart()
       }
     }
+  }
+
+  /**
+    * 下注
+    *
+    * @param userId
+    * @param one
+    * @param two
+    * @return
+    */
+  def bet(userId: Long, one: Int, two: Int,three : Int, index:Int): Int = {
+    val playerInfo_option = playerCardInfos.get(userId)
+    //玩家不存在
+    if (playerInfo_option.isEmpty) return ErrorCode.NO_USER
+    val playerCardInfoPaijiu = playerInfo_option.get
+    //已经下过注
+    if (playerCardInfoPaijiu.bet != null) return ErrorCode.ALREADY_BET
+    //下注不合法
+
+    val bet = new Bet(one, two,three,index)
+    if (!checkBet(bet)) return ErrorCode.BET_PARAM_ERROR
+    //总下注 不能大于锅底
+    var betNum:Int = 0
+    for(playerInfo <- this.playerCardInfos.values){
+      betNum += playerInfo.getBetNum()
+    }
+    if(betNum + one + two + three > this.roomPaijiu.bankerScore) {
+      return ErrorCode.BET_PARAM_LIMIT
+    }
+
+    playerCardInfoPaijiu.bet = bet
+
+
+    val result = Map("userId" -> userId, "bet" -> bet)
+    MsgSender.sendMsg2Player("gamePaijiuService", "betResult", result.asJava, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "bet", 0, userId)
+
+    //除去庄家全都下完注
+    val count = playerCardInfos.count { case (uid, playerInfo) => uid != bankerId && playerInfo.bet != null }
+    val isAllBet = count == users.size() - 1
+    if (isAllBet) {
+      crapStart()
+    }
+    0
   }
 
 

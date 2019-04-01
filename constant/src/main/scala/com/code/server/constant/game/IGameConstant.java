@@ -62,4 +62,12 @@ public interface IGameConstant extends IkafkaMsgId{
 
 
     int CLUB_MODE_USER_PAY = 1;
+
+    String PAIJIU_BET = "bet";
+    String PAIJIU_REBATE100 = "rebate100";
+    String PAIJIU_REBATE4 = "rebate4";
+    String PAIJIU_PAY_ONE = "pay_one";
+    String PAIJIU_PAY_AA = "pay_aa";
+
+
 }
