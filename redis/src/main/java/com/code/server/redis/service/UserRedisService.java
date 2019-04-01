@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConstant,IUser_Token {
 
 
-    private static final String USERBEAN = "userBean|";
 
     @Autowired
     private RedisTemplate redisTemplate;

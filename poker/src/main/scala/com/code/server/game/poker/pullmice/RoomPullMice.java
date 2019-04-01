@@ -106,7 +106,8 @@ public class RoomPullMice extends PokerGoldRoom {
         return roomVo;
     }
 
-    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, boolean hasWubuFeng, String clubId, String clubRoomModel) throws DataNotFoundException {
+    public static int createRoom(long userId, String roomType,String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple,
+                                 boolean hasWubuFeng, String clubId, String clubRoomModel,int clubMode) throws DataNotFoundException {
 
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
@@ -122,6 +123,7 @@ public class RoomPullMice extends PokerGoldRoom {
         room.setCanWuBuFeng(hasWubuFeng);
         room.setClubId(clubId);
         room.setClubRoomModel(clubRoomModel);
+        room.setClubMode(clubMode);
         room.init(gameNumber, multiple);
 
 

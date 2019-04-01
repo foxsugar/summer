@@ -59,4 +59,7 @@ public interface IGameConstant extends IkafkaMsgId{
     int STEP_CHUPAI = 11;//出牌
     int STEP_GET_CARD_UNFINISH = 12;//未发完牌
     int CHANGE_TABLE_CARDS_NOW = 13;//正在换底牌
+
+
+    int CLUB_MODE_USER_PAY = 1;
 }

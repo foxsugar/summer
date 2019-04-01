@@ -71,6 +71,7 @@ public class Room implements IfaceRoom {
 
     protected String clubId;
     protected String clubRoomModel;
+    protected int clubMode;
 
     public Map<Long, Double> userScoresForGold = new HashMap<>();
 
@@ -124,7 +125,8 @@ public class Room implements IfaceRoom {
             throw new DataNotFoundException("roomdata not found : " + gameType);
         }
         //俱乐部 加入不要钱
-        if (isClubRoom() || isGoldRoom()) {
+        boolean clubSpend0 = isClubRoom() && !isHasMode(CLUB_MODE_USER_PAY, clubMode);
+        if (clubSpend0 || isGoldRoom()) {
             return 0;
         }
 
@@ -864,9 +866,6 @@ public class Room implements IfaceRoom {
                 roomStatistics.failedTime += 1;
             }
         }
-        if (isAddClubMoney() && this.clubId!=null) {
-            RedisManager.getClubRedisService().addClubUserMoney(this.clubId, userId, score);
-        }
 
     }
 
@@ -1510,6 +1509,15 @@ public class Room implements IfaceRoom {
 
     public Room setAutoPlayStatus(Map<Long, Integer> autoPlayStatus) {
         this.autoPlayStatus = autoPlayStatus;
+        return this;
+    }
+
+    public int getClubMode() {
+        return clubMode;
+    }
+
+    public Room setClubMode(int clubMode) {
+        this.clubMode = clubMode;
         return this;
     }
 }

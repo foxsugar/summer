@@ -46,6 +46,7 @@ public class RoomVo implements IfaceRoomVo {
     public int chip;
     public String clubId;
     public String clubRoomModel;
+    public int clubMode;
 
     //牌九金币
     public int isGold;
@@ -369,6 +370,15 @@ public class RoomVo implements IfaceRoomVo {
 
     public RoomVo setAutoPlayStatus(Map<Long, Integer> autoPlayStatus) {
         this.autoPlayStatus = autoPlayStatus;
+        return this;
+    }
+
+    public int getClubMode() {
+        return clubMode;
+    }
+
+    public RoomVo setClubMode(int clubMode) {
+        this.clubMode = clubMode;
         return this;
     }
 }

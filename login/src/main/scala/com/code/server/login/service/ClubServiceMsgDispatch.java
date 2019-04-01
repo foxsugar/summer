@@ -167,7 +167,8 @@ public class ClubServiceMsgDispatch {
             case "clubDrawBack":
                 String clubModelId2 = params.get("clubModelId").asText();
                 String rid1 = params.path("roomId").asText();
-                return gameClubService.clubDrawBack(clubId, clubModelId2, rid1);
+                int mode = params.path("clubMode").asInt();
+                return gameClubService.clubDrawBack(clubId, clubModelId2, rid1, mode);
             case "kickUser":
                 long kickUser = params.get("kickUserId").asLong();
                 return gameClubService.kickUser(msgKey, userId, clubId, kickUser);
@@ -277,6 +278,15 @@ public class ClubServiceMsgDispatch {
 
             case "getClubAdmin":{
                 return gameClubService.getClubAdmin(msgKey, clubId);
+            }
+            case "setCreditInfo":{
+                int creditMode = params.get("creditMode").asInt();
+                int creditMin = params.get("creditMin").asInt();
+                int dayingjia = params.get("dayingjia").asInt();
+                int aa = params.get("aa").asInt();
+
+                return gameClubService.setCreditInfo(msgKey, clubId, creditMode, creditMin, dayingjia, aa);
+
             }
 
 

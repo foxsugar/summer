@@ -15,6 +15,9 @@ public class RoomModel {
     private long time;
     private String serviceName;
     private Map<String, ClubStatistics> statisticsMap = new HashMap<>();
+    private int mode;
+
+
 
 
     public String getId() {
@@ -86,6 +89,15 @@ public class RoomModel {
 
     public RoomModel setStatisticsMap(Map<String, ClubStatistics> statisticsMap) {
         this.statisticsMap = statisticsMap;
+        return this;
+    }
+
+    public int getMode() {
+        return mode;
+    }
+
+    public RoomModel setMode(int mode) {
+        this.mode = mode;
         return this;
     }
 }

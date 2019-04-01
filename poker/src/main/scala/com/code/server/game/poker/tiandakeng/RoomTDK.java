@@ -47,7 +47,7 @@ public class RoomTDK extends PokerGoldRoom {
 
     public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType,
                                  boolean isAA, boolean isJoin, boolean showChat, int personNum,
-                                 String clubId, String clubRoomModel,int otherMode) throws DataNotFoundException {
+                                 String clubId, String clubRoomModel,int clubMode,int otherMode) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         RoomTDK room = new RoomTDK();
 
@@ -68,6 +68,7 @@ public class RoomTDK extends PokerGoldRoom {
 
         room.setClubId(clubId);
         room.setClubRoomModel(clubRoomModel);
+        room.setClubMode(clubMode);
         room.init(gameNumber, multiple);
 
 

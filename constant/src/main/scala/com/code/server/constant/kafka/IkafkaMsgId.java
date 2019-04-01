@@ -13,8 +13,13 @@ public interface IkafkaMsgId {
 
     int KAFKA_MSG_ID_GUESS_ADD_GOLD = 3000;
 
+
     int KAFKA_MSG_ID_REFRESH_ROOM_INSTANCE = 3100;
     int KAFKA_MSG_ID_ROOM_CLUB_USER = 3101;
+
+    int KAFKA_MSG_ID_ADD_REBATE = 3200;
+    int KAFKA_MSG_ID_ADD_MONEY = 3201;
+
 
 
 

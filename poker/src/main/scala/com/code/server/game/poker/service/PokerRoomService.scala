@@ -41,9 +41,11 @@ object PokerRoomService {
         val showChat = params.path("showChat").asBoolean(false)
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
+        val clubMode = params.path("clubMode").asInt(0)
         val otherMode = params.path("otherMode").asInt(0)
 
-        return RoomDouDiZhu.createRoom(userId, gameNumber, multiple, gameType, roomType, isAA, isJoin, showChat, personNum, jiaoScore, shuanglong, clubId, clubRoomModel,otherMode)
+        return RoomDouDiZhu.createRoom(userId, gameNumber, multiple, gameType, roomType, isAA, isJoin, showChat, personNum, jiaoScore, shuanglong,
+          clubId, clubRoomModel,clubMode,otherMode)
 
       case "createHitGoldFlowerRoom" =>
         val roomType = params.get("roomType").asText()
@@ -59,6 +61,7 @@ object PokerRoomService {
         val isJoin = params.path("isJoin").asBoolean(true)
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
+        val clubMode = params.path("clubMode").asInt(0)
         val isRobot = params.path("isRobot").asBoolean(false)
         val time = params.path("time").asInt(10)
         val isJoinHalfWay = params.path("isJoinHalfWay").asBoolean(false)
@@ -69,7 +72,7 @@ object PokerRoomService {
 
 
         return RoomHitGoldFlower.createHitGoldFlowerRoom(userId, gameNumber, personNumber, cricleNumber,
-          multiple, caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel,
+          multiple, caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel,clubMode,
           isRobot, time, isJoinHalfWay,wanjialiangpai,bipaijiabei,otherMode)
 
       case "createXuanQiQiRoom" =>
@@ -83,8 +86,9 @@ object PokerRoomService {
         val isJoin = params.path("isJoin").asBoolean(true)
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
+        val clubMode = params.path("clubMode").asInt(0)
 
-        return RoomXuanQiQi.createXuanQiQiRoom(userId, gameNumber, personNumber, cricleNumber, multiple, gameType, roomType, isAA, isJoin, clubId, clubRoomModel)
+        return RoomXuanQiQi.createXuanQiQiRoom(userId, gameNumber, personNumber, cricleNumber, multiple, gameType, roomType, isAA, isJoin, clubId, clubRoomModel,clubMode)
 
       case "createPlaySevenRoom" =>
         val roomType = params.get("roomType").asText()
@@ -99,8 +103,10 @@ object PokerRoomService {
         val isJoin = params.path("isJoin").asBoolean(true)
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
+        val clubMode = params.path("clubMode").asInt(0)
 
-        return RoomPlaySeven.createPlaySevenRoom(userId, gameNumber, fengDing, kouDiJiaJi, zhuangDanDaJiaBei, personNumber, multiple, gameType, roomType, isAA, isJoin, clubId, clubRoomModel)
+        return RoomPlaySeven.createPlaySevenRoom(userId, gameNumber, fengDing, kouDiJiaJi, zhuangDanDaJiaBei, personNumber,
+          multiple, gameType, roomType, isAA, isJoin, clubId, clubRoomModel,clubMode)
 
 
       case "startGameByClient" =>
@@ -118,8 +124,9 @@ object PokerRoomService {
         val isJoin = params.path("isJoin").asBoolean(true)
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
+        val clubMode = params.path("clubMode").asInt(0)
 
-        return RoomCow.createCowRoom(userId, gameNumber, personNumber, multiple, gameType, roomType, isAA, isJoin, clubId, clubRoomModel);
+        return RoomCow.createCowRoom(userId, gameNumber, personNumber, multiple, gameType, roomType, isAA, isJoin, clubId, clubRoomModel,clubMode);
 
       case "startCowGameByClient" =>
         val roomId = params.get("roomId").asText()
@@ -156,6 +163,7 @@ object PokerRoomService {
         val clubRoomModel = params.path("clubRoomModel").asText
         val isAA = params.path("isAA").asBoolean(false)
         val personNum = params.path("personNumber").asInt(4)
+        val clubMode = params.path("clubMode").asInt(0)
 
 
         //todo paijiu 新添参数
@@ -171,7 +179,7 @@ object PokerRoomService {
         val otherMode =  params.path("otherMode").asInt()
 
 
-        return RoomPaijiu.createRoom(userId, roomType, gameType, gameNumber, clubId, clubRoomModel, isAA,
+        return RoomPaijiu.createRoom(userId, roomType, gameType, gameNumber, clubId, clubRoomModel,clubMode, isAA,
           robotType,robotNum, robotWinner, isReOpen, otherMode,personNum)
 
       case "createPaijiuGoldRoom" =>
@@ -180,6 +188,7 @@ object PokerRoomService {
         val gameNumber = params.path("gameNumber").asInt()
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
+        val clubMode = params.path("clubMode").asInt(0)
         val isGold = params.path("isGold").asInt()
         val goldType = params.path("goldType").asInt()
         return RoomGoldPaijiu.createGoldRoom(userId, roomType, gameType, gameNumber, isGold, goldType)
@@ -190,6 +199,7 @@ object PokerRoomService {
         val gameNumber = params.path("gameNumber").asInt()
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
+        val clubMode = params.path("clubMode").asInt(0)
         val isAA = params.path("isAA").asBoolean(false)
         val isJoin = params.path("isJoin").asBoolean(true)
         return RoomPaijiuAce.createRoom(userId, roomType, gameType, gameNumber,isJoin,clubId,clubRoomModel, isAA)
@@ -200,6 +210,7 @@ object PokerRoomService {
         val gameNumber = params.path("gameNumber").asInt()
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
+        val clubMode = params.path("clubMode").asInt(0)
         val isAA = params.path("isAA").asBoolean(false)
         val personNum = params.path("personNumber").asInt(4)
 
@@ -217,7 +228,7 @@ object PokerRoomService {
         val otherMode =  params.path("otherMode").asInt()
 
 
-        return RoomPaijiuCrazy.createRoom(userId, roomType, gameType, gameNumber, clubId, clubRoomModel, isAA,
+        return RoomPaijiuCrazy.createRoom(userId, roomType, gameType, gameNumber, clubId, clubRoomModel,clubMode, isAA,
           robotType,robotNum, robotWinner, isReOpen, otherMode,personNum)
 
       case "createTTZRoom" =>
@@ -229,9 +240,10 @@ object PokerRoomService {
         val multiple = params.path("multiple").asInt()
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
+        val clubMode = params.path("clubMode").asInt(0)
         //默认是2局
         var quan = params.path("quan").asInt(2)
-        return RoomTuiTongZi.createRoom(userId, roomType, gameType, gameNumber, personNumber, isJoin, multiple, clubId, clubRoomModel, quan)
+        return RoomTuiTongZi.createRoom(userId, roomType, gameType, gameNumber, personNumber, isJoin, multiple, clubId, clubRoomModel, clubMode,quan)
 
       case "createZGZRoom" =>
         val roomType = params.path("roomType").asText()
@@ -244,8 +256,9 @@ object PokerRoomService {
         val clubRoomModel = params.path("clubRoomModel").asText
         val isShowCard = params.path("showCard").asText
         val otherMode = params.path("otherMode").asInt(0)
+        val clubMode = params.path("clubMode").asInt(0)
         val isAA = params.path("isAA").asBoolean(false)
-        return RoomZhaGuZi.createRoom(userId, roomType, gameType, gameNumber, personNumber, isJoin, multiple, clubId, clubRoomModel, isShowCard,otherMode,isAA)
+        return RoomZhaGuZi.createRoom(userId, roomType, gameType, gameNumber, personNumber, isJoin, multiple, clubId, clubRoomModel,clubMode, isShowCard,otherMode,isAA)
 
 
       case "createYSZRoom" =>
@@ -278,7 +291,8 @@ object PokerRoomService {
         val hasWubuFeng = params.path("hasWubuFeng").asBoolean(false)
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
-        return RoomPullMice.createRoom(userId, roomType, gameType, gameNumber, personNumber, isJoin, multiple, hasWubuFeng, clubId, clubRoomModel)
+        val clubMode = params.path("clubMode").asInt(0)
+        return RoomPullMice.createRoom(userId, roomType, gameType, gameNumber, personNumber, isJoin, multiple, hasWubuFeng, clubId, clubRoomModel,clubMode)
 
       case "createPaijiuRoomNotInRoom" =>
         val roomType = params.path("roomType").asText()
@@ -287,7 +301,8 @@ object PokerRoomService {
         val isCreaterJoin = params.path("isCreaterJoin").asBoolean()
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
-        return RoomPaijiu.createRoomNotInRoom(userId, roomType, gameType, gameNumber, isCreaterJoin, clubId, clubRoomModel)
+        val clubMode = params.path("clubMode").asInt(0)
+        return RoomPaijiu.createRoomNotInRoom(userId, roomType, gameType, gameNumber, isCreaterJoin, clubId, clubRoomModel,clubMode)
 
       case "createGuessRoom" =>
         val roomType = params.path("roomType").asText()
@@ -325,8 +340,9 @@ object PokerRoomService {
         val isJoin = params.path("isJoin").asBoolean(false)
         val showChat = params.path("showChat").asBoolean(false)
         val otherMode = params.path("otherMode").asInt(0)
+        val clubMode = params.path("clubMode").asInt(0)
 
-        return RoomTDK.createRoom(userId, gameNumber,multiple,gameType, roomType,isAA,isJoin,showChat,personNumber,clubId,clubRoomModel,otherMode)
+        return RoomTDK.createRoom(userId, gameNumber,multiple,gameType, roomType,isAA,isJoin,showChat,personNumber,clubId,clubRoomModel,clubMode,otherMode)
 
       case "createYXXRoom"=>
         val roomType = params.path("roomType").asText()
@@ -344,8 +360,9 @@ object PokerRoomService {
         val chuanlian = params.path("chuanlian").asInt()
         val baozi = params.path("baozi").asInt()
         val nuo = params.path("nuo").asInt()
+        val clubMode = params.path("clubMode").asInt(0)
         return RoomYuxiaxie.createRoom(userId, gameNumber,multiple,gameType, roomType,isAA,isJoin,showChat,personNumber,
-          clubId,clubRoomModel,otherMode,danya, chuanlian, baozi, nuo)
+          clubId,clubRoomModel,clubMode,otherMode,danya, chuanlian, baozi, nuo)
 
         //鱼虾蟹 色子记录 todo 对协议
       case "getYXXDiceHistory"=>

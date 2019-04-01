@@ -50,6 +50,10 @@ public class RedisManager {
         getUserRedisService().addUserGold(userId, add);
     }
 
+    public static ConstantRedisService getConstantRedisService(){
+        return SpringUtil.getBean(ConstantRedisService.class);
+    }
+
     public static void removeRoomAllInfo(Object... roomId) {
         //删除room-serverId 映射
         getRoomRedisService().removeServer(roomId);

@@ -24,6 +24,7 @@ import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
+import com.code.server.util.Utils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.http.HttpResponse;
@@ -45,6 +46,8 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static com.code.server.constant.game.IGameConstant.CLUB_MODE_USER_PAY;
+
 /**
  * Created by sunxianping on 2018/1/15.
  */
@@ -65,6 +68,7 @@ public class GameClubService {
 
     @Autowired
     UserService userService;
+
 
     /**
      * 查看俱乐部
@@ -1352,7 +1356,7 @@ public class GameClubService {
      * @param clubId
      * @param clubModelId
      */
-    public int clubDrawBack(String clubId, String clubModelId,String roomId) {
+    public int clubDrawBack(String clubId, String clubModelId,String roomId,int clubMode) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club != null) {
             RoomModel roomModel = getRoomModel(club, clubModelId);
@@ -1372,8 +1376,11 @@ public class GameClubService {
                     //俱乐部的统计
                     ClubStatistics clubStatistics = getClubStatistics(club);
                     if (clubStatistics != null) {
-                        addStatisticeConsume(club, -roomModel.getMoney());
-                        club.getStatistics().setConsume(club.getStatistics().getConsume() - roomModel.getMoney());
+                        //不是玩家自己付
+                        if (!Utils.isHasMode(CLUB_MODE_USER_PAY, clubMode)) {
+                            addStatisticeConsume(club, -roomModel.getMoney());
+                            club.getStatistics().setConsume(club.getStatistics().getConsume() - roomModel.getMoney());
+                        }
                     }
                 }
             }
@@ -1461,21 +1468,26 @@ public class GameClubService {
                 boolean flag3 = !removeList.contains(roomModel.getId());
                 if (flag1 && flag2 && flag3) {
                     createRoom(club, roomModel);
-                    //减钱
-                    int moneyNow = club.getMoney() - roomModel.getMoney();
+                    //减钱 玩家花钱的话 消耗为0
+                    int needMoney = isUserSpendMoney(roomModel)?0:roomModel.getMoney();
+                    int moneyNow = club.getMoney() - needMoney;
                     club.setMoney(moneyNow);
 
                     //统计
-                    addStatisticeConsume(club, roomModel.getMoney());
+                    addStatisticeConsume(club, needMoney);
 
-                    club.getStatistics().setConsume(club.getStatistics().getConsume() + roomModel.getMoney());
-
-
+                    club.getStatistics().setConsume(club.getStatistics().getConsume() + needMoney);
                 }
             }
-
-
         }
+    }
+
+    public static boolean isUserSpendMoney(RoomModel roomModel) {
+        JsonNode jsonNode = JsonUtil.readTree(roomModel.getCreateCommand());
+        JsonNode paramNode = jsonNode.path("params");
+        ObjectNode objectNode = (ObjectNode) paramNode;
+        int clubMode = objectNode.path("clubMode").asInt(0);
+        return Utils.isHasMode(CLUB_MODE_USER_PAY, clubMode);
     }
 
     /**
@@ -1609,6 +1621,12 @@ public class GameClubService {
     }
 
 
+    /**
+     * 获取admin
+     * @param msgKey
+     * @param clubId
+     * @return
+     */
     public int getClubAdmin(KafkaMsgKey msgKey, String clubId) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
@@ -1619,6 +1637,36 @@ public class GameClubService {
         admin.addAll(club.getClubInfo().getAdmin());
 
         sendMsg(msgKey, new ResponseVo("clubService", "getClubAdmin", admin));
+        return 0;
+    }
+
+
+    /**
+     * 设置信用信息
+     * @param msgKey
+     * @param clubId
+     * @param creditMode
+     * @param creditMin
+     * @param dayingjia
+     * @param aa
+     * @return
+     */
+    public int setCreditInfo(KafkaMsgKey msgKey, String clubId, int creditMode, int creditMin, int dayingjia, int aa){
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+
+        club.getClubInfo().setCreditInfo(new HashMap<>());
+        if (club.getClubInfo().getCreditInfo() == null) {
+            club.getClubInfo().setCreditInfo(new HashMap<>());
+        }
+        club.getClubInfo().getCreditInfo().put("creditMode", creditMode);
+        club.getClubInfo().getCreditInfo().put("creditMin", creditMin);
+//        club.getClubInfo().getCreditInfo().put("creditMode", creditMode);
+//        club.getClubInfo().getCreditInfo().put("creditMode", creditMode);
+
+        sendMsg(msgKey, new ResponseVo("clubService", "setCreditInfo", 0));
         return 0;
     }
 

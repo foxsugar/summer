@@ -21,6 +21,8 @@ public class ClubInfo {
     //合伙人
     private List<Long> partner = new ArrayList<>();
     private boolean autoJoin = false;
+    private Map<String, Object> creditInfo = new HashMap<>();
+
 
     public Map<String, ClubMember> getMember() {
         return member;
@@ -100,6 +102,15 @@ public class ClubInfo {
 
     public ClubInfo setPartner(List<Long> partner) {
         this.partner = partner;
+        return this;
+    }
+
+    public Map<String, Object> getCreditInfo() {
+        return creditInfo;
+    }
+
+    public ClubInfo setCreditInfo(Map<String, Object> creditInfo) {
+        this.creditInfo = creditInfo;
         return this;
     }
 }

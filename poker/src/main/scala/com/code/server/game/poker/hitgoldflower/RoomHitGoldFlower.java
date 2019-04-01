@@ -83,7 +83,7 @@ public class RoomHitGoldFlower extends PokerGoldRoom {
 
     public static int createHitGoldFlowerRoom(long userId, int gameNumber, int personNumber,int cricleNumber,int multiple,
                                               int caiFen,int menPai, String gameType, String roomType, boolean isAA,
-                                              boolean isJoin, String clubId, String clubRoomModel,
+                                              boolean isJoin, String clubId, String clubRoomModel,int clubMode,
                                                 boolean isRobot, int time, boolean isJoinHalfWay,boolean wanjialiangpai,boolean bipaijiabei,int otherMode) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
@@ -110,6 +110,7 @@ public class RoomHitGoldFlower extends PokerGoldRoom {
         room.bipaijiabei = bipaijiabei;
         room.otherMode = otherMode;
         room.autoReady = otherMode == 1;
+        room.setClubMode(clubMode);
 
         room.init(gameNumber, multiple);
 

@@ -1,21 +1,50 @@
 package com.code.server.game.poker.paijiu
 
-import java.lang
+import java.{lang, util}
 
 import com.code.server.constant.data.{DataManager, StaticDataProto}
+import com.code.server.constant.kafka.{IKafaTopic, IkafkaMsgId, KafkaMsgKey}
 import com.code.server.constant.response.ErrorCode
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
+import com.code.server.kafka.MsgProducer
 import com.code.server.redis.service.RedisManager
-
+import com.code.server.util.SpringUtil
+import scala.collection.JavaConverters._
 /**
   * Created by sunxianping on 2019-03-22.
   */
 class GamePaijiuCrazy extends GamePaijiu{
 
 
+  /**
+    * 开始游戏
+    *
+    * @param users
+    * @param room
+    */
+  override def startGame(users: util.List[lang.Long], room: Room): Unit = {
+      loadData()
+      roomPaijiu = room.asInstanceOf[RoomPaijiu]
+      //实例化玩家
+      initPlayer()
+      //码牌
+      initCards()
 
+      bankerId = roomPaijiu.getBankerId
 
+      room.getCurGameNumber match {
+        case 1 => {
+          fightForBankerStart()
+        }
+        case _ => betStart()
+      }
+  }
+
+  def loadData(): Unit ={
+    this.rebateData = RedisManager.getConstantRedisService.getConstant
+    println(this.rebateData)
+  }
 
   override protected def getGroupScoreByName(name: String): Int = {
 
@@ -47,6 +76,9 @@ class GamePaijiuCrazy extends GamePaijiu{
     //没有这个牌型或者不含这个牌型
     if(data == null || getNoGroupName().contains(data.getName)) {
       //两张牌的点数相加
+      if(group == null) {
+        println("group null")
+      }
       val cardArray = group.split(",")
       val card1 = cardArray(0)
       val card2 = cardArray(1)
@@ -89,10 +121,19 @@ class GamePaijiuCrazy extends GamePaijiu{
     //推送开始下注
     MsgSender.sendMsg2Player("gamePaijiuService", "openStart", this.bankerId, users)
 
+  }
+
+
+  /**
+    * 摇骰子阶段
+    */
+  override protected def crapStart(): Unit = {
+    MsgSender.sendMsg2Player("gamePaijiuService", "crapStart", 0, bankerId)
+    this.state = START_CRAP
+    updateLastOperateTime()
     //自动摇色子
     crap(this.bankerId)
   }
-
 
   /**
     * 牌局结束
@@ -103,16 +144,42 @@ class GamePaijiuCrazy extends GamePaijiu{
     genRecord()
     //切庄开始
 
+    updateLastOperateTime()
     if(isAutoBreakBanker()) {
       bankerBreak(this.bankerId, true)
     }else{
-      bankerBreakStart()
+      if(this.roomPaijiu.curGameNumber==1) {
+        this.roomPaijiu.clearReadyStatus(true)
+        this.roomPaijiu.startGame()
+      }else{
+        bankerBreakStart()
+      }
     }
-    //如果到了条件 自动切庄
+  }
 
 
+  /**
+    * 是否所有人都开牌
+    *
+    * @return
+    */
+  override protected def isAllPlayerOpen(): Boolean = {
+    playerCardInfos.count { case (uid, playerInfo) => playerInfo.group1 == null } == 0
+  }
 
-    //大于10倍 小于20% 自动切庄
+
+  def sendCenterAddMoney(userId:Long,money:Double): Unit ={
+    val addMoney = Map("userId"->userId, "money"->money)
+    val kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ADD_MONEY)
+    val msgProducer = SpringUtil.getBean(classOf[MsgProducer])
+    msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney.asJava)
+  }
+
+  def sendCenterAddRebate(userId:Long, money:Double): Unit ={
+    val addMoney = Map("userId"->userId, "money"->money)
+    val kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ADD_REBATE)
+    val msgProducer = SpringUtil.getBean(classOf[MsgProducer])
+    msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney.asJava)
   }
 
 
@@ -146,7 +213,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     * @param room
     */
   def doCreateNewRoom(room:RoomPaijiu): Unit ={
-    RoomPaijiuCrazy.createRoom(0,room.getRoomType, room.getGameType, room.getGameNumber, room.getClubId, room.getClubRoomModel,
+    RoomPaijiuCrazy.createRoom(0,room.getRoomType, room.getGameType, room.getGameNumber, room.getClubId, room.getClubRoomModel,room.getClubMode,
       room.isAA,room.robotType, room.robotNum, room.robotWinner,room.isReOpen, room.getOtherMode, room.getPersonNumber)
   }
 
@@ -154,7 +221,15 @@ class GamePaijiuCrazy extends GamePaijiu{
 
   def isAutoBreakBanker():Boolean ={
     //大于10倍 小于20% 自动切庄
-    return false
+    if(this.roomPaijiu.bankerScore > this.roomPaijiu.bankerInitScore * 10 || this.roomPaijiu.bankerScore<=0) true
+    for(playerInfo <- this.playerCardInfos.values){
+      if(this.bankerId != playerInfo.userId){
+        if(RedisManager.getUserRedisService.getUserMoney(playerInfo.userId) <=0){
+          true
+        }
+      }
+    }
+    false
   }
 
   /**

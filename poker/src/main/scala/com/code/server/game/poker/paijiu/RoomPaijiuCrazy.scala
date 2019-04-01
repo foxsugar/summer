@@ -1,5 +1,7 @@
 package com.code.server.game.poker.paijiu
 
+import java.util
+
 import com.code.server.constant.response.{ErrorCode, ResponseVo}
 import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.room.Room
@@ -10,6 +12,7 @@ import com.code.server.util.timer.GameTimer
 import com.code.server.util.{IdWorker, SpringUtil}
 
 import scala.collection.JavaConverters._
+import scala.collection.JavaConversions._
 
 /**
   * Created by sunxianping on 2019-03-25.
@@ -66,6 +69,20 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     }
   }
 
+  override def addUserSocre(userId: Long, score: Double): Unit = {
+    super.addUserSocre(userId, score)
+    RedisManager.getUserRedisService.addUserMoney(userId, score)
+  }
+
+
+
+  override def pushScoreChange(): Unit = {
+    var userScores = new util.HashMap[Long,Double]()
+    for (userId <- users) {
+      userScores.put(userId, RedisManager.getUserRedisService.getUserMoney(userId))
+    }
+    MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userScores), this.getUsers)
+  }
 
   /**
     * 排队上庄
@@ -103,20 +120,27 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     */
   def updateBanker(): Unit = {
     //现在没有banker
-    if (this.bankerId == 0 && this.bankerList.nonEmpty) {
+    if ((this.bankerId == 0 ||this.bankerId == -1) && this.bankerList.nonEmpty) {
       //排队的第一个
 
       val userId = this.bankerList.head
       this.bankerId = userId
+      this.canStartUserId = userId
       this.bankerScore = this.bankerScoreMap(userId)
       this.bankerInitScore = this.bankerScoreMap(userId)
+
+      this.bankerList = this.bankerList.filter(_ != userId)
+      this.bankerScoreMap = this.bankerScoreMap.filterKeys(_ != userId)
+
       //推送
       MsgSender.sendMsg2Player(new ResponseVo("gameService", "updatePaijiuBanker", Map("userId" -> userId).asJava), this.getUsers)
       //更新时间
       this.updateLastOperateTime()
 
       //改局数
-      this.curGameNumber = 0
+      this.curGameNumber = 1
+
+      println("更新banker 更新后id为: " + userId)
 
     }
   }
@@ -127,7 +151,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
 object RoomPaijiuCrazy extends Room with PaijiuConstant {
 
-  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int, clubId: String, clubRoomModel: String, isAA: Boolean,
+  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int, clubId: String, clubRoomModel: String, clubMode:Int, isAA: Boolean,
                  robotType: Int, robotNum: Int, robotWinner: Int, isReOpen: Boolean, otherMode: Int, personNum: Int): Int = {
     val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
     var roomPaijiu = new RoomPaijiuCrazy
@@ -138,11 +162,12 @@ object RoomPaijiuCrazy extends Room with PaijiuConstant {
     roomPaijiu.setRoomType(roomType)
     roomPaijiu.setGameType(gameType)
     roomPaijiu.setGameNumber(gameNumber)
-    roomPaijiu.setBankerId(userId)
+//    roomPaijiu.setBankerId(userId)
     roomPaijiu.setCreateUser(userId)
     roomPaijiu.setPersonNumber(personNum)
     roomPaijiu.setClubId(clubId)
     roomPaijiu.setClubRoomModel(clubRoomModel)
+    roomPaijiu.setClubMode(clubMode)
     roomPaijiu.setAA(isAA)
 
     roomPaijiu.robotType = robotType
@@ -153,7 +178,7 @@ object RoomPaijiuCrazy extends Room with PaijiuConstant {
     roomPaijiu.setRobotRoom(robotType != 0)
 
     roomPaijiu.init(gameNumber, 1)
-    val code = roomPaijiu.joinRoom(userId, true)
+    val code = roomPaijiu.joinRoom(userId, false)
     if (code != 0) return code
 
     RoomManager.addRoom(roomPaijiu.getRoomId, "" + serverConfig.getServerId, roomPaijiu)

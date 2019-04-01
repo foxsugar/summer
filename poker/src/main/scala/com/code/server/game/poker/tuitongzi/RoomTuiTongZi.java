@@ -170,7 +170,8 @@ public class RoomTuiTongZi extends PokerGoldRoom {
     }
 
 
-    public static int createRoom(long userId, String roomType, String gameType, int gameNumber, int personNumber, boolean isJoin, int multiple, String clubId, String clubRoomModel, int quan) throws DataNotFoundException {
+    public static int createRoom(long userId, String roomType, String gameType, int gameNumber, int personNumber, boolean isJoin,
+                                 int multiple, String clubId, String clubRoomModel,int clubMode, int quan) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
         RoomTuiTongZi room = getRoomInstance(roomType);
@@ -186,6 +187,7 @@ public class RoomTuiTongZi extends PokerGoldRoom {
         room.isRobotRoom = true;
         room.setClubId(clubId);
         room.setClubRoomModel(clubRoomModel);
+        room.setClubMode(clubMode);
 
         room.init(gameNumber, multiple);
 

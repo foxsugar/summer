@@ -162,7 +162,7 @@ class RoomPaijiu extends PokerGoldRoom {
     this.roomStatisticsMap.remove(userId)
     //如果在上庄列表里 删掉
     this.bankerList = this.bankerList.filter(_!=userId)
-    this.bankerScoreMap = this.bankerScoreMap.filter(_!=userId)
+    this.bankerScoreMap = this.bankerScoreMap.filterKeys(_!=userId)
     this.robotList = this.robotList.filter(_!=userId)
     removeUserRoomRedis(userId)
   }
@@ -219,7 +219,7 @@ class RoomPaijiu extends PokerGoldRoom {
 
 
 object RoomPaijiu extends Room {
-  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,clubId:String,clubRoomModel:String,isAA:Boolean,
+  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,clubId:String,clubRoomModel:String,clubMode:Int,isAA:Boolean,
                 robotType:Int, robotNum:Int, robotWinner:Int, isReOpen:Boolean, otherMode:Int, personNum:Int): Int = {
     val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
     val roomPaijiu = new RoomPaijiu
@@ -232,6 +232,7 @@ object RoomPaijiu extends Room {
     roomPaijiu.setPersonNumber(personNum)
     roomPaijiu.setClubId(clubId)
     roomPaijiu.setClubRoomModel(clubRoomModel)
+    roomPaijiu.setClubMode(clubMode)
     roomPaijiu.setAA(isAA)
 
     roomPaijiu.robotType = robotType
@@ -256,8 +257,8 @@ object RoomPaijiu extends Room {
     0
   }
 
-  def createRoomNotInRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int, isCreaterJoin: Boolean,clubId:String,clubRoomModel:String): Int = {
-    RoomPaijiuByNotInRoom.createRoomNotInRoom(userId, roomType, gameType, gameNumber, isCreaterJoin,clubId, clubRoomModel)
+  def createRoomNotInRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int, isCreaterJoin: Boolean,clubId:String,clubRoomModel:String,clubMode:Int): Int = {
+    RoomPaijiuByNotInRoom.createRoomNotInRoom(userId, roomType, gameType, gameNumber, isCreaterJoin,clubId, clubRoomModel, clubMode)
   }
 
   /*def createRoomNotInRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int,isCreaterJoin:Boolean): Int = {

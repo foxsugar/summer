@@ -1,8 +1,13 @@
 package com.code.server.login.service;
 
+import com.code.server.constant.db.OtherConstant;
 import com.code.server.db.Service.ConstantService;
 import com.code.server.db.model.Constant;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2017/6/19.
@@ -20,9 +25,30 @@ public class ServerManager {
             constant = constant1;
 
         }
+        writeConstant2Redis();
     }
 
 
+    /**
+     * 把一些数据写到redis
+     */
+    public static void writeConstant2Redis(){
+        Map<String, Object> data = new HashMap<>();
+        if (constant.getOther() == null) {
+            constant.setOther(new OtherConstant());
+        }
+        if (constant.getOther().getRebateData() == null) {
+            constant.getOther().setRebateData(new HashMap<>());
+        }
+
+        data.put("bet", constant.getOther().getRebateData().getOrDefault("bet",5));
+        data.put("rebate100", constant.getOther().getRebateData().getOrDefault("bet",2.5));
+        data.put("rebate4", constant.getOther().getRebateData().getOrDefault("bet",2));
+        data.put("pay_one", constant.getOther().getRebateData().getOrDefault("bet",10));
+        data.put("pay_aa", constant.getOther().getRebateData().getOrDefault("bet",3));
+
+        RedisManager.getConstantRedisService().updateConstant(data);
+    }
 
 
 

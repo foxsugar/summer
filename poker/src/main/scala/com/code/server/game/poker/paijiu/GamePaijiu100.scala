@@ -1,8 +1,9 @@
 package com.code.server.game.poker.paijiu
 
-import java.lang
+import java.{lang, util}
 
 import com.code.server.constant.response.ErrorCode
+import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.redis.service.RedisManager
 
@@ -29,6 +30,38 @@ class GamePaijiu100 extends GamePaijiuCrazy {
   }
 
 
+  /**
+    * 开始游戏
+    *
+    * @param users
+    * @param room
+    */
+  override def startGame(users: util.List[lang.Long], room: Room): Unit = {
+    loadData()
+    roomPaijiu = room.asInstanceOf[RoomPaijiu]
+    //    this.room = roomPaijiu
+    //实例化玩家
+    initPlayer()
+    //码牌
+    initCards()
+
+    bankerId = roomPaijiu.getBankerId
+    //下注阶段开始
+    betStart()
+  }
+
+
+  /**
+    * 抽水
+    */
+  def serviceMoney(): Unit ={
+    for(playerInfo <- this.playerCardInfos.values){
+      if(playerInfo.bet != null){
+        val allBet:Double = playerInfo.bet.one + playerInfo.bet.two + playerInfo.bet.three
+        sendCenterAddMoney(playerInfo.userId, allBet)
+      }
+    }
+  }
 
   /**
     * 牌局结束
@@ -39,10 +72,16 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     //不记记录日志
 //    genRecord()
     //切庄开始
+    updateLastOperateTime()
     if(isAutoBreakBanker()) {
       bankerBreak(this.bankerId, flag = true)
     }else{
-      bankerBreakStart()
+      if(this.roomPaijiu.curGameNumber==1) {
+        this.roomPaijiu.clearReadyStatus(true)
+        this.roomPaijiu.startGame()
+      }else{
+        bankerBreakStart()
+      }
     }
   }
 
@@ -53,6 +92,21 @@ class GamePaijiu100 extends GamePaijiuCrazy {
 
   }
 
+
+  /**
+    * 是否所有人都开牌
+    *
+    * @return
+    */
+  override protected def isAllPlayerOpen(): Boolean = {
+    for(playerInfo <- this.playerCardInfos.values) {
+
+      if(playerInfo.cards.nonEmpty && playerInfo.group1 == null){
+        return false
+      }
+    }
+    true
+  }
 
   /**
     * 发牌

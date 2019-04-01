@@ -28,7 +28,8 @@ import com.code.server.util.timer.TimerNode;
  */
 public class RoomPaijiuByNotInRoom extends Room {
 
-    public static int createRoomNotInRoom(long userId, String roomType, String gameType,Integer gameNumber,boolean isCreaterJoin,String clubId,String clubRoomModel) throws DataNotFoundException {
+    public static int createRoomNotInRoom(long userId, String roomType, String gameType,Integer gameNumber,
+                                          boolean isCreaterJoin,String clubId,String clubRoomModel,int clubMode) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         RoomPaijiu roomPaijiu = new RoomPaijiu();
         roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId(serverConfig.getServerId())));
@@ -41,6 +42,7 @@ public class RoomPaijiuByNotInRoom extends Room {
         roomPaijiu.setCreaterJoin(isCreaterJoin);
         roomPaijiu.setClubId(clubId);
         roomPaijiu.setClubRoomModel(clubRoomModel);
+        roomPaijiu.setClubMode(clubMode);
         roomPaijiu.init(gameNumber, 1);
 
         //代建房 定时解散

@@ -237,8 +237,8 @@ object GameService {
       val flag = params.path("flag").asBoolean()
       game.bankerBreak(userId, flag)
 
-    case "autoOpenStart"=>
-      game.openStart()
+    case "autoCrap"=>
+      game.crap(userId)
       0
 
     case "exchange" =>

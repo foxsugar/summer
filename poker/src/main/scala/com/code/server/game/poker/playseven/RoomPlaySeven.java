@@ -53,7 +53,9 @@ public class RoomPlaySeven extends PokerGoldRoom {
         }
     }
 
-    public static int createPlaySevenRoom(long userId, int gameNumber,int fengDing,boolean kouDiJiaJi,boolean zhuangDanDaJiaBei, int personNumber,int multiple, String gameType, String roomType, boolean isAA, boolean isJoin, String clubId, String clubRoomModel) throws DataNotFoundException {
+    public static int createPlaySevenRoom(long userId, int gameNumber,int fengDing,boolean kouDiJiaJi,boolean zhuangDanDaJiaBei,
+                                          int personNumber,int multiple, String gameType, String roomType, boolean isAA, boolean isJoin,
+                                          String clubId, String clubRoomModel,int clubMode) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
         RoomPlaySeven room = getRoomInstance(roomType);
@@ -75,6 +77,7 @@ public class RoomPlaySeven extends PokerGoldRoom {
         room.setClubRoomModel(clubRoomModel);
         room.isRobotRoom =true;
         room.init(gameNumber, multiple);
+        room.setClubMode(clubMode);
 
         int code = room.joinRoom(userId, isJoin);
         if (code != 0) {

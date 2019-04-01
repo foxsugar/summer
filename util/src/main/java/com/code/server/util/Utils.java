@@ -27,4 +27,10 @@ public class Utils {
         }
         return ipString;
     }
+
+
+    public static boolean isHasMode(int type, int mode) {
+        int c = mode;
+        return (c & (1 << type)) >> type == 1;
+    }
 }

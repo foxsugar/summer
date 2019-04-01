@@ -301,7 +301,8 @@ public class LoginAction {
     @RequestMapping("/refreshMemory")
     public Map<String, Object> refreshMemory() {
         Map<String, Object> params = new HashMap<>();
-        ServerManager.constant = constantService.constantDao.findOne(1L);
+
+        ServerManager.init();
 
         params.put("constant", ServerManager.constant);
 

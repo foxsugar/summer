@@ -356,45 +356,6 @@ public class CenterMsgService implements IkafkaMsgId {
                 agentUser.setGold(agentUser.getGold() + addGold);
                 agentUserService.getAgentUserDao().save(agentUser);
             }
-
-
-//            //第一级代理
-//            if (bindUser1 != 0) {
-//                UserBean userBean1 = loadUserBean(bindUser1);
-//                if (userBean1.getId() == 1) {//是总代理
-//                    RedisManager.getUserRedisService().addUserGold(bindUser1, gold * 3);
-//                } else {
-//                    RedisManager.getUserRedisService().addUserGold(bindUser1, gold);
-//
-//                    //第二级代理
-//                    int bindUser2 = userBean1.getReferee();
-//                    if (bindUser2 != 0) {
-//                        UserBean userBean2 = loadUserBean(bindUser2);
-//                        if (userBean2.getId() == 1) {//是总代理
-//                            RedisManager.getUserRedisService().addUserGold(bindUser2, gold * 2);
-//                        } else {
-//                            RedisManager.getUserRedisService().addUserGold(bindUser2, gold);
-//
-//                            //第三级代理
-//                            int bindUser3 = userBean2.getReferee();
-//
-//                            if (bindUser3 != 0) {
-//                                UserBean userBean3 = loadUserBean(bindUser3);
-//                                if (userBean3.getId() == 1) {//是总代理
-//                                    RedisManager.getUserRedisService().addUserGold(bindUser3, gold * 1);
-//                                } else {
-//                                    RedisManager.getUserRedisService().addUserGold(bindUser3, gold);
-//
-//                                }
-//                            }
-//
-//                        }
-//                    }
-//                }
-//                //给总代理2份
-//                RedisManager.getUserRedisService().addUserGold(1, gold * 2);
-//
-//            }
         }
     }
 

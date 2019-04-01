@@ -35,6 +35,8 @@ public interface IfaceRoom extends IGameConstant {
     int ROOMTYPE_鱼虾蟹 = 14;
     int ROOMTYPE_wzq = 20;
 
+
+
     /**
      * 加入房间
      * @param userId

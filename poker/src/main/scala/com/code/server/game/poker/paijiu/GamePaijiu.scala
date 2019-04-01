@@ -42,6 +42,8 @@ class GamePaijiu extends Game with PaijiuConstant {
 
   var isRobotBet:Boolean = false
 
+  var rebateData:java.util.Map[_,_] = _
+
 
 
   //  var room: RoomPaijiu = _
@@ -169,7 +171,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     val bet = new Bet(one, two,three,index)
     if (!checkBet(bet)) return ErrorCode.BET_PARAM_ERROR
     //金币牌九 下注不能大于身上的钱
-    if (this.roomPaijiu.isInstanceOf[RoomPaijiuAce]){
+    if (this.roomPaijiu.isInstanceOf[RoomPaijiuAce]|| this.roomPaijiu.isInstanceOf[RoomPaijiuCrazy]){
       val myMoney = RedisManager.getUserRedisService.getUserMoney(userId)
       if(myMoney<one + two + three) {
         return ErrorCode.BET_PARAM_ERROR
@@ -334,6 +336,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     * 结算
     */
   protected def compute(): Unit = {
+    println("结算")
     val banker = playerCardInfos(bankerId)
     var resultSet: Set[Int] = Set()
     playerCardInfos.foreach { case (uid, playerInfo) =>
@@ -392,6 +395,9 @@ class GamePaijiu extends Game with PaijiuConstant {
     */
   protected def compareAndSetScore(banker: PlayerCardInfoPaijiu, other: PlayerCardInfoPaijiu): Int = {
     val mix8Score = getGroupScoreByName(MIX_8)
+    if(banker.group1 == null) {
+      println("null")
+    }
     val bankerScore1 = getGroupScore(banker.group1)
     val bankerScore2 = getGroupScore(banker.group2)
     val otherScore1 = getGroupScore(other.group1)
