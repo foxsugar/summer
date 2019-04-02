@@ -62,9 +62,15 @@ public class PlayerCardsInfoTDH51 extends PlayerCardsInfoHongZhong {
 
 
         if (isZimo) {
-            score *= 3;
+            //普通户*2倍   特殊* 3
+            if (score == 1) {
+                score *= 2;
+            }else{
+                score *= 3;
+            }
+
         } else {
-            score *= (room.getPersonNumber() - 1);
+//            score *= (room.getPersonNumber() - 1);
         }
 
         if (isZimo && huCardType.fan <= 9 && isHasMode(this.roomInfo.mode, HAS_HONGZHONG) && isHas4Hongzhong()) {
@@ -104,6 +110,7 @@ public class PlayerCardsInfoTDH51 extends PlayerCardsInfoHongZhong {
 
 
             } else {//点炮一个人出
+                score *= (room.getPersonNumber() - 1);
                 //不带包听
                 dianPao.addScore(-score);
                 this.roomInfo.addUserSocre(dianpaoUser, -score);

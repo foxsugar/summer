@@ -42,7 +42,7 @@ class GamePaijiu extends Game with PaijiuConstant {
 
   var isRobotBet:Boolean = false
 
-  var rebateData:java.util.Map[_,_] = _
+
 
 
 
@@ -452,7 +452,17 @@ class GamePaijiu extends Game with PaijiuConstant {
 //    logger.info("cardgroupName : " + name)
 //    DataManager.data.getPaijiuCardGroupScoreDataMap.get(name).getScore
   }
-
+  /**
+    * 获取牌得分
+    *
+    * @param playerInfo
+    * @return
+    */
+  protected def getCardScore(playerInfo: PlayerCardInfoPaijiu): (Int, Int) = {
+    val score1 = getGroupScore(playerInfo.group1)
+    val score2 = getGroupScore(playerInfo.group2)
+    (score1, score2)
+  }
 
   /**
     * 交换(测试用)

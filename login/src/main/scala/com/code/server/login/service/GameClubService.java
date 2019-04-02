@@ -1651,7 +1651,7 @@ public class GameClubService {
      * @param aa
      * @return
      */
-    public int setCreditInfo(KafkaMsgKey msgKey, String clubId, int creditMode, int creditMin, int dayingjia, int aa){
+    public int setCreditInfo(KafkaMsgKey msgKey, String clubId, int creditMode, int creditMin, boolean only, int dayingjia, int aa){
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
@@ -1663,12 +1663,40 @@ public class GameClubService {
         }
         club.getClubInfo().getCreditInfo().put("creditMode", creditMode);
         club.getClubInfo().getCreditInfo().put("creditMin", creditMin);
+        club.getClubInfo().getCreditInfo().put("only", only);
 //        club.getClubInfo().getCreditInfo().put("creditMode", creditMode);
 //        club.getClubInfo().getCreditInfo().put("creditMode", creditMode);
 
         sendMsg(msgKey, new ResponseVo("clubService", "setCreditInfo", 0));
         return 0;
     }
+
+    /**
+     * 设置信用分
+     * @param msgKey
+     * @param clubId
+     * @param toUser
+     * @param score
+     * @return
+     */
+    public int setCreditScore(KafkaMsgKey msgKey, String clubId, long toUser, int score){
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+
+        ClubMember clubMember = club.getClubInfo().getMember().get("" + toUser);
+        if (clubMember == null) {
+            return ErrorCode.CLUB_NO_USER;
+        }
+
+        clubMember.getAllStatistics().setAllScore(clubMember.getAllStatistics().getAllScore() + score);
+        sendMsg(msgKey, new ResponseVo("clubService", "setCreditScore", 0));
+        return 0;
+    }
+
+
+
 
     /**
      * 创建房间

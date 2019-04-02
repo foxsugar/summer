@@ -3,6 +3,7 @@ package com.code.server.login.service;
 import com.code.server.constant.club.ClubMember;
 import com.code.server.constant.club.ClubStatistics;
 import com.code.server.constant.club.RoomModel;
+import com.code.server.constant.club.ScoreItem;
 import com.code.server.constant.game.Record;
 import com.code.server.constant.game.RoomRecord;
 import com.code.server.constant.game.UserBean;
@@ -75,6 +76,9 @@ public class CenterMsgService implements IkafkaMsgId {
             case KAFKA_MSG_ID_ROOM_CLUB_USER:
                 getRoomClubByUser(msg);
                 break;
+            case KAFKA_MSG_ID_ADD_REBATE:
+                addRebate(msg);
+                break;
 
 
         }
@@ -105,6 +109,38 @@ public class CenterMsgService implements IkafkaMsgId {
         map.put("clubs", clubs);
 
         sendMsg2Player(new ResponseVo("roomService", "getRoomClubByUser", map), userId);
+
+    }
+
+    /**
+     * 增加rebate
+     * @param msg
+     */
+    private static void addRebate(String msg) {
+        long userId = JsonUtil.readTree(msg).path("userId").asLong();
+        double money = JsonUtil.readTree(msg).path("money").asDouble();
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        long parentId = userBean.getReferee();
+        if (parentId != 0) {
+            UserBean parentUser = LoginAction.loadUserBean(parentId);
+            if (parentUser != null) {
+                //返利记录
+                Map<Long,ScoreItem> rebateMap = parentUser.getUserInfo().getRebate();
+                if (rebateMap == null) {
+                    rebateMap = new HashMap<>();
+                    parentUser.getUserInfo().setRebate(rebateMap);
+                }
+                ScoreItem scoreItem = rebateMap.getOrDefault(userId, new ScoreItem());
+                scoreItem.setName(userBean.getUsername()).setScore(scoreItem.getScore() + money);
+                rebateMap.put(userId, scoreItem);
+
+                RedisManager.getUserRedisService().updateUserBean(parentId, parentUser);
+                //返利加到gold上
+                RedisManager.getUserRedisService().addUserGold(parentId, money);
+
+            }
+        }
 
     }
 
@@ -249,6 +285,14 @@ public class CenterMsgService implements IkafkaMsgId {
                         //设置总统计
                         clubMember.getAllStatistics().setOpenNum(clubMember.getAllStatistics().getOpenNum() + 1);
                         clubMember.getAllStatistics().setAllScore(clubMember.getAllStatistics().getAllScore() + userRecord.getScore());
+                        if (userRecord.getScore() > 0) {
+                            clubMember.getAllStatistics().setWinnerNum(clubMember.getAllStatistics().getWinnerNum() + 1);
+                            clubMember.getAllStatistics().setWinScore(clubMember.getAllStatistics().getWinScore() + userRecord.getScore());
+                        }
+                        if (userRecord.getScore() < 0) {
+                            clubMember.getAllStatistics().setLoseNum(clubMember.getAllStatistics().getLoseNum() + 1);
+                            clubMember.getAllStatistics().setLoseScore(clubMember.getAllStatistics().getLoseScore() + userRecord.getScore());
+                        }
                     }
 
                 }
@@ -357,17 +401,6 @@ public class CenterMsgService implements IkafkaMsgId {
                 agentUserService.getAgentUserDao().save(agentUser);
             }
         }
-    }
-
-    private static UserBean loadUserBean(long userId) {
-        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-        if (userBean == null) {
-            User user = userService.getUserByUserId(userId);
-            LoginAction.saveUser2Redis(user, LoginAction.getToken(userId));
-            userBean = RedisManager.getUserRedisService().getUserBean(userId);
-        }
-        return userBean;
-
     }
 
 

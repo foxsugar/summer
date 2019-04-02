@@ -1,5 +1,6 @@
 package com.code.server.constant.db;
 
+import com.code.server.constant.club.ScoreItem;
 import com.code.server.constant.game.Message;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class UserInfo {
     private int coupon = 0;
     private Map<String, Map<Integer, Integer>> taskComplete = new HashMap<>();
     private List<Message> messageBox = new ArrayList<>();
+    private  Map<Long, ScoreItem> rebate = new HashMap<>();
 
     public int getTotalPlayGameNumber() {
         return totalPlayGameNumber;
@@ -150,6 +152,15 @@ public class UserInfo {
 
     public UserInfo setMessageBox(List<Message> messageBox) {
         this.messageBox = messageBox;
+        return this;
+    }
+
+    public Map<Long, ScoreItem> getRebate() {
+        return rebate;
+    }
+
+    public UserInfo setRebate(Map<Long, ScoreItem> rebate) {
+        this.rebate = rebate;
         return this;
     }
 }

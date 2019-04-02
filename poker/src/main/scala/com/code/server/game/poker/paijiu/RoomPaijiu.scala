@@ -1,12 +1,14 @@
 package com.code.server.game.poker.paijiu
 
 import com.code.server.constant.game.{IGameConstant, RoomStatistics}
+import com.code.server.constant.kafka.{IKafaTopic, IkafkaMsgId, KafkaMsgKey}
 import com.code.server.constant.response._
 import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.poker.service.PokerGoldRoom
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
+import com.code.server.kafka.MsgProducer
 import com.code.server.redis.service.RedisManager
 import com.code.server.util.timer.GameTimer
 import com.code.server.util.{IdWorker, SpringUtil}
@@ -53,6 +55,8 @@ class RoomPaijiu extends PokerGoldRoom {
   var winnerIndex:ListBuffer[GamePaijiuResult] = ListBuffer()
   //三门获胜场次
   var winnerCountMap:Map[Int,Int] = Map()
+
+  var rebateData:java.util.Map[_,_] = _
 
 
 
@@ -213,6 +217,20 @@ class RoomPaijiu extends PokerGoldRoom {
     //战绩
     genRoomRecord()
   }
+
+
+  /**
+    * 发送返利
+    * @param userId
+    * @param money
+    */
+  def sendCenterAddRebate(userId:Long, money:Double): Unit ={
+    val addMoney = Map("userId"->userId, "money"->money)
+    val kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ADD_REBATE)
+    val msgProducer = SpringUtil.getBean(classOf[MsgProducer])
+    msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney.asJava)
+  }
+
 
 
 }

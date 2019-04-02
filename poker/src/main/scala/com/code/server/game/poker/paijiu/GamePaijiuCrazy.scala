@@ -4,13 +4,10 @@ import java.{lang, util}
 
 import com.code.server.constant.data.{DataManager, StaticDataProto}
 import com.code.server.constant.game.IGameConstant
-import com.code.server.constant.kafka.{IKafaTopic, IkafkaMsgId, KafkaMsgKey}
 import com.code.server.constant.response.ErrorCode
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
-import com.code.server.kafka.MsgProducer
 import com.code.server.redis.service.RedisManager
-import com.code.server.util.SpringUtil
 
 import scala.collection.JavaConverters._
 /**
@@ -44,8 +41,7 @@ class GamePaijiuCrazy extends GamePaijiu{
   }
 
   def loadData(): Unit ={
-    this.rebateData = RedisManager.getConstantRedisService.getConstant
-    println(this.rebateData)
+    this.roomPaijiu.rebateData = RedisManager.getConstantRedisService.getConstant
   }
 
   override protected def getGroupScoreByName(name: String): Int = {
@@ -141,10 +137,16 @@ class GamePaijiuCrazy extends GamePaijiu{
     * 牌局结束
     */
   override protected def gameOver(): Unit = {
+    //返利
+    val rebate:Double = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[Double]
+    for(playerInfo <- this.playerCardInfos.values){
+      this.roomPaijiu.sendCenterAddRebate(playerInfo.userId, rebate)
+    }
     compute()
     sendResult()
     genRecord()
     //切庄开始
+
 
     updateLastOperateTime()
     if(isAutoBreakBanker()) {
@@ -170,19 +172,7 @@ class GamePaijiuCrazy extends GamePaijiu{
   }
 
 
-  def sendCenterAddMoney(userId:Long,money:Double): Unit ={
-    val addMoney = Map("userId"->userId, "money"->money)
-    val kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ADD_MONEY)
-    val msgProducer = SpringUtil.getBean(classOf[MsgProducer])
-    msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney.asJava)
-  }
 
-  def sendCenterAddRebate(userId:Long, money:Double): Unit ={
-    val addMoney = Map("userId"->userId, "money"->money)
-    val kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ADD_REBATE)
-    val msgProducer = SpringUtil.getBean(classOf[MsgProducer])
-    msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney.asJava)
-  }
 
 
   /**
@@ -198,7 +188,7 @@ class GamePaijiuCrazy extends GamePaijiu{
       if(Room.isHasMode(MODE_WINNER_PAY, this.roomPaijiu.getOtherMode)) {
         //找到大赢家
         val winner = this.roomPaijiu.getMaxScoreUser
-        val money = this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[Integer]
+        val money = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[Integer]
         //付房费
         RedisManager.getUserRedisService.addUserMoney(winner, -money)
       }
@@ -247,6 +237,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     if (flag) {
       //换庄家
       //把钱加到庄身上
+
       RedisManager.getUserRedisService.addUserMoney(bankerId,this.roomPaijiu.bankerScore)
       this.roomPaijiu.setBankerId(0)
       this.roomPaijiu.bankerScore = 0
@@ -261,4 +252,146 @@ class GamePaijiuCrazy extends GamePaijiu{
     MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreak", 0, userId)
     0
   }
+
+
+  /**
+    * 下注
+    *
+    * @param userId
+    * @param one
+    * @param two
+    * @return
+    */
+  override def bet(userId: lang.Long, one: Int, two: Int, three: Int, index: Int): Int = {
+    val playerInfo_option = playerCardInfos.get(userId)
+    //玩家不存在
+    if (playerInfo_option.isEmpty) return ErrorCode.NO_USER
+    val playerCardInfoPaijiu = playerInfo_option.get
+    //已经下过注
+    if (playerCardInfoPaijiu.bet != null) return ErrorCode.ALREADY_BET
+    //下注不合法
+
+    val bet = new Bet(one, two,three,index)
+    if (!checkBet(bet)) return ErrorCode.BET_PARAM_ERROR
+    //金币牌九 下注不能大于身上的钱
+    val betNum:Int = one + two + three
+    if (this.roomPaijiu.isInstanceOf[RoomPaijiuAce]|| this.roomPaijiu.isInstanceOf[RoomPaijiuCrazy]){
+      val myMoney = RedisManager.getUserRedisService.getUserMoney(userId)
+      if(myMoney<betNum) {
+        return ErrorCode.BET_PARAM_ERROR
+      }
+    }
+
+    playerCardInfoPaijiu.bet = bet
+
+    this.roomPaijiu.addUserSocre(userId, -betNum)
+
+
+    val result = Map("userId" -> userId, "bet" -> bet)
+    MsgSender.sendMsg2Player("gamePaijiuService", "betResult", result.asJava, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "bet", 0, userId)
+
+    //除去庄家全都下完注
+    val count = playerCardInfos.count { case (uid, playerInfo) => uid != bankerId && playerInfo.bet != null }
+    val isAllBet = count == users.size() - 1
+    if (isAllBet) {
+      crapStart()
+    }
+    0
+  }
+
+
+  /**
+    * 结算
+    */
+  override def compute(): Unit = {
+    val banker = playerCardInfos(bankerId)
+    var winUsers: List[PlayerCardInfoPaijiu] = List()
+    val mix8Score = getGroupScoreByName(MIX_8)
+    var resultSet: Set[Int] = Set()
+    playerCardInfos.foreach { case (uid, other) =>
+      if (uid != bankerId) {
+        val bankerScore1 = getGroupScore(banker.group1)
+        val bankerScore2 = getGroupScore(banker.group2)
+        val otherScore1 = getGroupScore(other.group1)
+        val otherScore2 = getGroupScore(other.group2)
+        var result: Int = 0
+        if (bankerScore1 >= otherScore1) result += 1
+        if (bankerScore1 < otherScore1) result -= 1
+        if (bankerScore2 >= otherScore2) result += 1
+        if (bankerScore2 < otherScore2) result -= 1
+        resultSet = resultSet.+(result)
+        //庄家赢
+        if (result > 0) {
+          val changeScore = other.getBetScore(bankerScore2 >= mix8Score)
+          banker.addScore(roomPaijiu,changeScore)
+          other.addScore(roomPaijiu,-changeScore)
+
+          roomPaijiu.bankerScore += changeScore
+//          roomPaijiu.addUserSocre(banker.userId, changeScore)
+          roomPaijiu.addUserSocre(other.userId, -changeScore)
+          other.winState = LOSE
+
+          logger.info("庄家赢得钱: " + changeScore)
+
+
+
+        } else if (result < 0) {
+          other.winState = WIN
+          winUsers = winUsers.+:(other)
+        }else{
+          logger.info("和了")
+        }
+
+      }
+    }
+
+    //全赢或全输
+    if (resultSet.size == 1) {
+      val bankerStatiseics = this.roomPaijiu.getRoomStatisticsMap.get(bankerId)
+      if (resultSet.contains(WIN)) bankerStatiseics.winAllTime += 1
+      if (resultSet.contains(LOSE)) bankerStatiseics.loseAllTime += 1
+    }
+
+    //排序后的
+    val sortedUsers = winUsers.sortWith(compareByScore)
+    for (playerInfo <- sortedUsers) {
+      val score2 = getGroupScore(playerInfo.group2)
+      //庄家应该输的钱
+      val bankerLoseScore = playerInfo.getBetScore(score2 >= mix8Score)
+      val loseScore = if (bankerLoseScore > roomPaijiu.bankerScore) roomPaijiu.bankerScore else bankerLoseScore
+      logger.info("应输的钱: " + bankerLoseScore)
+      logger.info("实际的钱: " + loseScore)
+      logger.info("庄家的钱: " + banker.score)
+
+      //分数变化
+      banker.addScore(roomPaijiu, -loseScore.toInt)
+      roomPaijiu.bankerScore -= loseScore.toInt
+      playerInfo.addScore(roomPaijiu, loseScore.toInt)
+//      roomPaijiu.addUserSocre(banker.userId, -loseScore)
+      roomPaijiu.addUserSocre(playerInfo.userId, loseScore)
+
+    }
+  }
+
+  /**
+    * 排序
+    *
+    * @param playerInfo1
+    * @param playerInfo2
+    * @return
+    */
+  def compareByScore(playerInfo1: PlayerCardInfoPaijiu, playerInfo2: PlayerCardInfoPaijiu): Boolean = {
+    val playerScore1 = getCardScore(playerInfo1)
+    val playerScore2 = getCardScore(playerInfo2)
+
+    if (playerScore1._2 > playerScore2._2) {
+      true
+    } else if (playerScore1._2 == playerScore2._2) {
+      if (playerScore1._1 > playerScore2._1) true else false
+    } else {
+      false
+    }
+  }
+
 }

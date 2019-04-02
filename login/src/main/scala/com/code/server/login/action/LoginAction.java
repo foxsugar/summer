@@ -151,7 +151,7 @@ public class LoginAction {
     }
 
 
-    public static void saveUser2Redis(User user, String token) {
+    public static UserBean saveUser2Redis(User user, String token) {
         UserBean userBean = GameUserService.user2userBean(user);
 
 
@@ -166,6 +166,7 @@ public class LoginAction {
 
         RedisManager.getUserRedisService().setOpenIdUserId(user.getOpenId(), user.getId());//openid-userId
         RedisManager.getUserRedisService().setUserIdOpenId(user.getId(), user.getOpenId());//userId-openid
+        return userBean;
     }
 
 
@@ -184,6 +185,24 @@ public class LoginAction {
                 RedisManager.getUserRedisService().addRobotPool(user.getId());
             }
         }
+    }
+
+    /**
+     * load userBean
+     * @param userId
+     * @return
+     */
+    public static UserBean loadUserBean(long userId){
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean == null) {
+            UserService userService = SpringUtil.getBean(UserService.class);
+            User user = userService.getUserByUserId(userId);
+            if (user != null) {
+                String token = getToken(user.getId());
+                userBean = saveUser2Redis(user, token);
+            }
+        }
+        return userBean;
     }
 
     @RequestMapping("/login")

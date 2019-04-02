@@ -128,7 +128,7 @@ class GamePaijiu2CardsEndless extends GamePaijiuEndless {
     * @param playerInfo2
     * @return
     */
-  override protected def compareByScore(playerInfo1: PlayerCardInfoPaijiu, playerInfo2: PlayerCardInfoPaijiu): Boolean = {
+  override def compareByScore(playerInfo1: PlayerCardInfoPaijiu, playerInfo2: PlayerCardInfoPaijiu): Boolean = {
     val playerScore1 = getGroupScore(playerInfo1.group1)
     val playerScore2 = getGroupScore(playerInfo2.group1)
 

@@ -416,6 +416,9 @@ object PokerRoomService {
         MsgSender.sendMsg2Player("pokerRoomService", "getGoldRooms", result, userId)
         0
 
+      case "getCrazyRoom"=>
+        val crazyType : Int = params.path("type").asInt(0)
+        RoomPaijiuCrazy.getCrazyRoom(userId,crazyType)
 
       case "paijiuTobeBanker"=>
         val roomId = params.get("roomId").asText()
@@ -423,8 +426,6 @@ object PokerRoomService {
         var roomPaijiu = RoomManager.getRoom(roomId)
         val roomCrazy = roomPaijiu.asInstanceOf[RoomPaijiuCrazy]
         roomCrazy.tobeBanker(userId, score)
-
-        0
 
       case _ =>
         return -1

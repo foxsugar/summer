@@ -50,21 +50,10 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     //下注阶段开始
     betStart()
 
-    val money = this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[Integer]
   }
 
 
-  /**
-    * 抽水
-    */
-  def serviceMoney(): Unit ={
-    for(playerInfo <- this.playerCardInfos.values){
-      if(playerInfo.bet != null){
-        val allBet:Double = playerInfo.bet.one + playerInfo.bet.two + playerInfo.bet.three
-        sendCenterAddMoney(playerInfo.userId, allBet)
-      }
-    }
-  }
+
 
   /**
     * 牌局结束
@@ -88,6 +77,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     }
   }
 
+
   /**
     * 下注
     *
@@ -96,7 +86,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     * @param two
     * @return
     */
-  def bet(userId: Long, one: Int, two: Int,three : Int, index:Int): Int = {
+  override def bet(userId: lang.Long, one: Int, two: Int, three: Int, index: Int): Int = {
     val playerInfo_option = playerCardInfos.get(userId)
     //玩家不存在
     if (playerInfo_option.isEmpty) return ErrorCode.NO_USER
@@ -107,17 +97,26 @@ class GamePaijiu100 extends GamePaijiuCrazy {
 
     val bet = new Bet(one, two,three,index)
     if (!checkBet(bet)) return ErrorCode.BET_PARAM_ERROR
+    val myBetNum = one + two + three
+    //金币牌九 下注不能大于身上的钱
+    if (this.roomPaijiu.isInstanceOf[RoomPaijiuAce]|| this.roomPaijiu.isInstanceOf[RoomPaijiuCrazy]){
+      val myMoney = RedisManager.getUserRedisService.getUserMoney(userId)
+      if(myMoney<myBetNum) {
+        return ErrorCode.BET_PARAM_ERROR
+      }
+    }
     //总下注 不能大于锅底
     var betNum:Int = 0
     for(playerInfo <- this.playerCardInfos.values){
       betNum += playerInfo.getBetNum()
     }
-    if(betNum + one + two + three > this.roomPaijiu.bankerScore) {
+    if(betNum + myBetNum > this.roomPaijiu.bankerScore) {
       return ErrorCode.BET_PARAM_LIMIT
     }
 
     playerCardInfoPaijiu.bet = bet
 
+    this.roomPaijiu.addUserSocre(userId, -myBetNum)
 
     val result = Map("userId" -> userId, "bet" -> bet)
     MsgSender.sendMsg2Player("gamePaijiuService", "betResult", result.asJava, users)
@@ -131,6 +130,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     }
     0
   }
+
 
 
   override def isAutoBreakBanker():Boolean ={
@@ -228,7 +228,20 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     if (flag) {
       //换庄家
       //把钱加到庄身上
-      RedisManager.getUserRedisService.addUserMoney(bankerId,this.roomPaijiu.bankerScore)
+      //抽水
+      val winScore:Double = this.roomPaijiu.bankerScore - this.roomPaijiu.bankerInitScore
+      if(winScore > 0) {
+        val s = winScore * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[Double] / 100
+        val finalScore = winScore - s
+        RedisManager.getUserRedisService.addUserMoney(bankerId,finalScore)
+
+        //返利
+        val rebate =  winScore * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[Double] / 100
+        this.roomPaijiu.sendCenterAddRebate(userId, rebate)
+
+      }else{
+        RedisManager.getUserRedisService.addUserMoney(bankerId,this.roomPaijiu.bankerScore)
+      }
       this.roomPaijiu.setBankerId(0)
       this.roomPaijiu.bankerScore = 0
       this.roomPaijiu.clearReadyStatus(true)

@@ -11,6 +11,9 @@ public class ClubStatistics {
     private int openNum;//开局数
     private int completeNum;
     private int winnerNum;
+    private double winScore;
+    private int loseNum;
+    private double loseScore;
     private int consumeNum;//消耗数
     private double allScore;
     private int playerNum;
@@ -76,6 +79,33 @@ public class ClubStatistics {
 
     public ClubStatistics setPlayerUser(Set<Long> playerUser) {
         this.playerUser = playerUser;
+        return this;
+    }
+
+    public double getWinScore() {
+        return winScore;
+    }
+
+    public ClubStatistics setWinScore(double winScore) {
+        this.winScore = winScore;
+        return this;
+    }
+
+    public int getLoseNum() {
+        return loseNum;
+    }
+
+    public ClubStatistics setLoseNum(int loseNum) {
+        this.loseNum = loseNum;
+        return this;
+    }
+
+    public double getLoseScore() {
+        return loseScore;
+    }
+
+    public ClubStatistics setLoseScore(double loseScore) {
+        this.loseScore = loseScore;
         return this;
     }
 }

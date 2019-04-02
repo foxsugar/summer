@@ -223,17 +223,7 @@ class GamePaijiuEndless extends GamePaijiu {
     }
   }
 
-  /**
-    * 获取牌得分
-    *
-    * @param playerInfo
-    * @return
-    */
-  protected def getCardScore(playerInfo: PlayerCardInfoPaijiu): (Int, Int) = {
-    val score1 = getGroupScore(playerInfo.group1)
-    val score2 = getGroupScore(playerInfo.group2)
-    (score1, score2)
-  }
+
 
 
   /**
@@ -243,7 +233,7 @@ class GamePaijiuEndless extends GamePaijiu {
     * @param playerInfo2
     * @return
     */
-  protected def compareByScore(playerInfo1: PlayerCardInfoPaijiu, playerInfo2: PlayerCardInfoPaijiu): Boolean = {
+  def compareByScore(playerInfo1: PlayerCardInfoPaijiu, playerInfo2: PlayerCardInfoPaijiu): Boolean = {
     val playerScore1 = getCardScore(playerInfo1)
     val playerScore2 = getCardScore(playerInfo2)
 

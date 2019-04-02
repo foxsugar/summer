@@ -280,13 +280,20 @@ public class ClubServiceMsgDispatch {
                 return gameClubService.getClubAdmin(msgKey, clubId);
             }
             case "setCreditInfo":{
-                int creditMode = params.get("creditMode").asInt();
-                int creditMin = params.get("creditMin").asInt();
-                int dayingjia = params.get("dayingjia").asInt();
-                int aa = params.get("aa").asInt();
+                int creditMode = params.path("creditMode").asInt();
+                int creditMin = params.path("creditMin").asInt();
+                int dayingjia = params.path("dayingjia").asInt();
+                int aa = params.path("aa").asInt();
+                boolean only = params.path("only").asBoolean();
 
-                return gameClubService.setCreditInfo(msgKey, clubId, creditMode, creditMin, dayingjia, aa);
+                return gameClubService.setCreditInfo(msgKey, clubId, creditMode, creditMin, only,dayingjia, aa);
 
+            }
+
+            case "setCreditScore":{
+                long toUser = params.path("toUser").asLong();
+                int score = params.path("score").asInt();
+                return gameClubService.setCreditScore(msgKey, clubId,toUser, score);
             }
 
 
