@@ -182,7 +182,7 @@ class GamePaijiu extends Game with PaijiuConstant {
 
 
     val result = Map("userId" -> userId, "bet" -> bet)
-    MsgSender.sendMsg2Player("gamePaijiuService", "betResult", result.asJava, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "betResult", result.asJava, roomPaijiu.users)
     MsgSender.sendMsg2Player("gamePaijiuService", "bet", 0, userId)
 
     //除去庄家全都下完注
@@ -247,7 +247,7 @@ class GamePaijiu extends Game with PaijiuConstant {
       gameOver()
     }
     //开牌通知
-    MsgSender.sendMsg2Player("gamePaijiuService", "openResult", Map("userId" -> userId).asJava, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "openResult", Map("userId" -> userId).asJava, roomPaijiu.users)
     MsgSender.sendMsg2Player("gamePaijiuService", "open", 0, userId)
     0
   }
@@ -359,7 +359,7 @@ class GamePaijiu extends Game with PaijiuConstant {
   protected def sendResult(): Unit = {
     var gameResult = new GameResultPaijiu
     this.playerCardInfos.values.foreach(playerInfo => gameResult.getPlayerCardInfos.add(playerInfo.toVo))
-    MsgSender.sendMsg2Player("gamePaijiuService", "gameResult", gameResult, this.users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "gameResult", gameResult, roomPaijiu.users)
   }
 
 
@@ -375,7 +375,7 @@ class GamePaijiu extends Game with PaijiuConstant {
       // 存储返回
       val gameOfResult = new GameOfResult
       gameOfResult.setUserList(userOfResultList)
-      MsgSender.sendMsg2Player("gameService", "gamePaijiuFinalResult", gameOfResult, users)
+      MsgSender.sendMsg2Player("gameService", "gamePaijiuFinalResult", gameOfResult, roomPaijiu.users)
       RoomManager.removeRoom(roomPaijiu.getRoomId)
 
       //庄家初始分 再减掉
@@ -529,10 +529,10 @@ class GamePaijiu extends Game with PaijiuConstant {
 
     val param = Map("bankerId" -> this.bankerId, "curGameNumber" -> this.roomPaijiu.getCurGameNumber)
     //推送开始下注
-    MsgSender.sendMsg2Player("gamePaijiuService", "betStart", param.asJava, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "betStart", param.asJava, roomPaijiu.users)
     //双数局 通知上把牌
     if (roomPaijiu.getCurGameNumber % 2 == 0) {
-      MsgSender.sendMsg2Player("gamePaijiuService", "lastCards", roomPaijiu.lastGameCards.asJava, users)
+      MsgSender.sendMsg2Player("gamePaijiuService", "lastCards", roomPaijiu.lastGameCards.asJava, roomPaijiu.users)
     }
 
     updateLastOperateTime()
@@ -544,7 +544,7 @@ class GamePaijiu extends Game with PaijiuConstant {
   protected def fightForBankerStart(): Unit = {
     state = STATE_FIGHT_FOR_BANKER
     //推送开始下注
-    MsgSender.sendMsg2Player("gamePaijiuService", "fightForBankerStart", this.bankerId, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "fightForBankerStart", this.bankerId, roomPaijiu.users)
   }
 
   /**
@@ -553,7 +553,7 @@ class GamePaijiu extends Game with PaijiuConstant {
   def bankerSetScoreStart(): Unit = {
     state = STATE_BANKER_SET_SCORE
     //推送开始下注
-    MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScoreStart", this.bankerId, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScoreStart", this.bankerId, roomPaijiu.users)
   }
 
   /**
@@ -564,7 +564,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     //推送开始下注
     val result = Map("bankerId" -> this.bankerId)
     updateLastOperateTime()
-    MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreakStart", result.asJava, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreakStart", result.asJava, roomPaijiu.users)
   }
 
   /**
@@ -576,7 +576,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     state = STATE_OPEN
     updateLastOperateTime()
     //推送开始下注
-    MsgSender.sendMsg2Player("gamePaijiuService", "openStart", this.bankerId, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "openStart", this.bankerId, roomPaijiu.users)
   }
 
   /**
@@ -590,7 +590,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     val num1 = rand.nextInt(6) + 1
     val num2 = rand.nextInt(6) + 1
     val result = Map("num1" -> num1, "num2" -> num2)
-    MsgSender.sendMsg2Player("gamePaijiuService", "randSZ", result.asJava, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "randSZ", result.asJava, roomPaijiu.users)
     MsgSender.sendMsg2Player("gamePaijiuService", "crap", 0, userId)
     openStart()
     0
@@ -614,7 +614,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     playerCardInfoPaijiu.isHasFightForBanker = true
 
     val map = Map("userId" -> userId, "flag" -> flag)
-    MsgSender.sendMsg2Player("gamePaijiuService", "fightForBankerResult", map.asJava, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "fightForBankerResult", map.asJava, roomPaijiu.users)
     MsgSender.sendMsg2Player("gamePaijiuService", "fightForBanker", 0, userId)
 
     //选定庄家
@@ -638,7 +638,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     roomPaijiu.bankerScore = score
     roomPaijiu.bankerInitScore = score
     val result = Map("score" -> score)
-    MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScoreResult", result.asJava, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScoreResult", result.asJava, roomPaijiu.users)
     MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScore", 0, userId)
     //下注
     betStart()
@@ -666,6 +666,10 @@ class GamePaijiu extends Game with PaijiuConstant {
   }
 
 
+  def addUser(userId:Long, playerInfo:PlayerCardInfoPaijiu): Unit ={
+    this.users.add(userId)
+    this.playerCardInfos += (userId -> playerInfo)
+  }
 
 
   /**
@@ -689,7 +693,7 @@ class GamePaijiu extends Game with PaijiuConstant {
 
       //通知玩家
       val map = Map("userId" -> this.bankerId)
-      MsgSender.sendMsg2Player("gamePaijiuService", "chooseBanker", map.asJava, users)
+      MsgSender.sendMsg2Player("gamePaijiuService", "chooseBanker", map.asJava, roomPaijiu.users)
 
       //庄家选分
       bankerSetScoreStart()
@@ -718,7 +722,7 @@ class GamePaijiu extends Game with PaijiuConstant {
       }
       //通知玩家
       val map = Map("userId" -> this.bankerId)
-      MsgSender.sendMsg2Player("gamePaijiuService", "chooseBanker", map.asJava, users)
+      MsgSender.sendMsg2Player("gamePaijiuService", "chooseBanker", map.asJava, roomPaijiu.users)
 
       //庄家选分
       bankerSetScoreStart()

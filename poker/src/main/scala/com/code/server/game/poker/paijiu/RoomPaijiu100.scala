@@ -31,4 +31,30 @@ class RoomPaijiu100 extends RoomPaijiuCrazy{
     }
   }
 
+
+  /**
+    * 生成房间战绩
+    */
+  override def genRoomRecord(): Unit = {
+    //do nothing
+  }
+
+  /**
+    * 加入房间
+    * @param userId
+    * @param isJoin
+    *     */
+  override def joinRoom(userId: Long, isJoin: Boolean): Int = {
+    val rtn = super.joinRoom(userId, isJoin)
+    if (rtn != 0) return rtn
+    getReady(userId)
+    if (this.game != null) if (!this.game.getUsers.contains(userId)) {
+      this.game.users.add(userId)
+      val playerPaijiu = new PlayerCardInfoPaijiu
+      playerPaijiu.userId = userId
+      this.game.asInstanceOf[GamePaijiu].addUser(userId, playerPaijiu)
+    }
+    0
+  }
+
 }

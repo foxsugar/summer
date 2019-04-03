@@ -115,7 +115,7 @@ public class GameClubService {
         initRoomInstance(club);
 
 
-        boolean isPresident = club.getPresident() == userId;
+        boolean isPresident = club.getPresident() == userId || club.getClubInfo().getAdmin().contains(userId);
         ClubVo clubVo = getClubVo_simple(club);
         clubVo.getRoomModels().addAll(club.getClubInfo().getRoomModels());
         clubVo.getFloorDesc().addAll(club.getClubInfo().getFloorDesc());
@@ -128,6 +128,7 @@ public class GameClubService {
 //        }
         clubVo.getAdmin().addAll(club.getClubInfo().getAdmin());
         clubVo.getPartner().addAll(club.getClubInfo().getPartner());
+        clubVo.setCreditInfo(club.getClubInfo().getCreditInfo());
 
         clubVo.getMember().forEach(clubMember -> {
             String gateId = RedisManager.getUserRedisService().getGateId(clubMember.getUserId());
@@ -1664,8 +1665,8 @@ public class GameClubService {
         club.getClubInfo().getCreditInfo().put("creditMode", creditMode);
         club.getClubInfo().getCreditInfo().put("creditMin", creditMin);
         club.getClubInfo().getCreditInfo().put("only", only);
-//        club.getClubInfo().getCreditInfo().put("creditMode", creditMode);
-//        club.getClubInfo().getCreditInfo().put("creditMode", creditMode);
+        club.getClubInfo().getCreditInfo().put("dayingjia", dayingjia);
+        club.getClubInfo().getCreditInfo().put("aa", aa);
 
         sendMsg(msgKey, new ResponseVo("clubService", "setCreditInfo", 0));
         return 0;

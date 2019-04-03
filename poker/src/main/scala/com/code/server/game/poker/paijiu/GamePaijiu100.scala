@@ -119,7 +119,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     this.roomPaijiu.addUserSocre(userId, -myBetNum)
 
     val result = Map("userId" -> userId, "bet" -> bet)
-    MsgSender.sendMsg2Player("gamePaijiuService", "betResult", result.asJava, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "betResult", result.asJava, roomPaijiu.users)
     MsgSender.sendMsg2Player("gamePaijiuService", "bet", 0, userId)
 
     //除去庄家全都下完注

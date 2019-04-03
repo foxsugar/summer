@@ -5,7 +5,9 @@ import com.code.server.constant.club.RoomModel;
 import com.code.server.constant.club.Statistics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2018/1/17.
@@ -43,6 +45,8 @@ public class ClubVo {
     private List<Long> partner = new ArrayList<>();
 
     private boolean autoJoin = false;
+
+    private Map<String, Object> creditInfo = new HashMap<>();
 
 
     public String getId() {
@@ -231,6 +235,15 @@ public class ClubVo {
 
     public ClubVo setPartner(List<Long> partner) {
         this.partner = partner;
+        return this;
+    }
+
+    public Map<String, Object> getCreditInfo() {
+        return creditInfo;
+    }
+
+    public ClubVo setCreditInfo(Map<String, Object> creditInfo) {
+        this.creditInfo = creditInfo;
         return this;
     }
 }

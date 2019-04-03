@@ -117,7 +117,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     state = STATE_OPEN
     updateLastOperateTime()
     //推送开始下注
-    MsgSender.sendMsg2Player("gamePaijiuService", "openStart", this.bankerId, users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "openStart", this.bankerId, roomPaijiu.users)
 
   }
 

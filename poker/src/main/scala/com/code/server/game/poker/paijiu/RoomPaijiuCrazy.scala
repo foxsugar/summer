@@ -61,6 +61,19 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
   }
 
+  /**
+    * 100paijiu 不花钱
+    * @return
+    */
+  override def getNeedMoney(): Int = {
+    if(Room.isHasMode(MODE_WINNER_PAY, this.otherMode) && !isAA){
+      return this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[Int]
+    }else{
+      return this.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[Int]
+    }
+
+  }
+
 
   override def spendMoney(): Unit = {
 
@@ -147,6 +160,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
       this.bankerId = userId
       this.canStartUserId = userId
       this.bankerScore = this.bankerScoreMap(userId)
+
       this.bankerInitScore = this.bankerScoreMap(userId)
 
       this.bankerList = this.bankerList.filter(_ != userId)
@@ -165,6 +179,14 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     }
   }
 
+
+
+  override def joinRoom(userId: Long, isJoin: Boolean): Int = {
+    val rtn = super.joinRoom(userId, isJoin)
+    if (rtn != 0) return rtn
+    getReady(userId)
+    0
+  }
 
 }
 
@@ -197,6 +219,7 @@ object RoomPaijiuCrazy extends Room with PaijiuConstant {
     roomPaijiu.otherMode = otherMode
     roomPaijiu.setRobotRoom(robotType != 0)
 
+    roomPaijiu.rebateData = RedisManager.getConstantRedisService.getConstant
     roomPaijiu.init(gameNumber, 1)
     val code = roomPaijiu.joinRoom(userId, false)
     if (code != 0) return code
