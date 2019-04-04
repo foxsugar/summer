@@ -690,6 +690,30 @@ public class GameUserService {
         return 0;
     }
 
+    /**
+     * 转换
+     * @param msgKey
+     * @return
+     */
+    public int change2Money(KafkaMsgKey msgKey) {
+        long userId = msgKey.getUserId();
+        double num = RedisManager.getUserRedisService().getUserGold(userId);
+        RedisManager.getUserRedisService().addUserMoney(userId,num);
+        RedisManager.getUserRedisService().addUserGold(userId,-num);
+        //记录
+        Charge charge = new Charge();
+        charge.setOrderId(""+IdWorker.getDefaultInstance().nextId());
+        charge.setStatus(1);
+        charge.setMoney(num);
+        charge.setCreatetime(new Date());
+        charge.setUserid(userId);
+        charge.setRecharge_source("12");
+        Map<String, Object> result = new HashMap<>();
+        result.put("num", num);
+        sendMsg(msgKey, new ResponseVo("userService", "change2Money", result));
+        return 0;
+
+    }
 
     public int getRecordsByRoom(KafkaMsgKey msgKey, long roomUid) {
         List<com.code.server.db.model.GameRecord> list = gameRecordService.gameRecordDao.getGameRecordByUuid(roomUid);

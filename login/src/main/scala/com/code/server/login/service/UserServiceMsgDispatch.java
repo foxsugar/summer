@@ -118,6 +118,9 @@ public class UserServiceMsgDispatch {
             case "getDiscount":
                 return gameUserService.getDiscount(msgKey);
 
+            case "change2Money":
+                return gameUserService.change2Money(msgKey);
+
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

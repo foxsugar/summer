@@ -321,7 +321,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
         roomRecord.getOtherInfo().put("diceHistory", this.diceHistory);
 //        if (!this.isClubRoom()) {
-            roomRecord.getOtherInfo().put("betHistory", this.betHistory);
+//            roomRecord.getOtherInfo().put("betHistory", this.betHistory);
 //        }
         roomRecord.getOtherInfo().put("userScoreHistory", this.userScoreHistory);
         roomRecord.getOtherInfo().put("playerNum", 10);

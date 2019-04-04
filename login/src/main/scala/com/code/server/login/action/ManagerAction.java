@@ -205,6 +205,26 @@ public class ManagerAction extends Cors {
 //        }
 
     }
+
+    @RequestMapping("/getClubCreditInfo")
+    public Object getClubCreditInfo(String clubId) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club != null) {
+
+            return club.getClubInfo().getCreditInfo();
+        }
+        return new HashMap<>();
+    }
+
+    @RequestMapping("/editCLubUserScore")
+    public Object editCLubUserScore(String clubId, String userId, double num){
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if(club == null) return "-1";
+        ClubMember clubMember = club.getClubInfo().getMember().get("" + userId);
+        if(clubMember == null) return "-2";
+        clubMember.getAllStatistics().setAllScore(clubMember.getAllStatistics().getAllScore() + num);
+        return "0";
+    }
 //    INSERT INTO `summer`.`agent_user` (`id`, `address`, `area`, `cell`, `create_time`, `email`, `gold`, `id_card`, `invite_code`, `level`, `money`, `parent_id`, `parent_pay_deduct`, `parent_share_deduct`, `password`, `pay_deduct`, `real_name`, `share_deduct`, `username`, `agent_info`, `agent_info_record`) VALUES ('1', '1', '1', '13800000000', '2018-07-10 15:05:13', '1234567890@qq.com', '944599988', '120223100000000000', '11', '1', '90180748', '111111', '0.01', '0.02', '111111', '1', '1', '1', 'admin', '{\"allRebate\": 0, \"everyDayCost\": {}, \"everyDayRebate\": {}, \"everyPartnerRebate\": {}}', '{\"clearingRecord\": []}');
 //
 //    INSERT INTO `summer`.`agent_user` (`id`, `address`, `area`, `cell`, `create_time`, `email`, `gold`, `id_card`, `invite_code`, `level`, `money`, `parent_id`, `parent_pay_deduct`, `parent_share_deduct`, `password`, `pay_deduct`, `real_name`, `share_deduct`, `username`, `agent_info`, `agent_info_record`) VALUES ('2', NULL, NULL, NULL, '2018-09-16 20:32:48', NULL, '0', NULL, NULL, '1', '0', '0', '0', '0', '100003', '0', NULL, '0', '100003', '{\"allRebate\": 0, \"everyDayCost\": {}, \"everyDayRebate\": {}, \"everyPartnerRebate\": {}}', '{\"clearingRecord\": []}');

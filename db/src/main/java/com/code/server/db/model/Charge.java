@@ -43,7 +43,7 @@ public class Charge {
     private double money_point;//房卡
     private int chargeType;//充值类型
     private String username;//玩家名称
-    private String recharge_source;//1 微信  2 支付宝  3 分享赠送  4 充值卡  5绑定赠送  11.提现
+    private String recharge_source;//1 微信  2 支付宝  3 分享赠送  4 充值卡  5绑定赠送  11.提现 12.转换
     private double charge_before_money;
     private double charge_after_money;
     private String finishTime; //返利完成时间

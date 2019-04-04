@@ -162,6 +162,7 @@ public class ErrorCode {
 
 	public static final int CANNOT_GET_COUPON_ERROR = 1110014;//不能下注
 	public static final int CANNOT_GOOD_EXCHANGE_ERROR = 1110015;//不能下注
+	public static final int CANNOT_GOLD_NOT_ENOUGH = 1110016;//返利不够
 
 
 
