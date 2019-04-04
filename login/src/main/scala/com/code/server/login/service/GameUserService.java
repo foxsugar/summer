@@ -708,11 +708,48 @@ public class GameUserService {
         charge.setCreatetime(new Date());
         charge.setUserid(userId);
         charge.setRecharge_source("12");
+
+        chargeService.save(charge);
         Map<String, Object> result = new HashMap<>();
         result.put("num", num);
         sendMsg(msgKey, new ResponseVo("userService", "change2Money", result));
         return 0;
 
+    }
+
+    /**
+     * 提现
+     * @param msgKey
+     * @param num
+     * @param name
+     * @param card
+     * @param phone
+     * @return
+     */
+    public int withdrawMoney(KafkaMsgKey msgKey,double num, String name, String card, String phone){
+        long userId = msgKey.getUserId();
+        if (num <= 0) {
+            return ErrorCode.REQUEST_PARAM_ERROR;
+        }
+        if (RedisManager.getUserRedisService().getUserMoney(userId) <= num) {
+            return ErrorCode.GOLD_NOT_ENOUGH;
+        }
+        //减掉钱
+        RedisManager.getUserRedisService().addUserMoney(userId, -num);
+        //记录
+        Charge charge = new Charge();
+        charge.setOrderId("" + IdWorker.getDefaultInstance().nextId());
+        charge.setStatus(0);
+        charge.setCreatetime(new Date());
+        charge.setUsername(name);
+        charge.setSp_ip(phone);
+        charge.setShare_content(card);
+        charge.setRecharge_source("11");
+
+        chargeService.save(charge);
+
+        sendMsg(msgKey, new ResponseVo("userService", "withdrawMoney", 0));
+        return 0;
     }
 
     public int getRecordsByRoom(KafkaMsgKey msgKey, long roomUid) {

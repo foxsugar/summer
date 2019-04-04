@@ -121,6 +121,14 @@ public class UserServiceMsgDispatch {
             case "change2Money":
                 return gameUserService.change2Money(msgKey);
 
+            case "withdrawMoney":
+                double num = params.path("num").asDouble();
+                String userName1 = params.path("name").asText();
+                String card = params.path("card").asText();
+                String phone1 = params.path("phone").asText();
+
+                return gameUserService.withdrawMoney(msgKey, num, userName1, card, phone1);
+
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }
