@@ -320,11 +320,8 @@ public class LoginAction {
     @RequestMapping("/refreshMemory")
     public Map<String, Object> refreshMemory() {
         Map<String, Object> params = new HashMap<>();
-
         ServerManager.init();
-
         params.put("constant", ServerManager.constant);
-
         return getParams("refreshMemory", params, 0);
     }
 
