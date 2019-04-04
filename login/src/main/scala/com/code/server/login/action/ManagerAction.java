@@ -1,7 +1,6 @@
 package com.code.server.login.action;
 
 import com.code.server.constant.club.ClubMember;
-import com.code.server.constant.club.ClubStatistics;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ResponseVo;
@@ -190,19 +189,20 @@ public class ManagerAction extends Cors {
     private void clearClubMember(ClubMember clubMember) {
         LocalDate localDate = LocalDate.now();
         List<String> removeDate = new ArrayList<>();
-        for (Map.Entry<String, ClubStatistics> entry : clubMember.getStatistics().entrySet()) {
-            String key = entry.getKey();
-            LocalDate beginDateTime = LocalDate.parse(key, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            if (localDate.compareTo(beginDateTime) > 3) {
-                removeDate.add(key);
-            }
-
-        }
-
-        for (String key : removeDate) {
-            System.out.println("删除 " + key);
-            clubMember.getStatistics().remove(key);
-        }
+        clubMember.getStatistics().clear();
+//        for (Map.Entry<String, ClubStatistics> entry : clubMember.getStatistics().entrySet()) {
+//            String key = entry.getKey();
+//            LocalDate beginDateTime = LocalDate.parse(key, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//            if (localDate.compareTo(beginDateTime) > 3) {
+//                removeDate.add(key);
+//            }
+//
+//        }
+//
+//        for (String key : removeDate) {
+//            System.out.println("删除 " + key);
+//            clubMember.getStatistics().remove(key);
+//        }
 
     }
 //    INSERT INTO `summer`.`agent_user` (`id`, `address`, `area`, `cell`, `create_time`, `email`, `gold`, `id_card`, `invite_code`, `level`, `money`, `parent_id`, `parent_pay_deduct`, `parent_share_deduct`, `password`, `pay_deduct`, `real_name`, `share_deduct`, `username`, `agent_info`, `agent_info_record`) VALUES ('1', '1', '1', '13800000000', '2018-07-10 15:05:13', '1234567890@qq.com', '944599988', '120223100000000000', '11', '1', '90180748', '111111', '0.01', '0.02', '111111', '1', '1', '1', 'admin', '{\"allRebate\": 0, \"everyDayCost\": {}, \"everyDayRebate\": {}, \"everyPartnerRebate\": {}}', '{\"clearingRecord\": []}');
