@@ -254,12 +254,12 @@ public class GameClubHasMoneyService extends GameClubService {
      * @param inviteUser
      * @return
      */
-    public int invite(KafkaMsgKey msgKey, String clubId, String roomId, String inviteUser, String roomModel, String name) {
+    public int invite(KafkaMsgKey msgKey, String clubId, String roomId, String inviteUser, String roomModel, String name,int type) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
         }
-        super.invite(msgKey, clubId, roomId, inviteUser, roomModel, name);
+        super.invite(msgKey, clubId, roomId, inviteUser, roomModel, name, type);
         sendMsg(new ResponseVo("clubService", "addUserPush",0 ),getClubUser( ClubManager.getInstance().getClubById(clubId)));
         return 0;
     }

@@ -158,7 +158,8 @@ public class ClubServiceMsgDispatch {
                 String roomId1 = params.get("roomId").asText();
                 String roomModel = params.get("roomModel").asText();
                 String name = params.get("name").asText();
-                return gameClubService.invite(msgKey, clubId, roomId1, inviteUser, roomModel, name);
+                int type = params.path("type").asInt(0);
+                return gameClubService.invite(msgKey, clubId, roomId1, inviteUser, roomModel, name, type);
             case "getClubRecord":
                 return gameClubService.getClubRecord(msgKey, userId, clubId);
             case "getClubRecordByDate":
@@ -298,8 +299,8 @@ public class ClubServiceMsgDispatch {
             }
 
             case "clearAllMemberCredit":{
-                int type = params.path("type").asInt(0);
-                return gameClubService.clearAllMemberCredit(msgKey, clubId, type);
+                int type1 = params.path("type").asInt(0);
+                return gameClubService.clearAllMemberCredit(msgKey, clubId, type1);
             }
 
 

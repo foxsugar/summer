@@ -40,6 +40,52 @@ class GamePaijiuCrazy extends GamePaijiu{
       }
   }
 
+
+
+  /**
+    * 发牌
+    */
+  override protected def deal(): Unit = {
+    //测试的发牌
+    if (this.roomPaijiu.isTest && this.roomPaijiu.getCurGameNumber % 2 == 0 && this.roomPaijiu.testUserId != 0) {
+      val (maxCards, newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(cards)
+      val testPlayer = playerCardInfos(this.roomPaijiu.testUserId)
+      testPlayer.cards = maxCards
+
+      MsgSender.sendMsg2Player("gamePaijiuService", "getCards", testPlayer.cards.asJava, this.roomPaijiu.testUserId)
+      var slidList = newCards.sliding(4, 4).toList
+      //两张牌模式
+      if(Room.isHasMode(MODE_2CARD,this.roomPaijiu.otherMode)){
+        slidList = cards.sliding(2, 2).toList
+      }
+      var count = 0
+
+
+      for (playerInfo <- playerCardInfos.values if playerInfo.userId != this.roomPaijiu.testUserId) {
+        playerInfo.cards ++= slidList(count)
+        count += 1
+        //发牌通知
+        MsgSender.sendMsg2Player("gamePaijiuService", "getCards", playerInfo.cards.asJava, playerInfo.userId)
+      }
+
+      //状态置回
+      this.roomPaijiu.testUserId = 0
+    } else {
+      var slidList = cards.sliding(4, 4).toList
+      if(Room.isHasMode(MODE_2CARD,this.roomPaijiu.otherMode)){
+        slidList = cards.sliding(2, 2).toList
+      }
+      var count = 0
+      for (playerInfo <- playerCardInfos.values) {
+        playerInfo.cards ++= slidList(count)
+        count += 1
+        //发牌通知
+        MsgSender.sendMsg2Player("gamePaijiuService", "getCards", playerInfo.cards.asJava, playerInfo.userId)
+      }
+    }
+  }
+
+
   def loadData(): Unit ={
     this.roomPaijiu.rebateData = RedisManager.getConstantRedisService.getConstant
   }

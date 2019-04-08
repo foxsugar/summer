@@ -217,10 +217,12 @@ public class ManagerAction extends Cors {
     }
 
     @RequestMapping("/editCLubUserScore")
-    public Object editCLubUserScore(String clubId, String userId, double num){
+    public Object editCLubUserScore(String clubId, String unionId, double num){
         Club club = ClubManager.getInstance().getClubById(clubId);
         if(club == null) return "-1";
-        ClubMember clubMember = club.getClubInfo().getMember().get("" + userId);
+        User user = userService.getUserDao().getUserByUnionId(unionId);
+        if(user == null) return "-2";
+        ClubMember clubMember = club.getClubInfo().getMember().get("" + user.getId());
         if(clubMember == null) return "-2";
         clubMember.getAllStatistics().setAllScore(clubMember.getAllStatistics().getAllScore() + num);
         return "0";

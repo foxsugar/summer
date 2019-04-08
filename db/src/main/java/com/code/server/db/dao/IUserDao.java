@@ -39,4 +39,6 @@ public interface IUserDao extends PagingAndSortingRepository<User, Long>, JpaSpe
 
     List<User> findAllByVip(int robot);
 
+    User getUserByUnionId(String unionId);
+
 }

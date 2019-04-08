@@ -20,8 +20,13 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     super.initCards()
     //牌放到预先设定好的牌中
 
-    val slidList = cards.sliding(4, 4).toList
+    var slidList = cards.sliding(4, 4).toList
 
+
+    //两张牌模式
+    if(Room.isHasMode(MODE_2CARD,this.roomPaijiu.otherMode)){
+      slidList = cards.sliding(2, 2).toList
+    }
 
     //分牌
     for (i <- 0 to 3) {
@@ -135,7 +140,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
 
   override def isAutoBreakBanker():Boolean ={
     //大于10倍 小于20% 自动切庄
-    this.roomPaijiu.bankerScore > 10 * this.roomPaijiu.bankerInitScore || this.roomPaijiu.bankerScore < this.roomPaijiu.bankerInitScore * 20 /100
+    this.roomPaijiu.bankerScore > 10 * this.roomPaijiu.bankerInitScore || this.roomPaijiu.bankerScore < this.roomPaijiu.bankerInitScore * 10 /100
 
   }
 

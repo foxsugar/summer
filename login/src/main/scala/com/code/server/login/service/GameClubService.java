@@ -1294,7 +1294,7 @@ public class GameClubService {
      * @param inviteUser
      * @return
      */
-    public int invite(KafkaMsgKey msgKey, String clubId, String roomId, String inviteUser, String roomModel, String name) {
+    public int invite(KafkaMsgKey msgKey, String clubId, String roomId, String inviteUser, String roomModel, String name,int type) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
@@ -1306,6 +1306,7 @@ public class GameClubService {
         result.put("inviteUser", inviteUser);
         result.put("roomModelInfo", getRoomModel(club, roomModel));
         result.put("name", name);
+        result.put("type", type);
 //        msgProducer.send();
         sendMsg2Player(new ResponseVo("clubService", "inviteUser", result), Long.valueOf(inviteUser));
 
