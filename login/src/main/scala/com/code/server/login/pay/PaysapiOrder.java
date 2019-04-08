@@ -3,11 +3,13 @@ package com.code.server.login.pay;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.ChargeService;
+import com.code.server.db.Service.RecommendService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.dao.IAgentUserDao;
 import com.code.server.db.dao.IConstantDao;
 import com.code.server.db.model.Charge;
 import com.code.server.db.model.Constant;
+import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.kafka.MsgSender;
@@ -57,6 +59,9 @@ public class PaysapiOrder {
 
     @Autowired
     private IConstantDao constantDao;
+
+    @Autowired
+    private RecommendService recommendService;
 
 
     @RequestMapping(value = "/pay_cft")
@@ -320,6 +325,28 @@ public class PaysapiOrder {
 //        }
         return "支付成功";
     }
+
+
+
+    @RequestMapping(value = "/invite")
+    public String invite( long userId, RedirectAttributes attr,HttpServletRequest request) throws Exception {
+        String ip = Utils.getIpAddr(request);
+
+        Recommend recommend = new Recommend();
+        recommend.setUnionId(ip);
+        recommend.setAgentId(userId);
+        recommendService.getRecommendDao().save(recommend);
+
+        ModelAndView modelAndView = new ModelAndView();
+
+
+        return "/success";
+
+//        modelAndView.setViewName("redirect:https://pay.sxhhjc.cn/");
+
+//        return modelAndView;
+    }
+
 
 
     public static String getDateStr() {

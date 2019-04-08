@@ -293,7 +293,13 @@ public class ClubServiceMsgDispatch {
             case "setCreditScore":{
                 long toUser = params.path("toUser").asLong();
                 int score = params.path("score").asInt();
-                return gameClubService.setCreditScore(msgKey, clubId,toUser, score);
+                boolean clear = params.path("clear").asBoolean(false);
+                return gameClubService.setCreditScore(msgKey, clubId,toUser, score, clear);
+            }
+
+            case "clearAllMemberCredit":{
+                int type = params.path("type").asInt(0);
+                return gameClubService.clearAllMemberCredit(msgKey, clubId, type);
             }
 
 

@@ -1680,7 +1680,7 @@ public class GameClubService {
      * @param score
      * @return
      */
-    public int setCreditScore(KafkaMsgKey msgKey, String clubId, long toUser, int score){
+    public int setCreditScore(KafkaMsgKey msgKey, String clubId, long toUser, int score, boolean clear){
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
@@ -1691,12 +1691,39 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_USER;
         }
 
-        clubMember.getAllStatistics().setAllScore(clubMember.getAllStatistics().getAllScore() + score);
+        if (clear) {
+            clubMember.getAllStatistics().setAllScore(0);
+        }else{
+            clubMember.getAllStatistics().setAllScore(clubMember.getAllStatistics().getAllScore() + score);
+        }
         sendMsg(msgKey, new ResponseVo("clubService", "setCreditScore", 0));
         return 0;
     }
 
 
+    /**
+     * 清空信用分
+     * @param msgKey
+     * @param clubId
+     * @param type
+     * @return
+     */
+    public int clearAllMemberCredit(KafkaMsgKey msgKey, String clubId, int type){
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        for(ClubMember clubMember : club.getClubInfo().getMember().values()){
+            ClubStatistics clubStatistics = clubMember.getAllStatistics();
+            if (type == 0) {
+                clubStatistics.setAllScore(0);
+            }else if(type == 1){
+                clubStatistics.setOpenNum(0).setWinnerNum(0).setLoseNum(0).setWinScore(0).setLoseScore(0);
+            }
+        }
+        sendMsg(msgKey, new ResponseVo("clubService", "clearAllMemberCredit", 0));
+        return 0;
+    }
 
 
     /**
