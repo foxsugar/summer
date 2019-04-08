@@ -220,8 +220,9 @@ public class ManagerAction extends Cors {
     public Object editCLubUserScore(String clubId, String unionId, double num){
         Club club = ClubManager.getInstance().getClubById(clubId);
         if(club == null) return "-1";
-        User user = userService.getUserDao().getUserByUnionId(unionId);
-        if(user == null) return "-2";
+        List<User> userList = userService.getUserDao().getUserByUnionId(unionId);
+        if(userList == null || userList.size()==0 ) return "-2";
+        User user = userList.get(0);
         ClubMember clubMember = club.getClubInfo().getMember().get("" + user.getId());
         if(clubMember == null) return "-2";
         clubMember.getAllStatistics().setAllScore(clubMember.getAllStatistics().getAllScore() + num);
