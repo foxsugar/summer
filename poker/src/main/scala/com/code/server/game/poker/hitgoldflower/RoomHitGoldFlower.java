@@ -288,6 +288,10 @@ public class RoomHitGoldFlower extends PokerGoldRoom {
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "roomNotice", userOfRoom), this.getUsers());
 
 
+        if (isClubRoom()) {
+            noticeClubJoinRoom(userId);
+        }
+
     }
 
 

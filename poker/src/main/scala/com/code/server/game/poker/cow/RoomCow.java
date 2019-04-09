@@ -192,6 +192,10 @@ public class RoomCow  extends Room {
 
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "joinRoom", this.toVo(userId)), userId);
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "roomNotice", userOfRoom), this.getUsers());
+
+        if (isClubRoom()) {
+            noticeClubJoinRoom(userId);
+        }
     }
 
     public void spendMoney() {
