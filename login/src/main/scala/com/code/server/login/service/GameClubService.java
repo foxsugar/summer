@@ -1659,7 +1659,6 @@ public class GameClubService {
             return ErrorCode.CLUB_NO_THIS;
         }
 
-        club.getClubInfo().setCreditInfo(new HashMap<>());
         if (club.getClubInfo().getCreditInfo() == null) {
             club.getClubInfo().setCreditInfo(new HashMap<>());
         }
