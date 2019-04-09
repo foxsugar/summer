@@ -160,6 +160,7 @@ public class ClubServiceMsgDispatch {
                 String name = params.get("name").asText();
                 int type = params.path("type").asInt(0);
                 return gameClubService.invite(msgKey, clubId, roomId1, inviteUser, roomModel, name, type);
+
             case "getClubRecord":
                 return gameClubService.getClubRecord(msgKey, userId, clubId);
             case "getClubRecordByDate":

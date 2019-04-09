@@ -386,6 +386,8 @@ public class LoginAction {
         if (userBean != null) {
             userBean.setVip(vip);
             RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+
+            GameUserService.saveUserBean(userId);
         }else{
             User user = userService.getUserByUserId(userId);
             user.setVip(vip);
