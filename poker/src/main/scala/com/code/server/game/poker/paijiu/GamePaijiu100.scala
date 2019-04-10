@@ -3,7 +3,7 @@ package com.code.server.game.poker.paijiu
 import java.{lang, util}
 
 import com.code.server.constant.game.IGameConstant
-import com.code.server.constant.response.ErrorCode
+import com.code.server.constant.response.{ErrorCode, GamePaijiuResult}
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.redis.service.RedisManager
@@ -264,6 +264,37 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     0
   }
 
+  /**
+    * 记录胜负平日志
+    */
+  override def dataLog(): Unit = {
+    val gamepaijiuResult = new GamePaijiuResult()
+    val bankerCards = this.commonCards(0)
 
+    val bankerGroup = getMaxOpenGroup(bankerCards)
+    val bankerScore1 = getGroupScore(bankerGroup._1)
+    val bankerScore2 = getGroupScore(bankerGroup._2)
+    this.commonCards.foreach(t=>{
+      val index = t._1
+      val cards = t._2
+      if(index !=0){
+        val otherGroup = getMaxOpenGroup(cards)
+        val otherScore1 = getGroupScore(otherGroup._1)
+        val otherScore2 = getGroupScore(otherGroup._2)
 
+        var result: Int = 0
+        if (bankerScore1 >= otherScore1) result += 1
+        if (bankerScore1 < otherScore1) result -= 1
+        if (bankerScore2 >= otherScore2) result += 1
+        if (bankerScore2 < otherScore2) result -= 1
+
+        doLogRecord(gamepaijiuResult,index,-result)
+      }
+    })
+
+    this.roomPaijiu.winnerIndex.append(gamepaijiuResult)
+    if(this.roomPaijiu.winnerIndex.size>10){
+      this.roomPaijiu.winnerIndex.remove(0)
+    }
+  }
 }

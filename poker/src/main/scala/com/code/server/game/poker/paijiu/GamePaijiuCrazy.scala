@@ -366,6 +366,10 @@ class GamePaijiuCrazy extends GamePaijiu{
     }
 
     this.roomPaijiu.winnerIndex.append(gamePaijiuResult)
+
+    if(this.roomPaijiu.winnerIndex.size>10){
+      this.roomPaijiu.winnerIndex.remove(0)
+    }
   }
 
 
@@ -454,6 +458,8 @@ class GamePaijiuCrazy extends GamePaijiu{
       }
     }
 
+    //记录 胜负平记录
+    dataLog()
 
     //全赢或全输
     if (resultSet.size == 1) {
