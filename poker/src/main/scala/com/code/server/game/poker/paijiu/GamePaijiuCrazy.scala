@@ -4,7 +4,7 @@ import java.{lang, util}
 
 import com.code.server.constant.data.{DataManager, StaticDataProto}
 import com.code.server.constant.game.IGameConstant
-import com.code.server.constant.response.ErrorCode
+import com.code.server.constant.response.{ErrorCode, GamePaijiuResult}
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.redis.service.RedisManager
@@ -122,6 +122,7 @@ class GamePaijiuCrazy extends GamePaijiu{
       //两张牌的点数相加
       if(group == null) {
         println("group null")
+        return 0
       }
       val cardArray = group.split(",")
       val card1 = cardArray(0)
@@ -348,6 +349,67 @@ class GamePaijiuCrazy extends GamePaijiu{
 
 
   /**
+    * 记录胜负平日志
+    */
+  def dataLog(): Unit ={
+    val oneId = nextTurnId(this.bankerId)
+    val gamePaijiuResult = new GamePaijiuResult()
+
+    doLogRecord(gamePaijiuResult, 1, getSFP(playerCardInfos(oneId).getScore()))
+    if(this.users.size>2){
+      val twoId = nextTurnId(oneId)
+      doLogRecord(gamePaijiuResult, 2, getSFP(playerCardInfos(twoId).getScore()))
+      if(this.users.size()>3){
+        val threeId = nextTurnId(twoId)
+        doLogRecord(gamePaijiuResult, 3, getSFP(playerCardInfos(threeId).getScore()))
+      }
+    }
+
+    this.roomPaijiu.winnerIndex.append(gamePaijiuResult)
+  }
+
+
+  /**
+    * 记录
+    * @param gamePaijiuResult
+    * @param index
+    * @param sfp
+    */
+  def doLogRecord(gamePaijiuResult:GamePaijiuResult,index:Int, sfp:Int): Unit ={
+    if(index == 1){
+      gamePaijiuResult.setOne(sfp)
+      val count = this.roomPaijiu.winnerCountMap.getOrDefault(1,0)
+      this.roomPaijiu.winnerCountMap.put(1, count + 1)
+    }
+    if(index == 2) {
+      gamePaijiuResult.setTwo(sfp)
+      val count = this.roomPaijiu.winnerCountMap.getOrDefault(2,0)
+      this.roomPaijiu.winnerCountMap.put(2, count + 1)
+    }
+    if(index == 3) {
+      gamePaijiuResult.setThree(sfp)
+      val count = this.roomPaijiu.winnerCountMap.getOrDefault(3,0)
+      this.roomPaijiu.winnerCountMap.put(3, count + 1)
+    }
+  }
+
+
+  /**
+    * 获得胜负平
+    * @param score
+    * @return
+    */
+  def getSFP(score:Double):Int={
+    if(score>0){
+      return 1
+    }else if(score<0){
+      return -1
+    }else{
+      return 0
+    }
+  }
+
+  /**
     * 结算
     */
   override def compute(): Unit = {
@@ -391,6 +453,7 @@ class GamePaijiuCrazy extends GamePaijiu{
 
       }
     }
+
 
     //全赢或全输
     if (resultSet.size == 1) {

@@ -1365,7 +1365,9 @@ public class GameClubService {
             if (roomModel != null) {
                 int money = roomModel.getMoney();
                 synchronized (club.lock) {
-                    club.setMoney(club.getMoney() + money);
+                    if (!Utils.isHasMode(CLUB_MODE_USER_PAY, clubMode)) {
+                        club.setMoney(club.getMoney() + money);
+                    }
 
                     //统计减去消耗
                     String today = LocalDate.now().toString();

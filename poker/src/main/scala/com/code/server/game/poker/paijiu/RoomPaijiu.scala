@@ -1,5 +1,7 @@
 package com.code.server.game.poker.paijiu
 
+import java.util
+
 import com.code.server.constant.game.{IGameConstant, RoomStatistics}
 import com.code.server.constant.kafka.{IKafaTopic, IkafkaMsgId, KafkaMsgKey}
 import com.code.server.constant.response._
@@ -54,7 +56,7 @@ class RoomPaijiu extends PokerGoldRoom {
   //赢得索引
   var winnerIndex:ListBuffer[GamePaijiuResult] = ListBuffer()
   //三门获胜场次
-  var winnerCountMap:Map[Int,Int] = Map()
+  var winnerCountMap:java.util.Map[Integer,Integer] = new util.HashMap[Integer,Integer]()
 
   var rebateData:java.util.Map[_,_] = _
 
@@ -178,7 +180,7 @@ class RoomPaijiu extends PokerGoldRoom {
     roomVo.setBankerScore(this.bankerScore)
     roomVo.setBankerId(this.bankerId)
     roomVo.setWinnerIndex(this.winnerIndex.toList.asJava)
-    roomVo.setWinnerCountMap(this.winnerCountMap.asJava)
+    roomVo.setWinnerCountMap(this.winnerCountMap)
     roomVo
 
   }
