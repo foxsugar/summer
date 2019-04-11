@@ -207,6 +207,7 @@ public class Room implements IfaceRoom {
         msg.put("clubId", this.clubId);
         msg.put("clubModelId", this.clubRoomModel);
         msg.put("roomId", this.roomId);
+        msg.put("clubMode", this.clubMode);
         ResponseVo responseVo = new ResponseVo("clubService", "clubDrawBack", msg);
         msgProducer.send("clubService", kafkaKey, responseVo);
 

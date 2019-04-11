@@ -104,9 +104,20 @@ public class CenterMsgService implements IkafkaMsgId {
         });
 
         Map<String, Object> result = JsonUtil.readValue(msg, Map.class);
-        Long userId = jsonNode.path("userId").asLong();
+        long userId = jsonNode.path("userId").asLong();
+        String clubId = jsonNode.path("clubId").asText();
+        Club club = ClubManager.getInstance().getClubById(clubId);
+
         List<String> clubs = ClubManager.getInstance().getUserClubs(userId);
         map.put("clubs", clubs);
+        map.put("credit", club.getClubInfo().getCreditInfo());
+        ClubMember clubMember = club.getClubInfo().getMember().get(""+userId);
+        if (clubMember != null) {
+            map.put("score", clubMember.getAllStatistics().getAllScore());
+        }else{
+            map.put("score", 0);
+        }
+
 
         sendMsg2Player(new ResponseVo("roomService", "getRoomClubByUser", map), userId);
 
