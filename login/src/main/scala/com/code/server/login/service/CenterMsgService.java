@@ -110,12 +110,15 @@ public class CenterMsgService implements IkafkaMsgId {
 
         List<String> clubs = ClubManager.getInstance().getUserClubs(userId);
         map.put("clubs", clubs);
-        map.put("credit", club.getClubInfo().getCreditInfo());
-        ClubMember clubMember = club.getClubInfo().getMember().get(""+userId);
-        if (clubMember != null) {
-            map.put("score", clubMember.getAllStatistics().getAllScore());
-        }else{
-            map.put("score", 0);
+        if (club != null) {
+
+            map.put("credit", club.getClubInfo().getCreditInfo());
+            ClubMember clubMember = club.getClubInfo().getMember().get(""+userId);
+            if (clubMember != null) {
+                map.put("score", clubMember.getAllStatistics().getAllScore());
+            }else{
+                map.put("score", 0);
+            }
         }
 
 

@@ -192,10 +192,10 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
             PlayerCardsInfoMj dpUser = this.gameInfo.getPlayerCardsInfos().get(dianpaoUser);
 
             //点炮的是庄
-            if (this.gameInfo.getFirstTurn() == dianpaoUser && isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_显庄)) {
-                int temp = 10;
-                allScore += temp;
-            }
+//            if (this.gameInfo.getFirstTurn() == dianpaoUser && isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_显庄)) {
+//                int temp = 10;
+//                allScore += temp;
+//            }
             if (isBankerWinMore && this.gameInfo.getFirstTurn() != dianpaoUser) {
                 allScore += 10;
             }
