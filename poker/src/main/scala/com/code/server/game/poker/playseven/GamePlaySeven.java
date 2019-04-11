@@ -21,7 +21,7 @@ import java.util.*;
  *
  * @version 1.0
  */
-public class GamePlaySeven extends Game{
+public class GamePlaySeven extends Game {
 
     public static final long STOP_TIME = 500;
 
@@ -40,11 +40,11 @@ public class GamePlaySeven extends Game{
     public int jianFen = 0;
     public int kouDiBeiShu = 1;//扣底翻倍的倍数
     public Integer liangCard;//亮的牌
-    public long secondBanker= 0l;//另一个队友Id
+    public long secondBanker = 0l;//另一个队友Id
     public int huaSe;//1230 黑红花片
     public int step;//步骤
-    public int chuHuaSe=-2;//1230 黑红花片
-    public long diYiChu=0l;
+    public int chuHuaSe = -2;//1230 黑红花片
+    public long diYiChu = 0l;
 
     //出过 1，未出 0
     protected Map<Long, Integer> ifChuPai = new HashMap<>();
@@ -72,9 +72,9 @@ public class GamePlaySeven extends Game{
             PlayerCardInfoPlaySeven playerCardInfo = getGameTypePlayerCardInfo();
             playerCardInfo.userId = uid;
             playerCardInfos.put(uid, playerCardInfo);
-            ifChuPai.put(uid,0);
-            compareCard.put(uid,-1);
-            userGetFen.put(uid,0);
+            ifChuPai.put(uid, 0);
+            compareCard.put(uid, -1);
+            userGetFen.put(uid, 0);
         }
         this.users.addAll(users);
         shuffle();
@@ -94,14 +94,14 @@ public class GamePlaySeven extends Game{
 
 
     //==============操作=====================
-    public int getCard(long userId,Integer number) {
+    public int getCard(long userId, Integer number) {
 
-        if(room.getPersonNumber()==5){
-            if(playerCardInfos.get(userId).handCards.size()>=20){
+        if (room.getPersonNumber() == 5) {
+            if (playerCardInfos.get(userId).handCards.size() >= 20) {
                 return ErrorCode.ERROR_CARD_MAX;
             }
-        }else{
-            if(playerCardInfos.get(userId).handCards.size()>=25){
+        } else {
+            if (playerCardInfos.get(userId).handCards.size() >= 25) {
                 return ErrorCode.ERROR_CARD_MAX;
             }
         }
@@ -110,29 +110,29 @@ public class GamePlaySeven extends Game{
         Map<String, Object> msg = new HashMap<>();
         msg.put("userId", playerCardInfos.get(userId).getUserId());
         int size = playerCardInfos.get(userId).handCards.size();
-        int tempcardNum = playerCardInfos.get(userId).handCards.get(size-1);
-        msg.put("card",tempcardNum);
-        if(size==1){
-            if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||
-                    tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52){
+        int tempcardNum = playerCardInfos.get(userId).handCards.get(size - 1);
+        msg.put("card", tempcardNum);
+        if (size == 1) {
+            if (tempcardNum == 49 || tempcardNum == 50 || tempcardNum == 51 || tempcardNum == 52 ||
+                    tempcardNum == -49 || tempcardNum == -50 || tempcardNum == -51 || tempcardNum == -52) {
                 playerCardInfos.get(userId).setShouQi("1");
                 playerCardInfos.get(userId).setDanLiang("1");
                 msg.put("shouQi", "1");
                 msg.put("danLiang", "1");
             }
-        }else{
-            if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||
-                    tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52){
+        } else {
+            if (tempcardNum == 49 || tempcardNum == 50 || tempcardNum == 51 || tempcardNum == 52 ||
+                    tempcardNum == -49 || tempcardNum == -50 || tempcardNum == -51 || tempcardNum == -52) {
                 playerCardInfos.get(userId).setDanLiang("1");
                 msg.put("danLiang", "1");
             }
         }
-        if("1".equals(playerCardInfos.get(userId).getDanLiang())){
+        if ("1".equals(playerCardInfos.get(userId).getDanLiang())) {
             for (int j = 0; j < size; j++) {
-                if(tempcardNum!=playerCardInfos.get(userId).handCards.get(j))
+                if (tempcardNum != playerCardInfos.get(userId).handCards.get(j))
                     if (tempcardNum + playerCardInfos.get(userId).handCards.get(j) == 0 &&
-                            (tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
-                            tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54)) {
+                            (tempcardNum == 49 || tempcardNum == 50 || tempcardNum == 51 || tempcardNum == 52 || tempcardNum == 53 || tempcardNum == 54 ||
+                                    tempcardNum == -49 || tempcardNum == -50 || tempcardNum == -51 || tempcardNum == -52 || tempcardNum == -53 || tempcardNum == -54)) {
                         playerCardInfos.get(userId).setShuangLiang("1");
                         playerCardInfos.get(userId).setFanZhu("4");
                         //playerCardInfos.get(userId).setRenShu("4");
@@ -143,29 +143,30 @@ public class GamePlaySeven extends Game{
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "cardAndCanOperate", msg), userId);
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "getCard", 0), userId);
 
-        if(this.step==CAN_CHANGE_TABLE_CARDS||this.step==STEP_CHUPAI||this.step==CHANGE_TABLE_CARDS_NOW){
+        if (this.step == CAN_CHANGE_TABLE_CARDS || this.step == STEP_CHUPAI || this.step == CHANGE_TABLE_CARDS_NOW) {
 
-        }else{
+        } else {
             boolean b = true;
-            a:for (long l:playerCardInfos.keySet()) {
-                if("1".equals(playerCardInfos.get(l).fanZhu)){
+            a:
+            for (long l : playerCardInfos.keySet()) {
+                if ("1".equals(playerCardInfos.get(l).fanZhu)) {
                     b = false;
                     break a;
                 }
             }
-            if(4==room.getPersonNumber()){
-                if(b){
-                    if(playerCardInfos.get(userId).handCards.size()==25){
+            if (4 == room.getPersonNumber()) {
+                if (b) {
+                    if (playerCardInfos.get(userId).handCards.size() == 25) {
                         this.step = STEP_GET_CARD_FINISH;
-                    }else{
+                    } else {
                         this.step = STEP_GET_CARD_UNFINISH;
                     }
                 }
-            }else{
-                if(b){
-                    if(playerCardInfos.get(userId).handCards.size()==20){
+            } else {
+                if (b) {
+                    if (playerCardInfos.get(userId).handCards.size() == 20) {
                         this.step = STEP_GET_CARD_FINISH;
-                    }else{
+                    } else {
                         this.step = STEP_GET_CARD_UNFINISH;
                     }
                 }
@@ -178,28 +179,28 @@ public class GamePlaySeven extends Game{
     public int getAllCard(long userId) {
         this.step = STEP_GET_CARD_FINISH;
 
-        while(playerCardInfos.get(userId).handCards.size()<100/room.getPersonNumber()){
+        while (playerCardInfos.get(userId).handCards.size() < 100 / room.getPersonNumber()) {
             playerCardInfos.get(userId).handCards.add(cards.remove(0));
             int size = playerCardInfos.get(userId).handCards.size();
-            int tempcardNum = playerCardInfos.get(userId).handCards.get(size-1);
-            if(size==1){
-                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||
-                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52){
+            int tempcardNum = playerCardInfos.get(userId).handCards.get(size - 1);
+            if (size == 1) {
+                if (tempcardNum == 49 || tempcardNum == 50 || tempcardNum == 51 || tempcardNum == 52 ||
+                        tempcardNum == -49 || tempcardNum == -50 || tempcardNum == -51 || tempcardNum == -52) {
                     playerCardInfos.get(userId).setShouQi("1");
                     playerCardInfos.get(userId).setDanLiang("1");
                 }
-            }else{
-                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||
-                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52){
+            } else {
+                if (tempcardNum == 49 || tempcardNum == 50 || tempcardNum == 51 || tempcardNum == 52 ||
+                        tempcardNum == -49 || tempcardNum == -50 || tempcardNum == -51 || tempcardNum == -52) {
                     playerCardInfos.get(userId).setDanLiang("1");
                 }
             }
-            if("1".equals(playerCardInfos.get(userId).getDanLiang())){
+            if ("1".equals(playerCardInfos.get(userId).getDanLiang())) {
                 for (int j = 0; j < size; j++) {
-                    if(tempcardNum!=playerCardInfos.get(userId).handCards.get(j))
+                    if (tempcardNum != playerCardInfos.get(userId).handCards.get(j))
                         if (tempcardNum + playerCardInfos.get(userId).handCards.get(j) == 0 &&
-                                (tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
-                                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54)) {
+                                (tempcardNum == 49 || tempcardNum == 50 || tempcardNum == 51 || tempcardNum == 52 || tempcardNum == 53 || tempcardNum == 54 ||
+                                        tempcardNum == -49 || tempcardNum == -50 || tempcardNum == -51 || tempcardNum == -52 || tempcardNum == -53 || tempcardNum == -54)) {
                             playerCardInfos.get(userId).setShuangLiang("1");
                             playerCardInfos.get(userId).setFanZhu("4");
                             //playerCardInfos.get(userId).setRenShu("4");
@@ -219,7 +220,7 @@ public class GamePlaySeven extends Game{
 
 
     public int getTableCard(long userId) {
-        if(userId!=this.zhuId){
+        if (userId != this.zhuId) {
             return ErrorCode.NOT_YOU_TURN;
         }
         Map<String, Object> tableCardMsg = new HashMap<>();
@@ -232,21 +233,21 @@ public class GamePlaySeven extends Game{
         return 0;
     }
 
-    public int shouQi(long userId,Integer card){
-        if(Math.abs(card)==53 || Math.abs(card)==54){
+    public int shouQi(long userId, Integer card) {
+        if (Math.abs(card) == 53 || Math.abs(card) == 54) {
             return ErrorCode.ERROR_CARD;
         }
-        if(Math.abs(card)>52){
+        if (Math.abs(card) > 52) {
             this.huaSe = -1;
-        }else{
-            this.huaSe = Math.abs(card)%4;
+        } else {
+            this.huaSe = Math.abs(card) % 4;
         }
         this.chuPaiId = userId;
         this.liangCard = card;
         this.zhuId = userId;
         room.setBankerId(userId);
         this.shouQiDouble = true;
-        this.seeTableCard =true;
+        this.seeTableCard = true;
         playerCardInfos.get(userId).setShouQi("2");
 
         Map<String, Object> msg = new HashMap<>();
@@ -254,9 +255,9 @@ public class GamePlaySeven extends Game{
         msg.put("shouQiCard", card);
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "tellShouQiUserId", msg), users);
 
-        for (Long l:playerCardInfos.keySet()) {
+        for (Long l : playerCardInfos.keySet()) {
             Map<String, Object> opreaterMsg = new HashMap<>();
-            if(l!=userId){
+            if (l != userId) {
                 playerCardInfos.get(l).setShouQi("3");
                 playerCardInfos.get(l).setDanLiang("3");
                 playerCardInfos.get(l).setShuangLiang("3");
@@ -264,25 +265,25 @@ public class GamePlaySeven extends Game{
                 opreaterMsg.put("danLiang", "3");
                 opreaterMsg.put("shuangLiang", "3");
             }
-            if((playerCardInfos.get(l).handCards.contains(49)&&playerCardInfos.get(l).handCards.contains(-49))||
-                    (playerCardInfos.get(l).handCards.contains(50)&&playerCardInfos.get(l).handCards.contains(-50))||
-                    (playerCardInfos.get(l).handCards.contains(51)&&playerCardInfos.get(l).handCards.contains(-51))||
-                    (playerCardInfos.get(l).handCards.contains(52)&&playerCardInfos.get(l).handCards.contains(-52))||
-                    (playerCardInfos.get(l).handCards.contains(53)&&playerCardInfos.get(l).handCards.contains(-53))||
-                    (playerCardInfos.get(l).handCards.contains(54)&&playerCardInfos.get(l).handCards.contains(-54))){
-                if(l!=userId){
+            if ((playerCardInfos.get(l).handCards.contains(49) && playerCardInfos.get(l).handCards.contains(-49)) ||
+                    (playerCardInfos.get(l).handCards.contains(50) && playerCardInfos.get(l).handCards.contains(-50)) ||
+                    (playerCardInfos.get(l).handCards.contains(51) && playerCardInfos.get(l).handCards.contains(-51)) ||
+                    (playerCardInfos.get(l).handCards.contains(52) && playerCardInfos.get(l).handCards.contains(-52)) ||
+                    (playerCardInfos.get(l).handCards.contains(53) && playerCardInfos.get(l).handCards.contains(-53)) ||
+                    (playerCardInfos.get(l).handCards.contains(54) && playerCardInfos.get(l).handCards.contains(-54))) {
+                if (l != userId) {
                     playerCardInfos.get(l).setFanZhu("1");
                     opreaterMsg.put("fanZhu", "1");
                     this.step = STEP_FANZHU;
                 }
             }
-            if((playerCardInfos.get(l).handCards.contains(49)&&playerCardInfos.get(l).handCards.contains(-49))||
-                    (playerCardInfos.get(l).handCards.contains(50)&&playerCardInfos.get(l).handCards.contains(-50))||
-                    (playerCardInfos.get(l).handCards.contains(51)&&playerCardInfos.get(l).handCards.contains(-51))||
-                    (playerCardInfos.get(l).handCards.contains(52)&&playerCardInfos.get(l).handCards.contains(-52))||
-                    (playerCardInfos.get(l).handCards.contains(53)&&playerCardInfos.get(l).handCards.contains(-53))||
-                    (playerCardInfos.get(l).handCards.contains(54)&&playerCardInfos.get(l).handCards.contains(-54))){
-                if(l!=userId){
+            if ((playerCardInfos.get(l).handCards.contains(49) && playerCardInfos.get(l).handCards.contains(-49)) ||
+                    (playerCardInfos.get(l).handCards.contains(50) && playerCardInfos.get(l).handCards.contains(-50)) ||
+                    (playerCardInfos.get(l).handCards.contains(51) && playerCardInfos.get(l).handCards.contains(-51)) ||
+                    (playerCardInfos.get(l).handCards.contains(52) && playerCardInfos.get(l).handCards.contains(-52)) ||
+                    (playerCardInfos.get(l).handCards.contains(53) && playerCardInfos.get(l).handCards.contains(-53)) ||
+                    (playerCardInfos.get(l).handCards.contains(54) && playerCardInfos.get(l).handCards.contains(-54))) {
+                if (l != userId) {
                     playerCardInfos.get(l).setFanZhu("1");
                     opreaterMsg.put("fanZhu", "1");
                     this.step = STEP_FANZHU;
@@ -294,13 +295,14 @@ public class GamePlaySeven extends Game{
 
 
         boolean b = false;
-        a:for (long l:playerCardInfos.keySet()) {
-            if(!"0".equals(playerCardInfos.get(l).fanZhu)){
-                b=true;
+        a:
+        for (long l : playerCardInfos.keySet()) {
+            if (!"0".equals(playerCardInfos.get(l).fanZhu)) {
+                b = true;
                 break a;
             }
         }
-        if (b){
+        if (b) {
             playerCardInfos.get(userId).setSeeTableCard("1");
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChangeTableCards", 0), zhuId);
             this.step = CAN_CHANGE_TABLE_CARDS;
@@ -315,20 +317,20 @@ public class GamePlaySeven extends Game{
         return 0;
     }
 
-    public int danLiang(long userId,Integer card){
-        if(Math.abs(card)==53 || Math.abs(card)==54){
+    public int danLiang(long userId, Integer card) {
+        if (Math.abs(card) == 53 || Math.abs(card) == 54) {
             return ErrorCode.ERROR_CARD;
         }
-        if(Math.abs(card)>52){
+        if (Math.abs(card) > 52) {
             this.huaSe = -1;
-        }else{
-            this.huaSe = Math.abs(card)%4;
+        } else {
+            this.huaSe = Math.abs(card) % 4;
         }
         this.chuPaiId = userId;
         this.liangCard = card;
         this.zhuId = userId;
         room.setBankerId(userId);
-        this.seeTableCard =true;
+        this.seeTableCard = true;
         playerCardInfos.get(userId).setDanLiang("2");
 
         Map<String, Object> msg = new HashMap<>();
@@ -336,9 +338,9 @@ public class GamePlaySeven extends Game{
         msg.put("danLiangCard", card);
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "tellDanLiangUserId", msg), users);
         //this.step = STEP_FANZHU;
-        for (Long l:playerCardInfos.keySet()) {
+        for (Long l : playerCardInfos.keySet()) {
             Map<String, Object> opreaterMsg = new HashMap<>();
-            if(l!=userId){
+            if (l != userId) {
                 playerCardInfos.get(l).setShouQi("3");
                 playerCardInfos.get(l).setDanLiang("3");
                 playerCardInfos.get(l).setShuangLiang("3");
@@ -346,13 +348,13 @@ public class GamePlaySeven extends Game{
                 opreaterMsg.put("danLiang", "3");
                 opreaterMsg.put("shuangLiang", "3");
             }
-            if((playerCardInfos.get(l).handCards.contains(49)&&playerCardInfos.get(l).handCards.contains(-49))||
-                    (playerCardInfos.get(l).handCards.contains(50)&&playerCardInfos.get(l).handCards.contains(-50))||
-                    (playerCardInfos.get(l).handCards.contains(51)&&playerCardInfos.get(l).handCards.contains(-51))||
-                    (playerCardInfos.get(l).handCards.contains(52)&&playerCardInfos.get(l).handCards.contains(-52))||
-                    (playerCardInfos.get(l).handCards.contains(53)&&playerCardInfos.get(l).handCards.contains(-53))||
-                    (playerCardInfos.get(l).handCards.contains(54)&&playerCardInfos.get(l).handCards.contains(-54))){
-                if(l!=userId){
+            if ((playerCardInfos.get(l).handCards.contains(49) && playerCardInfos.get(l).handCards.contains(-49)) ||
+                    (playerCardInfos.get(l).handCards.contains(50) && playerCardInfos.get(l).handCards.contains(-50)) ||
+                    (playerCardInfos.get(l).handCards.contains(51) && playerCardInfos.get(l).handCards.contains(-51)) ||
+                    (playerCardInfos.get(l).handCards.contains(52) && playerCardInfos.get(l).handCards.contains(-52)) ||
+                    (playerCardInfos.get(l).handCards.contains(53) && playerCardInfos.get(l).handCards.contains(-53)) ||
+                    (playerCardInfos.get(l).handCards.contains(54) && playerCardInfos.get(l).handCards.contains(-54))) {
+                if (l != userId) {
                     playerCardInfos.get(l).setFanZhu("1");
                     opreaterMsg.put("fanZhu", "1");
                     this.step = STEP_FANZHU;
@@ -367,13 +369,14 @@ public class GamePlaySeven extends Game{
         msg.put("tableCards", tableCards);
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "tellTableCards", tableCardMsg), userId);*/
         boolean b = false;
-        a:for (long l:playerCardInfos.keySet()) {
-            if("1".equals(playerCardInfos.get(l).fanZhu)){
-                b=true;
+        a:
+        for (long l : playerCardInfos.keySet()) {
+            if ("1".equals(playerCardInfos.get(l).fanZhu)) {
+                b = true;
                 break a;
             }
         }
-        if (!b){
+        if (!b) {
             playerCardInfos.get(userId).setSeeTableCard("1");
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChangeTableCards", 0), zhuId);
             this.step = CAN_CHANGE_TABLE_CARDS;
@@ -385,14 +388,14 @@ public class GamePlaySeven extends Game{
         return 0;
     }
 
-    public int shuangLiang(long userId,Integer card){
+    public int shuangLiang(long userId, Integer card) {
         /*if(Math.abs(card)!=49 || Math.abs(card)!=50 || Math.abs(card)!=51 || Math.abs(card)!=52 || Math.abs(card)!=53 || Math.abs(card)!=54){
             return ErrorCode.ERROR_CARD;
         }*/
-        if(Math.abs(card)>52){
+        if (Math.abs(card) > 52) {
             this.huaSe = -1;
-        }else{
-            this.huaSe = Math.abs(card)%4;
+        } else {
+            this.huaSe = Math.abs(card) % 4;
         }
         this.shuangLiangDouble = true;
         this.chuPaiId = userId;
@@ -401,7 +404,7 @@ public class GamePlaySeven extends Game{
         this.secondBanker = userId;
         room.setBankerId(userId);
         this.shouQiDouble = true;
-        this.seeTableCard =true;
+        this.seeTableCard = true;
         playerCardInfos.get(userId).setShuangLiang("2");
         this.step = STEP_FANZHU;
 
@@ -412,9 +415,9 @@ public class GamePlaySeven extends Game{
         msg.put("shuangLiangCard", card);
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "tellShuangLiangUserId", msg), users);
 
-        for (Long l:playerCardInfos.keySet()) {
+        for (Long l : playerCardInfos.keySet()) {
             Map<String, Object> opreaterMsg = new HashMap<>();
-            if(l!=userId){
+            if (l != userId) {
                 playerCardInfos.get(l).setShouQi("3");
                 playerCardInfos.get(l).setDanLiang("3");
                 playerCardInfos.get(l).setShuangLiang("3");
@@ -422,10 +425,10 @@ public class GamePlaySeven extends Game{
                 opreaterMsg.put("danLiang", "3");
                 opreaterMsg.put("shuangLiang", "3");
             }
-            if(liangCard!=53&&liangCard!=54){
-                if((playerCardInfos.get(l).handCards.contains(53)&&playerCardInfos.get(l).handCards.contains(-53))||
-                        (playerCardInfos.get(l).handCards.contains(54)&&playerCardInfos.get(l).handCards.contains(-54))){
-                    if(l!=userId){
+            if (liangCard != 53 && liangCard != 54) {
+                if ((playerCardInfos.get(l).handCards.contains(53) && playerCardInfos.get(l).handCards.contains(-53)) ||
+                        (playerCardInfos.get(l).handCards.contains(54) && playerCardInfos.get(l).handCards.contains(-54))) {
+                    if (l != userId) {
                         playerCardInfos.get(l).setFanZhu("1");
                         opreaterMsg.put("fanZhu", "1");
                     }
@@ -441,13 +444,14 @@ public class GamePlaySeven extends Game{
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "tellTableCards", tableCardMsg), userId);
 */
         boolean b = false;
-        a:for (long l:playerCardInfos.keySet()) {
-            if("1".equals(playerCardInfos.get(l).fanZhu)){
-                b=true;
+        a:
+        for (long l : playerCardInfos.keySet()) {
+            if ("1".equals(playerCardInfos.get(l).fanZhu)) {
+                b = true;
                 break a;
             }
         }
-        if (!b){
+        if (!b) {
             playerCardInfos.get(userId).setSeeTableCard("1");
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChangeTableCards", 0), zhuId);
             this.step = CAN_CHANGE_TABLE_CARDS;
@@ -459,16 +463,16 @@ public class GamePlaySeven extends Game{
         return 0;
     }
 
-    public int fanZhu(long userId,boolean fan,Integer card){
+    public int fanZhu(long userId, boolean fan, Integer card) {
         //todo 已经反过就不能再反了
 //        if (this.fanzhu) {
 //            return ErrorCode.ERROR_CANNOT_FANZHU;
 //        }
-        if(fan){//反主
-            if(Math.abs(card)>52){
+        if (fan) {//反主
+            if (Math.abs(card) > 52) {
                 this.huaSe = -1;
-            }else{
-                this.huaSe = Math.abs(card)%4;
+            } else {
+                this.huaSe = Math.abs(card) % 4;
             }
             this.shuangLiangDouble = true;
             this.liangCard = card;
@@ -485,44 +489,44 @@ public class GamePlaySeven extends Game{
             fzmsg.put("fanZhuId", userId);
             fzmsg.put("fanZhuCard", card);
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "tellFanZhu", fzmsg), users);
-            for (Long l:playerCardInfos.keySet()) {
+            for (Long l : playerCardInfos.keySet()) {
                 Map<String, Object> opreaterMsg = new HashMap<>();
-                if(liangCard!=54&&liangCard!=53){
-                    if((playerCardInfos.get(l).handCards.contains(53)&&playerCardInfos.get(l).handCards.contains(-53))||
-                            (playerCardInfos.get(l).handCards.contains(54)&&playerCardInfos.get(l).handCards.contains(-54))){
-                    /*if(l!=userId){*/
+                if (liangCard != 54 && liangCard != 53) {
+                    if ((playerCardInfos.get(l).handCards.contains(53) && playerCardInfos.get(l).handCards.contains(-53)) ||
+                            (playerCardInfos.get(l).handCards.contains(54) && playerCardInfos.get(l).handCards.contains(-54))) {
+                        /*if(l!=userId){*/
 //                        playerCardInfos.get(l).setFanZhu("1");
 //                        opreaterMsg.put("fanZhu", "1");
 
                         playerCardInfos.get(l).setFanZhu("3");
-                    /*}*/
-                    }else{
+                        /*}*/
+                    } else {
                         playerCardInfos.get(l).setFanZhu("3");
                     }
-                }else{
-                    for (long ll:playerCardInfos.keySet()) {
+                } else {
+                    for (long ll : playerCardInfos.keySet()) {
                         playerCardInfos.get(ll).setFanZhu("3");
                     }
                 }
-                if("2".equals(playerCardInfos.get(l).getDanLiang())||"2".equals(playerCardInfos.get(l).getShouQi())||"2".equals(playerCardInfos.get(l).getShuangLiang())){
-                    if(l!=userId){
+                if ("2".equals(playerCardInfos.get(l).getDanLiang()) || "2".equals(playerCardInfos.get(l).getShouQi()) || "2".equals(playerCardInfos.get(l).getShuangLiang())) {
+                    if (l != userId) {
                         playerCardInfos.get(l).setDanLiang("3");
                         playerCardInfos.get(l).setShouQi("3");
                         playerCardInfos.get(l).setShuangLiang("3");
                     }
                 }
-                if("1".equals(playerCardInfos.get(l).getSeeTableCard())){
-                    if(l!=userId){
+                if ("1".equals(playerCardInfos.get(l).getSeeTableCard())) {
+                    if (l != userId) {
                         playerCardInfos.get(l).setSeeTableCard("3");
                     }
                 }
-                if("1".equals(playerCardInfos.get(l).getSeeTableCard())){
-                    if(l!=userId){
+                if ("1".equals(playerCardInfos.get(l).getSeeTableCard())) {
+                    if (l != userId) {
                         playerCardInfos.get(l).setSeeTableCard("3");
                     }
                 }
-                if("2".equals(playerCardInfos.get(l).getFanZhu())){
-                    if(l!=userId){
+                if ("2".equals(playerCardInfos.get(l).getFanZhu())) {
+                    if (l != userId) {
                         playerCardInfos.get(l).setFanZhu("3");
                     }
                 }
@@ -537,34 +541,35 @@ public class GamePlaySeven extends Game{
                 }
             }
             if(b){*/
-                playerCardInfos.get(userId).setSeeTableCard("1");
-                MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChangeTableCards", 0), zhuId);
-                this.step = CAN_CHANGE_TABLE_CARDS;
+            playerCardInfos.get(userId).setSeeTableCard("1");
+            MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChangeTableCards", 0), zhuId);
+            this.step = CAN_CHANGE_TABLE_CARDS;
             /*}*/
-        }else{
-            if(playerCardInfos.get(userId).handCards.contains(liangCard)&&playerCardInfos.get(userId).handCards.contains(-liangCard)){
+        } else {
+            if (playerCardInfos.get(userId).handCards.contains(liangCard) && playerCardInfos.get(userId).handCards.contains(-liangCard)) {
                 playerCardInfos.get(zhuId).setRenShu("1");
                 MsgSender.sendMsg2Player(new ResponseVo("gameService", "canRenShu", 0), zhuId);
             }
-            for (long l:playerCardInfos.keySet()) {
-                if("1".equals(playerCardInfos.get(l).fanZhu)){
+            for (long l : playerCardInfos.keySet()) {
+                if ("1".equals(playerCardInfos.get(l).fanZhu)) {
                     playerCardInfos.get(l).setFanZhu("4");
                 }
             }
             //没有反主的，通知可以看底牌
             boolean b = true;
-            a:for (long l:playerCardInfos.keySet()) {
-                if("1".equals(playerCardInfos.get(l).fanZhu)){
-                    b=false;
+            a:
+            for (long l : playerCardInfos.keySet()) {
+                if ("1".equals(playerCardInfos.get(l).fanZhu)) {
+                    b = false;
                     break a;
                 }
             }
-            if (b && !changTableCard){
+            if (b && !changTableCard) {
                 playerCardInfos.get(zhuId).setSeeTableCard("1");
                 MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChangeTableCards", 0), zhuId);
                 this.step = CAN_CHANGE_TABLE_CARDS;
             }
-            if(changTableCard){
+            if (changTableCard) {
                 this.step = STEP_CHUPAI;
 
                 Map<String, Object> msgs = new HashMap<>();
@@ -586,9 +591,9 @@ public class GamePlaySeven extends Game{
         return 0;
     }
 
-    public int renShu(long userId,boolean renshu){
-        if("1".equals(playerCardInfos.get(userId).getRenShu())){
-            if(renshu){
+    public int renShu(long userId, boolean renshu) {
+        if ("1".equals(playerCardInfos.get(userId).getRenShu())) {
+            if (renshu) {
                 computeRenshu();
                 sendResult(room.getBankerId());
                 genRecord();
@@ -605,10 +610,10 @@ public class GamePlaySeven extends Game{
         return 0;
     }
 
-    public int changeTableCards(long userId,String tableDelete,String tableAdd){
+    public int changeTableCards(long userId, String tableDelete, String tableAdd) {
 
         //delete和add均为底牌的操作
-        List<Integer> delete  = CardsUtil.transfromStringToCards(tableDelete);
+        List<Integer> delete = CardsUtil.transfromStringToCards(tableDelete);
         //List<Integer> add  = CardsUtil.transfromStringToCards(tableAdd);
 
         playerCardInfos.get(userId).handCards.addAll(tableCards);
@@ -620,20 +625,20 @@ public class GamePlaySeven extends Game{
         this.changTableCard = true;
 
         boolean b = false;//判断是不是有人可以反主
-        for (Long l:playerCardInfos.keySet()) {
-            if(l!=userId){
-                if("1".equals(playerCardInfos.get(l).getFanZhu())||"4".equals(playerCardInfos.get(l).getFanZhu())){
+        for (Long l : playerCardInfos.keySet()) {
+            if (l != userId) {
+                if ("1".equals(playerCardInfos.get(l).getFanZhu()) || "4".equals(playerCardInfos.get(l).getFanZhu())) {
                     playerCardInfos.get(l).setFanZhu("1");
                     MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", 0), l);
                     b = true;
                 }
 
-                if(shuangLiangDouble){//双亮
-                    if(liangCard==53||liangCard==54){
+                if (shuangLiangDouble) {//双亮
+                    if (liangCard == 53 || liangCard == 54) {
 
-                    }else{
-                        if((playerCardInfos.get(l).getHandCards().contains(54)&&playerCardInfos.get(l).getHandCards().contains(-54))||
-                                (playerCardInfos.get(l).getHandCards().contains(53)&&playerCardInfos.get(l).getHandCards().contains(-53))){
+                    } else {
+                        if ((playerCardInfos.get(l).getHandCards().contains(54) && playerCardInfos.get(l).getHandCards().contains(-54)) ||
+                                (playerCardInfos.get(l).getHandCards().contains(53) && playerCardInfos.get(l).getHandCards().contains(-53))) {
                             playerCardInfos.get(l).setFanZhu("1");
                             //MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", 0), l);
                             b = true;
@@ -644,13 +649,13 @@ public class GamePlaySeven extends Game{
                             MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", opreaterMsg), l);
                         }
                     }
-                }else{
-                    if((playerCardInfos.get(l).getHandCards().contains(54)&&playerCardInfos.get(l).getHandCards().contains(-54))||
-                            (playerCardInfos.get(l).getHandCards().contains(53)&&playerCardInfos.get(l).getHandCards().contains(-53))||
-                            (playerCardInfos.get(l).getHandCards().contains(52)&&playerCardInfos.get(l).getHandCards().contains(-52))||
-                            (playerCardInfos.get(l).getHandCards().contains(51)&&playerCardInfos.get(l).getHandCards().contains(-51))||
-                            (playerCardInfos.get(l).getHandCards().contains(50)&&playerCardInfos.get(l).getHandCards().contains(-50))||
-                            (playerCardInfos.get(l).getHandCards().contains(49)&&playerCardInfos.get(l).getHandCards().contains(-49))){
+                } else {
+                    if ((playerCardInfos.get(l).getHandCards().contains(54) && playerCardInfos.get(l).getHandCards().contains(-54)) ||
+                            (playerCardInfos.get(l).getHandCards().contains(53) && playerCardInfos.get(l).getHandCards().contains(-53)) ||
+                            (playerCardInfos.get(l).getHandCards().contains(52) && playerCardInfos.get(l).getHandCards().contains(-52)) ||
+                            (playerCardInfos.get(l).getHandCards().contains(51) && playerCardInfos.get(l).getHandCards().contains(-51)) ||
+                            (playerCardInfos.get(l).getHandCards().contains(50) && playerCardInfos.get(l).getHandCards().contains(-50)) ||
+                            (playerCardInfos.get(l).getHandCards().contains(49) && playerCardInfos.get(l).getHandCards().contains(-49))) {
                         playerCardInfos.get(l).setFanZhu("1");
                         //MsgSender.sendMsg2Player(new ResponseVo("gameService", "canOperate", 0), l);
                         Map<String, Object> opreaterMsg = new HashMap<>();
@@ -664,11 +669,11 @@ public class GamePlaySeven extends Game{
         }
         MsgSender.sendMsg2Player("gameService", "changeTableCards", 0, userId);
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "tellChangeTableCards", userId), users);
-        if (b){
+        if (b) {
             this.step = STEP_FANZHU;
-        }else{
-            if(playerCardInfos.get(userId).handCards.contains(liangCard)&&playerCardInfos.get(userId).handCards.contains(-liangCard)){
-                if("4".equals(playerCardInfos.get(userId).getRenShu())){
+        } else {
+            if (playerCardInfos.get(userId).handCards.contains(liangCard) && playerCardInfos.get(userId).handCards.contains(-liangCard)) {
+                if ("4".equals(playerCardInfos.get(userId).getRenShu())) {
                     playerCardInfos.get(userId).setRenShu("1");
                     MsgSender.sendMsg2Player(new ResponseVo("gameService", "canRenShu", 0), userId);
                 }
@@ -689,12 +694,11 @@ public class GamePlaySeven extends Game{
         return 0;
     }
 
-    public int play(long userId,String playCard){
-
+    public int play(long userId, String playCard) {
 
 
         this.step = STEP_CHUPAI;
-        List<Integer> playCardList  = CardsUtil.transfromStringToCards(playCard);
+        List<Integer> playCardList = CardsUtil.transfromStringToCards(playCard);
 
         /*if(-2!=chuHuaSe){
             if(chuHuaSe!=playCardList.get(0)%4){
@@ -707,36 +711,36 @@ public class GamePlaySeven extends Game{
         }*/
 
         long tempUser = 0l;
-        for (long l:compareCard.keySet()) {
-            if(1==compareCard.get(l)){
+        for (long l : compareCard.keySet()) {
+            if (1 == compareCard.get(l)) {
                 tempUser = l;
             }
         }
-        if(0l!=tempUser){
-            if(playCardList.size()!=playerCardInfos.get(tempUser).playCards.size()){
+        if (0l != tempUser) {
+            if (playCardList.size() != playerCardInfos.get(tempUser).playCards.size()) {
                 return ErrorCode.ERROR_CARD;
             }
         }
-        if(-2!=chuHuaSe||chuHuaSe!=Math.abs(playCardList.get(0))%4){//出的不一样
-            if(-1==chuHuaSe||chuHuaSe==huaSe){//出的主
-                if(Math.abs(playCardList.get(0))<45 && Math.abs(playCardList.get(0))%4!=huaSe){
-                    for (Integer i:playerCardInfos.get(userId).handCards) {
-                        if(!playCardList.contains(i) && (i>44 || huaSe==Math.abs(i)%4)){
+        if (-2 != chuHuaSe || chuHuaSe != Math.abs(playCardList.get(0)) % 4) {//出的不一样
+            if (-1 == chuHuaSe || chuHuaSe == huaSe) {//出的主
+                if (Math.abs(playCardList.get(0)) < 45 && Math.abs(playCardList.get(0)) % 4 != huaSe) {
+                    for (Integer i : playerCardInfos.get(userId).handCards) {
+                        if (!playCardList.contains(i) && (i > 44 || huaSe == Math.abs(i) % 4)) {
                             return ErrorCode.ERROR_CARD;
                         }
                     }
                 }
-            }else{//不是主
-                if(Math.abs(playCardList.get(0))>44 || Math.abs(playCardList.get(0))%4==huaSe){
-                    for (Integer i:playerCardInfos.get(userId).handCards) {
-                        if(!playCardList.contains(i) && Math.abs(i)<45  && chuHuaSe==Math.abs(i)%4){
+            } else {//不是主
+                if (Math.abs(playCardList.get(0)) > 44 || Math.abs(playCardList.get(0)) % 4 == huaSe) {
+                    for (Integer i : playerCardInfos.get(userId).handCards) {
+                        if (!playCardList.contains(i) && Math.abs(i) < 45 && chuHuaSe == Math.abs(i) % 4) {
                             return ErrorCode.ERROR_CARD;
                         }
                     }
                 }
-                if(chuHuaSe!=Math.abs(playCardList.get(0))%4){
-                    for (Integer i:playerCardInfos.get(userId).handCards) {
-                        if(!playCardList.contains(i) && Math.abs(i)<45 && chuHuaSe==Math.abs(i)%4){
+                if (chuHuaSe != Math.abs(playCardList.get(0)) % 4) {
+                    for (Integer i : playerCardInfos.get(userId).handCards) {
+                        if (!playCardList.contains(i) && Math.abs(i) < 45 && chuHuaSe == Math.abs(i) % 4) {
                             return ErrorCode.ERROR_CARD;
                         }
                     }
@@ -744,47 +748,47 @@ public class GamePlaySeven extends Game{
             }
         }
 
-        if(playCardList.size()>1){
+        if (playCardList.size() > 1) {
             List<Integer> tempList = new ArrayList<>();
             tempList.addAll(playerCardInfos.get(userId).handCards);
             tempList.removeAll(playCardList);
             boolean b = false;
-            a:for (Integer i:playCardList){
-                if(chuHuaSe!=Math.abs(i)%4){
+            a:
+            for (Integer i : playCardList) {
+                if (chuHuaSe != Math.abs(i) % 4) {
                     b = true;
                     break a;
                 }
             }
-            if(b){
-                for (Integer i:tempList) {
-                    if(Math.abs(i)<45 && chuHuaSe==Math.abs(i)%4){
+            if (b) {
+                for (Integer i : tempList) {
+                    if (Math.abs(i) < 45 && chuHuaSe == Math.abs(i) % 4) {
                         return ErrorCode.ERROR_CARD;
                     }
                 }
             }
         }
-        if(0==getChuPaiNum()){
-            if(playCardList.size()>=4){
-                if(!CardsUtil.isTuoLaJi(playCardList)){
+        if (0 == getChuPaiNum()) {
+            if (playCardList.size() >= 4) {
+                if (!CardsUtil.isTuoLaJi(playCardList)) {
                     return ErrorCode.ERROR_CARD;
                 }
-            }else if(playCardList.size()==2){
-                if(playCardList.get(0)+playCardList.get(1)!=0){
+            } else if (playCardList.size() == 2) {
+                if (playCardList.get(0) + playCardList.get(1) != 0) {
                     return ErrorCode.ERROR_CARD;
                 }
             }
-        }else{
-            if(playCardList.size()==2){
-                if(-1==chuHuaSe||chuHuaSe==huaSe){//出的主
-                    if(CardsUtil.duiNumZhu(playCardList,huaSe)!=playCardList.size()){
-                        if(CardsUtil.duiNumNoZhu(playCardList,huaSe)>=2){
+        } else {
+            if (playCardList.size() == 2) {
+                if (-1 == chuHuaSe || chuHuaSe == huaSe) {//出的主
+                    if (CardsUtil.duiNumZhu(playCardList, huaSe) != playCardList.size()) {
+                        if (CardsUtil.duiNumNoZhu(playCardList, huaSe) >= 2) {
                             return ErrorCode.ERROR_CARD;
                         }
                     }
-                }
-                else{//出的不是主
-                    if(CardsUtil.duiNumNoZhu(playCardList,chuHuaSe)!=playCardList.size()){
-                        if(CardsUtil.duiNumNoZhu(playCardList,chuHuaSe)>=2){
+                } else {//出的不是主
+                    if (CardsUtil.duiNumNoZhu(playCardList, chuHuaSe) != playCardList.size()) {
+                        if (CardsUtil.duiNumNoZhu(playCardList, chuHuaSe) >= 2) {
                             return ErrorCode.ERROR_CARD;
                         }
                     }
@@ -827,17 +831,16 @@ public class GamePlaySeven extends Game{
                 }
             }*/
 
-            if(playCardList.size()>=4){
-                if(-1==chuHuaSe||chuHuaSe==huaSe){//出的主
-                    if(CardsUtil.duiNumZhu(playCardList,huaSe)!=playCardList.size()){
-                        if(CardsUtil.duiNumZhu(playerCardInfos.get(userId).handCards,huaSe)>=playCardList.size()){
+            if (playCardList.size() >= 4) {
+                if (-1 == chuHuaSe || chuHuaSe == huaSe) {//出的主
+                    if (CardsUtil.duiNumZhu(playCardList, huaSe) != playCardList.size()) {
+                        if (CardsUtil.duiNumZhu(playerCardInfos.get(userId).handCards, huaSe) >= playCardList.size()) {
                             return ErrorCode.ERROR_CARD;
                         }
                     }
-                }
-                else{//出的不是主
-                    if(CardsUtil.duiNumNoZhu(playCardList,chuHuaSe)!=playCardList.size()){
-                        if(CardsUtil.duiNumNoZhu(playerCardInfos.get(userId).handCards,chuHuaSe)>=playCardList.size()){
+                } else {//出的不是主
+                    if (CardsUtil.duiNumNoZhu(playCardList, chuHuaSe) != playCardList.size()) {
+                        if (CardsUtil.duiNumNoZhu(playerCardInfos.get(userId).handCards, chuHuaSe) >= playCardList.size()) {
                             return ErrorCode.ERROR_CARD;
                         }
                     }
@@ -858,25 +861,25 @@ public class GamePlaySeven extends Game{
             this.secondBanker=zhuId;
         }*/
 
-        for (Integer i:playCardList) {
-            if(0==(i+liangCard)||liangCard==i){//出特殊7的话 会有提示
-                if(userId!=zhuId){
+        for (Integer i : playCardList) {
+            if (0 == (i + liangCard) || liangCard == i) {//出特殊7的话 会有提示
+                if (userId != zhuId) {
                     this.secondBanker = userId;
                     Map<String, Object> msg = new HashMap<>();
                     msg.put("tiaoFanUserId", userId);
                     msg.put("liangCard", liangCard);
                     MsgSender.sendMsg2Player(new ResponseVo("gameService", "tellGongYou", msg), users);
-                }else{
+                } else {
                     long temp = 0l;
-                    for (long l:playerCardInfos.keySet()) {
-                        if(playerCardInfos.get(l).handCards.contains(liangCard)||playerCardInfos.get(l).handCards.contains(-liangCard)){
-                            if(l!=zhuId){
-                                temp=l;
+                    for (long l : playerCardInfos.keySet()) {
+                        if (playerCardInfos.get(l).handCards.contains(liangCard) || playerCardInfos.get(l).handCards.contains(-liangCard)) {
+                            if (l != zhuId) {
+                                temp = l;
                             }
                         }
                     }
-                    if(temp==zhuId){
-                        this.secondBanker=zhuId;
+                    if (temp == zhuId) {
+                        this.secondBanker = zhuId;
                     }
                 }
             }
@@ -885,25 +888,25 @@ public class GamePlaySeven extends Game{
         chuPaiPlayer.setPlayCards(playCardList);
         chuPaiPlayer.getHandCards().removeAll(playCardList);
 
-        ifChuPai.put(userId,1);
+        ifChuPai.put(userId, 1);
 
         Map<String, Object> msg = new HashMap<>();
         msg.put("userId", userId);
         msg.put("playCard", playCardList);
 
 
-        if(1==getChuPaiNum()){//第一个人出牌
+        if (1 == getChuPaiNum()) {//第一个人出牌
 
-            if(Math.abs(playCardList.get(0))>44){
+            if (Math.abs(playCardList.get(0)) > 44) {
                 this.chuHuaSe = -1;
-            }else{
-                if(Math.abs(playCardList.get(0))%4==huaSe){
+            } else {
+                if (Math.abs(playCardList.get(0)) % 4 == huaSe) {
                     this.chuHuaSe = -1;
-                }else {
-                    this.chuHuaSe = Math.abs(playCardList.get(0))%4;
+                } else {
+                    this.chuHuaSe = Math.abs(playCardList.get(0)) % 4;
                 }
             }
-            compareCard.put(userId,1);
+            compareCard.put(userId, 1);
             long nextUser = nextTurnId(userId);
             chuPaiId = nextUser;
             this.diYiChu = userId;
@@ -911,31 +914,31 @@ public class GamePlaySeven extends Game{
             Map<String, Object> msgs = new HashMap<>();
             msgs.put("nextUser", nextUser);
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "tellChuPaiId", msgs), users);
-            msg.put("chuHuaSe",this.chuHuaSe);
+            msg.put("chuHuaSe", this.chuHuaSe);
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "playCard", msg), users);
 
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "play", 0), userId);
 
-        }else if(room.getPersonNumber()==getChuPaiNum()){//最后一个人出牌
-            boolean compareResult = CardsUtil.compareCards(huaSe,chuHuaSe,getWinCards(),playCardList);
+        } else if (room.getPersonNumber() == getChuPaiNum()) {//最后一个人出牌
+            boolean compareResult = CardsUtil.compareCards(huaSe, chuHuaSe, getWinCards(), playCardList);
             int fen = 0;
             long winnerId = getWinnerId();
-            if(compareResult){//原来的人赢
-                compareCard.put(userId,0);
-            }else{
-                compareCard.put(winnerId,0);
-                compareCard.put(userId,1);
+            if (compareResult) {//原来的人赢
+                compareCard.put(userId, 0);
+            } else {
+                compareCard.put(winnerId, 0);
+                compareCard.put(userId, 1);
             }
-            for (Long l :users) {
-                for (Integer integer:playerCardInfos.get(l).getPlayCards()) {
-                    fen+=CardsUtil.cardsOfScore.get(integer);
+            for (Long l : users) {
+                for (Integer integer : playerCardInfos.get(l).getPlayCards()) {
+                    fen += CardsUtil.cardsOfScore.get(integer);
                 }
             }
             winnerId = getWinnerId();
             playerCardInfos.get(winnerId).setFen(fen);
-            userGetFen.put(winnerId,userGetFen.get(winnerId)+fen);
+            userGetFen.put(winnerId, userGetFen.get(winnerId) + fen);
 
-            msg.put("chuHuaSe",this.chuHuaSe);
+            msg.put("chuHuaSe", this.chuHuaSe);
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "playCard", msg), users);
 
             Map<String, Object> msgss = new HashMap<>();
@@ -944,28 +947,28 @@ public class GamePlaySeven extends Game{
 
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "play", 0), userId);
 
-            if(playerCardInfos.get(userId).handCards.size()>0){
+            if (playerCardInfos.get(userId).handCards.size() > 0) {
                 //MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChuPai", 0), winnerId);
                 Map<String, Object> msgs = new HashMap<>();
                 msgs.put("nextUser", winnerId);
                 this.chuPaiId = winnerId;
                 this.chuHuaSe = -2;
                 MsgSender.sendMsg2Player(new ResponseVo("gameService", "tellChuPaiId", msgs), users);
-            }else{
-                if(winnerId!=zhuId&&winnerId!=secondBanker&&secondBanker!=0l){
+            } else {
+                if (winnerId != zhuId && winnerId != secondBanker && secondBanker != 0l) {
                     int size = playCardList.size();
-                    if(1==size){
+                    if (1 == size) {
                         this.kouDiBeiShu = 2;
-                    }else{
-                        this.kouDiBeiShu = (int)Math.scalb(1,size/2+1);
+                    } else {
+                        this.kouDiBeiShu = (int) Math.scalb(1, size / 2 + 1);
                     }
-                    for (Integer integer:tableCards) {//算底分
-                        this.tableCardFen+=CardsUtil.cardsOfScore.get(integer);
+                    for (Integer integer : tableCards) {//算底分
+                        this.tableCardFen += CardsUtil.cardsOfScore.get(integer);
                     }
                 }
-                for (long l:userGetFen.keySet()) {
-                    if(l!=zhuId&&l!=secondBanker){
-                        this.jianFen+=userGetFen.get(l);
+                for (long l : userGetFen.keySet()) {
+                    if (l != zhuId && l != secondBanker) {
+                        this.jianFen += userGetFen.get(l);
                     }
                 }
 
@@ -976,20 +979,20 @@ public class GamePlaySeven extends Game{
                 sendFinalResult();
             }
 
-            for (long l:users) {
-                ifChuPai.put(l,0);
-                compareCard.put(l,0);
+            for (long l : users) {
+                ifChuPai.put(l, 0);
+                compareCard.put(l, 0);
                 playerCardInfos.get(l).setPlayCards(null);
             }
 
-        }else{//第二个人出牌
-            boolean compareResult = CardsUtil.compareCards(huaSe,chuHuaSe,getWinCards(),playCardList);
+        } else {//第二个人出牌
+            boolean compareResult = CardsUtil.compareCards(huaSe, chuHuaSe, getWinCards(), playCardList);
             long winnerId = getWinnerId();
-            if(compareResult){//原来的人赢
-                compareCard.put(userId,0);
-            }else{
-                compareCard.put(winnerId,0);
-                compareCard.put(userId,1);
+            if (compareResult) {//原来的人赢
+                compareCard.put(userId, 0);
+            } else {
+                compareCard.put(winnerId, 0);
+                compareCard.put(userId, 1);
             }
             long nextUser = nextTurnId(userId);
             this.chuPaiId = nextUser;
@@ -998,7 +1001,7 @@ public class GamePlaySeven extends Game{
             msgs.put("nextUser", nextUser);
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "tellChuPaiId", msgs), users);
 
-            msg.put("chuHuaSe",this.chuHuaSe);
+            msg.put("chuHuaSe", this.chuHuaSe);
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "playCard", msg), users);
 
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "play", 0), userId);
@@ -1009,7 +1012,7 @@ public class GamePlaySeven extends Game{
         return 0;
     }
 
-    public int dealAgain(){
+    public int dealAgain() {
         room.clearReadyStatus(false);
         MsgSender.sendMsg2Player("gameService", "dealAgain", 0, users);
         updateLastOperateTime();
@@ -1023,10 +1026,14 @@ public class GamePlaySeven extends Game{
     protected void shuffle() {
         cards.addAll(CardsUtil.cardsOf108.keySet());
         Collections.shuffle(cards);
-        tableCards.add(cards.get(107));tableCards.add(cards.get(106));
-        tableCards.add(cards.get(105));tableCards.add(cards.get(104));
-        tableCards.add(cards.get(103));tableCards.add(cards.get(102));
-        tableCards.add(cards.get(101));tableCards.add(cards.get(100));
+        tableCards.add(cards.get(107));
+        tableCards.add(cards.get(106));
+        tableCards.add(cards.get(105));
+        tableCards.add(cards.get(104));
+        tableCards.add(cards.get(103));
+        tableCards.add(cards.get(102));
+        tableCards.add(cards.get(101));
+        tableCards.add(cards.get(100));
     }
 
     protected void shuffle2() {
@@ -1037,22 +1044,22 @@ public class GamePlaySeven extends Game{
     @Deprecated
     protected void dealOne() {
         int cardSize = 1;
-        if(4==room.getPersonNumber()){
-            while (cardSize<26){
+        if (4 == room.getPersonNumber()) {
+            while (cardSize < 26) {
                 sendSingleCard();
                 try {
                     Thread.sleep(STOP_TIME);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 cardSize++;
             }
-        }else if(5==room.getPersonNumber()){
-            while (cardSize<21){
+        } else if (5 == room.getPersonNumber()) {
+            while (cardSize < 21) {
                 sendSingleCard();
                 try {
                     Thread.sleep(STOP_TIME);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 cardSize++;
@@ -1061,32 +1068,32 @@ public class GamePlaySeven extends Game{
     }
 
     @Deprecated
-    private void sendSingleCard(){
+    private void sendSingleCard() {
         for (PlayerCardInfoPlaySeven playerCardInfo : playerCardInfos.values()) {
             playerCardInfo.handCards.add(cards.remove(0));
             Map<String, Object> msg = new HashMap<>();
             msg.put("userId", playerCardInfo.getUserId());
             int size = playerCardInfo.handCards.size();
-            int tempcardNum = playerCardInfo.handCards.get(size-1);
-            msg.put("card",tempcardNum);
-            if(size==1){
-                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
-                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54){
+            int tempcardNum = playerCardInfo.handCards.get(size - 1);
+            msg.put("card", tempcardNum);
+            if (size == 1) {
+                if (tempcardNum == 49 || tempcardNum == 50 || tempcardNum == 51 || tempcardNum == 52 || tempcardNum == 53 || tempcardNum == 54 ||
+                        tempcardNum == -49 || tempcardNum == -50 || tempcardNum == -51 || tempcardNum == -52 || tempcardNum == -53 || tempcardNum == -54) {
                     playerCardInfo.setShouQi("1");
                     playerCardInfo.setDanLiang("1");
                     msg.put("shouQi", "1");
                     msg.put("danLiang", "1");
                 }
-            }else{
-                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
-                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54){
+            } else {
+                if (tempcardNum == 49 || tempcardNum == 50 || tempcardNum == 51 || tempcardNum == 52 || tempcardNum == 53 || tempcardNum == 54 ||
+                        tempcardNum == -49 || tempcardNum == -50 || tempcardNum == -51 || tempcardNum == -52 || tempcardNum == -53 || tempcardNum == -54) {
                     playerCardInfo.setDanLiang("1");
                     msg.put("danLiang", "1");
                 }
             }
-            if("1".equals(playerCardInfo.getDanLiang())){
+            if ("1".equals(playerCardInfo.getDanLiang())) {
                 for (int j = 0; j < size; j++) {
-                    if(tempcardNum!=playerCardInfo.handCards.get(j))
+                    if (tempcardNum != playerCardInfo.handCards.get(j))
                         if (tempcardNum + playerCardInfo.handCards.get(j) == 0) {
                             playerCardInfo.setShuangLiang("1");
                             playerCardInfo.setFanZhu("4");
@@ -1100,19 +1107,18 @@ public class GamePlaySeven extends Game{
     }
 
 
-
     /**
      * 发牌，定时发
      */
     @Deprecated
-    protected void deal(){
+    protected void deal() {
         //发所有
         for (PlayerCardInfoPlaySeven playerCardInfo : playerCardInfos.values()) {
-            if(4==room.getPersonNumber()){
+            if (4 == room.getPersonNumber()) {
                 for (int i = 0; i < 25; i++) {
                     playerCardInfo.handCards.add(cards.remove(0));
                 }
-            }else if(5==room.getPersonNumber()){
+            } else if (5 == room.getPersonNumber()) {
                 for (int i = 0; i < 20; i++) {
                     playerCardInfo.handCards.add(cards.remove(0));
                 }
@@ -1121,15 +1127,15 @@ public class GamePlaySeven extends Game{
         this.tableCards.addAll(cards);
         //定时
         int timer = 0;
-        if(4==room.getPersonNumber()){
-            while(timer<25){
+        if (4 == room.getPersonNumber()) {
+            while (timer < 25) {
                 for (int i = 0; i < 25; i++) {
                     sendSingleCardAndWait500s(i);
                 }
                 timer++;
             }
-        }else if(5==room.getPersonNumber()){
-            while(timer<20){
+        } else if (5 == room.getPersonNumber()) {
+            while (timer < 20) {
                 for (int i = 0; i < 20; i++) {
                     sendSingleCardAndWait500s(i);
                 }
@@ -1143,26 +1149,26 @@ public class GamePlaySeven extends Game{
     //单张发并且等待500s
     @Deprecated
     private void sendSingleCardAndWait500s(int i) {
-        for (Long l:playerCardInfos.keySet()) {
+        for (Long l : playerCardInfos.keySet()) {
             Map<String, Object> msg = new HashMap<>();
             msg.put("userId", l);
             int tempcardNum = playerCardInfos.get(l).handCards.get(i);
-            msg.put("card",tempcardNum);
-            if(i==0){
-                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
-                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54){
+            msg.put("card", tempcardNum);
+            if (i == 0) {
+                if (tempcardNum == 49 || tempcardNum == 50 || tempcardNum == 51 || tempcardNum == 52 || tempcardNum == 53 || tempcardNum == 54 ||
+                        tempcardNum == -49 || tempcardNum == -50 || tempcardNum == -51 || tempcardNum == -52 || tempcardNum == -53 || tempcardNum == -54) {
                     playerCardInfos.get(l).setShouQi("1");
                     playerCardInfos.get(l).setDanLiang("1");
                 }
-            }else{
-                if(tempcardNum==49||tempcardNum==50||tempcardNum==51||tempcardNum==52||tempcardNum==53||tempcardNum==54||
-                        tempcardNum==-49||tempcardNum==-50||tempcardNum==-51||tempcardNum==-52||tempcardNum==-53||tempcardNum==-54){
+            } else {
+                if (tempcardNum == 49 || tempcardNum == 50 || tempcardNum == 51 || tempcardNum == 52 || tempcardNum == 53 || tempcardNum == 54 ||
+                        tempcardNum == -49 || tempcardNum == -50 || tempcardNum == -51 || tempcardNum == -52 || tempcardNum == -53 || tempcardNum == -54) {
                     playerCardInfos.get(l).setDanLiang("1");
                 }
             }
-            if("1".equals(playerCardInfos.get(l).getDanLiang())){
+            if ("1".equals(playerCardInfos.get(l).getDanLiang())) {
                 for (int j = 0; j < i; j++) {
-                    if(tempcardNum+playerCardInfos.get(l).handCards.get(j)==0){
+                    if (tempcardNum + playerCardInfos.get(l).handCards.get(j) == 0) {
                         playerCardInfos.get(l).setShuangLiang("1");
                         playerCardInfos.get(l).setFanZhu("4");
                         playerCardInfos.get(l).setRenShu("4");
@@ -1173,53 +1179,62 @@ public class GamePlaySeven extends Game{
         }
         try {
             Thread.sleep(500);//发牌停顿
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
     protected void compute(long winnerId) {
-        int allScore = kouDiBeiShu*tableCardFen+jianFen;
+        int allScore = kouDiBeiShu * tableCardFen + jianFen;
         int temp = 0;//正分为庄
 
-        if (room.kouDiJiaJi && winnerId!=zhuId&&winnerId!=secondBanker) {
-            if(allScore<80){
-                temp=-1;
-            }else{//大于80的情况
-                temp = -(allScore-40)/40;
-            }
+        if (room.kouDiJiaJi && winnerId != zhuId && winnerId != secondBanker) {
+            if (allScore < 80) {
+//                temp = -1;
 
-        }else{
-
-            if(allScore>=40&&allScore<80){
-                temp=1;
-            }else if(allScore>=5&&allScore<40){
-                temp=2;
-            }else if(allScore==0){
-                if(5==room.fengDing){
-                    temp=5;
-                }else {
-                    temp=3;
+                if (1 == playerCardInfos.get(winnerId).playCards.size()) {
+                    temp -= 1;
+                } else if (2 == playerCardInfos.get(winnerId).playCards.size()) {
+                    temp -= 2;
+                } else {
+                    temp -= 4;
                 }
-            }else{//大于80的情况
-                temp = -(allScore-40)/40;
+
+            } else {//大于80的情况
+                temp = -(allScore - 40) / 40;
+            }
+
+        } else {
+
+            if (allScore >= 40 && allScore < 80) {
+                temp = 1;
+            } else if (allScore >= 5 && allScore < 40) {
+                temp = 2;
+            } else if (allScore == 0) {
+                if (5 == room.fengDing) {
+                    temp = 5;
+                } else {
+                    temp = 3;
+                }
+            } else {//大于80的情况
+                temp = -(allScore - 40) / 40;
             }
         }
-        if(shuangLiangDouble||fanzhu){
-            if(room.zhuangDanDaJiaBei && winnerId==room.getBankerId()){
-                temp*=2;
+        if (shuangLiangDouble || fanzhu) {
+            if (room.zhuangDanDaJiaBei && winnerId == room.getBankerId()) {
+                temp *= 2;
             }
         }
-        if(room.kouDiJiaJi){
-            if(winnerId!=zhuId&&winnerId!=secondBanker){
-                if(allScore>=80){
-                    if(1==playerCardInfos.get(winnerId).playCards.size()){
-                        temp-=1;
-                    }else if(2==playerCardInfos.get(winnerId).playCards.size()){
-                        temp-=2;
-                    }else{
-                        temp-=4;
+        if (room.kouDiJiaJi) {
+            if (winnerId != zhuId && winnerId != secondBanker) {
+                if (allScore >= 80) {
+                    if (1 == playerCardInfos.get(winnerId).playCards.size()) {
+                        temp -= 1;
+                    } else if (2 == playerCardInfos.get(winnerId).playCards.size()) {
+                        temp -= 2;
+                    } else {
+                        temp -= 4;
                     }
                 }
             }
@@ -1230,27 +1245,27 @@ public class GamePlaySeven extends Game{
             roomPlaySeven = (RoomPlaySeven) room;
         }
 
-        if(Math.abs(temp)>room.fengDing){
-            if (temp>0){
+        if (Math.abs(temp) > room.fengDing) {
+            if (temp > 0) {
                 temp = room.fengDing;
-            }else {
+            } else {
                 temp = -room.fengDing;
             }
         }
-        for (Long l:users) {
-            if(secondBanker==zhuId){
-                if(l!=secondBanker && l!=zhuId){//不是庄
+        for (Long l : users) {
+            if (secondBanker == zhuId) {
+                if (l != secondBanker && l != zhuId) {//不是庄
                     playerCardInfos.get(l).addScore(-temp);
                     roomPlaySeven.addUserSocre(l, -temp);
-                }else {
-                    playerCardInfos.get(l).addScore(3*temp);
-                    roomPlaySeven.addUserSocre(l, 3*temp);
+                } else {
+                    playerCardInfos.get(l).addScore(3 * temp);
+                    roomPlaySeven.addUserSocre(l, 3 * temp);
                 }
-            }else {
-                if(l!=secondBanker && l!=zhuId){//不是庄
+            } else {
+                if (l != secondBanker && l != zhuId) {//不是庄
                     playerCardInfos.get(l).addScore(-temp);
                     roomPlaySeven.addUserSocre(l, -temp);
-                }else {
+                } else {
                     playerCardInfos.get(l).addScore(temp);
                     roomPlaySeven.addUserSocre(l, temp);
                 }
@@ -1264,22 +1279,22 @@ public class GamePlaySeven extends Game{
         if (room instanceof RoomPlaySeven) {
             roomPlaySeven = (RoomPlaySeven) room;
         }
-        for (Long l:users) {
+        for (Long l : users) {
             roomPlaySeven.addUserSocre(l, 1);
             playerCardInfos.get(l).addScore(1);
         }
-        roomPlaySeven.addUserSocre(zhuId, -1*(roomPlaySeven.getPersonNumber()));
-        playerCardInfos.get(zhuId).addScore(-1*(roomPlaySeven.getPersonNumber()));
+        roomPlaySeven.addUserSocre(zhuId, -1 * (roomPlaySeven.getPersonNumber()));
+        playerCardInfos.get(zhuId).addScore(-1 * (roomPlaySeven.getPersonNumber()));
     }
 
     protected void sendResult(long winnerId) {
-        Map<Long,Double> score = new HashMap<>();
-        GameResultSeven gameResultSeven  = new GameResultSeven();
-        for (long l:users) {
-            score.put(l,playerCardInfos.get(l).getScore());
+        Map<Long, Double> score = new HashMap<>();
+        GameResultSeven gameResultSeven = new GameResultSeven();
+        for (long l : users) {
+            score.put(l, playerCardInfos.get(l).getScore());
         }
         for (PlayerCardInfoPlaySeven p : playerCardInfos.values()) {
-            gameResultSeven.getPlayerCardInfos().add( p.toVo());
+            gameResultSeven.getPlayerCardInfos().add(p.toVo());
         }
 
         gameResultSeven.setZhuId(zhuId);
@@ -1289,12 +1304,12 @@ public class GamePlaySeven extends Game{
         gameResultSeven.setJianFen(jianFen);
         gameResultSeven.setKouDiBeiShu(kouDiBeiShu);
         gameResultSeven.setTableCards(tableCards);
-        if(winnerId!=zhuId && winnerId!=secondBanker){
-            if(1==playerCardInfos.get(winnerId).playCards.size()){
+        if (winnerId != zhuId && winnerId != secondBanker) {
+            if (1 == playerCardInfos.get(winnerId).playCards.size()) {
                 gameResultSeven.setKouDiJiaJi(1);
-            }else if(2==playerCardInfos.get(winnerId).playCards.size()){
+            } else if (2 == playerCardInfos.get(winnerId).playCards.size()) {
                 gameResultSeven.setKouDiJiaJi(2);
-            }else{
+            } else {
                 gameResultSeven.setKouDiJiaJi(4);
             }
         }
@@ -1304,9 +1319,9 @@ public class GamePlaySeven extends Game{
     }
 
     protected void genRecord() {
-        Map<Long,Double> score = new HashMap<>();
-        for (long l:users) {
-            score.put(l,playerCardInfos.get(l).getScore());
+        Map<Long, Double> score = new HashMap<>();
+        for (long l : users) {
+            score.put(l, playerCardInfos.get(l).getScore());
         }
         long id = IdWorker.getDefaultInstance().nextId();
         genRecord(score, room, id);
@@ -1341,10 +1356,10 @@ public class GamePlaySeven extends Game{
     }
 
     //获取已经出牌的人数
-    public int getChuPaiNum(){
+    public int getChuPaiNum() {
         int chuPaiNum = 0;
-        for (long l:ifChuPai.keySet()) {
-            if(1==ifChuPai.get(l)){
+        for (long l : ifChuPai.keySet()) {
+            if (1 == ifChuPai.get(l)) {
                 chuPaiNum++;
             }
         }
@@ -1352,10 +1367,10 @@ public class GamePlaySeven extends Game{
     }
 
     //获取赢的人的牌
-    public List<Integer> getWinCards(){
+    public List<Integer> getWinCards() {
         long winnerId = 0l;
-        for (long l:compareCard.keySet()) {
-            if(1==compareCard.get(l)){
+        for (long l : compareCard.keySet()) {
+            if (1 == compareCard.get(l)) {
                 winnerId = l;
             }
         }
@@ -1363,10 +1378,10 @@ public class GamePlaySeven extends Game{
     }
 
     //获取赢的人
-    public long getWinnerId(){
+    public long getWinnerId() {
         long winnerId = 0l;
-        for (long l:compareCard.keySet()) {
-            if(1==compareCard.get(l)){
+        for (long l : compareCard.keySet()) {
+            if (1 == compareCard.get(l)) {
                 winnerId = l;
             }
         }
@@ -1374,18 +1389,18 @@ public class GamePlaySeven extends Game{
     }
 
     //是否2张7
-    public boolean ifTwo7OrWang(long userId){
-        return (this.playerCardInfos.get(userId).handCards.contains(49) && this.playerCardInfos.get(userId).handCards.contains(-49))||
-                (this.playerCardInfos.get(userId).handCards.contains(50) && this.playerCardInfos.get(userId).handCards.contains(-50))||
-                (this.playerCardInfos.get(userId).handCards.contains(51) && this.playerCardInfos.get(userId).handCards.contains(-51))||
-                (this.playerCardInfos.get(userId).handCards.contains(52) && this.playerCardInfos.get(userId).handCards.contains(-52))||
-                (this.playerCardInfos.get(userId).handCards.contains(53) && this.playerCardInfos.get(userId).handCards.contains(-53))||
+    public boolean ifTwo7OrWang(long userId) {
+        return (this.playerCardInfos.get(userId).handCards.contains(49) && this.playerCardInfos.get(userId).handCards.contains(-49)) ||
+                (this.playerCardInfos.get(userId).handCards.contains(50) && this.playerCardInfos.get(userId).handCards.contains(-50)) ||
+                (this.playerCardInfos.get(userId).handCards.contains(51) && this.playerCardInfos.get(userId).handCards.contains(-51)) ||
+                (this.playerCardInfos.get(userId).handCards.contains(52) && this.playerCardInfos.get(userId).handCards.contains(-52)) ||
+                (this.playerCardInfos.get(userId).handCards.contains(53) && this.playerCardInfos.get(userId).handCards.contains(-53)) ||
                 (this.playerCardInfos.get(userId).handCards.contains(54) && this.playerCardInfos.get(userId).handCards.contains(-54));
     }
 
     //是否2张7
-    public boolean ifTwoWang(long userId){
-        return (this.playerCardInfos.get(userId).handCards.contains(53) && this.playerCardInfos.get(userId).handCards.contains(-53))||
+    public boolean ifTwoWang(long userId) {
+        return (this.playerCardInfos.get(userId).handCards.contains(53) && this.playerCardInfos.get(userId).handCards.contains(-53)) ||
                 (this.playerCardInfos.get(userId).handCards.contains(54) && this.playerCardInfos.get(userId).handCards.contains(-54));
     }
 
@@ -1586,9 +1601,9 @@ public class GamePlaySeven extends Game{
         vo.secondBanker = this.secondBanker;
 
         for (long l : this.getPlayerCardInfos().keySet()) {
-            if(userId == l){
+            if (userId == l) {
                 vo.playerCardInfos.put(l, this.getPlayerCardInfos().get(l).toVo(userId));
-            }else{
+            } else {
                 vo.playerCardInfos.put(l, this.getPlayerCardInfos().get(l).toVo());
             }
         }
