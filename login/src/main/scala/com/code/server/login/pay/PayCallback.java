@@ -119,7 +119,7 @@ public class PayCallback {
 
             int money_total = Integer.valueOf(element.elementText("total_fee")) / 100;
             if (paySign.equals(element.elementText("sign"))
-                    && charge.getMoney() == money_total) {
+                    ) {
 
                 if (0 == charge.getStatus()) {
                     ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
