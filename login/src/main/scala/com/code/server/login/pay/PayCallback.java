@@ -201,8 +201,8 @@ public class PayCallback {
 
 //                    serverConfig.getChargeMap()
                     //龙七分档
-                    if (serverConfig.getChargeMap().containsKey(money_total)) {
-                        addMoney = serverConfig.getChargeMap().get(money_total);
+                    if (serverConfig.getChargeMap().containsKey((int)charge.getMoney())) {
+                        addMoney = serverConfig.getChargeMap().get((int)charge.getMoney());
                     }
 
                     if (UserBeanRedis != null) {
