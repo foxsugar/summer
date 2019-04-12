@@ -196,9 +196,9 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
 //                int temp = 10;
 //                allScore += temp;
 //            }
-            if (isBankerWinMore && this.gameInfo.getFirstTurn() != dianpaoUser) {
-                allScore += 10;
-            }
+//            if (isBankerWinMore && this.gameInfo.getFirstTurn() != dianpaoUser) {
+//                allScore += 10;
+//            }
             dpUser.addScore(-allScore);
             this.roomInfo.addUserSocre(dpUser.getUserId(), -allScore);
         }
