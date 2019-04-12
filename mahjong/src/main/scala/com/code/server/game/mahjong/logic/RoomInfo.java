@@ -222,6 +222,10 @@ public class RoomInfo extends RoomInfoExtendGold {
             case "HONGZHONG2":
             case "HONGZHONG3":
                 return new GameInfoHongZhong();
+            case "HONGZHONGZLB":
+            case "HONGZHONGZLB2":
+            case "HONGZHONGZLB3":
+                return new GameInfoHongZhong().setTurnZeroAfterHuangZhuang(true);
             case "HONGZHONGSS3":
             case "HONGZHONGSS":
                 return new GameInfoHongZhong().setTurnZeroAfterHuangZhuang(true);
@@ -239,6 +243,11 @@ public class RoomInfo extends RoomInfoExtendGold {
                 return new GameInfoLongxiang().setAfterTingShowCard(true);
             case "BEIJING":
                 return new GameInfoHasChi().setHasJieGangHu(true);
+            case "THREEAZLB":
+            case "THREEAZLB2":
+            case "THREEAZLB3":
+                return new GameInfo().setTurnZeroAfterHuangZhuang(true);
+
             default:
                 return new GameInfo();
         }
@@ -268,7 +277,8 @@ public class RoomInfo extends RoomInfoExtendGold {
         if (this.gameType.equals("ZHONGXIN")) {
             this.gameType = "LQ";
         }
-        if (this.gameType.equals("THREEA") || this.gameType.equals("THREEA2") ||this.gameType.equals("THREEA3")) {
+        if (this.gameType.equals("THREEA") || this.gameType.equals("THREEA2") ||this.gameType.equals("THREEA3")||
+                this.gameType.equals("THREEAZLB") || this.gameType.equals("THREEAZLB2") ||this.gameType.equals("THREEAZLB3")) {
             this.gameType = "LQ";
         }
 
