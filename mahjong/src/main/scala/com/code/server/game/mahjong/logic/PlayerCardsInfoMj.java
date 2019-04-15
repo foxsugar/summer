@@ -80,6 +80,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     protected Set<Integer> guoPengSet = new HashSet<>();
     protected int paofen = -1;
     protected String koutingCard = "";
+    public int dingqueGroupType = 0;
 
     /**
      * 根据发的牌初始化
@@ -1416,6 +1417,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     public PlayerCardsInfoMj setKoutingCard(String koutingCard) {
         this.koutingCard = koutingCard;
+        return this;
+    }
+
+    public int getDingqueGroupType() {
+        return dingqueGroupType;
+    }
+
+    public PlayerCardsInfoMj setDingqueGroupType(int dingqueGroupType) {
+        this.dingqueGroupType = dingqueGroupType;
         return this;
     }
 }

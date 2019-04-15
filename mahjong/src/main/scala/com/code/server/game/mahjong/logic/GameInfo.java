@@ -87,6 +87,7 @@ public class GameInfo extends Game {
     private boolean isTurnZeroAfterHuangZhuang = false;
 
     public int rand = 0;
+
 //    private Set<Long> noCanHuList = new HashSet<>();//本轮不能胡的人
 
     /**
@@ -226,6 +227,16 @@ public class GameInfo extends Game {
      * @return
      */
     public int paofen(long userId, int status) {
+        return 0;
+    }
+
+    /**
+     * 定缺
+     * @param userId
+     * @param groupType
+     * @return
+     */
+    public int dingque(long userId, int groupType){
         return 0;
     }
 

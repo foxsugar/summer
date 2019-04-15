@@ -24,6 +24,7 @@ public class ClubVo {
     private int applyNum;
     private String image;
     private int roomModelNum;
+    private double score;
     private List<String> floorDesc = new ArrayList<>();
 
     private List<ClubMember> member = new ArrayList<>();//成员
@@ -244,6 +245,15 @@ public class ClubVo {
 
     public ClubVo setCreditInfo(Map<String, Object> creditInfo) {
         this.creditInfo = creditInfo;
+        return this;
+    }
+
+    public double getScore() {
+        return score;
+    }
+
+    public ClubVo setScore(double score) {
+        this.score = score;
         return this;
     }
 }

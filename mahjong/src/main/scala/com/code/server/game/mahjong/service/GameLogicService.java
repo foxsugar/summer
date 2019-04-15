@@ -100,6 +100,10 @@ public class GameLogicService {
                 int status = jsonNode.path("status").asInt(0);
                 code = paofen(roomId, userId, status);
                 break;
+            case "dingque":
+                int groupTyep = jsonNode.path("type").asInt(0);
+                code = getGameInfo(roomId).dingque(userId, groupTyep);
+                break;
         }
         if (code == 0) {
             MsgSender.sendMsg2Player("gameLogicService",method,code, userId);

@@ -420,6 +420,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     val banker = playerCardInfos(bankerId)
     var winUsers: List[PlayerCardInfoPaijiu] = List()
     val mix8Score = getGroupScoreByName(MIX_8)
+    val mix9Score = getGroupScoreByName(MIX_8)
     var resultSet: Set[Int] = Set()
     playerCardInfos.foreach { case (uid, other) =>
       if (uid != bankerId) {

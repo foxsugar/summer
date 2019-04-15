@@ -86,7 +86,7 @@ public class GameClubService {
             Club club = ClubManager.getInstance().getClubById(clubId);
             if (club != null) {
                 club.getClubInfo().getMember().get("" + userId).setLastLoginTime("" + System.currentTimeMillis());
-                list.add(getClubVo_simple(club));
+                list.add(getClubVo_simple(club, userId));
             }
         }
 
@@ -1829,6 +1829,22 @@ public class GameClubService {
         return clubVo;
     }
 
+
+    private ClubVo getClubVo_simple(Club club,long userId) {
+        if (club == null) {
+            return new ClubVo();
+        }
+        ClubVo clubVo = getClubVo_simple(club);
+        ClubMember clubMember = club.getClubInfo().getMember().get(""+userId);
+        if (clubMember != null) {
+
+            clubVo.setScore(clubMember.getAllStatistics().getAllScore());
+        }else{
+            clubVo.setScore(0);
+        }
+
+        return clubVo;
+    }
 
     /**
      * 转让俱乐部
