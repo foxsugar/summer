@@ -48,6 +48,14 @@ public class GamePlaySevenFive extends GamePlaySeven{
                         }else{
                             temp-=4;
                         }
+                    }else{
+                        if (1 == playerCardInfos.get(winnerId).playCards.size()) {
+                            temp -= 1;
+                        } else if (2 == playerCardInfos.get(winnerId).playCards.size()) {
+                            temp -= 2;
+                        } else {
+                            temp -= 4;
+                        }
                     }
                 }
             }

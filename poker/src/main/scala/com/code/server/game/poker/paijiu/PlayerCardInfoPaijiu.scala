@@ -44,6 +44,14 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
     result
   }
 
+  def getBetScore(isWinTwo:Boolean , isWinThree:Boolean):Int = {
+    if(bet == null) return 0
+    var result = bet.one
+    if(isWinTwo) result += bet.two
+    if(isWinThree) result += bet.three
+    result
+  }
+
   /**
     * 加分数
     * @param room

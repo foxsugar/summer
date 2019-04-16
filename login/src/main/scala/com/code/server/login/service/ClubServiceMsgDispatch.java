@@ -174,7 +174,6 @@ public class ClubServiceMsgDispatch {
             case "kickUser":
                 long kickUser = params.get("kickUserId").asLong();
                 return gameClubService.kickUser(msgKey, userId, clubId, kickUser);
-
             case "getChargeRecord":
                 return gameClubService.getChargeRecord(msgKey, userId, clubId);
 

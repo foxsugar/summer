@@ -420,7 +420,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     val banker = playerCardInfos(bankerId)
     var winUsers: List[PlayerCardInfoPaijiu] = List()
     val mix8Score = getGroupScoreByName(MIX_8)
-    val mix9Score = getGroupScoreByName(MIX_8)
+    val sky8Score = getGroupScoreByName(SKY_8)
     var resultSet: Set[Int] = Set()
     playerCardInfos.foreach { case (uid, other) =>
       if (uid != bankerId) {
@@ -436,7 +436,8 @@ class GamePaijiuCrazy extends GamePaijiu{
         resultSet = resultSet.+(result)
         //庄家赢
         if (result > 0) {
-          val changeScore = other.getBetScore(bankerScore2 >= mix8Score)
+          val isHas3Bet = Room.isHasMode(MODE_BET_3, this.roomPaijiu.otherMode)
+          val changeScore = other.getBetScore(bankerScore2 >= mix8Score, isHas3Bet && bankerScore2>sky8Score)
           banker.addScore(roomPaijiu,changeScore)
           other.addScore(roomPaijiu,-changeScore)
 

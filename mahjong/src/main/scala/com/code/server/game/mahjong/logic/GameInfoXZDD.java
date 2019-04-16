@@ -3,6 +3,7 @@ package com.code.server.game.mahjong.logic;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.mahjong.response.ErrorCode;
 import com.code.server.game.mahjong.response.HandCardsResp;
+import com.code.server.game.mahjong.response.OperateReqResp;
 import com.code.server.game.mahjong.response.ResponseType;
 import com.code.server.game.room.kafka.MsgSender;
 
@@ -92,6 +93,166 @@ public class GameInfoXZDD extends GameInfoNew {
         }
         return 0;
     }
+
+
+
+    /**
+     * 胡牌
+     *
+     * @param userId
+     * @return
+     */
+    public int hu(long userId) {
+        if (isAlreadyHu) {
+            return ErrorCode.CAN_NOT_HU_ALREADY;
+        }
+        PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
+        if (playerCardsInfo == null) {
+            return ErrorCode.USER_ERROR;
+        }
+
+        //回放
+        OperateReqResp operateReqResp = new OperateReqResp();
+        operateReqResp.setUserId(userId);
+        operateReqResp.setOperateType(OperateReqResp.type_hu);
+
+        if (lastOperateUserId == userId) {//自摸
+            if (playerCardsInfo.isCanHu_zimo(catchCard)) {
+                setBanker(userId);
+                playerCardsInfo.hu_zm(room, this, catchCard);
+                //回放
+                replay.getOperate().add(operateReqResp);
+                handleHu(playerCardsInfo);
+
+            } else {
+                return ErrorCode.CAN_NOT_HU;
+            }
+        } else {
+
+            if (this.disCard == null && jieGangHuCard == null) {
+                return ErrorCode.CAN_NOT_HU;
+            }
+            String card = this.disCard;
+            //
+            if (jieGangHuCard != null) {
+                card = jieGangHuCard;
+            }
+
+            if (playerCardsInfo.isCanHu_dianpao(card)) {
+
+                handleWait(userId, WaitDetail.huPoint);
+            } else {
+                return ErrorCode.CAN_NOT_HU;
+            }
+        }
+
+
+        return 0;
+
+    }
+
+
+
+
+    protected void doHu(PlayerCardsInfoMj playerCardsInfo, long userId) {
+        OperateReqResp operateReqResp = new OperateReqResp();
+        operateReqResp.setUserId(userId);
+        operateReqResp.setOperateType(OperateReqResp.type_hu);
+
+        //todo 谁坐庄
+        setBanker(userId);
+
+        long nextUser = nextTurnId(userId);
+
+        if (jieGangHuCard != null) {
+            //截杠胡
+            playerCardsInfo.setJieGangHu(true);
+            playerCardsInfo.hu_dianpao(room, this, beJieGangUser, jieGangHuCard);
+            //回放
+            operateReqResp.setFromUserId(beJieGangUser);
+            operateReqResp.setCard(jieGangHuCard);
+
+            PlayerCardsInfoMj playerCardsInfoBeJie = playerCardsInfos.get(beJieGangUser);
+            //删除杠
+            if (playerCardsInfoBeJie != null) {
+                playerCardsInfoBeJie.cards.remove(jieGangHuCard);
+                playerCardsInfoBeJie.removeGang2Peng(jieGangHuCard);
+            }
+
+            beJieGangUser = -1;
+            jieGangHuCard = null;
+        } else {
+            //删除弃牌
+            deleteDisCard(lastPlayUserId, disCard);
+            playerCardsInfo.hu_dianpao(room, this, lastPlayUserId, disCard);
+
+            //回放
+            operateReqResp.setFromUserId(lastOperateUserId);
+            operateReqResp.setCard(disCard);
+
+            this.disCard = null;
+        }
+
+        //回放
+        operateReqResp.setIsMing(true);
+        replay.getOperate().add(operateReqResp);
+
+        handleHu(playerCardsInfo);
+    }
+
+
+    protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
+//        isAlreadyHu = true;
+        boolean onlyOneNoHu = playerCardsInfos.values().stream().filter(playerCardsInfoMj -> !playerCardsInfoMj.isAlreadyHu).count() == this.users.size() - 1;
+        if (this.remainCards.size() == 0 || onlyOneNoHu) {
+            sendResult(true, playerCardsInfo.getUserId(), null);
+            noticeDissolutionResult();
+            room.clearReadyStatus(true);
+        }else{
+            //下个人摸牌
+//            mopai();
+        }
+
+
+
+    }
+
+
+
+
+    protected void handleYiPaoDuoXiang() {
+
+        List<Long> yipaoduoxiang = new ArrayList<>();
+
+        //删除弃牌
+        deleteDisCard(lastPlayUserId, disCard);
+        this.waitingforList.forEach(waitDetail -> {
+            if (waitDetail.isHu) {
+                long uid = waitDetail.myUserId;
+                yipaoduoxiang.add(uid);
+                PlayerCardsInfoMj playerCardsInfoMj = playerCardsInfos.get(uid);
+                playerCardsInfoMj.hu_dianpao(room, this, lastPlayUserId, disCard);
+            }
+        });
+
+        //todo 下次的庄家
+        setBanker(yipaoduoxiang.get(0));
+
+        //回放
+        OperateReqResp operateReqResp = new OperateReqResp();
+        operateReqResp.setYipaoduoxiangUser(yipaoduoxiang);
+        operateReqResp.setOperateType(OperateReqResp.type_yipaoduoxiang);
+        operateReqResp.setIsMing(true);
+        replay.getOperate().add(operateReqResp);
+
+//        handleHu(playerCardsInfo);
+
+        isAlreadyHu = true;
+        sendResult(true, -1L, yipaoduoxiang);
+        noticeDissolutionResult();
+        room.clearReadyStatus(true);
+    }
+
 
     /**
      * 下一个出牌人id

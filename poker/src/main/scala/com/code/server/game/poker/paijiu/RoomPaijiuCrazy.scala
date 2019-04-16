@@ -3,7 +3,7 @@ package com.code.server.game.poker.paijiu
 import java.util
 
 import com.code.server.constant.game.IGameConstant
-import com.code.server.constant.response.{ErrorCode, ResponseVo, RoomVo}
+import com.code.server.constant.response.{ErrorCode, IfaceRoomVo, ResponseVo}
 import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
@@ -14,6 +14,7 @@ import com.code.server.util.{IdWorker, SpringUtil}
 
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
 
 /**
   * Created by sunxianping on 2019-03-25.
@@ -239,16 +240,16 @@ object RoomPaijiuCrazy extends Room with PaijiuConstant {
     * @param crazyType
     */
   def getCrazyRoom(userId:Long,crazyType:Int): Int ={
-    var roomList = List[RoomVo]()
+    var roomList = ListBuffer[IfaceRoomVo]()
     RoomManager.getInstance().getRooms
     for(room <- RoomManager.getInstance().getRooms.values()){
       //四人
       if(crazyType == 0 && !room.isInstanceOf[RoomPaijiu100] && room.isInstanceOf[RoomPaijiuCrazy] ){
-        roomList.+:(room.toVo(0))
+        roomList.append(room.toVo(0))
       }
       //百人
       if(crazyType == 1 && room.isInstanceOf[RoomPaijiu100]){
-        roomList.+:(room.toVo(0))
+        roomList.append(room.toVo(0))
       }
     }
 
