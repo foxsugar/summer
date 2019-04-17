@@ -10,6 +10,7 @@ import com.code.server.game.room.kafka.MsgSender
 import com.code.server.redis.service.RedisManager
 
 import scala.collection.JavaConverters._
+import scala.util.Random
 /**
   * Created by sunxianping on 2019-03-22.
   */
@@ -210,6 +211,42 @@ class GamePaijiuCrazy extends GamePaijiu{
 
 
   /**
+    * 抢庄后选定庄家
+    */
+  override protected def chooseBankerAfterFight(): Unit = {
+    //全选之后决定地主
+    val isAllChoose = playerCardInfos.count { case (uid, playerInfo) => !playerInfo.isHasFightForBanker } == 0
+    if (isAllChoose) {
+      val wantTobeBankerList = playerCardInfos.filter { case (uid, playerInfo) => playerInfo.isFightForBanker }.toList
+      //没人选择当庄家 则 创建者当庄家
+      if (wantTobeBankerList.isEmpty) {
+        roomPaijiu.setBankerId(roomPaijiu.getBankerId)
+        this.bankerId = roomPaijiu.getBankerId
+      } else {
+        //随机选庄家
+        val bid = new Random().shuffle(wantTobeBankerList).head._1
+        roomPaijiu.setBankerId(bid)
+        this.bankerId = bid
+      }
+
+      //通知玩家
+      val map = Map("userId" -> this.bankerId)
+      MsgSender.sendMsg2Player("gamePaijiuService", "chooseBanker", map.asJava, roomPaijiu.users)
+
+      //庄家选分
+//      bankerSetScoreStart()
+
+      //扣钱
+      RedisManager.getUserRedisService.addUserMoney(this.bankerId, -this.roomPaijiu.bankerScore)
+
+
+      //开始下注
+      betStart()
+
+    }
+  }
+
+  /**
     * 是否所有人都开牌
     *
     * @return
@@ -254,7 +291,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     */
   def doCreateNewRoom(room:RoomPaijiu): Unit ={
     RoomPaijiuCrazy.createRoom(0,room.getRoomType, room.getGameType, room.getGameNumber, room.getClubId, room.getClubRoomModel,room.getClubMode,
-      room.isAA,room.robotType, room.robotNum, room.robotWinner,room.isReOpen, room.getOtherMode, room.getPersonNumber)
+      room.isAA,room.robotType, room.robotNum, room.robotWinner,room.isReOpen, room.getOtherMode, room.getPersonNumber,room.bankerInitScore )
   }
 
 

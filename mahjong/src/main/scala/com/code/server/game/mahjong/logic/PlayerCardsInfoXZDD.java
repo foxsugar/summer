@@ -1,6 +1,7 @@
 package com.code.server.game.mahjong.logic;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2019-04-15.
@@ -65,6 +66,55 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj{
         if(isAlreadyHu) return false;
         return super.isCanTing(cards);
     }
+
+
+
+    /**
+     * 杠手里的牌
+     *
+     * @param diangangUser
+     * @param card
+     * @return
+     */
+
+    public boolean gang_hand(RoomInfo room, GameInfo info, long diangangUser, String card) {
+        boolean isMing = false;
+        int cardType = CardTypeUtil.cardType.get(card);
+        Map<Integer, Integer> cardNum = getCardNum(cards);
+        long diangang = -1;
+        if (cardNum.containsKey(cardType) && cardNum.get(cardType) == 4) {
+            if (pengType.containsKey(cardType)) {//碰的类型包含这个 是明杠
+                //判断是否过了一圈才杠的
+                //最后一个碰的类型
+                int lastPengType = pengList.get(pengList.size() - 1);
+                if (lastPengType == cardType) {
+
+                }
+                pengType.remove(cardType);//从碰中移除
+                pengList.remove(Integer.valueOf(cardType));
+                mingGangType.put(cardType, diangang);
+                isMing = true;
+
+            } else {
+                anGangType.add(cardType);
+                isMing = false;
+
+            }
+        }
+        return isMing;
+    }
+
+
+    @Override
+    public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card) {
+        super.gangCompute(room, gameInfo, isMing, diangangUser, card);
+        //算分
+
+        //碰后杠 过一圈不算分
+
+
+    }
+
 
 
 }

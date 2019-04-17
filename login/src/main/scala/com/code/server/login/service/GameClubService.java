@@ -1704,6 +1704,30 @@ public class GameClubService {
 
 
     /**
+     * 获得俱乐部信息和自己分数
+     * @param msgKey
+     * @param clubId
+     * @return
+     */
+    public int getCreditAndOwnInfo(KafkaMsgKey msgKey, String clubId){
+        long userId = msgKey.getUserId();
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("creditInfo", club.getClubInfo().getCreditInfo());
+        ClubMember clubMember = club.getClubInfo().getMember().get(""+userId);
+        if (clubMember != null) {
+            result.put("score", clubMember.getAllStatistics().getAllScore());
+        }else{
+            result.put("score", 0);
+        }
+        sendMsg(msgKey, new ResponseVo("clubService", "getCreditAndOwnInfo", result));
+        return 0;
+    }
+
+    /**
      * 清空信用分
      * @param msgKey
      * @param clubId

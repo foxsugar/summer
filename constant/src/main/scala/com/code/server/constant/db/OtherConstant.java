@@ -9,6 +9,7 @@ import java.util.Map;
 public class OtherConstant {
     private Map<String, String> notice = new HashMap<>();//公告
     private Map<String, String> explain = new HashMap<>();//说明
+    private Map<String, String> promo = new HashMap<>();//推广
     private Map<String, Object> rebateData = new HashMap<>();
 
 
@@ -37,6 +38,15 @@ public class OtherConstant {
 
     public OtherConstant setRebateData(Map<String, Object> rebateData) {
         this.rebateData = rebateData;
+        return this;
+    }
+
+    public Map<String, String> getPromo() {
+        return promo;
+    }
+
+    public OtherConstant setPromo(Map<String, String> promo) {
+        this.promo = promo;
         return this;
     }
 }

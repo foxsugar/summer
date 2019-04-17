@@ -118,11 +118,12 @@ public class GameInfoXZDD extends GameInfoNew {
 
         if (lastOperateUserId == userId) {//自摸
             if (playerCardsInfo.isCanHu_zimo(catchCard)) {
+                long nextUser = 0;
                 setBanker(userId);
                 playerCardsInfo.hu_zm(room, this, catchCard);
                 //回放
                 replay.getOperate().add(operateReqResp);
-                handleHu(playerCardsInfo);
+                handleHu(playerCardsInfo,nextUser);
 
             } else {
                 return ErrorCode.CAN_NOT_HU;
@@ -197,20 +198,20 @@ public class GameInfoXZDD extends GameInfoNew {
         operateReqResp.setIsMing(true);
         replay.getOperate().add(operateReqResp);
 
-        handleHu(playerCardsInfo);
+        handleHu(playerCardsInfo,nextUser);
     }
 
 
-    protected void handleHu(PlayerCardsInfoMj playerCardsInfo) {
+    protected void handleHu(PlayerCardsInfoMj playerCardsInfo,long nextMopaiUser) {
 //        isAlreadyHu = true;
-        boolean onlyOneNoHu = playerCardsInfos.values().stream().filter(playerCardsInfoMj -> !playerCardsInfoMj.isAlreadyHu).count() == this.users.size() - 1;
+        boolean onlyOneNoHu = getHuPlayerNum() == this.users.size() - 1;
         if (this.remainCards.size() == 0 || onlyOneNoHu) {
             sendResult(true, playerCardsInfo.getUserId(), null);
             noticeDissolutionResult();
             room.clearReadyStatus(true);
         }else{
             //下个人摸牌
-//            mopai();
+            mopai(nextMopaiUser);
         }
 
 
@@ -218,6 +219,15 @@ public class GameInfoXZDD extends GameInfoNew {
     }
 
 
+
+
+    /**
+     * 胡牌的人数
+     * @return
+     */
+    private int getHuPlayerNum() {
+        return (int)playerCardsInfos.values().stream().filter(playerCardsInfoMj -> !playerCardsInfoMj.isAlreadyHu).count();
+    }
 
 
     protected void handleYiPaoDuoXiang() {
@@ -235,7 +245,7 @@ public class GameInfoXZDD extends GameInfoNew {
             }
         });
 
-        //todo 下次的庄家
+        //todo 下次的庄家  点炮的做庄
         setBanker(yipaoduoxiang.get(0));
 
         //回放
@@ -245,12 +255,20 @@ public class GameInfoXZDD extends GameInfoNew {
         operateReqResp.setIsMing(true);
         replay.getOperate().add(operateReqResp);
 
-//        handleHu(playerCardsInfo);
 
-        isAlreadyHu = true;
-        sendResult(true, -1L, yipaoduoxiang);
-        noticeDissolutionResult();
-        room.clearReadyStatus(true);
+
+        boolean onlyOneNoHu = getHuPlayerNum() == this.users.size() - 1;
+        if (this.remainCards.size() == 0 || onlyOneNoHu) {
+            isAlreadyHu = true;
+            sendResult(true, -1L, yipaoduoxiang);
+            noticeDissolutionResult();
+            room.clearReadyStatus(true);
+        }else{
+            //摸牌
+
+        }
+
+
     }
 
 

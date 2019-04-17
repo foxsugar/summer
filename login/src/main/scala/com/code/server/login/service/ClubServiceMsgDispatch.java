@@ -303,6 +303,10 @@ public class ClubServiceMsgDispatch {
                 return gameClubService.clearAllMemberCredit(msgKey, clubId, type1);
             }
 
+            case "getCreditAndOwnInfo":{
+                return gameClubService.getCreditAndOwnInfo(msgKey, clubId);
+            }
+
 
         }
         return 0;

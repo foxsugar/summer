@@ -226,10 +226,11 @@ object PokerRoomService {
         val isReOpen:Boolean = params.path("isReOpen").asBoolean(false)
 
         val otherMode =  params.path("otherMode").asInt()
+        val bankerInitScore =  params.path("bankerInitScore").asInt()
 
 
         return RoomPaijiuCrazy.createRoom(userId, roomType, gameType, gameNumber, clubId, clubRoomModel,clubMode, isAA,
-          robotType,robotNum, robotWinner, isReOpen, otherMode,personNum)
+          robotType,robotNum, robotWinner, isReOpen, otherMode,personNum,bankerInitScore)
 
       case "createTTZRoom" =>
         val roomType = params.path("roomType").asText()

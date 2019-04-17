@@ -26,6 +26,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     protected List<String> cards = new ArrayList<>();//手上的牌
     protected List<String> disCards = new ArrayList<>();//丢弃的牌
     protected Map<Integer, Long> pengType = new HashMap<>();//碰
+    protected List<Integer> pengList = new ArrayList<>();//碰的列表
     protected Set<Integer> anGangType = new HashSet<>();//暗杠
     protected Map<Integer, Long> mingGangType = new HashMap<>();//明杠
     protected Set<Integer> chiType = new HashSet<>();
@@ -161,6 +162,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         this.cards.add(card);
         int cardType = CardTypeUtil.cardType.get(card);
         pengType.put(cardType, playUser);
+        pengList.add(cardType);
         this.lastOperate = type_peng;
         operateList.add(type_peng);
         Map<Integer, Integer> map = getCardNum(cards);
@@ -685,6 +687,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
                 //diangang = pengType.get(huType);
                 pengType.remove(cardType);//从碰中移除
                 mingGangType.put(cardType, diangang);
+                pengList.remove(Integer.valueOf(cardType));
                 isMing = true;
 
             } else {
@@ -1426,6 +1429,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     public PlayerCardsInfoMj setDingqueGroupType(int dingqueGroupType) {
         this.dingqueGroupType = dingqueGroupType;
+        return this;
+    }
+
+    public List<Integer> getPengList() {
+        return pengList;
+    }
+
+    public PlayerCardsInfoMj setPengList(List<Integer> pengList) {
+        this.pengList = pengList;
         return this;
     }
 }

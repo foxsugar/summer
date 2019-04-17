@@ -195,7 +195,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 object RoomPaijiuCrazy extends Room with PaijiuConstant {
 
   def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int, clubId: String, clubRoomModel: String, clubMode: Int, isAA: Boolean,
-                 robotType: Int, robotNum: Int, robotWinner: Int, isReOpen: Boolean, otherMode: Int, personNum: Int): Int = {
+                 robotType: Int, robotNum: Int, robotWinner: Int, isReOpen: Boolean, otherMode: Int, personNum: Int,bankerInitScore:Int): Int = {
     val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
     var roomPaijiu = new RoomPaijiuCrazy
     if (Room.isHasMode(MODE_100, otherMode)) {
@@ -219,6 +219,10 @@ object RoomPaijiuCrazy extends Room with PaijiuConstant {
     roomPaijiu.isReOpen = isReOpen
     roomPaijiu.otherMode = otherMode
     roomPaijiu.setRobotRoom(robotType != 0)
+
+    //锅底
+    roomPaijiu.bankerScore = bankerInitScore
+    roomPaijiu.bankerInitScore = bankerInitScore
 
     roomPaijiu.rebateData = RedisManager.getConstantRedisService.getConstant
     roomPaijiu.init(gameNumber, 1)
