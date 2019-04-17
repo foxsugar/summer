@@ -88,6 +88,8 @@ public class GameInfo extends Game {
 
     public int rand = 0;
 
+    protected int state;
+
 //    private Set<Long> noCanHuList = new HashSet<>();//本轮不能胡的人
 
     /**
@@ -240,6 +242,10 @@ public class GameInfo extends Game {
         return 0;
     }
 
+    public int huanpai(long userId, List<String> cards) {
+
+        return 0;
+    }
     protected void computeAllGang() {
         if(this.isAlreadyComputeGang) return;
         this.isAlreadyComputeGang = true;
@@ -1855,6 +1861,15 @@ public class GameInfo extends Game {
 
     public GameInfo setTurnZeroAfterHuangZhuang(boolean turnZeroAfterHuangZhuang) {
         isTurnZeroAfterHuangZhuang = turnZeroAfterHuangZhuang;
+        return this;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public GameInfo setState(int state) {
+        this.state = state;
         return this;
     }
 }

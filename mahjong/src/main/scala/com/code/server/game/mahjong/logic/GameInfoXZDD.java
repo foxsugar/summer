@@ -17,6 +17,9 @@ import java.util.*;
 public class GameInfoXZDD extends GameInfoNew {
 
 
+    private int STATE_HUANPAI = 1;
+    private int STATE_DINGQUE = 2;
+    private int STATE_PLAY = 3;
     /**
      * 发牌
      */
@@ -63,6 +66,19 @@ public class GameInfoXZDD extends GameInfoNew {
         //第一个人抓牌
       //  mopai(firstTurn, "发牌");
 
+        if(isHasHuanpai()){
+
+            this.state = STATE_HUANPAI;
+        }else{
+
+            this.state = STATE_DINGQUE;
+        }
+        //是否有换牌
+
+    }
+
+    private boolean isHasHuanpai(){
+        return true;
     }
 
     /**
@@ -83,17 +99,65 @@ public class GameInfoXZDD extends GameInfoNew {
 
         MsgSender.sendMsg2Player(vo, this.users);
 
-        MsgSender.sendMsg2Player("gameService", "dingque", this.room.laZhuang, users);
+
+        result.put("groupType", groupType);
+        result.put("userId", userId);
+        MsgSender.sendMsg2Player("gameService", "dingque", result, users);
 
         boolean isAllDingque = this.playerCardsInfos.values().stream().noneMatch(playerCardsInfoMj1 -> playerCardsInfoMj.dingqueGroupType == 0);
         if (isAllDingque) {
-            MsgSender.sendMsg2Player("gameService", "allDingque", this.room.laZhuang, users);
+            MsgSender.sendMsg2Player("gameService", "allDingque", 0, users);
+            this.state = STATE_PLAY;
             //
-            mopai(firstTurn, "发牌");
+
         }
         return 0;
     }
 
+
+    /**
+     * 换牌
+     * @param userId
+     * @param cards
+     * @return
+     */
+    public int huanpai(long userId, List<String> cards) {
+
+        PlayerCardsInfoMj playerCardsInfoMj = this.playerCardsInfos.get(userId);
+        if (playerCardsInfoMj.getChangeCards().size() != 0) {
+            return ErrorCode.CAN_NOT_HUANPAI;
+        }
+        playerCardsInfoMj.getChangeCards().addAll(cards);
+        Map<String, Object> result = new HashMap<>();
+        result.put("userId", userId);
+
+        MsgSender.sendMsg2Player("gameService", "huanpai", result, users);
+
+        boolean isAllChange = this.playerCardsInfos.values().stream().noneMatch(playerCardsInfoMj1 -> playerCardsInfoMj1.changeCards.size() == 0);
+        if (isAllChange) {
+
+            MsgSender.sendMsg2Player("gameService", "allHuanpai", 0, users);
+
+            //开始换牌
+            for (PlayerCardsInfoMj player : this.playerCardsInfos.values()) {
+                List<String> cs = new ArrayList<>(player.changeCards);
+                //把牌给下一个人
+                long nextUser = nextTurnId(player.getUserId());
+                PlayerCardsInfoMj nextPlayer = this.playerCardsInfos.get(nextUser);
+                nextPlayer.cards.addAll(cs);
+                player.cards.removeAll(player.changeCards);
+                Map<String, Object> newCards = new HashMap<>();
+                newCards.put("userId", nextUser);
+                newCards.put("newCards", nextPlayer.getCards());
+                MsgSender.sendMsg2Player("gameService", "changePushCards", newCards, nextUser);
+            }
+
+            this.state = STATE_DINGQUE;
+
+            mopai(firstTurn, "发牌");
+        }
+        return 0;
+    }
 
 
     /**

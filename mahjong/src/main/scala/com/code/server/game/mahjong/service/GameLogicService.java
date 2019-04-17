@@ -104,6 +104,11 @@ public class GameLogicService {
                 int groupTyep = jsonNode.path("type").asInt(0);
                 code = getGameInfo(roomId).dingque(userId, groupTyep);
                 break;
+            case "huanpai":
+                String changeCards = jsonNode.get("changeCards").toString();
+                List<String> changeList = JsonUtil.readValue(changeCards, new TypeReference<List<String>>() {});
+                code = getGameInfo(roomId).huanpai(userId, changeList);
+                break;
         }
         if (code == 0) {
             MsgSender.sendMsg2Player("gameLogicService",method,code, userId);

@@ -20,6 +20,7 @@ public interface ErrorCode {
 
     public static final int CAN_NOT_LAZHUANG = 1020;
     public static final int CAN_NOT_DINGQUE = 1030;
+    public static final int CAN_NOT_HUANPAI = 1040;
 
     public static final int CARD_ERROR = 2000;
     public static final int USER_ERROR = 2001;

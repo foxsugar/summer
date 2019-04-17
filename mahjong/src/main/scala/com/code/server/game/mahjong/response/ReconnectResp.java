@@ -22,6 +22,7 @@ public class ReconnectResp {
     private List<Integer> hun = new ArrayList<>();
     private int rand;
     private long fanshiLastCatchUser = 0;
+    private int state;
 
 
 
@@ -37,6 +38,7 @@ public class ReconnectResp {
         hun.addAll(gameInfo.getHun());
         rand = gameInfo.rand;
         fanshiLastCatchUser = gameInfo.getLastCatchCardUser();
+        state = gameInfo.getState();
 
         for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
             long uid = playerCardsInfo.getUserId();

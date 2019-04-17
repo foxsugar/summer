@@ -82,6 +82,10 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     protected int paofen = -1;
     protected String koutingCard = "";
     public int dingqueGroupType = 0;
+    public List<String> changeCards = new ArrayList<>();
+
+    //其他人的杠分往来
+    protected Map<Long, Double> otherGangScore = new HashMap<>();
 
     /**
      * 根据发的牌初始化
@@ -1438,6 +1442,24 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     public PlayerCardsInfoMj setPengList(List<Integer> pengList) {
         this.pengList = pengList;
+        return this;
+    }
+
+    public Map<Long, Double> getOtherGangScore() {
+        return otherGangScore;
+    }
+
+    public PlayerCardsInfoMj setOtherGangScore(Map<Long, Double> otherGangScore) {
+        this.otherGangScore = otherGangScore;
+        return this;
+    }
+
+    public List<String> getChangeCards() {
+        return changeCards;
+    }
+
+    public PlayerCardsInfoMj setChangeCards(List<String> changeCards) {
+        this.changeCards = changeCards;
         return this;
     }
 }
