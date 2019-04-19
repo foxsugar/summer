@@ -99,6 +99,7 @@ public interface HuType {
     int hu_清一色七小对 = 190;
     int hu_清一色豪华七小对 = 191;
     int hu_清一色双豪华七小对 = 192;
+    int hu_将七对 = 193;//258组成的豪华七小对
 
     //没有1 9
     int hu_中张 = 200;

@@ -1,5 +1,8 @@
 package com.code.server.game.mahjong.logic;
 
+import com.code.server.game.mahjong.util.HuCardType;
+import com.code.server.game.mahjong.util.HuLimit;
+
 import java.util.List;
 import java.util.Map;
 
@@ -13,8 +16,20 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
     public void init(List<String> cards) {
         super.init(cards);
 
-//        specialHuScore.put(hu_清一色,2);
-        specialHuScore.put(hu_吊将, 0);
+        specialHuScore.put(hu_碰碰胡, 1);
+        specialHuScore.put(hu_清一色碰碰胡, 3);
+        specialHuScore.put(hu_清一色, 2);
+        specialHuScore.put(hu_七小对, 2);
+        specialHuScore.put(hu_豪华七小对, 3);
+        specialHuScore.put(hu_双豪七小对_山西, 3);
+        specialHuScore.put(hu_清一色七小对, 4);
+        specialHuScore.put(hu_清一色豪华七小对, 5);
+        specialHuScore.put(hu_清一色双豪华七小对, 5);
+        specialHuScore.put(hu_将对, 3);
+        specialHuScore.put(hu_门清, 1);
+        specialHuScore.put(hu_中张, 1);
+        specialHuScore.put(hu_幺九, 3);
+        specialHuScore.put(hu_将七对, 4);
 
     }
 
@@ -63,8 +78,20 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
 
     @Override
     public boolean isCanTing(List<String> cards) {
-        if (isAlreadyHu) return false;
-        return super.isCanTing(cards);
+        return false;
+//        if (isAlreadyHu) return false;
+//        return super.isCanTing(cards);
+    }
+
+
+    /**
+     * 获得最大听牌分数
+     * @return
+     */
+    protected int getMaxTingScore(){
+        List<HuCardType> hulist = getTingHuCardType(this.cards, new HuLimit(0));
+        HuCardType huCardType = getMaxScoreHuCardType(hulist);
+        return huCardType.fan;
     }
 
 
@@ -80,8 +107,7 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
         boolean isMing = false;
         int cardType = CardTypeUtil.cardType.get(card);
         Map<Integer, Integer> cardNum = getCardNum(cards);
-        long
-                diangang = -1;
+        long diangang = -1;
         if (cardNum.containsKey(cardType) && cardNum.get(cardType) == 4) {
             if (pengType.containsKey(cardType)) {//碰的类型包含这个 是明杠
                 //判断是否过了一圈才杠的
@@ -125,7 +151,7 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
             if(!isMing) score = 2;
             for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
                 //不是自己并且没胡
-                if (playerCardsInfoMj.getUserId() != this.userId && !playerCardsInfoMj.isAlreadyHu) {
+                if (playerCardsInfoMj.getUserId() != this.userId) {
                     allScore += score;
                     playerCardsInfoMj.addScore(-score);
                     playerCardsInfoMj.addGangScore(-score);

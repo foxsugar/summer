@@ -20,12 +20,23 @@ public class GameInfoXZDD extends GameInfoNew {
     private int STATE_HUANPAI = 1;
     private int STATE_DINGQUE = 2;
     private int STATE_PLAY = 3;
+
+
+    public static final int MODE_CHANGE_0 = 1;
+    public static final int MODE_CHANGE_3 = 2;
+    public static final int MODE_CHANGE_4 = 3;
+    public static final int MODE_HAS_GANGKAI = 4;
+    public static final int MODE_HAS_GANGPAO = 5;
+    public static final int MODE_NO_WAN = 6;
+    public static final int MODE_ZIMO_JIADI = 7;
+    public static final int MODE_ZIMO_JIAFAN = 8;
     /**
      * 发牌
      */
     public void fapai() {
         //打乱顺序
         Collections.shuffle(remainCards);
+        //没有风 字
         remainCards.removeAll(CardTypeUtil.FENG_CARD);
         remainCards.removeAll(CardTypeUtil.ZI_CARD);
         for (int i = 0; i < playerSize; i++) {
@@ -67,18 +78,17 @@ public class GameInfoXZDD extends GameInfoNew {
       //  mopai(firstTurn, "发牌");
 
         if(isHasHuanpai()){
-
             this.state = STATE_HUANPAI;
+            MsgSender.sendMsg2Player("gameService", "startHuanpai", 0, users);
         }else{
-
             this.state = STATE_DINGQUE;
+            MsgSender.sendMsg2Player("gameService", "startDingque", 0, users);
         }
-        //是否有换牌
 
     }
 
     private boolean isHasHuanpai(){
-        return true;
+        return !this.room.isHasMode(MODE_CHANGE_0);
     }
 
     /**
@@ -144,20 +154,97 @@ public class GameInfoXZDD extends GameInfoNew {
                 //把牌给下一个人
                 long nextUser = nextTurnId(player.getUserId());
                 PlayerCardsInfoMj nextPlayer = this.playerCardsInfos.get(nextUser);
-                nextPlayer.cards.addAll(cs);
-                player.cards.removeAll(player.changeCards);
-                Map<String, Object> newCards = new HashMap<>();
-                newCards.put("userId", nextUser);
-                newCards.put("newCards", nextPlayer.getCards());
-                MsgSender.sendMsg2Player("gameService", "changePushCards", newCards, nextUser);
+                //正转
+                if (this.room.curGameNumber % 2 == 0) {
+                    player.cards.addAll(cs);
+                    nextPlayer.cards.removeAll(nextPlayer.changeCards);
+                }else{//反转
+                    nextPlayer.cards.addAll(cs);
+                    player.cards.removeAll(player.changeCards);
+                }
             }
 
-            this.state = STATE_DINGQUE;
+            this.playerCardsInfos.forEach((uid,playerInfo)->{
+                Map<String, Object> newCards = new HashMap<>();
+                newCards.put("userId", uid);
+                newCards.put("newCards", playerInfo.getCards());
+                MsgSender.sendMsg2Player("gameService", "changePushCards", newCards, uid);
+            });
+            if (this.room.isHasMode(MODE_NO_WAN)) {
+                this.playerCardsInfos.values().forEach(player->dingque(player.getUserId(),1));
+                this.state = STATE_PLAY;
+                mopai(firstTurn, "发牌");
+            }else{
+                this.state = STATE_DINGQUE;
+                MsgSender.sendMsg2Player("gameService", "startDingque", 0, users);
+            }
 
-            mopai(firstTurn, "发牌");
+
+
         }
         return 0;
     }
+
+
+
+    /**
+     * 荒庄的处理
+     *
+     * @param userId
+     */
+    protected void handleHuangzhuang(long userId) {
+
+        List<PlayerCardsInfoMj> winList = new ArrayList<>();
+        List<PlayerCardsInfoMj> loseList = new ArrayList<>();
+        for (PlayerCardsInfoMj player : this.playerCardsInfos.values()) {
+            if(!player.isAlreadyHu){
+                if (!player.chaHuazhu() && player.chaDajiao()) {
+                    winList.add(player);
+                }
+                if (player.chaHuazhu() || !player.chaDajiao()) {
+                    loseList.add(player);
+                }
+            }
+        }
+
+        //把杠分退掉
+        loseList.forEach(losePlayer->{
+            losePlayer.getOtherGangScore().forEach((otherId,score)->{
+                PlayerCardsInfoMj otherPlayer = this.playerCardsInfos.get(otherId);
+                otherPlayer.addGangScore(score.intValue());
+                otherPlayer.addScore(score);
+                this.room.addUserSocre(otherId, score);
+
+                losePlayer.addGangScore(-score.intValue());
+                losePlayer.addScore(-score);
+                this.room.addUserSocre(losePlayer.getUserId(), -score);
+            });
+        });
+
+        //赔付
+        if (loseList.size() > 0 && winList.size() > 0) {
+
+
+
+            //按最大牌型输分
+            winList.forEach(winPlayer->{
+                int score = winPlayer.getMaxTingScore();
+                loseList.forEach(losePlayer->{
+                    losePlayer.addScore(-score);
+                    this.room.addUserSocre(losePlayer.getUserId(), -score);
+
+                    winPlayer.addScore(score);
+                    this.room.addUserSocre(winPlayer.getUserId(), score);
+                });
+            });
+        }
+
+        sendResult(false, userId, null);
+        noticeDissolutionResult();
+        //通知所有玩家结束
+        room.clearReadyStatus(true);
+    }
+
 
 
     /**
@@ -270,9 +357,14 @@ public class GameInfoXZDD extends GameInfoNew {
 //        isAlreadyHu = true;
         boolean onlyOneNoHu = getHuPlayerNum() == this.users.size() - 1;
         if (this.remainCards.size() == 0 || onlyOneNoHu) {
-            sendResult(true, playerCardsInfo.getUserId(), null);
-            noticeDissolutionResult();
-            room.clearReadyStatus(true);
+            if (onlyOneNoHu) {
+
+                sendResult(true, playerCardsInfo.getUserId(), null);
+                noticeDissolutionResult();
+                room.clearReadyStatus(true);
+                return;
+            }
+           handleHuangzhuang(nextMopaiUser);
         }else{
             //下个人摸牌
             mopai(nextMopaiUser);
@@ -310,8 +402,11 @@ public class GameInfoXZDD extends GameInfoNew {
         });
 
         //todo 下次的庄家  点炮的做庄
-        setBanker(yipaoduoxiang.get(0));
+        if (getHuPlayerNum() == 0) {
+            setBanker(lastPlayUserId);
+        }
 
+        long nextMopaiUser = nextTurnId(lastPlayUserId);
         //回放
         OperateReqResp operateReqResp = new OperateReqResp();
         operateReqResp.setYipaoduoxiangUser(yipaoduoxiang);
@@ -323,13 +418,18 @@ public class GameInfoXZDD extends GameInfoNew {
 
         boolean onlyOneNoHu = getHuPlayerNum() == this.users.size() - 1;
         if (this.remainCards.size() == 0 || onlyOneNoHu) {
-            isAlreadyHu = true;
-            sendResult(true, -1L, yipaoduoxiang);
-            noticeDissolutionResult();
-            room.clearReadyStatus(true);
+            if (onlyOneNoHu) {
+
+                isAlreadyHu = true;
+                sendResult(true, -1L, yipaoduoxiang);
+                noticeDissolutionResult();
+                room.clearReadyStatus(true);
+                return;
+            }
+            handleHuangzhuang(nextMopaiUser);
         }else{
             //摸牌
-
+            mopai(nextMopaiUser);
         }
 
 

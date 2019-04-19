@@ -247,6 +247,8 @@ public class RoomInfo extends RoomInfoExtendGold {
             case "THREEAZLB2":
             case "THREEAZLB3":
                 return new GameInfo().setTurnZeroAfterHuangZhuang(true);
+            case "XUEZHANDAODI":
+                return new GameInfoXZDD();
 
             default:
                 return new GameInfo();

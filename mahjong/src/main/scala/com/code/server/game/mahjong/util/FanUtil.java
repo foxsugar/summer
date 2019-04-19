@@ -648,7 +648,7 @@ public class FanUtil implements HuType {
     }
 
 
-    private static boolean isHu258(List<String> cards, PlayerCardsInfoMj playerCardsInfoMj){
+    public static boolean isHu258(List<String> cards, PlayerCardsInfoMj playerCardsInfoMj){
         Set<String> allCards = new HashSet<>();
         allCards.addAll(cards);
         allCards.addAll(playerCardsInfoMj.getCards());

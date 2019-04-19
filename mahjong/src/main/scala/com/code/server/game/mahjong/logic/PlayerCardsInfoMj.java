@@ -86,6 +86,8 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     //其他人的杠分往来
     protected Map<Long, Double> otherGangScore = new HashMap<>();
+    //上次杠牌的分数
+    protected double lastGangScore = 0;
 
     /**
      * 根据发的牌初始化
@@ -895,6 +897,28 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         return size >= 2 && this.operateList.get(size - 2) == type_gang;
     }
 
+
+    /**
+     * 查大叫
+     * @return
+     */
+    protected boolean chaDajiao() {
+        return isCanTing(cards);
+    }
+
+    /**
+     * 查花猪
+     * @return
+     */
+    protected boolean chaHuazhu(){
+        Set<Integer> group = new HashSet<>();
+       this.cards.forEach(card->group.add(CardTypeUtil.getCardGroup(card)));
+       return group.size() == 3;
+    }
+
+    protected int getMaxTingScore(){
+        return 0;
+    }
     /**
      * 是否是sanpeng
      *
@@ -930,6 +954,9 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     public int addGangScore(int score) {
         this.gangScore = this.gangScore + score;
+        if (score > 0) {
+            this.lastGangScore = score;
+        }
         return this.gangScore;
     }
 

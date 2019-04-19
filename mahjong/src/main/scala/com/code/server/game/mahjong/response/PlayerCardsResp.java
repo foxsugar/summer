@@ -46,6 +46,8 @@ public class PlayerCardsResp {
     private Set<Integer> baoAnDan = new HashSet<>();
     private int paofen = -1;
     private String koutingCard;
+    public int dingqueGroupType = 0;
+    public List<String> changeCards = new ArrayList<>();
 
     
 
@@ -100,6 +102,8 @@ public class PlayerCardsResp {
         this.xuanfengdan.putAll(info.getXuanfengDan());
         this.gangScore = info.getGangScore();
         this.paofen = info.getPaofen();
+        this.dingqueGroupType = info.getDingqueGroupType();
+        this.changeCards = info.getChangeCards();
 
     }
 
@@ -377,6 +381,24 @@ public class PlayerCardsResp {
 
     public PlayerCardsResp setKoutingCard(String koutingCard) {
         this.koutingCard = koutingCard;
+        return this;
+    }
+
+    public int getDingqueGroupType() {
+        return dingqueGroupType;
+    }
+
+    public PlayerCardsResp setDingqueGroupType(int dingqueGroupType) {
+        this.dingqueGroupType = dingqueGroupType;
+        return this;
+    }
+
+    public List<String> getChangeCards() {
+        return changeCards;
+    }
+
+    public PlayerCardsResp setChangeCards(List<String> changeCards) {
+        this.changeCards = changeCards;
         return this;
     }
 }

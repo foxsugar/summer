@@ -246,6 +246,13 @@ public class GameInfo extends Game {
 
         return 0;
     }
+
+    public int huanpaiCancel(long userId) {
+        PlayerCardsInfoMj playerCardsInfoMj = playerCardsInfos.get(userId);
+        playerCardsInfoMj.getChangeCards().clear();
+        return 0;
+    }
+
     protected void computeAllGang() {
         if(this.isAlreadyComputeGang) return;
         this.isAlreadyComputeGang = true;

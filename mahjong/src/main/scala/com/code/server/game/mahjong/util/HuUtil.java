@@ -190,6 +190,9 @@ public class HuUtil implements HuType {
             if (playerCardsInfo.isHasSpecialHu(hu_清一色双豪华七小对) && isShuangHaoQixiaodui(cards, playerCardsInfo) && isYiSe_wtt(cards)) {
                 huList.add(HuCardType.getSpecialHuInstance(hu_清一色双豪华七小对).setFan(playerCardsInfo.getSpecialHuScore(hu_清一色双豪华七小对)));
             }
+            if (playerCardsInfo.isHasSpecialHu(hu_将七对) && isJiangqidui(cards, playerCardsInfo)) {
+                huList.add(HuCardType.getSpecialHuInstance(hu_将七对).setFan(playerCardsInfo.getSpecialHuScore(hu_将七对)));
+            }
         }
 
 
@@ -620,6 +623,10 @@ public class HuUtil implements HuType {
 
         return isHas4Num >= 2;
 
+    }
+
+    public static boolean isJiangqidui(List<String> cards, PlayerCardsInfoMj playerCardsInfoMj){
+        return (isHaoHuaQixiaodui(cards, playerCardsInfoMj, 1) || isShuangHaoQixiaodui(cards, playerCardsInfoMj)) && FanUtil.isHu258(cards, playerCardsInfoMj);
     }
 
     public static boolean cardIsHun(List<Integer> hun, int cardType) {

@@ -109,6 +109,9 @@ public class GameLogicService {
                 List<String> changeList = JsonUtil.readValue(changeCards, new TypeReference<List<String>>() {});
                 code = getGameInfo(roomId).huanpai(userId, changeList);
                 break;
+            case "huanpaiCancel":
+                code = getGameInfo(roomId).huanpaiCancel(userId);
+                break;
         }
         if (code == 0) {
             MsgSender.sendMsg2Player("gameLogicService",method,code, userId);
