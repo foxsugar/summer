@@ -24,9 +24,9 @@ class GamePaijiuCrazy extends GamePaijiu{
     * @param room
     */
   override def startGame(users: util.List[lang.Long], room: Room): Unit = {
-      loadData()
       roomPaijiu = room.asInstanceOf[RoomPaijiu]
-      //实例化玩家
+      loadData()
+    //实例化玩家
       initPlayer()
       //码牌
       initCards()
@@ -88,13 +88,13 @@ class GamePaijiuCrazy extends GamePaijiu{
 
 
   def loadData(): Unit ={
-    var map = new util.HashMap[String,Double]()
-    map.put("bet",5)
-    map.put("rebate4",2)
-    map.put("rebate100",2.5)
-    map.put("pay_aa",3)
-    map.put("pay_one",10)
-    this.roomPaijiu.rebateData = map
+//    var map = new util.HashMap[String,Double]()
+//    map.put("bet",5)
+//    map.put("rebate4",2)
+//    map.put("rebate100",2.5)
+//    map.put("pay_aa",3)
+//    map.put("pay_one",5)
+    this.roomPaijiu.rebateData = RedisManager.getConstantRedisService.getConstant
   }
 
   override protected def getGroupScoreByName(name: String): Int = {
