@@ -547,11 +547,11 @@ public class GameHitGoldFlower extends Game {
             playerCardInfo.setSee("0");
         }
         if(seeUser.contains(userId)){
-            if(chip>=MAX_BET_NUM){
+            if(chip>MAX_BET_NUM){
                 playerCardInfo.setRaise("0");
             }
         }else{
-            if(chip>=MAX_BET_NUM/2){
+            if(chip>MAX_BET_NUM/2){
                 playerCardInfo.setRaise("0");
             }
         }
@@ -595,11 +595,11 @@ public class GameHitGoldFlower extends Game {
             playerCardInfo.setKill("0");
         }
         if(seeUser.contains(curUserId)){
-            if(chip>=MAX_BET_NUM){
+            if(chip>MAX_BET_NUM){
                 playerCardInfo.setRaise("0");
             }
         }else{
-            if(chip>=MAX_BET_NUM/2){
+            if(chip>MAX_BET_NUM/2){
                 playerCardInfo.setRaise("0");
             }
         }
@@ -651,11 +651,11 @@ public class GameHitGoldFlower extends Game {
             playerCardInfo.setKill("0");
         }
         if(seeUser.contains(curUserId)){
-            if(chip>=MAX_BET_NUM){
+            if(chip>MAX_BET_NUM){
                 playerCardInfo.setRaise("0");
             }
         }else{
-            if(chip>=MAX_BET_NUM/2){
+            if(chip>MAX_BET_NUM/2){
                 playerCardInfo.setRaise("0");
             }
         }

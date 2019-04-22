@@ -146,23 +146,32 @@ public class GameInfoXZDD extends GameInfoNew {
         boolean isAllChange = this.playerCardsInfos.values().stream().noneMatch(playerCardsInfoMj1 -> playerCardsInfoMj1.changeCards.size() == 0);
         if (isAllChange) {
 
-            MsgSender.sendMsg2Player("gameService", "allHuanpai", 0, users);
 
+
+            int changeType = 0;
             //开始换牌
             for (PlayerCardsInfoMj player : this.playerCardsInfos.values()) {
-                List<String> cs = new ArrayList<>(player.changeCards);
+                List<String> cs = new ArrayList<>();
                 //把牌给下一个人
                 long nextUser = nextTurnId(player.getUserId());
                 PlayerCardsInfoMj nextPlayer = this.playerCardsInfos.get(nextUser);
                 //正转
                 if (this.room.curGameNumber % 2 == 0) {
+                    cs.addAll(nextPlayer.getChangeCards());
                     player.cards.addAll(cs);
                     nextPlayer.cards.removeAll(nextPlayer.changeCards);
                 }else{//反转
+                    changeType = 1;
+                    cs.addAll(player.getChangeCards());
                     nextPlayer.cards.addAll(cs);
                     player.cards.removeAll(player.changeCards);
                 }
             }
+
+
+            Map<String, Object> huanpaiResult = new HashMap<>();
+            huanpaiResult.put("changeType", changeType);
+            MsgSender.sendMsg2Player("gameService", "allHuanpai", huanpaiResult, users);
 
             this.playerCardsInfos.forEach((uid,playerInfo)->{
                 Map<String, Object> newCards = new HashMap<>();

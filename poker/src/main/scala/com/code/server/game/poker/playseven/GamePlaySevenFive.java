@@ -20,35 +20,46 @@ public class GamePlaySevenFive extends GamePlaySeven{
         {
             int allScore = kouDiBeiShu*tableCardFen+jianFen;
             int temp = 0;//正分为庄
-            if(allScore>=40&&allScore<80){
-                temp=1;
-            }else if(allScore>=5&&allScore<40){
-                temp=2;
-            }else if(allScore==0){
-                if(5==room.fengDing){
-                    temp=5;
-                }else {
-                    temp=3;
+            if (room.kouDiJiaJi && winnerId != zhuId && winnerId != secondBanker) {
+                if (allScore < 80) {
+//                temp = -1;
+
+                    if (1 == playerCardInfos.get(winnerId).playCards.size()) {
+                        temp -= 1;
+                    } else if (2 == playerCardInfos.get(winnerId).playCards.size()) {
+                        temp -= 2;
+                    } else {
+                        temp -= 4;
+                    }
+
+                } else {//大于80的情况
+                    temp = -(allScore - 40) / 40;
                 }
-            }else{
-                temp = -(allScore-40)/40;
-            }
-            if(shuangLiangDouble||fanzhu){
-                if(room.zhuangDanDaJiaBei && winnerId==room.getBankerId()){
-                    temp*=2;
+
+            } else {
+
+                if (allScore >= 40 && allScore < 80) {
+                    temp = 1;
+                } else if (allScore >= 5 && allScore < 40) {
+                    temp = 2;
+                } else if (allScore == 0) {
+                    if (5 == room.fengDing) {
+                        temp = 5;
+                    } else {
+                        temp = 3;
+                    }
+                } else {//大于80的情况
+                    temp = -(allScore - 40) / 40;
                 }
             }
-            if(room.kouDiJiaJi){
-                if(winnerId!=room.getBankerId()&&winnerId!=secondBanker){
-                    if(allScore>=80){
-                        if(1==playerCardInfos.get(winnerId).playCards.size()){
-                            temp-=1;
-                        }else if(2==playerCardInfos.get(winnerId).playCards.size()){
-                            temp-=2;
-                        }else{
-                            temp-=4;
-                        }
-                    }else{
+            if (shuangLiangDouble || fanzhu) {
+                if (room.zhuangDanDaJiaBei && winnerId == room.getBankerId()) {
+                    temp *= 2;
+                }
+            }
+            if (room.kouDiJiaJi) {
+                if (winnerId != zhuId && winnerId != secondBanker) {
+                    if (allScore >= 80) {
                         if (1 == playerCardInfos.get(winnerId).playCards.size()) {
                             temp -= 1;
                         } else if (2 == playerCardInfos.get(winnerId).playCards.size()) {
@@ -59,16 +70,6 @@ public class GamePlaySevenFive extends GamePlaySeven{
                     }
                 }
             }
-            if(5==room.fengDing){
-                if(temp>5){
-                    temp=5;
-                }
-            }else {
-                if(temp>3){
-                    temp=3;
-                }
-            }
-
 
             RoomPlaySeven roomPlaySeven = null;
             if (room instanceof RoomPlaySeven) {
