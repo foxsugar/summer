@@ -227,7 +227,7 @@ class GamePaijiuCrazy extends GamePaijiu{
       val wantTobeBankerList = playerCardInfos.filter { case (uid, playerInfo) => playerInfo.isFightForBanker }.toList
       //没人选择当庄家 则 创建者当庄家
       if (wantTobeBankerList.isEmpty) {
-        roomPaijiu.setBankerId(roomPaijiu.getBankerId)
+        roomPaijiu.setBankerId(roomPaijiu.users.get(0))
         this.bankerId = roomPaijiu.getBankerId
       } else {
         //随机选庄家
