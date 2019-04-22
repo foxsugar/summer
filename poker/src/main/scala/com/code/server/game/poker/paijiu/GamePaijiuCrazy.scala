@@ -32,6 +32,7 @@ class GamePaijiuCrazy extends GamePaijiu{
       initCards()
 
       bankerId = roomPaijiu.getBankerId
+      updateLastOperateTime()
 
       room.getCurGameNumber match {
         case 1 => {
@@ -192,7 +193,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     */
   override protected def gameOver(): Unit = {
     //返利
-    val rebate:Double = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[Double]
+    val rebate:Int = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[Int]
     for(playerInfo <- this.playerCardInfos.values){
       this.roomPaijiu.sendCenterAddRebate(playerInfo.userId, rebate)
     }
