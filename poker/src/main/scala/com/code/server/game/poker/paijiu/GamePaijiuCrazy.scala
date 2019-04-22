@@ -88,7 +88,13 @@ class GamePaijiuCrazy extends GamePaijiu{
 
 
   def loadData(): Unit ={
-    this.roomPaijiu.rebateData = RedisManager.getConstantRedisService.getConstant
+    var map = new util.HashMap[String,Double]()
+    map.put("bet",5)
+    map.put("rebate4",2)
+    map.put("rebate100",2.5)
+    map.put("pay_aa",3)
+    map.put("pay_one",10)
+    this.roomPaijiu.rebateData = map
   }
 
   override protected def getGroupScoreByName(name: String): Int = {
