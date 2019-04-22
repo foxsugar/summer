@@ -90,10 +90,24 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
      */
     protected int getMaxTingScore(){
         List<HuCardType> hulist = getTingHuCardType(this.cards, new HuLimit(0));
+        hulist.forEach(this::resetFan);
         HuCardType huCardType = getMaxScoreHuCardType(hulist);
         return huCardType.fan;
     }
 
+
+    private void resetFan(HuCardType huCardType) {
+        int fan = 0;
+        for (int huType : huCardType.specialHuList) {
+            if (this.specialHuScore.containsKey(huType)) {
+                int temp = this.specialHuScore.get(huType);
+                if (temp > fan) {
+                    fan = temp;
+                }
+            }
+        }
+        huCardType.fan = fan;
+    }
 
     /**
      * 杠手里的牌
