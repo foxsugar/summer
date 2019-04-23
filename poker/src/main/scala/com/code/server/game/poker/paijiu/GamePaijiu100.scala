@@ -43,8 +43,8 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     * @param room
     */
   override def startGame(users: util.List[lang.Long], room: Room): Unit = {
-    loadData()
     roomPaijiu = room.asInstanceOf[RoomPaijiu]
+    loadData()
     //    this.room = roomPaijiu
     //实例化玩家
     initPlayer()

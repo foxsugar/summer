@@ -24,14 +24,15 @@ class GamePaijiuCrazy extends GamePaijiu{
     * @param room
     */
   override def startGame(users: util.List[lang.Long], room: Room): Unit = {
-      loadData()
       roomPaijiu = room.asInstanceOf[RoomPaijiu]
-      //实例化玩家
+      loadData()
+    //实例化玩家
       initPlayer()
       //码牌
       initCards()
 
       bankerId = roomPaijiu.getBankerId
+      updateLastOperateTime()
 
       room.getCurGameNumber match {
         case 1 => {
@@ -88,6 +89,12 @@ class GamePaijiuCrazy extends GamePaijiu{
 
 
   def loadData(): Unit ={
+//    var map = new util.HashMap[String,Double]()
+//    map.put("bet",5)
+//    map.put("rebate4",2)
+//    map.put("rebate100",2.5)
+//    map.put("pay_aa",3)
+//    map.put("pay_one",5)
     this.roomPaijiu.rebateData = RedisManager.getConstantRedisService.getConstant
   }
 
@@ -186,7 +193,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     */
   override protected def gameOver(): Unit = {
     //返利
-    val rebate:Double = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[Double]
+    val rebate:Int = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[Int]
     for(playerInfo <- this.playerCardInfos.values){
       this.roomPaijiu.sendCenterAddRebate(playerInfo.userId, rebate)
     }
@@ -220,7 +227,7 @@ class GamePaijiuCrazy extends GamePaijiu{
       val wantTobeBankerList = playerCardInfos.filter { case (uid, playerInfo) => playerInfo.isFightForBanker }.toList
       //没人选择当庄家 则 创建者当庄家
       if (wantTobeBankerList.isEmpty) {
-        roomPaijiu.setBankerId(roomPaijiu.getBankerId)
+        roomPaijiu.setBankerId(roomPaijiu.users.get(0))
         this.bankerId = roomPaijiu.getBankerId
       } else {
         //随机选庄家
