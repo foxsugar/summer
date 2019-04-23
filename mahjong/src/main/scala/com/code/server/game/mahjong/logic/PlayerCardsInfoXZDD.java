@@ -2,9 +2,12 @@ package com.code.server.game.mahjong.logic;
 
 import com.code.server.game.mahjong.util.HuCardType;
 import com.code.server.game.mahjong.util.HuLimit;
+import com.code.server.game.mahjong.util.HuUtil;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by sunxianping on 2019-04-15.
@@ -16,20 +19,23 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
     public void init(List<String> cards) {
         super.init(cards);
 
-        specialHuScore.put(hu_碰碰胡, 1);
-        specialHuScore.put(hu_清一色碰碰胡, 3);
-        specialHuScore.put(hu_清一色, 2);
-        specialHuScore.put(hu_七小对, 2);
-        specialHuScore.put(hu_豪华七小对, 3);
-        specialHuScore.put(hu_双豪七小对_山西, 3);
-        specialHuScore.put(hu_清一色七小对, 4);
-        specialHuScore.put(hu_清一色豪华七小对, 5);
-        specialHuScore.put(hu_清一色双豪华七小对, 5);
-        specialHuScore.put(hu_将对, 3);
-        specialHuScore.put(hu_门清, 1);
-        specialHuScore.put(hu_中张, 1);
+        specialHuScore.put(hu_碰碰胡, 2);
+        specialHuScore.put(hu_清一色碰碰胡, 4);
+        specialHuScore.put(hu_清一色, 3);
+        specialHuScore.put(hu_七小对, 3);
         specialHuScore.put(hu_幺九, 3);
-        specialHuScore.put(hu_将七对, 4);
+        specialHuScore.put(hu_豪华七小对, 5);
+        specialHuScore.put(hu_双豪七小对_山西, 5);
+        specialHuScore.put(hu_清一色七小对, 5);
+        specialHuScore.put(hu_清一色豪华七小对, 6);
+        specialHuScore.put(hu_清一色双豪华七小对, 6);
+        specialHuScore.put(hu_天胡, 6);
+        specialHuScore.put(hu_地胡, 6);
+
+//        specialHuScore.put(hu_将对, 3);
+//        specialHuScore.put(hu_门清, 1);
+//        specialHuScore.put(hu_中张, 1);
+//        specialHuScore.put(hu_将七对, 4);
 
     }
 
@@ -83,6 +89,17 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
 //        return super.isCanTing(cards);
     }
 
+    @Override
+    public void hu_zm(RoomInfo room, GameInfo gameInfo, String card) {
+        super.hu_zm(room, gameInfo, card);
+        this.gameInfo.isAlreadyHu = false;
+    }
+
+    @Override
+    public void hu_dianpao(RoomInfo room, GameInfo gameInfo, long dianpaoUser, String disCard) {
+        super.hu_dianpao(room, gameInfo, dianpaoUser, disCard);
+        this.gameInfo.isAlreadyHu = false;
+    }
 
     /**
      * 获得最大听牌分数
@@ -109,6 +126,7 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
         huCardType.fan = fan;
     }
 
+
     /**
      * 杠手里的牌
      *
@@ -129,6 +147,10 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
                 int lastPengType = pengList.get(pengList.size() - 1);
                 if (lastPengType == cardType) {
 
+                    if (this.operateList.get(this.operateList.size() - 4) == type_peng) {
+                        noScoreGang.add(cardType);
+                    }
+
                 }
                 pengType.remove(cardType);//从碰中移除
                 pengList.remove(Integer.valueOf(cardType));
@@ -148,8 +170,12 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
     @Override
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card) {
         super.gangCompute(room, gameInfo, isMing, diangangUser, card);
+        int cardType = CardTypeUtil.getTypeByCard(card);
+        //不算分的杠
+        if (this.noScoreGang.contains(cardType)) {
+            return;
+        }
         //算分
-
         int score = 1;
         int allScore = 0;
         if (isMing && diangangUser != -1) {
@@ -185,5 +211,99 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
 
     }
 
+    /**
+     * 获得根数
+     * @param cards
+     * @return
+     */
+    private int getGenNum(List<String> cards){
+        Map<Integer, Integer> cardNum = new HashMap<>();
+        cards.forEach(card->{
+            int type = CardTypeUtil.getTypeByCard(card);
+            if (!this.mingGangType.containsKey(type) && !this.anGangType.contains(type)) {
+                int num = cardNum.getOrDefault(type, 0);
+                cardNum.put(type, num + 1);
+            }
+        });
+        return (int)cardNum.values().stream().filter(num->num == 4).count();
+    }
 
+
+    private int getLimitFan(){
+        return 6;
+    }
+
+    @Override
+    public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
+//        super.huCompute(room, gameInfo, isZimo, dianpaoUser, card);
+
+        List<String> cs = getCardsNoChiPengGang(cards);
+        List<HuCardType> huList = HuUtil.isHu(cs, this, CardTypeUtil.cardType.get(card), new HuLimit(0));
+        if (isTianhu()) {
+            huList.forEach(huCardType -> huCardType.specialHuList.add(hu_天胡));
+        }
+        if (isDihu()) {
+            huList.forEach(huCardType -> huCardType.specialHuList.add(hu_地胡));
+        }
+        huList.forEach(this::resetFan);
+        HuCardType huCardType = getMaxScoreHuCardType(huList);
+        setWinTypeResult(getMaxScoreHuCardType(huList));
+
+        int fan = huCardType.fan;
+
+
+
+
+        //杠加番
+        fan += getGangNum();
+
+        //根加番
+        fan += getGenNum(this.cards);
+
+        if (isGangKai()) fan+= 1;
+        this.winType.add(hu_杠上开花);
+
+        //截杠胡
+        if(isJieGangHu) fan+= 1;
+        this.winType.add(hu_截杠胡);
+
+        //杠上点炮
+        PlayerCardsInfoMj dianPao = this.gameInfo.playerCardsInfos.get(dianpaoUser);
+        if (dianPao != null) {
+            if(dianPao.isGangPao()) {
+                fan += 1;
+                this.winType.add(hu_杠上点炮);
+            }
+        }
+
+        //是否超过最大番
+        if (fan > getLimitFan()) {
+            fan = getLimitFan();
+        }
+        this.fan = fan;
+
+
+        int score = 1<<fan;
+        AtomicInteger allScore = new AtomicInteger();
+        if (isZimo) {
+            this.gameInfo.playerCardsInfos.forEach((id,otherInfo)->{
+                if (id != this.userId) {
+                    otherInfo.addScore(-score);
+                    this.roomInfo.addUserSocre(id, -score);
+                    allScore.addAndGet(score);
+                }
+            });
+        }else{
+            if (dianPao != null) {
+                dianPao.addScore(-score);
+                this.roomInfo.addUserSocre(dianpaoUser, -score);
+                allScore.addAndGet(score);
+            }
+        }
+
+        this.addScore(allScore.get());
+        this.roomInfo.addUserSocre(this.userId, allScore.get());
+
+
+    }
 }

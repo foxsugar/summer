@@ -99,11 +99,11 @@ public class GameInfoXZDD extends GameInfoNew {
      */
     public int dingque(long userId, int groupType){
         PlayerCardsInfoMj playerCardsInfoMj = this.playerCardsInfos.get(userId);
-        playerCardsInfoMj.dingqueGroupType = groupType;
 
         if (playerCardsInfoMj.dingqueGroupType != 0) {
             return ErrorCode.CAN_NOT_DINGQUE;
         }
+        playerCardsInfoMj.dingqueGroupType = groupType;
         Map<String, Object> result = new HashMap<>();
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, "dingqueResp", result);
 
@@ -114,11 +114,12 @@ public class GameInfoXZDD extends GameInfoNew {
         result.put("userId", userId);
         MsgSender.sendMsg2Player("gameService", "dingque", result, users);
 
-        boolean isAllDingque = this.playerCardsInfos.values().stream().noneMatch(playerCardsInfoMj1 -> playerCardsInfoMj.dingqueGroupType == 0);
+        boolean isAllDingque = this.playerCardsInfos.values().stream().noneMatch(playerCardsInfoMj1 -> playerCardsInfoMj1.dingqueGroupType == 0);
         if (isAllDingque) {
             MsgSender.sendMsg2Player("gameService", "allDingque", 0, users);
             this.state = STATE_PLAY;
             //
+            mopai(this.room.getBankerId());
 
         }
         return 0;
@@ -159,12 +160,12 @@ public class GameInfoXZDD extends GameInfoNew {
                 if (this.room.curGameNumber % 2 == 0) {
                     cs.addAll(nextPlayer.getChangeCards());
                     player.cards.addAll(cs);
-                    nextPlayer.cards.removeAll(nextPlayer.changeCards);
+                    player.cards.removeAll(player.changeCards);
                 }else{//反转
                     changeType = 1;
                     cs.addAll(player.getChangeCards());
                     nextPlayer.cards.addAll(cs);
-                    player.cards.removeAll(player.changeCards);
+                    nextPlayer.cards.removeAll(nextPlayer.changeCards);
                 }
             }
 
@@ -204,20 +205,37 @@ public class GameInfoXZDD extends GameInfoNew {
     protected void handleHuangzhuang(long userId) {
 
         List<PlayerCardsInfoMj> winList = new ArrayList<>();
-        List<PlayerCardsInfoMj> loseList = new ArrayList<>();
+        List<PlayerCardsInfoMj> huazhuList = new ArrayList<>();
+        List<PlayerCardsInfoMj> noHuazhuList = new ArrayList<>();
+        List<PlayerCardsInfoMj> dajiaoList = new ArrayList<>();
+        List<PlayerCardsInfoMj> noDajiaoList = new ArrayList<>();
+        List<PlayerCardsInfoMj> loseGangList = new ArrayList<>();
         for (PlayerCardsInfoMj player : this.playerCardsInfos.values()) {
             if(!player.isAlreadyHu){
+                if (player.chaHuazhu()) {
+                    huazhuList.add(player);
+                }else{
+                    noHuazhuList.add(player);
+                }
+
+                if (player.chaDajiao()) {
+                    dajiaoList.add(player);
+                }else{
+                    if (!player.chaHuazhu()) {
+                        noDajiaoList.add(player);
+                    }
+                }
                 if (!player.chaHuazhu() && player.chaDajiao()) {
                     winList.add(player);
                 }
                 if (player.chaHuazhu() || !player.chaDajiao()) {
-                    loseList.add(player);
+                    loseGangList.add(player);
                 }
             }
         }
 
         //把杠分退掉
-        loseList.forEach(losePlayer->{
+        loseGangList.forEach(losePlayer->{
             losePlayer.getOtherGangScore().forEach((otherId,score)->{
                 PlayerCardsInfoMj otherPlayer = this.playerCardsInfos.get(otherId);
                 otherPlayer.addGangScore(score.intValue());
@@ -230,15 +248,31 @@ public class GameInfoXZDD extends GameInfoNew {
             });
         });
 
+
+
+        //赔花猪
+        int huazhuScore = 16;
+        huazhuList.forEach(huazhuPlayer ->{
+            noHuazhuList.forEach(noHuazhuPlayer->{
+
+                noHuazhuPlayer.addScore(huazhuScore);
+                this.room.addUserSocre(noHuazhuPlayer.getUserId(), huazhuScore);
+
+                huazhuPlayer.addScore(-huazhuScore);
+                this.room.addUserSocre(huazhuPlayer.getUserId(), -huazhuScore);
+
+            });
+        });
+
         //赔付
-        if (loseList.size() > 0 && winList.size() > 0) {
+//        if (loseList.size() > 0 && winList.size() > 0) {
 
 
 
             //按最大牌型输分
-            winList.forEach(winPlayer->{
+            dajiaoList.forEach(winPlayer->{
                 int score = winPlayer.getMaxTingScore();
-                loseList.forEach(losePlayer->{
+                noDajiaoList.forEach(losePlayer->{
                     losePlayer.addScore(-score);
                     this.room.addUserSocre(losePlayer.getUserId(), -score);
 
@@ -246,7 +280,7 @@ public class GameInfoXZDD extends GameInfoNew {
                     this.room.addUserSocre(winPlayer.getUserId(), score);
                 });
             });
-        }
+//        }
 
         sendResult(false, userId, null);
         noticeDissolutionResult();
@@ -278,7 +312,7 @@ public class GameInfoXZDD extends GameInfoNew {
 
         if (lastOperateUserId == userId) {//自摸
             if (playerCardsInfo.isCanHu_zimo(catchCard)) {
-                long nextUser = 0;
+                long nextUser = nextTurnId(userId);
                 setBanker(userId);
                 playerCardsInfo.hu_zm(room, this, catchCard);
                 //回放
@@ -375,6 +409,12 @@ public class GameInfoXZDD extends GameInfoNew {
             }
            handleHuangzhuang(nextMopaiUser);
         }else{
+            Map<String, Object> huInfo = new HashMap<>();
+            List<Long> huList = new ArrayList<>();
+            huList.add(playerCardsInfo.userId);
+            huInfo.put("huList", huList);
+            MsgSender.sendMsg2Player("gameService", "noticeHu", huInfo, users);
+            this.room.pushScoreChange();
             //下个人摸牌
             mopai(nextMopaiUser);
         }
@@ -391,7 +431,7 @@ public class GameInfoXZDD extends GameInfoNew {
      * @return
      */
     private int getHuPlayerNum() {
-        return (int)playerCardsInfos.values().stream().filter(playerCardsInfoMj -> !playerCardsInfoMj.isAlreadyHu).count();
+        return (int)playerCardsInfos.values().stream().filter(playerCardsInfoMj -> playerCardsInfoMj.isAlreadyHu).count();
     }
 
 
@@ -437,6 +477,9 @@ public class GameInfoXZDD extends GameInfoNew {
             }
             handleHuangzhuang(nextMopaiUser);
         }else{
+            Map<String, Object> huInfo = new HashMap<>();
+            huInfo.put("huList", yipaoduoxiang);
+            MsgSender.sendMsg2Player("gameService", "noticeHu", huInfo, users);
             //摸牌
             mopai(nextMopaiUser);
         }

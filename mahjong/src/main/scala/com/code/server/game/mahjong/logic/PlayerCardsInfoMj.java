@@ -89,6 +89,8 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     //上次杠牌的分数
     protected double lastGangScore = 0;
 
+    protected List<Integer> noScoreGang = new ArrayList<>();
+
     /**
      * 根据发的牌初始化
      *
@@ -897,6 +899,26 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         return size >= 2 && this.operateList.get(size - 2) == type_gang;
     }
 
+    /**
+     * 是否是天胡
+     * @return
+     */
+    protected boolean isTianhu(){
+        return this.userId == this.gameInfo.getFirstTurn() && this.operateList.size() == 1 && this.operateList.get(0) == type_mopai;
+    }
+
+    /**
+     * 是否是地胡
+     * @return
+     */
+    protected boolean isDihu(){
+        return this.userId != this.gameInfo.getFirstTurn() && this.operateList.size() == 1 && this.operateList.get(0) == type_mopai;
+    }
+
+    protected boolean isGangPao(){
+        int operateSize = this.operateList.size();
+        return (operateSize>=3 && this.operateList.get(operateSize - 3) == type_gang);
+    }
 
     /**
      * 查大叫

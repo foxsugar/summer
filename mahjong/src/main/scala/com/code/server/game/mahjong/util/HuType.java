@@ -82,6 +82,7 @@ public interface HuType {
     int hu_素 = 151;
 
     int hu_天胡 = 160;
+    int hu_地胡 = 161;
 
     int hu_金杠 = 165;
 
@@ -124,6 +125,9 @@ public interface HuType {
     int hu_幺九谱2 = 213;
     int hu_幺九谱3 = 214;
     int hu_幺九谱4 = 215;
+
+    int hu_杠上点炮 = 220;
+    int hu_截杠胡 = 221;
 
 
 
