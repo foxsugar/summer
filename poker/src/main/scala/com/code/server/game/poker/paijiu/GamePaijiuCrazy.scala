@@ -128,7 +128,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     //没有这个牌型或者不含这个牌型
     if(data == null || getNoGroupName().contains(data.getName)) {
       //两张牌的点数相加
-      if(group == null) {
+      if(group == null || "".equals(group)) {
         println("group null")
         return 0
       }
@@ -140,6 +140,32 @@ class GamePaijiuCrazy extends GamePaijiu{
       getGroupScoreByName(data.getName)
     }
 
+  }
+
+
+  /**
+    * 检测开牌是否合法
+    *
+    * @param playerCardInfo
+    * @param group1
+    * @param group2
+    * @return
+    */
+  override protected def checkOpen(playerCardInfo: PlayerCardInfoPaijiu, group1: String, group2: String): Boolean = {
+    var allCard = Array.concat(group1.split(",")).map(card => card.toInt).toList
+
+    if(group2 != null && !"".equals(group2)) {
+      allCard = Array.concat(group1.split(","), group2.split(",")).map(card => card.toInt).toList
+    }
+
+    //开的牌和拥有的牌相同
+    val isSame = playerCardInfo.cards.diff(allCard).isEmpty
+    if (!isSame) return false
+
+    //第一组不小于第二组牌
+    val score1 = getGroupScore(group1)
+    val score2 = getGroupScore(group2)
+    score1 >= score2
   }
 
 
