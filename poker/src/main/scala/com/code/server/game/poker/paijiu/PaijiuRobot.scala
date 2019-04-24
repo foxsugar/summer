@@ -174,7 +174,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
       for (userId <- room.robotList) {
         val playerInfo = gamePaijiu.playerCardInfos(userId)
         //没下注
-        if (playerInfo != null && playerInfo.bet == null) {
+        if (playerInfo != null && playerInfo.bet == null && gamePaijiu.bankerId != playerInfo.userId) {
 
           val one = Random.shuffle(betNum).head
           //只下一道
@@ -209,7 +209,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
 
     for (playerInfo <- game.playerCardInfos.values) {
 
-      if (playerInfo.bet == null) {
+      if (playerInfo.bet == null && playerInfo.userId != game.bankerId) {
         //默认下10
         sendBet(playerInfo.userId, room.getRoomId, 10, 0, 0, 0)
       }
