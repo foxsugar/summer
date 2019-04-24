@@ -469,6 +469,7 @@ public class LoginAction {
         newUser.setVip(0);
         newUser.setUuid("0");
         newUser.setMoney(getConstant().getInitMoney());
+        newUser.setGold(getConstant().getInitGold());
         newUser.setRegistDate(new Date());
         newUser.setLastLoginDate(new Date());
         newUser.setUnionId(unionId);
