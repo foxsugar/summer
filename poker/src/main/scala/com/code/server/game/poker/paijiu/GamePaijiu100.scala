@@ -107,7 +107,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     if (this.roomPaijiu.isInstanceOf[RoomPaijiuAce]|| this.roomPaijiu.isInstanceOf[RoomPaijiuCrazy]){
       val myMoney = RedisManager.getUserRedisService.getUserMoney(userId)
       if(myMoney<myBetNum) {
-        return ErrorCode.BET_PARAM_ERROR
+        return ErrorCode.BET_PARAM_NO_MONEY
       }
     }
     //总下注 不能大于锅底

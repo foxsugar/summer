@@ -2,7 +2,7 @@ package com.code.server.game.poker.paijiu
 
 import java.util
 
-import com.code.server.constant.game.IGameConstant
+import com.code.server.constant.game.{IGameConstant, RoomStatistics}
 import com.code.server.constant.response.{ErrorCode, IfaceRoomVo, ResponseVo}
 import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.room.Room
@@ -39,6 +39,23 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     this.bankerScoreMap = this.bankerScoreMap.filterKeys(_ != userId)
     this.robotList = this.robotList.filter(_ != userId)
     removeUserRoomRedis(userId)
+  }
+
+
+
+  override protected def roomAddUser(userId: Long): Unit = {
+    this.users.add(userId)
+    this.userStatus.put(userId, 0)
+    this.userScores.put(userId, RedisManager.getUserRedisService.getUserMoney(userId))
+    this.roomStatisticsMap.put(userId, new RoomStatistics(userId))
+    this.canStartUserId = users.get(0)
+    //代开房
+    if (!isCreaterJoin ||isClubRoom) this.bankerId = users.get(0)
+    //如果是机器人
+    if(RedisManager.getUserRedisService.getUserBean(userId).getVip == 1) {
+      this.robotList = this.robotList.+:(userId)
+    }
+    addUser2RoomRedis(userId)
   }
 
 

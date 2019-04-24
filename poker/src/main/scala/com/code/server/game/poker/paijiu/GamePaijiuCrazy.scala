@@ -369,7 +369,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     if (this.roomPaijiu.isInstanceOf[RoomPaijiuAce]|| this.roomPaijiu.isInstanceOf[RoomPaijiuCrazy]){
       val myMoney = RedisManager.getUserRedisService.getUserMoney(userId)
       if(myMoney<betNum) {
-        return ErrorCode.BET_PARAM_ERROR
+        return ErrorCode.BET_PARAM_NO_MONEY
       }
     }
 

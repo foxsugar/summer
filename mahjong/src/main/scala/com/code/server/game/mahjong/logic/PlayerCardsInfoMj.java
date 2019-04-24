@@ -885,6 +885,8 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
         this.huCard = disCard;
         huCompute(room, gameInfo, false, dianpaoUser, disCard);
         this.lastOperate = type_hu;
+        gameInfo.isAlreadyHu = true;
+        this.isAlreadyHu = true;
 
     }
 

@@ -398,7 +398,7 @@ public class GameInfoXZDD extends GameInfoNew {
 
     protected void handleHu(PlayerCardsInfoMj playerCardsInfo,long nextMopaiUser) {
 //        isAlreadyHu = true;
-        boolean onlyOneNoHu = getHuPlayerNum() == this.users.size() - 1;
+        boolean onlyOneNoHu = getNoHuPlayerNum() == 1;
         if (this.remainCards.size() == 0 || onlyOneNoHu) {
             if (onlyOneNoHu) {
 
@@ -434,6 +434,10 @@ public class GameInfoXZDD extends GameInfoNew {
         return (int)playerCardsInfos.values().stream().filter(playerCardsInfoMj -> playerCardsInfoMj.isAlreadyHu).count();
     }
 
+    private int getNoHuPlayerNum(){
+        return (int) playerCardsInfos.values().stream().filter(player -> !player.isAlreadyHu).count();
+    }
+
 
     protected void handleYiPaoDuoXiang() {
 
@@ -465,7 +469,7 @@ public class GameInfoXZDD extends GameInfoNew {
 
 
 
-        boolean onlyOneNoHu = getHuPlayerNum() == this.users.size() - 1;
+        boolean onlyOneNoHu = getNoHuPlayerNum() == 1;
         if (this.remainCards.size() == 0 || onlyOneNoHu) {
             if (onlyOneNoHu) {
 

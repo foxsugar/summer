@@ -91,7 +91,7 @@ public class RoomGuessCar extends Room {
     public int joinRoom(long userId, boolean isJoin) {
         //要多于5个钻
         if(userId != this.createUser){
-            if(RedisManager.getUserRedisService().getUserGold(userId) < 50){
+            if(RedisManager.getUserRedisService().getUserGold(userId) < 10){
                 return ErrorCode.NOT_HAVE_MORE_MONEY;
             }
         }

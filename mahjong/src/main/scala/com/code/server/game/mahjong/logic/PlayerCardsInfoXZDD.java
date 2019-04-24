@@ -4,9 +4,7 @@ import com.code.server.game.mahjong.util.HuCardType;
 import com.code.server.game.mahjong.util.HuLimit;
 import com.code.server.game.mahjong.util.HuUtil;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -48,37 +46,58 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
     @Override
     public boolean isHasGang() {
         if (isAlreadyHu) return false;
-        return super.isHasGang();
+        List<String> temp = new ArrayList<>();
+        temp.addAll(cards);
+        Set<Integer> set = getHasGangList(temp);
+        for (int cardType : set) {
+            int group = CardTypeUtil.getCardGroupByCardType(cardType);
+            if (group != dingqueGroupType) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
     @Override
     public boolean isCanPengAddThisCard(String card) {
         if (isAlreadyHu) return false;
+        int group = CardTypeUtil.getCardGroup(card);
+        if(group == dingqueGroupType) return false;
         return super.isCanPengAddThisCard(card);
     }
 
     @Override
     public boolean isCanGangAddThisCard(String card) {
         if (isAlreadyHu) return false;
+        int group = CardTypeUtil.getCardGroup(card);
+        if(group == dingqueGroupType) return false;
         return super.isCanGangAddThisCard(card);
     }
 
     @Override
     public boolean isCanGangThisCard(String card) {
         if (isAlreadyHu) return false;
+        int group = CardTypeUtil.getCardGroup(card);
+        if(group == dingqueGroupType) return false;
         return super.isCanGangThisCard(card);
     }
 
     @Override
     public boolean isCanHu_dianpao(String card) {
         if (isAlreadyHu) return false;
+        int group = CardTypeUtil.getCardGroup(card);
+        if(group == dingqueGroupType) return false;
+        if(getGroupNum() == 3) return false;
         return super.isCanHu_dianpao(card);
     }
 
     @Override
     public boolean isCanHu_zimo(String card) {
         if (isAlreadyHu) return false;
+        int group = CardTypeUtil.getCardGroup(card);
+        if(group == dingqueGroupType) return false;
+        if(getGroupNum() == 3) return false;
         return super.isCanHu_zimo(card);
     }
 
@@ -101,6 +120,14 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
         this.gameInfo.isAlreadyHu = false;
     }
 
+    private int getGroupNum(){
+        Set<Integer> set = new HashSet<>();
+        this.cards.forEach(card->{
+            int group = CardTypeUtil.getCardGroup(card);
+            set.add(group);
+        });
+        return set.size();
+    }
     /**
      * 获得最大听牌分数
      * @return

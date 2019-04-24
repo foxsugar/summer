@@ -116,6 +116,7 @@ public class ErrorCode {
 	public static final int CRAP_PARAM_ERROR = 500029;
 	public static final int CRAP_ALREADY_BANKER = 500030;
 	public static final int BET_PARAM_LIMIT = 500031;
+	public static final int BET_PARAM_NO_MONEY = 500032;
 
 	//扎金花
 	public static final int NOT_GET_MEMPAI = 600001;

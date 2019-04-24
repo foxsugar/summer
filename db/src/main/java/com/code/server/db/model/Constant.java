@@ -25,6 +25,7 @@ public class Constant extends BaseEntity {
     private String download1;
     private String download2;
     private int initMoney;
+    private int initGold;
     private String versionOfAndroid;//安卓版本
     private String versionOfIos;//IOS版本
     private int appleCheck;
@@ -214,6 +215,15 @@ public class Constant extends BaseEntity {
 
     public Constant setOther(OtherConstant other) {
         this.other = other;
+        return this;
+    }
+
+    public int getInitGold() {
+        return initGold;
+    }
+
+    public Constant setInitGold(int initGold) {
+        this.initGold = initGold;
         return this;
     }
 

@@ -11,14 +11,13 @@ import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
 import com.code.server.kafka.MsgProducer
-import com.code.server.redis.service.RedisManager
 import com.code.server.util.timer.GameTimer
 import com.code.server.util.{IdWorker, SpringUtil}
 import org.springframework.beans.BeanUtils
 
 import scala.beans.BeanProperty
-import scala.collection.mutable.ListBuffer
 import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
 
 /**
   * Created by sunxianping on 2017/7/24.
@@ -154,9 +153,9 @@ class RoomPaijiu extends PokerGoldRoom {
     //代开房
     if (!isCreaterJoin ||isClubRoom) this.bankerId = users.get(0)
     //如果是机器人
-    if(RedisManager.getUserRedisService.getUserBean(userId).getVip == 1) {
-      this.robotList = this.robotList.+:(userId)
-    }
+//    if(RedisManager.getUserRedisService.getUserBean(userId).getVip == 1) {
+//      this.robotList = this.robotList.+:(userId)
+//    }
     addUser2RoomRedis(userId)
   }
 
