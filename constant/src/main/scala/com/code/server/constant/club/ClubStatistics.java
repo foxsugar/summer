@@ -18,6 +18,7 @@ public class ClubStatistics {
     private double allScore;
     private int playerNum;
     private Set<Long> playerUser = new HashSet<>();
+    private double playMinScore;
 
     public int getOpenNum() {
         return openNum;
@@ -106,6 +107,15 @@ public class ClubStatistics {
 
     public ClubStatistics setLoseScore(double loseScore) {
         this.loseScore = loseScore;
+        return this;
+    }
+
+    public double getPlayMinScore() {
+        return playMinScore;
+    }
+
+    public ClubStatistics setPlayMinScore(double playMinScore) {
+        this.playMinScore = playMinScore;
         return this;
     }
 }

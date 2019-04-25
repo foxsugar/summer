@@ -298,6 +298,12 @@ public class ClubServiceMsgDispatch {
                 return gameClubService.setCreditScore(msgKey, clubId,toUser, score, clear);
             }
 
+            case "setPlayMinScore":{
+                long toUser = params.path("toUser").asLong();
+                int score = params.path("score").asInt();
+                return gameClubService.setPlayMinScore(msgKey, clubId, toUser,score);
+            }
+
             case "clearAllMemberCredit":{
                 int type1 = params.path("type").asInt(0);
                 return gameClubService.clearAllMemberCredit(msgKey, clubId, type1);

@@ -30,7 +30,7 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
         specialHuScore.put(hu_天胡, 6);
         specialHuScore.put(hu_地胡, 6);
 
-//        specialHuScore.put(hu_将对, 3);
+        specialHuScore.put(hu_将对, 4);
 //        specialHuScore.put(hu_门清, 1);
 //        specialHuScore.put(hu_中张, 1);
 //        specialHuScore.put(hu_将七对, 4);

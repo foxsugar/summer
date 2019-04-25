@@ -90,6 +90,10 @@ public class GameInfo extends Game {
 
     protected int state;
 
+    protected boolean nowYipaoduoxiang = false;
+
+    protected String yipaoduoxiangCard = null;
+
 //    private Set<Long> noCanHuList = new HashSet<>();//本轮不能胡的人
 
     /**
@@ -649,6 +653,8 @@ public class GameInfo extends Game {
         GameInfo gameInfo;
         String[] params;
 
+        boolean isFire;
+
 
         public WaitDetail() {
         }
@@ -696,6 +702,7 @@ public class GameInfo extends Game {
                     break;
             }
 
+            this.isFire = true;
 
         }
 

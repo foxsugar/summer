@@ -1703,6 +1703,23 @@ public class GameClubService {
     }
 
 
+    public int setPlayMinScore(KafkaMsgKey msgKey, String clubId, long toUser, int score) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+
+        ClubMember clubMember = club.getClubInfo().getMember().get("" + toUser);
+        if (clubMember == null) {
+            return ErrorCode.CLUB_NO_USER;
+        }
+
+        clubMember.getAllStatistics().setPlayMinScore(score);
+
+        sendMsg(msgKey, new ResponseVo("clubService", "setPlayMinScore", 0));
+        return 0;
+    }
+
     /**
      * 获得俱乐部信息和自己分数
      * @param msgKey
@@ -1720,8 +1737,10 @@ public class GameClubService {
         ClubMember clubMember = club.getClubInfo().getMember().get(""+userId);
         if (clubMember != null) {
             result.put("score", clubMember.getAllStatistics().getAllScore());
+            result.put("playMinScore", clubMember.getAllStatistics().getPlayMinScore());
         }else{
             result.put("score", 0);
+            result.put("playMinScore", 0);
         }
         sendMsg(msgKey, new ResponseVo("clubService", "getCreditAndOwnInfo", result));
         return 0;
@@ -1863,9 +1882,12 @@ public class GameClubService {
         if (clubMember != null) {
 
             clubVo.setScore(clubMember.getAllStatistics().getAllScore());
+            clubVo.setPlayMinScore(clubMember.getAllStatistics().getPlayMinScore());
         }else{
             clubVo.setScore(0);
+            clubVo.setPlayMinScore(0);
         }
+        clubVo.setCreditInfo(club.getClubInfo().getCreditInfo());
 
         return clubVo;
     }

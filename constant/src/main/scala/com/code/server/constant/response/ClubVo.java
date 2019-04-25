@@ -25,6 +25,7 @@ public class ClubVo {
     private String image;
     private int roomModelNum;
     private double score;
+    private double playMinScore;
     private List<String> floorDesc = new ArrayList<>();
 
     private List<ClubMember> member = new ArrayList<>();//成员
@@ -254,6 +255,15 @@ public class ClubVo {
 
     public ClubVo setScore(double score) {
         this.score = score;
+        return this;
+    }
+
+    public double getPlayMinScore() {
+        return playMinScore;
+    }
+
+    public ClubVo setPlayMinScore(double playMinScore) {
+        this.playMinScore = playMinScore;
         return this;
     }
 }
