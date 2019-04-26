@@ -36,6 +36,9 @@ public class GameInfoXZDD extends GameInfoNew {
         //没有风 字
         remainCards.removeAll(CardTypeUtil.FENG_CARD);
         remainCards.removeAll(CardTypeUtil.ZI_CARD);
+        if (this.room.isHasMode(MODE_NO_WAN)) {
+            remainCards.removeAll(CardTypeUtil.WAN_CARD);
+        }
         for (int i = 0; i < playerSize; i++) {
             PlayerCardsInfoMj playerCardsInfo = PlayerCardsInfoFactory.getInstance(room);
             playerCardsInfo.setGameInfo(this);
@@ -80,6 +83,13 @@ public class GameInfoXZDD extends GameInfoNew {
         }else{
             this.state = STATE_DINGQUE;
             MsgSender.sendMsg2Player("gameService", "startDingque", 0, users);
+
+            if (this.room.isHasMode(MODE_NO_WAN)) {
+                this.playerCardsInfos.values().forEach(player->dingque(player.getUserId(),1));
+//                this.state = STATE_PLAY;
+//                mopai(firstTurn, "发牌");
+            }
+
         }
 
     }

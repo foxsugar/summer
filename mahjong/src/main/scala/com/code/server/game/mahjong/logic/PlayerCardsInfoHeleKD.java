@@ -94,7 +94,10 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
 
 
 
-        room.pushScoreChange();
+        String gameType = this.roomInfo.getGameType();
+        if (!"ZHANGLEBAO".equals(gameType) && !"ZHANGLEBAO2".equals(gameType) && !"ZHANGLEBAO3".equals(gameType)) {
+            room.pushScoreChange();
+        }
     }
 
 
