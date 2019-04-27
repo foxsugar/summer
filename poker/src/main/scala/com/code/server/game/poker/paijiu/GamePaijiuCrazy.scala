@@ -299,11 +299,7 @@ class GamePaijiuCrazy extends GamePaijiu{
   override protected def sendFinalResult(): Unit ={
 
     val userOfResultList = this.roomPaijiu.getUserOfResult
-    // 存储返回
-    val gameOfResult = new GameOfResult
-    gameOfResult.setUserList(userOfResultList)
-    MsgSender.sendMsg2Player("gameService", "gamePaijiuFinalResult", gameOfResult, roomPaijiu.users)
-    RoomManager.removeRoom(roomPaijiu.getRoomId)
+
 
     //庄家初始分 再减掉
     roomPaijiu.addUserSocre(this.roomPaijiu.getBankerId, -this.roomPaijiu.bankerInitScore)
@@ -312,20 +308,30 @@ class GamePaijiuCrazy extends GamePaijiu{
     this.roomPaijiu.genRoomRecord()
 
     //大赢家付房费
-//    if(this.roomPaijiu.isRoomOver ) {
+    //    if(this.roomPaijiu.isRoomOver ) {
 
-      if(Room.isHasMode(MODE_WINNER_PAY, this.roomPaijiu.getOtherMode)) {
-        //找到大赢家
-        val winner = this.roomPaijiu.getMaxScoreUser
-        val money = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble
-        //付房费
-        RedisManager.getUserRedisService.addUserMoney(winner, -money)
-      }
-      //重开一个一样的房间
-      if(this.roomPaijiu.isReOpen) {
-        doCreateNewRoom(this.roomPaijiu)
-      }
-//    }
+    if (Room.isHasMode(MODE_WINNER_PAY, this.roomPaijiu.getOtherMode)) {
+      //找到大赢家
+      val winner = this.roomPaijiu.getMaxScoreUser
+      val money = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble
+      //付房费
+      RedisManager.getUserRedisService.addUserMoney(winner, -money)
+    }
+
+
+    // 存储返回
+    val gameOfResult = new GameOfResult
+    gameOfResult.setUserList(userOfResultList)
+    MsgSender.sendMsg2Player("gameService", "gamePaijiuFinalResult", gameOfResult, roomPaijiu.users)
+    RoomManager.removeRoom(roomPaijiu.getRoomId)
+
+
+
+    //重开一个一样的房间
+    if (this.roomPaijiu.isReOpen) {
+      doCreateNewRoom(this.roomPaijiu)
+    }
+    //    }
 
 
   }
