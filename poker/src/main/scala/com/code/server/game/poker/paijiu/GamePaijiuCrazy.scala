@@ -235,7 +235,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     }else{
       if(this.roomPaijiu.curGameNumber==1) {
         this.roomPaijiu.clearReadyStatus(true)
-        this.roomPaijiu.startGame()
+//        this.roomPaijiu.startGame()
       }else{
         bankerBreakStart()
       }
@@ -363,7 +363,7 @@ class GamePaijiuCrazy extends GamePaijiu{
 
     } else {
       this.roomPaijiu.clearReadyStatus(true)
-      this.roomPaijiu.startGame()
+//      this.roomPaijiu.startGame()
     }
 
     MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreak", 0, userId)
