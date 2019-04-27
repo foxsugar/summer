@@ -219,7 +219,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     */
   override protected def gameOver(): Unit = {
     //返利
-    val rebate:Int = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[Int]
+    val rebate:Double = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[Double]
     for(playerInfo <- this.playerCardInfos.values){
       this.roomPaijiu.sendCenterAddRebate(playerInfo.userId, rebate)
     }
