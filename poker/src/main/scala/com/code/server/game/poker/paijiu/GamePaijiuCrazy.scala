@@ -4,9 +4,10 @@ import java.{lang, util}
 
 import com.code.server.constant.data.{DataManager, StaticDataProto}
 import com.code.server.constant.game.IGameConstant
-import com.code.server.constant.response.{ErrorCode, GamePaijiuResult}
+import com.code.server.constant.response.{ErrorCode, GameOfResult, GamePaijiuResult}
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
+import com.code.server.game.room.service.RoomManager
 import com.code.server.redis.service.RedisManager
 
 import scala.collection.JavaConverters._
@@ -297,10 +298,21 @@ class GamePaijiuCrazy extends GamePaijiu{
     */
   override protected def sendFinalResult(): Unit ={
 
-   super.sendFinalResult()
+    val userOfResultList = this.roomPaijiu.getUserOfResult
+    // 存储返回
+    val gameOfResult = new GameOfResult
+    gameOfResult.setUserList(userOfResultList)
+    MsgSender.sendMsg2Player("gameService", "gamePaijiuFinalResult", gameOfResult, roomPaijiu.users)
+    RoomManager.removeRoom(roomPaijiu.getRoomId)
+
+    //庄家初始分 再减掉
+    roomPaijiu.addUserSocre(this.roomPaijiu.getBankerId, -this.roomPaijiu.bankerInitScore)
+
+    //战绩
+    this.roomPaijiu.genRoomRecord()
 
     //大赢家付房费
-    if(this.roomPaijiu.isRoomOver ) {
+//    if(this.roomPaijiu.isRoomOver ) {
 
       if(Room.isHasMode(MODE_WINNER_PAY, this.roomPaijiu.getOtherMode)) {
         //找到大赢家
@@ -313,7 +325,7 @@ class GamePaijiuCrazy extends GamePaijiu{
       if(this.roomPaijiu.isReOpen) {
         doCreateNewRoom(this.roomPaijiu)
       }
-    }
+//    }
 
 
   }
