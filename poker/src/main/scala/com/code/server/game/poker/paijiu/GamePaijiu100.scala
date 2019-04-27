@@ -236,12 +236,12 @@ class GamePaijiu100 extends GamePaijiuCrazy {
       //抽水
       val winScore:Double = this.roomPaijiu.bankerScore - this.roomPaijiu.bankerInitScore
       if(winScore > 0) {
-        val s = winScore * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[Double] / 100
+        val s = winScore * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble / 100
         val finalScore = winScore - s
         RedisManager.getUserRedisService.addUserMoney(bankerId,finalScore)
 
         //返利
-        val rebate =  winScore * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[Double] / 100
+        val rebate =  winScore * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100
         this.roomPaijiu.sendCenterAddRebate(userId, rebate)
 
       }else{

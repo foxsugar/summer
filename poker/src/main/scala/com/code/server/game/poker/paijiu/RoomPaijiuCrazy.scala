@@ -85,9 +85,9 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     */
   override def getNeedMoney(): Int = {
     if(Room.isHasMode(MODE_WINNER_PAY, this.otherMode) && !isAA){
-      return this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[Int]
+      return this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toInt
     }else{
-      return this.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[Int]
+      return this.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[String].toInt
     }
 
   }
@@ -95,7 +95,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
   override def spendMoney(): Unit = {
 
-    createNeedMoney = this.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[Integer]
+    createNeedMoney = this.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[String].toInt
 
     //大赢家最后付钱
     if (!isAA && Room.isHasMode(MODE_WINNER_PAY, this.otherMode)) {
@@ -110,11 +110,11 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     //百人牌九 加分时抽水
     if (this.isInstanceOf[RoomPaijiu100] && score > 0) {
       val game: GamePaijiuCrazy = this.game.asInstanceOf[GamePaijiuCrazy]
-      val multiple = rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[Integer]
+      val multiple = rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble
       val s = score * (100 - multiple) / 100
       RedisManager.getUserRedisService.addUserMoney(userId, s)
       //返利
-      val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[Integer]
+      val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble
 
       //发送返利
       sendCenterAddRebate(userId, rs)

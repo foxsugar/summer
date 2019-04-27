@@ -219,7 +219,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     */
   override protected def gameOver(): Unit = {
     //返利
-    val rebate:Double = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[Double]
+    val rebate:Double = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble
     for(playerInfo <- this.playerCardInfos.values){
       this.roomPaijiu.sendCenterAddRebate(playerInfo.userId, rebate)
     }
@@ -305,7 +305,7 @@ class GamePaijiuCrazy extends GamePaijiu{
       if(Room.isHasMode(MODE_WINNER_PAY, this.roomPaijiu.getOtherMode)) {
         //找到大赢家
         val winner = this.roomPaijiu.getMaxScoreUser
-        val money = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[Integer]
+        val money = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble
         //付房费
         RedisManager.getUserRedisService.addUserMoney(winner, -money)
       }
