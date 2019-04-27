@@ -9,6 +9,7 @@ import java.util.List;
 public class GameResultPaijiu {
     public List<IfacePlayerInfoVo> playerCardInfos = new ArrayList<>();
 
+    public double bankerScore;
     public List<IfacePlayerInfoVo> getPlayerCardInfos() {
         return playerCardInfos;
     }
@@ -16,5 +17,13 @@ public class GameResultPaijiu {
     public GameResultPaijiu setPlayerCardInfos(List<IfacePlayerInfoVo> playerCardInfos) {
         this.playerCardInfos = playerCardInfos;
         return this;
+    }
+
+    public double getBankerScore() {
+        return bankerScore;
+    }
+
+    public void setBankerScore(double bankerScore) {
+        this.bankerScore = bankerScore;
     }
 }
