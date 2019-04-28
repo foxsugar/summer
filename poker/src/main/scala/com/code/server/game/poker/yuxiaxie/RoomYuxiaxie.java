@@ -321,7 +321,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
         roomRecord.getOtherInfo().put("diceHistory", this.diceHistory);
 //        if (!this.isClubRoom()) {
-//            roomRecord.getOtherInfo().put("betHistory", this.betHistory);
+            roomRecord.getOtherInfo().put("betHistory", this.betHistory);
 //        }
         roomRecord.getOtherInfo().put("userScoreHistory", this.userScoreHistory);
         roomRecord.getOtherInfo().put("playerNum", 10);
@@ -342,6 +342,16 @@ public class RoomYuxiaxie extends PokerGoldRoom {
             }
             roomRecord.getRecords().add(userRecord);
         });
+
+        //test
+//        for (int i = 0; i < 10000; i++) {
+//            UserRecord userRecord = new UserRecord();
+//            userRecord.setUserId(i);
+//            userRecord.setName("abc2dfdsrteingdlsafjeiangdnsagkfdsna");
+//            userRecord.setImage("uuuuuussvbbbbbbbbbbbb");
+//            userRecord.setScore(i);
+//            roomRecord.getRecords().add(userRecord);
+//        }
 
         KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ROOM_RECORD);
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);

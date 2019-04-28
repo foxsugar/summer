@@ -1703,7 +1703,7 @@ public class GameClubService {
     }
 
 
-    public int setPlayMinScore(KafkaMsgKey msgKey, String clubId, long toUser, int score) {
+    public int setPlayMinScore(KafkaMsgKey msgKey, String clubId, long toUser, double score) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;

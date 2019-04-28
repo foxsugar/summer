@@ -300,7 +300,7 @@ public class ClubServiceMsgDispatch {
 
             case "setPlayMinScore":{
                 long toUser = params.path("toUser").asLong();
-                int score = params.path("score").asInt();
+                double score = params.path("score").asDouble();
                 return gameClubService.setPlayMinScore(msgKey, clubId, toUser,score);
             }
 
