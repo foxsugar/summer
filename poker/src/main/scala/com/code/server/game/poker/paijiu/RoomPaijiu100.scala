@@ -1,5 +1,6 @@
 package com.code.server.game.poker.paijiu
 
+import com.code.server.constant.game.IGameConstant
 import com.code.server.redis.service.RedisManager
 
 /**
@@ -22,12 +23,22 @@ class RoomPaijiu100 extends RoomPaijiuCrazy{
   override def addUserSocre(userId: Long, score: Double): Unit = {
     super.addUserSocre(userId, score)
 
-    //返利
-    if(score > 0) {
+    //百人牌九 加分时抽水
+    if (this.isInstanceOf[RoomPaijiu100] && score > 0) {
+      if(score>0) {
 
-    }else{
-      RedisManager.getUserRedisService.addUserMoney(userId, score)
+        val game: GamePaijiuCrazy = this.game.asInstanceOf[GamePaijiuCrazy]
+        val multiple = rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble
+        val s = score * (100 - multiple) / 100
+        RedisManager.getUserRedisService.addUserMoney(userId, s)
+        //返利
+        val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble
 
+        //发送返利
+        sendCenterAddRebate(userId, rs)
+      }else{
+        RedisManager.getUserRedisService.addUserMoney(userId, score)
+      }
     }
   }
 

@@ -108,18 +108,23 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
   override def addUserSocre(userId: Long, score: Double): Unit = {
     super.addUserSocre(userId, score)
     //百人牌九 加分时抽水
-    if (this.isInstanceOf[RoomPaijiu100] && score > 0) {
-      val game: GamePaijiuCrazy = this.game.asInstanceOf[GamePaijiuCrazy]
-      val multiple = rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble
-      val s = score * (100 - multiple) / 100
-      RedisManager.getUserRedisService.addUserMoney(userId, s)
+    if (!this.isInstanceOf[RoomPaijiu100]) {
+      if(score>0) {
+
+
+//      val game: GamePaijiuCrazy = this.game.asInstanceOf[GamePaijiuCrazy]
+//      val multiple = rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble
+//      val s = score * (100 - multiple) / 100
+      RedisManager.getUserRedisService.addUserMoney(userId, score)
       //返利
-      val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble
+      val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble
 
       //发送返利
       sendCenterAddRebate(userId, rs)
-    } else {
-      RedisManager.getUserRedisService.addUserMoney(userId, score)
+      }else{
+
+        RedisManager.getUserRedisService.addUserMoney(userId, score)
+      }
     }
 
   }
