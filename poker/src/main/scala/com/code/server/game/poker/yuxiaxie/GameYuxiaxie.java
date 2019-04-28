@@ -7,8 +7,11 @@ import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.code.server.constant.game.Bet.TYPE_DANYA;
@@ -18,6 +21,8 @@ import static com.code.server.constant.game.Bet.TYPE_NUO;
  * Created by sunxianping on 2018-11-30.
  */
 public class GameYuxiaxie extends Game {
+
+    private Logger logger = LoggerFactory.getLogger(GameYuxiaxie.class);
 
     static final int STATE_START_GAME = 0;
     static final int STATE_CRAP = 1;
@@ -302,6 +307,13 @@ public class GameYuxiaxie extends Game {
         //开始下注
         betStart();
 
+
+        String log = "date: " + LocalDateTime.now().toString() +
+                " roomId: " + this.room.getRoomId() +
+                " gameNum: " + this.room.curGameNumber +
+                " dice1: " + num1 + " dice2: " + num2;
+        logger.error(log);
+
         return 0;
     }
 
@@ -387,7 +399,7 @@ public class GameYuxiaxie extends Game {
             this.room.userScoreHistory.putIfAbsent(playerInfoYuxiaxie.getUserId(), new HashMap<>());
             this.room.userScoreHistory.get(playerInfoYuxiaxie.getUserId()).put(this.room.curGameNumber, score);
             playerInfoYuxiaxie.setScore(score);
-            System.out.println("userId : " + playerInfoYuxiaxie.getUserId() + "  score : " + score);
+//            System.out.println("userId : " + playerInfoYuxiaxie.getUserId() + "  score : " + score);
 
 //            this.room.addUserSocre(playerInfoYuxiaxie.getUserId(), score);
             allScore += score;

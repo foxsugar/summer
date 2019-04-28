@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
   * Created by sunxianping on 2017/5/23.
   */
 object MsgDispatch {
-  private val logger = LoggerFactory.getLogger("MsgDispatch")
+  private val logger = LoggerFactory.getLogger(this.getClass)
 
   def dispatch(record: ConsumerRecord[String, String]): Unit = {
     logger.info(record.toString)
