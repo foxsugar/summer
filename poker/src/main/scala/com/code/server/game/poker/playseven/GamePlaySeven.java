@@ -297,12 +297,12 @@ public class GamePlaySeven extends Game {
         boolean b = false;
         a:
         for (long l : playerCardInfos.keySet()) {
-            if (!"0".equals(playerCardInfos.get(l).fanZhu)) {
+            if ("1".equals(playerCardInfos.get(l).fanZhu)) {
                 b = true;
                 break a;
             }
         }
-        if (b) {
+        if (!b) {
             playerCardInfos.get(userId).setSeeTableCard("1");
             MsgSender.sendMsg2Player(new ResponseVo("gameService", "canChangeTableCards", 0), zhuId);
             this.step = CAN_CHANGE_TABLE_CARDS;
