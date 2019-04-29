@@ -293,7 +293,7 @@ public class ClubServiceMsgDispatch {
 
             case "setCreditScore":{
                 long toUser = params.path("toUser").asLong();
-                int score = params.path("score").asInt();
+                double score = params.path("score").asDouble();
                 boolean clear = params.path("clear").asBoolean(false);
                 return gameClubService.setCreditScore(msgKey, clubId,toUser, score, clear);
             }

@@ -1682,7 +1682,7 @@ public class GameClubService {
      * @param score
      * @return
      */
-    public int setCreditScore(KafkaMsgKey msgKey, String clubId, long toUser, int score, boolean clear){
+    public int setCreditScore(KafkaMsgKey msgKey, String clubId, long toUser, double score, boolean clear){
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
