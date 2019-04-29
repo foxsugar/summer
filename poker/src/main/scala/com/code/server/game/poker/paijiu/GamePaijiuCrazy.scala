@@ -207,7 +207,7 @@ class GamePaijiuCrazy extends GamePaijiu{
   /**
     * 摇骰子阶段
     */
-  override protected def crapStart(): Unit = {
+  override def crapStart(): Unit = {
     MsgSender.sendMsg2Player("gamePaijiuService", "crapStart", 0, bankerId)
     this.state = START_CRAP
     updateLastOperateTime()

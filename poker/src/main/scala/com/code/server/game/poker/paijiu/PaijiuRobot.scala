@@ -47,12 +47,13 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     doFightForBanker(roomPaijiu, gamePaijiu, now)
     //机器人下注
     doRobotBet(roomPaijiu, gamePaijiu, now)
-    //百人牌九 15秒自动发牌
+
 
     //四人牌九强制下注
     doForceBet(roomPaijiu, gamePaijiu, now)
     //规定时间下注
 
+    //百人牌九 15秒自动发牌
     doAutoDealCard(roomPaijiu, gamePaijiu, now)
 
     //开牌
@@ -229,8 +230,10 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     if (game.state != STATE_BET && game.state != START_CRAP) return
     if (time - game.lastOperateTime < 1000 * 15) return
     println("托管: 自动发牌")
+    //强制下注状态结束
 
-    sendOpenStart(game.bankerId, room.getRoomId)
+
+    sendCrapStart(game.bankerId, room.getRoomId)
 
   }
 
@@ -392,7 +395,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     * @param userId
     * @param roomId
     */
-  def sendOpenStart(userId: Long, roomId: String): Unit = {
+  def sendCrapStart(userId: Long, roomId: String): Unit = {
     val partition: Int = RedisManager.getRoomRedisService.getServerId(roomId).toInt
     val msgKey: KafkaMsgKey = new KafkaMsgKey
     msgKey.setRoomId(roomId)

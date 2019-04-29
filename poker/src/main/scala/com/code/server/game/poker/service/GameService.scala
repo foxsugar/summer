@@ -238,7 +238,7 @@ object GameService {
       game.bankerBreak(userId, flag)
 
     case "autoCrap"=>
-      game.crap(userId)
+      game.crapStart()
       0
 
     case "exchange" =>

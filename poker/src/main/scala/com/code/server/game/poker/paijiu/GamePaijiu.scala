@@ -200,7 +200,7 @@ class GamePaijiu extends Game with PaijiuConstant {
   /**
     * 摇骰子阶段
     */
-  protected def crapStart(): Unit = {
+  def crapStart(): Unit = {
     MsgSender.sendMsg2Player("gamePaijiuService", "crapStart", 0, bankerId)
     this.state = START_CRAP
     updateLastOperateTime()
