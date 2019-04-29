@@ -18,6 +18,9 @@ public class RoomPaijiuVo extends RoomVo {
 
     public Map winnerCountMap = new HashMap<>();
 
+    public List bankerList = new ArrayList();
+    public Map bankerScoreMap = new HashMap();
+
 
 
     public int getBankerScore() {
@@ -54,5 +57,21 @@ public class RoomPaijiuVo extends RoomVo {
     public RoomPaijiuVo setWinnerCountMap(Map winnerCountMap) {
         this.winnerCountMap = winnerCountMap;
         return this;
+    }
+
+    public List getBankerList() {
+        return bankerList;
+    }
+
+    public void setBankerList(List bankerList) {
+        this.bankerList = bankerList;
+    }
+
+    public Map getBankerScoreMap() {
+        return bankerScoreMap;
+    }
+
+    public void setBankerScoreMap(Map bankerScoreMap) {
+        this.bankerScoreMap = bankerScoreMap;
     }
 }

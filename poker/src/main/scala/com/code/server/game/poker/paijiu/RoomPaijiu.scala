@@ -180,6 +180,8 @@ class RoomPaijiu extends PokerGoldRoom {
     roomVo.setBankerId(this.bankerId)
     roomVo.setWinnerIndex(this.winnerIndex.toList.asJava)
     roomVo.setWinnerCountMap(this.winnerCountMap)
+    roomVo.setBankerList(this.bankerList.asJava)
+    roomVo.setBankerScoreMap(this.bankerScoreMap.asJava)
     roomVo
 
   }

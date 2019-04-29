@@ -172,7 +172,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
 
   def getPaijiuBankerList(userId:Long):Int = {
-    val result = Map("bankerList"->this.bankerList, "bankerScoreMap"->this.bankerScoreMap)
+    val result = Map("bankerList"->this.bankerList.asJava, "bankerScoreMap"->this.bankerScoreMap.asJava)
     MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "getPaijiuBankerList", result.asJava), userId)
     0
   }
