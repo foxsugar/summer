@@ -391,7 +391,26 @@ public class CenterMsgService implements IkafkaMsgId {
             } catch (URISyntaxException | MalformedURLException e) {
                 e.printStackTrace();
             }
+
+            try{
+                lq_upScoreRecord(roomRecord.getRoomId());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
+    }
+
+
+    /**
+     * 龙七记录上分
+     * @param roomId
+     */
+    private static void lq_upScoreRecord(String roomId){
+        UpScoreRecordService upScoreRecordService = SpringUtil.getBean(UpScoreRecordService.class);
+        UpScoreRecord upScoreRecord = new UpScoreRecord();
+        upScoreRecord.setDate(new Date());
+        upScoreRecord.setRoomId(roomId);
+        upScoreRecordService.getUpScoreRecordDao().save(upScoreRecord);
     }
 
     public static int getClubModelIndex(Club club, String roomModel) {
