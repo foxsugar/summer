@@ -428,6 +428,11 @@ object PokerRoomService {
         val roomCrazy = roomPaijiu.asInstanceOf[RoomPaijiuCrazy]
         roomCrazy.tobeBanker(userId, score)
 
+      case "getPaijiuBankerList"=>
+        val roomId = params.get("roomId").asText()
+        var roomPaijiu = RoomManager.getRoom(roomId)
+        val roomCrazy = roomPaijiu.asInstanceOf[RoomPaijiuCrazy]
+        roomCrazy.getPaijiuBankerList(userId)
       case _ =>
         return -1
     }
