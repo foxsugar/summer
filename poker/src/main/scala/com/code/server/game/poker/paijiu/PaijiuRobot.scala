@@ -118,7 +118,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     */
   def doStartGame(room: RoomPaijiu, now: Long): Unit = {
     if (room.getGame == null) {
-      if(room.isInstanceOf[GamePaijiuCrazy]) {
+      if(room.isInstanceOf[RoomPaijiuCrazy]) {
 
 
         if (room.isInstanceOf[RoomPaijiu100]) {
