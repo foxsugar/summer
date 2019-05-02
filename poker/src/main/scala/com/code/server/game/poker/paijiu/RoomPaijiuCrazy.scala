@@ -87,7 +87,8 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
       //并且在游戏中下注
       val game = this.game.asInstanceOf[GamePaijiu]
       val player = game.playerCardInfos(userId)
-      if(player != null && this.bankerId != userId && player.bet!= null) {
+      if(player != null ) {
+        if(this.bankerId == userId || player.bet != null)
         return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME
       }
     }
