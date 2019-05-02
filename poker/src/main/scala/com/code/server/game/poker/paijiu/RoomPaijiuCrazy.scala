@@ -1,9 +1,10 @@
 package com.code.server.game.poker.paijiu
 
 import java.util
+import java.util.{ArrayList, List}
 
 import com.code.server.constant.game.{IGameConstant, RoomStatistics}
-import com.code.server.constant.response.{ErrorCode, IfaceRoomVo, ResponseVo}
+import com.code.server.constant.response.{ErrorCode, IfaceRoomVo, Notice, ResponseVo}
 import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
@@ -77,6 +78,36 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     this.isOpen = true
     pushScoreChange()
 
+  }
+
+
+  override def quitRoom(userId: Long): Int = {
+    if (!this.users.contains(userId)) return ErrorCode.CANNOT_QUIT_ROOM_NOT_EXIST
+    if (isInGame) {
+      //并且在游戏中下注
+      val game = this.game.asInstanceOf[GamePaijiu]
+      val player = game.playerCardInfos(userId)
+      if(player != null && this.bankerId != userId && player.bet!= null) {
+        return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME
+      }
+    }
+
+
+    //删除玩家房间映射关系
+    roomRemoveUser(userId)
+    game.users.remove(userId)
+//    //        GameManager.getInstance().getUserRoom().remove(userId);
+//    if (this.createUser == userId) { //房主解散
+//      val n = new Notice
+//      n.setMessage("roomNum " + this.getRoomId + " :has destroy success!")
+//      MsgSender.sendMsg2Player("roomService", "destroyRoom", n, this.getUsers)
+//      //代开房 并且游戏未开始
+//      if (!isCreaterJoin && this.curGameNumber == 1) dissolutionRoom()
+//      val room_ = RoomManager.getRoom(this.roomId).asInstanceOf[Room]
+//      if (room_ != null) RoomManager.removeRoom(this.roomId)
+//    }
+    noticeQuitRoom(userId)
+    0
   }
 
   /**

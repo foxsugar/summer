@@ -45,6 +45,7 @@ class GamePaijiuCrazy extends GamePaijiu{
 
 
 
+
   /**
     * 发牌
     */
