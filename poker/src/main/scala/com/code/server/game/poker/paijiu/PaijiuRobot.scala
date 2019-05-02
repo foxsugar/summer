@@ -123,17 +123,18 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
 
 
         if (room.isInstanceOf[RoomPaijiu100]) {
-          println("托管: 开始游戏")
           val rp = room.asInstanceOf[RoomPaijiu100]
           //更新banker
           rp.updateBanker()
           //选定庄家后10秒开局
           if ((now - rp.getLastOperateTime) > 10000 && rp.getBankerId != 0) {
+            println("托管: 开始游戏")
             sendStartGame(rp)
           }
         }else{
           val rpc = room.asInstanceOf[RoomPaijiuCrazy]
           if ((now - rpc.getLastOperateTime) > 10000 && rpc.getCurGameNumber>1) {
+            println("托管: 开始游戏")
             sendStartGame(rpc)
           }
         }
