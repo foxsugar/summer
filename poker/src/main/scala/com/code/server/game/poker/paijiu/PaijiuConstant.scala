@@ -15,6 +15,15 @@ trait PaijiuConstant {
   val STATE_BANKER_BREAK = 6//切庄
 
 
+  val FIGHT_FOR_BANKER_TIME = 1000 * 10
+  val START_TIME = 1000 * 10
+  val BET_TIME = 1000 * 10
+  val FORCE_BET_TIME = 1000 * 20
+  val DEAL_TIME = 1000 * 15
+  val OPEN_TIME = 1000 * 10
+  val BREAK_TIME = 1000 * 10
+
+
   //杂8的名字  大于等于杂8输两道
   val MIX_8 = "mixeight"
   val SKY_8 = "skyeight"
