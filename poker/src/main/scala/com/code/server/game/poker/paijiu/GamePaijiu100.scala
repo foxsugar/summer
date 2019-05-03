@@ -217,8 +217,8 @@ class GamePaijiu100 extends GamePaijiuCrazy {
           val index = playerInfo.bet.index
           playerInfo.cards ++= commonCards(index)
         }
-        MsgSender.sendMsg2Player("gamePaijiuService", "getCards", playerInfo.cards.asJava, playerInfo.userId)
       }
+      MsgSender.sendMsg2Player("gamePaijiuService", "getCards", playerInfo.cards.asJava, playerInfo.userId)
     }
   }
 
