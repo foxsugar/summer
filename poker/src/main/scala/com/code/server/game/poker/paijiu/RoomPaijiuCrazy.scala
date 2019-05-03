@@ -198,6 +198,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     //更新庄家
     updateBanker()
 
+    MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "someOneTobeBanker", Map("userId"->userId).asJava), this.users)
     MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "paijiuTobeBanker", 0), userId)
     0
   }
