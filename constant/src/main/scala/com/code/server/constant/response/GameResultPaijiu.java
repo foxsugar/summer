@@ -17,6 +17,7 @@ public class GameResultPaijiu {
     }
 
     public Map<Integer, Object> cardMap = new HashMap<>();
+    public GamePaijiuResult sfp ;
 
     public GameResultPaijiu setPlayerCardInfos(List<IfacePlayerInfoVo> playerCardInfos) {
         this.playerCardInfos = playerCardInfos;
@@ -37,5 +38,13 @@ public class GameResultPaijiu {
 
     public void setCardMap(Map<Integer, Object> cardMap) {
         this.cardMap = cardMap;
+    }
+
+    public GamePaijiuResult getSfp() {
+        return sfp;
+    }
+
+    public void setSfp(GamePaijiuResult sfp) {
+        this.sfp = sfp;
     }
 }
