@@ -3,7 +3,7 @@ package com.code.server.game.poker.paijiu
 import java.{lang, util}
 
 import com.code.server.constant.game.IGameConstant
-import com.code.server.constant.response.{ErrorCode, GamePaijiuResult}
+import com.code.server.constant.response.{ErrorCode, GamePaijiuResult, GameResultPaijiu}
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.redis.service.RedisManager
@@ -58,6 +58,26 @@ class GamePaijiu100 extends GamePaijiuCrazy {
   }
 
 
+  override protected def sendResult(): Unit = {
+    var gameResult = new GameResultPaijiu
+    this.playerCardInfos.values.foreach(playerInfo => gameResult.getPlayerCardInfos.add(playerInfo.toVo))
+    gameResult.setBankerScore(this.roomPaijiu.bankerScore)
+
+    this.commonCards.foreach(t=>{
+      val index = t._1
+      val cards = t._2
+      if(index !=0){
+        val otherGroup = getMaxOpenGroup(cards)
+        var s = otherGroup._1
+        if(otherGroup._2 != null) {
+          s = otherGroup._1 +"&" + otherGroup._2
+        }
+        gameResult.getCardMap.put(index, s)
+      }
+    })
+
+    MsgSender.sendMsg2Player("gamePaijiuService", "gameResult", gameResult, roomPaijiu.users)
+  }
 
 
   /**
