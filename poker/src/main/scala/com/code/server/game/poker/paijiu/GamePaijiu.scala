@@ -196,7 +196,7 @@ class GamePaijiu extends Game with PaijiuConstant {
 
   override def updateLastOperateTime(): Unit = {
     this.lastOperateTime = System.currentTimeMillis
-    pushRemainTime(this.roomPaijiu.getRemainTime())
+    this.roomPaijiu.pushRemainTime(this.roomPaijiu.getRemainTime())
   }
 
 
