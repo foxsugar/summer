@@ -175,7 +175,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
   override protected def isAllPlayerOpen(): Boolean = {
     for(playerInfo <- this.playerCardInfos.values) {
 
-      if(playerInfo.cards.nonEmpty && playerInfo.group1 == null){
+      if(playerInfo.bet!= null && playerInfo.group1 == null){
         return false
       }
     }
