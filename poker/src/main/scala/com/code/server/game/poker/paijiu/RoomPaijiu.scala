@@ -22,7 +22,7 @@ import scala.collection.mutable.ListBuffer
 /**
   * Created by sunxianping on 2017/7/24.
   */
-class RoomPaijiu extends PokerGoldRoom {
+class RoomPaijiu extends PokerGoldRoom with PaijiuConstant {
 
   @BeanProperty
   var cards: List[Int] = List()
@@ -182,6 +182,7 @@ class RoomPaijiu extends PokerGoldRoom {
     roomVo.setWinnerCountMap(this.winnerCountMap)
     roomVo.setBankerList(this.bankerList.asJava)
     roomVo.setBankerScoreMap(this.bankerScoreMap.asJava)
+    roomVo.setPaijiuRemainTime(this.getRemainTime())
     roomVo
 
   }
@@ -235,6 +236,30 @@ class RoomPaijiu extends PokerGoldRoom {
   }
 
 
+  /**
+    * 获取剩余时间
+    * @return
+    */
+  def getRemainTime(): Long ={
+    val now = System.currentTimeMillis()
+    if(this.game == null) {
+      this.lastOperateTime + STATE_TIME(STATE_START) - now
+    }else{
+      val gamePaijiu = this.game.asInstanceOf[GamePaijiu]
+      this.game.lastOperateTime + STATE_TIME(gamePaijiu.state) - now
+    }
+
+  }
+
+
+  /**
+    * 推送剩余时间
+    * @param time
+    */
+  def pushRemainTime(time:Long): Unit ={
+    val map = Map("time"->time)
+    MsgSender.sendMsg2Player("gamePaijiuService", "pushRemainTime", map.asJava, this.users)
+  }
 
 }
 

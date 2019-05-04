@@ -119,7 +119,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     if (playerInfo_option.isEmpty) return ErrorCode.NO_USER
     val playerCardInfoPaijiu = playerInfo_option.get
     //已经下过注
-    if (playerCardInfoPaijiu.bet != null) return ErrorCode.ALREADY_BET
+//    if (playerCardInfoPaijiu.bet != null) return ErrorCode.ALREADY_BET
     //下注不合法
 
     val bet = new Bet(one, two,three,index)
@@ -141,7 +141,17 @@ class GamePaijiu100 extends GamePaijiuCrazy {
       return ErrorCode.BET_PARAM_LIMIT
     }
 
-    playerCardInfoPaijiu.bet = bet
+    if(playerCardInfoPaijiu.bet == null) {
+      playerCardInfoPaijiu.bet = bet
+
+    }else{
+      if(playerCardInfoPaijiu.bet.index != index) {
+        return ErrorCode.BET_PARAM_ERROR
+      }
+      playerCardInfoPaijiu.bet.one += one
+      playerCardInfoPaijiu.bet.two += two
+      playerCardInfoPaijiu.bet.three += three
+    }
 
     this.roomPaijiu.addUserSocre(userId, -myBetNum)
 

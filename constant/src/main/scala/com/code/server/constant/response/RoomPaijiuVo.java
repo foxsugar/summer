@@ -20,6 +20,7 @@ public class RoomPaijiuVo extends RoomVo {
 
     public List bankerList = new ArrayList();
     public Map bankerScoreMap = new HashMap();
+    public long paijiuRemainTime;
 
 
 
@@ -73,5 +74,13 @@ public class RoomPaijiuVo extends RoomVo {
 
     public void setBankerScoreMap(Map bankerScoreMap) {
         this.bankerScoreMap = bankerScoreMap;
+    }
+
+    public long getPaijiuRemainTime() {
+        return paijiuRemainTime;
+    }
+
+    public void setPaijiuRemainTime(long paijiuRemainTime) {
+        this.paijiuRemainTime = paijiuRemainTime;
     }
 }

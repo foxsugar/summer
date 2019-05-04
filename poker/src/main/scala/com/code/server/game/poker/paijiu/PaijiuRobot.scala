@@ -79,7 +79,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     if (gamePaijiu.isInstanceOf[GamePaijiu100]) return
     val game: GamePaijiuCrazy = gamePaijiu.asInstanceOf[GamePaijiuCrazy]
     if (game.state == STATE_FIGHT_FOR_BANKER) {
-      if (now - gamePaijiu.lastOperateTime > FIGHT_FOR_BANKER_TIME) {
+      if (now - gamePaijiu.lastOperateTime > STATE_TIME(STATE_FIGHT_FOR_BANKER)) {
         for (playerInfo <- game.playerCardInfos.values) {
           if (!playerInfo.isHasFightForBanker) {
             sendFightBanker(playerInfo.userId, roomPaijiu.getRoomId)
@@ -129,13 +129,13 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
           //更新banker
           rp.updateBanker()
           //选定庄家后10秒开局
-          if ((now - rp.getLastOperateTime) > START_TIME && rp.getBankerId != 0) {
+          if ((now - rp.getLastOperateTime) > STATE_TIME(STATE_START) && rp.getBankerId != 0) {
             println("托管: 开始游戏")
             sendStartGame(rp)
           }
         }else{
           val rpc = room.asInstanceOf[RoomPaijiuCrazy]
-          if ((now - rpc.getLastOperateTime) > START_TIME && rpc.getCurGameNumber>1) {
+          if ((now - rpc.getLastOperateTime) > STATE_TIME(STATE_START) && rpc.getCurGameNumber>1) {
             println("托管: 开始游戏")
             sendStartGame(rpc)
           }
@@ -154,7 +154,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
   def doBreakBanker(room: RoomPaijiu, game: GamePaijiu, now: Long): Unit = {
     if (game.state == STATE_BANKER_BREAK) {
       //10秒自动 继续
-      if (now - game.lastOperateTime > BREAK_TIME) {
+      if (now - game.lastOperateTime > STATE_TIME(STATE_BANKER_BREAK)) {
         println("托管: 切庄")
         sendBreakBanker(game.bankerId, room.getRoomId)
       }
@@ -217,7 +217,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     if (game.isInstanceOf[GamePaijiu100]) return
     if (game.state != STATE_BET) return
 
-    if (time - game.lastOperateTime < FORCE_BET_TIME) return
+    if (time - game.lastOperateTime < STATE_TIME(STATE_BET)) return
 
     for (playerInfo <- game.playerCardInfos.values) {
 
@@ -231,7 +231,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
   def doAutoDealCard(room: RoomPaijiu, game: GamePaijiu, time: Long): Unit = {
     if (!game.isInstanceOf[GamePaijiu100]) return
     if (game.state != STATE_BET && game.state != START_CRAP) return
-    if (time - game.lastOperateTime < DEAL_TIME) return
+    if (time - game.lastOperateTime < STATE_TIME(START_CRAP)) return
     println("托管: 自动发牌")
     //强制下注状态结束
 
@@ -253,7 +253,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     if (game.state != STATE_OPEN) return
 
     //10秒自动开牌
-    if (time - game.lastOperateTime <= OPEN_TIME) return
+    if (time - game.lastOperateTime <= STATE_TIME(STATE_OPEN)) return
     println("托管: 自动开牌")
 
     for (playerInfo <- game.playerCardInfos.values) {

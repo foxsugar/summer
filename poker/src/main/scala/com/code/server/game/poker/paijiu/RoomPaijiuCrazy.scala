@@ -232,6 +232,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
       MsgSender.sendMsg2Player(new ResponseVo("gameService", "updatePaijiuBanker", Map("userId" -> userId,"score"->this.bankerScore).asJava), this.getUsers)
       //更新时间
       this.updateLastOperateTime()
+      pushRemainTime(getRemainTime())
 
       //改局数
       this.curGameNumber = 1
