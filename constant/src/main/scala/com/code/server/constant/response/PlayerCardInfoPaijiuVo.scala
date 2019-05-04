@@ -12,6 +12,7 @@ class PlayerCardInfoPaijiuVo extends IfacePlayerInfoVo{
   var bet1:Int = _
   var bet2:Int = _
   var bet3:Int = _
+  var index:Int = _
 
   //开牌
   var group1: String = _
