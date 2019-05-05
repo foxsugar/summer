@@ -287,12 +287,16 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
         //根加番
         fan += getGenNum(this.cards);
 
-        if (isGangKai()) fan+= 1;
-        this.winType.add(hu_杠上开花);
+        if (isGangKai()) {
+            fan+= 1;
+            this.winType.add(hu_杠上开花);
+        }
 
         //截杠胡
-        if(isJieGangHu) fan+= 1;
-        this.winType.add(hu_截杠胡);
+        if(isJieGangHu) {
+            fan+= 1;
+            this.winType.add(hu_截杠胡);
+        }
 
         //杠上点炮
         PlayerCardsInfoMj dianPao = this.gameInfo.playerCardsInfos.get(dianpaoUser);
