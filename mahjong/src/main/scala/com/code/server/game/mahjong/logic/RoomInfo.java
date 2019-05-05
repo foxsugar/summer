@@ -215,6 +215,7 @@ public class RoomInfo extends RoomInfoExtendGold {
             case "ZHANGLEBAO":
             case "ZHANGLEBAO2":
             case "ZHANGLEBAO3":
+
 //                this.setHasGangBlackList(false);
                 return new GameInfoZhanglebao().setTurnZeroAfterHuangZhuang(true);
             case "LUANGUAF":
@@ -227,7 +228,7 @@ public class RoomInfo extends RoomInfoExtendGold {
             case "HONGZHONGZLB2":
             case "HONGZHONGZLB3":
 //                this.setHasGangBlackList(false);
-                return new GameInfoHongZhong().setTurnZeroAfterHuangZhuang(true);
+                return new GameInfoHongzhongZLB().setTurnZeroAfterHuangZhuang(true);
             case "HONGZHONGSS3":
             case "HONGZHONGSS":
                 return new GameInfoHongZhong().setTurnZeroAfterHuangZhuang(true);

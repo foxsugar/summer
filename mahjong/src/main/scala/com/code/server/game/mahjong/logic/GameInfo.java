@@ -1141,11 +1141,14 @@ public class GameInfo extends Game {
         ResultResp result = new ResultResp();
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_RESULT, result);
 
+        long remainCardBeginUser = 0;
         if (isHasWinner) {
             if (yipaoduoxiang == null) {
                 result.setWinnerId(winnerId);
+                remainCardBeginUser = nextTurnId(winnerId);
             } else {
                 result.setYipaoduoxiang(yipaoduoxiang);
+                remainCardBeginUser = nextTurnId(lastPlayUserId);
             }
             result.setBaoCard(baoCard);
         }
@@ -1158,6 +1161,8 @@ public class GameInfo extends Game {
         result.setUserInfos(list);
         result.setLaZhuang(this.room.laZhuang);
         result.setLaZhuangStatus(this.room.laZhuangStatus);
+
+        setReaminCardInfo(result, remainCardBeginUser);
         MsgSender.sendMsg2Player(vo, users);
 
 
@@ -1165,6 +1170,15 @@ public class GameInfo extends Game {
         replay.setResult(result);
         //生成记录
         genRecord();
+    }
+
+    protected int getNeedRemainCardNum(){
+        return 0;
+    }
+
+    protected void setReaminCardInfo(ResultResp result,long beginUser){
+        result.getRemainCards().addAll(this.remainCards);
+        result.setBeginUser(beginUser);
     }
 
     @Override

@@ -34,6 +34,23 @@ public class GameInfoZhanglebao extends GameInfoHeleKD {
     }
 
 
+    protected int getNeedRemainCardNum(){
+        int gangCount = 0;
+        for (PlayerCardsInfoMj playerCardsInfoMj : this.playerCardsInfos.values()) {
+            gangCount += playerCardsInfoMj.getGangNum();
+        }
+        return 16 + gangCount;
+    }
+
+    /**
+     * 是否荒庄
+     *
+     * @param playerCardsInfo
+     * @return
+     */
+    protected boolean isHuangzhuang(PlayerCardsInfoMj playerCardsInfo) {
+        return this.remainCards.size() <= getNeedRemainCardNum();
+    }
 
 
     protected void doHu(PlayerCardsInfoMj playerCardsInfo, long userId) {

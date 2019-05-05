@@ -1,5 +1,6 @@
 package com.code.server.game.mahjong.response;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ public class ResultResp {
     private Map<Long, Boolean> laZhuangStatus = new HashMap<>();
     private List<Long> yipaoduoxiang;
     private String yu;
+    private List<String> remainCards = new ArrayList<>();
+    private long beginUser ;
 
 
     public String getBaoCard() {
@@ -76,6 +79,24 @@ public class ResultResp {
 
     public ResultResp setYu(String yu) {
         this.yu = yu;
+        return this;
+    }
+
+    public List<String> getRemainCards() {
+        return remainCards;
+    }
+
+    public ResultResp setRemainCards(List<String> remainCards) {
+        this.remainCards = remainCards;
+        return this;
+    }
+
+    public long getBeginUser() {
+        return beginUser;
+    }
+
+    public ResultResp setBeginUser(long beginUser) {
+        this.beginUser = beginUser;
         return this;
     }
 }

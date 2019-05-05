@@ -189,8 +189,8 @@ public class GameInfoXZDD extends GameInfoNew {
             });
             if (this.room.isHasMode(MODE_NO_WAN)) {
                 this.playerCardsInfos.values().forEach(player->dingque(player.getUserId(),1));
-                this.state = STATE_PLAY;
-                mopai(firstTurn, "发牌");
+//                this.state = STATE_PLAY;
+//                mopai(firstTurn, "发牌");
             }else{
                 this.state = STATE_DINGQUE;
                 MsgSender.sendMsg2Player("gameService", "startDingque", 0, users);
