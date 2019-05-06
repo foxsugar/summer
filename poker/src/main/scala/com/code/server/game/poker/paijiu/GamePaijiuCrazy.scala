@@ -162,11 +162,17 @@ class GamePaijiuCrazy extends GamePaijiu{
 
     //开的牌和拥有的牌相同
     val isSame = playerCardInfo.cards.diff(allCard).isEmpty
-    if (!isSame) return false
+    if (!isSame) {
+      logger.error("开的牌和拥有的不同")
+      return false
+    }
 
     //第一组不小于第二组牌
     val score1 = getGroupScore(group1)
     val score2 = getGroupScore(group2)
+    if(score1<score2) {
+      logger.error("第一组牌小")
+    }
     score1 >= score2
   }
 
@@ -195,11 +201,14 @@ class GamePaijiuCrazy extends GamePaijiu{
     * 转换为开牌状态
     */
   override def openStart(): Unit = {
+    if(state != START_CRAP) {
+      return
+    }
     //发牌
     deal()
     state = STATE_OPEN
     updateLastOperateTime()
-    //推送开始下注
+    //推送
     MsgSender.sendMsg2Player("gamePaijiuService", "openStart", this.bankerId, roomPaijiu.users)
 
   }

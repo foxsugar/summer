@@ -85,7 +85,7 @@ public class ReconnService {
             if (gameInfo != null) {
                 ReconnectResp reconnect = new ReconnectResp(gameInfo, userId);
                 allMessage.setGameId(gameInfo.getGameId());
-                allMessage.setCardNumber(gameInfo.getRemainCards().size());
+                allMessage.setCardNumber(gameInfo.getRemainCards().size() - gameInfo.getNeedRemainCardNum());
                 allMessage.setReconnectResp(reconnect);
             }
             allMessage.setUsers(userList);

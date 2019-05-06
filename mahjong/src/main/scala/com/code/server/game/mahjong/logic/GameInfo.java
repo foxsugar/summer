@@ -1172,12 +1172,18 @@ public class GameInfo extends Game {
         genRecord();
     }
 
-    protected int getNeedRemainCardNum(){
+    public int getNeedRemainCardNum(){
         return 0;
     }
 
     protected void setReaminCardInfo(ResultResp result,long beginUser){
-        result.getRemainCards().addAll(this.remainCards);
+        List<String> cards = new ArrayList<>(this.remainCards);
+        int last = cards.size() - getNeedRemainCardNum();
+        if (last < 0) {
+            last = 0;
+        }
+        cards = cards.subList(0, last);
+        result.getRemainCards().addAll(cards);
         result.setBeginUser(beginUser);
     }
 

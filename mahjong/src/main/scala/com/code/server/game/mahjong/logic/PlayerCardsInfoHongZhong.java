@@ -18,6 +18,7 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
     public static final int NO_FENG = 5;
     public static final int TWO_HUN = 6;
     public static final int DIANPAOSANJIACHU = 7;//点炮三家出
+    public static final int LIUPAI = 8;//点炮三家出
 
 
     @Override

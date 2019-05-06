@@ -6,7 +6,10 @@ package com.code.server.game.mahjong.logic;
 public class GameInfoHongzhongZLB extends GameInfoHongZhong {
 
 
-    protected int getNeedRemainCardNum(){
+    public int getNeedRemainCardNum(){
+        if (!this.room.isHasMode(PlayerCardsInfoHongZhong.LIUPAI)) {
+            return 0;
+        }
         int gangCount = 0;
         for (PlayerCardsInfoMj playerCardsInfoMj : this.playerCardsInfos.values()) {
             gangCount += playerCardsInfoMj.getGangNum();

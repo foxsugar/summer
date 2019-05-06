@@ -26,6 +26,7 @@ public class GameInfoZhuohaozi extends GameInfoNew {
     public static final int mode_不带七小对 = 13;
     public static final int mode_七小对翻倍 = 14;
     public static final int mode_豪七翻2倍 = 15;
+    public static final int mode_留牌 = 16;
 
 
     /**

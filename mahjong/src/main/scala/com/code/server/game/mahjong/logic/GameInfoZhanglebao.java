@@ -34,7 +34,10 @@ public class GameInfoZhanglebao extends GameInfoHeleKD {
     }
 
 
-    protected int getNeedRemainCardNum(){
+    public int getNeedRemainCardNum(){
+        if (!this.room.isHasMode(GameInfoZhuohaozi.mode_留牌)) {
+            return 0;
+        }
         int gangCount = 0;
         for (PlayerCardsInfoMj playerCardsInfoMj : this.playerCardsInfos.values()) {
             gangCount += playerCardsInfoMj.getGangNum();
