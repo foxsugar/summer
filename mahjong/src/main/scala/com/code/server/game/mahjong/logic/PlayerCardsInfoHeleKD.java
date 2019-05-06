@@ -55,7 +55,7 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
         if (isMing && diangangUser != -1) {
 
 
-            boolean isBaoAll = !this.gameInfo.getPlayerCardsInfos().get(diangangUser).isTing && !isHasMode(room.getMode(), GameInfoZhuohaozi.mode_大包);
+            boolean isBaoAll = !this.gameInfo.getPlayerCardsInfos().get(diangangUser).isTing;
 
             for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
                 if (playerCardsInfoMj.getUserId() != this.userId) {

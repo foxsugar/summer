@@ -58,7 +58,7 @@ class RoomPaijiu100 extends RoomPaijiuCrazy{
   override def joinRoom(userId: Long, isJoin: Boolean): Int = {
     val rtn = super.joinRoom(userId, isJoin)
     if (rtn != 0) return rtn
-    getReady(userId)
+//    getReady(userId)
     if (this.game != null) if (!this.game.getUsers.contains(userId)) {
       this.game.users.add(userId)
       val playerPaijiu = new PlayerCardInfoPaijiu

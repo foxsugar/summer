@@ -131,7 +131,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     if(data == null || getNoGroupName().contains(data.getName)) {
       //两张牌的点数相加
       if(group == null || "".equals(group)) {
-        println("group null")
+        println(group + " group null")
         return 0
       }
       val cardArray = group.split(",")
@@ -218,6 +218,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     * 摇骰子阶段
     */
   override def crapStart(): Unit = {
+    if(this.state != STATE_BET) return
     MsgSender.sendMsg2Player("gamePaijiuService", "crapStart", 0, bankerId)
     this.state = START_CRAP
     updateLastOperateTime()

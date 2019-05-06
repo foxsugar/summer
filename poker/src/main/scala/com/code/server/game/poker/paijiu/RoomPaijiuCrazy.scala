@@ -1,10 +1,9 @@
 package com.code.server.game.poker.paijiu
 
 import java.util
-import java.util.{ArrayList, List}
 
 import com.code.server.constant.game.{IGameConstant, RoomStatistics}
-import com.code.server.constant.response.{ErrorCode, IfaceRoomVo, Notice, ResponseVo}
+import com.code.server.constant.response.{ErrorCode, IfaceRoomVo, ResponseVo}
 import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
@@ -247,7 +246,9 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
   override def joinRoom(userId: Long, isJoin: Boolean): Int = {
     val rtn = super.joinRoom(userId, isJoin)
     if (rtn != 0) return rtn
-    getReady(userId)
+    if(!this.isInstanceOf[RoomPaijiu100]) {
+      getReady(userId)
+    }
     0
   }
 

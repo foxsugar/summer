@@ -43,11 +43,11 @@ public class ServerManager {
             constant.getOther().setRebateData(new HashMap<>());
         }
 
-        data.put(PAIJIU_BET, constant.getOther().getRebateData().getOrDefault(PAIJIU_BET,5));
-        data.put(PAIJIU_REBATE100, constant.getOther().getRebateData().getOrDefault(PAIJIU_REBATE100,2.5));
-        data.put(PAIJIU_REBATE4, constant.getOther().getRebateData().getOrDefault(PAIJIU_REBATE4,2));
-        data.put(PAIJIU_PAY_ONE, constant.getOther().getRebateData().getOrDefault(PAIJIU_PAY_ONE,10));
-        data.put(PAIJIU_PAY_AA, constant.getOther().getRebateData().getOrDefault(PAIJIU_PAY_AA,3));
+        data.put(PAIJIU_BET, constant.getOther().getRebateData().getOrDefault(PAIJIU_BET,"5"));
+        data.put(PAIJIU_REBATE100, constant.getOther().getRebateData().getOrDefault(PAIJIU_REBATE100,"2.5"));
+        data.put(PAIJIU_REBATE4, constant.getOther().getRebateData().getOrDefault(PAIJIU_REBATE4,"2"));
+        data.put(PAIJIU_PAY_ONE, constant.getOther().getRebateData().getOrDefault(PAIJIU_PAY_ONE,"10"));
+        data.put(PAIJIU_PAY_AA, constant.getOther().getRebateData().getOrDefault(PAIJIU_PAY_AA,"3"));
 
         RedisManager.getConstantRedisService().updateConstant(data);
     }
