@@ -24,7 +24,7 @@ class RoomPaijiu100 extends RoomPaijiuCrazy{
     super.addUserSocre(userId, score)
 
     //百人牌九 加分时抽水
-    if (this.isInstanceOf[RoomPaijiu100] && score > 0) {
+    if (this.isInstanceOf[RoomPaijiu100]) {
       if(score>0) {
 
         val game: GamePaijiuCrazy = this.game.asInstanceOf[GamePaijiuCrazy]

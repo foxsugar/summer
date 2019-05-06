@@ -150,6 +150,7 @@ public class CenterMsgService implements IkafkaMsgId {
                 ScoreItem scoreItem = rebateMap.getOrDefault(userId, new ScoreItem());
                 scoreItem.setName(userBean.getUsername()).setScore(scoreItem.getScore() + money);
                 rebateMap.put(userId, scoreItem);
+                parentUser.getUserInfo().setRebate(rebateMap);
 
                 RedisManager.getUserRedisService().updateUserBean(parentId, parentUser);
                 //返利加到gold上
