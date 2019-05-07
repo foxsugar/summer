@@ -1204,7 +1204,7 @@ public class GameClubService {
         }
     }
 
-    private static ClubStatistics getClubStatistics(Club club) {
+    public static ClubStatistics getClubStatistics(Club club) {
         String date = LocalDate.now().toString();
 
         System.out.println("club = " + club);
@@ -1227,7 +1227,7 @@ public class GameClubService {
         System.out.println("之后的局数 " + clubStatistics.getOpenNum());
     }
 
-    private static void addStatisticeConsume(Club club, int num) {
+    public static void addStatisticeConsume(Club club, int num) {
         ClubStatistics clubStatistics = getClubStatistics(club);
         System.out.println("clubStatistics " + clubStatistics);
         System.out.println("之前的消耗 " + clubStatistics.getConsumeNum());

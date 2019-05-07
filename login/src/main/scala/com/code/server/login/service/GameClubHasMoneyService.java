@@ -137,7 +137,51 @@ public class GameClubHasMoneyService extends GameClubService {
     }
 
 
-
+    /**
+     * 俱乐部房间退钱
+     *
+     * @param clubId
+     * @param clubModelId
+     */
+    public int clubDrawBack(String clubId, String clubModelId,String roomId,int clubMode) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club != null) {
+            for (RoomInstance roomInstance : club.getClubInfo().getRoomInstance().values()) {
+                if (roomId.equals(roomInstance.getRoomId())) {
+                    RedisManager.getUserRedisService().addUserMoney(club.getPresident(), roomInstance.getMoney());
+                }
+            }
+//            RoomModel roomModel = getRoomModel(club, clubModelId);
+//            if (roomModel != null) {
+//                int money = roomModel.getMoney();
+//                synchronized (club.lock) {
+//                    if (!Utils.isHasMode(CLUB_MODE_USER_PAY, clubMode)) {
+////                        club.setMoney(club.getMoney() + money);
+//                        RedisManager.getUserRedisService().addUserMoney(club.getPresident(), money);
+//                    }
+//
+//                    //统计减去消耗
+//                    String today = LocalDate.now().toString();
+//                    //每个玩法的统计
+//                    ClubStatistics roomModelClubStatistics = roomModel.getStatisticsMap().get(today);
+//                    if (roomModelClubStatistics != null) {
+//                        roomModelClubStatistics.setConsumeNum(roomModelClubStatistics.getConsumeNum() - roomModel.getMoney());
+//                        roomModelClubStatistics.setOpenNum(roomModelClubStatistics.getOpenNum() - 1);
+//                    }
+//                    //俱乐部的统计
+//                    ClubStatistics clubStatistics = getClubStatistics(club);
+//                    if (clubStatistics != null) {
+//                        //不是玩家自己付
+//                        if (!Utils.isHasMode(CLUB_MODE_USER_PAY, clubMode)) {
+//                            addStatisticeConsume(club, -roomModel.getMoney());
+//                            club.getStatistics().setConsume(club.getStatistics().getConsume() - roomModel.getMoney());
+//                        }
+//                    }
+//                }
+//            }
+        }
+        return 0;
+    }
 
     /**
      * 解散
