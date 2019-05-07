@@ -19,11 +19,79 @@ public final class StaticDataProto {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+     * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+     */
+    int getCrazyPaijiuCardGroupDataCount();
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+     */
+    boolean containsCrazyPaijiuCardGroupData(
+        java.lang.String key);
+    /**
+     * Use {@link #getCrazyPaijiuCardGroupDataMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData>
+    getCrazyPaijiuCardGroupData();
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+     */
+    java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData>
+    getCrazyPaijiuCardGroupDataMap();
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+     */
+
+    com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData getCrazyPaijiuCardGroupDataOrDefault(
+        java.lang.String key,
+        com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData defaultValue);
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+     */
+
+    com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData getCrazyPaijiuCardGroupDataOrThrow(
+        java.lang.String key);
+
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+     */
+    int getCrazyPaijiuCardGroupScoreDataCount();
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+     */
+    boolean containsCrazyPaijiuCardGroupScoreData(
+        java.lang.String key);
+    /**
+     * Use {@link #getCrazyPaijiuCardGroupScoreDataMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData>
+    getCrazyPaijiuCardGroupScoreData();
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+     */
+    java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData>
+    getCrazyPaijiuCardGroupScoreDataMap();
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+     */
+
+    com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData getCrazyPaijiuCardGroupScoreDataOrDefault(
+        java.lang.String key,
+        com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData defaultValue);
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+     */
+
+    com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData getCrazyPaijiuCardGroupScoreDataOrThrow(
+        java.lang.String key);
+
+    /**
+     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
      */
     int getLaotiePaijiuCardGroupDataCount();
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
      */
     boolean containsLaotiePaijiuCardGroupData(
         java.lang.String key);
@@ -34,30 +102,30 @@ public final class StaticDataProto {
     java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData>
     getLaotiePaijiuCardGroupData();
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
      */
     java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData>
     getLaotiePaijiuCardGroupDataMap();
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData getLaotiePaijiuCardGroupDataOrDefault(
         java.lang.String key,
         com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData defaultValue);
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData getLaotiePaijiuCardGroupDataOrThrow(
         java.lang.String key);
 
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
      */
     int getLaotiePaijiuCardGroupScoreDataCount();
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
      */
     boolean containsLaotiePaijiuCardGroupScoreData(
         java.lang.String key);
@@ -68,30 +136,30 @@ public final class StaticDataProto {
     java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupScoreData>
     getLaotiePaijiuCardGroupScoreData();
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
      */
     java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupScoreData>
     getLaotiePaijiuCardGroupScoreDataMap();
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupScoreData getLaotiePaijiuCardGroupScoreDataOrDefault(
         java.lang.String key,
         com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupScoreData defaultValue);
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupScoreData getLaotiePaijiuCardGroupScoreDataOrThrow(
         java.lang.String key);
 
     /**
-     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
      */
     int getPaijiuCardDataCount();
     /**
-     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
      */
     boolean containsPaijiuCardData(
         int key);
@@ -102,30 +170,30 @@ public final class StaticDataProto {
     java.util.Map<java.lang.Integer, com.code.server.constant.data.StaticDataProto.PaijiuCardData>
     getPaijiuCardData();
     /**
-     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
      */
     java.util.Map<java.lang.Integer, com.code.server.constant.data.StaticDataProto.PaijiuCardData>
     getPaijiuCardDataMap();
     /**
-     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.PaijiuCardData getPaijiuCardDataOrDefault(
         int key,
         com.code.server.constant.data.StaticDataProto.PaijiuCardData defaultValue);
     /**
-     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.PaijiuCardData getPaijiuCardDataOrThrow(
         int key);
 
     /**
-     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
      */
     int getPaijiuCardGroupDataCount();
     /**
-     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
      */
     boolean containsPaijiuCardGroupData(
         java.lang.String key);
@@ -136,30 +204,30 @@ public final class StaticDataProto {
     java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.PaijiuCardGroupData>
     getPaijiuCardGroupData();
     /**
-     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
      */
     java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.PaijiuCardGroupData>
     getPaijiuCardGroupDataMap();
     /**
-     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.PaijiuCardGroupData getPaijiuCardGroupDataOrDefault(
         java.lang.String key,
         com.code.server.constant.data.StaticDataProto.PaijiuCardGroupData defaultValue);
     /**
-     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.PaijiuCardGroupData getPaijiuCardGroupDataOrThrow(
         java.lang.String key);
 
     /**
-     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
      */
     int getPaijiuCardGroupScoreDataCount();
     /**
-     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
      */
     boolean containsPaijiuCardGroupScoreData(
         java.lang.String key);
@@ -170,30 +238,30 @@ public final class StaticDataProto {
     java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.PaijiuCardGroupScoreData>
     getPaijiuCardGroupScoreData();
     /**
-     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
      */
     java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.PaijiuCardGroupScoreData>
     getPaijiuCardGroupScoreDataMap();
     /**
-     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.PaijiuCardGroupScoreData getPaijiuCardGroupScoreDataOrDefault(
         java.lang.String key,
         com.code.server.constant.data.StaticDataProto.PaijiuCardGroupScoreData defaultValue);
     /**
-     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.PaijiuCardGroupScoreData getPaijiuCardGroupScoreDataOrThrow(
         java.lang.String key);
 
     /**
-     * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+     * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
      */
     int getRoomDataCount();
     /**
-     * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+     * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
      */
     boolean containsRoomData(
         java.lang.String key);
@@ -204,30 +272,30 @@ public final class StaticDataProto {
     java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.RoomData>
     getRoomData();
     /**
-     * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+     * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
      */
     java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.RoomData>
     getRoomDataMap();
     /**
-     * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+     * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.RoomData getRoomDataOrDefault(
         java.lang.String key,
         com.code.server.constant.data.StaticDataProto.RoomData defaultValue);
     /**
-     * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+     * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.RoomData getRoomDataOrThrow(
         java.lang.String key);
 
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
      */
     int getTestDataCount();
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
      */
     boolean containsTestData(
         int key);
@@ -238,30 +306,30 @@ public final class StaticDataProto {
     java.util.Map<java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData>
     getTestData();
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
      */
     java.util.Map<java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData>
     getTestDataMap();
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.TestData getTestDataOrDefault(
         int key,
         com.code.server.constant.data.StaticDataProto.TestData defaultValue);
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.TestData getTestDataOrThrow(
         int key);
 
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
      */
     int getXiaoyaoPaijiuCardGroupDataCount();
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
      */
     boolean containsXiaoyaoPaijiuCardGroupData(
         java.lang.String key);
@@ -272,30 +340,30 @@ public final class StaticDataProto {
     java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupData>
     getXiaoyaoPaijiuCardGroupData();
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
      */
     java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupData>
     getXiaoyaoPaijiuCardGroupDataMap();
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupData getXiaoyaoPaijiuCardGroupDataOrDefault(
         java.lang.String key,
         com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupData defaultValue);
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupData getXiaoyaoPaijiuCardGroupDataOrThrow(
         java.lang.String key);
 
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
      */
     int getXiaoyaoPaijiuCardGroupScoreDataCount();
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
      */
     boolean containsXiaoyaoPaijiuCardGroupScoreData(
         java.lang.String key);
@@ -306,19 +374,19 @@ public final class StaticDataProto {
     java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupScoreData>
     getXiaoyaoPaijiuCardGroupScoreData();
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
      */
     java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupScoreData>
     getXiaoyaoPaijiuCardGroupScoreDataMap();
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupScoreData getXiaoyaoPaijiuCardGroupScoreDataOrDefault(
         java.lang.String key,
         com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupScoreData defaultValue);
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
      */
 
     com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupScoreData getXiaoyaoPaijiuCardGroupScoreDataOrThrow(
@@ -365,9 +433,35 @@ public final class StaticDataProto {
             }
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                crazyPaijiuCardGroupData_ = com.google.protobuf.MapField.newMapField(
+                    CrazyPaijiuCardGroupDataDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000001;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData>
+              crazyPaijiuCardGroupData__ = input.readMessage(
+                  CrazyPaijiuCardGroupDataDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              crazyPaijiuCardGroupData_.getMutableMap().put(
+                  crazyPaijiuCardGroupData__.getKey(), crazyPaijiuCardGroupData__.getValue());
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                crazyPaijiuCardGroupScoreData_ = com.google.protobuf.MapField.newMapField(
+                    CrazyPaijiuCardGroupScoreDataDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000002;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData>
+              crazyPaijiuCardGroupScoreData__ = input.readMessage(
+                  CrazyPaijiuCardGroupScoreDataDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              crazyPaijiuCardGroupScoreData_.getMutableMap().put(
+                  crazyPaijiuCardGroupScoreData__.getKey(), crazyPaijiuCardGroupScoreData__.getValue());
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
                 laotiePaijiuCardGroupData_ = com.google.protobuf.MapField.newMapField(
                     LaotiePaijiuCardGroupDataDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000001;
+                mutable_bitField0_ |= 0x00000004;
               }
               com.google.protobuf.MapEntry<java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData>
               laotiePaijiuCardGroupData__ = input.readMessage(
@@ -376,11 +470,11 @@ public final class StaticDataProto {
                   laotiePaijiuCardGroupData__.getKey(), laotiePaijiuCardGroupData__.getValue());
               break;
             }
-            case 18: {
-              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
                 laotiePaijiuCardGroupScoreData_ = com.google.protobuf.MapField.newMapField(
                     LaotiePaijiuCardGroupScoreDataDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000002;
+                mutable_bitField0_ |= 0x00000008;
               }
               com.google.protobuf.MapEntry<java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupScoreData>
               laotiePaijiuCardGroupScoreData__ = input.readMessage(
@@ -389,11 +483,11 @@ public final class StaticDataProto {
                   laotiePaijiuCardGroupScoreData__.getKey(), laotiePaijiuCardGroupScoreData__.getValue());
               break;
             }
-            case 26: {
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
                 paijiuCardData_ = com.google.protobuf.MapField.newMapField(
                     PaijiuCardDataDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000004;
+                mutable_bitField0_ |= 0x00000010;
               }
               com.google.protobuf.MapEntry<java.lang.Integer, com.code.server.constant.data.StaticDataProto.PaijiuCardData>
               paijiuCardData__ = input.readMessage(
@@ -402,11 +496,11 @@ public final class StaticDataProto {
                   paijiuCardData__.getKey(), paijiuCardData__.getValue());
               break;
             }
-            case 34: {
-              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+            case 50: {
+              if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
                 paijiuCardGroupData_ = com.google.protobuf.MapField.newMapField(
                     PaijiuCardGroupDataDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000008;
+                mutable_bitField0_ |= 0x00000020;
               }
               com.google.protobuf.MapEntry<java.lang.String, com.code.server.constant.data.StaticDataProto.PaijiuCardGroupData>
               paijiuCardGroupData__ = input.readMessage(
@@ -415,11 +509,11 @@ public final class StaticDataProto {
                   paijiuCardGroupData__.getKey(), paijiuCardGroupData__.getValue());
               break;
             }
-            case 42: {
-              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+            case 58: {
+              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
                 paijiuCardGroupScoreData_ = com.google.protobuf.MapField.newMapField(
                     PaijiuCardGroupScoreDataDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000010;
+                mutable_bitField0_ |= 0x00000040;
               }
               com.google.protobuf.MapEntry<java.lang.String, com.code.server.constant.data.StaticDataProto.PaijiuCardGroupScoreData>
               paijiuCardGroupScoreData__ = input.readMessage(
@@ -428,11 +522,11 @@ public final class StaticDataProto {
                   paijiuCardGroupScoreData__.getKey(), paijiuCardGroupScoreData__.getValue());
               break;
             }
-            case 50: {
-              if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+            case 66: {
+              if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
                 roomData_ = com.google.protobuf.MapField.newMapField(
                     RoomDataDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000020;
+                mutable_bitField0_ |= 0x00000080;
               }
               com.google.protobuf.MapEntry<java.lang.String, com.code.server.constant.data.StaticDataProto.RoomData>
               roomData__ = input.readMessage(
@@ -441,11 +535,11 @@ public final class StaticDataProto {
                   roomData__.getKey(), roomData__.getValue());
               break;
             }
-            case 58: {
-              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+            case 74: {
+              if (!((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
                 testData_ = com.google.protobuf.MapField.newMapField(
                     TestDataDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000040;
+                mutable_bitField0_ |= 0x00000100;
               }
               com.google.protobuf.MapEntry<java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData>
               testData__ = input.readMessage(
@@ -454,11 +548,11 @@ public final class StaticDataProto {
                   testData__.getKey(), testData__.getValue());
               break;
             }
-            case 66: {
-              if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
+            case 82: {
+              if (!((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
                 xiaoyaoPaijiuCardGroupData_ = com.google.protobuf.MapField.newMapField(
                     XiaoyaoPaijiuCardGroupDataDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000080;
+                mutable_bitField0_ |= 0x00000200;
               }
               com.google.protobuf.MapEntry<java.lang.String, com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupData>
               xiaoyaoPaijiuCardGroupData__ = input.readMessage(
@@ -467,11 +561,11 @@ public final class StaticDataProto {
                   xiaoyaoPaijiuCardGroupData__.getKey(), xiaoyaoPaijiuCardGroupData__.getValue());
               break;
             }
-            case 74: {
-              if (!((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
+            case 90: {
+              if (!((mutable_bitField0_ & 0x00000400) == 0x00000400)) {
                 xiaoyaoPaijiuCardGroupScoreData_ = com.google.protobuf.MapField.newMapField(
                     XiaoyaoPaijiuCardGroupScoreDataDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000100;
+                mutable_bitField0_ |= 0x00000400;
               }
               com.google.protobuf.MapEntry<java.lang.String, com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupScoreData>
               xiaoyaoPaijiuCardGroupScoreData__ = input.readMessage(
@@ -501,22 +595,26 @@ public final class StaticDataProto {
         int number) {
       switch (number) {
         case 1:
-          return internalGetLaotiePaijiuCardGroupData();
+          return internalGetCrazyPaijiuCardGroupData();
         case 2:
-          return internalGetLaotiePaijiuCardGroupScoreData();
+          return internalGetCrazyPaijiuCardGroupScoreData();
         case 3:
-          return internalGetPaijiuCardData();
+          return internalGetLaotiePaijiuCardGroupData();
         case 4:
-          return internalGetPaijiuCardGroupData();
+          return internalGetLaotiePaijiuCardGroupScoreData();
         case 5:
-          return internalGetPaijiuCardGroupScoreData();
+          return internalGetPaijiuCardData();
         case 6:
-          return internalGetRoomData();
+          return internalGetPaijiuCardGroupData();
         case 7:
-          return internalGetTestData();
+          return internalGetPaijiuCardGroupScoreData();
         case 8:
-          return internalGetXiaoyaoPaijiuCardGroupData();
+          return internalGetRoomData();
         case 9:
+          return internalGetTestData();
+        case 10:
+          return internalGetXiaoyaoPaijiuCardGroupData();
+        case 11:
           return internalGetXiaoyaoPaijiuCardGroupScoreData();
         default:
           throw new RuntimeException(
@@ -530,7 +628,159 @@ public final class StaticDataProto {
               com.code.server.constant.data.StaticDataProto.DataManager.class, com.code.server.constant.data.StaticDataProto.DataManager.Builder.class);
     }
 
-    public static final int LAOTIEPAIJIUCARDGROUPDATA_FIELD_NUMBER = 1;
+    public static final int CRAZYPAIJIUCARDGROUPDATA_FIELD_NUMBER = 1;
+    private static final class CrazyPaijiuCardGroupDataDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData>newDefaultInstance(
+                  com.code.server.constant.data.StaticDataProto.internal_static_DataManager_CrazyPaijiuCardGroupDataEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData.getDefaultInstance());
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData> crazyPaijiuCardGroupData_;
+    private com.google.protobuf.MapField<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData>
+    internalGetCrazyPaijiuCardGroupData() {
+      if (crazyPaijiuCardGroupData_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            CrazyPaijiuCardGroupDataDefaultEntryHolder.defaultEntry);
+      }
+      return crazyPaijiuCardGroupData_;
+    }
+
+    public int getCrazyPaijiuCardGroupDataCount() {
+      return internalGetCrazyPaijiuCardGroupData().getMap().size();
+    }
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+     */
+
+    public boolean containsCrazyPaijiuCardGroupData(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      return internalGetCrazyPaijiuCardGroupData().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getCrazyPaijiuCardGroupDataMap()} instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData> getCrazyPaijiuCardGroupData() {
+      return getCrazyPaijiuCardGroupDataMap();
+    }
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+     */
+
+    public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData> getCrazyPaijiuCardGroupDataMap() {
+      return internalGetCrazyPaijiuCardGroupData().getMap();
+    }
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+     */
+
+    public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData getCrazyPaijiuCardGroupDataOrDefault(
+        java.lang.String key,
+        com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData defaultValue) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData> map =
+          internalGetCrazyPaijiuCardGroupData().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+     */
+
+    public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData getCrazyPaijiuCardGroupDataOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData> map =
+          internalGetCrazyPaijiuCardGroupData().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int CRAZYPAIJIUCARDGROUPSCOREDATA_FIELD_NUMBER = 2;
+    private static final class CrazyPaijiuCardGroupScoreDataDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData>newDefaultInstance(
+                  com.code.server.constant.data.StaticDataProto.internal_static_DataManager_CrazyPaijiuCardGroupScoreDataEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData.getDefaultInstance());
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData> crazyPaijiuCardGroupScoreData_;
+    private com.google.protobuf.MapField<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData>
+    internalGetCrazyPaijiuCardGroupScoreData() {
+      if (crazyPaijiuCardGroupScoreData_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            CrazyPaijiuCardGroupScoreDataDefaultEntryHolder.defaultEntry);
+      }
+      return crazyPaijiuCardGroupScoreData_;
+    }
+
+    public int getCrazyPaijiuCardGroupScoreDataCount() {
+      return internalGetCrazyPaijiuCardGroupScoreData().getMap().size();
+    }
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+     */
+
+    public boolean containsCrazyPaijiuCardGroupScoreData(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      return internalGetCrazyPaijiuCardGroupScoreData().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getCrazyPaijiuCardGroupScoreDataMap()} instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData> getCrazyPaijiuCardGroupScoreData() {
+      return getCrazyPaijiuCardGroupScoreDataMap();
+    }
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+     */
+
+    public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData> getCrazyPaijiuCardGroupScoreDataMap() {
+      return internalGetCrazyPaijiuCardGroupScoreData().getMap();
+    }
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+     */
+
+    public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData getCrazyPaijiuCardGroupScoreDataOrDefault(
+        java.lang.String key,
+        com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData defaultValue) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData> map =
+          internalGetCrazyPaijiuCardGroupScoreData().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+     */
+
+    public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData getCrazyPaijiuCardGroupScoreDataOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData> map =
+          internalGetCrazyPaijiuCardGroupScoreData().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int LAOTIEPAIJIUCARDGROUPDATA_FIELD_NUMBER = 3;
     private static final class LaotiePaijiuCardGroupDataDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData> defaultEntry =
@@ -557,7 +807,7 @@ public final class StaticDataProto {
       return internalGetLaotiePaijiuCardGroupData().getMap().size();
     }
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
      */
 
     public boolean containsLaotiePaijiuCardGroupData(
@@ -573,14 +823,14 @@ public final class StaticDataProto {
       return getLaotiePaijiuCardGroupDataMap();
     }
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
      */
 
     public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData> getLaotiePaijiuCardGroupDataMap() {
       return internalGetLaotiePaijiuCardGroupData().getMap();
     }
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData getLaotiePaijiuCardGroupDataOrDefault(
@@ -592,7 +842,7 @@ public final class StaticDataProto {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData getLaotiePaijiuCardGroupDataOrThrow(
@@ -606,7 +856,7 @@ public final class StaticDataProto {
       return map.get(key);
     }
 
-    public static final int LAOTIEPAIJIUCARDGROUPSCOREDATA_FIELD_NUMBER = 2;
+    public static final int LAOTIEPAIJIUCARDGROUPSCOREDATA_FIELD_NUMBER = 4;
     private static final class LaotiePaijiuCardGroupScoreDataDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupScoreData> defaultEntry =
@@ -633,7 +883,7 @@ public final class StaticDataProto {
       return internalGetLaotiePaijiuCardGroupScoreData().getMap().size();
     }
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
      */
 
     public boolean containsLaotiePaijiuCardGroupScoreData(
@@ -649,14 +899,14 @@ public final class StaticDataProto {
       return getLaotiePaijiuCardGroupScoreDataMap();
     }
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
      */
 
     public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupScoreData> getLaotiePaijiuCardGroupScoreDataMap() {
       return internalGetLaotiePaijiuCardGroupScoreData().getMap();
     }
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupScoreData getLaotiePaijiuCardGroupScoreDataOrDefault(
@@ -668,7 +918,7 @@ public final class StaticDataProto {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+     * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupScoreData getLaotiePaijiuCardGroupScoreDataOrThrow(
@@ -682,7 +932,7 @@ public final class StaticDataProto {
       return map.get(key);
     }
 
-    public static final int PAIJIUCARDDATA_FIELD_NUMBER = 3;
+    public static final int PAIJIUCARDDATA_FIELD_NUMBER = 5;
     private static final class PaijiuCardDataDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.Integer, com.code.server.constant.data.StaticDataProto.PaijiuCardData> defaultEntry =
@@ -709,7 +959,7 @@ public final class StaticDataProto {
       return internalGetPaijiuCardData().getMap().size();
     }
     /**
-     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
      */
 
     public boolean containsPaijiuCardData(
@@ -725,14 +975,14 @@ public final class StaticDataProto {
       return getPaijiuCardDataMap();
     }
     /**
-     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
      */
 
     public java.util.Map<java.lang.Integer, com.code.server.constant.data.StaticDataProto.PaijiuCardData> getPaijiuCardDataMap() {
       return internalGetPaijiuCardData().getMap();
     }
     /**
-     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.PaijiuCardData getPaijiuCardDataOrDefault(
@@ -744,7 +994,7 @@ public final class StaticDataProto {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+     * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.PaijiuCardData getPaijiuCardDataOrThrow(
@@ -758,7 +1008,7 @@ public final class StaticDataProto {
       return map.get(key);
     }
 
-    public static final int PAIJIUCARDGROUPDATA_FIELD_NUMBER = 4;
+    public static final int PAIJIUCARDGROUPDATA_FIELD_NUMBER = 6;
     private static final class PaijiuCardGroupDataDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.String, com.code.server.constant.data.StaticDataProto.PaijiuCardGroupData> defaultEntry =
@@ -785,7 +1035,7 @@ public final class StaticDataProto {
       return internalGetPaijiuCardGroupData().getMap().size();
     }
     /**
-     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
      */
 
     public boolean containsPaijiuCardGroupData(
@@ -801,14 +1051,14 @@ public final class StaticDataProto {
       return getPaijiuCardGroupDataMap();
     }
     /**
-     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
      */
 
     public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.PaijiuCardGroupData> getPaijiuCardGroupDataMap() {
       return internalGetPaijiuCardGroupData().getMap();
     }
     /**
-     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.PaijiuCardGroupData getPaijiuCardGroupDataOrDefault(
@@ -820,7 +1070,7 @@ public final class StaticDataProto {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+     * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.PaijiuCardGroupData getPaijiuCardGroupDataOrThrow(
@@ -834,7 +1084,7 @@ public final class StaticDataProto {
       return map.get(key);
     }
 
-    public static final int PAIJIUCARDGROUPSCOREDATA_FIELD_NUMBER = 5;
+    public static final int PAIJIUCARDGROUPSCOREDATA_FIELD_NUMBER = 7;
     private static final class PaijiuCardGroupScoreDataDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.String, com.code.server.constant.data.StaticDataProto.PaijiuCardGroupScoreData> defaultEntry =
@@ -861,7 +1111,7 @@ public final class StaticDataProto {
       return internalGetPaijiuCardGroupScoreData().getMap().size();
     }
     /**
-     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
      */
 
     public boolean containsPaijiuCardGroupScoreData(
@@ -877,14 +1127,14 @@ public final class StaticDataProto {
       return getPaijiuCardGroupScoreDataMap();
     }
     /**
-     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
      */
 
     public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.PaijiuCardGroupScoreData> getPaijiuCardGroupScoreDataMap() {
       return internalGetPaijiuCardGroupScoreData().getMap();
     }
     /**
-     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.PaijiuCardGroupScoreData getPaijiuCardGroupScoreDataOrDefault(
@@ -896,7 +1146,7 @@ public final class StaticDataProto {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+     * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.PaijiuCardGroupScoreData getPaijiuCardGroupScoreDataOrThrow(
@@ -910,7 +1160,7 @@ public final class StaticDataProto {
       return map.get(key);
     }
 
-    public static final int ROOMDATA_FIELD_NUMBER = 6;
+    public static final int ROOMDATA_FIELD_NUMBER = 8;
     private static final class RoomDataDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.String, com.code.server.constant.data.StaticDataProto.RoomData> defaultEntry =
@@ -937,7 +1187,7 @@ public final class StaticDataProto {
       return internalGetRoomData().getMap().size();
     }
     /**
-     * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+     * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
      */
 
     public boolean containsRoomData(
@@ -953,14 +1203,14 @@ public final class StaticDataProto {
       return getRoomDataMap();
     }
     /**
-     * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+     * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
      */
 
     public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.RoomData> getRoomDataMap() {
       return internalGetRoomData().getMap();
     }
     /**
-     * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+     * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.RoomData getRoomDataOrDefault(
@@ -972,7 +1222,7 @@ public final class StaticDataProto {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+     * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.RoomData getRoomDataOrThrow(
@@ -986,7 +1236,7 @@ public final class StaticDataProto {
       return map.get(key);
     }
 
-    public static final int TESTDATA_FIELD_NUMBER = 7;
+    public static final int TESTDATA_FIELD_NUMBER = 9;
     private static final class TestDataDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData> defaultEntry =
@@ -1013,7 +1263,7 @@ public final class StaticDataProto {
       return internalGetTestData().getMap().size();
     }
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
      */
 
     public boolean containsTestData(
@@ -1029,14 +1279,14 @@ public final class StaticDataProto {
       return getTestDataMap();
     }
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
      */
 
     public java.util.Map<java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData> getTestDataMap() {
       return internalGetTestData().getMap();
     }
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.TestData getTestDataOrDefault(
@@ -1048,7 +1298,7 @@ public final class StaticDataProto {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+     * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.TestData getTestDataOrThrow(
@@ -1062,7 +1312,7 @@ public final class StaticDataProto {
       return map.get(key);
     }
 
-    public static final int XIAOYAOPAIJIUCARDGROUPDATA_FIELD_NUMBER = 8;
+    public static final int XIAOYAOPAIJIUCARDGROUPDATA_FIELD_NUMBER = 10;
     private static final class XiaoyaoPaijiuCardGroupDataDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.String, com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupData> defaultEntry =
@@ -1089,7 +1339,7 @@ public final class StaticDataProto {
       return internalGetXiaoyaoPaijiuCardGroupData().getMap().size();
     }
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
      */
 
     public boolean containsXiaoyaoPaijiuCardGroupData(
@@ -1105,14 +1355,14 @@ public final class StaticDataProto {
       return getXiaoyaoPaijiuCardGroupDataMap();
     }
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
      */
 
     public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupData> getXiaoyaoPaijiuCardGroupDataMap() {
       return internalGetXiaoyaoPaijiuCardGroupData().getMap();
     }
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupData getXiaoyaoPaijiuCardGroupDataOrDefault(
@@ -1124,7 +1374,7 @@ public final class StaticDataProto {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupData getXiaoyaoPaijiuCardGroupDataOrThrow(
@@ -1138,7 +1388,7 @@ public final class StaticDataProto {
       return map.get(key);
     }
 
-    public static final int XIAOYAOPAIJIUCARDGROUPSCOREDATA_FIELD_NUMBER = 9;
+    public static final int XIAOYAOPAIJIUCARDGROUPSCOREDATA_FIELD_NUMBER = 11;
     private static final class XiaoyaoPaijiuCardGroupScoreDataDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.String, com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupScoreData> defaultEntry =
@@ -1165,7 +1415,7 @@ public final class StaticDataProto {
       return internalGetXiaoyaoPaijiuCardGroupScoreData().getMap().size();
     }
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
      */
 
     public boolean containsXiaoyaoPaijiuCardGroupScoreData(
@@ -1181,14 +1431,14 @@ public final class StaticDataProto {
       return getXiaoyaoPaijiuCardGroupScoreDataMap();
     }
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
      */
 
     public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupScoreData> getXiaoyaoPaijiuCardGroupScoreDataMap() {
       return internalGetXiaoyaoPaijiuCardGroupScoreData().getMap();
     }
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupScoreData getXiaoyaoPaijiuCardGroupScoreDataOrDefault(
@@ -1200,7 +1450,7 @@ public final class StaticDataProto {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+     * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
      */
 
     public com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupScoreData getXiaoyaoPaijiuCardGroupScoreDataOrThrow(
@@ -1229,57 +1479,69 @@ public final class StaticDataProto {
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
+          internalGetCrazyPaijiuCardGroupData(),
+          CrazyPaijiuCardGroupDataDefaultEntryHolder.defaultEntry,
+          1);
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetCrazyPaijiuCardGroupScoreData(),
+          CrazyPaijiuCardGroupScoreDataDefaultEntryHolder.defaultEntry,
+          2);
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
           internalGetLaotiePaijiuCardGroupData(),
           LaotiePaijiuCardGroupDataDefaultEntryHolder.defaultEntry,
-          1);
+          3);
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
           internalGetLaotiePaijiuCardGroupScoreData(),
           LaotiePaijiuCardGroupScoreDataDefaultEntryHolder.defaultEntry,
-          2);
+          4);
       com.google.protobuf.GeneratedMessageV3
         .serializeIntegerMapTo(
           output,
           internalGetPaijiuCardData(),
           PaijiuCardDataDefaultEntryHolder.defaultEntry,
-          3);
+          5);
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
           internalGetPaijiuCardGroupData(),
           PaijiuCardGroupDataDefaultEntryHolder.defaultEntry,
-          4);
+          6);
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
           internalGetPaijiuCardGroupScoreData(),
           PaijiuCardGroupScoreDataDefaultEntryHolder.defaultEntry,
-          5);
+          7);
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
           internalGetRoomData(),
           RoomDataDefaultEntryHolder.defaultEntry,
-          6);
+          8);
       com.google.protobuf.GeneratedMessageV3
         .serializeIntegerMapTo(
           output,
           internalGetTestData(),
           TestDataDefaultEntryHolder.defaultEntry,
-          7);
+          9);
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
           internalGetXiaoyaoPaijiuCardGroupData(),
           XiaoyaoPaijiuCardGroupDataDefaultEntryHolder.defaultEntry,
-          8);
+          10);
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
           internalGetXiaoyaoPaijiuCardGroupScoreData(),
           XiaoyaoPaijiuCardGroupScoreDataDefaultEntryHolder.defaultEntry,
-          9);
+          11);
     }
 
     public int getSerializedSize() {
@@ -1287,6 +1549,26 @@ public final class StaticDataProto {
       if (size != -1) return size;
 
       size = 0;
+      for (java.util.Map.Entry<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData> entry
+           : internalGetCrazyPaijiuCardGroupData().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData>
+        crazyPaijiuCardGroupData__ = CrazyPaijiuCardGroupDataDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(1, crazyPaijiuCardGroupData__);
+      }
+      for (java.util.Map.Entry<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData> entry
+           : internalGetCrazyPaijiuCardGroupScoreData().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData>
+        crazyPaijiuCardGroupScoreData__ = CrazyPaijiuCardGroupScoreDataDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(2, crazyPaijiuCardGroupScoreData__);
+      }
       for (java.util.Map.Entry<java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData> entry
            : internalGetLaotiePaijiuCardGroupData().getMap().entrySet()) {
         com.google.protobuf.MapEntry<java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData>
@@ -1295,7 +1577,7 @@ public final class StaticDataProto {
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(1, laotiePaijiuCardGroupData__);
+            .computeMessageSize(3, laotiePaijiuCardGroupData__);
       }
       for (java.util.Map.Entry<java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupScoreData> entry
            : internalGetLaotiePaijiuCardGroupScoreData().getMap().entrySet()) {
@@ -1305,7 +1587,7 @@ public final class StaticDataProto {
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(2, laotiePaijiuCardGroupScoreData__);
+            .computeMessageSize(4, laotiePaijiuCardGroupScoreData__);
       }
       for (java.util.Map.Entry<java.lang.Integer, com.code.server.constant.data.StaticDataProto.PaijiuCardData> entry
            : internalGetPaijiuCardData().getMap().entrySet()) {
@@ -1315,7 +1597,7 @@ public final class StaticDataProto {
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(3, paijiuCardData__);
+            .computeMessageSize(5, paijiuCardData__);
       }
       for (java.util.Map.Entry<java.lang.String, com.code.server.constant.data.StaticDataProto.PaijiuCardGroupData> entry
            : internalGetPaijiuCardGroupData().getMap().entrySet()) {
@@ -1325,7 +1607,7 @@ public final class StaticDataProto {
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(4, paijiuCardGroupData__);
+            .computeMessageSize(6, paijiuCardGroupData__);
       }
       for (java.util.Map.Entry<java.lang.String, com.code.server.constant.data.StaticDataProto.PaijiuCardGroupScoreData> entry
            : internalGetPaijiuCardGroupScoreData().getMap().entrySet()) {
@@ -1335,7 +1617,7 @@ public final class StaticDataProto {
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(5, paijiuCardGroupScoreData__);
+            .computeMessageSize(7, paijiuCardGroupScoreData__);
       }
       for (java.util.Map.Entry<java.lang.String, com.code.server.constant.data.StaticDataProto.RoomData> entry
            : internalGetRoomData().getMap().entrySet()) {
@@ -1345,7 +1627,7 @@ public final class StaticDataProto {
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(6, roomData__);
+            .computeMessageSize(8, roomData__);
       }
       for (java.util.Map.Entry<java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData> entry
            : internalGetTestData().getMap().entrySet()) {
@@ -1355,7 +1637,7 @@ public final class StaticDataProto {
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(7, testData__);
+            .computeMessageSize(9, testData__);
       }
       for (java.util.Map.Entry<java.lang.String, com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupData> entry
            : internalGetXiaoyaoPaijiuCardGroupData().getMap().entrySet()) {
@@ -1365,7 +1647,7 @@ public final class StaticDataProto {
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(8, xiaoyaoPaijiuCardGroupData__);
+            .computeMessageSize(10, xiaoyaoPaijiuCardGroupData__);
       }
       for (java.util.Map.Entry<java.lang.String, com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupScoreData> entry
            : internalGetXiaoyaoPaijiuCardGroupScoreData().getMap().entrySet()) {
@@ -1375,7 +1657,7 @@ public final class StaticDataProto {
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(9, xiaoyaoPaijiuCardGroupScoreData__);
+            .computeMessageSize(11, xiaoyaoPaijiuCardGroupScoreData__);
       }
       memoizedSize = size;
       return size;
@@ -1393,6 +1675,10 @@ public final class StaticDataProto {
       com.code.server.constant.data.StaticDataProto.DataManager other = (com.code.server.constant.data.StaticDataProto.DataManager) obj;
 
       boolean result = true;
+      result = result && internalGetCrazyPaijiuCardGroupData().equals(
+          other.internalGetCrazyPaijiuCardGroupData());
+      result = result && internalGetCrazyPaijiuCardGroupScoreData().equals(
+          other.internalGetCrazyPaijiuCardGroupScoreData());
       result = result && internalGetLaotiePaijiuCardGroupData().equals(
           other.internalGetLaotiePaijiuCardGroupData());
       result = result && internalGetLaotiePaijiuCardGroupScoreData().equals(
@@ -1421,6 +1707,14 @@ public final class StaticDataProto {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      if (!internalGetCrazyPaijiuCardGroupData().getMap().isEmpty()) {
+        hash = (37 * hash) + CRAZYPAIJIUCARDGROUPDATA_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetCrazyPaijiuCardGroupData().hashCode();
+      }
+      if (!internalGetCrazyPaijiuCardGroupScoreData().getMap().isEmpty()) {
+        hash = (37 * hash) + CRAZYPAIJIUCARDGROUPSCOREDATA_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetCrazyPaijiuCardGroupScoreData().hashCode();
+      }
       if (!internalGetLaotiePaijiuCardGroupData().getMap().isEmpty()) {
         hash = (37 * hash) + LAOTIEPAIJIUCARDGROUPDATA_FIELD_NUMBER;
         hash = (53 * hash) + internalGetLaotiePaijiuCardGroupData().hashCode();
@@ -1556,22 +1850,26 @@ public final class StaticDataProto {
           int number) {
         switch (number) {
           case 1:
-            return internalGetLaotiePaijiuCardGroupData();
+            return internalGetCrazyPaijiuCardGroupData();
           case 2:
-            return internalGetLaotiePaijiuCardGroupScoreData();
+            return internalGetCrazyPaijiuCardGroupScoreData();
           case 3:
-            return internalGetPaijiuCardData();
+            return internalGetLaotiePaijiuCardGroupData();
           case 4:
-            return internalGetPaijiuCardGroupData();
+            return internalGetLaotiePaijiuCardGroupScoreData();
           case 5:
-            return internalGetPaijiuCardGroupScoreData();
+            return internalGetPaijiuCardData();
           case 6:
-            return internalGetRoomData();
+            return internalGetPaijiuCardGroupData();
           case 7:
-            return internalGetTestData();
+            return internalGetPaijiuCardGroupScoreData();
           case 8:
-            return internalGetXiaoyaoPaijiuCardGroupData();
+            return internalGetRoomData();
           case 9:
+            return internalGetTestData();
+          case 10:
+            return internalGetXiaoyaoPaijiuCardGroupData();
+          case 11:
             return internalGetXiaoyaoPaijiuCardGroupScoreData();
           default:
             throw new RuntimeException(
@@ -1583,22 +1881,26 @@ public final class StaticDataProto {
           int number) {
         switch (number) {
           case 1:
-            return internalGetMutableLaotiePaijiuCardGroupData();
+            return internalGetMutableCrazyPaijiuCardGroupData();
           case 2:
-            return internalGetMutableLaotiePaijiuCardGroupScoreData();
+            return internalGetMutableCrazyPaijiuCardGroupScoreData();
           case 3:
-            return internalGetMutablePaijiuCardData();
+            return internalGetMutableLaotiePaijiuCardGroupData();
           case 4:
-            return internalGetMutablePaijiuCardGroupData();
+            return internalGetMutableLaotiePaijiuCardGroupScoreData();
           case 5:
-            return internalGetMutablePaijiuCardGroupScoreData();
+            return internalGetMutablePaijiuCardData();
           case 6:
-            return internalGetMutableRoomData();
+            return internalGetMutablePaijiuCardGroupData();
           case 7:
-            return internalGetMutableTestData();
+            return internalGetMutablePaijiuCardGroupScoreData();
           case 8:
-            return internalGetMutableXiaoyaoPaijiuCardGroupData();
+            return internalGetMutableRoomData();
           case 9:
+            return internalGetMutableTestData();
+          case 10:
+            return internalGetMutableXiaoyaoPaijiuCardGroupData();
+          case 11:
             return internalGetMutableXiaoyaoPaijiuCardGroupScoreData();
           default:
             throw new RuntimeException(
@@ -1629,6 +1931,8 @@ public final class StaticDataProto {
       }
       public Builder clear() {
         super.clear();
+        internalGetMutableCrazyPaijiuCardGroupData().clear();
+        internalGetMutableCrazyPaijiuCardGroupScoreData().clear();
         internalGetMutableLaotiePaijiuCardGroupData().clear();
         internalGetMutableLaotiePaijiuCardGroupScoreData().clear();
         internalGetMutablePaijiuCardData().clear();
@@ -1661,6 +1965,10 @@ public final class StaticDataProto {
       public com.code.server.constant.data.StaticDataProto.DataManager buildPartial() {
         com.code.server.constant.data.StaticDataProto.DataManager result = new com.code.server.constant.data.StaticDataProto.DataManager(this);
         int from_bitField0_ = bitField0_;
+        result.crazyPaijiuCardGroupData_ = internalGetCrazyPaijiuCardGroupData();
+        result.crazyPaijiuCardGroupData_.makeImmutable();
+        result.crazyPaijiuCardGroupScoreData_ = internalGetCrazyPaijiuCardGroupScoreData();
+        result.crazyPaijiuCardGroupScoreData_.makeImmutable();
         result.laotiePaijiuCardGroupData_ = internalGetLaotiePaijiuCardGroupData();
         result.laotiePaijiuCardGroupData_.makeImmutable();
         result.laotiePaijiuCardGroupScoreData_ = internalGetLaotiePaijiuCardGroupScoreData();
@@ -1720,6 +2028,10 @@ public final class StaticDataProto {
 
       public Builder mergeFrom(com.code.server.constant.data.StaticDataProto.DataManager other) {
         if (other == com.code.server.constant.data.StaticDataProto.DataManager.getDefaultInstance()) return this;
+        internalGetMutableCrazyPaijiuCardGroupData().mergeFrom(
+            other.internalGetCrazyPaijiuCardGroupData());
+        internalGetMutableCrazyPaijiuCardGroupScoreData().mergeFrom(
+            other.internalGetCrazyPaijiuCardGroupScoreData());
         internalGetMutableLaotiePaijiuCardGroupData().mergeFrom(
             other.internalGetLaotiePaijiuCardGroupData());
         internalGetMutableLaotiePaijiuCardGroupScoreData().mergeFrom(
@@ -1766,6 +2078,252 @@ public final class StaticDataProto {
       private int bitField0_;
 
       private com.google.protobuf.MapField<
+          java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData> crazyPaijiuCardGroupData_;
+      private com.google.protobuf.MapField<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData>
+      internalGetCrazyPaijiuCardGroupData() {
+        if (crazyPaijiuCardGroupData_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              CrazyPaijiuCardGroupDataDefaultEntryHolder.defaultEntry);
+        }
+        return crazyPaijiuCardGroupData_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData>
+      internalGetMutableCrazyPaijiuCardGroupData() {
+        onChanged();;
+        if (crazyPaijiuCardGroupData_ == null) {
+          crazyPaijiuCardGroupData_ = com.google.protobuf.MapField.newMapField(
+              CrazyPaijiuCardGroupDataDefaultEntryHolder.defaultEntry);
+        }
+        if (!crazyPaijiuCardGroupData_.isMutable()) {
+          crazyPaijiuCardGroupData_ = crazyPaijiuCardGroupData_.copy();
+        }
+        return crazyPaijiuCardGroupData_;
+      }
+
+      public int getCrazyPaijiuCardGroupDataCount() {
+        return internalGetCrazyPaijiuCardGroupData().getMap().size();
+      }
+      /**
+       * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+       */
+
+      public boolean containsCrazyPaijiuCardGroupData(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        return internalGetCrazyPaijiuCardGroupData().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getCrazyPaijiuCardGroupDataMap()} instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData> getCrazyPaijiuCardGroupData() {
+        return getCrazyPaijiuCardGroupDataMap();
+      }
+      /**
+       * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+       */
+
+      public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData> getCrazyPaijiuCardGroupDataMap() {
+        return internalGetCrazyPaijiuCardGroupData().getMap();
+      }
+      /**
+       * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+       */
+
+      public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData getCrazyPaijiuCardGroupDataOrDefault(
+          java.lang.String key,
+          com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData defaultValue) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData> map =
+            internalGetCrazyPaijiuCardGroupData().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+       */
+
+      public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData getCrazyPaijiuCardGroupDataOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData> map =
+            internalGetCrazyPaijiuCardGroupData().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearCrazyPaijiuCardGroupData() {
+        internalGetMutableCrazyPaijiuCardGroupData().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+       */
+
+      public Builder removeCrazyPaijiuCardGroupData(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableCrazyPaijiuCardGroupData().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData>
+      getMutableCrazyPaijiuCardGroupData() {
+        return internalGetMutableCrazyPaijiuCardGroupData().getMutableMap();
+      }
+      /**
+       * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+       */
+      public Builder putCrazyPaijiuCardGroupData(
+          java.lang.String key,
+          com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData value) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        if (value == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableCrazyPaijiuCardGroupData().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <code>map&lt;string, .CrazyPaijiuCardGroupData&gt; crazyPaijiuCardGroupData = 1;</code>
+       */
+
+      public Builder putAllCrazyPaijiuCardGroupData(
+          java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData> values) {
+        internalGetMutableCrazyPaijiuCardGroupData().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+
+      private com.google.protobuf.MapField<
+          java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData> crazyPaijiuCardGroupScoreData_;
+      private com.google.protobuf.MapField<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData>
+      internalGetCrazyPaijiuCardGroupScoreData() {
+        if (crazyPaijiuCardGroupScoreData_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              CrazyPaijiuCardGroupScoreDataDefaultEntryHolder.defaultEntry);
+        }
+        return crazyPaijiuCardGroupScoreData_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData>
+      internalGetMutableCrazyPaijiuCardGroupScoreData() {
+        onChanged();;
+        if (crazyPaijiuCardGroupScoreData_ == null) {
+          crazyPaijiuCardGroupScoreData_ = com.google.protobuf.MapField.newMapField(
+              CrazyPaijiuCardGroupScoreDataDefaultEntryHolder.defaultEntry);
+        }
+        if (!crazyPaijiuCardGroupScoreData_.isMutable()) {
+          crazyPaijiuCardGroupScoreData_ = crazyPaijiuCardGroupScoreData_.copy();
+        }
+        return crazyPaijiuCardGroupScoreData_;
+      }
+
+      public int getCrazyPaijiuCardGroupScoreDataCount() {
+        return internalGetCrazyPaijiuCardGroupScoreData().getMap().size();
+      }
+      /**
+       * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+       */
+
+      public boolean containsCrazyPaijiuCardGroupScoreData(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        return internalGetCrazyPaijiuCardGroupScoreData().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getCrazyPaijiuCardGroupScoreDataMap()} instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData> getCrazyPaijiuCardGroupScoreData() {
+        return getCrazyPaijiuCardGroupScoreDataMap();
+      }
+      /**
+       * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+       */
+
+      public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData> getCrazyPaijiuCardGroupScoreDataMap() {
+        return internalGetCrazyPaijiuCardGroupScoreData().getMap();
+      }
+      /**
+       * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+       */
+
+      public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData getCrazyPaijiuCardGroupScoreDataOrDefault(
+          java.lang.String key,
+          com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData defaultValue) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData> map =
+            internalGetCrazyPaijiuCardGroupScoreData().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+       */
+
+      public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData getCrazyPaijiuCardGroupScoreDataOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData> map =
+            internalGetCrazyPaijiuCardGroupScoreData().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearCrazyPaijiuCardGroupScoreData() {
+        internalGetMutableCrazyPaijiuCardGroupScoreData().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+       */
+
+      public Builder removeCrazyPaijiuCardGroupScoreData(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableCrazyPaijiuCardGroupScoreData().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData>
+      getMutableCrazyPaijiuCardGroupScoreData() {
+        return internalGetMutableCrazyPaijiuCardGroupScoreData().getMutableMap();
+      }
+      /**
+       * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+       */
+      public Builder putCrazyPaijiuCardGroupScoreData(
+          java.lang.String key,
+          com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData value) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        if (value == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableCrazyPaijiuCardGroupScoreData().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <code>map&lt;string, .CrazyPaijiuCardGroupScoreData&gt; crazyPaijiuCardGroupScoreData = 2;</code>
+       */
+
+      public Builder putAllCrazyPaijiuCardGroupScoreData(
+          java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData> values) {
+        internalGetMutableCrazyPaijiuCardGroupScoreData().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+
+      private com.google.protobuf.MapField<
           java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData> laotiePaijiuCardGroupData_;
       private com.google.protobuf.MapField<java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData>
       internalGetLaotiePaijiuCardGroupData() {
@@ -1792,7 +2350,7 @@ public final class StaticDataProto {
         return internalGetLaotiePaijiuCardGroupData().getMap().size();
       }
       /**
-       * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+       * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
        */
 
       public boolean containsLaotiePaijiuCardGroupData(
@@ -1808,14 +2366,14 @@ public final class StaticDataProto {
         return getLaotiePaijiuCardGroupDataMap();
       }
       /**
-       * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+       * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
        */
 
       public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData> getLaotiePaijiuCardGroupDataMap() {
         return internalGetLaotiePaijiuCardGroupData().getMap();
       }
       /**
-       * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+       * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData getLaotiePaijiuCardGroupDataOrDefault(
@@ -1827,7 +2385,7 @@ public final class StaticDataProto {
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+       * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupData getLaotiePaijiuCardGroupDataOrThrow(
@@ -1847,7 +2405,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+       * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
        */
 
       public Builder removeLaotiePaijiuCardGroupData(
@@ -1866,7 +2424,7 @@ public final class StaticDataProto {
         return internalGetMutableLaotiePaijiuCardGroupData().getMutableMap();
       }
       /**
-       * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+       * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
        */
       public Builder putLaotiePaijiuCardGroupData(
           java.lang.String key,
@@ -1878,7 +2436,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 1;</code>
+       * <code>map&lt;string, .LaotiePaijiuCardGroupData&gt; laotiePaijiuCardGroupData = 3;</code>
        */
 
       public Builder putAllLaotiePaijiuCardGroupData(
@@ -1915,7 +2473,7 @@ public final class StaticDataProto {
         return internalGetLaotiePaijiuCardGroupScoreData().getMap().size();
       }
       /**
-       * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+       * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
        */
 
       public boolean containsLaotiePaijiuCardGroupScoreData(
@@ -1931,14 +2489,14 @@ public final class StaticDataProto {
         return getLaotiePaijiuCardGroupScoreDataMap();
       }
       /**
-       * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+       * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
        */
 
       public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupScoreData> getLaotiePaijiuCardGroupScoreDataMap() {
         return internalGetLaotiePaijiuCardGroupScoreData().getMap();
       }
       /**
-       * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+       * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupScoreData getLaotiePaijiuCardGroupScoreDataOrDefault(
@@ -1950,7 +2508,7 @@ public final class StaticDataProto {
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+       * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.LaotiePaijiuCardGroupScoreData getLaotiePaijiuCardGroupScoreDataOrThrow(
@@ -1970,7 +2528,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+       * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
        */
 
       public Builder removeLaotiePaijiuCardGroupScoreData(
@@ -1989,7 +2547,7 @@ public final class StaticDataProto {
         return internalGetMutableLaotiePaijiuCardGroupScoreData().getMutableMap();
       }
       /**
-       * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+       * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
        */
       public Builder putLaotiePaijiuCardGroupScoreData(
           java.lang.String key,
@@ -2001,7 +2559,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 2;</code>
+       * <code>map&lt;string, .LaotiePaijiuCardGroupScoreData&gt; laotiePaijiuCardGroupScoreData = 4;</code>
        */
 
       public Builder putAllLaotiePaijiuCardGroupScoreData(
@@ -2038,7 +2596,7 @@ public final class StaticDataProto {
         return internalGetPaijiuCardData().getMap().size();
       }
       /**
-       * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+       * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
        */
 
       public boolean containsPaijiuCardData(
@@ -2054,14 +2612,14 @@ public final class StaticDataProto {
         return getPaijiuCardDataMap();
       }
       /**
-       * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+       * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
        */
 
       public java.util.Map<java.lang.Integer, com.code.server.constant.data.StaticDataProto.PaijiuCardData> getPaijiuCardDataMap() {
         return internalGetPaijiuCardData().getMap();
       }
       /**
-       * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+       * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.PaijiuCardData getPaijiuCardDataOrDefault(
@@ -2073,7 +2631,7 @@ public final class StaticDataProto {
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+       * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.PaijiuCardData getPaijiuCardDataOrThrow(
@@ -2093,7 +2651,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+       * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
        */
 
       public Builder removePaijiuCardData(
@@ -2112,7 +2670,7 @@ public final class StaticDataProto {
         return internalGetMutablePaijiuCardData().getMutableMap();
       }
       /**
-       * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+       * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
        */
       public Builder putPaijiuCardData(
           int key,
@@ -2124,7 +2682,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 3;</code>
+       * <code>map&lt;int32, .PaijiuCardData&gt; paijiuCardData = 5;</code>
        */
 
       public Builder putAllPaijiuCardData(
@@ -2161,7 +2719,7 @@ public final class StaticDataProto {
         return internalGetPaijiuCardGroupData().getMap().size();
       }
       /**
-       * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+       * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
        */
 
       public boolean containsPaijiuCardGroupData(
@@ -2177,14 +2735,14 @@ public final class StaticDataProto {
         return getPaijiuCardGroupDataMap();
       }
       /**
-       * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+       * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
        */
 
       public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.PaijiuCardGroupData> getPaijiuCardGroupDataMap() {
         return internalGetPaijiuCardGroupData().getMap();
       }
       /**
-       * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+       * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.PaijiuCardGroupData getPaijiuCardGroupDataOrDefault(
@@ -2196,7 +2754,7 @@ public final class StaticDataProto {
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+       * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.PaijiuCardGroupData getPaijiuCardGroupDataOrThrow(
@@ -2216,7 +2774,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+       * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
        */
 
       public Builder removePaijiuCardGroupData(
@@ -2235,7 +2793,7 @@ public final class StaticDataProto {
         return internalGetMutablePaijiuCardGroupData().getMutableMap();
       }
       /**
-       * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+       * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
        */
       public Builder putPaijiuCardGroupData(
           java.lang.String key,
@@ -2247,7 +2805,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 4;</code>
+       * <code>map&lt;string, .PaijiuCardGroupData&gt; paijiuCardGroupData = 6;</code>
        */
 
       public Builder putAllPaijiuCardGroupData(
@@ -2284,7 +2842,7 @@ public final class StaticDataProto {
         return internalGetPaijiuCardGroupScoreData().getMap().size();
       }
       /**
-       * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+       * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
        */
 
       public boolean containsPaijiuCardGroupScoreData(
@@ -2300,14 +2858,14 @@ public final class StaticDataProto {
         return getPaijiuCardGroupScoreDataMap();
       }
       /**
-       * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+       * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
        */
 
       public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.PaijiuCardGroupScoreData> getPaijiuCardGroupScoreDataMap() {
         return internalGetPaijiuCardGroupScoreData().getMap();
       }
       /**
-       * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+       * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.PaijiuCardGroupScoreData getPaijiuCardGroupScoreDataOrDefault(
@@ -2319,7 +2877,7 @@ public final class StaticDataProto {
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+       * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.PaijiuCardGroupScoreData getPaijiuCardGroupScoreDataOrThrow(
@@ -2339,7 +2897,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+       * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
        */
 
       public Builder removePaijiuCardGroupScoreData(
@@ -2358,7 +2916,7 @@ public final class StaticDataProto {
         return internalGetMutablePaijiuCardGroupScoreData().getMutableMap();
       }
       /**
-       * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+       * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
        */
       public Builder putPaijiuCardGroupScoreData(
           java.lang.String key,
@@ -2370,7 +2928,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 5;</code>
+       * <code>map&lt;string, .PaijiuCardGroupScoreData&gt; paijiuCardGroupScoreData = 7;</code>
        */
 
       public Builder putAllPaijiuCardGroupScoreData(
@@ -2407,7 +2965,7 @@ public final class StaticDataProto {
         return internalGetRoomData().getMap().size();
       }
       /**
-       * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+       * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
        */
 
       public boolean containsRoomData(
@@ -2423,14 +2981,14 @@ public final class StaticDataProto {
         return getRoomDataMap();
       }
       /**
-       * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+       * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
        */
 
       public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.RoomData> getRoomDataMap() {
         return internalGetRoomData().getMap();
       }
       /**
-       * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+       * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.RoomData getRoomDataOrDefault(
@@ -2442,7 +3000,7 @@ public final class StaticDataProto {
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+       * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.RoomData getRoomDataOrThrow(
@@ -2462,7 +3020,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+       * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
        */
 
       public Builder removeRoomData(
@@ -2481,7 +3039,7 @@ public final class StaticDataProto {
         return internalGetMutableRoomData().getMutableMap();
       }
       /**
-       * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+       * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
        */
       public Builder putRoomData(
           java.lang.String key,
@@ -2493,7 +3051,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;string, .RoomData&gt; roomData = 6;</code>
+       * <code>map&lt;string, .RoomData&gt; roomData = 8;</code>
        */
 
       public Builder putAllRoomData(
@@ -2530,7 +3088,7 @@ public final class StaticDataProto {
         return internalGetTestData().getMap().size();
       }
       /**
-       * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+       * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
        */
 
       public boolean containsTestData(
@@ -2546,14 +3104,14 @@ public final class StaticDataProto {
         return getTestDataMap();
       }
       /**
-       * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+       * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
        */
 
       public java.util.Map<java.lang.Integer, com.code.server.constant.data.StaticDataProto.TestData> getTestDataMap() {
         return internalGetTestData().getMap();
       }
       /**
-       * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+       * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.TestData getTestDataOrDefault(
@@ -2565,7 +3123,7 @@ public final class StaticDataProto {
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+       * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.TestData getTestDataOrThrow(
@@ -2585,7 +3143,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+       * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
        */
 
       public Builder removeTestData(
@@ -2604,7 +3162,7 @@ public final class StaticDataProto {
         return internalGetMutableTestData().getMutableMap();
       }
       /**
-       * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+       * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
        */
       public Builder putTestData(
           int key,
@@ -2616,7 +3174,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;int32, .TestData&gt; testData = 7;</code>
+       * <code>map&lt;int32, .TestData&gt; testData = 9;</code>
        */
 
       public Builder putAllTestData(
@@ -2653,7 +3211,7 @@ public final class StaticDataProto {
         return internalGetXiaoyaoPaijiuCardGroupData().getMap().size();
       }
       /**
-       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
        */
 
       public boolean containsXiaoyaoPaijiuCardGroupData(
@@ -2669,14 +3227,14 @@ public final class StaticDataProto {
         return getXiaoyaoPaijiuCardGroupDataMap();
       }
       /**
-       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
        */
 
       public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupData> getXiaoyaoPaijiuCardGroupDataMap() {
         return internalGetXiaoyaoPaijiuCardGroupData().getMap();
       }
       /**
-       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupData getXiaoyaoPaijiuCardGroupDataOrDefault(
@@ -2688,7 +3246,7 @@ public final class StaticDataProto {
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupData getXiaoyaoPaijiuCardGroupDataOrThrow(
@@ -2708,7 +3266,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
        */
 
       public Builder removeXiaoyaoPaijiuCardGroupData(
@@ -2727,7 +3285,7 @@ public final class StaticDataProto {
         return internalGetMutableXiaoyaoPaijiuCardGroupData().getMutableMap();
       }
       /**
-       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
        */
       public Builder putXiaoyaoPaijiuCardGroupData(
           java.lang.String key,
@@ -2739,7 +3297,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 8;</code>
+       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupData&gt; xiaoyaoPaijiuCardGroupData = 10;</code>
        */
 
       public Builder putAllXiaoyaoPaijiuCardGroupData(
@@ -2776,7 +3334,7 @@ public final class StaticDataProto {
         return internalGetXiaoyaoPaijiuCardGroupScoreData().getMap().size();
       }
       /**
-       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
        */
 
       public boolean containsXiaoyaoPaijiuCardGroupScoreData(
@@ -2792,14 +3350,14 @@ public final class StaticDataProto {
         return getXiaoyaoPaijiuCardGroupScoreDataMap();
       }
       /**
-       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
        */
 
       public java.util.Map<java.lang.String, com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupScoreData> getXiaoyaoPaijiuCardGroupScoreDataMap() {
         return internalGetXiaoyaoPaijiuCardGroupScoreData().getMap();
       }
       /**
-       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupScoreData getXiaoyaoPaijiuCardGroupScoreDataOrDefault(
@@ -2811,7 +3369,7 @@ public final class StaticDataProto {
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
        */
 
       public com.code.server.constant.data.StaticDataProto.XiaoyaoPaijiuCardGroupScoreData getXiaoyaoPaijiuCardGroupScoreDataOrThrow(
@@ -2831,7 +3389,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
        */
 
       public Builder removeXiaoyaoPaijiuCardGroupScoreData(
@@ -2850,7 +3408,7 @@ public final class StaticDataProto {
         return internalGetMutableXiaoyaoPaijiuCardGroupScoreData().getMutableMap();
       }
       /**
-       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
        */
       public Builder putXiaoyaoPaijiuCardGroupScoreData(
           java.lang.String key,
@@ -2862,7 +3420,7 @@ public final class StaticDataProto {
         return this;
       }
       /**
-       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 9;</code>
+       * <code>map&lt;string, .XiaoyaoPaijiuCardGroupScoreData&gt; xiaoyaoPaijiuCardGroupScoreData = 11;</code>
        */
 
       public Builder putAllXiaoyaoPaijiuCardGroupScoreData(
@@ -2915,6 +3473,1212 @@ public final class StaticDataProto {
     }
 
     public com.code.server.constant.data.StaticDataProto.DataManager getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface CrazyPaijiuCardGroupDataOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:CrazyPaijiuCardGroupData)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string id = 1;</code>
+     */
+    java.lang.String getId();
+    /**
+     * <code>string id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getIdBytes();
+
+    /**
+     * <code>string name = 2;</code>
+     */
+    java.lang.String getName();
+    /**
+     * <code>string name = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getNameBytes();
+  }
+  /**
+   * Protobuf type {@code CrazyPaijiuCardGroupData}
+   */
+  public  static final class CrazyPaijiuCardGroupData extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:CrazyPaijiuCardGroupData)
+      CrazyPaijiuCardGroupDataOrBuilder {
+    // Use CrazyPaijiuCardGroupData.newBuilder() to construct.
+    private CrazyPaijiuCardGroupData(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private CrazyPaijiuCardGroupData() {
+      id_ = "";
+      name_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private CrazyPaijiuCardGroupData(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              id_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              name_ = s;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.code.server.constant.data.StaticDataProto.internal_static_CrazyPaijiuCardGroupData_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.code.server.constant.data.StaticDataProto.internal_static_CrazyPaijiuCardGroupData_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData.class, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData.Builder.class);
+    }
+
+    public static final int ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object id_;
+    /**
+     * <code>string id = 1;</code>
+     */
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        id_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIdBytes() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int NAME_FIELD_NUMBER = 2;
+    private volatile java.lang.Object name_;
+    /**
+     * <code>string name = 2;</code>
+     */
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        name_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string name = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        name_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
+      }
+      if (!getNameBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, name_);
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
+      }
+      if (!getNameBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, name_);
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData)) {
+        return super.equals(obj);
+      }
+      com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData other = (com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData) obj;
+
+      boolean result = true;
+      result = result && getId()
+          .equals(other.getId());
+      result = result && getName()
+          .equals(other.getName());
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + getId().hashCode();
+      hash = (37 * hash) + NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getName().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code CrazyPaijiuCardGroupData}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:CrazyPaijiuCardGroupData)
+        com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupDataOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.code.server.constant.data.StaticDataProto.internal_static_CrazyPaijiuCardGroupData_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.code.server.constant.data.StaticDataProto.internal_static_CrazyPaijiuCardGroupData_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData.class, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData.Builder.class);
+      }
+
+      // Construct using com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        id_ = "";
+
+        name_ = "";
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.code.server.constant.data.StaticDataProto.internal_static_CrazyPaijiuCardGroupData_descriptor;
+      }
+
+      public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData getDefaultInstanceForType() {
+        return com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData.getDefaultInstance();
+      }
+
+      public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData build() {
+        com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData buildPartial() {
+        com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData result = new com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData(this);
+        result.id_ = id_;
+        result.name_ = name_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData) {
+          return mergeFrom((com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData other) {
+        if (other == com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData.getDefaultInstance()) return this;
+        if (!other.getId().isEmpty()) {
+          id_ = other.id_;
+          onChanged();
+        }
+        if (!other.getName().isEmpty()) {
+          name_ = other.name_;
+          onChanged();
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object id_ = "";
+      /**
+       * <code>string id = 1;</code>
+       */
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          id_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIdBytes() {
+        java.lang.Object ref = id_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          id_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string id = 1;</code>
+       */
+      public Builder setId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string id = 1;</code>
+       */
+      public Builder clearId() {
+        
+        id_ = getDefaultInstance().getId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string id = 1;</code>
+       */
+      public Builder setIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        id_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object name_ = "";
+      /**
+       * <code>string name = 2;</code>
+       */
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          name_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string name = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string name = 2;</code>
+       */
+      public Builder setName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        name_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string name = 2;</code>
+       */
+      public Builder clearName() {
+        
+        name_ = getDefaultInstance().getName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string name = 2;</code>
+       */
+      public Builder setNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        name_ = value;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:CrazyPaijiuCardGroupData)
+    }
+
+    // @@protoc_insertion_point(class_scope:CrazyPaijiuCardGroupData)
+    private static final com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData();
+    }
+
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<CrazyPaijiuCardGroupData>
+        PARSER = new com.google.protobuf.AbstractParser<CrazyPaijiuCardGroupData>() {
+      public CrazyPaijiuCardGroupData parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new CrazyPaijiuCardGroupData(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<CrazyPaijiuCardGroupData> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<CrazyPaijiuCardGroupData> getParserForType() {
+      return PARSER;
+    }
+
+    public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface CrazyPaijiuCardGroupScoreDataOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:CrazyPaijiuCardGroupScoreData)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string id = 1;</code>
+     */
+    java.lang.String getId();
+    /**
+     * <code>string id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getIdBytes();
+
+    /**
+     * <code>int32 score = 2;</code>
+     */
+    int getScore();
+  }
+  /**
+   * Protobuf type {@code CrazyPaijiuCardGroupScoreData}
+   */
+  public  static final class CrazyPaijiuCardGroupScoreData extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:CrazyPaijiuCardGroupScoreData)
+      CrazyPaijiuCardGroupScoreDataOrBuilder {
+    // Use CrazyPaijiuCardGroupScoreData.newBuilder() to construct.
+    private CrazyPaijiuCardGroupScoreData(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private CrazyPaijiuCardGroupScoreData() {
+      id_ = "";
+      score_ = 0;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private CrazyPaijiuCardGroupScoreData(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              id_ = s;
+              break;
+            }
+            case 16: {
+
+              score_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.code.server.constant.data.StaticDataProto.internal_static_CrazyPaijiuCardGroupScoreData_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.code.server.constant.data.StaticDataProto.internal_static_CrazyPaijiuCardGroupScoreData_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData.class, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData.Builder.class);
+    }
+
+    public static final int ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object id_;
+    /**
+     * <code>string id = 1;</code>
+     */
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        id_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIdBytes() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int SCORE_FIELD_NUMBER = 2;
+    private int score_;
+    /**
+     * <code>int32 score = 2;</code>
+     */
+    public int getScore() {
+      return score_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
+      }
+      if (score_ != 0) {
+        output.writeInt32(2, score_);
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
+      }
+      if (score_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, score_);
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData)) {
+        return super.equals(obj);
+      }
+      com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData other = (com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData) obj;
+
+      boolean result = true;
+      result = result && getId()
+          .equals(other.getId());
+      result = result && (getScore()
+          == other.getScore());
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + getId().hashCode();
+      hash = (37 * hash) + SCORE_FIELD_NUMBER;
+      hash = (53 * hash) + getScore();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code CrazyPaijiuCardGroupScoreData}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:CrazyPaijiuCardGroupScoreData)
+        com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreDataOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.code.server.constant.data.StaticDataProto.internal_static_CrazyPaijiuCardGroupScoreData_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.code.server.constant.data.StaticDataProto.internal_static_CrazyPaijiuCardGroupScoreData_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData.class, com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData.Builder.class);
+      }
+
+      // Construct using com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        id_ = "";
+
+        score_ = 0;
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.code.server.constant.data.StaticDataProto.internal_static_CrazyPaijiuCardGroupScoreData_descriptor;
+      }
+
+      public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData getDefaultInstanceForType() {
+        return com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData.getDefaultInstance();
+      }
+
+      public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData build() {
+        com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData buildPartial() {
+        com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData result = new com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData(this);
+        result.id_ = id_;
+        result.score_ = score_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData) {
+          return mergeFrom((com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData other) {
+        if (other == com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData.getDefaultInstance()) return this;
+        if (!other.getId().isEmpty()) {
+          id_ = other.id_;
+          onChanged();
+        }
+        if (other.getScore() != 0) {
+          setScore(other.getScore());
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object id_ = "";
+      /**
+       * <code>string id = 1;</code>
+       */
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          id_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIdBytes() {
+        java.lang.Object ref = id_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          id_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string id = 1;</code>
+       */
+      public Builder setId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string id = 1;</code>
+       */
+      public Builder clearId() {
+        
+        id_ = getDefaultInstance().getId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string id = 1;</code>
+       */
+      public Builder setIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        id_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int score_ ;
+      /**
+       * <code>int32 score = 2;</code>
+       */
+      public int getScore() {
+        return score_;
+      }
+      /**
+       * <code>int32 score = 2;</code>
+       */
+      public Builder setScore(int value) {
+        
+        score_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 score = 2;</code>
+       */
+      public Builder clearScore() {
+        
+        score_ = 0;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:CrazyPaijiuCardGroupScoreData)
+    }
+
+    // @@protoc_insertion_point(class_scope:CrazyPaijiuCardGroupScoreData)
+    private static final com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData();
+    }
+
+    public static com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<CrazyPaijiuCardGroupScoreData>
+        PARSER = new com.google.protobuf.AbstractParser<CrazyPaijiuCardGroupScoreData>() {
+      public CrazyPaijiuCardGroupScoreData parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new CrazyPaijiuCardGroupScoreData(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<CrazyPaijiuCardGroupScoreData> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<CrazyPaijiuCardGroupScoreData> getParserForType() {
+      return PARSER;
+    }
+
+    public com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupScoreData getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -10905,6 +12669,16 @@ public final class StaticDataProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_DataManager_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_DataManager_CrazyPaijiuCardGroupDataEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_DataManager_CrazyPaijiuCardGroupDataEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_DataManager_CrazyPaijiuCardGroupScoreDataEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_DataManager_CrazyPaijiuCardGroupScoreDataEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_DataManager_LaotiePaijiuCardGroupDataEntry_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -10949,6 +12723,16 @@ public final class StaticDataProto {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_DataManager_XiaoyaoPaijiuCardGroupScoreDataEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_CrazyPaijiuCardGroupData_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_CrazyPaijiuCardGroupData_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_CrazyPaijiuCardGroupScoreData_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_CrazyPaijiuCardGroupScoreData_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_LaotiePaijiuCardGroupData_descriptor;
   private static final 
@@ -11033,27 +12817,36 @@ public final class StaticDataProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\027static_data_proto.proto\"\213\013\n\013DataManage" +
-      "r\022N\n\031laotiePaijiuCardGroupData\030\001 \003(\0132+.D" +
-      "ataManager.LaotiePaijiuCardGroupDataEntr" +
-      "y\022X\n\036laotiePaijiuCardGroupScoreData\030\002 \003(" +
-      "\01320.DataManager.LaotiePaijiuCardGroupSco" +
-      "reDataEntry\0228\n\016paijiuCardData\030\003 \003(\0132 .Da" +
-      "taManager.PaijiuCardDataEntry\022B\n\023paijiuC" +
-      "ardGroupData\030\004 \003(\0132%.DataManager.PaijiuC" +
-      "ardGroupDataEntry\022L\n\030paijiuCardGroupScor" +
-      "eData\030\005 \003(\0132*.DataManager.PaijiuCardGrou",
-      "pScoreDataEntry\022,\n\010roomData\030\006 \003(\0132\032.Data" +
-      "Manager.RoomDataEntry\022,\n\010testData\030\007 \003(\0132" +
-      "\032.DataManager.TestDataEntry\022P\n\032xiaoyaoPa" +
-      "ijiuCardGroupData\030\010 \003(\0132,.DataManager.Xi" +
-      "aoyaoPaijiuCardGroupDataEntry\022Z\n\037xiaoyao" +
-      "PaijiuCardGroupScoreData\030\t \003(\01321.DataMan" +
-      "ager.XiaoyaoPaijiuCardGroupScoreDataEntr" +
-      "y\032\\\n\036LaotiePaijiuCardGroupDataEntry\022\013\n\003k" +
+      "\n\027static_data_proto.proto\"\363\r\n\013DataManage" +
+      "r\022L\n\030crazyPaijiuCardGroupData\030\001 \003(\0132*.Da" +
+      "taManager.CrazyPaijiuCardGroupDataEntry\022" +
+      "V\n\035crazyPaijiuCardGroupScoreData\030\002 \003(\0132/" +
+      ".DataManager.CrazyPaijiuCardGroupScoreDa" +
+      "taEntry\022N\n\031laotiePaijiuCardGroupData\030\003 \003" +
+      "(\0132+.DataManager.LaotiePaijiuCardGroupDa" +
+      "taEntry\022X\n\036laotiePaijiuCardGroupScoreDat" +
+      "a\030\004 \003(\01320.DataManager.LaotiePaijiuCardGr" +
+      "oupScoreDataEntry\0228\n\016paijiuCardData\030\005 \003(",
+      "\0132 .DataManager.PaijiuCardDataEntry\022B\n\023p" +
+      "aijiuCardGroupData\030\006 \003(\0132%.DataManager.P" +
+      "aijiuCardGroupDataEntry\022L\n\030paijiuCardGro" +
+      "upScoreData\030\007 \003(\0132*.DataManager.PaijiuCa" +
+      "rdGroupScoreDataEntry\022,\n\010roomData\030\010 \003(\0132" +
+      "\032.DataManager.RoomDataEntry\022,\n\010testData\030" +
+      "\t \003(\0132\032.DataManager.TestDataEntry\022P\n\032xia" +
+      "oyaoPaijiuCardGroupData\030\n \003(\0132,.DataMana" +
+      "ger.XiaoyaoPaijiuCardGroupDataEntry\022Z\n\037x" +
+      "iaoyaoPaijiuCardGroupScoreData\030\013 \003(\01321.D",
+      "ataManager.XiaoyaoPaijiuCardGroupScoreDa" +
+      "taEntry\032Z\n\035CrazyPaijiuCardGroupDataEntry" +
+      "\022\013\n\003key\030\001 \001(\t\022(\n\005value\030\002 \001(\0132\031.CrazyPaij" +
+      "iuCardGroupData:\0028\001\032d\n\"CrazyPaijiuCardGr" +
+      "oupScoreDataEntry\022\013\n\003key\030\001 \001(\t\022-\n\005value\030" +
+      "\002 \001(\0132\036.CrazyPaijiuCardGroupScoreData:\0028" +
+      "\001\032\\\n\036LaotiePaijiuCardGroupDataEntry\022\013\n\003k" +
       "ey\030\001 \001(\t\022)\n\005value\030\002 \001(\0132\032.LaotiePaijiuCa" +
-      "rdGroupData:\0028\001\032f\n#LaotiePaijiuCardGroup",
-      "ScoreDataEntry\022\013\n\003key\030\001 \001(\t\022.\n\005value\030\002 \001" +
+      "rdGroupData:\0028\001\032f\n#LaotiePaijiuCardGroup" +
+      "ScoreDataEntry\022\013\n\003key\030\001 \001(\t\022.\n\005value\030\002 \001",
       "(\0132\037.LaotiePaijiuCardGroupScoreData:\0028\001\032" +
       "F\n\023PaijiuCardDataEntry\022\013\n\003key\030\001 \001(\005\022\036\n\005v" +
       "alue\030\002 \001(\0132\017.PaijiuCardData:\0028\001\032P\n\030Paiji" +
@@ -11062,46 +12855,49 @@ public final class StaticDataProto {
       "jiuCardGroupScoreDataEntry\022\013\n\003key\030\001 \001(\t\022" +
       "(\n\005value\030\002 \001(\0132\031.PaijiuCardGroupScoreDat" +
       "a:\0028\001\032:\n\rRoomDataEntry\022\013\n\003key\030\001 \001(\t\022\030\n\005v" +
-      "alue\030\002 \001(\0132\t.RoomData:\0028\001\032:\n\rTestDataEnt",
-      "ry\022\013\n\003key\030\001 \001(\005\022\030\n\005value\030\002 \001(\0132\t.TestDat" +
+      "alue\030\002 \001(\0132\t.RoomData:\0028\001\032:\n\rTestDataEnt" +
+      "ry\022\013\n\003key\030\001 \001(\005\022\030\n\005value\030\002 \001(\0132\t.TestDat",
       "a:\0028\001\032^\n\037XiaoyaoPaijiuCardGroupDataEntry" +
       "\022\013\n\003key\030\001 \001(\t\022*\n\005value\030\002 \001(\0132\033.XiaoyaoPa" +
       "ijiuCardGroupData:\0028\001\032h\n$XiaoyaoPaijiuCa" +
       "rdGroupScoreDataEntry\022\013\n\003key\030\001 \001(\t\022/\n\005va" +
       "lue\030\002 \001(\0132 .XiaoyaoPaijiuCardGroupScoreD" +
-      "ata:\0028\001\"5\n\031LaotiePaijiuCardGroupData\022\n\n\002" +
-      "id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\";\n\036LaotiePaijiuCa" +
-      "rdGroupScoreData\022\n\n\002id\030\001 \001(\t\022\r\n\005score\030\002 " +
-      "\001(\005\"*\n\016PaijiuCardData\022\n\n\002id\030\001 \001(\005\022\014\n\004car",
-      "d\030\002 \001(\005\"/\n\023PaijiuCardGroupData\022\n\n\002id\030\001 \001" +
-      "(\t\022\014\n\004name\030\002 \001(\t\"5\n\030PaijiuCardGroupScore" +
-      "Data\022\n\n\002id\030\001 \001(\t\022\r\n\005score\030\002 \001(\005\"\371\003\n\010Room" +
-      "Data\022\n\n\002id\030\001 \001(\t\022#\n\005money\030\002 \003(\0132\024.RoomDa" +
-      "ta.MoneyEntry\022\016\n\006maxBet\030\003 \001(\001\022+\n\teachMon" +
-      "ey\030\004 \003(\0132\030.RoomData.EachMoneyEntry\022\021\n\tis" +
-      "AddGold\030\005 \001(\005\022\026\n\016isWinner2Dizhu\030\006 \001(\005\022\026\n" +
-      "\016paijiuDataName\030\007 \001(\t\022+\n\tenterGold\030\010 \003(\013" +
-      "2\030.RoomData.EnterGoldEntry\022\'\n\007outGold\030\t " +
-      "\003(\0132\026.RoomData.OutGoldEntry\022\016\n\006rebate\030\n ",
-      "\001(\005\022\024\n\014instanceName\030\013 \001(\t\032,\n\nMoneyEntry\022" +
-      "\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\005:\0028\001\0320\n\016EachM" +
-      "oneyEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\005:\0028" +
-      "\001\0320\n\016EnterGoldEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005valu" +
-      "e\030\002 \001(\005:\0028\001\032.\n\014OutGoldEntry\022\013\n\003key\030\001 \001(\005" +
-      "\022\r\n\005value\030\002 \001(\005:\0028\001\"\275\002\n\010TestData\022\n\n\002id\030\001" +
-      " \001(\005\022\014\n\004name\030\002 \001(\t\022\013\n\003age\030\003 \001(\005\022\013\n\003exp\030\004" +
-      " \003(\005\022%\n\006weapon\030\005 \003(\0132\025.TestData.WeaponEn" +
-      "try\022\020\n\010testLong\030\006 \001(\003\022\022\n\ntestDouble\030\007 \001(" +
-      "\001\022\026\n\016testListDouble\030\010 \003(\001\0223\n\rtestMapDoub",
-      "le\030\t \003(\0132\034.TestData.TestMapDoubleEntry\032-" +
-      "\n\013WeaponEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(" +
-      "\t:\0028\001\0324\n\022TestMapDoubleEntry\022\013\n\003key\030\001 \001(\003" +
-      "\022\r\n\005value\030\002 \001(\001:\0028\001\"6\n\032XiaoyaoPaijiuCard" +
-      "GroupData\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\"<\n\037X" +
-      "iaoyaoPaijiuCardGroupScoreData\022\n\n\002id\030\001 \001" +
-      "(\t\022\r\n\005score\030\002 \001(\005B?\n\035com.code.server.con" +
-      "stant.dataB\017StaticDataProto\252\002\014com.bsl.da" +
-      "tab\006proto3"
+      "ata:\0028\001\"4\n\030CrazyPaijiuCardGroupData\022\n\n\002i" +
+      "d\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\":\n\035CrazyPaijiuCard" +
+      "GroupScoreData\022\n\n\002id\030\001 \001(\t\022\r\n\005score\030\002 \001(" +
+      "\005\"5\n\031LaotiePaijiuCardGroupData\022\n\n\002id\030\001 \001" +
+      "(\t\022\014\n\004name\030\002 \001(\t\";\n\036LaotiePaijiuCardGrou",
+      "pScoreData\022\n\n\002id\030\001 \001(\t\022\r\n\005score\030\002 \001(\005\"*\n" +
+      "\016PaijiuCardData\022\n\n\002id\030\001 \001(\005\022\014\n\004card\030\002 \001(" +
+      "\005\"/\n\023PaijiuCardGroupData\022\n\n\002id\030\001 \001(\t\022\014\n\004" +
+      "name\030\002 \001(\t\"5\n\030PaijiuCardGroupScoreData\022\n" +
+      "\n\002id\030\001 \001(\t\022\r\n\005score\030\002 \001(\005\"\371\003\n\010RoomData\022\n" +
+      "\n\002id\030\001 \001(\t\022#\n\005money\030\002 \003(\0132\024.RoomData.Mon" +
+      "eyEntry\022\016\n\006maxBet\030\003 \001(\001\022+\n\teachMoney\030\004 \003" +
+      "(\0132\030.RoomData.EachMoneyEntry\022\021\n\tisAddGol" +
+      "d\030\005 \001(\005\022\026\n\016isWinner2Dizhu\030\006 \001(\005\022\026\n\016paiji" +
+      "uDataName\030\007 \001(\t\022+\n\tenterGold\030\010 \003(\0132\030.Roo",
+      "mData.EnterGoldEntry\022\'\n\007outGold\030\t \003(\0132\026." +
+      "RoomData.OutGoldEntry\022\016\n\006rebate\030\n \001(\005\022\024\n" +
+      "\014instanceName\030\013 \001(\t\032,\n\nMoneyEntry\022\013\n\003key" +
+      "\030\001 \001(\005\022\r\n\005value\030\002 \001(\005:\0028\001\0320\n\016EachMoneyEn" +
+      "try\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\005:\0028\001\0320\n\016E" +
+      "nterGoldEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(" +
+      "\005:\0028\001\032.\n\014OutGoldEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005va" +
+      "lue\030\002 \001(\005:\0028\001\"\275\002\n\010TestData\022\n\n\002id\030\001 \001(\005\022\014" +
+      "\n\004name\030\002 \001(\t\022\013\n\003age\030\003 \001(\005\022\013\n\003exp\030\004 \003(\005\022%" +
+      "\n\006weapon\030\005 \003(\0132\025.TestData.WeaponEntry\022\020\n",
+      "\010testLong\030\006 \001(\003\022\022\n\ntestDouble\030\007 \001(\001\022\026\n\016t" +
+      "estListDouble\030\010 \003(\001\0223\n\rtestMapDouble\030\t \003" +
+      "(\0132\034.TestData.TestMapDoubleEntry\032-\n\013Weap" +
+      "onEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\t:\0028\001\032" +
+      "4\n\022TestMapDoubleEntry\022\013\n\003key\030\001 \001(\003\022\r\n\005va" +
+      "lue\030\002 \001(\001:\0028\001\"6\n\032XiaoyaoPaijiuCardGroupD" +
+      "ata\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\"<\n\037Xiaoyao" +
+      "PaijiuCardGroupScoreData\022\n\n\002id\030\001 \001(\t\022\r\n\005" +
+      "score\030\002 \001(\005B?\n\035com.code.server.constant." +
+      "dataB\017StaticDataProto\252\002\014com.bsl.datab\006pr",
+      "oto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -11120,93 +12916,117 @@ public final class StaticDataProto {
     internal_static_DataManager_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DataManager_descriptor,
-        new java.lang.String[] { "LaotiePaijiuCardGroupData", "LaotiePaijiuCardGroupScoreData", "PaijiuCardData", "PaijiuCardGroupData", "PaijiuCardGroupScoreData", "RoomData", "TestData", "XiaoyaoPaijiuCardGroupData", "XiaoyaoPaijiuCardGroupScoreData", });
-    internal_static_DataManager_LaotiePaijiuCardGroupDataEntry_descriptor =
+        new java.lang.String[] { "CrazyPaijiuCardGroupData", "CrazyPaijiuCardGroupScoreData", "LaotiePaijiuCardGroupData", "LaotiePaijiuCardGroupScoreData", "PaijiuCardData", "PaijiuCardGroupData", "PaijiuCardGroupScoreData", "RoomData", "TestData", "XiaoyaoPaijiuCardGroupData", "XiaoyaoPaijiuCardGroupScoreData", });
+    internal_static_DataManager_CrazyPaijiuCardGroupDataEntry_descriptor =
       internal_static_DataManager_descriptor.getNestedTypes().get(0);
+    internal_static_DataManager_CrazyPaijiuCardGroupDataEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_DataManager_CrazyPaijiuCardGroupDataEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_DataManager_CrazyPaijiuCardGroupScoreDataEntry_descriptor =
+      internal_static_DataManager_descriptor.getNestedTypes().get(1);
+    internal_static_DataManager_CrazyPaijiuCardGroupScoreDataEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_DataManager_CrazyPaijiuCardGroupScoreDataEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_DataManager_LaotiePaijiuCardGroupDataEntry_descriptor =
+      internal_static_DataManager_descriptor.getNestedTypes().get(2);
     internal_static_DataManager_LaotiePaijiuCardGroupDataEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DataManager_LaotiePaijiuCardGroupDataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_DataManager_LaotiePaijiuCardGroupScoreDataEntry_descriptor =
-      internal_static_DataManager_descriptor.getNestedTypes().get(1);
+      internal_static_DataManager_descriptor.getNestedTypes().get(3);
     internal_static_DataManager_LaotiePaijiuCardGroupScoreDataEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DataManager_LaotiePaijiuCardGroupScoreDataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_DataManager_PaijiuCardDataEntry_descriptor =
-      internal_static_DataManager_descriptor.getNestedTypes().get(2);
+      internal_static_DataManager_descriptor.getNestedTypes().get(4);
     internal_static_DataManager_PaijiuCardDataEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DataManager_PaijiuCardDataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_DataManager_PaijiuCardGroupDataEntry_descriptor =
-      internal_static_DataManager_descriptor.getNestedTypes().get(3);
+      internal_static_DataManager_descriptor.getNestedTypes().get(5);
     internal_static_DataManager_PaijiuCardGroupDataEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DataManager_PaijiuCardGroupDataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_DataManager_PaijiuCardGroupScoreDataEntry_descriptor =
-      internal_static_DataManager_descriptor.getNestedTypes().get(4);
+      internal_static_DataManager_descriptor.getNestedTypes().get(6);
     internal_static_DataManager_PaijiuCardGroupScoreDataEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DataManager_PaijiuCardGroupScoreDataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_DataManager_RoomDataEntry_descriptor =
-      internal_static_DataManager_descriptor.getNestedTypes().get(5);
+      internal_static_DataManager_descriptor.getNestedTypes().get(7);
     internal_static_DataManager_RoomDataEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DataManager_RoomDataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_DataManager_TestDataEntry_descriptor =
-      internal_static_DataManager_descriptor.getNestedTypes().get(6);
+      internal_static_DataManager_descriptor.getNestedTypes().get(8);
     internal_static_DataManager_TestDataEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DataManager_TestDataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_DataManager_XiaoyaoPaijiuCardGroupDataEntry_descriptor =
-      internal_static_DataManager_descriptor.getNestedTypes().get(7);
+      internal_static_DataManager_descriptor.getNestedTypes().get(9);
     internal_static_DataManager_XiaoyaoPaijiuCardGroupDataEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DataManager_XiaoyaoPaijiuCardGroupDataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_DataManager_XiaoyaoPaijiuCardGroupScoreDataEntry_descriptor =
-      internal_static_DataManager_descriptor.getNestedTypes().get(8);
+      internal_static_DataManager_descriptor.getNestedTypes().get(10);
     internal_static_DataManager_XiaoyaoPaijiuCardGroupScoreDataEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DataManager_XiaoyaoPaijiuCardGroupScoreDataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
-    internal_static_LaotiePaijiuCardGroupData_descriptor =
+    internal_static_CrazyPaijiuCardGroupData_descriptor =
       getDescriptor().getMessageTypes().get(1);
+    internal_static_CrazyPaijiuCardGroupData_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_CrazyPaijiuCardGroupData_descriptor,
+        new java.lang.String[] { "Id", "Name", });
+    internal_static_CrazyPaijiuCardGroupScoreData_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_CrazyPaijiuCardGroupScoreData_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_CrazyPaijiuCardGroupScoreData_descriptor,
+        new java.lang.String[] { "Id", "Score", });
+    internal_static_LaotiePaijiuCardGroupData_descriptor =
+      getDescriptor().getMessageTypes().get(3);
     internal_static_LaotiePaijiuCardGroupData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_LaotiePaijiuCardGroupData_descriptor,
         new java.lang.String[] { "Id", "Name", });
     internal_static_LaotiePaijiuCardGroupScoreData_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_LaotiePaijiuCardGroupScoreData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_LaotiePaijiuCardGroupScoreData_descriptor,
         new java.lang.String[] { "Id", "Score", });
     internal_static_PaijiuCardData_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_PaijiuCardData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_PaijiuCardData_descriptor,
         new java.lang.String[] { "Id", "Card", });
     internal_static_PaijiuCardGroupData_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_PaijiuCardGroupData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_PaijiuCardGroupData_descriptor,
         new java.lang.String[] { "Id", "Name", });
     internal_static_PaijiuCardGroupScoreData_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_PaijiuCardGroupScoreData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_PaijiuCardGroupScoreData_descriptor,
         new java.lang.String[] { "Id", "Score", });
     internal_static_RoomData_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_RoomData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_RoomData_descriptor,
@@ -11236,7 +13056,7 @@ public final class StaticDataProto {
         internal_static_RoomData_OutGoldEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_TestData_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_TestData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_TestData_descriptor,
@@ -11254,13 +13074,13 @@ public final class StaticDataProto {
         internal_static_TestData_TestMapDoubleEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_XiaoyaoPaijiuCardGroupData_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_XiaoyaoPaijiuCardGroupData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_XiaoyaoPaijiuCardGroupData_descriptor,
         new java.lang.String[] { "Id", "Name", });
     internal_static_XiaoyaoPaijiuCardGroupScoreData_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_XiaoyaoPaijiuCardGroupScoreData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_XiaoyaoPaijiuCardGroupScoreData_descriptor,

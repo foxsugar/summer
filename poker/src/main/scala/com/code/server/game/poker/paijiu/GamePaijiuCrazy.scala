@@ -102,7 +102,7 @@ class GamePaijiuCrazy extends GamePaijiu{
 
   override protected def getGroupScoreByName(name: String): Int = {
 
-    DataManager.data.getPaijiuCardGroupScoreDataMap.get(name)
+    DataManager.data.getCrazyPaijiuCardGroupScoreDataMap.get(name)
 
 
     val d: StaticDataProto.DataManager = DataManager.data
@@ -126,7 +126,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     */
   override def getGroupScore(group: String): Int = {
 
-    val data = DataManager.data.getPaijiuCardGroupDataMap.get(group)
+    val data = DataManager.data.getCrazyPaijiuCardGroupDataMap.get(group)
     //没有这个牌型或者不含这个牌型
     if(data == null || getNoGroupName().contains(data.getName)) {
       //两张牌的点数相加
@@ -183,7 +183,7 @@ class GamePaijiuCrazy extends GamePaijiu{
       set = set.+("ghost")
     }
     if(!Room.isHasMode(MODE_ZHADAN,roomPaijiu.getOtherMode)) {
-      set = set.+("zhadan")
+      set = set.+("boom")
     }
 
     if(!Room.isHasMode(MODE_TIANJIU,roomPaijiu.getOtherMode)) {
@@ -191,7 +191,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     }
 
     if(!Room.isHasMode(MODE_DIJIU,roomPaijiu.getOtherMode)) {
-      set = set.+("fieldnine")
+      set = set.+("fieldninenn")
     }
     set
   }
