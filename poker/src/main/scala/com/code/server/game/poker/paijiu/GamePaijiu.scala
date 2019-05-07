@@ -365,6 +365,7 @@ class GamePaijiu extends Game with PaijiuConstant {
     this.playerCardInfos.values.foreach(playerInfo => gameResult.getPlayerCardInfos.add(playerInfo.toVo))
     gameResult.setBankerScore(this.roomPaijiu.bankerScore)
     MsgSender.sendMsg2Player("gamePaijiuService", "gameResult", gameResult, roomPaijiu.users)
+    this.roomPaijiu.pushScoreChange()
   }
 
 

@@ -79,6 +79,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     gameResult.setSfp(this.roomPaijiu.winnerIndex.last)
 
     MsgSender.sendMsg2Player("gamePaijiuService", "gameResult", gameResult, roomPaijiu.users)
+    this.roomPaijiu.pushScoreChange()
   }
 
 
