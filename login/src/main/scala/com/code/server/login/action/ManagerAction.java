@@ -220,6 +220,16 @@ public class ManagerAction extends Cors {
         }
         return 0;
     }
+    @RequestMapping("/setVip")
+    public Object setVip(long userId, int vip){
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+            userBean.setVip(vip);
+            RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+            userService.save(GameUserService.userBean2User(userBean));
+        }
+        return 0;
+    }
 
     @RequestMapping("/getClubCreditInfo")
     public Object getClubCreditInfo(String clubId) {

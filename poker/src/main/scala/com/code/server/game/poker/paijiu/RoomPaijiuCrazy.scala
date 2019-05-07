@@ -95,7 +95,9 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
     //删除玩家房间映射关系
     roomRemoveUser(userId)
-    game.users.remove(userId)
+    if(game!= null) {
+      game.users.remove(userId)
+    }
 //    //        GameManager.getInstance().getUserRoom().remove(userId);
 //    if (this.createUser == userId) { //房主解散
 //      val n = new Notice
