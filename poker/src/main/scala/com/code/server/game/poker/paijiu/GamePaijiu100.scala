@@ -160,11 +160,11 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     MsgSender.sendMsg2Player("gamePaijiuService", "bet", 0, userId)
 
     //除去庄家全都下完注
-    val count = playerCardInfos.count { case (uid, playerInfo) => uid != bankerId && playerInfo.bet != null }
-    val isAllBet = count == users.size() - 1
-    if (isAllBet) {
-      crapStart()
-    }
+//    val count = playerCardInfos.count { case (uid, playerInfo) => uid != bankerId && playerInfo.bet != null }
+//    val isAllBet = count == users.size() - 1
+//    if (isAllBet) {
+//      crapStart()
+//    }
     0
   }
 
@@ -184,9 +184,14 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     */
   override protected def isAllPlayerOpen(): Boolean = {
     for(playerInfo <- this.playerCardInfos.values) {
-
-      if(playerInfo.bet!= null && playerInfo.group1 == null){
-        return false
+      if(playerInfo.userId == this.bankerId){
+        if(playerInfo.group1 == null){
+          return false
+        }
+      }else{
+        if(playerInfo.bet!= null && playerInfo.group1 == null){
+          return false
+        }
       }
     }
     true
@@ -317,8 +322,11 @@ class GamePaijiu100 extends GamePaijiuCrazy {
         var result: Int = 0
         if (bankerScore1 >= otherScore1) result += 1
         if (bankerScore1 < otherScore1) result -= 1
-        if (bankerScore2 >= otherScore2) result += 1
-        if (bankerScore2 < otherScore2) result -= 1
+        if(!Room.isHasMode(MODE_2CARD,this.roomPaijiu.otherMode)){
+
+          if (bankerScore2 >= otherScore2) result += 1
+          if (bankerScore2 < otherScore2) result -= 1
+        }
 
         doLogRecord(gamepaijiuResult,index,-result)
       }

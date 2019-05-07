@@ -530,8 +530,11 @@ class GamePaijiuCrazy extends GamePaijiu{
         var result: Int = 0
         if (bankerScore1 >= otherScore1) result += 1
         if (bankerScore1 < otherScore1) result -= 1
-        if (bankerScore2 >= otherScore2) result += 1
-        if (bankerScore2 < otherScore2) result -= 1
+        //四张的牌九
+        if(!Room.isHasMode(MODE_2CARD,this.roomPaijiu.otherMode)){
+          if (bankerScore2 >= otherScore2) result += 1
+          if (bankerScore2 < otherScore2) result -= 1
+        }
         resultSet = resultSet.+(result)
         //庄家赢
         if (result > 0) {
