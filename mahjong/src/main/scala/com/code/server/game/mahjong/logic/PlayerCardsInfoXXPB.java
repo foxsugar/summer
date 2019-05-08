@@ -7,6 +7,7 @@ import com.code.server.game.mahjong.util.HuType;
 import com.code.server.game.mahjong.util.HuUtil;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 *    
@@ -26,17 +27,48 @@ public class PlayerCardsInfoXXPB extends PlayerCardsInfoMj {
 	@Override
 	public void init(List<String> cards) {
 		super.init(cards);
-		specialHuScore.put(hu_清一色,4);
+		specialHuScore.put(hu_清一色,2);
 		specialHuScore.put(hu_一条龙,2);
 		specialHuScore.put(hu_七小对,2);
-		specialHuScore.put(hu_十三幺,6);
+//		specialHuScore.put(hu_十三幺,6);
 		specialHuScore.put(hu_杠上开花,2);
-		specialHuScore.put(hu_混一色,2);
-		specialHuScore.put(hu_字一色,6);
-		specialHuScore.put(hu_三碰,2);
+//		specialHuScore.put(hu_混一色,2);
+//		specialHuScore.put(hu_字一色,6);
+//		specialHuScore.put(hu_三碰,2);
 		specialHuScore.put(hu_豪华七小对,4);
 	}
 
+
+	/**
+	 * 杠手里的牌
+	 *
+	 * @param diangangUser
+	 * @param card
+	 * @return
+	 */
+
+	public boolean gang_hand(RoomInfo room, GameInfo info, long diangangUser, String card) {
+		boolean isMing = false;
+		int cardType = CardTypeUtil.cardType.get(card);
+		Map<Integer, Integer> cardNum = getCardNum(cards);
+		long diangang = -1;
+		if (cardNum.containsKey(cardType) && cardNum.get(cardType) == 4) {
+			if (pengType.containsKey(cardType)) {//碰的类型包含这个 是明杠
+				diangang = pengType.get(cardType);
+				pengType.remove(cardType);//从碰中移除
+				mingGangType.put(cardType, diangang);
+				pengList.remove(Integer.valueOf(cardType));
+				isMing = true;
+
+			} else {
+				anGangType.add(cardType);
+				isMing = false;
+
+			}
+		}
+//        gangCompute(room, info, isMing, diangang,card);
+		return isMing;
+	}
 
 	//杠牌分数计算(不用提前计算)
 	@Override
@@ -99,6 +131,8 @@ public class PlayerCardsInfoXXPB extends PlayerCardsInfoMj {
 		for (HuCardType huCardType : huList) {
 			//是否是三碰
 			boolean isSanPeng = (huCardType.anGang.size()+huCardType.mingGang.size()+huCardType.peng.size()+huCardType.ke.size())>=3;
+			//去掉三碰
+			isSanPeng = false;
 			if (isSanPeng) this.winType.add(HuType.hu_三碰);
 
 			System.out.println("胡牌拥有的类型: " + huCardType.specialHuList);
