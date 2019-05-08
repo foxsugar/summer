@@ -179,11 +179,11 @@ public class LoginAction {
 
         for (User user : list) {
             UserBean userBean = RedisManager.getUserRedisService().getUserBean(user.getId());
-            if (userBean == null) {
+//            if (userBean == null) {
                 String token = getToken(user.getId());
                 saveUser2Redis(user, token);
                 RedisManager.getUserRedisService().addRobotPool(user.getId());
-            }
+//            }
         }
     }
 
