@@ -741,6 +741,7 @@ public class GameUserService {
         charge.setOrderId("" + IdWorker.getDefaultInstance().nextId());
         charge.setStatus(0);
         charge.setCreatetime(new Date());
+        charge.setMoney(num);
         charge.setUsername(name);
         charge.setSp_ip(phone);
         charge.setShare_content(card);
