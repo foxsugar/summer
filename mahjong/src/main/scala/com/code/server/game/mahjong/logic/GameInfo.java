@@ -1178,11 +1178,11 @@ public class GameInfo extends Game {
 
     protected void setReaminCardInfo(ResultResp result,long beginUser){
         List<String> cards = new ArrayList<>(this.remainCards);
-        int last = cards.size() - getNeedRemainCardNum();
-        if (last < 0) {
-            last = 0;
-        }
-        cards = cards.subList(0, last);
+//        int last = cards.size() - getNeedRemainCardNum();
+//        if (last < 0) {
+//            last = 0;
+//        }
+//        cards = cards.subList(0, last);
         result.getRemainCards().addAll(cards);
         result.setBeginUser(beginUser);
     }
