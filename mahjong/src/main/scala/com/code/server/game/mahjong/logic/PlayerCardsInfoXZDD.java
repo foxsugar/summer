@@ -257,6 +257,18 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
 
 
     private int getLimitFan(){
+        if (this.roomInfo.isHasMode(GameInfoXZDD.MODE_FAN_3)) {
+            return 3;
+        }
+        if (this.roomInfo.isHasMode(GameInfoXZDD.MODE_FAN_4)) {
+            return 4;
+        }
+        if (this.roomInfo.isHasMode(GameInfoXZDD.MODE_FAN_5)) {
+            return 5;
+        }
+        if (this.roomInfo.isHasMode(GameInfoXZDD.MODE_FAN_6)) {
+            return 6;
+        }
         return 6;
     }
 

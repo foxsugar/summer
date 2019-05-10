@@ -27,6 +27,10 @@ public class GameInfoXZDD extends GameInfoNew {
     public static final int MODE_NO_WAN = 6;
     public static final int MODE_ZIMO_JIADI = 7;
     public static final int MODE_ZIMO_JIAFAN = 8;
+    public static final int MODE_FAN_3 = 9;
+    public static final int MODE_FAN_4 = 10;
+    public static final int MODE_FAN_5 = 11;
+    public static final int MODE_FAN_6 = 12;
     /**
      * 发牌
      */
