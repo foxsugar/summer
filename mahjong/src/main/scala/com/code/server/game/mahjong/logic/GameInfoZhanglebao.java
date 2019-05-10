@@ -42,7 +42,9 @@ public class GameInfoZhanglebao extends GameInfoHeleKD {
         for (PlayerCardsInfoMj playerCardsInfoMj : this.playerCardsInfos.values()) {
             gangCount += playerCardsInfoMj.getGangNum();
         }
-        return 16 + gangCount;
+        int add =  (gangCount % 2 == 0) ? 0:1;
+
+        return 16 + add;
     }
 
     /**

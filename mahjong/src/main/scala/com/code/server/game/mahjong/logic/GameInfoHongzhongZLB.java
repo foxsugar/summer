@@ -7,14 +7,16 @@ public class GameInfoHongzhongZLB extends GameInfoHongZhong {
 
 
     public int getNeedRemainCardNum(){
-        if (!this.room.isHasMode(PlayerCardsInfoHongZhong.LIUPAI)) {
+        if (!this.room.isHasMode(GameInfoZhuohaozi.mode_留牌)) {
             return 0;
         }
         int gangCount = 0;
         for (PlayerCardsInfoMj playerCardsInfoMj : this.playerCardsInfos.values()) {
             gangCount += playerCardsInfoMj.getGangNum();
         }
-        return 16 + gangCount;
+        int add =  (gangCount % 2 == 0) ? 0:1;
+
+        return 16 + add;
     }
 
     /**
