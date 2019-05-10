@@ -31,6 +31,7 @@ public class GameInfoXZDD extends GameInfoNew {
     public static final int MODE_FAN_4 = 10;
     public static final int MODE_FAN_5 = 11;
     public static final int MODE_FAN_6 = 12;
+    public static final int MODE_DINGQUE = 13;
     /**
      * 发牌
      */
