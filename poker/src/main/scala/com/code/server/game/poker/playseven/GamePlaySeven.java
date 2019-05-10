@@ -673,10 +673,10 @@ public class GamePlaySeven extends Game {
             this.step = STEP_FANZHU;
         } else {
             if (playerCardInfos.get(userId).handCards.contains(liangCard) && playerCardInfos.get(userId).handCards.contains(-liangCard)) {
-                if ("4".equals(playerCardInfos.get(userId).getRenShu())) {
+//                if ("4".equals(playerCardInfos.get(userId).getRenShu())) {
                     playerCardInfos.get(userId).setRenShu("1");
                     MsgSender.sendMsg2Player(new ResponseVo("gameService", "canRenShu", 0), userId);
-                }
+//                }
             }
             Map<String, Object> msgs = new HashMap<>();
             msgs.put("zhuId", zhuId);
@@ -1221,7 +1221,7 @@ public class GamePlaySeven extends Game {
                 temp = -(allScore - 40) / 40;
             }
         }
-        if (shuangLiangDouble || fanzhu) {
+        if (shuangLiangDouble || fanzhu || shouQiDouble) {
             if (room.zhuangDanDaJiaBei && winnerId == room.getBankerId()) {
                 temp *= 2;
             }
