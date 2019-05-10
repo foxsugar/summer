@@ -240,12 +240,13 @@ class GamePaijiuCrazy extends GamePaijiu{
     genRecord()
     //切庄开始
 
+    this.lastOperateTime = System.currentTimeMillis
 
-    updateLastOperateTime()
     if(isAutoBreakBanker()) {
       bankerBreak(this.bankerId, true)
     }else{
       if(this.roomPaijiu.curGameNumber==1) {
+//        updateLastOperateTime()
         this.roomPaijiu.clearReadyStatus(true)
 //        this.roomPaijiu.startGame()
       }else{

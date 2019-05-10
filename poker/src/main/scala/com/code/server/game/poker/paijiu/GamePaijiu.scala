@@ -665,12 +665,16 @@ class GamePaijiu extends Game with PaijiuConstant {
     if (userId != bankerId) return ErrorCode.NOT_BANKER
     if (roomPaijiu.getCurGameNumber < 3) return ErrorCode.BANKER_BREAK_GAMENUM_ERROR
 
+
+    MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreakResp", Map("userId"->userId, "flag"->flag).asJava, this.roomPaijiu.getUsers)
+
     if (flag) {
       //结束
       sendFinalResult()
     } else {
       betStart()
     }
+
     MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreak", 0, userId)
     0
   }

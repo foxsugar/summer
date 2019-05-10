@@ -92,7 +92,8 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     //不记记录日志
 //    genRecord()
     //切庄开始
-    updateLastOperateTime()
+//    updateLastOperateTime()
+    this.lastOperateTime = System.currentTimeMillis
     if(isAutoBreakBanker()) {
       bankerBreak(this.bankerId, flag = true)
     }else{
