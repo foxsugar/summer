@@ -269,6 +269,8 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     */
   override def bankerBreak(userId: lang.Long, flag: Boolean): Int = {
     if (userId != bankerId) return ErrorCode.NOT_BANKER
+    MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreakResp", Map("userId"->userId, "flag"->flag).asJava, this.roomPaijiu.getUsers)
+
     if (flag) {
       //换庄家
       //把钱加到庄身上
