@@ -21,7 +21,7 @@ trait PaijiuConstant {
     STATE_BET->1000 * 20,
     START_CRAP->1000 * 10,
     STATE_OPEN->1000 * 15,
-    STATE_BANKER_BREAK->1000 * 10,
+    STATE_BANKER_BREAK->1000 * 15,
 
   )
 
