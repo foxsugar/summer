@@ -231,7 +231,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
   def doAutoDealCard(room: RoomPaijiu, game: GamePaijiu, time: Long): Unit = {
     if (!game.isInstanceOf[GamePaijiu100]) return
     if (game.state != STATE_BET && game.state != START_CRAP) return
-    if (time - game.lastOperateTime < STATE_TIME(START_CRAP)) return
+    if (time - game.lastOperateTime < STATE_TIME(STATE_BET)) return
     println("托管: 自动发牌")
     //强制下注状态结束
 
