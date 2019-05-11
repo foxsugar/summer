@@ -413,6 +413,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     * @return
     */
   override def bet(userId: lang.Long, one: Int, two: Int, three: Int, index: Int): Int = {
+    if(this.state != STATE_BET) return ErrorCode.BET_PARAM_ERROR
     val playerInfo_option = playerCardInfos.get(userId)
     //玩家不存在
     if (playerInfo_option.isEmpty) return ErrorCode.NO_USER
