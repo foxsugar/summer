@@ -254,7 +254,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
 
     //10秒自动开牌
     if (time - game.lastOperateTime <= STATE_TIME(STATE_OPEN)) return
-    println("托管: 自动开牌")
+//    println("托管: 自动开牌")
 
     for (playerInfo <- game.playerCardInfos.values) {
 
