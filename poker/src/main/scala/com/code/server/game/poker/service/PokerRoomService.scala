@@ -433,6 +433,13 @@ object PokerRoomService {
         var roomPaijiu = RoomManager.getRoom(roomId)
         val roomCrazy = roomPaijiu.asInstanceOf[RoomPaijiuCrazy]
         roomCrazy.getPaijiuBankerList(userId)
+
+      case "paijiuSetPass"=>
+        val flag = params.path("flag").asBoolean(false)
+        val roomId = params.get("roomId").asText()
+        var room = RoomManager.getRoom(roomId)
+        val roomPaijiu = room.asInstanceOf[RoomPaijiuCrazy]
+        roomPaijiu.paijiuSetPass(userId,flag)
       case _ =>
         return -1
     }

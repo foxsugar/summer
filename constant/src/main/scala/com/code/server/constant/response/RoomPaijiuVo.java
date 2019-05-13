@@ -22,6 +22,11 @@ public class RoomPaijiuVo extends RoomVo {
     public Map bankerScoreMap = new HashMap();
     public long paijiuRemainTime;
 
+    public boolean alreadySet ;
+    public boolean usePass;
+    public int pass;
+
+
 
 
     public int getBankerScore() {
@@ -82,5 +87,32 @@ public class RoomPaijiuVo extends RoomVo {
 
     public void setPaijiuRemainTime(long paijiuRemainTime) {
         this.paijiuRemainTime = paijiuRemainTime;
+    }
+
+    public boolean isAlreadySet() {
+        return alreadySet;
+    }
+
+    public RoomPaijiuVo setAlreadySet(boolean alreadySet) {
+        this.alreadySet = alreadySet;
+        return this;
+    }
+
+    public boolean isUsePass() {
+        return usePass;
+    }
+
+    public RoomPaijiuVo setUsePass(boolean usePass) {
+        this.usePass = usePass;
+        return this;
+    }
+
+    public int getPass() {
+        return pass;
+    }
+
+    public RoomPaijiuVo setPass(int pass) {
+        this.pass = pass;
+        return this;
     }
 }

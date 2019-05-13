@@ -59,6 +59,11 @@ class RoomPaijiu extends PokerGoldRoom with PaijiuConstant {
 
   var rebateData:java.util.Map[_,_] = _
 
+  var alreadySet :Boolean = false
+
+  var usePass:Boolean = false
+
+  var pass:Int = 0
 
 
 
@@ -183,6 +188,9 @@ class RoomPaijiu extends PokerGoldRoom with PaijiuConstant {
     roomVo.setBankerList(this.bankerList.asJava)
     roomVo.setBankerScoreMap(this.bankerScoreMap.asJava)
     roomVo.setPaijiuRemainTime(this.getRemainTime())
+    roomVo.setAlreadySet(this.alreadySet)
+    roomVo.setUsePass(this.usePass)
+    roomVo.setPass(this.pass)
     roomVo
 
   }

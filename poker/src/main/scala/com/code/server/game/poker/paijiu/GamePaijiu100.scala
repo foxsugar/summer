@@ -165,12 +165,20 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     //除去庄家全都下完注
 //    val count = playerCardInfos.count { case (uid, playerInfo) => uid != bankerId && playerInfo.bet != null }
 //    val isAllBet = count == users.size() - 1
-//    if (isAllBet) {
-//      crapStart()
-//    }
+    if (isBetFull()) {
+      crapStart()
+    }
     0
   }
 
+
+  def isBetFull():Boolean={
+    var betCount = 0
+    this.playerCardInfos.values.foreach(player=>{
+      betCount += player.getBetNum()
+    })
+    betCount>=this.roomPaijiu.bankerScore
+  }
 
 
   override def isAutoBreakBanker():Boolean ={

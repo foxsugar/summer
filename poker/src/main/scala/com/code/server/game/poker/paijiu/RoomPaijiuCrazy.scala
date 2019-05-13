@@ -1,6 +1,7 @@
 package com.code.server.game.poker.paijiu
 
 import java.util
+import java.util.Random
 
 import com.code.server.constant.game.{IGameConstant, RoomStatistics}
 import com.code.server.constant.response.{ErrorCode, IfaceRoomVo, ResponseVo}
@@ -211,6 +212,24 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     0
   }
 
+  /**
+    * 设置是否用密码
+    * @param userId
+    * @param flag
+    * @return
+    */
+  def paijiuSetPass(userId:Long, flag:Boolean):Int = {
+    if(this.alreadySet) return ErrorCode.CANNOT_ALREADY_SET
+    this.alreadySet = true
+    this.usePass = flag
+    if(flag){
+      this.pass = new Random().nextInt(9999)
+    }
+
+    val result = Map("flag"->flag, "pass"->this.pass)
+    MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "paijiuSetPass", result.asJava), userId)
+    0
+  }
   /**
     * 更新banker
     */
