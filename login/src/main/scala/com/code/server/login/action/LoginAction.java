@@ -16,6 +16,7 @@ import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.LoginService;
 import com.code.server.login.service.ServerManager;
 import com.code.server.login.util.MD5Util;
+import com.code.server.login.util.ZXingUtil;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.IdWorker;
@@ -86,6 +87,10 @@ public class LoginAction {
                 userService.save(user);
                 //reids 记录新增玩家
                 RedisManager.getLogRedisService().logRegisterUser();
+                ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+                if (!"".equals(serverConfig.getQrDir())) {
+                    ZXingUtil.createQrCode(user.getId());
+                }
             } else {
                 return ErrorCode.ROLE_ACCOUNT_OR_PASSWORD_ERROR;
             }
@@ -115,6 +120,11 @@ public class LoginAction {
 
             //保存
             userService.save(user);
+
+            ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+            if (!"".equals(serverConfig.getQrDir())) {
+                ZXingUtil.createQrCode(user.getId());
+            }
 
             //reids 记录新增玩家
             RedisManager.getLogRedisService().logRegisterUser();

@@ -222,7 +222,6 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
                     allScore += score;
                     playerCardsInfoMj.addScore(-score);
                     playerCardsInfoMj.addGangScore(-score);
-                    this.roomInfo.addUserSocre(diangangUser, -score);
                     this.otherGangScore.put(playerCardsInfoMj.getUserId(),this.otherGangScore.getOrDefault(playerCardsInfoMj.getUserId(),0D) + score );
                 }
             }

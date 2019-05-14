@@ -84,6 +84,8 @@ public class ServerConfig {
 
     private int startRobot = 0;
 
+    private String qrDir = "";
+
 
     public String getServerType() {
         return serverType;
@@ -414,5 +416,12 @@ public class ServerConfig {
         return this;
     }
 
+    public String getQrDir() {
+        return qrDir;
+    }
 
+    public ServerConfig setQrDir(String qrDir) {
+        this.qrDir = qrDir;
+        return this;
+    }
 }
