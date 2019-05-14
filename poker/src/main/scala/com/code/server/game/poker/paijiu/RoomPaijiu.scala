@@ -1,7 +1,6 @@
 package com.code.server.game.poker.paijiu
 
 import java.util
-import java.util.{HashMap, Map}
 
 import com.code.server.constant.game.{IGameConstant, RoomStatistics}
 import com.code.server.constant.kafka.{IKafaTopic, IkafkaMsgId, KafkaMsgKey}
@@ -96,24 +95,24 @@ class RoomPaijiu extends PokerGoldRoom with PaijiuConstant {
   }
 
 
-  override def getRoomClubByUser(userId: Long): Int = {
-    val result = new util.HashMap[String, AnyRef]
-    result.put("userId", userId)
-    result.put("alreadySet",this.alreadySet)
-    result.put("usePass",this.usePass)
-    result.put("pass",this.pass)
-    if (this.clubId == null) {
-      result.put("clubId", 0)
-      MsgSender.sendMsg2Player(new ResponseVo("roomService", "getRoomClubByUser", result), userId)
-    }
-    else {
-      result.put("clubId", this.clubId)
-      val kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ROOM_CLUB_USER)
-      val msgProducer = SpringUtil.getBean(classOf[MsgProducer])
-      msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, result)
-    }
-    0
-  }
+//  override def getRoomClubByUser(userId: Long): Int = {
+//    val result = new util.HashMap[String, AnyRef]
+//    result.put("userId", userId)
+//    result.put("alreadySet",this.alreadySet)
+//    result.put("usePass",this.usePass)
+//    result.put("pass",this.pass)
+//    if (this.clubId == null) {
+//      result.put("clubId", 0)
+//      MsgSender.sendMsg2Player(new ResponseVo("roomService", "getRoomClubByUser", result), userId)
+//    }
+//    else {
+//      result.put("clubId", this.clubId)
+//      val kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ROOM_CLUB_USER)
+//      val msgProducer = SpringUtil.getBean(classOf[MsgProducer])
+//      msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, result)
+//    }
+//    0
+//  }
 
   def isAceRoomOver():Boolean = {
     return false;
