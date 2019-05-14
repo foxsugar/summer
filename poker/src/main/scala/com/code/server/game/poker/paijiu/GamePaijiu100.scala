@@ -107,6 +107,8 @@ class GamePaijiu100 extends GamePaijiuCrazy {
   }
 
 
+
+
   /**
     * 下注
     *

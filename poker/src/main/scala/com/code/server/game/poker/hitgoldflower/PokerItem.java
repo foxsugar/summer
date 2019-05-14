@@ -379,14 +379,22 @@ public class PokerItem {
 		
 		ArrayList<PokerItem> list1 = p1.getPokers();
 		ArrayList<PokerItem> list2 = p2.getPokers();
-		
+		System.out.println("list1 : "+list1);
+		System.out.println("list2 : "+list2);
+
 		//因为是对子 所以中间的牌必定是对子中的一个
 		//先比较对
 		PokerItem item1 = list1.get(1);
 		PokerItem item2 = list2.get(1);
-		if(item1.index < item2.index){
+		System.out.println("item1 : " + item1);
+		System.out.println("item2 : " + item2);
+		int dui1 = (item1.index - 2) / 4;
+		int dui2 = (item2.index - 2) / 4;
+		if(dui1 < dui2){
+			System.out.println("list1 小");
 			return 0;
-		}else if(item1.index > item2.index){
+		}else if(dui1 > dui2){
+			System.out.println("list1 大");
 			return 2;
 		}else{
 			//对子相等 比较单
@@ -395,7 +403,9 @@ public class PokerItem {
 			
 			int chushu1 = (signle1.index - 2) / 4;
 			int chushu2 = (signle2.index - 2) / 4;
-			
+			System.out.println("chushu1 : " + chushu1);
+			System.out.println("chushu2 : " + chushu2);
+
 			if(chushu1 < chushu2){
 				return 0;
 			}else if(chushu1 == chushu2){
@@ -409,5 +419,13 @@ public class PokerItem {
 	public static int DanZi(Player p1, Player p2){
 		return  JinHua(p1, p2);
 	}
-	
+
+	@Override
+	public String toString() {
+		return "PokerItem{" +
+				"color='" + color + '\'' +
+				", value='" + value + '\'' +
+				", index=" + index +
+				'}';
+	}
 }
