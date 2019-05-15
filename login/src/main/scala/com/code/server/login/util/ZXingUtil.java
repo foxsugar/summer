@@ -44,7 +44,7 @@ public class ZXingUtil {
     public static void createQrCode(long userId){
         String content = "http://fir.cool/admin/"+userId;
 
-        String dir = SpringUtil.getBean(ServerConfig.class).getQrDir() + userId;
+        String dir = SpringUtil.getBean(ServerConfig.class).getQrDir() + userId + "."+FORMAT;
 
         createZxingqrCode(content, dir);
 
