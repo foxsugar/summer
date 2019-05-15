@@ -27,13 +27,19 @@ repositories {
 
 
 dependencies {
-	compile project(path: ':redis')
+//	compile project(path: ':redis')
 	compile project(path: ':util')
 	compile project(path: ':constant')
-	compile project(path: ':db')
-	compile project(path: ':kafka')
-	compile project(path: ':rpc')
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+//	compile project(path: ':db')
+//	compile project(path: ':kafka')
+//	compile project(path: ':rpc')
+//	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+//	compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.9.RELEASE'
+	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+
+
 }

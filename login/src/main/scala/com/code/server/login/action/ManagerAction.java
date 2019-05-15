@@ -4,8 +4,10 @@ import com.code.server.constant.club.ClubMember;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ResponseVo;
+import com.code.server.db.Service.RecommendService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.model.Club;
+import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
@@ -40,6 +42,9 @@ public class ManagerAction extends Cors {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RecommendService recommendService;
 
     @RequestMapping("/getOnlineUser")
     public Map<String, Object> getOnlineUser() {
@@ -258,6 +263,14 @@ public class ManagerAction extends Cors {
 //    INSERT INTO `summer`.`agent_user` (`id`, `address`, `area`, `cell`, `create_time`, `email`, `gold`, `id_card`, `invite_code`, `level`, `money`, `parent_id`, `parent_pay_deduct`, `parent_share_deduct`, `password`, `pay_deduct`, `real_name`, `share_deduct`, `username`, `agent_info`, `agent_info_record`) VALUES ('2', NULL, NULL, NULL, '2018-09-16 20:32:48', NULL, '0', NULL, NULL, '1', '0', '0', '0', '0', '100003', '0', NULL, '0', '100003', '{\"allRebate\": 0, \"everyDayCost\": {}, \"everyDayRebate\": {}, \"everyPartnerRebate\": {}}', '{\"clearingRecord\": []}');
 
 
+    @RequestMapping("/bindIp")
+    public Object bingIp(long userId, String ip) {
+        Recommend recommend = new Recommend();
+        recommend.setUnionId(ip);
+        recommend.setAgentId(userId);
+        recommendService.getRecommendDao().save(recommend);
+        return 0;
+    }
     public static void main(String[] args) {
         LocalDate localDate = LocalDate.now();
         LocalDate beginDateTime = LocalDate.parse("2017-10-10", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
