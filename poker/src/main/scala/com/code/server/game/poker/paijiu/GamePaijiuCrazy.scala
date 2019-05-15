@@ -361,11 +361,11 @@ class GamePaijiuCrazy extends GamePaijiu{
 
   def isAutoBreakBanker():Boolean ={
     //大于10倍 小于20% 自动切庄
-    if(this.roomPaijiu.bankerScore > this.roomPaijiu.bankerInitScore * 10 || this.roomPaijiu.bankerScore<=0) true
+    if(this.roomPaijiu.bankerScore > this.roomPaijiu.bankerInitScore * 10 || this.roomPaijiu.bankerScore<=0) return true
     for(playerInfo <- this.playerCardInfos.values){
       if(this.bankerId != playerInfo.userId){
         if(RedisManager.getUserRedisService.getUserMoney(playerInfo.userId) <=0){
-          true
+          return true
         }
       }
     }
@@ -526,11 +526,14 @@ class GamePaijiuCrazy extends GamePaijiu{
     val mix8Score = getGroupScoreByName(MIX_8)
     val sky8Score = getGroupScoreByName(SKY_8)
     var resultSet: Set[Int] = Set()
+    val bankerScore1 = getGroupScore(banker.group1)
+    val bankerScore2 = getGroupScore(banker.group2)
+    println("bankerscore1: " + bankerScore1)
     playerCardInfos.foreach { case (uid, other) =>
       if (uid != bankerId) {
-        val bankerScore1 = getGroupScore(banker.group1)
-        val bankerScore2 = getGroupScore(banker.group2)
         val otherScore1 = getGroupScore(other.group1)
+        println("otherscore1: " + otherScore1)
+
         val otherScore2 = getGroupScore(other.group2)
         var result: Int = 0
         if (bankerScore1 >= otherScore1) result += 1

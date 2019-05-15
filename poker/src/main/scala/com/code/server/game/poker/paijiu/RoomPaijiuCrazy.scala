@@ -184,13 +184,13 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
   def tobeBanker(userId: Long, score: Int): Int = {
 
     if (this.bankerScoreMap.contains(userId) || this.bankerId == userId) {
-      ErrorCode.CRAP_ALREADY_BANKER
+      return ErrorCode.CRAP_ALREADY_BANKER
     }
     if (score <= 0) {
-      ErrorCode.CRAP_ALREADY_BANKER
+      return ErrorCode.CRAP_ALREADY_BANKER
     }
     if (RedisManager.getUserRedisService.getUserMoney(userId) < score) {
-      ErrorCode.CRAP_ALREADY_BANKER
+      return ErrorCode.CRAP_ALREADY_BANKER
     }
     //上庄先扣钱
     RedisManager.getUserRedisService.addUserMoney(userId, -score)
