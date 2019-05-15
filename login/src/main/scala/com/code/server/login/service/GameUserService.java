@@ -8,8 +8,8 @@ import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserVo;
 import com.code.server.db.Service.*;
-import com.code.server.db.model.*;
 import com.code.server.db.model.UserRecord;
+import com.code.server.db.model.*;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.rpc.RpcManager;
@@ -21,6 +21,7 @@ import com.code.server.util.SpringUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -56,6 +57,12 @@ public class GameUserService {
 
     @Autowired
     GoodExchangeService goodExchangeService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    private long lastGetTime = 0;
+    private int onlinePeople = 0;
 
 
 
@@ -184,6 +191,21 @@ public class GameUserService {
             sendMsg(msgKey, vo);
         }
         ResponseVo vo = new ResponseVo("userService", "getNickNamePlayer", results);
+        sendMsg(msgKey, vo);
+        return 0;
+    }
+
+    public int getOnlinePeople(KafkaMsgKey msgKey) {
+
+        long now = System.currentTimeMillis();
+        if (now - getLastGetTime() > 1000 * 60L) {
+            int count = RedisManager.getUserRedisService().getOnlineUserNum() + RedisManager.getUserRedisService().getRobotPoolUser().size();
+            this.onlinePeople = count;
+            this.lastGetTime = now;
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("onlinePeople", this.onlinePeople);
+        ResponseVo vo = new ResponseVo("userService", "getOnlinePeople", result);
         sendMsg(msgKey, vo);
         return 0;
     }
@@ -775,4 +797,21 @@ public class GameUserService {
         }
     }
 
+    public long getLastGetTime() {
+        return lastGetTime;
+    }
+
+    public GameUserService setLastGetTime(long lastGetTime) {
+        this.lastGetTime = lastGetTime;
+        return this;
+    }
+
+    public int getOnlinePeople() {
+        return onlinePeople;
+    }
+
+    public GameUserService setOnlinePeople(int onlinePeople) {
+        this.onlinePeople = onlinePeople;
+        return this;
+    }
 }

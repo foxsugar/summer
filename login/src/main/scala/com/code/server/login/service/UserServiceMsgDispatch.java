@@ -60,8 +60,9 @@ public class UserServiceMsgDispatch {
                 return gameUserService.giveOtherMoney(msgKey, rechargeUserId, money);
 
             case "getNickNamePlayer":
-
                 return gameUserService.getNickNamePlayer(msgKey);
+            case "getOnlinePeople":
+                return gameUserService.getOnlinePeople(msgKey);
             case "getServerInfo":
                 return gameUserService.getServerInfo(msgKey);
             case "reportingCoord":
