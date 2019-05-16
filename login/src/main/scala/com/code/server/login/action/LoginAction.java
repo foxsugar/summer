@@ -416,6 +416,23 @@ public class LoginAction {
         return result;
     }
 
+    @RequestMapping("/createQrCode")
+    public Object createQrCode(long userId,boolean isRobot) {
+
+        if (isRobot) {
+            UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+            if (userBean == null) {
+                loadUserBean(userId);
+                RedisManager.getUserRedisService().addRobotPool(userId);
+            }
+
+        }
+
+
+        ZXingUtil.createQrCode(userId);
+        return 0;
+
+    }
 
 
 

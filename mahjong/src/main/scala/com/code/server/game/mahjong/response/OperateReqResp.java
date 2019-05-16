@@ -19,6 +19,10 @@ public class OperateReqResp {
     public static final int type_play = 11;
     public static final int type_yipaoduoxiang = 12;//一炮多响
     public static final int type_bufeng = 13;//一炮多响
+    public static final int type_dingque = 14;//一炮多响
+    public static final int type_huanpai = 15;//一炮多响
+    public static final int type_huanpaiNew = 16;//一炮多响
+
 
 
 
@@ -32,6 +36,10 @@ public class OperateReqResp {
     private List<String> chiCards;
     private List<String> xuanfengCards;
     private List<Long> yipaoduoxiangUser;
+    private int dingqueGroup;
+    private List<String> huanpaiCards;
+    private List<String> huanpaiNewCards;
+    private int changeType;
 
     public int getOperateType() {
         return operateType;
@@ -103,6 +111,42 @@ public class OperateReqResp {
 
     public OperateReqResp setYipaoduoxiangUser(List<Long> yipaoduoxiangUser) {
         this.yipaoduoxiangUser = yipaoduoxiangUser;
+        return this;
+    }
+
+    public int getDingqueGroup() {
+        return dingqueGroup;
+    }
+
+    public OperateReqResp setDingqueGroup(int dingqueGroup) {
+        this.dingqueGroup = dingqueGroup;
+        return this;
+    }
+
+    public List<String> getHuanpaiCards() {
+        return huanpaiCards;
+    }
+
+    public OperateReqResp setHuanpaiCards(List<String> huanpaiCards) {
+        this.huanpaiCards = huanpaiCards;
+        return this;
+    }
+
+    public List<String> getHuanpaiNewCards() {
+        return huanpaiNewCards;
+    }
+
+    public OperateReqResp setHuanpaiNewCards(List<String> huanpaiNewCards) {
+        this.huanpaiNewCards = huanpaiNewCards;
+        return this;
+    }
+
+    public int getChangeType() {
+        return changeType;
+    }
+
+    public OperateReqResp setChangeType(int changeType) {
+        this.changeType = changeType;
         return this;
     }
 }

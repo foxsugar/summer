@@ -118,13 +118,16 @@ public class GameInfoXZDD extends GameInfoNew {
         playerCardsInfoMj.dingqueGroupType = groupType;
         Map<String, Object> result = new HashMap<>();
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, "dingqueResp", result);
-
         MsgSender.sendMsg2Player(vo, this.users);
-
-
         result.put("groupType", groupType);
         result.put("userId", userId);
         MsgSender.sendMsg2Player("gameService", "dingque", result, users);
+
+        OperateReqResp operateReqResp = new OperateReqResp();
+        operateReqResp.setUserId(userId);
+        operateReqResp.setDingqueGroup(groupType);
+        operateReqResp.setOperateType(OperateReqResp.type_dingque);
+        replay.getOperate().add(operateReqResp);
 
         boolean isAllDingque = this.playerCardsInfos.values().stream().noneMatch(playerCardsInfoMj1 -> playerCardsInfoMj1.dingqueGroupType == 0);
         if (isAllDingque) {
@@ -156,6 +159,13 @@ public class GameInfoXZDD extends GameInfoNew {
 
         MsgSender.sendMsg2Player("gameService", "huanpai", result, users);
 
+
+        OperateReqResp operateReqResp = new OperateReqResp();
+        operateReqResp.setUserId(userId);
+        operateReqResp.setHuanpaiCards(cards);
+        operateReqResp.setOperateType(OperateReqResp.type_huanpai);
+        replay.getOperate().add(operateReqResp);
+
         boolean isAllChange = this.playerCardsInfos.values().stream().noneMatch(playerCardsInfoMj1 -> playerCardsInfoMj1.changeCards.size() == 0);
         if (isAllChange) {
 
@@ -164,6 +174,10 @@ public class GameInfoXZDD extends GameInfoNew {
             int changeType = 0;
             //开始换牌
             for (PlayerCardsInfoMj player : this.playerCardsInfos.values()) {
+
+                OperateReqResp operateHuanpaiResp = new OperateReqResp();
+                operateHuanpaiResp.setOperateType(OperateReqResp.type_huanpaiNew);
+
                 List<String> cs = new ArrayList<>();
                 //把牌给下一个人
                 long nextUser = nextTurnId(player.getUserId());
@@ -173,12 +187,21 @@ public class GameInfoXZDD extends GameInfoNew {
                     cs.addAll(nextPlayer.getChangeCards());
                     player.cards.addAll(cs);
                     player.cards.removeAll(player.changeCards);
+
+                    operateHuanpaiResp.setUserId(player.userId);
                 }else{//反转
                     changeType = 1;
                     cs.addAll(player.getChangeCards());
                     nextPlayer.cards.addAll(cs);
                     nextPlayer.cards.removeAll(nextPlayer.changeCards);
+
+                    operateHuanpaiResp.setUserId(nextPlayer.userId);
                 }
+                operateHuanpaiResp.setHuanpaiNewCards(cs);
+                operateHuanpaiResp.setChangeType(changeType);
+
+
+                replay.getOperate().add(operateHuanpaiResp);
             }
 
 

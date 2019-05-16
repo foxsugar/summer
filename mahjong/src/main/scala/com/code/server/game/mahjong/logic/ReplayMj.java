@@ -26,6 +26,7 @@ public class ReplayMj {
     private Map<Long, String> koutingCard = new HashMap<>();
     private Map<Long, Integer> paofen = new HashMap<>();
 
+
     private int rand;
 
     // 不能加gameInfo进来 会循环引用
