@@ -325,7 +325,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     //大赢家付房费
 
 
-    if (Room.isHasMode(MODE_WINNER_PAY, this.roomPaijiu.getOtherMode) && !this.roomPaijiu.isInstanceOf[RoomPaijiu100]) {
+    if (!this.roomPaijiu.isAA && !this.roomPaijiu.isInstanceOf[RoomPaijiu100]) {
       //找到大赢家
       val winner = this.roomPaijiu.getMaxScoreUser
       val money = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble

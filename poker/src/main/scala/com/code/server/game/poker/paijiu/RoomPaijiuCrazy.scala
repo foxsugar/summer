@@ -118,7 +118,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     * @return
     */
   override def getNeedMoney(): Int = {
-    if(Room.isHasMode(MODE_WINNER_PAY, this.otherMode) && !isAA){
+    if(!isAA){
       return this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble.toInt
     }else{
       return this.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[String].toDouble.toInt
@@ -164,7 +164,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
 
 
-    if (Room.isHasMode(MODE_WINNER_PAY, this.getOtherMode) && !this.isInstanceOf[RoomPaijiu100]) {
+    if (!this.isAA && !this.isInstanceOf[RoomPaijiu100]) {
       //找到大赢家
       val winner = this.getMaxScoreUser
       val money = this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble
@@ -196,7 +196,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     createNeedMoney = this.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[String].toDouble.toInt
 
     //大赢家最后付钱
-    if (!isAA && Room.isHasMode(MODE_WINNER_PAY, this.otherMode)) {
+    if (!isAA) {
 
     } else {
       super.spendMoney()
