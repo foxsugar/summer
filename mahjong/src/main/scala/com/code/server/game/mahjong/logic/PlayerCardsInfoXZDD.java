@@ -286,7 +286,10 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
         }
         huList.forEach(this::resetFan);
         HuCardType huCardType = getMaxScoreHuCardType(huList);
-        setWinTypeResult(getMaxScoreHuCardType(huList));
+        if (huCardType == null) {
+            huCardType = new HuCardType();
+        }
+        setWinTypeResult(huCardType);
 
         int fan = huCardType.fan;
 

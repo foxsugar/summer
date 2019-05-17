@@ -117,7 +117,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
 
 
-    public int dissolution(long userId, boolean agreeOrNot, String methodName) {
+    public int dissolution(long userId, boolean agreeOrNot, String methodName, long time) {
         if (!this.users.contains(userId)) {
             return ErrorCode.CANNOT_FIND_THIS_USER;
 

@@ -4,7 +4,7 @@ import java.util
 import java.util.Random
 
 import com.code.server.constant.game.{IGameConstant, RoomStatistics}
-import com.code.server.constant.response.{ErrorCode, IfaceRoomVo, ResponseVo}
+import com.code.server.constant.response.{ErrorCode, GameOfResult, IfaceRoomVo, ResponseVo}
 import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
@@ -127,6 +127,72 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
   }
 
 
+  override protected def setResultOtherInfo(gameOfResult: GameOfResult): Unit = {
+
+  }
+
+
+
+  override protected def dissolutionRoom(): Unit = {
+    //庄家初始分 再减掉
+    import java.time.LocalDateTime
+
+    import com.code.server.constant.response.{GameOfResult, ResponseVo}
+    import com.code.server.game.room.kafka.MsgSender
+    import com.code.server.game.room.service.RoomManager
+    RoomManager.removeRoom(this.roomId)
+    // 结果类
+    val userOfResultList = getUserOfResult
+
+    //代开房 并且游戏未开始
+    if (!isCreaterJoin && !this.isInGame && (this.curGameNumber == 1)) {
+      drawBack()
+      GameTimer.removeNode(this.prepareRoomTimerNode)
+    }
+    this.isInGame = false
+
+
+    //庄家初始分 再减掉
+    //todo 庄家的分如何处理
+//    this.addUserSocre(this.getBankerId, -this.bankerInitScore)
+
+    // 存储返回
+    val gameOfResult = new GameOfResult
+
+    gameOfResult.setUserList(userOfResultList)
+    gameOfResult.setEndTime(LocalDateTime.now.toString)
+
+
+    var m = Map("isAA"->this.isAA)
+
+    if (Room.isHasMode(MODE_WINNER_PAY, this.getOtherMode) && !this.isInstanceOf[RoomPaijiu100]) {
+      //找到大赢家
+      val winner = this.getMaxScoreUser
+      val money = this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble
+      //付房费
+      RedisManager.getUserRedisService.addUserMoney(winner, -money)
+      m +=("winnerId"->winner, "cost"->money)
+    }else{
+      m +=("cost"->this.getNeedMoney)
+
+    }
+
+    gameOfResult.setOther(m.asJava)
+
+    MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), users)
+
+
+
+    //战绩
+    genRoomRecord()
+
+    if(this.isReOpen) {
+      RoomPaijiuCrazy.createRoom(0,this.getRoomType, this.getGameType, this.getGameNumber, this.getClubId, this.getClubRoomModel,this.getClubMode,
+        this.isAA,this.robotType, this.robotNum, this.robotWinner,this.isReOpen, this.getOtherMode, this.getPersonNumber,this.bankerInitScore )
+    }
+  }
+
+
   override def spendMoney(): Unit = {
 
     createNeedMoney = this.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[String].toDouble.toInt
@@ -140,7 +206,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
   }
 
   override def addUserSocre(userId: Long, score: Double): Unit = {
-    super.addUserSocre(userId, score)
+//    super.addUserSocre(userId, score)
     //百人牌九 加分时抽水
     if (!this.isInstanceOf[RoomPaijiu100]) {
       if(score>0) {

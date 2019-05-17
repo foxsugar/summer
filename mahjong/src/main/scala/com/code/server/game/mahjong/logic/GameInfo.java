@@ -681,6 +681,7 @@ public class GameInfo extends Game {
 
         void fire() {
             PlayerCardsInfoMj playerCardsInfo = gameInfo.getPlayerCardsInfos().get(myUserId);
+            this.isFire = true;
             switch (operate) {
                 case huPoint:
                     gameInfo.doHu(playerCardsInfo, myUserId);
@@ -702,7 +703,7 @@ public class GameInfo extends Game {
                     break;
             }
 
-            this.isFire = true;
+
 
         }
 

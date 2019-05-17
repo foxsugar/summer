@@ -80,10 +80,11 @@ public class RoomMsgDispatch {
             }
             case "dissolveRoom": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
+                long time = params.path("time").asLong(1000 * 60 * 5);
                 if (room == null) {
                     return ErrorCode.CAN_NOT_NO_ROOM;
                 }
-                return room.dissolution(userId, true, method);
+                return room.dissolution(userId, true, method, time);
             }
             case "answerIfDissolveRoom": {
 
@@ -91,8 +92,9 @@ public class RoomMsgDispatch {
                 if (room == null) {
                     return ErrorCode.CAN_NOT_NO_ROOM;
                 }
+                long time = params.path("time").asLong(1000 * 60 * 5);
                 boolean isAgree = "2".equals(params.get("answer").asText());
-                return room.dissolution(userId, isAgree, method);
+                return room.dissolution(userId, isAgree, method, time);
             }
             case "startGameByClient": {
                 IfaceRoom room = RoomManager.getRoom(roomId);

@@ -8,6 +8,9 @@ public class GameOfResult {
 
 	private String endTime;
 
+	private Object other;
+
+
 	public List<UserOfResult> getUserList() {
 		return userList;
 	}
@@ -24,4 +27,14 @@ public class GameOfResult {
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
+
+
+    public Object getOther() {
+        return other;
+    }
+
+    public GameOfResult setOther(Object other) {
+        this.other = other;
+        return this;
+    }
 }

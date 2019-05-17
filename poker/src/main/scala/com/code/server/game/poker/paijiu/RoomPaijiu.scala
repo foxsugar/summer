@@ -252,6 +252,17 @@ class RoomPaijiu extends PokerGoldRoom with PaijiuConstant {
   }
 
 
+  def logRoomStatistics(userId:Long, score:Double): Unit ={
+    val roomStatistics = roomStatisticsMap.get(userId)
+    if (roomStatistics != null) {
+      roomStatistics.maxScore = if (roomStatistics.maxScore > score) roomStatistics.maxScore
+      else score
+      if (score >= 0) roomStatistics.winTime += 1
+      else roomStatistics.failedTime += 1
+      roomStatistics.score += score
+    }
+  }
+
   /**
     * 发送返利
     * @param userId

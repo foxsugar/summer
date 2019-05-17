@@ -66,7 +66,7 @@ public interface IfaceRoom extends IGameConstant {
      * @param method
      * @return
      */
-    int dissolution(long userId,boolean agreeOrNot, String method);
+    int dissolution(long userId,boolean agreeOrNot, String method, long time);
 
     /**
      * 客户端触发开始游戏

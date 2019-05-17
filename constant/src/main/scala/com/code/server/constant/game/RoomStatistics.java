@@ -13,6 +13,7 @@ public class RoomStatistics {
     public String maxCardGroup;
     public String ext;
     public int zhaCount;
+    public double score;
 
     public RoomStatistics() {
     }

@@ -808,10 +808,7 @@ public class GameInfoNew extends GameInfo {
                     waitingforList.clear();
                 }
             }
-
         }
-
-
         return 0;
     }
 

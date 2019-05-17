@@ -21,13 +21,11 @@ class RoomPaijiu100 extends RoomPaijiuCrazy{
 
 
   override def addUserSocre(userId: Long, score: Double): Unit = {
-    super.addUserSocre(userId, score)
-
     //百人牌九 加分时抽水
     if (this.isInstanceOf[RoomPaijiu100]) {
       if(score>0) {
 
-        val game: GamePaijiuCrazy = this.game.asInstanceOf[GamePaijiuCrazy]
+        val game = this.game.asInstanceOf[GamePaijiuCrazy]
         val multiple = rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble
         val s = score * (100 - multiple) / 100
         RedisManager.getUserRedisService.addUserMoney(userId, s)

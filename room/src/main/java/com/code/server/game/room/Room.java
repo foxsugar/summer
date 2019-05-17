@@ -394,9 +394,9 @@ public class Room implements IfaceRoom {
     public long getMaxScoreUser(){
         long userId = 0;
         double score = 0;
-        for(Map.Entry<Long,Double> en : this.userScores.entrySet()){
-            if (en.getValue() > score) {
-                score = en.getValue();
+        for(Map.Entry<Long,RoomStatistics> en : this.roomStatisticsMap.entrySet()){
+            if (en.getValue().score > score) {
+                score = en.getValue().score;
                 userId = en.getKey();
             }
         }
@@ -649,7 +649,7 @@ public class Room implements IfaceRoom {
     }
 
 
-    public int dissolution(long userId, boolean agreeOrNot, String methodName) {
+    public int dissolution(long userId, boolean agreeOrNot, String methodName, long time) {
         if (!this.users.contains(userId)) {
             return ErrorCode.CANNOT_FIND_THIS_USER;
 
@@ -664,7 +664,7 @@ public class Room implements IfaceRoom {
             this.isHasDissolutionRequest = true;
             //第一次申请 五分钟后解散
             long start = System.currentTimeMillis();
-            TimerNode node = new TimerNode(start, FIVE_MIN, false, () -> {
+            TimerNode node = new TimerNode(start, time, false, () -> {
 
                 if (isCanDissloution) {
                     dissolutionRoom();
@@ -825,6 +825,10 @@ public class Room implements IfaceRoom {
 
     }
 
+
+    protected void setResultOtherInfo(GameOfResult gameOfResult){
+
+    }
     private void removeClubInstance() {
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
         KafkaMsgKey kafkaKey = new KafkaMsgKey();
@@ -866,6 +870,7 @@ public class Room implements IfaceRoom {
             } else {
                 roomStatistics.failedTime += 1;
             }
+            roomStatistics.score += score;
         }
 
     }

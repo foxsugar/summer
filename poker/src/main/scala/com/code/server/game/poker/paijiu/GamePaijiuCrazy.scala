@@ -305,47 +305,48 @@ class GamePaijiuCrazy extends GamePaijiu{
 
 
 
+
   /**
     * 最终结算版
     */
   override protected def sendFinalResult(): Unit ={
 
     val userOfResultList = this.roomPaijiu.getUserOfResult
-
+    // 存储返回
+    val gameOfResult = new GameOfResult
 
     //庄家初始分 再减掉
-    roomPaijiu.addUserSocre(this.roomPaijiu.getBankerId, -this.roomPaijiu.bankerInitScore)
+    //todo 庄家的分如何处理
+//    roomPaijiu.addUserSocre(this.roomPaijiu.getBankerId, -this.roomPaijiu.bankerInitScore)
 
     //战绩
     this.roomPaijiu.genRoomRecord()
 
     //大赢家付房费
-    //    if(this.roomPaijiu.isRoomOver ) {
 
-    if (Room.isHasMode(MODE_WINNER_PAY, this.roomPaijiu.getOtherMode)) {
+    var m = Map("isAA"->this.roomPaijiu.isAA)
+    if (Room.isHasMode(MODE_WINNER_PAY, this.roomPaijiu.getOtherMode) && !this.roomPaijiu.isInstanceOf[RoomPaijiu100]) {
       //找到大赢家
       val winner = this.roomPaijiu.getMaxScoreUser
       val money = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble
       //付房费
       RedisManager.getUserRedisService.addUserMoney(winner, -money)
+      m +=("winnerId"->winner, "cost"->money)
+    }else{
+      m +=("cost"->this.roomPaijiu.getNeedMoney)
     }
 
+    gameOfResult.setOther(m.asJava)
 
-    // 存储返回
-    val gameOfResult = new GameOfResult
     gameOfResult.setUserList(userOfResultList)
     MsgSender.sendMsg2Player("gameService", "gamePaijiuFinalResult", gameOfResult, roomPaijiu.users)
     RoomManager.removeRoom(roomPaijiu.getRoomId)
-
 
 
     //重开一个一样的房间
     if (this.roomPaijiu.isReOpen) {
       doCreateNewRoom(this.roomPaijiu)
     }
-    //    }
-
-
   }
 
   /**
@@ -389,6 +390,7 @@ class GamePaijiuCrazy extends GamePaijiu{
 
 
       RedisManager.getUserRedisService.addUserMoney(bankerId,this.roomPaijiu.bankerScore)
+
       this.roomPaijiu.setBankerId(0)
       this.roomPaijiu.bankerScore = 0
       this.roomPaijiu.clearReadyStatus(true)
@@ -552,8 +554,11 @@ class GamePaijiuCrazy extends GamePaijiu{
           other.addScore(roomPaijiu,-changeScore)
 
           roomPaijiu.bankerScore += changeScore
+          //庄的分最后再加
 //          roomPaijiu.addUserSocre(banker.userId, changeScore)
           roomPaijiu.addUserSocre(other.userId, -changeScore)
+          roomPaijiu.logRoomStatistics(other.userId, -changeScore)
+          roomPaijiu.logRoomStatistics(banker.userId, changeScore)
           other.winState = LOSE
 
           logger.info("庄家赢得钱: " + changeScore)
@@ -585,7 +590,8 @@ class GamePaijiuCrazy extends GamePaijiu{
     for (playerInfo <- sortedUsers) {
       val score2 = getGroupScore(playerInfo.group2)
       //庄家应该输的钱
-      val bankerLoseScore = playerInfo.getBetScore(score2 >= mix8Score)
+      val isHas3Bet = Room.isHasMode(MODE_BET_3, this.roomPaijiu.otherMode)
+      val bankerLoseScore = playerInfo.getBetScore(score2 >= mix8Score, isHas3Bet && bankerScore2>sky8Score)
       val loseScore = if (bankerLoseScore > roomPaijiu.bankerScore) roomPaijiu.bankerScore else bankerLoseScore
       logger.info("应输的钱: " + bankerLoseScore)
       logger.info("实际的钱: " + loseScore)
@@ -597,6 +603,9 @@ class GamePaijiuCrazy extends GamePaijiu{
       playerInfo.addScore(roomPaijiu, loseScore.toInt)
 //      roomPaijiu.addUserSocre(banker.userId, -loseScore)
       roomPaijiu.addUserSocre(playerInfo.userId, loseScore)
+
+      roomPaijiu.logRoomStatistics(playerInfo.userId, loseScore)
+      roomPaijiu.logRoomStatistics(banker.userId, -loseScore)
 
     }
   }

@@ -70,9 +70,9 @@ public class RoomGuessCar extends Room {
     }
 
 
-    public int dissolution(long userId, boolean agreeOrNot, String methodName){
+    public int dissolution(long userId, boolean agreeOrNot, String methodName, long time){
 
-        int rtn =  super.dissolution(userId, agreeOrNot, methodName);
+        int rtn =  super.dissolution(userId, agreeOrNot, methodName, time);
         if (rtn == 0 && userId == this.bankerId) {
            //把钱返给庄家
             RedisManager.getUserRedisService().addUserGold(userId, bankerScore);
