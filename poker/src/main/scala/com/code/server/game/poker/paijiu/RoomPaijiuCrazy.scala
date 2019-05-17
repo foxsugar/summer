@@ -163,7 +163,6 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     gameOfResult.setEndTime(LocalDateTime.now.toString)
 
 
-    var m = Map("isAA"->this.isAA)
 
     if (Room.isHasMode(MODE_WINNER_PAY, this.getOtherMode) && !this.isInstanceOf[RoomPaijiu100]) {
       //找到大赢家
@@ -171,13 +170,12 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
       val money = this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble
       //付房费
       RedisManager.getUserRedisService.addUserMoney(winner, -money)
-      m +=("winnerId"->winner, "cost"->money)
+      gameOfResult.setOther(Map("isAA"->this.isAA,"winnerId"->winner, "cost"->money).asJava)
     }else{
-      m +=("cost"->this.getNeedMoney)
+      gameOfResult.setOther(Map("isAA"->this.isAA, "cost"->this.getNeedMoney).asJava)
 
     }
 
-    gameOfResult.setOther(m.asJava)
 
     MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), users)
 

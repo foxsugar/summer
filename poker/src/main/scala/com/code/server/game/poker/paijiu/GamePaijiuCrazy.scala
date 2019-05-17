@@ -324,19 +324,18 @@ class GamePaijiuCrazy extends GamePaijiu{
 
     //大赢家付房费
 
-    var m = Map("isAA"->this.roomPaijiu.isAA)
+
     if (Room.isHasMode(MODE_WINNER_PAY, this.roomPaijiu.getOtherMode) && !this.roomPaijiu.isInstanceOf[RoomPaijiu100]) {
       //找到大赢家
       val winner = this.roomPaijiu.getMaxScoreUser
       val money = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble
       //付房费
       RedisManager.getUserRedisService.addUserMoney(winner, -money)
-      m +=("winnerId"->winner, "cost"->money)
+      gameOfResult.setOther(Map("isAA"->this.roomPaijiu.isAA,"winnerId"->winner, "cost"->money).asJava)
     }else{
-      m +=("cost"->this.roomPaijiu.getNeedMoney)
+      gameOfResult.setOther(Map("isAA"->this.roomPaijiu.isAA, "cost"->this.roomPaijiu.getNeedMoney).asJava)
     }
 
-    gameOfResult.setOther(m.asJava)
 
     gameOfResult.setUserList(userOfResultList)
     MsgSender.sendMsg2Player("gameService", "gamePaijiuFinalResult", gameOfResult, roomPaijiu.users)
