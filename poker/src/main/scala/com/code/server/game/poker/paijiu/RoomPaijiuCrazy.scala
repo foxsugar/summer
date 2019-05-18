@@ -294,6 +294,9 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "paijiuSetPass", result.asJava), userId)
     0
   }
+
+
+
   /**
     * 更新banker
     */
@@ -423,4 +426,23 @@ object RoomPaijiuCrazy extends Room with PaijiuConstant {
     MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "getCrazyRoom", roomList.asJava), userId)
     0
   }
+
+
+
+  def getPaijiuPlayerNum(userId:Long): Int ={
+    var map: java.util.HashMap[String,Int] = new java.util.HashMap()
+    for(room <- RoomManager.getInstance().getRooms.values()){
+      if(room.isInstanceOf[RoomPaijiu]){
+        val paijiuRoom = room.asInstanceOf[RoomPaijiu]
+        val count = map.getOrElse(paijiuRoom.getGameType,0) + room.getUsers.size()
+        map.put(paijiuRoom.getGameType, count)
+      }
+
+    }
+
+    MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "getPaijiuPlayerNum", map), userId)
+    0
+  }
+
+
 }

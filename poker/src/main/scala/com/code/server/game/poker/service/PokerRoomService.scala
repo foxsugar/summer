@@ -440,6 +440,11 @@ object PokerRoomService {
         var room = RoomManager.getRoom(roomId)
         val roomPaijiu = room.asInstanceOf[RoomPaijiuCrazy]
         roomPaijiu.paijiuSetPass(userId,flag)
+
+      case "getPaijiuPlayerNum"=>
+
+        RoomPaijiuCrazy.getPaijiuPlayerNum(userId)
+
       case _ =>
         return -1
     }
