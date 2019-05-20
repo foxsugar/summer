@@ -333,7 +333,7 @@ public class PlayerCardsInfoXZDD extends PlayerCardsInfoMj {
         AtomicInteger allScore = new AtomicInteger();
         if (isZimo) {
             this.gameInfo.playerCardsInfos.forEach((id,otherInfo)->{
-                if (id != this.userId) {
+                if (id != this.userId && !otherInfo.isAlreadyHu) {
                     otherInfo.addScore(-score);
                     this.roomInfo.addUserSocre(id, -score);
                     allScore.addAndGet(score);
