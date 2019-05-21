@@ -1,10 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Title</title>
+    <title>疯狂娱乐</title>
 </head>
 <body>
-show
+    <img src="wz1.png"/>
+    <a th:href="${model.url}"><img src="wz2.png"/></a>
+    <img src="wz3.png"/>
+
 </body>
 </html>
+
+<style>
+
+
+    body {
+        margin: 0px;
+        padding: 0;
+        border: 0;
+
+    }
+
+    img {
+        outline-width: 0;
+        vertical-align: top;
+        float:left;
+        margin:0;
+        border:0;
+        padding:0;
+        display:block;
+        width: 100%;
+        height: 100%;
+    }
+
+
+
+</style>

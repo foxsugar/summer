@@ -11,6 +11,7 @@ public class ServerConfig {
     private int serverId;
 
 
+    private String firUrl;
     private int adminRpcServerPort;
     private String gameRpcHost;
     private int gameRpcPort;
@@ -59,6 +60,15 @@ public class ServerConfig {
 
     public ServerConfig setGameRpcPort(int gameRpcPort) {
         this.gameRpcPort = gameRpcPort;
+        return this;
+    }
+
+    public String getFirUrl() {
+        return firUrl;
+    }
+
+    public ServerConfig setFirUrl(String firUrl) {
+        this.firUrl = firUrl;
         return this;
     }
 }

@@ -9,6 +9,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,19 +22,22 @@ public class TestAction {
 
 
     @RequestMapping("/share")
-    public String share(HttpServletRequest request, Model model, long userId) throws Exception {
+    public ModelAndView share(HttpServletRequest request, Model model, long userId) throws Exception {
 
 
 //        model.addAttribute("users", "hello");
         HttpClient httpclient = HttpClients.createDefault();
         String ip = getIpAddr(request);
 
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         // 创建http GET请求
-        String local = SpringUtil.getBean(ServerConfig.class).getGameRpcHost();
+        String local = serverConfig.getGameRpcHost();
 
         HttpGet httpGet = new HttpGet(local + "?userId=" + userId + "&ip=" + ip);
         httpclient.execute(httpGet);
-        return "/show";
+
+        model.addAttribute("url", serverConfig.getFirUrl());
+        return new ModelAndView("/show", "model", model);
     }
 
 
