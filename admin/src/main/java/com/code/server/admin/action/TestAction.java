@@ -37,7 +37,7 @@ public class TestAction {
         httpclient.execute(httpGet);
 
         model.addAttribute("url", serverConfig.getFirUrl());
-        return new ModelAndView("/show", "model", model);
+        return new ModelAndView("show", "model", model);
     }
 
 

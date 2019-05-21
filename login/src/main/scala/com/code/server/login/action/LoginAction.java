@@ -434,6 +434,13 @@ public class LoginAction {
 
     }
 
+    @RequestMapping("/genAllQrCode")
+    public Object genAllQrCode(){
+        for (User user : userService.getUserDao().findAll()) {
+            ZXingUtil.createQrCode(user.getId());
+        }
+        return 0;
+    }
 
 
     public Map<String, Object> getParams(String url, Object params, int code) {
