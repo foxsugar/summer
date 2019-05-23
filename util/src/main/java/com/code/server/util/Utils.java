@@ -33,4 +33,6 @@ public class Utils {
         int c = mode;
         return (c & (1 << type)) >> type == 1;
     }
+
+
 }

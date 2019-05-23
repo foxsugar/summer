@@ -85,24 +85,24 @@ public class DataManager implements IGameConstant {
         return str.toString();
     }
 
-    public static void main(String[] args) throws IOException {
-        initData("D:\\GitOfSummer\\summer\\data\\static_data.json");
-//        initData("E:\\datagen\\out\\static_data.data");
-
-//        System.out.println(data.getPaijiuCardGroupDataCount());
-//        System.out.println(data.getPaijiuCardGroupScoreDataCount());
-//        System.out.println(data.getPersonMap().size());
-//        System.out.println(data.getPersonCount());
-//        System.out.println(data.getPaijiuCardGroupScoreDataCount());
-
-//        System.out.println(data.getPaijiuCardGroupDataMap());
-//        System.out.println(data.getPaijiuCardGroupScoreDataMap());
-        data.getPaijiuCardGroupScoreDataMap().forEach((name,score)->{
-            System.out.println("name"+name+"score"+score.getScore());
-        });
-
-
-    }
+//    public static void main(String[] args) throws IOException {
+//        initData("D:\\GitOfSummer\\summer\\data\\static_data.json");
+////        initData("E:\\datagen\\out\\static_data.data");
+//
+////        System.out.println(data.getPaijiuCardGroupDataCount());
+////        System.out.println(data.getPaijiuCardGroupScoreDataCount());
+////        System.out.println(data.getPersonMap().size());
+////        System.out.println(data.getPersonCount());
+////        System.out.println(data.getPaijiuCardGroupScoreDataCount());
+//
+////        System.out.println(data.getPaijiuCardGroupDataMap());
+////        System.out.println(data.getPaijiuCardGroupScoreDataMap());
+//        data.getPaijiuCardGroupScoreDataMap().forEach((name,score)->{
+//            System.out.println("name"+name+"score"+score.getScore());
+//        });
+//
+//
+//    }
 
     private static void init() {
         RoomData roomData_longqi = new RoomData();

@@ -50,7 +50,7 @@ object Test {
   def testMap()={
     var m1 = Map(1->22,2->3)
      m1 += (4->6)
-    m1 -= 4
+//    m1 -= 4
 
     print(JsonUtil.toJson(m1.asJava))
   }
@@ -179,7 +179,7 @@ object Test {
 //    test1()
 //    testSame()
 //    testAdd()
-//    testMap()
+    testMap()
 //    testMuList
 //    testList
 //    testShuffle
@@ -192,6 +192,6 @@ object Test {
 //    testFilter
 //    testGetScore("17,19")
 //    testListBuff()
-    testFor()
+//    testFor()
   }
 }

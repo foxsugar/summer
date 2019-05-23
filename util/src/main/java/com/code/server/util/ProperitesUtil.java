@@ -9,12 +9,12 @@ import java.util.Properties;
  * Created by sun on 2015/8/26.
  */
 public class ProperitesUtil {
-    public static void main(String[] args) throws Exception {
-
-        Properties p = loadProperties("application.properties");
-        System.out.println(p.getProperty("url"));
-
-    }
+//    public static void main(String[] args) throws Exception {
+//
+//        Properties p = loadProperties("application.properties");
+//        System.out.println(p.getProperty("url"));
+//
+//    }
 
     public static Properties loadProperties(String name) throws Exception {
         Properties p = new Properties();

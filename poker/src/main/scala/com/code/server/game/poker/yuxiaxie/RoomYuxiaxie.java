@@ -456,18 +456,21 @@ public class RoomYuxiaxie extends PokerGoldRoom {
 
         if (isClubRoom()) {
             if (this.game != null) {
+                synchronized (this.game) {
 
-                GameYuxiaxie gameYuxiaxie = (GameYuxiaxie) this.game;
-                PlayerInfoYuxiaxie playerInfoYuxiaxie = gameYuxiaxie.playerCardInfos.get(userId);
-                if (playerInfoYuxiaxie.getBets().size() > 0 ) {
-                    return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME;
+
+
+                    GameYuxiaxie gameYuxiaxie = (GameYuxiaxie) this.game;
+                    PlayerInfoYuxiaxie playerInfoYuxiaxie = gameYuxiaxie.playerCardInfos.get(userId);
+                    if (playerInfoYuxiaxie.getBets().size() > 0 ) {
+                        return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME;
+                    }
+
+                    //从game中退出
+                    gameYuxiaxie.playerCardInfos.remove(userId);
+                    gameYuxiaxie.users.remove(userId);
+
                 }
-
-                //从game中退出
-                gameYuxiaxie.playerCardInfos.remove(userId);
-                gameYuxiaxie.users.remove(userId);
-
-
 //                this.setPersonNumber(userScores.size());
             }
 

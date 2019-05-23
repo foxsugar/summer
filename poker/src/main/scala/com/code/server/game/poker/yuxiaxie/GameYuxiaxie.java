@@ -386,40 +386,44 @@ public class GameYuxiaxie extends Game {
      * 结算
      */
     public void compute(){
-        int allScore = 0;
-        int allBetNum = 0;
-        for (PlayerInfoYuxiaxie playerInfoYuxiaxie : this.playerCardInfos.values()) {
-            //
-            if (this.room.getBankerId() == playerInfoYuxiaxie.getUserId()) {
-                continue;
+        synchronized (this) {
+
+
+            int allScore = 0;
+            int allBetNum = 0;
+            for (PlayerInfoYuxiaxie playerInfoYuxiaxie : this.playerCardInfos.values()) {
+                //
+                if (this.room.getBankerId() == playerInfoYuxiaxie.getUserId()) {
+                    continue;
+                }
+
+                int score = playerInfoYuxiaxie.settle(this.room,this.dice.get(0), this.dice.get(1));
+
+                this.room.userScoreHistory.putIfAbsent(playerInfoYuxiaxie.getUserId(), new HashMap<>());
+                this.room.userScoreHistory.get(playerInfoYuxiaxie.getUserId()).put(this.room.curGameNumber, score);
+                playerInfoYuxiaxie.setScore(score);
+    //            System.out.println("userId : " + playerInfoYuxiaxie.getUserId() + "  score : " + score);
+
+    //            this.room.addUserSocre(playerInfoYuxiaxie.getUserId(), score);
+                allScore += score;
+                allBetNum += playerInfoYuxiaxie.getAllBetNum();
+
             }
+            //
+            int rs =  - allScore;
+            PlayerInfoYuxiaxie banker = playerCardInfos.get(this.room.getBankerId());
+    //        banker.setScore(banker.getScore() - allScore);
+            banker.setScore(rs);
 
-            int score = playerInfoYuxiaxie.settle(this.room,this.dice.get(0), this.dice.get(1));
+            this.room.userScoreHistory.putIfAbsent(banker.getUserId(), new HashMap<>());
+            this.room.userScoreHistory.get(banker.getUserId()).put(this.room.curGameNumber, rs);
 
-            this.room.userScoreHistory.putIfAbsent(playerInfoYuxiaxie.getUserId(), new HashMap<>());
-            this.room.userScoreHistory.get(playerInfoYuxiaxie.getUserId()).put(this.room.curGameNumber, score);
-            playerInfoYuxiaxie.setScore(score);
-//            System.out.println("userId : " + playerInfoYuxiaxie.getUserId() + "  score : " + score);
-
-//            this.room.addUserSocre(playerInfoYuxiaxie.getUserId(), score);
-            allScore += score;
-            allBetNum += playerInfoYuxiaxie.getAllBetNum();
-
+    //        this.room.addUserSocre(banker.getUserId(), -allScore);
+            this.room.addUserSocre(banker.getUserId(), rs);
+    //        if (this.room.isClubRoom()) {
+    //            RedisManager.getClubRedisService().addClubUserMoney(this.room.getClubId(), banker.getUserId(), rs);
+    //        }
         }
-        //
-        int rs =  - allScore;
-        PlayerInfoYuxiaxie banker = playerCardInfos.get(this.room.getBankerId());
-//        banker.setScore(banker.getScore() - allScore);
-        banker.setScore(rs);
-
-        this.room.userScoreHistory.putIfAbsent(banker.getUserId(), new HashMap<>());
-        this.room.userScoreHistory.get(banker.getUserId()).put(this.room.curGameNumber, rs);
-
-//        this.room.addUserSocre(banker.getUserId(), -allScore);
-        this.room.addUserSocre(banker.getUserId(), rs);
-//        if (this.room.isClubRoom()) {
-//            RedisManager.getClubRedisService().addClubUserMoney(this.room.getClubId(), banker.getUserId(), rs);
-//        }
 
     }
 
