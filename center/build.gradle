@@ -40,3 +40,8 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-tomcat'
 	runtime 'jstl:jstl:1.2'
 }
+
+//不执行thrift的编译
+gradle.taskGraph.whenReady { graph ->
+	graph.allTasks.findAll { it.name ==~ /compileThrift.*/ }*.enabled = false
+}
