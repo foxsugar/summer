@@ -308,7 +308,7 @@ public class MenuHandler extends AbstractHandler {
         //todo 展示二维码 链接
 
         item1.setPicUrl("https://mmbiz.qpic.cn/mmbiz_png/wj1STzkg04h46BuribmuoJnsMQgc2m70558p3mE91j6zq4sph6RavCicfUiahTSRj4CVRSRN9ecdJKic6ysZeBCZiag/0?wx_fmt=png");
-        item1.setTitle("董小姐棋牌");
+        item1.setTitle("棋牌");
           item1.setDescription("点击进入专属界面");
 //        String url = "http://" + serverConfig.getDomain() + "/game/wechat/clickLink";
         String sid = "" + System.currentTimeMillis() + "_" + new Random().nextInt(999999);
@@ -360,7 +360,7 @@ public class MenuHandler extends AbstractHandler {
         //todo 展示二维码 链接
 
         item1.setPicUrl("https://mmbiz.qpic.cn/mmbiz_png/wj1STzkg04h46BuribmuoJnsMQgc2m70558p3mE91j6zq4sph6RavCicfUiahTSRj4CVRSRN9ecdJKic6ysZeBCZiag/0?wx_fmt=png");
-        item1.setTitle("董小姐棋牌室");
+        item1.setTitle("棋牌室");
         item1.setUrl("/game/wecha");
 
         WxMpXmlOutNewsMessage m = WxMpXmlOutMessage.NEWS()
