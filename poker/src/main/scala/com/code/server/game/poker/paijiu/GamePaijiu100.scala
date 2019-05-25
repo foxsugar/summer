@@ -95,6 +95,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
 //    updateLastOperateTime()
     this.lastOperateTime = System.currentTimeMillis
     if(isAutoBreakBanker()) {
+      state = STATE_BANKER_BREAK
       bankerBreak(this.bankerId, flag = true)
     }else{
       if(this.roomPaijiu.curGameNumber==1) {

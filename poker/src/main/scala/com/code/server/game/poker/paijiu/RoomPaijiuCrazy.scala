@@ -43,7 +43,6 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
   }
 
 
-
   override protected def roomAddUser(userId: Long): Unit = {
     this.users.add(userId)
     this.userStatus.put(userId, 0)
@@ -51,9 +50,9 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     this.roomStatisticsMap.put(userId, new RoomStatistics(userId))
     this.canStartUserId = users.get(0)
     //代开房
-    if (!isCreaterJoin ||isClubRoom) this.bankerId = users.get(0)
+    if (!isCreaterJoin || isClubRoom) this.bankerId = users.get(0)
     //如果是机器人
-    if(RedisManager.getUserRedisService.getUserBean(userId).getVip == 1) {
+    if (RedisManager.getUserRedisService.getUserBean(userId).getVip == 1) {
       this.robotList = this.robotList.+:(userId)
     }
     addUser2RoomRedis(userId)
@@ -87,40 +86,41 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
       //并且在游戏中下注
       val game = this.game.asInstanceOf[GamePaijiu]
       val player = game.playerCardInfos(userId)
-      if(player != null ) {
-        if(this.bankerId == userId || player.bet != null)
-        return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME
+      if (player != null) {
+        if (this.bankerId == userId || player.bet != null)
+          return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME
       }
     }
 
 
     //删除玩家房间映射关系
     roomRemoveUser(userId)
-    if(game!= null) {
+    if (game != null) {
       game.users.remove(userId)
     }
-//    //        GameManager.getInstance().getUserRoom().remove(userId);
-//    if (this.createUser == userId) { //房主解散
-//      val n = new Notice
-//      n.setMessage("roomNum " + this.getRoomId + " :has destroy success!")
-//      MsgSender.sendMsg2Player("roomService", "destroyRoom", n, this.getUsers)
-//      //代开房 并且游戏未开始
-//      if (!isCreaterJoin && this.curGameNumber == 1) dissolutionRoom()
-//      val room_ = RoomManager.getRoom(this.roomId).asInstanceOf[Room]
-//      if (room_ != null) RoomManager.removeRoom(this.roomId)
-//    }
+    //    //        GameManager.getInstance().getUserRoom().remove(userId);
+    //    if (this.createUser == userId) { //房主解散
+    //      val n = new Notice
+    //      n.setMessage("roomNum " + this.getRoomId + " :has destroy success!")
+    //      MsgSender.sendMsg2Player("roomService", "destroyRoom", n, this.getUsers)
+    //      //代开房 并且游戏未开始
+    //      if (!isCreaterJoin && this.curGameNumber == 1) dissolutionRoom()
+    //      val room_ = RoomManager.getRoom(this.roomId).asInstanceOf[Room]
+    //      if (room_ != null) RoomManager.removeRoom(this.roomId)
+    //    }
     noticeQuitRoom(userId)
     0
   }
 
   /**
     * 100paijiu 不花钱
+    *
     * @return
     */
   override def getNeedMoney(): Int = {
-    if(!isAA){
+    if (!isAA) {
       return this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble.toInt
-    }else{
+    } else {
       return this.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[String].toDouble.toInt
     }
 
@@ -130,7 +130,6 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
   override protected def setResultOtherInfo(gameOfResult: GameOfResult): Unit = {
 
   }
-
 
 
   override protected def dissolutionRoom(): Unit = {
@@ -154,7 +153,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
     //庄家初始分 再减掉
     //todo 庄家的分如何处理
-//    this.addUserSocre(this.getBankerId, -this.bankerInitScore)
+    //    this.addUserSocre(this.getBankerId, -this.bankerInitScore)
 
     // 存储返回
     val gameOfResult = new GameOfResult
@@ -163,16 +162,15 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     gameOfResult.setEndTime(LocalDateTime.now.toString)
 
 
-
     if (!this.isAA && !this.isInstanceOf[RoomPaijiu100]) {
       //找到大赢家
       val winner = this.getMaxScoreUser
       val money = this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble
       //付房费
       RedisManager.getUserRedisService.addUserMoney(winner, -money)
-      gameOfResult.setOther(Map("isAA"->this.isAA,"winnerId"->winner, "cost"->money).asJava)
-    }else{
-      gameOfResult.setOther(Map("isAA"->this.isAA, "cost"->this.getNeedMoney).asJava)
+      gameOfResult.setOther(Map("isAA" -> this.isAA, "winnerId" -> winner, "cost" -> money).asJava)
+    } else {
+      gameOfResult.setOther(Map("isAA" -> this.isAA, "cost" -> this.getNeedMoney).asJava)
 
     }
 
@@ -184,9 +182,9 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     //战绩
     genRoomRecord()
 
-    if(this.isReOpen) {
-      RoomPaijiuCrazy.createRoom(0,this.getRoomType, this.getGameType, this.getGameNumber, this.getClubId, this.getClubRoomModel,this.getClubMode,
-        this.isAA,this.robotType, this.robotNum, this.robotWinner,this.isReOpen, this.getOtherMode, this.getPersonNumber,this.bankerInitScore )
+    if (this.isReOpen) {
+      RoomPaijiuCrazy.createRoom(0, this.getRoomType, this.getGameType, this.getGameNumber, this.getClubId, this.getClubRoomModel, this.getClubMode,
+        this.isAA, this.robotType, this.robotNum, this.robotWinner, this.isReOpen, this.getOtherMode, this.getPersonNumber, this.bankerInitScore)
     }
   }
 
@@ -204,30 +202,28 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
   }
 
   override def addUserSocre(userId: Long, score: Double): Unit = {
-//    super.addUserSocre(userId, score)
+    //    super.addUserSocre(userId, score)
     //百人牌九 加分时抽水
     if (!this.isInstanceOf[RoomPaijiu100]) {
-      if(score>0) {
+      if (score > 0) {
 
 
-//      val game: GamePaijiuCrazy = this.game.asInstanceOf[GamePaijiuCrazy]
-//      val multiple = rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble
-//      val s = score * (100 - multiple) / 100
-      RedisManager.getUserRedisService.addUserMoney(userId, score)
-      //返利
-      val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble
+        //      val game: GamePaijiuCrazy = this.game.asInstanceOf[GamePaijiuCrazy]
+        //      val multiple = rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble
+        //      val s = score * (100 - multiple) / 100
+        RedisManager.getUserRedisService.addUserMoney(userId, score)
+        //返利
+        val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble
 
-      //发送返利
-      sendCenterAddRebate(userId, rs)
-      }else{
+        //发送返利
+        sendCenterAddRebate(userId, rs)
+      } else {
 
         RedisManager.getUserRedisService.addUserMoney(userId, score)
       }
     }
 
   }
-
-
 
 
   override def pushScoreChange(): Unit = {
@@ -264,37 +260,37 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     //更新庄家
     updateBanker()
 
-    MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "someOneTobeBanker", Map("userId"->userId, "score"->score).asJava), this.users)
+    MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "someOneTobeBanker", Map("userId" -> userId, "score" -> score).asJava), this.users)
     MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "paijiuTobeBanker", 0), userId)
     0
   }
 
 
-  def getPaijiuBankerList(userId:Long):Int = {
-    val result = Map("bankerList"->this.bankerList.asJava, "bankerScoreMap"->this.bankerScoreMap.asJava)
+  def getPaijiuBankerList(userId: Long): Int = {
+    val result = Map("bankerList" -> this.bankerList.asJava, "bankerScoreMap" -> this.bankerScoreMap.asJava)
     MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "getPaijiuBankerList", result.asJava), userId)
     0
   }
 
   /**
     * 设置是否用密码
+    *
     * @param userId
     * @param flag
     * @return
     */
-  def paijiuSetPass(userId:Long, flag:Boolean):Int = {
-    if(this.alreadySet) return ErrorCode.CANNOT_ALREADY_SET
+  def paijiuSetPass(userId: Long, flag: Boolean): Int = {
+    if (this.alreadySet) return ErrorCode.CANNOT_ALREADY_SET
     this.alreadySet = true
     this.usePass = flag
-    if(flag){
+    if (flag) {
       this.pass = new Random().nextInt(9999)
     }
 
-    val result = Map("flag"->flag, "pass"->this.pass)
+    val result = Map("flag" -> flag, "pass" -> this.pass)
     MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "paijiuSetPass", result.asJava), userId)
     0
   }
-
 
 
   /**
@@ -316,7 +312,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
       this.bankerScoreMap = this.bankerScoreMap.filterKeys(_ != userId)
 
       //推送
-      MsgSender.sendMsg2Player(new ResponseVo("gameService", "updatePaijiuBanker", Map("userId" -> userId,"score"->this.bankerScore).asJava), this.getUsers)
+      MsgSender.sendMsg2Player(new ResponseVo("gameService", "updatePaijiuBanker", Map("userId" -> userId, "score" -> this.bankerScore).asJava), this.getUsers)
       //更新时间
       this.updateLastOperateTime()
       pushRemainTime(getRemainTime())
@@ -330,33 +326,20 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
   }
 
 
-  override protected def roomAddUser(userId: Long): Unit = {
-    this.users.add(userId)
-    this.userStatus.put(userId, 0)
-    this.userScores.put(userId, RedisManager.getUserRedisService.getUserMoney(userId))
-    this.roomStatisticsMap.put(userId, new RoomStatistics(userId))
-    this.canStartUserId = users.get(0)
-    if (!isCreaterJoin || isClubRoom) this.bankerId = users.get(0)
-    addUser2RoomRedis(userId)
-  }
-
   override def joinRoom(userId: Long, isJoin: Boolean): Int = {
     val rtn = super.joinRoom(userId, isJoin)
     if (rtn != 0) return rtn
-    if(!this.isInstanceOf[RoomPaijiu100]) {
+    if (!this.isInstanceOf[RoomPaijiu100]) {
       getReady(userId)
     }
     0
   }
-
-
-
-
+}
 
 object RoomPaijiuCrazy extends Room with PaijiuConstant {
 
   def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int, clubId: String, clubRoomModel: String, clubMode: Int, isAA: Boolean,
-                 robotType: Int, robotNum: Int, robotWinner: Int, isReOpen: Boolean, otherMode: Int, personNum: Int,bankerInitScore:Int): Int = {
+                 robotType: Int, robotNum: Int, robotWinner: Int, isReOpen: Boolean, otherMode: Int, personNum: Int, bankerInitScore: Int): Int = {
     val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
     var roomPaijiu = new RoomPaijiuCrazy
     if (Room.isHasMode(MODE_100, otherMode)) {
@@ -401,19 +384,20 @@ object RoomPaijiuCrazy extends Room with PaijiuConstant {
 
   /**
     * 获得房间
+    *
     * @param userId
     * @param crazyType
     */
-  def getCrazyRoom(userId:Long,crazyType:Int): Int ={
+  def getCrazyRoom(userId: Long, crazyType: Int): Int = {
     var roomList = ListBuffer[IfaceRoomVo]()
     RoomManager.getInstance().getRooms
-    for(room <- RoomManager.getInstance().getRooms.values()){
+    for (room <- RoomManager.getInstance().getRooms.values()) {
       //四人
-      if(crazyType == 0 && !room.isInstanceOf[RoomPaijiu100] && room.isInstanceOf[RoomPaijiuCrazy] ){
+      if (crazyType == 0 && !room.isInstanceOf[RoomPaijiu100] && room.isInstanceOf[RoomPaijiuCrazy]) {
         roomList.append(room.toVo(0))
       }
       //百人
-      if(crazyType == 1 && room.isInstanceOf[RoomPaijiu100]){
+      if (crazyType == 1 && room.isInstanceOf[RoomPaijiu100]) {
         roomList.append(room.toVo(0))
       }
     }
@@ -423,13 +407,12 @@ object RoomPaijiuCrazy extends Room with PaijiuConstant {
   }
 
 
-
-  def getPaijiuPlayerNum(userId:Long): Int ={
-    var map: java.util.HashMap[String,Int] = new java.util.HashMap()
-    for(room <- RoomManager.getInstance().getRooms.values()){
-      if(room.isInstanceOf[RoomPaijiu]){
+  def getPaijiuPlayerNum(userId: Long): Int = {
+    var map: java.util.HashMap[String, Int] = new java.util.HashMap()
+    for (room <- RoomManager.getInstance().getRooms.values()) {
+      if (room.isInstanceOf[RoomPaijiu]) {
         val paijiuRoom = room.asInstanceOf[RoomPaijiu]
-        val count = map.getOrElse(paijiuRoom.getGameType,0) + room.getUsers.size()
+        val count = map.getOrElse(paijiuRoom.getGameType, 0) + room.getUsers.size()
         map.put(paijiuRoom.getGameType, count)
       }
 

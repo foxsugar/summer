@@ -243,6 +243,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     this.lastOperateTime = System.currentTimeMillis
 
     if(isAutoBreakBanker()) {
+      state = STATE_BANKER_BREAK
       bankerBreak(this.bankerId, true)
     }else{
       if(this.roomPaijiu.curGameNumber==1) {
@@ -369,7 +370,7 @@ class GamePaijiuCrazy extends GamePaijiu{
         }
       }
     }
-    false
+    return false
   }
 
   /**
@@ -548,7 +549,11 @@ class GamePaijiuCrazy extends GamePaijiu{
         //庄家赢
         if (result > 0) {
           val isHas3Bet = Room.isHasMode(MODE_BET_3, this.roomPaijiu.otherMode)
-          val changeScore = other.getBetScore(bankerScore2 >= mix8Score, isHas3Bet && bankerScore2>sky8Score)
+          var changeScore = other.getBetScore(bankerScore2 >= mix8Score, isHas3Bet && bankerScore2>sky8Score)
+          //两张牌也判断赢三道
+          if(Room.isHasMode(MODE_2CARD,this.roomPaijiu.otherMode)) {
+            changeScore = other.getBetScore(bankerScore1 >= mix8Score, isHas3Bet && bankerScore1>sky8Score)
+          }
           banker.addScore(roomPaijiu,changeScore)
           other.addScore(roomPaijiu,-changeScore)
 
@@ -587,10 +592,16 @@ class GamePaijiuCrazy extends GamePaijiu{
     //排序后的
     val sortedUsers = winUsers.sortWith(compareByScore)
     for (playerInfo <- sortedUsers) {
+      val score1 = getGroupScore(playerInfo.group1)
       val score2 = getGroupScore(playerInfo.group2)
       //庄家应该输的钱
       val isHas3Bet = Room.isHasMode(MODE_BET_3, this.roomPaijiu.otherMode)
-      val bankerLoseScore = playerInfo.getBetScore(score2 >= mix8Score, isHas3Bet && bankerScore2>sky8Score)
+      var bankerLoseScore = playerInfo.getBetScore(score2 >= mix8Score, isHas3Bet && bankerScore2>sky8Score)
+      //两张牌也判断赢三道
+      if(Room.isHasMode(MODE_2CARD,this.roomPaijiu.otherMode)) {
+        bankerLoseScore = playerInfo.getBetScore(score1 >= mix8Score, isHas3Bet && score1>sky8Score)
+      }
+
       val loseScore = if (bankerLoseScore > roomPaijiu.bankerScore) roomPaijiu.bankerScore else bankerLoseScore
       logger.info("应输的钱: " + bankerLoseScore)
       logger.info("实际的钱: " + loseScore)
