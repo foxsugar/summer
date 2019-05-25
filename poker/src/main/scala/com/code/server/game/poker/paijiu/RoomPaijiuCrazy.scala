@@ -330,6 +330,15 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
   }
 
 
+  override protected def roomAddUser(userId: Long): Unit = {
+    this.users.add(userId)
+    this.userStatus.put(userId, 0)
+    this.userScores.put(userId, RedisManager.getUserRedisService.getUserMoney(userId))
+    this.roomStatisticsMap.put(userId, new RoomStatistics(userId))
+    this.canStartUserId = users.get(0)
+    if (!isCreaterJoin || isClubRoom) this.bankerId = users.get(0)
+    addUser2RoomRedis(userId)
+  }
 
   override def joinRoom(userId: Long, isJoin: Boolean): Int = {
     val rtn = super.joinRoom(userId, isJoin)
@@ -341,21 +350,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
   }
 
 
-  override protected def isCanJoinCheckMoney(userId: Long): Boolean = {
 
-    if(!this.isInstanceOf[RoomPaijiu100]) {
-      if(isAA) {
-        RedisManager.getUserRedisService.getUserMoney(userId) >= bankerInitScore + getNeedMoney()
-      }else{
-        RedisManager.getUserRedisService.getUserMoney(userId) >= bankerInitScore
-      }
-    }else{
-      super.isCanJoinCheckMoney(userId)
-    }
-
-  }
-
-}
 
 
 object RoomPaijiuCrazy extends Room with PaijiuConstant {
