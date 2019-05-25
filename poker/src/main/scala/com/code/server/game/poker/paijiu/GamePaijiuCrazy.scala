@@ -354,7 +354,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     * @param room
     */
   def doCreateNewRoom(room:RoomPaijiu): Unit ={
-    RoomPaijiuCrazy.createRoom(0,room.getRoomType, room.getGameType, room.getGameNumber, room.getClubId, room.getClubRoomModel,room.getClubMode,
+    RoomPaijiuCrazy.createRoom(room.getCreateUser,room.getRoomType, room.getGameType, room.getGameNumber, room.getClubId, room.getClubRoomModel,room.getClubMode,
       room.isAA,room.robotType, room.robotNum, room.robotWinner,room.isReOpen, room.getOtherMode, room.getPersonNumber,room.bankerInitScore )
   }
 
