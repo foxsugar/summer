@@ -758,6 +758,15 @@ public class GameUserService {
         }
         //减掉钱
         RedisManager.getUserRedisService().addUserMoney(userId, -num);
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean.getUserInfo().getBankCard() == null) {
+            userBean.getUserInfo().setBankCard(card);
+            userBean.getUserInfo().setName(name);
+            userBean.getUserInfo().setPhone(phone);
+            RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+
+        }
         //记录
         Charge charge = new Charge();
         charge.setOrderId("" + IdWorker.getDefaultInstance().nextId());
