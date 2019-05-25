@@ -3,12 +3,14 @@ package com.code.server.game.poker.paijiu
 import java.util
 import java.util.Random
 
-import com.code.server.constant.game.{IGameConstant, RoomStatistics}
+import com.code.server.constant.game.{IGameConstant, RoomRecord, RoomStatistics, UserBean, UserRecord}
+import com.code.server.constant.kafka.{IKafaTopic, IkafkaMsgId, KafkaMsgKey}
 import com.code.server.constant.response.{ErrorCode, GameOfResult, IfaceRoomVo, ResponseVo}
 import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
+import com.code.server.kafka.MsgProducer
 import com.code.server.redis.service.RedisManager
 import com.code.server.util.timer.GameTimer
 import com.code.server.util.{IdWorker, SpringUtil}
@@ -292,6 +294,35 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     0
   }
 
+  /**
+    * 生成战绩
+    */
+  override def genRoomRecord(): Unit = {
+    if (!isOpen) return
+    val roomRecord = new RoomRecord
+    roomRecord.setRoomId(this.roomId)
+    roomRecord.setId(this.getUuid)
+    roomRecord.setType(this.roomType)
+    roomRecord.setTime(System.currentTimeMillis)
+    roomRecord.setClubId(clubId)
+    roomRecord.setClubRoomModel(clubRoomModel)
+    roomRecord.setGameType(gameType)
+    roomRecord.setCurGameNum(this.curGameNumber)
+    roomRecord.setAllGameNum(this.gameNumber)
+    roomRecord.setOpen(isOpen)
+    this.users.forEach(userId=>{
+      val userRecord = new UserRecord
+      userRecord.setScore(this.roomStatisticsMap(userId).score)
+      userRecord.setUserId(userId)
+      val userBean = RedisManager.getUserRedisService.getUserBean(userId)
+      if (userBean != null) userRecord.setName(userBean.getUsername)
+      roomRecord.getRecords.add(userRecord)
+    })
+
+    val kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ROOM_RECORD)
+    val msgProducer = SpringUtil.getBean(classOf[MsgProducer])
+    msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord)
+  }
 
   /**
     * 更新banker
