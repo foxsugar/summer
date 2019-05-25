@@ -41,6 +41,9 @@ class RoomPaijiu100 extends RoomPaijiuCrazy{
   }
 
 
+  override protected def isCanJoinCheckMoney(userId: Long): Boolean = {
+    return true
+  }
   /**
     * 生成房间战绩
     */
