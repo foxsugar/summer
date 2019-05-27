@@ -23,6 +23,8 @@ public class UserInfo {
     private double chargeGoldNum = 0;
     private String name;
     private String idCard;
+    private String phone;
+    private String bankCard;
     private Map<String, Integer> playGameNum = new HashMap<>();
     private int coupon = 0;
     private Map<String, Map<Integer, Integer>> taskComplete = new HashMap<>();
@@ -161,6 +163,24 @@ public class UserInfo {
 
     public UserInfo setRebate(Map<Long, ScoreItem> rebate) {
         this.rebate = rebate;
+        return this;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public UserInfo setPhone(String phone) {
+        this.phone = phone;
+        return this;
+    }
+
+    public String getBankCard() {
+        return bankCard;
+    }
+
+    public UserInfo setBankCard(String bankCard) {
+        this.bankCard = bankCard;
         return this;
     }
 }
