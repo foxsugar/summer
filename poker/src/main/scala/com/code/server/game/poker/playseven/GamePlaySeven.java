@@ -1280,11 +1280,11 @@ public class GamePlaySeven extends Game {
             roomPlaySeven = (RoomPlaySeven) room;
         }
         for (Long l : users) {
-            roomPlaySeven.addUserSocre(l, 1);
-            playerCardInfos.get(l).addScore(1);
+            roomPlaySeven.addUserSocre(l, 2);
+            playerCardInfos.get(l).addScore(2);
         }
-        roomPlaySeven.addUserSocre(zhuId, -1 * (roomPlaySeven.getPersonNumber()));
-        playerCardInfos.get(zhuId).addScore(-1 * (roomPlaySeven.getPersonNumber()));
+        roomPlaySeven.addUserSocre(zhuId, -2 * (roomPlaySeven.getPersonNumber()));
+        playerCardInfos.get(zhuId).addScore(-2 * (roomPlaySeven.getPersonNumber()));
     }
 
     protected void sendResult(long winnerId) {
