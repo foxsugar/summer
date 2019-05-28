@@ -69,4 +69,15 @@ class RoomPaijiu100 extends RoomPaijiuCrazy{
     0
   }
 
+  override def clearReadyStatus(isAddGameNum: Boolean): Unit = {
+//    lastOperateTime = System.currentTimeMillis
+    this.setGame(null)
+    this.setInGame(false)
+    import scala.collection.JavaConversions._
+    for (entry <- this.userStatus.entrySet) {
+      entry.setValue(IGameConstant.STATUS_JOIN)
+    }
+    if (isAddGameNum) this.curGameNumber += 1
+  }
+
 }
