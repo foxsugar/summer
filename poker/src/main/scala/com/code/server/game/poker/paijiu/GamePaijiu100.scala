@@ -306,7 +306,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
       this.roomPaijiu.clearReadyStatus(true)
 
       val room100 = roomPaijiu.asInstanceOf[RoomPaijiu100]
-      room100.updateBanker()
+//      room100.updateBanker()
 
       //百人不结束
     } else {
