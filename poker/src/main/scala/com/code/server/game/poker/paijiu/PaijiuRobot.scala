@@ -128,6 +128,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
           val rp = room.asInstanceOf[RoomPaijiu100]
           //更新banker
           val isUp = rp.updateBanker()
+          println("是否更新了庄家: " + isUp)
           //选定庄家后10秒开局
           if (rp.getBankerId != 0) {
             if(isUp) {
