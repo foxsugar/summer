@@ -300,6 +300,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
       }else{
         RedisManager.getUserRedisService.addUserMoney(bankerId,this.roomPaijiu.bankerScore)
       }
+      this.roomPaijiu.lastBankerInitScore = this.roomPaijiu.bankerInitScore
       this.roomPaijiu.setBankerId(0)
       this.roomPaijiu.bankerScore = 0
       this.roomPaijiu.clearReadyStatus(true)

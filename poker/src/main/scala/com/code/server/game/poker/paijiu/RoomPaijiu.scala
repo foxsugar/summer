@@ -51,6 +51,7 @@ class RoomPaijiu extends PokerGoldRoom with PaijiuConstant {
   //上庄列表
   var bankerList:List[Long] = List()
   var bankerScoreMap:Map[Long,Int] = Map()
+  var lastBankerInitScore:Int = 0
 
   //赢得索引
   var winnerIndex:ListBuffer[GamePaijiuResult] = ListBuffer()

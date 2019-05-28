@@ -12,6 +12,7 @@ public class RoomPaijiuVo extends RoomVo {
     //庄家设置的分
     public int bankerScore = 0;
     public int bankerInitScore = 0;
+    public int lastBankerInitScore =0;
 
 
     public List<GamePaijiuResult> winnerIndex = new ArrayList<>();
@@ -113,6 +114,15 @@ public class RoomPaijiuVo extends RoomVo {
 
     public RoomPaijiuVo setPass(int pass) {
         this.pass = pass;
+        return this;
+    }
+
+    public int getLastBankerInitScore() {
+        return lastBankerInitScore;
+    }
+
+    public RoomPaijiuVo setLastBankerInitScore(int lastBankerInitScore) {
+        this.lastBankerInitScore = lastBankerInitScore;
         return this;
     }
 }

@@ -3,7 +3,7 @@ package com.code.server.game.poker.paijiu
 import java.util
 import java.util.Random
 
-import com.code.server.constant.game.{IGameConstant, RoomRecord, RoomStatistics, UserBean, UserRecord}
+import com.code.server.constant.game.{IGameConstant, RoomRecord, RoomStatistics, UserRecord}
 import com.code.server.constant.kafka.{IKafaTopic, IkafkaMsgId, KafkaMsgKey}
 import com.code.server.constant.response.{ErrorCode, GameOfResult, IfaceRoomVo, ResponseVo}
 import com.code.server.game.poker.config.ServerConfig
@@ -34,9 +34,11 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     //如果现在是庄家,把钱退给他
     if (this.bankerId != userId && bankerScoreMap.contains(userId)) {
       RedisManager.getUserRedisService.addUserMoney(userId, bankerScoreMap(userId))
+      this.lastBankerInitScore = bankerInitScore
       this.bankerId = 0
       this.bankerInitScore = 0
       this.bankerScore = 0
+
     }
     this.bankerList = this.bankerList.filter(_ != userId)
     this.bankerScoreMap = this.bankerScoreMap.filterKeys(_ != userId)
@@ -327,7 +329,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
   /**
     * 更新banker
     */
-  def updateBanker(): Unit = {
+  def updateBanker(): Boolean = {
     //现在没有banker
     if ((this.bankerId == 0 || this.bankerId == -1) && this.bankerList.nonEmpty) {
       //排队的第一个
@@ -352,7 +354,10 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
       this.curGameNumber = 1
 
       println("更新banker 更新后id为: " + userId)
+      return true
 
+    }else{
+      return false
     }
   }
 
