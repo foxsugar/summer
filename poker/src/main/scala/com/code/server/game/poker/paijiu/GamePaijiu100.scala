@@ -290,7 +290,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
       val winScore:Double = this.roomPaijiu.bankerScore - this.roomPaijiu.bankerInitScore
       if(winScore > 0) {
         val s = winScore * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble / 100
-        val finalScore = winScore - s
+        val finalScore = this.roomPaijiu.bankerScore - s
         RedisManager.getUserRedisService.addUserMoney(bankerId,finalScore)
 
         //返利

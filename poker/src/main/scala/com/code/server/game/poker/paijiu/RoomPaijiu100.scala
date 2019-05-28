@@ -24,7 +24,6 @@ class RoomPaijiu100 extends RoomPaijiuCrazy{
     //百人牌九 加分时抽水
     if (this.isInstanceOf[RoomPaijiu100]) {
       if(score>0) {
-
         val game = this.game.asInstanceOf[GamePaijiuCrazy]
         val multiple = rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble
         val s = score * (100 - multiple) / 100

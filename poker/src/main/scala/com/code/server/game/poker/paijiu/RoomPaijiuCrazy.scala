@@ -32,13 +32,16 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     this.roomStatisticsMap.remove(userId)
     //如果在上庄列表里 删掉
     //如果现在是庄家,把钱退给他
-    if (this.bankerId != userId && bankerScoreMap.contains(userId)) {
-      RedisManager.getUserRedisService.addUserMoney(userId, bankerScoreMap(userId))
+
+    if(this.bankerId == userId) {
+      RedisManager.getUserRedisService.addUserMoney(userId, this.bankerScore)
       this.lastBankerInitScore = bankerInitScore
       this.bankerId = 0
       this.bankerInitScore = 0
       this.bankerScore = 0
-
+    }
+    if (bankerScoreMap.contains(userId)) {
+      RedisManager.getUserRedisService.addUserMoney(userId, bankerScoreMap(userId))
     }
     this.bankerList = this.bankerList.filter(_ != userId)
     this.bankerScoreMap = this.bankerScoreMap.filterKeys(_ != userId)
@@ -102,16 +105,6 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     if (game != null) {
       game.users.remove(userId)
     }
-    //    //        GameManager.getInstance().getUserRoom().remove(userId);
-    //    if (this.createUser == userId) { //房主解散
-    //      val n = new Notice
-    //      n.setMessage("roomNum " + this.getRoomId + " :has destroy success!")
-    //      MsgSender.sendMsg2Player("roomService", "destroyRoom", n, this.getUsers)
-    //      //代开房 并且游戏未开始
-    //      if (!isCreaterJoin && this.curGameNumber == 1) dissolutionRoom()
-    //      val room_ = RoomManager.getRoom(this.roomId).asInstanceOf[Room]
-    //      if (room_ != null) RoomManager.removeRoom(this.roomId)
-    //    }
     noticeQuitRoom(userId)
     0
   }
@@ -210,15 +203,9 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     //百人牌九 加分时抽水
     if (!this.isInstanceOf[RoomPaijiu100]) {
       if (score > 0) {
-
-
-        //      val game: GamePaijiuCrazy = this.game.asInstanceOf[GamePaijiuCrazy]
-        //      val multiple = rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble
-        //      val s = score * (100 - multiple) / 100
         RedisManager.getUserRedisService.addUserMoney(userId, score)
         //返利
         val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble
-
         //发送返利
         sendCenterAddRebate(userId, rs)
       } else {
