@@ -128,7 +128,6 @@ public class PayCallback {
                     charge.setCallbacktime(new Date());
                     double money = charge.getMoney();
                     String dayStr = DateUtil.convert2DayString(new Date());
-                    Constant constant = constantDao.findOne(1l);
 
                     User u = userService.getUserByUserId(charge.getUserid());
 
@@ -221,6 +220,8 @@ public class PayCallback {
                         userService.save(user);
                     }
 
+                    //改成真实充值
+                    charge.setMoney(rebateMoney);
 
                     //保存订单
                     chargeService.save(charge);

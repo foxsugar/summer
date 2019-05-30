@@ -443,16 +443,14 @@ class GamePaijiuCrazy extends GamePaijiu{
     if (!checkBet(bet)) return ErrorCode.BET_PARAM_ERROR
     //金币牌九 下注不能大于身上的钱
     val betNum:Int = one + two + three
-    if (this.roomPaijiu.isInstanceOf[RoomPaijiuAce]|| this.roomPaijiu.isInstanceOf[RoomPaijiuCrazy]){
-      val myMoney = RedisManager.getUserRedisService.getUserMoney(userId)
-      if(myMoney<betNum) {
-        return ErrorCode.BET_PARAM_NO_MONEY
-      }
+    val myMoney = RedisManager.getUserRedisService.getUserMoney(userId)
+    if(myMoney<betNum) {
+      return ErrorCode.BET_PARAM_NO_MONEY
     }
 
     playerCardInfoPaijiu.bet = bet
 
-    this.roomPaijiu.addUserSocre(userId, -betNum)
+//    this.roomPaijiu.addUserSocre(userId, -betNum)
 
 
     val result = Map("userId" -> userId, "bet" -> bet)
@@ -547,7 +545,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     val bankerScore2 = getGroupScore(banker.group2)
     println("bankerscore1: " + bankerScore1)
     playerCardInfos.foreach { case (uid, other) =>
-      if (uid != bankerId) {
+      if (uid != bankerId && other.bet != null) {
         val otherScore1 = getGroupScore(other.group1)
         println("otherscore1: " + otherScore1)
 

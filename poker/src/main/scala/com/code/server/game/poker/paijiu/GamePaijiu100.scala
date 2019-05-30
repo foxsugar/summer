@@ -132,12 +132,12 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     if (!checkBet(bet)) return ErrorCode.BET_PARAM_ERROR
     val myBetNum = one + two + three
     //金币牌九 下注不能大于身上的钱
-    if (this.roomPaijiu.isInstanceOf[RoomPaijiuAce]|| this.roomPaijiu.isInstanceOf[RoomPaijiuCrazy]){
-      val myMoney = RedisManager.getUserRedisService.getUserMoney(userId)
-      if(myMoney<myBetNum) {
-        return ErrorCode.BET_PARAM_NO_MONEY
-      }
+
+    val myMoney = RedisManager.getUserRedisService.getUserMoney(userId)
+    if(myMoney<playerCardInfoPaijiu.getBetNum() + one + two + three) {
+      return ErrorCode.BET_PARAM_NO_MONEY
     }
+
     //总下注 不能大于锅底
     var betNum:Int = 0
     for(playerInfo <- this.playerCardInfos.values){
@@ -159,7 +159,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
       playerCardInfoPaijiu.bet.three += three
     }
 
-    this.roomPaijiu.addUserSocre(userId, -myBetNum)
+//    this.roomPaijiu.addUserSocre(userId, -myBetNum)
 
     val result = Map("userId" -> userId, "bet" -> bet)
     MsgSender.sendMsg2Player("gamePaijiuService", "betResult", result.asJava, roomPaijiu.users)
