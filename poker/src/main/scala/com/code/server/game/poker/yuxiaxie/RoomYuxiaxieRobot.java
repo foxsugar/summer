@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by sunxianping on 2019-01-03.
  */
 public class RoomYuxiaxieRobot implements IRobot {
-    long time = 60000;
+    long time = 40000;
 
     @Override
     public void execute() {

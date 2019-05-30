@@ -47,6 +47,13 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     this.bankerScoreMap = this.bankerScoreMap.filterKeys(_ != userId)
     this.robotList = this.robotList.filter(_ != userId)
     removeUserRoomRedis(userId)
+
+    //重置房间密码状态
+    if(this.users.size() == 0) {
+      this.alreadySet = false
+      this.usePass = false
+      this.pass = 0
+    }
   }
 
 
