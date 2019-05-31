@@ -123,11 +123,16 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     */
   override def getNeedMoney(): Int = {
     if (!isAA) {
-      return this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble.toInt + bankerInitScore
+      return this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble.toInt
     } else {
-      return this.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[String].toDouble.toInt + bankerInitScore
+      return this.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[String].toDouble.toInt
     }
 
+  }
+
+
+  override protected def isCanJoinCheckMoney(userId: Long): Boolean = { //代建房
+    return RedisManager.getUserRedisService.getUserMoney(userId) >= createNeedMoney + bankerInitScore
   }
 
 
