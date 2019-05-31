@@ -164,7 +164,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
         int lastCard = CardTypeUtil.getTypeByCard(card);
         List<HuCardType> huList = HuUtil.isHu(this, noPengAndGang, getChiPengGangNum(), this.gameInfo.hun, lastCard);
         for (HuCardType huCardType : huList) {
-            if (huCardType.specialHuList.contains(hu_吊将)) {
+            if (huCardType.specialHuList.contains(hu_吊将) ||huCardType.specialHuList.contains(hu_七小对_吊将)) {
                 return false;
             }
             if (huCardType.hun3.size() > 0) {
@@ -355,7 +355,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
      * @return
      */
     protected int getMaxPoint(HuCardType huCardType, boolean isDianPao) {
-        if (!isDianPao && huCardType.specialHuList.contains(hu_吊将)) {
+        if (!isDianPao && (huCardType.specialHuList.contains(hu_吊将) ||  huCardType.specialHuList.contains(hu_七小对_吊将))) {
             return 10;
         }
         boolean isHun = HuUtil.cardIsHun(this.gameInfo.hun, huCardType.tingCardType);

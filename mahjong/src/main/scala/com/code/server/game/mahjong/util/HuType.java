@@ -129,6 +129,8 @@ public interface HuType {
     int hu_杠上点炮 = 220;
     int hu_截杠胡 = 221;
 
+    int hu_七小对_吊将 = 222;
+
 
 
 

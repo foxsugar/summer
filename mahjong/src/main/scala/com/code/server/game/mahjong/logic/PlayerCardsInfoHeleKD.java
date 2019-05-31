@@ -13,6 +13,12 @@ import static com.code.server.game.mahjong.logic.GameInfoZhuohaozi.mode_明听;
 public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
 
     @Override
+    public void init(List<String> cards) {
+        super.init(cards);
+        specialHuScore.put(hu_七小对_吊将, 0);
+    }
+
+    @Override
     public void ting(String card) {
         //出牌 弃牌置为空(客户端扣牌)
         this.cards.remove(card);

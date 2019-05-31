@@ -226,7 +226,14 @@ public class HuUtil implements HuType {
             if (huCardType != null) {
                 huCardType.setFan(playerCardsInfo.getSpecialHuScore(hu_七小对)).specialHuList.add(hu_七小对);
                 huList.add(huCardType);
+
+                if (playerCardsInfo.isHasSpecialHu(hu_七小对_吊将)) {
+                    if (isQixiaoduiDiaojiang(cards, hun, lastCard)) {
+                        huCardType.specialHuList.add(hu_七小对_吊将);
+                    }
+                }
             }
+
         }
 
         if (playerCardsInfo.isHasSpecialHu(hu_豪华七小对)) {
@@ -234,6 +241,11 @@ public class HuUtil implements HuType {
             if (huCardType != null) {
                 huCardType.setFan(playerCardsInfo.getSpecialHuScore(hu_豪华七小对)).specialHuList.add(hu_豪华七小对);
                 huList.add(huCardType);
+                if (playerCardsInfo.isHasSpecialHu(hu_七小对_吊将)) {
+                    if (isQixiaoduiDiaojiang(cards, hun, lastCard)) {
+                        huCardType.specialHuList.add(hu_七小对_吊将);
+                    }
+                }
             }
         }
 
@@ -243,6 +255,11 @@ public class HuUtil implements HuType {
                 HuCardType huCardType = new HuCardType();
                 huCardType.setFan(playerCardsInfo.getSpecialHuScore(hu_清七对)).specialHuList.add(hu_清七对);
                 huList.add(huCardType);
+                if (playerCardsInfo.isHasSpecialHu(hu_七小对_吊将)) {
+                    if (isQixiaoduiDiaojiang(cards, hun, lastCard)) {
+                        huCardType.specialHuList.add(hu_七小对_吊将);
+                    }
+                }
             }
         }
 
@@ -266,6 +283,34 @@ public class HuUtil implements HuType {
         return huList;
     }
 
+    private static boolean isQixiaoduiDiaojiang(List<String> cards, List<Integer> hun, int lastCard) {
+        Map<Integer, Integer> cardNum = new HashMap<>();
+        int hunCardNum = 0;
+        for (String card : cards) {
+            int cardType = CardTypeUtil.getTypeByCard(card);
+            if (hun.contains(cardType)) {
+                hunCardNum ++;
+            }else{
+                int num = cardNum.getOrDefault(cardType, 0);
+                num +=1;
+                cardNum.put(cardType, num);
+            }
+        }
+        final int[] needHunNum = {0};
+        cardNum.forEach((cardType,num)->{
+            if (num % 2 == 1) {
+                needHunNum[0] += 1;
+            }
+        });
+        boolean lastCardIsHun = hun.contains(lastCard);
+        if (lastCardIsHun) {
+            return hunCardNum - needHunNum[0] >=2;
+        } else {
+            return hunCardNum>0 && hunCardNum - needHunNum[0]>=1;
+        }
+
+
+    }
 
     public static List<Integer> isTing(List<String> cards, PlayerCardsInfoMj playerCardsInfo, HuLimit limit) {
         List<Integer> exclude = new ArrayList<>();
