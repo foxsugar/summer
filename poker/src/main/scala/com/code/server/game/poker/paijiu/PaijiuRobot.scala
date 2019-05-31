@@ -139,8 +139,10 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
           //四人不需要等待
           if (rpc.getCurGameNumber>1) {
             println("托管: 开始游戏 四人 " + room.getRoomId)
-            if(rpc.getCurGameNumber == 2 && (now - rpc.getLastOperateTime)> STATE_TIME(STATE_START)) {
-              sendStartGame(rpc)
+            if(rpc.getCurGameNumber == 2) {
+              if((now - rpc.getLastOperateTime)> STATE_TIME(STATE_START)) {
+                sendStartGame(rpc)
+              }
             }else{
               sendStartGame(rpc)
             }
