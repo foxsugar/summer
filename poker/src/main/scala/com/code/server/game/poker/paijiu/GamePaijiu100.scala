@@ -98,12 +98,12 @@ class GamePaijiu100 extends GamePaijiuCrazy {
       state = STATE_BANKER_BREAK
       bankerBreak(this.bankerId, flag = true)
     }else{
-      if(this.roomPaijiu.curGameNumber==1) {
-        this.roomPaijiu.clearReadyStatus(true)
-//        this.roomPaijiu.startGame()
-      }else{
+//      if(this.roomPaijiu.curGameNumber==1) {
+//        this.roomPaijiu.clearReadyStatus(true)
+////        this.roomPaijiu.startGame()
+//      }else{
         bankerBreakStart()
-      }
+//      }
     }
   }
 
