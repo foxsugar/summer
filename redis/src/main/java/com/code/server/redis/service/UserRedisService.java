@@ -291,7 +291,8 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
     }
 
     @Override
-    public Set<String> getRobotPoolUser() {
-        return redisTemplate.boundSetOps(ROBOT_POOL).members();
+    public List<String> getRobotPoolUser() {
+        List<String> list = new ArrayList<>(redisTemplate.boundSetOps(ROBOT_POOL).members());
+        return list;
     }
 }

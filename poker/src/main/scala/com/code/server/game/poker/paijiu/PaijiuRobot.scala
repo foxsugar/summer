@@ -2,6 +2,7 @@ package com.code.server.game.poker.paijiu
 
 
 import java.lang.Long
+import java.util.Collections
 
 import com.code.server.constant.kafka.KafkaMsgKey
 import com.code.server.constant.response.ResponseVo
@@ -292,11 +293,14 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     * @return
     */
   private def getRobotList(num: Int): List[Long] = {
-    val set: java.util.Set[String] = RedisManager.getUserRedisService.getRobotPoolUser
-    var robotList: List[Long] = List()
+    val list: java.util.List[String] = RedisManager.getUserRedisService.getRobotPoolUser
+
+    Collections.shuffle(list)
     var count = 0
     import scala.collection.JavaConversions._
-    for (userId <- set) {
+    var robotList: List[Long] = List()
+
+    for (userId <- list) {
       val uid: Long = Long.parseLong(userId)
       val roomId = RedisManager.getUserRedisService.getRoomId(uid)
       if (roomId == null) {

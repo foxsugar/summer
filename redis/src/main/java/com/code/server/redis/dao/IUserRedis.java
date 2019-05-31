@@ -4,7 +4,6 @@ import com.code.server.constant.game.UserBean;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by sunxianping on 2017/5/25.
@@ -55,6 +54,6 @@ public interface IUserRedis {
 
     void addRobotPool(long userId);
 
-    Set<String> getRobotPoolUser();
+    List<String> getRobotPoolUser();
 
 }

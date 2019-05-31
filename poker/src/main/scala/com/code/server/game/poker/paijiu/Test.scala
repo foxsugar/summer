@@ -68,11 +68,15 @@ object Test {
     print(l1)
   }
   def testShuffle() = {
-    val list = List(1,23,5,5,7,8,9,2)
+    val set = Set(1,23,5,5,7,8,9,2)
+    val list = List()
+
     val rand = Random
 //    rand.setSeed(rand.nextInt(100))
 //    rand.shuffle(list)
-    print( rand.shuffle(list).head)
+//    print( rand.shuffle(list).head)
+    print(set)
+    print(rand.shuffle(set))
     print(list)
     print( rand.shuffle(list))
 
@@ -179,10 +183,10 @@ object Test {
 //    test1()
 //    testSame()
 //    testAdd()
-    testMap()
+//    testMap()
 //    testMuList
 //    testList
-//    testShuffle
+    testShuffle
 //    testSild
 //    testMap1
 //    testPlayerVo
