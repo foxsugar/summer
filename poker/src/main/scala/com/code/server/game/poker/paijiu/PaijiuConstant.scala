@@ -47,6 +47,7 @@ trait PaijiuConstant {
   val MODE_DIJIU = 13
 
 
+
   val CARDSCORE = Map(
     1->12,
     2->12,

@@ -2,6 +2,7 @@ package com.code.server.game.poker.paijiu
 
 import java.{lang, util}
 
+import com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData
 import com.code.server.constant.data.{DataManager, StaticDataProto}
 import com.code.server.constant.game.IGameConstant
 import com.code.server.constant.response.{ErrorCode, GameOfResult, GamePaijiuResult}
@@ -126,24 +127,55 @@ class GamePaijiuCrazy extends GamePaijiu{
     */
   override def getGroupScore(group: String): Int = {
 
+    if(group == null || "".equals(group)) {
+      println(group + " group null")
+      return 0
+    }
+
     val data = DataManager.data.getCrazyPaijiuCardGroupDataMap.get(group)
     //没有这个牌型或者不含这个牌型
-    if(data == null || getNoGroupName().contains(data.getName)) {
+    if(data == null ) {
       //两张牌的点数相加
-      if(group == null || "".equals(group)) {
-        println(group + " group null")
-        return 0
-      }
+
+
+      //翻转一下
       val cardArray = group.split(",")
-      val card1 = cardArray(0)
-      val card2 = cardArray(1)
-      CARDSCORE(card1.toInt) + CARDSCORE(card2.toInt)
+      val groupS = cardArray(0) + "," + cardArray(1)
+      val dataS = DataManager.data.getCrazyPaijiuCardGroupDataMap.get(groupS)
+      if(dataS == null) {
+        return 0
+      }else{
+        getCrazyGroupScore(groupS, dataS)
+      }
     }else{
-      getGroupScoreByName(data.getName)
+      getCrazyGroupScore(group, data)
     }
 
   }
 
+  def getCrazyGroupScore(group:String, data : CrazyPaijiuCardGroupData):Int={
+
+    if(!Room.isHasMode(MODE_GUIZI,roomPaijiu.getOtherMode) && data.getName.equals("ghost")) {
+      return getGroupScoreByName("zero")
+    }
+
+    if(!Room.isHasMode(MODE_DIJIU,roomPaijiu.getOtherMode) && data.getName.equals("fieldninenn")) {
+      return getGroupScoreByName("fieldone")
+    }
+
+    if(!Room.isHasMode(MODE_TIANJIU,roomPaijiu.getOtherMode) && data.getName.equals("skynineking")) {
+      return getGroupScoreByName("skyone")
+    }
+    if(!Room.isHasMode(MODE_ZHADAN,roomPaijiu.getOtherMode) && data.getName.equals("boom")) {
+      if(group.equals("5,32") || group.equals("32,5")) {
+        return getGroupScoreByName("peopleone")
+      }else{
+        return getGroupScoreByName("mixone")
+      }
+
+    }
+    return getGroupScoreByName(data.getName)
+  }
 
   /**
     * 检测开牌是否合法
