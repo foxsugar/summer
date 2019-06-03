@@ -2,8 +2,8 @@ package com.code.server.game.room;
 
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
-import com.code.server.game.room.service.RoomManager;
 import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.game.room.service.RoomManager;
 import com.code.server.util.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -143,6 +143,7 @@ public class RoomMsgDispatch {
 //                if (r.isAllReady() && r.getUsers().size() >= 2) {
                     r.startGame();
 //                }
+                MsgSender.sendMsg2Player("roomService", "startAuto", 0, userId);
                 return 0;
             }
 
