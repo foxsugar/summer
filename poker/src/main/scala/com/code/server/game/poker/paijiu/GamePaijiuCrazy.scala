@@ -131,24 +131,17 @@ class GamePaijiuCrazy extends GamePaijiu{
       println(group + " group null")
       return 0
     }
-
     val data = DataManager.data.getCrazyPaijiuCardGroupDataMap.get(group)
+    if(data == null) {
+      return 0
+    }
     //没有这个牌型或者不含这个牌型
-    if(data == null ) {
+    if( getNoGroupName().contains(data.getName)) {
       //两张牌的点数相加
 
-
-      //翻转一下
-      val cardArray = group.split(",")
-      val groupS = cardArray(0) + "," + cardArray(1)
-      val dataS = DataManager.data.getCrazyPaijiuCardGroupDataMap.get(groupS)
-      if(dataS == null) {
-        return 0
-      }else{
-        getCrazyGroupScore(groupS, dataS)
-      }
-    }else{
       getCrazyGroupScore(group, data)
+    }else{
+      getGroupScoreByName(data.getName)
     }
 
   }
