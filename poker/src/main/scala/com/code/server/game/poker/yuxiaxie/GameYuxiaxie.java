@@ -301,7 +301,10 @@ public class GameYuxiaxie extends Game {
         diceHis.addAll(dice);
         this.room.getDiceHistory().put(this.room.curGameNumber, diceHis);
 
-        pushToAll("gameService", "crapResp", dice);
+        List<Integer> diceTemp = new ArrayList<>();
+        diceTemp.add(random.nextInt(6) + 1);
+        diceTemp.add(random.nextInt(6) + 1);
+        pushToAll("gameService", "crapResp", diceTemp);
         MsgSender.sendMsg2Player("gameService", "crap", 0,userId);
 
         //开始下注
