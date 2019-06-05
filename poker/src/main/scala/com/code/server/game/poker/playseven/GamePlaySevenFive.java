@@ -52,7 +52,7 @@ public class GamePlaySevenFive extends GamePlaySeven{
                     temp = -(allScore - 40) / 40;
                 }
             }
-            if (shuangLiangDouble || fanzhu) {
+            if (shuangLiangDouble || fanzhu|| secondBanker == room.getBankerId()) {
                 if (room.zhuangDanDaJiaBei && winnerId == room.getBankerId()) {
                     temp *= 2;
                 }

@@ -862,7 +862,7 @@ public class GamePlaySeven extends Game {
         }*/
 
         for (Integer i : playCardList) {
-            if (0 == (i + liangCard) || liangCard == i) {//出特殊7的话 会有提示
+            if (0 == (i + liangCard) || liangCard == i.intValue()) {//出特殊7的话 会有提示
                 if (userId != zhuId) {
                     this.secondBanker = userId;
                     Map<String, Object> msg = new HashMap<>();
@@ -873,9 +873,9 @@ public class GamePlaySeven extends Game {
                     long temp = 0l;
                     for (long l : playerCardInfos.keySet()) {
                         if (playerCardInfos.get(l).handCards.contains(liangCard) || playerCardInfos.get(l).handCards.contains(-liangCard)) {
-                            if (l != zhuId) {
+//                            if (l != zhuId) {
                                 temp = l;
-                            }
+//                            }
                         }
                     }
                     if (temp == zhuId) {
@@ -1221,7 +1221,7 @@ public class GamePlaySeven extends Game {
                 temp = -(allScore - 40) / 40;
             }
         }
-        if (shuangLiangDouble || fanzhu || shouQiDouble) {
+        if (shuangLiangDouble || fanzhu || shouQiDouble || secondBanker == room.getBankerId()) {
             if (room.zhuangDanDaJiaBei && winnerId == room.getBankerId()) {
                 temp *= 2;
             }
