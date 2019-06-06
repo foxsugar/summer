@@ -379,8 +379,12 @@ class GamePaijiuCrazy extends GamePaijiu{
     * @param room
     */
   def doCreateNewRoom(room:RoomPaijiu): Unit ={
+    var personNum = 4
+    if(this.isInstanceOf[GamePaijiu100]) {
+      personNum = room.getPersonNumber
+    }
     RoomPaijiuCrazy.createRoom(room.getCreateUser,room.getRoomType, room.getGameType, room.getGameNumber, room.getClubId, room.getClubRoomModel,room.getClubMode,
-      room.isAA,room.robotType, room.robotNum, room.robotWinner,room.isReOpen, room.getOtherMode, room.getPersonNumber,room.bankerInitScore )
+      room.isAA,room.robotType, room.robotNum, room.robotWinner,room.isReOpen, room.getOtherMode, personNum,room.bankerInitScore )
   }
 
 
