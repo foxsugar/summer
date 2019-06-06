@@ -873,9 +873,9 @@ public class GamePlaySeven extends Game {
                     long temp = 0l;
                     for (long l : playerCardInfos.keySet()) {
                         if (playerCardInfos.get(l).handCards.contains(liangCard) || playerCardInfos.get(l).handCards.contains(-liangCard)) {
-//                            if (l != zhuId) {
+                            if (l != zhuId) {
                                 temp = l;
-//                            }
+                            }
                         }
                     }
                     if (temp == zhuId) {
