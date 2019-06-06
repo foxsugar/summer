@@ -324,6 +324,13 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord)
   }
 
+
+  override def dissolutionRoom(userId: Long): Int = {
+    this.isReOpen = false
+    dissolutionRoom()
+    MsgSender.sendMsg2Player(new ResponseVo("roomService", "dissolutionRoom", "ok"), userId)
+    0
+  }
   /**
     * 更新banker
     */
