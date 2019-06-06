@@ -214,9 +214,9 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     //百人牌九 加分时抽水
     if (!this.isInstanceOf[RoomPaijiu100]) {
       if (score > 0) {
-        RedisManager.getUserRedisService.addUserMoney(userId, score)
         //返利
         val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble
+        RedisManager.getUserRedisService.addUserMoney(userId, score-rs)
         //发送返利
         sendCenterAddRebate(userId, rs)
       } else {

@@ -27,9 +27,9 @@ class RoomPaijiu100 extends RoomPaijiuCrazy{
         val game = this.game.asInstanceOf[GamePaijiuCrazy]
         val multiple = rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble
         val s = score * (100 - multiple) / 100
-        RedisManager.getUserRedisService.addUserMoney(userId, s)
         //返利
         val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble
+        RedisManager.getUserRedisService.addUserMoney(userId, s)
 
         //发送返利
         sendCenterAddRebate(userId, rs)

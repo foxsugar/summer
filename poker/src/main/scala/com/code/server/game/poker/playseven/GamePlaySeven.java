@@ -870,7 +870,7 @@ public class GamePlaySeven extends Game {
                     msg.put("liangCard", liangCard);
                     MsgSender.sendMsg2Player(new ResponseVo("gameService", "tellGongYou", msg), users);
                 } else {
-                    long temp = 0l;
+                    long temp = zhuId;
                     for (long l : playerCardInfos.keySet()) {
                         if (playerCardInfos.get(l).handCards.contains(liangCard) || playerCardInfos.get(l).handCards.contains(-liangCard)) {
                             if (l != zhuId) {
