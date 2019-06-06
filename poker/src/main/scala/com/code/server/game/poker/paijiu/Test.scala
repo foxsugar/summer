@@ -107,6 +107,13 @@ object Test {
     print(pl)
 
   }
+
+  def testListBuff1(): Unit ={
+    var list = ListBuffer(1,1,2,2)
+    list-=1
+    print(list)
+
+  }
 //  def testCardGroup():Unit = {
 ////    val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
 //    //加载数据
@@ -186,7 +193,7 @@ object Test {
 //    testMap()
 //    testMuList
 //    testList
-    testShuffle
+//    testShuffle
 //    testSild
 //    testMap1
 //    testPlayerVo
@@ -197,5 +204,6 @@ object Test {
 //    testGetScore("17,19")
 //    testListBuff()
 //    testFor()
+    testListBuff1()
   }
 }
