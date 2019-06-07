@@ -290,6 +290,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
       val winScore:Double = this.roomPaijiu.bankerScore - this.roomPaijiu.bankerInitScore
       var rebate:Double = 0
       if(winScore > 0) {
+        //抽水
         val s = winScore * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble / 100
         val finalScore = this.roomPaijiu.bankerScore - s
 
