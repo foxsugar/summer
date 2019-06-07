@@ -186,6 +186,15 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
     }
 
+    //返利
+    if(!this.isInstanceOf[RoomPaijiu100]) {
+
+      val rebate:Double = this.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble
+      for(userId <- this.users){
+        this.sendCenterAddRebate(userId, rebate)
+      }
+    }
+
 
     MsgSender.sendMsg2Player(new ResponseVo("gameService", "askNoticeDissolutionResult", gameOfResult), users)
 
@@ -216,16 +225,16 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     //    super.addUserSocre(userId, score)
     //百人牌九 加分时抽水
     if (!this.isInstanceOf[RoomPaijiu100]) {
-      if (score > 0) {
-        //返利
-        val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble /100
-        RedisManager.getUserRedisService.addUserMoney(userId, score-rs)
-        //发送返利
-        sendCenterAddRebate(userId, rs)
-      } else {
+//      if (score > 0) {
+//        //返利
+//        val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble /100
+//        RedisManager.getUserRedisService.addUserMoney(userId, score-rs)
+//        //发送返利
+//        sendCenterAddRebate(userId, rs)
+//      } else {
 
         RedisManager.getUserRedisService.addUserMoney(userId, score)
-      }
+//      }
     }
 
   }

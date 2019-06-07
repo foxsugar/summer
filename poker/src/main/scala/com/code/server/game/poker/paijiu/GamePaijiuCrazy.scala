@@ -255,11 +255,7 @@ class GamePaijiuCrazy extends GamePaijiu{
     * 牌局结束
     */
   override protected def gameOver(): Unit = {
-    //返利
-    val rebate:Double = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble
-    for(playerInfo <- this.playerCardInfos.values){
-      this.roomPaijiu.sendCenterAddRebate(playerInfo.userId, rebate)
-    }
+
     compute()
     sendResult()
     genRecord()
@@ -362,6 +358,15 @@ class GamePaijiuCrazy extends GamePaijiu{
       gameOfResult.setOther(Map("isAA"->this.roomPaijiu.isAA, "cost"->this.roomPaijiu.getNeedMoney).asJava)
     }
 
+    //返利
+    if(!this.roomPaijiu.isInstanceOf[RoomPaijiu100]) {
+
+      val rebate:Double = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble
+      for(playerInfo <- this.playerCardInfos.values){
+        this.roomPaijiu.sendCenterAddRebate(playerInfo.userId, rebate)
+      }
+    }
+
 
     gameOfResult.setUserList(userOfResultList)
     MsgSender.sendMsg2Player("gameService", "gamePaijiuFinalResult", gameOfResult, roomPaijiu.users)
@@ -423,14 +428,14 @@ class GamePaijiuCrazy extends GamePaijiu{
       //抽水
       val winScore:Double = this.roomPaijiu.bankerScore - this.roomPaijiu.bankerInitScore
       var rebate:Double = 0
-      if(winScore > 0) {
-        //返利
-        rebate =  winScore * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble / 100
-        this.roomPaijiu.sendCenterAddRebate(userId, rebate)
-
-      }else{
-        rebate = 0
-      }
+//      if(winScore > 0) {
+//        //返利
+//        rebate =  winScore * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble / 100
+//        this.roomPaijiu.sendCenterAddRebate(userId, rebate)
+//
+//      }else{
+//        rebate = 0
+//      }
 
       RedisManager.getUserRedisService.addUserMoney(bankerId,this.roomPaijiu.bankerScore - rebate)
 
