@@ -14,6 +14,7 @@ import com.code.server.kafka.MsgProducer
 import com.code.server.redis.service.RedisManager
 import com.code.server.util.timer.GameTimer
 import com.code.server.util.{IdWorker, SpringUtil}
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
@@ -23,6 +24,7 @@ import scala.collection.mutable.ListBuffer
   * Created by sunxianping on 2019-03-25.
   */
 class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
+   val logger:Logger = LoggerFactory.getLogger(RoomPaijiuCrazy.getClass)
 
 
   override def roomRemoveUser(userId: Long): Unit = {
@@ -178,6 +180,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
       //付房费
       RedisManager.getUserRedisService.addUserMoney(winner, -money)
       gameOfResult.setOther(Map("isAA" -> this.isAA, "winnerId" -> winner, "cost" -> money).asJava)
+
     } else {
       gameOfResult.setOther(Map("isAA" -> this.isAA, "cost" -> this.getNeedMoney).asJava)
 
@@ -199,7 +202,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
   override def spendMoney(): Unit = {
 
-    createNeedMoney = this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble.toInt
+    createNeedMoney = 0
 
     //大赢家最后付钱
     if (isAA) {
