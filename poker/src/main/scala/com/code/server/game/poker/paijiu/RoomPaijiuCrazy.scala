@@ -218,7 +218,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     if (!this.isInstanceOf[RoomPaijiu100]) {
       if (score > 0) {
         //返利
-        val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble
+        val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble /100
         RedisManager.getUserRedisService.addUserMoney(userId, score-rs)
         //发送返利
         sendCenterAddRebate(userId, rs)
