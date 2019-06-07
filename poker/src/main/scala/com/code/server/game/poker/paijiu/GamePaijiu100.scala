@@ -298,7 +298,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
         rebate =  winScore * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100
         this.roomPaijiu.sendCenterAddRebate(userId, rebate)
 
-        RedisManager.getUserRedisService.addUserMoney(bankerId,finalScore-rebate)
+        RedisManager.getUserRedisService.addUserMoney(bankerId,finalScore)
       }else{
         RedisManager.getUserRedisService.addUserMoney(bankerId,this.roomPaijiu.bankerScore)
       }
