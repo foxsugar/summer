@@ -186,7 +186,8 @@ class GamePaijiu100 extends GamePaijiuCrazy {
 
   override def isAutoBreakBanker():Boolean ={
     //大于10倍 小于20% 自动切庄
-    this.roomPaijiu.bankerScore > 10 * this.roomPaijiu.bankerInitScore || this.roomPaijiu.bankerScore < this.roomPaijiu.bankerInitScore * 10 /100
+    //todo 是否有多少把 自动下庄
+    this.roomPaijiu.bankerScore > 10 * this.roomPaijiu.bankerInitScore || this.roomPaijiu.bankerScore < this.roomPaijiu.bankerInitScore * 20 /100 || this.roomPaijiu.curGameNumber>24
 
   }
 
@@ -308,7 +309,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
       this.roomPaijiu.bankerScore = 0
       this.roomPaijiu.clearReadyStatus(true)
 
-      val room100 = roomPaijiu.asInstanceOf[RoomPaijiu100]
+//      val room100 = roomPaijiu.asInstanceOf[RoomPaijiu100]
 //      room100.updateBanker()
 
       //百人不结束

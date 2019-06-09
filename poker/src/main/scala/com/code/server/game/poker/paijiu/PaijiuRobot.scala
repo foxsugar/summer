@@ -130,7 +130,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
           //更新banker
           rp.updateBanker()
           //选定庄家后10秒开局  庄家没变化的话 不许等待10秒
-          if (rp.getBankerId != 0) {
+          if ((now - rp.getLastOperateTime) > 2000 && rp.getBankerId != 0) {
 
             println("托管: 开始游戏 100 " + room.getRoomId)
             sendStartGame(rp)
