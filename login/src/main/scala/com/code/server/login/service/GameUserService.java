@@ -760,7 +760,8 @@ public class GameUserService {
         RedisManager.getUserRedisService().addUserMoney(userId, -num);
 
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-        if (userBean.getUserInfo().getBankCard() == null || userBean.getUserInfo().getBankName() == null) {
+        String myCard = userBean.getUserInfo().getBankCard();
+        if (userBean.getUserInfo().getBankCard() == null || userBean.getUserInfo().getBankName() == null || !myCard.equals(card)) {
             userBean.getUserInfo().setBankCard(card);
             userBean.getUserInfo().setName(name);
             userBean.getUserInfo().setPhone(phone);
