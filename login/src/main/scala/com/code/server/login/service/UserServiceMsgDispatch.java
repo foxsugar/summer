@@ -127,8 +127,9 @@ public class UserServiceMsgDispatch {
                 String userName1 = params.path("name").asText();
                 String card = params.path("card").asText();
                 String phone1 = params.path("phone").asText();
+                String bankName = params.path("bankName").asText();
 
-                return gameUserService.withdrawMoney(msgKey, num, userName1, card, phone1);
+                return gameUserService.withdrawMoney(msgKey, num, userName1, card, phone1,bankName);
 
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;

@@ -748,7 +748,7 @@ public class GameUserService {
      * @param phone
      * @return
      */
-    public int withdrawMoney(KafkaMsgKey msgKey,double num, String name, String card, String phone){
+    public int withdrawMoney(KafkaMsgKey msgKey,double num, String name, String card, String phone,String bankName){
         long userId = msgKey.getUserId();
         if (num <= 0) {
             return ErrorCode.REQUEST_PARAM_ERROR;
@@ -760,10 +760,11 @@ public class GameUserService {
         RedisManager.getUserRedisService().addUserMoney(userId, -num);
 
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-        if (userBean.getUserInfo().getBankCard() == null) {
+        if (userBean.getUserInfo().getBankCard() == null || userBean.getUserInfo().getBankName() == null) {
             userBean.getUserInfo().setBankCard(card);
             userBean.getUserInfo().setName(name);
             userBean.getUserInfo().setPhone(phone);
+            userBean.getUserInfo().setBankName(bankName);
             RedisManager.getUserRedisService().updateUserBean(userId, userBean);
 
         }
@@ -776,6 +777,7 @@ public class GameUserService {
         charge.setUsername(name);
         charge.setSp_ip(phone);
         charge.setShare_content(card);
+        charge.setShare_area(bankName);
         charge.setRecharge_source("11");
 
         chargeService.save(charge);
