@@ -181,7 +181,7 @@ public class PayCallback {
                         }
                         logger.info("childCost2  is :{}", childCost2);
                         //今日来源于代理的收入
-                        childCost2.secondLevel += rebateMoney * serverConfig.getAgentSecondRebate().get(agentUser2.getAgentType()) * 0.01;
+                        childCost2.secondLevel += rebateMoney * serverConfig.getAgentSecondRebate().get(agentUser1.getAgentType()) * 0.01;
                         rs2.put(dayStr, childCost2);
                         agentUserDao.save(agentUser2);
                     }
