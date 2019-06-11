@@ -25,6 +25,7 @@ public class UserInfo {
     private String idCard;
     private String phone;
     private String bankCard;
+    private String bankName;
     private Map<String, Integer> playGameNum = new HashMap<>();
     private int coupon = 0;
     private Map<String, Map<Integer, Integer>> taskComplete = new HashMap<>();
@@ -181,6 +182,15 @@ public class UserInfo {
 
     public UserInfo setBankCard(String bankCard) {
         this.bankCard = bankCard;
+        return this;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public UserInfo setBankName(String bankName) {
+        this.bankName = bankName;
         return this;
     }
 }
