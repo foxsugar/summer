@@ -27,6 +27,7 @@ import java.util.Date;
 public class Charge {
 
     @Id
+    @Column(name = "order_id")
     private String orderId;
     private String transaction_id;
     private long userid;
