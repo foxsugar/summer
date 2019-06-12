@@ -34,7 +34,7 @@ public interface IChargeDao extends PagingAndSortingRepository<Charge, Long>, Jp
     double getSumMoneyByUseridAndChargeType(Long uid, int chargeType);
 
 
-    @Query(value="select '*' from charge where userid=?1 and recharge_source=?2", nativeQuery = true)
-    List<Object> getChargesByUserid(long userId,String recharge_source);
+    @Query(value="select * from charge where userid=?1 and recharge_source=?2", nativeQuery = true)
+    List<Charge> getChargesByUserid(long userId,String recharge_source);
 
 }

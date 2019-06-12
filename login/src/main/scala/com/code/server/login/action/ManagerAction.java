@@ -4,8 +4,10 @@ import com.code.server.constant.club.ClubMember;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ResponseVo;
+import com.code.server.db.Service.ChargeService;
 import com.code.server.db.Service.RecommendService;
 import com.code.server.db.Service.UserService;
+import com.code.server.db.model.Charge;
 import com.code.server.db.model.Club;
 import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
@@ -45,6 +47,8 @@ public class ManagerAction extends Cors {
 
     @Autowired
     private RecommendService recommendService;
+    @Autowired
+    private ChargeService chargeService;
 
     @RequestMapping("/getOnlineUser")
     public Map<String, Object> getOnlineUser() {
@@ -71,6 +75,14 @@ public class ManagerAction extends Cors {
 
     }
 
+
+    @RequestMapping("/getChargeRecord")
+    public int getChargeRecord(long userId, String type) {
+
+        List<Charge> list = chargeService.chargeDao.getChargesByUserid(userId, type);
+        System.out.println(list);
+        return 0;
+    }
 
     @RequestMapping("/getRoomUserInfo")
     public Map<String, Object> getRoomUserInfo(String roomId) {
