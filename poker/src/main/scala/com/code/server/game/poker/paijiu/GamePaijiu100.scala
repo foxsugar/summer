@@ -60,7 +60,19 @@ class GamePaijiu100 extends GamePaijiuCrazy {
 
   override protected def sendResult(): Unit = {
     var gameResult = new GameResultPaijiu
+    val bankerPlayer = this.playerCardInfos(this.roomPaijiu.getBankerId)
+    //抽水
+    var choushui:Double = 0
+    if(bankerPlayer.getScore() > 0) {
+      choushui = bankerPlayer.getScore() * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble / 100
+      bankerPlayer.score = bankerPlayer.score - choushui
+
+      //返利
+      var rebate =  bankerPlayer.getScore() * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100
+      this.roomPaijiu.sendCenterAddRebate(this.roomPaijiu.getBankerId, rebate)
+    }
     this.playerCardInfos.values.foreach(playerInfo => gameResult.getPlayerCardInfos.add(playerInfo.toVo))
+    this.roomPaijiu.bankerScore -= choushui
     gameResult.setBankerScore(this.roomPaijiu.bankerScore)
 
     this.commonCards.foreach(t=>{
@@ -288,22 +300,22 @@ class GamePaijiu100 extends GamePaijiuCrazy {
       //换庄家
       //把钱加到庄身上
       //抽水
-      val winScore:Double = this.roomPaijiu.bankerScore - this.roomPaijiu.bankerInitScore
-      var rebate:Double = 0
-      if(winScore > 0) {
-        //抽水
-        val s = winScore * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble / 100
-        val finalScore = this.roomPaijiu.bankerScore - s
-
-
-        //返利
-        rebate =  winScore * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100
-        this.roomPaijiu.sendCenterAddRebate(userId, rebate)
-
-        RedisManager.getUserRedisService.addUserMoney(bankerId,finalScore)
-      }else{
+//      val winScore:Double = this.roomPaijiu.bankerScore - this.roomPaijiu.bankerInitScore
+//      var rebate:Double = 0
+//      if(winScore > 0) {
+//        //抽水
+//        val s = winScore * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble / 100
+//        val finalScore = this.roomPaijiu.bankerScore - s
+//
+//
+//        //返利
+//        rebate =  winScore * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100
+//        this.roomPaijiu.sendCenterAddRebate(userId, rebate)
+//
+//        RedisManager.getUserRedisService.addUserMoney(bankerId,finalScore)
+//      }else{
         RedisManager.getUserRedisService.addUserMoney(bankerId,this.roomPaijiu.bankerScore)
-      }
+//      }
       this.roomPaijiu.lastBankerInitScore = this.roomPaijiu.bankerInitScore
       this.roomPaijiu.setBankerId(0)
       this.roomPaijiu.bankerScore = 0
