@@ -350,6 +350,19 @@ public class GameYuxiaxie extends Game {
         return 0;
     }
 
+    public int test(int num1, int num2) {
+        if (this.state == STATE_BET) {
+            dice.clear();
+            dice.add(num1);
+            dice.add(num2);
+            List<Integer> diceHis = new ArrayList<>();
+            diceHis.addAll(dice);
+            this.room.getDiceHistory().put(this.room.curGameNumber, diceHis);
+        }
+        pushToAll("gameService", "yuxiaxieTest", 0);
+        return 0;
+    }
+
 
     private void sendResult() {
 

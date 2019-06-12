@@ -114,7 +114,8 @@ public class UserServiceMsgDispatch {
                 return gameUserService.goodExchange(msgKey, userName, location, id, phone);
 
             case "getChargeRecord":
-                return gameUserService.getChargeRecord(msgKey);
+                String recharge_source = params.path("type").asText("1");
+                return gameUserService.getChargeRecord(msgKey, recharge_source);
 
             case "getDiscount":
                 return gameUserService.getDiscount(msgKey);

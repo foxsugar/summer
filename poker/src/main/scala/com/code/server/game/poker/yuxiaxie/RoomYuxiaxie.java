@@ -631,7 +631,7 @@ public class RoomYuxiaxie extends PokerGoldRoom {
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.game != null) {
             roomVo.game = this.game.toVo(userId);
-            roomVo.setBetRemainTime( 60000 +this.game.lastOperateTime-System.currentTimeMillis() );
+            roomVo.setBetRemainTime( 40000 +this.game.lastOperateTime-System.currentTimeMillis() );
         }
         if (this.getTimerNode() != null) {
             long time = this.getTimerNode().getStart() + this.getTimerNode().getInterval() - System.currentTimeMillis();

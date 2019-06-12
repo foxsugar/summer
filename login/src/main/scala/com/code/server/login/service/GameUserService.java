@@ -700,9 +700,9 @@ public class GameUserService {
         return 0;
     }
 
-    public int getChargeRecord(KafkaMsgKey msgKey) {
+    public int getChargeRecord(KafkaMsgKey msgKey, String type) {
         long userId = msgKey.getUserId();
-        sendMsg(msgKey, new ResponseVo("userService", "getChargeRecord", chargeService.chargeDao.getChargesByUserid(userId)));
+        sendMsg(msgKey, new ResponseVo("userService", "getChargeRecord", chargeService.chargeDao.getChargesByUserid(userId, type)));
         return 0;
     }
 

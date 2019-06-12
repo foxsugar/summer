@@ -4,6 +4,7 @@ import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.doudizhu.RoomDouDiZhuGold;
 import com.code.server.game.poker.doudizhu.RoomDouDiZhuPlus;
+import com.code.server.game.poker.hitgoldflower.RoomYSZLongcheng;
 import com.code.server.game.poker.zhaguzi.RoomYSZ;
 import com.code.server.game.room.IfaceRoom;
 import com.code.server.game.room.Room;
@@ -92,6 +93,16 @@ public class PokerGoldRoom extends RoomExtendGold {
 
 
                 return roomYSZ;
+
+            case "450":
+                RoomYSZ roomlc = null;
+                try {
+                    roomlc = RoomYSZLongcheng.createYSZRoom_(userId, 100, 6, 15, goldRoomType, 0, 0,
+                            gameType, roomType, true, true, null, null, goldRoomType, IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT);
+                } catch (DataNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return roomlc;
         }
 
 

@@ -417,6 +417,10 @@ object GameService {
 
     case "prepareOpen"=>
       game.prepareOpen(userId)
+    case "yuxiaxieTest"=>
+      val num1 = params.path("num1").asInt(0)
+      val num2 = params.path("num2").asInt(0)
+      game.test(num1, num2)
 
 
     case _ =>
