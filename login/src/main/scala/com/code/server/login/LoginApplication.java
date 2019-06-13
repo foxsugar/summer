@@ -56,6 +56,9 @@ public class LoginApplication extends SpringBootServletInitializer {
 			if (serverConfig.getStartRobot() == 1) {
 				LoginAction.loadRobot();
 			}
+			if (serverConfig.getLoadAllUser() == 1) {
+				LoginAction.loadAllPlayer();
+			}
 
 		}
 

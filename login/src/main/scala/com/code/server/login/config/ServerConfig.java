@@ -86,6 +86,8 @@ public class ServerConfig {
 
     private String qrDir = "";
 
+    private int loadAllUser = 0;
+
 
     public String getServerType() {
         return serverType;
@@ -422,6 +424,15 @@ public class ServerConfig {
 
     public ServerConfig setQrDir(String qrDir) {
         this.qrDir = qrDir;
+        return this;
+    }
+
+    public int getLoadAllUser() {
+        return loadAllUser;
+    }
+
+    public ServerConfig setLoadAllUser(int loadAllUser) {
+        this.loadAllUser = loadAllUser;
         return this;
     }
 }

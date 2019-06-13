@@ -1,11 +1,102 @@
 package com.code.server.game.mahjong.logic;
 
+import com.code.server.constant.response.ResponseVo;
+import com.code.server.game.mahjong.response.HandCardsResp;
 import com.code.server.game.mahjong.response.OperateReqResp;
+import com.code.server.game.mahjong.response.ResponseType;
+import com.code.server.game.mahjong.util.HuWithHun;
+import com.code.server.game.room.kafka.MsgSender;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+import static com.code.server.game.mahjong.logic.GameInfoZhuohaozi.*;
 
 /**
  * Created by sunxianping on 2019-02-20.
  */
 public class GameInfoZhanglebao extends GameInfoHeleKD {
+
+
+    @Override
+    public void initHun() {
+
+    }
+
+    /**
+     * 发牌
+     */
+    public void fapai() {
+        //打乱顺序
+        Collections.shuffle(remainCards);
+        for (int i = 0; i < playerSize; i++) {
+            PlayerCardsInfoMj playerCardsInfo = PlayerCardsInfoFactory.getInstance(room);
+            playerCardsInfo.setGameInfo(this);
+            long userId = users.get(i);
+            //设置id
+            playerCardsInfo.setUserId(userId);
+            List<String> playerCards = new ArrayList<>();
+            //发牌
+            for (int j = 0; j < cardSize; j++) {
+                playerCards.add(remainCards.remove(0));
+            }
+            //初始化
+            playerCardsInfo.init(playerCards);
+            //放进map
+            playerCardsInfos.put(userId, playerCardsInfo);
+
+            //发牌状态通知
+            HandCardsResp resp = new HandCardsResp();
+            resp.setCards(playerCards);
+            ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_GET_HAND_CARDS, resp);
+
+            MsgSender.sendMsg2Player(vo, userId);
+
+
+        }
+        doAfterFapai();
+        //回放的牌信息
+        for (PlayerCardsInfoMj playerCardsInfoMj : playerCardsInfos.values()) {
+            List<String> cs = new ArrayList<>();
+            cs.addAll(playerCardsInfoMj.getCards());
+            replay.getCards().put(playerCardsInfoMj.getUserId(), cs);
+        }
+
+
+        //第一个人抓牌
+        mopai(firstTurn, "发牌");
+
+
+        //确定耗子
+
+        if (!room.isHasMode(mode_不带耗子)) {
+
+            //随机混
+            Random rand = new Random();
+            int hunIndex = 0;
+            if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_风耗子)) {
+                hunIndex = 27 + rand.nextInt(7);
+            }else{
+                String card = this.remainCards.remove(0);
+                hunIndex = CardTypeUtil.getTypeByCard(card);
+            }
+
+            if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_双耗子)) {
+                this.hun = HuWithHun.getHunType(hunIndex);
+            } else {
+                String card = this.remainCards.remove(0);
+                hunIndex = CardTypeUtil.getTypeByCard(card);
+                this.hun.add(hunIndex);
+            }
+
+            //通知混
+            MsgSender.sendMsg2Player("gameService", "noticeHun", this.hun, users);
+
+            replay.getHun().addAll(this.hun);
+        }
+    }
 
     /**
      * 荒庄的处理

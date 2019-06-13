@@ -59,6 +59,9 @@ public class RoomYSZLongcheng extends RoomYSZ {
         }
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         long parentId = userBean.getReferee();
+        if (parentId == 0) {
+            return false;
+        }
         if(RedisManager.getUserRedisService().getUserMoney(parentId)<1){
             return false;
         }

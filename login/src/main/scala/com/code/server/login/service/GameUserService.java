@@ -560,6 +560,38 @@ public class GameUserService {
     }
 
 
+    public int bindInGame(KafkaMsgKey msgKey, int referrerId){
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(msgKey.getUserId());
+        if (userBean == null) {
+            return ErrorCode.YOU_HAVE_NOT_LOGIN;
+        }
+        if (referrerId <= 0 || userBean.getReferee() != 0) {
+            return ErrorCode.CAN_NOT_BING_REFERRER;
+        }
+        if (referrerId == msgKey.getUserId()) {
+            return ErrorCode.CAN_NOT_BING_REFERRER;
+        }
+
+        UserBean parent = RedisManager.getUserRedisService().getUserBean(referrerId);
+
+
+        if (parent == null) {
+            return ErrorCode.REFERRER_NOT_EXIST;
+        }
+
+        userBean.setReferee(referrerId);
+        RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
+
+        RedisManager.getUserRedisService().addUserMoney(msgKey.getUserId(), SpringUtil.getBean(ServerConfig.class).getBindRefereeReward());
+
+
+        ResponseVo vo = new ResponseVo("userService", "bindInGame", 0);
+        sendMsg(msgKey, vo);
+        return 0;
+    }
+
+
     public int accessCode(KafkaMsgKey msgKey, String accessCode) {
         if (accessCode == null || "".equals(accessCode)) {
             return ErrorCode.NO_ACCESSCODE;

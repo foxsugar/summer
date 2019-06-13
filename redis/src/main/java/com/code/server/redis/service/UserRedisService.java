@@ -295,4 +295,9 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
         List<String> list = new ArrayList<>(redisTemplate.boundSetOps(ROBOT_POOL).members());
         return list;
     }
+
+    public long getUserNum(){
+        BoundHashOperations<String,String,String> user_bean = redisTemplate.boundHashOps(USER_BEAN);
+        return user_bean.size();
+    }
 }

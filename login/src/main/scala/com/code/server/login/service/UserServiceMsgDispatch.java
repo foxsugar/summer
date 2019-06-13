@@ -90,6 +90,10 @@ public class UserServiceMsgDispatch {
                 int referrerId = params.get("referrerId").asInt();
                 return gameUserService.guessCarBindReferrer(msgKey,referrerId);
 
+            case "bindInGame":
+                int referrerId1 = params.get("referrerId").asInt();
+                return gameUserService.bindInGame(msgKey,referrerId1);
+
             case "accessCode":
                 String code = params.get("accessCode").asText();
                 return gameUserService.accessCode(msgKey, code);

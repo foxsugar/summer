@@ -16,6 +16,7 @@ import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.LoginService;
 import com.code.server.login.service.ServerManager;
 import com.code.server.login.util.MD5Util;
+import com.code.server.login.util.Utils;
 import com.code.server.login.util.ZXingUtil;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
@@ -100,6 +101,39 @@ public class LoginAction {
 
         params.put("token", token);
         params.put("userId", user.getId());
+        return 0;
+    }
+
+    private int login4sqlByOpenIdAndIP(String openId,String unionId, String userName, String img, int sex, Map<String, Object> params,String ip) {
+        User user = userService.getUserByOpenId(openId);
+        //查询数据库，没有新建玩家
+        if (user == null) {
+            //新建玩家
+            user = createUser(openId,unionId, userName, img, sex);
+
+            //代理推荐情况
+            Recommend recommend = recommendService.getRecommendDao().getByUnionId(ip);
+            if (recommend != null) {
+                //玩家设置代理
+                user.setReferee((int) recommend.getAgentId());
+            }
+
+            //保存
+            userService.save(user);
+
+            ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+            if (!"".equals(serverConfig.getQrDir())) {
+                ZXingUtil.createQrCode(user.getId());
+            }
+
+            //reids 记录新增玩家
+            RedisManager.getLogRedisService().logRegisterUser();
+        }
+        String token = getToken(user.getId());
+        saveUser2Redis(user, token);
+
+        params.put("token", token);
+        params.put("userId", "" + user.getId());
         return 0;
     }
 
@@ -197,6 +231,18 @@ public class LoginAction {
         }
     }
 
+    public static void loadAllPlayer() {
+        UserService userService = SpringUtil.getBean(UserService.class);
+//        if (RedisManager.getUserRedisService().getUserNum() == 0) {
+
+            for (User user : userService.getUserDao().findAll()) {
+                String token = getToken(user.getId());
+                saveUser2Redis(user, token);
+            }
+
+//        }
+    }
+
     /**
      * load userBean
      * @param userId
@@ -275,7 +321,7 @@ public class LoginAction {
 
 
     @RequestMapping("/checkOpenId")
-    public Map<String, Object> checkOpenId(String openId, String username, String image, int sex, String token_user,String unionId) {
+    public Map<String, Object> checkOpenId(String openId, String username, String image, int sex, String token_user, String unionId, HttpServletRequest request) {
 
 
         System.out.println(unionId);
@@ -285,8 +331,16 @@ public class LoginAction {
 
         String userId = userRedisService.getUserIdByOpenId(openId);
 
+
+
         if (userId == null) {
-            code = login4sqlByOpenId(openId, unionId,username, image, sex, params);
+            String ip = "";
+            try {
+                ip = Utils.getIpAddr(request);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            code = login4sqlByOpenIdAndIP(openId, unionId,username, image, sex, params, ip);
             userId = (String) params.get("userId");
         } else {
             //刷新redis数据

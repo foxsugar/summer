@@ -11,21 +11,37 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static com.code.server.game.mahjong.logic.GameInfoZhuohaozi.mode_不带耗子;
-import static com.code.server.game.mahjong.logic.GameInfoZhuohaozi.mode_双耗子;
-import static com.code.server.game.mahjong.logic.GameInfoZhuohaozi.mode_风耗子;
-
 /**
- * Created by sunxianping on 2019-05-05.
+ * Created by sunxianping on 2019-06-13.
  */
-public class GameInfoHongzhongZLB extends GameInfoHongZhong {
+public class GameInfoZhuohaoziZLB extends GameInfoZhuohaozi {
 
 
+    /**
+     * 初始化方法
+     *
+     * @param firstTurn
+     * @param users
+     */
+    public void init(int gameId, long firstTurn, List<Long> users, RoomInfo room) {
+        this.gameId = gameId;
 
-    @Override
-    public void initHun() {
+        this.firstTurn = firstTurn;
+        this.turnId = firstTurn;
+        remainCards.addAll(CardTypeUtil.ALL_CARD);
+        this.users.addAll(users);
+        this.room = room;
+        this.cardSize = 13;
+        this.playerSize = room.getPersonNumber();
 
+//        initHun();
+        //不带风
+        fapai();
     }
+
+
+
+
 
     /**
      * 发牌
@@ -88,7 +104,7 @@ public class GameInfoHongzhongZLB extends GameInfoHongZhong {
             if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_双耗子)) {
                 this.hun = HuWithHun.getHunType(hunIndex);
             } else {
-                String card = this.remainCards.remove(0);
+                String card = this.remainCards.get(0);
                 hunIndex = CardTypeUtil.getTypeByCard(card);
                 this.hun.add(hunIndex);
             }
@@ -99,29 +115,4 @@ public class GameInfoHongzhongZLB extends GameInfoHongZhong {
             replay.getHun().addAll(this.hun);
         }
     }
-
-    public int getNeedRemainCardNum(){
-        if (!this.room.isHasMode(GameInfoZhuohaozi.mode_留牌)) {
-            return 0;
-        }
-        int gangCount = 0;
-        for (PlayerCardsInfoMj playerCardsInfoMj : this.playerCardsInfos.values()) {
-            gangCount += playerCardsInfoMj.getGangNum();
-        }
-        int add =  (gangCount % 2 == 0) ? 0:1;
-
-        return 16 + add;
-    }
-
-    /**
-     * 是否荒庄
-     *
-     * @param playerCardsInfo
-     * @return
-     */
-    protected boolean isHuangzhuang(PlayerCardsInfoMj playerCardsInfo) {
-        return this.remainCards.size() <= getNeedRemainCardNum();
-    }
-
-
 }
