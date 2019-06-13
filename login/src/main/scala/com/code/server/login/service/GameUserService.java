@@ -780,6 +780,7 @@ public class GameUserService {
         charge.setShare_content(card);
         charge.setShare_area(bankName);
         charge.setRecharge_source("11");
+        charge.setUserid(userId);
 
         chargeService.save(charge);
 

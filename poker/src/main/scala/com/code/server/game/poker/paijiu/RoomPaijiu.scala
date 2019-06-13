@@ -30,7 +30,7 @@ class RoomPaijiu extends PokerGoldRoom with PaijiuConstant {
   var lastGameCards: List[Int] = List()
 
   //庄家设置的分
-  var bankerScore: Int = 0
+  var bankerScore: Double = 0
   var bankerInitScore: Int = 0
 
   var isTest: Boolean = true

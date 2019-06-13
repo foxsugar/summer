@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class RoomPaijiuVo extends RoomVo {
     //庄家设置的分
-    public int bankerScore = 0;
+    public double bankerScore = 0;
     public int bankerInitScore = 0;
     public int lastBankerInitScore =0;
 
@@ -28,13 +28,11 @@ public class RoomPaijiuVo extends RoomVo {
     public int pass;
 
 
-
-
-    public int getBankerScore() {
+    public double getBankerScore() {
         return bankerScore;
     }
 
-    public RoomPaijiuVo setBankerScore(int bankerScore) {
+    public RoomPaijiuVo setBankerScore(double bankerScore) {
         this.bankerScore = bankerScore;
         return this;
     }
