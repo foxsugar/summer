@@ -17,6 +17,10 @@ class RoomPaijiu100 extends RoomPaijiuCrazy{
     return 0
   }
 
+  override def spendMoney(): Unit = {
+
+  }
+
   override def isRoomOver: Boolean = false
 
 
@@ -28,7 +32,7 @@ class RoomPaijiu100 extends RoomPaijiuCrazy{
         val multiple = rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble
         val s = score * (100 - multiple) / 100
         //返利
-        val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble
+        val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100
         RedisManager.getUserRedisService.addUserMoney(userId, s)
 
         //发送返利
