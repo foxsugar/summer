@@ -37,7 +37,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
     if (this.bankerId == userId) {
       RedisManager.getUserRedisService.addUserMoney(userId, this.bankerScore)
-      this.lastBankerInitScore = bankerInitScore
+//      this.lastBankerInitScore = bankerInitScore
       this.bankerId = 0
       this.bankerInitScore = 0
       this.bankerScore = 0
@@ -420,6 +420,7 @@ object RoomPaijiuCrazy extends Room with PaijiuConstant {
     //锅底
     roomPaijiu.bankerScore = bankerInitScore
     roomPaijiu.bankerInitScore = bankerInitScore
+    roomPaijiu.lastBankerInitScore  = bankerInitScore
 
     roomPaijiu.rebateData = RedisManager.getConstantRedisService.getConstant
     roomPaijiu.init(gameNumber, 1)

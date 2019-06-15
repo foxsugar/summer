@@ -441,7 +441,7 @@ class GamePaijiuCrazy extends GamePaijiu{
 
 
 
-      this.roomPaijiu.lastBankerInitScore = this.roomPaijiu.bankerInitScore
+//      this.roomPaijiu.lastBankerInitScore = this.roomPaijiu.bankerInitScore
       this.roomPaijiu.setBankerId(0)
       this.roomPaijiu.bankerScore = 0
       this.roomPaijiu.clearReadyStatus(true)
