@@ -135,7 +135,11 @@ public class CenterMsgService implements IkafkaMsgId {
     private static void addRebate(String msg) {
         long userId = JsonUtil.readTree(msg).path("userId").asLong();
         double money = JsonUtil.readTree(msg).path("money").asDouble();
+        addRebate(userId, money);
+    }
 
+
+    public static void addRebate(long userId, double money){
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         long parentId = userBean.getReferee();
         if (parentId != 0) {
@@ -158,7 +162,6 @@ public class CenterMsgService implements IkafkaMsgId {
 
             }
         }
-
     }
 
     private static void genRecord(String msg) {

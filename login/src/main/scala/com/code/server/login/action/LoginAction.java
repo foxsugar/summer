@@ -3,9 +3,6 @@ package com.code.server.login.action;
 
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.UserBean;
-import com.code.server.constant.kafka.IKafaTopic;
-import com.code.server.constant.kafka.IkafkaMsgId;
-import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.db.Service.ConstantService;
 import com.code.server.db.Service.GameRecordService;
@@ -14,8 +11,8 @@ import com.code.server.db.Service.UserService;
 import com.code.server.db.model.Constant;
 import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
-import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
+import com.code.server.login.service.CenterMsgService;
 import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.LoginService;
 import com.code.server.login.service.ServerManager;
@@ -131,12 +128,7 @@ public class LoginAction {
             }
 
             if (recommend != null) {
-                Map<String, Object> addMoney = new HashMap<>();
-                addMoney.put("userId", user.getId());
-                addMoney.put("money", 0);
-                KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ADD_REBATE);
-                MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
-                msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney);
+                CenterMsgService.addRebate(user.getId(), 0D);
             }
 
             //reids 记录新增玩家

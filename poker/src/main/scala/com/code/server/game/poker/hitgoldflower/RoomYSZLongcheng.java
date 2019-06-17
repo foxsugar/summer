@@ -54,7 +54,7 @@ public class RoomYSZLongcheng extends RoomYSZ {
 
     @Override
     protected boolean isCanJoinCheckMoney(long userId) {
-        if (RedisManager.getUserRedisService().getUserMoney(userId) < goldRoomType) {
+        if (!super.isCanJoinCheckMoney(userId)) {
             return false;
         }
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
@@ -62,7 +62,7 @@ public class RoomYSZLongcheng extends RoomYSZ {
         if (parentId == 0) {
             return false;
         }
-        if(RedisManager.getUserRedisService().getUserMoney(parentId)<1){
+        if(RedisManager.getUserRedisService().getUserMoney(parentId)<getSameParentNum(parentId)){
             return false;
         }
         return true;
@@ -74,21 +74,14 @@ public class RoomYSZLongcheng extends RoomYSZ {
         if (rtn == 0) {
             UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
             playerParentMap.put(userId, (long) userBean.getReferee());
+            //自动准备
+            getReady(userId);
         }
         return rtn;
     }
 
 
-    //    @Override
-//    protected int getOutGold() {
-//        if (isGoldRoom() && this.goldRoomPermission != GOLD_ROOM_PERMISSION_DEFAULT) {
-//            //todo 根据闷牌 得到出场限制
-////            return super.getOutGold();
-//            return computeEnterGold() / 2;
-//        } else{
-//            return super.getOutGold();
-//        }
-//    }
+
 
 
     public void clearReadyStatusGoldRoom(boolean isAddGameNum) {
@@ -99,7 +92,7 @@ public class RoomYSZLongcheng extends RoomYSZ {
             for (long userId : this.users) {
                 double gold = RedisManager.getUserRedisService().getUserGold(userId);
                 //小于goldtype
-                if (gold < goldRoomType) {
+                if (gold < getOutGold()) {
                     removeList.add(userId);
                 }else{
                     int num = joinNextPartnerPlayerNum.getOrDefault(playerParentMap.get(userId), 0);
@@ -128,28 +121,22 @@ public class RoomYSZLongcheng extends RoomYSZ {
     }
 
 
+    /**
+     * 房间中同样的上级玩家个数
+     * @param pid
+     * @return
+     */
+    private long getSameParentNum(long pid) {
+        return getPlayerParentMap().values().stream().filter(parentId->pid == parentId).count();
+    }
+
     protected void goldRoomStart() {
-        //房卡消耗
-//        if (isGoldRoom()) {
-//            if (!this.users.contains(this.bankerId)) {
-//                this.bankerId = this.users.get(0);
-//            }
-//            double cost = this.getGoldRoomType() / 10;
-//            //50底分 抽成翻倍
-//            if (this.getGoldRoomType() == 50) {
-//                cost *= 2;
-//            }
-//
-//            for (long userId : users) {
-//                //扣除费用
-//                RedisManager.getUserRedisService().addUserGold(userId, -cost);
-//                //返利
-//                UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-//                RedisManager.getAgentRedisService().addRebate(userId, userBean.getReferee(), 1, cost / 100,cost);
-//            }
-//            //
-//            RedisManager.getLogRedisService().addGoldIncome(getGameLogKeyStr(), cost * users.size());
-//        }
+        //消耗上级房卡
+        for (long userId : users) {
+            //扣除费用
+            long parentId = playerParentMap.get(userId);
+            RedisManager.getUserRedisService().addUserMoney(parentId, -1);
+        }
     }
 
 

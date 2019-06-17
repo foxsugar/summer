@@ -88,7 +88,12 @@ public class GameYSZLongcheng extends GameYSZ {
         }
         for (PlayerYSZ playerCardInfo : playerCardInfos.values()) {
             if (winList.contains(playerCardInfo.getUserId())) {
-                playerCardInfo.setScore(1 * totalChip / winList.size());
+                //抽水5%
+                double add = totalChip * 95 /100 /winList.size();
+                //todo 返利
+
+                playerCardInfo.setScore(add);
+
             } else {
                 playerCardInfo.setScore(-1 * playerCardInfo.getAllScore());
             }

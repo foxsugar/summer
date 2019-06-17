@@ -195,6 +195,29 @@ public class GameUserService {
         return 0;
     }
 
+    /**
+     * 获得其他人的信息
+     * @param msgKey
+     * @param userId
+     * @return
+     */
+    public int getOtherPlayerInfo(KafkaMsgKey msgKey, long userId) {
+        UserBean userBean = userRedisService.getUserBean(userId);
+        if (userBean == null) {
+            return ErrorCode.YOU_HAVE_NOT_LOGIN;
+
+        }
+        Map<String, Object> results = new HashMap<String, Object>();
+
+        results.put("nickname", userBean.getUsername());
+
+        ResponseVo vo = new ResponseVo("userService", "getOtherPlayerInfo", results);
+        sendMsg(msgKey, vo);
+        return 0;
+    }
+
+
+
     public int getOnlinePeople(KafkaMsgKey msgKey) {
 
         long now = System.currentTimeMillis();

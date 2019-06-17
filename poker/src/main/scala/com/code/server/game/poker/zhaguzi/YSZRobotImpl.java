@@ -5,7 +5,6 @@ import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.robot.ResponseRobotVo;
 import com.code.server.game.room.Room;
-import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.util.SpringUtil;
@@ -174,12 +173,12 @@ public class YSZRobotImpl implements YSZRobot {
                     if ((status != Room.STATUS_READY)) {
 //                        boolean isOnline = RedisManager.getUserRedisService().getGateId(uid) != null;
 //                        if (isOnline) {
-//                            getReady(room, uid);
+                            getReady(room, uid);
 //                        }else{
 //                            quitRoom(room,uid);
 //                        }
-                        quitRoom(room, uid);
-                        MsgSender.sendMsg2Player("roomService", "quitRoomKick", "quit", uid);
+//                        quitRoom(room, uid);
+//                        MsgSender.sendMsg2Player("roomService", "quitRoomKick", "quit", uid);
                     }
                 });
             }

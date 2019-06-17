@@ -298,13 +298,20 @@ public class PokerItem {
 			if ((chushu2 == 0) && (itemA.index / 4 == 11) && (itemB.index / 4 == 12)){
 				return 0;
 			}
-
+			// 123 比jqk大
+			if ((chushu2 == 0) && (itemA.index / 4 == 1) && (itemB.index / 4 == 2)){
+				return 0;
+			}
 			return 2;
 		}else{
 
 			PokerItem itemA = list1.get(1);
 			PokerItem itemB = list1.get(2);
 			if (chushu1 == 0 && (itemA.index / 4 == 11) && (itemB.index / 4 == 12)){
+				return 2;
+			}
+			// 123 比jqk大
+			if (chushu1 == 0 && (itemA.index / 4 == 1) && (itemB.index / 4 == 2)){
 				return 2;
 			}
 			return 0;

@@ -302,8 +302,8 @@ public class RoomYSZ extends RoomExtendGold {
     protected int getOutGold() {
         if (isGoldRoom() && this.goldRoomPermission != GOLD_ROOM_PERMISSION_DEFAULT) {
             //todo 根据闷牌 得到出场限制
-//            return super.getOutGold();
-            return computeEnterGold() / 2;
+            return super.getOutGold();
+//            return computeEnterGold() / 2;
         } else{
             return super.getOutGold();
         }
@@ -314,8 +314,8 @@ public class RoomYSZ extends RoomExtendGold {
         if (isGoldRoom() && this.goldRoomPermission != GOLD_ROOM_PERMISSION_DEFAULT) {
 
             //todo 根据闷牌 得到进场限制
-//            return super.getEnterGold();
-            return computeEnterGold();
+            return super.getEnterGold();
+//            return computeEnterGold();
         } else{
             return super.getEnterGold();
         }

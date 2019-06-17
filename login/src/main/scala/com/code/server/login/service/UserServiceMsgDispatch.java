@@ -61,6 +61,9 @@ public class UserServiceMsgDispatch {
 
             case "getNickNamePlayer":
                 return gameUserService.getNickNamePlayer(msgKey);
+            case "getOtherPlayerInfo":
+                long otherPlayerId = params.path("userId").asLong();
+                return gameUserService.getOtherPlayerInfo(msgKey,otherPlayerId);
             case "getOnlinePeople":
                 return gameUserService.getOnlinePeople(msgKey);
             case "getServerInfo":
