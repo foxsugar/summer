@@ -5,7 +5,7 @@ import java.{lang, util}
 import com.code.server.constant.data.StaticDataProto.CrazyPaijiuCardGroupData
 import com.code.server.constant.data.{DataManager, StaticDataProto}
 import com.code.server.constant.game.IGameConstant
-import com.code.server.constant.response.{ErrorCode, GameOfResult, GamePaijiuResult}
+import com.code.server.constant.response.{ErrorCode, GameOfResult}
 import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
@@ -503,70 +503,13 @@ class GamePaijiuCrazy extends GamePaijiu{
   }
 
 
-  /**
-    * 记录胜负平日志
-    */
-  def dataLog(): Unit ={
-    val oneId = nextTurnId(this.bankerId)
-    val gamePaijiuResult = new GamePaijiuResult()
-
-    doLogRecord(gamePaijiuResult, 1, getSFP(playerCardInfos(oneId).getScore()))
-    if(this.users.size>2){
-      val twoId = nextTurnId(oneId)
-      doLogRecord(gamePaijiuResult, 2, getSFP(playerCardInfos(twoId).getScore()))
-      if(this.users.size()>3){
-        val threeId = nextTurnId(twoId)
-        doLogRecord(gamePaijiuResult, 3, getSFP(playerCardInfos(threeId).getScore()))
-      }
-    }
-
-    this.roomPaijiu.winnerIndex.append(gamePaijiuResult)
-
-    if(this.roomPaijiu.winnerIndex.size>10){
-      this.roomPaijiu.winnerIndex.remove(0)
-    }
-  }
 
 
-  /**
-    * 记录
-    * @param gamePaijiuResult
-    * @param index
-    * @param sfp
-    */
-  def doLogRecord(gamePaijiuResult:GamePaijiuResult,index:Int, sfp:Int): Unit ={
-    if(index == 1){
-      gamePaijiuResult.setOne(sfp)
-      val count = this.roomPaijiu.winnerCountMap.getOrDefault(1,0)
-      this.roomPaijiu.winnerCountMap.put(1, count + 1)
-    }
-    if(index == 2) {
-      gamePaijiuResult.setTwo(sfp)
-      val count = this.roomPaijiu.winnerCountMap.getOrDefault(2,0)
-      this.roomPaijiu.winnerCountMap.put(2, count + 1)
-    }
-    if(index == 3) {
-      gamePaijiuResult.setThree(sfp)
-      val count = this.roomPaijiu.winnerCountMap.getOrDefault(3,0)
-      this.roomPaijiu.winnerCountMap.put(3, count + 1)
-    }
-  }
 
 
-  /**
-    * 获得胜负平
-    * @param score
-    * @return
-    */
-  def getSFP(score:Double):Int={
-    if(score>0){
-      return 1
-    }else if(score<0){
-      return -1
-    }else{
-      return 0
-    }
-  }
+
+
+
 
   /**
     * 结算

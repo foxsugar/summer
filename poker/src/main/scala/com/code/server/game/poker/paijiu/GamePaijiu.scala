@@ -17,6 +17,7 @@ import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
 
+
 /**
   * Created by sunxianping on 2017/7/21.
   */
@@ -326,11 +327,11 @@ class GamePaijiu extends Game with PaijiuConstant {
     var temp = 0.0;
     for (playerInfo <- playerCardInfos) {
       if(playerInfo._2.userId!=bankerId){
-        map.put(playerInfo._2.userId,playerInfo._2.score);
-        temp+= playerInfo._2.score;
+        map.put(playerInfo._2.userId,playerInfo._2.score)
+        temp+= playerInfo._2.score
       }
     }
-    map.put(bankerId,-temp);
+    map.put(bankerId,-temp)
     genRecord(map, this.roomPaijiu, id)
     //    genRecord(playerCardInfos.values.toMap((playerInfo)=>))
   }
@@ -740,6 +741,69 @@ class GamePaijiu extends Game with PaijiuConstant {
 
       //庄家选分
       bankerSetScoreStart()
+    }
+  }
+
+  /**
+    * 记录胜负平日志
+    */
+  def dataLog(): Unit ={
+    val oneId = nextTurnId(this.bankerId)
+    val gamePaijiuResult = new GamePaijiuResult()
+
+    doLogRecord(gamePaijiuResult, 1, getSFP(playerCardInfos(oneId).getScore()))
+    if(this.users.size>2){
+      val twoId = nextTurnId(oneId)
+      doLogRecord(gamePaijiuResult, 2, getSFP(playerCardInfos(twoId).getScore()))
+      if(this.users.size()>3){
+        val threeId = nextTurnId(twoId)
+        doLogRecord(gamePaijiuResult, 3, getSFP(playerCardInfos(threeId).getScore()))
+      }
+    }
+
+    this.roomPaijiu.winnerIndex.append(gamePaijiuResult)
+
+    if(this.roomPaijiu.winnerIndex.size>10){
+      this.roomPaijiu.winnerIndex.remove(0)
+    }
+  }
+
+  /**
+    * 获得胜负平
+    * @param score
+    * @return
+    */
+  def getSFP(score:Double):Int={
+    if(score>0){
+      return 1
+    }else if(score<0){
+      return -1
+    }else{
+      return 0
+    }
+  }
+
+  /**
+    * 记录
+    * @param gamePaijiuResult
+    * @param index
+    * @param sfp
+    */
+  def doLogRecord(gamePaijiuResult:GamePaijiuResult,index:Int, sfp:Int): Unit ={
+    if(index == 1){
+      gamePaijiuResult.setOne(sfp)
+      val count = this.roomPaijiu.winnerCountMap.getOrDefault(1,0)
+      this.roomPaijiu.winnerCountMap.put(1, count + 1)
+    }
+    if(index == 2) {
+      gamePaijiuResult.setTwo(sfp)
+      val count = this.roomPaijiu.winnerCountMap.getOrDefault(2,0)
+      this.roomPaijiu.winnerCountMap.put(2, count + 1)
+    }
+    if(index == 3) {
+      gamePaijiuResult.setThree(sfp)
+      val count = this.roomPaijiu.winnerCountMap.getOrDefault(3,0)
+      this.roomPaijiu.winnerCountMap.put(3, count + 1)
     }
   }
 

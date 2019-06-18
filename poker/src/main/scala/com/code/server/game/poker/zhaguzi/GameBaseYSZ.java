@@ -1,9 +1,7 @@
 package com.code.server.game.poker.zhaguzi;
 
-import com.code.server.constant.data.DataManager;
 import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.response.*;
-import com.code.server.game.poker.doudizhu.CardUtil;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.IfaceRoom;
 import com.code.server.game.room.Room;
@@ -12,10 +10,8 @@ import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.DateUtil;
 import com.code.server.util.IdWorker;
-import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -628,7 +624,10 @@ public class GameBaseYSZ extends Game {
         Map<String, Object> result = new HashMap<>();
         result.put("askerId", askerId);
         result.put("winnerId", winnerId);
-        result.put("loserId", winnerId == askerId ? accepterId : askerId);
+        long loserId = winnerId==askerId?accepterId:askerId;
+        result.put("loserId",loserId);
+        result.put("winnerCards", this.playerCardInfos.get(winnerId).handcards);
+        result.put("loserCards", this.playerCardInfos.get(loserId).handcards);
         if (seeUser.contains(askerId)) {
             playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore() + chip * 2);
             this.room.addUserSocre(askerId, -chip * 2);

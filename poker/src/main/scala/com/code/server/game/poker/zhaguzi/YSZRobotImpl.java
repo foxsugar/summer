@@ -21,7 +21,7 @@ public class YSZRobotImpl implements YSZRobot {
 
     protected static final Logger logger = LoggerFactory.getLogger(YSZRobotImpl.class);
     public static final long SECOND = 1000L;//秒;
-    public static final long COUNT = 90;
+    public static final long COUNT = 10;
 
     @Override
     //自动过
@@ -165,7 +165,7 @@ public class YSZRobotImpl implements YSZRobot {
 //            System.out.println("last op " + room.getLastOperateTime());
 //            System.out.println("now " + now);
             //如果没在游戏中
-            if (room.getCurGameNumber() > 1 && now - room.getLastOperateTime() > 1000 * 15) {
+            if (room.getCurGameNumber() > 1 && now - room.getLastOperateTime() > 1000 * 5) {
 //                logger.info("xxxxxxx:now{}:lastOverTime{}==inter:{}", now, ((RoomYSZ) room).getLastReadyTime(), (now - ((RoomYSZ) room).getLastReadyTime())/ 1000.0);
                 Map<Long, Integer> map = new HashMap<>();
                 map.putAll(room.getUserStatus());

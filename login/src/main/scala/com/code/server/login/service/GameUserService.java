@@ -8,10 +8,11 @@ import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserVo;
 import com.code.server.db.Service.*;
-import com.code.server.db.model.UserRecord;
 import com.code.server.db.model.*;
+import com.code.server.db.model.UserRecord;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
+import com.code.server.login.kafka.MsgSender;
 import com.code.server.login.rpc.RpcManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.redis.service.UserRedisService;
@@ -839,7 +840,12 @@ public class GameUserService {
 
         chargeService.save(charge);
 
+
         sendMsg(msgKey, new ResponseVo("userService", "withdrawMoney", 0));
+
+        Map<String, String> rs = new HashMap<>();
+        MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
+
         return 0;
     }
 
