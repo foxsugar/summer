@@ -342,9 +342,11 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     val gamepaijiuResult = new GamePaijiuResult()
     val bankerCards = this.commonCards(0)
 
-    val bankerGroup = getMaxOpenGroup(bankerCards)
-    val bankerScore1 = getGroupScore(bankerGroup._1)
-    val bankerScore2 = getGroupScore(bankerGroup._2)
+    val banker = playerCardInfos(this.bankerId)
+
+//    val bankerGroup = getMaxOpenGroup(bankerCards)
+    val bankerScore1 = getGroupScore(banker.group1)
+    val bankerScore2 = getGroupScore(banker.group2)
     this.commonCards.foreach(t=>{
       val index = t._1
       val cards = t._2

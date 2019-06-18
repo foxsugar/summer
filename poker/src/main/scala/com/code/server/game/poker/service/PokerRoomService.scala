@@ -6,7 +6,7 @@ import com.code.server.game.poker.cow.RoomCow
 import com.code.server.game.poker.doudizhu.RoomDouDiZhu
 import com.code.server.game.poker.guess.RoomGuessCar
 import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower
-import com.code.server.game.poker.paijiu.{RoomGoldPaijiu, RoomPaijiu, RoomPaijiuAce, RoomPaijiuCrazy}
+import com.code.server.game.poker.paijiu._
 import com.code.server.game.poker.playseven.RoomPlaySeven
 import com.code.server.game.poker.pullmice.RoomPullMice
 import com.code.server.game.poker.tiandakeng.RoomTDK
@@ -428,10 +428,17 @@ object PokerRoomService {
         val roomCrazy = roomPaijiu.asInstanceOf[RoomPaijiuCrazy]
         roomCrazy.tobeBanker(userId, score)
 
+      case "tuitongziTobeBanker"=>
+        val roomId = params.get("roomId").asText()
+        val score =  params.get("score").asInt(0)
+        var roomPaijiu = RoomManager.getRoom(roomId)
+        val roomCrazy = roomPaijiu.asInstanceOf[RoomTuitongziGold]
+        roomCrazy.tobeBanker(userId, score)
+
       case "getPaijiuBankerList"=>
         val roomId = params.get("roomId").asText()
         var roomPaijiu = RoomManager.getRoom(roomId)
-        val roomCrazy = roomPaijiu.asInstanceOf[RoomPaijiuCrazy]
+        val roomCrazy = roomPaijiu.asInstanceOf[RoomPaijiu]
         roomCrazy.getPaijiuBankerList(userId)
 
       case "paijiuSetPass"=>

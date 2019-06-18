@@ -5,6 +5,7 @@ import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.doudizhu.RoomDouDiZhuGold;
 import com.code.server.game.poker.doudizhu.RoomDouDiZhuPlus;
 import com.code.server.game.poker.hitgoldflower.RoomYSZLongcheng;
+import com.code.server.game.poker.paijiu.RoomTuitongziGold;
 import com.code.server.game.poker.zhaguzi.RoomYSZ;
 import com.code.server.game.room.IfaceRoom;
 import com.code.server.game.room.Room;
@@ -103,6 +104,12 @@ public class PokerGoldRoom extends RoomExtendGold {
                     e.printStackTrace();
                 }
                 return roomlc;
+
+            case "456":
+                RoomTuitongziGold roomtuitongzi = null;
+                roomtuitongzi = RoomTuitongziGold.createRoom_(userId,"3","456",4,"","",0,
+                        false,2,0,0,false,0,4,goldRoomType);
+                return roomtuitongzi;
         }
 
 

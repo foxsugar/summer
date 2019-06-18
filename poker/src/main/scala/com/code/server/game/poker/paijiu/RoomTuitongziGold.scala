@@ -1,7 +1,14 @@
 package com.code.server.game.poker.paijiu
 
 import com.code.server.constant.game.RoomStatistics
+import com.code.server.constant.response.{ErrorCode, ResponseVo}
+import com.code.server.game.poker.config.ServerConfig
+import com.code.server.game.room.Room
+import com.code.server.game.room.kafka.MsgSender
+import com.code.server.game.room.service.RoomManager
 import com.code.server.redis.service.RedisManager
+import com.code.server.util.{IdWorker, SpringUtil}
+import scala.collection.JavaConverters._
 
 /**
   * Created by sunxianping on 2019-06-17.
@@ -57,4 +64,139 @@ class RoomTuitongziGold extends RoomPaijiu{
     addUser2RoomRedis(userId)
   }
 
+
+  /**
+    * 100paijiu 不花钱
+    *
+    * @return
+    */
+  override def getNeedMoney(): Int = {
+   return 0
+
+  }
+
+  override def spendMoney(): Unit = {
+  }
+
+
+  override protected def isCanJoinCheckMoney(userId: Long): Boolean = { //todo 检验金币
+    true
+  }
+
+
+  /**
+    * 排队上庄
+    *
+    * @param userId
+    * @param score
+    * @return
+    */
+  def tobeBanker(userId: Long, score: Int): Int = {
+
+    if (this.bankerScoreMap.contains(userId) || this.bankerId == userId) {
+      return ErrorCode.CRAP_ALREADY_BANKER
+    }
+    if (score <= 0) {
+      return ErrorCode.CRAP_ALREADY_BANKER
+    }
+    if (RedisManager.getUserRedisService.getUserGold(userId) < score) {
+      return ErrorCode.CRAP_ALREADY_BANKER
+    }
+    //上庄先扣钱
+    RedisManager.getUserRedisService.addUserMoney(userId, -score)
+    this.bankerList = this.bankerList.+:(userId)
+    this.bankerScoreMap = this.bankerScoreMap.+(userId -> score)
+
+    //更新庄家
+    //    updateBanker()
+
+    MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "someOneTobeBanker", Map("userId" -> userId, "score" -> score).asJava), this.users)
+    MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "tuitongziTobeBanker", 0), userId)
+    0
+  }
+
+}
+
+
+
+
+object RoomTuitongziGold extends Room {
+  def createRoom(userId: Long, roomType: String, gameType: String, gameNumber: Int, clubId: String, clubRoomModel: String, clubMode: Int, isAA: Boolean,
+                 robotType: Int, robotNum: Int, robotWinner: Int, isReOpen: Boolean, otherMode: Int, personNum: Int): Int = {
+    val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
+    val roomPaijiu = new RoomTuitongziGold
+    roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId(serverConfig.getServerId)))
+    roomPaijiu.setRoomType(roomType)
+    roomPaijiu.setGameType(gameType)
+    roomPaijiu.setGameNumber(gameNumber)
+    roomPaijiu.setBankerId(userId)
+    roomPaijiu.setCreateUser(userId)
+    roomPaijiu.setPersonNumber(personNum)
+    roomPaijiu.setClubId(clubId)
+    roomPaijiu.setClubRoomModel(clubRoomModel)
+    roomPaijiu.setClubMode(clubMode)
+    roomPaijiu.setAA(isAA)
+
+    roomPaijiu.robotType = robotType
+    roomPaijiu.robotNum = robotNum
+    roomPaijiu.robotWinner = robotWinner
+    roomPaijiu.isReOpen = isReOpen
+    roomPaijiu.otherMode = otherMode
+    roomPaijiu.setRobotRoom(robotType != 0)
+
+
+    roomPaijiu.init(gameNumber, 1)
+    val code = roomPaijiu.joinRoom(userId, true)
+    if (code != 0) return code
+
+    RoomManager.addRoom(roomPaijiu.getRoomId, "" + serverConfig.getServerId, roomPaijiu)
+    val idword = new IdWorker(serverConfig.getServerId, 0)
+    roomPaijiu.setUuid(idword.nextId())
+
+    MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createPaijiuRoom", roomPaijiu.toVo(userId)), userId)
+    0
+  }
+
+
+
+  def createRoom_(userId: Long, roomType: String, gameType: String, gameNumber: Int, clubId: String, clubRoomModel: String, clubMode: Int, isAA: Boolean,
+                 robotType: Int, robotNum: Int, robotWinner: Int, isReOpen: Boolean, otherMode: Int, personNum: Int,bankerInitScore:Int): RoomTuitongziGold = {
+    val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
+    val roomPaijiu = new RoomTuitongziGold
+    roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId(serverConfig.getServerId)))
+    roomPaijiu.setRoomType(roomType)
+    roomPaijiu.setGameType(gameType)
+    roomPaijiu.setGameNumber(gameNumber)
+    roomPaijiu.setBankerId(userId)
+    roomPaijiu.setCreateUser(userId)
+    roomPaijiu.setPersonNumber(personNum)
+    roomPaijiu.setClubId(clubId)
+    roomPaijiu.setClubRoomModel(clubRoomModel)
+    roomPaijiu.setClubMode(clubMode)
+    roomPaijiu.setAA(isAA)
+
+    roomPaijiu.robotType = robotType
+    roomPaijiu.robotNum = robotNum
+    roomPaijiu.robotWinner = robotWinner
+    roomPaijiu.isReOpen = isReOpen
+    roomPaijiu.otherMode = otherMode
+    roomPaijiu.setRobotRoom(robotType != 0)
+
+
+    roomPaijiu.bankerScore = bankerInitScore
+    roomPaijiu.bankerInitScore = bankerInitScore
+    roomPaijiu.lastBankerInitScore  = bankerInitScore
+
+
+    roomPaijiu.init(gameNumber, 1)
+//    val code = roomPaijiu.joinRoom(userId, true)
+//    if (code != 0) return code
+
+    RoomManager.addRoom(roomPaijiu.getRoomId, "" + serverConfig.getServerId, roomPaijiu)
+    val idword = new IdWorker(serverConfig.getServerId, 0)
+    roomPaijiu.setUuid(idword.nextId())
+
+    MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createPaijiuRoom", roomPaijiu.toVo(userId)), userId)
+    roomPaijiu
+  }
 }

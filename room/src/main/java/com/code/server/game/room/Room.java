@@ -1000,6 +1000,8 @@ public class Room implements IfaceRoom {
         System.out.println(roomVo.roomId);
 
         System.out.println(43421 % 4 == 2);
+        System.out.println(isHasMode(3,5128));
+        System.out.println(isHasMode(3,5132));
     }
 
     @Override

@@ -541,10 +541,10 @@ class GamePaijiuCrazy extends GamePaijiu{
         //庄家赢
         if (result > 0) {
           val isHas3Bet = Room.isHasMode(MODE_BET_3, this.roomPaijiu.otherMode)
-          var changeScore = other.getBetScore(bankerScore2 >= mix8Score, isHas3Bet && bankerScore2>sky8Score)
+          var changeScore = other.getBetScore(bankerScore2 >= mix8Score, bankerScore2>sky8Score)
           //两张牌也判断赢三道
           if(Room.isHasMode(MODE_2CARD,this.roomPaijiu.otherMode)) {
-            changeScore = other.getBetScore(bankerScore1 >= mix8Score, isHas3Bet && bankerScore1>sky8Score)
+            changeScore = other.getBetScore(bankerScore1 >= mix8Score, bankerScore1>sky8Score)
           }
           banker.addScore(roomPaijiu,changeScore)
           other.addScore(roomPaijiu,-changeScore)
@@ -588,7 +588,7 @@ class GamePaijiuCrazy extends GamePaijiu{
       val score2 = getGroupScore(playerInfo.group2)
       //庄家应该输的钱
       val isHas3Bet = Room.isHasMode(MODE_BET_3, this.roomPaijiu.otherMode)
-      var bankerLoseScore = playerInfo.getBetScore(score2 >= mix8Score, isHas3Bet && bankerScore2>sky8Score)
+      var bankerLoseScore = playerInfo.getBetScore(score2 >= mix8Score, isHas3Bet && score2>sky8Score)
       //两张牌也判断赢三道
       if(Room.isHasMode(MODE_2CARD,this.roomPaijiu.otherMode)) {
         bankerLoseScore = playerInfo.getBetScore(score1 >= mix8Score, isHas3Bet && score1>sky8Score)
