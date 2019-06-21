@@ -1,6 +1,9 @@
 package com.code.server.game.poker.service;
 
 import com.code.server.constant.exception.DataNotFoundException;
+import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.IkafkaMsgId;
+import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.doudizhu.RoomDouDiZhuGold;
 import com.code.server.game.poker.doudizhu.RoomDouDiZhuPlus;
@@ -11,7 +14,11 @@ import com.code.server.game.room.IfaceRoom;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.RoomExtendGold;
 import com.code.server.game.room.service.RoomManager;
+import com.code.server.kafka.MsgProducer;
 import com.code.server.util.SpringUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2018/6/5.
@@ -30,12 +37,7 @@ public class PokerGoldRoom extends RoomExtendGold {
         room.setGoldRoomType(goldRoomType);
         room.setGoldRoomPermission(GOLD_ROOM_PERMISSION_DEFAULT);
         room.setMultiple(goldRoomType);
-
-
-
-
         return room;
-
     }
 
     protected boolean isCanAgreeDissloution(int agreeNum) {
@@ -46,6 +48,24 @@ public class PokerGoldRoom extends RoomExtendGold {
             return agreeNum >= personNumber - 1 && agreeNum >= 2;
         }
     }
+
+
+    /**
+     * 发送返利
+     * @param userId
+     * @param money
+     */
+    protected void sendCenterAddRebateLongxiang(long userId, double money){
+        Map<String, Object> addMoney = new HashMap<>();
+        addMoney.put("userId", userId);
+        addMoney.put("money", money);
+
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ADD_REBATE_LONGCHENG);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney);
+    }
+
+
 
     public void add2GoldPool() {
         int serverId = SpringUtil.getBean(ServerConfig.class).getServerId();

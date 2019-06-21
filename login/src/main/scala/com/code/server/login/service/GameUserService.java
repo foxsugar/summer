@@ -612,6 +612,8 @@ public class GameUserService {
 
         ResponseVo vo = new ResponseVo("userService", "bindInGame", 0);
         sendMsg(msgKey, vo);
+
+        CenterMsgService.addRebate(msgKey.getUserId(), 0D);
         return 0;
     }
 
@@ -846,6 +848,28 @@ public class GameUserService {
         Map<String, String> rs = new HashMap<>();
         MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
 
+        return 0;
+    }
+
+
+    public int getAllMember(KafkaMsgKey msgKey) {
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(msgKey.getUserId());
+        List<Map<String, Object>> list = new ArrayList<>();
+
+        for (long userId : userBean.getUserInfo().getRebate().keySet()) {
+            Map<String, Object> item = new HashMap<>();
+            UserBean userBeanItem = RedisManager.getUserRedisService().getUserBean(userId);
+            if (userBeanItem != null) {
+                item.put("userId", userId);
+
+                item.put("name", userBeanItem.getUsername());
+                item.put("money", userBeanItem.getMoney());
+                item.put("gold", userBean.getGold());
+                item.put("image", userBean.getImage());
+                list.add(item);
+            }
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("userService", "getAllMember", list), msgKey.getUserId());
         return 0;
     }
 

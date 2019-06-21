@@ -2,7 +2,7 @@ package com.code.server.game.poker.paijiu
 
 import java.lang
 
-import com.code.server.constant.response.{ErrorCode, GamePaijiuResult}
+import com.code.server.constant.response.{ErrorCode, GamePaijiuResult, GameResultPaijiu}
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.redis.service.RedisManager
 
@@ -20,9 +20,9 @@ class GameTuitongziGold extends GamePaijiu {
     //单数局
     if (isFirst) {
       //初始牌并洗牌
-      var cardList = List()
-      for (i <- 0 to 36) {
-        cardList.+:(i)
+      var cardList:List[Int] = List()
+      for (i <- 0 to 35) {
+        cardList = cardList.+:(i)
       }
       val rand = new Random
       roomPaijiu.cards = rand.shuffle(cardList)
@@ -80,7 +80,7 @@ class GameTuitongziGold extends GamePaijiu {
     //下注不合法
 
     val bet = new Bet(one, two, three, index)
-    if (!checkBet(bet)) return ErrorCode.BET_PARAM_ERROR
+//    if (!checkBet(bet)) return ErrorCode.BET_PARAM_ERROR
     val myBetNum = one + two + three
     //金币牌九 下注不能大于身上的钱
 
@@ -102,9 +102,9 @@ class GameTuitongziGold extends GamePaijiu {
       playerCardInfoPaijiu.bet = bet
 
     } else {
-      if (playerCardInfoPaijiu.bet.index != index) {
-        return ErrorCode.BET_PARAM_ERROR
-      }
+//      if (playerCardInfoPaijiu.bet.index != index) {
+//        return ErrorCode.BET_PARAM_ERROR
+//      }
       playerCardInfoPaijiu.bet.one += one
       playerCardInfoPaijiu.bet.two += two
       playerCardInfoPaijiu.bet.three += three
@@ -125,6 +125,39 @@ class GameTuitongziGold extends GamePaijiu {
     0
   }
 
+
+  /**
+    * 摇骰子阶段
+    */
+  override def crapStart(): Unit = {
+    if(this.state != STATE_BET) return
+    MsgSender.sendMsg2Player("gamePaijiuService", "crapStart", 0, bankerId)
+    this.state = START_CRAP
+    updateLastOperateTime()
+    //自动摇色子
+    crap(this.bankerId)
+  }
+
+
+  /**
+    * 掷骰子
+    */
+  def crap(userId: Long): Int = {
+    if (state != START_CRAP) return ErrorCode.CRAP_PARAM_ERROR
+    if (userId != bankerId) return ErrorCode.NOT_BANKER
+
+    val rand = new Random()
+    val num1 = rand.nextInt(6) + 1
+    val num2 = rand.nextInt(6) + 1
+    val result = Map("num1" -> num1, "num2" -> num2)
+    MsgSender.sendMsg2Player("gamePaijiuService", "randSZ", result.asJava, roomPaijiu.users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "crap", 0, userId)
+    openStart()
+//    gameOver()
+    0
+  }
+
+
   def isBetFull():Boolean={
     var betCount = 0
     this.playerCardInfos.values.foreach(player=>{
@@ -142,21 +175,11 @@ class GameTuitongziGold extends GamePaijiu {
     * @param group2
     * @return
     */
-  def open(userId: Long, group1: String, group2: String): Int = {
+  override def open(userId: lang.Long, group1: String, group2: String): Int = {
     val playerInfoOption = playerCardInfos.get(userId)
     if (playerInfoOption.isEmpty) return ErrorCode.NO_USER
     //开牌是否合法
-//    if (!checkOpen(playerInfoOption.get, group1, group2)) return ErrorCode.OPEN_PARAM_ERROR
     playerInfoOption.get.group1 = group1
-//    playerInfoOption.get.group2 = group2
-
-    //记录最大牌型
-//    val lastMax = roomPaijiu.getRoomStatisticsMap.get(userId).maxCardGroup
-//    val lastMaxScore = if (lastMax == null) 0 else getGroupScore(lastMax)
-//    val thisScore = getGroupScore(group1)
-//    if (thisScore > lastMaxScore) {
-//      roomPaijiu.getRoomStatisticsMap.get(userId).maxCardGroup = group1
-//    }
 
     //是否已经全开牌
     val isAllOpen = isAllPlayerOpen()
@@ -169,6 +192,39 @@ class GameTuitongziGold extends GamePaijiu {
     0
   }
 
+
+  /**
+    * 检测开牌是否合法
+    *
+    * @param playerCardInfo
+    * @param group1
+    * @param group2
+    * @return
+    */
+  override protected def checkOpen(playerCardInfo: PlayerCardInfoPaijiu, group1: String, group2: String): Boolean = {
+    return true
+  }
+
+
+  /**
+    * 是否所有人都开牌
+    *
+    * @return
+    */
+  override protected def isAllPlayerOpen(): Boolean = {
+    for(playerInfo <- this.playerCardInfos.values) {
+      if(playerInfo.userId == this.bankerId){
+        if(playerInfo.group1 == null){
+          return false
+        }
+      }else{
+        if(playerInfo.bet!= null && playerInfo.group1 == null){
+          return false
+        }
+      }
+    }
+    true
+  }
 
   /**
     * 获得牌型分数
@@ -241,9 +297,9 @@ class GameTuitongziGold extends GamePaijiu {
     //记录胜负平
     val gamePaijiuResult = new GamePaijiuResult()
 
-    doLogRecord(gamePaijiuResult, 1, otherScore1 - bankerScore)
-    doLogRecord(gamePaijiuResult, 2, otherScore2 - bankerScore)
-    doLogRecord(gamePaijiuResult, 3, otherScore3 - bankerScore)
+    doLogRecord(gamePaijiuResult, 1, if(otherScore1 - bankerScore>0) 1 else -1)
+    doLogRecord(gamePaijiuResult, 2, if(otherScore2 - bankerScore>0)1 else -1)
+    doLogRecord(gamePaijiuResult, 3, if(otherScore3 - bankerScore>0) 1 else -1)
 
     this.roomPaijiu.winnerIndex.append(gamePaijiuResult)
 
@@ -259,6 +315,8 @@ class GameTuitongziGold extends GamePaijiu {
       if (resultSet.contains(LOSE)) bankerStatiseics.loseAllTime += 1
     }
   }
+
+
 
   /**
     * 牌局结束
@@ -337,6 +395,41 @@ class GameTuitongziGold extends GamePaijiu {
 
     MsgSender.sendMsg2Player("gamePaijiuService", "bankerBreak", 0, userId)
     0
+  }
+
+
+
+
+  override protected def sendResult(): Unit = {
+    var gameResult = new GameResultPaijiu
+    val bankerPlayer = this.playerCardInfos(this.roomPaijiu.getBankerId)
+    //抽水
+    var choushui:Double = 0
+    if(bankerPlayer.getScore() > 0) {
+      choushui = bankerPlayer.getScore() * 5 / 100
+      bankerPlayer.score = bankerPlayer.score - choushui
+
+      //返利
+//      var rebate =  bankerPlayer.getScore() * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100
+//      this.roomPaijiu.sendCenterAddRebate(this.roomPaijiu.getBankerId, rebate)
+    }
+    this.playerCardInfos.values.foreach(playerInfo => gameResult.getPlayerCardInfos.add(playerInfo.toVo))
+    this.roomPaijiu.bankerScore -= choushui
+    gameResult.setBankerScore(this.roomPaijiu.bankerScore)
+
+    this.commonCards.foreach(t=>{
+      val index = t._1
+//      if(index !=0){
+
+
+      gameResult.getCardMap.put(index, commonCards(index).asJava)
+//      }
+    })
+
+    gameResult.setSfp(this.roomPaijiu.winnerIndex.last)
+
+    MsgSender.sendMsg2Player("gamePaijiuService", "gameResult", gameResult, roomPaijiu.users)
+    this.roomPaijiu.pushScoreChange()
   }
 
 }

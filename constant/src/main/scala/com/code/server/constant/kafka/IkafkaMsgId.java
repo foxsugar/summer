@@ -19,6 +19,7 @@ public interface IkafkaMsgId {
 
     int KAFKA_MSG_ID_ADD_REBATE = 3200;
     int KAFKA_MSG_ID_ADD_MONEY = 3201;
+    int KAFKA_MSG_ID_ADD_REBATE_LONGCHENG = 3202;
 
 
 

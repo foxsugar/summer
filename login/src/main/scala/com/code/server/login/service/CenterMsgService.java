@@ -80,6 +80,10 @@ public class CenterMsgService implements IkafkaMsgId {
                 addRebate(msg);
                 break;
 
+            case KAFKA_MSG_ID_ADD_REBATE_LONGCHENG:
+                addRebateLongcheng(msg);
+                break;
+
 
         }
     }
@@ -136,6 +140,29 @@ public class CenterMsgService implements IkafkaMsgId {
         long userId = JsonUtil.readTree(msg).path("userId").asLong();
         double money = JsonUtil.readTree(msg).path("money").asDouble();
         addRebate(userId, money);
+    }
+
+
+    private static void addRebateLongcheng(String msg) {
+        long userId = JsonUtil.readTree(msg).path("userId").asLong();
+        double money = JsonUtil.readTree(msg).path("money").asDouble();
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        long parentId = userBean.getReferee();
+        if (parentId != 0) {
+            UserBean parentUser = LoginAction.loadUserBean(parentId);
+            if (parentUser != null) {
+                //返利记录
+
+                RebateDetail rebateDetail = new RebateDetail();
+                rebateDetail.setUserId(userId);
+                rebateDetail.setAgentId(parentId);
+                rebateDetail.setNum(money);
+
+
+            }
+        }
+
     }
 
 

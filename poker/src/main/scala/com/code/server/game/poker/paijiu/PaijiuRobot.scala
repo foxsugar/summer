@@ -31,12 +31,18 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     }
     var roomPaijiu = room.asInstanceOf[RoomPaijiu]
 
+    val now = System.currentTimeMillis()
+
     //机器人加入的逻辑
     //机器人可加入 并且 game为空时 机器人加入
+    if(room.isInstanceOf[RoomTuitongziGold]) {
+      tuitongziRobot(roomPaijiu,now)
+      return
+    }
 
     doAddRobot(roomPaijiu)
 
-    val now = System.currentTimeMillis()
+
 
     //开始游戏
     doStartGame(roomPaijiu, now)
@@ -68,6 +74,59 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
 
   }
 
+  def tuitongziRobot(room:RoomPaijiu,now:Long): Unit ={
+    val rp = room
+    if(room.getGame == null) {
+
+      //更新banker
+      rp.updateBanker()
+      //选定庄家后10秒开局  庄家没变化的话 不许等待10秒
+      if ((now - rp.getLastOperateTime) > 2000 && rp.getBankerId != 0) {
+
+        println("托管: 开始游戏 100 " + room.getRoomId)
+        sendStartGame(rp)
+      }
+
+    }else{
+
+
+      //发牌
+      val game = room.getGame.asInstanceOf[GamePaijiu]
+      if(game.state == STATE_BET || game.state == START_CRAP){
+        if(now - game.lastOperateTime > STATE_TIME(STATE_BET)) {
+          sendCrapStart(game.bankerId, room.getRoomId)
+        }
+      }
+
+      if (game.state == STATE_OPEN) {
+
+        if (now - game.lastOperateTime > 1000 * 3) {
+
+          for (playerInfo <- game.playerCardInfos.values) {
+
+            if (playerInfo.cards.nonEmpty && playerInfo.group1 == null) {
+
+            //            val finalGroup = game.getMaxOpenGroup(playerInfo.cards)
+
+            sendOpenMsg(playerInfo.userId, room.getRoomId, "1", "")
+
+          }
+        }
+        }
+      }
+
+      //切锅
+      if (game.state == STATE_BANKER_BREAK) {
+        //10秒自动 继续
+        if (now - game.lastOperateTime > STATE_TIME(STATE_BANKER_BREAK)) {
+          println("托管: 切庄")
+          sendBreakBanker(game.bankerId, room.getRoomId)
+        }
+      }
+
+
+    }
+  }
   /**
     * 抢庄
     *

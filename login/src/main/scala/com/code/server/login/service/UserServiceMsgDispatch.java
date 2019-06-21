@@ -139,6 +139,8 @@ public class UserServiceMsgDispatch {
 
                 return gameUserService.withdrawMoney(msgKey, num, userName1, card, phone1,bankName);
 
+            case "getAllMember":
+                return gameUserService.getAllMember(msgKey);
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

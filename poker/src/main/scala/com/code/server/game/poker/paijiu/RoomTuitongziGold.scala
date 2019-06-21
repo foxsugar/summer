@@ -7,7 +7,9 @@ import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
 import com.code.server.redis.service.RedisManager
+import com.code.server.util.timer.GameTimer
 import com.code.server.util.{IdWorker, SpringUtil}
+
 import scala.collection.JavaConverters._
 
 /**
@@ -81,6 +83,35 @@ class RoomTuitongziGold extends RoomPaijiu{
 
   override protected def isCanJoinCheckMoney(userId: Long): Boolean = { //todo 检验金币
     true
+  }
+
+  /**
+    * 最小金币
+    *
+    * @return
+    */
+  override protected def getOutGold(): Int = {
+    return 0
+  }
+
+  override def startGame(): Unit = {
+    //do nothing
+//    if (this.curGameNumber > 1) {
+      MsgSender.sendMsg2Player(new ResponseVo("gameService", "gamePaijiuBegin", "ok"), this.getUsers)
+      //开始游戏
+      val game = getGameInstance
+      this.game = game
+      game.startGame(users, this)
+
+      //游戏开始 代建房 去除定时解散
+      if (!isOpen && !this.isCreaterJoin) GameTimer.removeNode(prepareRoomTimerNode)
+
+      //扣钱
+      if (!isOpen && isCreaterJoin) spendMoney()
+      this.isInGame = true
+      this.isOpen = true
+      pushScoreChange()
+//    }
   }
 
 
@@ -167,7 +198,7 @@ object RoomTuitongziGold extends Room {
     roomPaijiu.setRoomType(roomType)
     roomPaijiu.setGameType(gameType)
     roomPaijiu.setGameNumber(gameNumber)
-    roomPaijiu.setBankerId(userId)
+//    roomPaijiu.setBankerId(userId)
     roomPaijiu.setCreateUser(userId)
     roomPaijiu.setPersonNumber(personNum)
     roomPaijiu.setClubId(clubId)
@@ -192,7 +223,7 @@ object RoomTuitongziGold extends Room {
 //    val code = roomPaijiu.joinRoom(userId, true)
 //    if (code != 0) return code
 
-    RoomManager.addRoom(roomPaijiu.getRoomId, "" + serverConfig.getServerId, roomPaijiu)
+//    RoomManager.addRoom(roomPaijiu.getRoomId, "" + serverConfig.getServerId, roomPaijiu)
     val idword = new IdWorker(serverConfig.getServerId, 0)
     roomPaijiu.setUuid(idword.nextId())
 

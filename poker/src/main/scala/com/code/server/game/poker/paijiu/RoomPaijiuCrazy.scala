@@ -339,40 +339,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     MsgSender.sendMsg2Player(new ResponseVo("roomService", "dissolutionRoom", "ok"), userId)
     0
   }
-  /**
-    * 更新banker
-    */
-  def updateBanker(): Boolean = {
-    //现在没有banker
-    if ((this.bankerId == 0 || this.bankerId == -1) && this.bankerList.nonEmpty) {
-      //排队的第一个
 
-      val userId = this.bankerList.head
-      this.bankerId = userId
-      this.canStartUserId = userId
-      this.bankerScore = this.bankerScoreMap(userId)
-
-      this.bankerInitScore = this.bankerScoreMap(userId)
-
-      this.bankerList = this.bankerList.filter(_ != userId)
-      this.bankerScoreMap = this.bankerScoreMap.filterKeys(_ != userId)
-
-      //推送
-      MsgSender.sendMsg2Player(new ResponseVo("gameService", "updatePaijiuBanker", Map("userId" -> userId, "score" -> this.bankerScore).asJava), this.getUsers)
-      //更新时间
-      this.updateLastOperateTime()
-      pushRemainTime(getRemainTime())
-
-      //改局数
-      this.curGameNumber = 1
-
-      println("更新banker 更新后id为: " + userId)
-      return true
-
-    } else {
-      return false
-    }
-  }
 
 
   override def joinRoom(userId: Long, isJoin: Boolean): Int = {
