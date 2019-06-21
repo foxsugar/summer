@@ -268,9 +268,8 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     }
     //上庄先扣钱
     RedisManager.getUserRedisService.addUserMoney(userId, -score)
-    this.bankerList = this.bankerList.+:(userId)
+    this.bankerList = this.bankerList:+ userId
     this.bankerScoreMap = this.bankerScoreMap.+(userId -> score)
-
     //更新庄家
     //    updateBanker()
 
