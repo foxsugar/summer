@@ -3,9 +3,7 @@ package com.code.server.db.model;
 import com.code.server.db.utils.BaseEntity;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by sunxianping on 2019-06-21.
@@ -19,6 +17,8 @@ import javax.persistence.Table;
         })
 public class RebateDetail extends BaseEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private long userId;
     private long agentId;
