@@ -34,7 +34,7 @@ class GamePaijiuCrazy extends GamePaijiu{
       initCards()
 
       bankerId = roomPaijiu.getBankerId
-      updateLastOperateTime()
+
 
       room.getCurGameNumber match {
         case 1 => {
@@ -42,6 +42,8 @@ class GamePaijiuCrazy extends GamePaijiu{
         }
         case _ => betStart()
       }
+
+    updateLastOperateTime()
   }
 
 

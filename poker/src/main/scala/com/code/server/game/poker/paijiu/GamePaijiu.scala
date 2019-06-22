@@ -552,9 +552,9 @@ class GamePaijiu extends Game with PaijiuConstant {
     */
   protected def fightForBankerStart(): Unit = {
     state = STATE_FIGHT_FOR_BANKER
-    updateLastOperateTime()
     //推送开始下注
     MsgSender.sendMsg2Player("gamePaijiuService", "fightForBankerStart", this.bankerId, roomPaijiu.users)
+    updateLastOperateTime()
   }
 
   /**
@@ -562,9 +562,9 @@ class GamePaijiu extends Game with PaijiuConstant {
     */
   def bankerSetScoreStart(): Unit = {
     state = STATE_BANKER_SET_SCORE
-    updateLastOperateTime()
     //推送开始下注
     MsgSender.sendMsg2Player("gamePaijiuService", "bankerSetScoreStart", this.bankerId, roomPaijiu.users)
+    updateLastOperateTime()
   }
 
   /**
