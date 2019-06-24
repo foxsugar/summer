@@ -10,7 +10,7 @@ import javax.persistence.*;
  */
 @DynamicUpdate
 @Entity
-@Table(name = "users",
+@Table(name = "rebate_detail",
         indexes = {@Index(name = "id", columnList = "id"),
                 @Index(name="userId",columnList = "userId"),
                 @Index(name="agentId",columnList = "agentId"),
