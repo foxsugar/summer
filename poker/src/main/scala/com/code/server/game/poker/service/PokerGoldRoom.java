@@ -55,7 +55,7 @@ public class PokerGoldRoom extends RoomExtendGold {
      * @param userId
      * @param money
      */
-    protected void sendCenterAddRebateLongxiang(long userId, double money){
+    public void sendCenterAddRebateLongxiang(long userId, double money){
         Map<String, Object> addMoney = new HashMap<>();
         addMoney.put("userId", userId);
         addMoney.put("money", money);

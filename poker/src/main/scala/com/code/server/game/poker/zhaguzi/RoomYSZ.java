@@ -3,7 +3,7 @@ import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.*;
 import com.code.server.constant.response.*;
 import com.code.server.game.poker.config.ServerConfig;
-import com.code.server.game.room.RoomExtendGold;
+import com.code.server.game.poker.service.PokerGoldRoom;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.config.IConstant;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class RoomYSZ extends RoomExtendGold {
+public class RoomYSZ extends PokerGoldRoom {
 
     //扎金花专用
     protected double caiFen;

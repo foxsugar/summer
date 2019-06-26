@@ -102,13 +102,16 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
 
         if (now - game.lastOperateTime > 1000 * 3) {
 
+          println("托管 开牌")
           for (playerInfo <- game.playerCardInfos.values) {
 
-            if (playerInfo.cards.nonEmpty && playerInfo.group1 == null) {
 
-            //            val finalGroup = game.getMaxOpenGroup(playerInfo.cards)
-
-            sendOpenMsg(playerInfo.userId, room.getRoomId, "1", "")
+            if (playerInfo.userId == game.bankerId && playerInfo.group1 == null) {
+              sendOpenMsg(playerInfo.userId, room.getRoomId, "1", "")
+            } else {
+              if (playerInfo.bet != null && playerInfo.group1 == null) {
+                sendOpenMsg(playerInfo.userId, room.getRoomId, "1", "")
+              }
 
           }
         }

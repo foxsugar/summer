@@ -67,6 +67,31 @@ class RoomTuitongziGold extends RoomPaijiu{
   }
 
 
+
+  override def addUserSocre(userId: Long, score: Double): Unit = {
+    //百人牌九 加分时抽水
+
+      if(score>0) {
+        val game = this.game.asInstanceOf[GameTuitongziGold]
+
+        val s = score * (100 - 5) / 100
+        //返利
+        RedisManager.getUserRedisService.addUserMoney(userId, s)
+
+        //发送返利
+        sendCenterAddRebateLongxiang(userId, score * 1.5 /100)
+      }else{
+        RedisManager.getUserRedisService.addUserMoney(userId, score)
+      }
+
+  }
+
+
+
+
+
+
+
   /**
     * 100paijiu 不花钱
     *
@@ -114,6 +139,48 @@ class RoomTuitongziGold extends RoomPaijiu{
 //    }
   }
 
+  /**
+    * 加入房间
+    * @param userId
+    * @param isJoin
+    *     */
+  override def joinRoom(userId: Long, isJoin: Boolean): Int = {
+    val rtn = super.joinRoom(userId, isJoin)
+    if (rtn != 0) return rtn
+    //    getReady(userId)
+    if (this.game != null) if (!this.game.getUsers.contains(userId)) {
+      this.game.users.add(userId)
+      val playerPaijiu = new PlayerCardInfoPaijiu
+      playerPaijiu.userId = userId
+      this.game.asInstanceOf[GamePaijiu].addUser(userId, playerPaijiu)
+    }
+    0
+  }
+
+  override def quitRoom(userId: Long): Int = {
+    if (!this.users.contains(userId)) return ErrorCode.CANNOT_QUIT_ROOM_NOT_EXIST
+    if (isInGame) {
+      //并且在游戏中下注
+      val game = this.game.asInstanceOf[GamePaijiu]
+      val player = game.playerCardInfos(userId)
+      if (player != null) {
+        if (this.bankerId == userId)
+          return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME
+      }
+      if(player.bet != null && game.state != STATE_BANKER_BREAK){
+        return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME
+      }
+    }
+
+
+    //删除玩家房间映射关系
+    roomRemoveUser(userId)
+    if (game != null) {
+      game.users.remove(userId)
+    }
+    noticeQuitRoom(userId)
+    0
+  }
 
   /**
     * 排队上庄
@@ -135,7 +202,7 @@ class RoomTuitongziGold extends RoomPaijiu{
     }
     //上庄先扣钱
     RedisManager.getUserRedisService.addUserMoney(userId, -score)
-    this.bankerList = this.bankerList.+:(userId)
+    this.bankerList = this.bankerList:+ userId
     this.bankerScoreMap = this.bankerScoreMap.+(userId -> score)
 
     //更新庄家

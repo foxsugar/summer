@@ -50,6 +50,7 @@ public class CenterMsgService implements IkafkaMsgId {
     private static ReplayService replayService = SpringUtil.getBean(ReplayService.class);
 
     private static UserService userService = SpringUtil.getBean(UserService.class);
+    private static RebateDetailService rebateDetailService = SpringUtil.getBean(RebateDetailService.class);
 
 
     public static void dispatch(KafkaMsgKey msgKey, String msg) {
@@ -158,8 +159,18 @@ public class CenterMsgService implements IkafkaMsgId {
                 rebateDetail.setUserId(userId);
                 rebateDetail.setAgentId(parentId);
                 rebateDetail.setNum(money);
+                rebateDetail.setDate(new Date());
+
+                rebateDetail.setBeforeNum(parentUser.getUserInfo().getAllRebate());
+                parentUser.getUserInfo().setAllRebate(parentUser.getUserInfo().getAllRebate() + money);
+                rebateDetail.setAfterNum(parentUser.getUserInfo().getAllRebate());
+                RedisManager.getUserRedisService().addSaveUser(parentId);
 
 
+
+                RedisManager.getUserRedisService().updateUserBean(parentId, parentUser);
+
+                rebateDetailService.rebateDetailDao.save(rebateDetail);
             }
         }
 

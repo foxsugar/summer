@@ -1,10 +1,15 @@
 package com.code.server.game.poker.paijiu
 
-import java.lang
+import java.{lang, util}
 
+import com.code.server.constant.game.{RoomRecord, UserRecord}
+import com.code.server.constant.kafka.{IKafaTopic, IkafkaMsgId, KafkaMsgKey}
 import com.code.server.constant.response.{ErrorCode, GamePaijiuResult, GameResultPaijiu}
+import com.code.server.game.room.Room
 import com.code.server.game.room.kafka.MsgSender
+import com.code.server.kafka.MsgProducer
 import com.code.server.redis.service.RedisManager
+import com.code.server.util.SpringUtil
 
 import scala.collection.JavaConverters._
 import scala.util.Random
@@ -52,6 +57,28 @@ class GameTuitongziGold extends GamePaijiu {
   }
 
 
+
+
+  /**
+    * 开始游戏
+    *
+    * @param users
+    * @param room
+    */
+  override def startGame(users: util.List[lang.Long], room: Room): Unit = {
+    roomPaijiu = room.asInstanceOf[RoomPaijiu]
+    //    this.room = roomPaijiu
+    //实例化玩家
+    initPlayer()
+    //码牌
+    initCards()
+
+    bankerId = roomPaijiu.getBankerId
+    //下注阶段开始
+    betStart()
+
+  }
+
   /**
     * 发牌
     */
@@ -84,7 +111,7 @@ class GameTuitongziGold extends GamePaijiu {
     val myBetNum = one + two + three
     //金币牌九 下注不能大于身上的钱
 
-    val myMoney = RedisManager.getUserRedisService.getUserMoney(userId)
+    val myMoney = RedisManager.getUserRedisService.getUserGold(userId)
     if (myMoney < playerCardInfoPaijiu.getBetNum() + one + two + three) {
       return ErrorCode.BET_PARAM_NO_MONEY
     }
@@ -184,6 +211,7 @@ class GameTuitongziGold extends GamePaijiu {
     //是否已经全开牌
     val isAllOpen = isAllPlayerOpen()
     if (isAllOpen) {
+      println("全部开牌")
       gameOver()
     }
     //开牌通知
@@ -235,10 +263,10 @@ class GameTuitongziGold extends GamePaijiu {
 
     val card1 = cards.head
     val card2 = cards(1)
-    val cardIndex1 = card1/4
-    val cardIndex2 = card2/4
+    val cardIndex1 = card1/4 + 1
+    val cardIndex2 = card2/4 + 1
     val isSame = cardIndex1 == cardIndex2
-    if(isSame) return (cardIndex1 + 1) * 10
+    if(isSame) return cardIndex1  * 10
     var sum = cardIndex1 + cardIndex2
     if(sum>=10) sum-=10
     return sum
@@ -255,6 +283,8 @@ class GameTuitongziGold extends GamePaijiu {
     val otherScore1 = getCardScore(commonCards(1))
     val otherScore2 = getCardScore(commonCards(2))
     val otherScore3 = getCardScore(commonCards(3))
+
+
     playerCardInfos.foreach { case (uid, other) =>
       if (uid != bankerId && other.bet != null) {
         var result: Int = 0
@@ -318,12 +348,43 @@ class GameTuitongziGold extends GamePaijiu {
 
 
 
+
+  /**
+    * 生成战绩
+    */
+   def genRoomRecord(): Unit = {
+
+    val roomRecord = new RoomRecord
+    roomRecord.setRoomId(this.roomPaijiu.getRoomId)
+    roomRecord.setId(this.roomPaijiu.getUuid)
+    roomRecord.setType(this.roomPaijiu.getRoomType)
+    roomRecord.setTime(System.currentTimeMillis)
+    roomRecord.setGameType(this.roomPaijiu.getGameType)
+    roomRecord.setCurGameNum(this.roomPaijiu.curGameNumber)
+    roomRecord.setAllGameNum(this.roomPaijiu.getGameNumber())
+    roomRecord.setOpen(this.roomPaijiu.isOpen)
+
+    this.playerCardInfos.values.foreach(playerInfo=>{
+      val userRecord = new UserRecord
+      userRecord.setScore(playerInfo.score)
+      userRecord.setUserId(playerInfo.userId)
+      roomRecord.addRecord(userRecord)
+
+      val kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ROOM_RECORD)
+      val msgProducer = SpringUtil.getBean(classOf[MsgProducer])
+      msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord)
+    })
+
+
+  }
+
   /**
     * 牌局结束
     */
   override protected def gameOver(): Unit = {
     compute()
     sendResult()
+    genRoomRecord()
     //不记记录日志
     //    genRecord()
     //切庄开始
@@ -345,7 +406,7 @@ class GameTuitongziGold extends GamePaijiu {
   def isAutoBreakBanker():Boolean ={
     //大于10倍 小于20% 自动切庄
     //todo 是否有多少把 自动下庄
-    this.roomPaijiu.bankerScore > 10 * this.roomPaijiu.bankerInitScore || this.roomPaijiu.bankerScore < this.roomPaijiu.bankerInitScore * 20 /100 || this.roomPaijiu.curGameNumber>24
+    this.roomPaijiu.bankerScore > 10 * this.roomPaijiu.bankerInitScore || this.roomPaijiu.bankerScore < this.roomPaijiu.bankerInitScore * 20 /100 || this.roomPaijiu.curGameNumber>20
 
   }
   /**
@@ -411,7 +472,7 @@ class GameTuitongziGold extends GamePaijiu {
 
       //返利
 //      var rebate =  bankerPlayer.getScore() * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100
-//      this.roomPaijiu.sendCenterAddRebate(this.roomPaijiu.getBankerId, rebate)
+      this.roomPaijiu.sendCenterAddRebateLongxiang(this.roomPaijiu.getBankerId, bankerPlayer.getScore() * 1.5 /100)
     }
     this.playerCardInfos.values.foreach(playerInfo => gameResult.getPlayerCardInfos.add(playerInfo.toVo))
     this.roomPaijiu.bankerScore -= choushui

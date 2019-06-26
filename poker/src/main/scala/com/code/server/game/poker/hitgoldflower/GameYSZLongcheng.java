@@ -1,10 +1,17 @@
 package com.code.server.game.poker.hitgoldflower;
 
+import com.code.server.constant.game.RoomRecord;
+import com.code.server.constant.game.UserRecord;
+import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.IkafkaMsgId;
+import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.zhaguzi.*;
 import com.code.server.game.poker.zhaguzi.PokerItem;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.kafka.MsgProducer;
+import com.code.server.util.SpringUtil;
 
 import java.util.List;
 
@@ -28,8 +35,42 @@ public class GameYSZLongcheng extends GameYSZ {
     }
 
 
+    /**
+     * 生成战绩
+     */
+    public void genRoomRecord(){
+
+        RoomRecord roomRecord = new RoomRecord();
+        roomRecord.setRoomId(this.room.getRoomId());
+        roomRecord.setId(this.room.getUuid());
+        roomRecord.setType(this.room.getRoomType());
+        roomRecord.setTime(System.currentTimeMillis());
+        roomRecord.setGameType(this.room.getGameType());
+        roomRecord.setCurGameNum(this.room.curGameNumber);
+        roomRecord.setAllGameNum(this.room.getGameNumber());
+        roomRecord.setOpen(this.room.isOpen);
+
+        this.playerCardInfos.values().forEach(playerInfo->{
+            UserRecord userRecord = new UserRecord();
+            userRecord.setScore(playerInfo.getScore());
+            userRecord.setUserId(playerInfo.userId);
+            roomRecord.addRecord(userRecord);
+
+            KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ROOM_RECORD);
+            MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+            msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord);
+        });
 
 
+    }
+
+
+    /**
+     * 战绩
+     */
+    protected void genRecord() {
+        genRoomRecord();
+    }
     /**
      * 算分
      *
@@ -92,6 +133,9 @@ public class GameYSZLongcheng extends GameYSZ {
                 double add = totalChip * 95 /100 /winList.size();
                 //todo 返利
 
+                double rebate = 1.5 / 100 * 77 / 100 * chip / playerCardInfos.size() + 1.5 / 100 * 23 / 100 * (playerCardInfo.getAllScore()) / chip;
+
+                this.room.sendCenterAddRebateLongxiang(playerCardInfo.getUserId(), rebate);
                 playerCardInfo.setScore(add);
 
             } else {

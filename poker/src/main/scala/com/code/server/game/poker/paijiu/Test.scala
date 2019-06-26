@@ -63,8 +63,9 @@ object Test {
   }
 
   def testList = {
-    var l1 = List(1,2,3)
-    l1.asJava.add(4)
+    var l1 = List(5,1,2,3)
+    l1 = l1:+(4)
+//    l1.asJava.add(4)
     print(l1)
   }
   def testShuffle() = {
@@ -110,7 +111,7 @@ object Test {
 
   def testListBuff1(): Unit ={
     var list = ListBuffer(1,1,2,2)
-    list-=1
+    list.append(5)
     print(list)
 
   }

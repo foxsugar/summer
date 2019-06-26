@@ -4,6 +4,7 @@ import com.code.server.db.utils.BaseEntity;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by sunxianping on 2019-06-21.
@@ -23,7 +24,7 @@ public class RebateDetail extends BaseEntity {
     private long userId;
     private long agentId;
     private double num;
-    private String date;
+    private Date date;
 
     private double beforeNum;
     private double afterNum;
@@ -66,11 +67,11 @@ public class RebateDetail extends BaseEntity {
         return this;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public RebateDetail setDate(String date) {
+    public RebateDetail setDate(Date date) {
         this.date = date;
         return this;
     }

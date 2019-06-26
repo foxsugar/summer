@@ -364,6 +364,8 @@ class GamePaijiu100 extends GamePaijiuCrazy {
           if (bankerScore2 < otherScore2) result -= 1
         }
 
+        if(result>0) result = 1
+        if(result<0) result = -1
         doLogRecord(gamepaijiuResult,index,-result)
       }
     })

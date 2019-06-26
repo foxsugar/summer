@@ -7,8 +7,11 @@ package com.code.server.db.dao;
 import com.code.server.db.model.RebateDetail;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.List;
+
 public interface IRebateDetailDao extends PagingAndSortingRepository<RebateDetail, Long> {
 
 
 
+    List<RebateDetail> findAllByAgentId(long agentId);
 }

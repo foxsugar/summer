@@ -31,6 +31,7 @@ public class UserInfo {
     private Map<String, Map<Integer, Integer>> taskComplete = new HashMap<>();
     private List<Message> messageBox = new ArrayList<>();
     private  Map<Long, ScoreItem> rebate = new HashMap<>();
+    private double allRebate;
 
     public int getTotalPlayGameNumber() {
         return totalPlayGameNumber;
@@ -191,6 +192,15 @@ public class UserInfo {
 
     public UserInfo setBankName(String bankName) {
         this.bankName = bankName;
+        return this;
+    }
+
+    public double getAllRebate() {
+        return allRebate;
+    }
+
+    public UserInfo setAllRebate(double allRebate) {
+        this.allRebate = allRebate;
         return this;
     }
 }

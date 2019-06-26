@@ -12,7 +12,7 @@ public class RebateDetailService {
 
 
     @Autowired
-    private IRebateDetailDao rebateDetailDao;
+    public IRebateDetailDao rebateDetailDao;
 
 
 }

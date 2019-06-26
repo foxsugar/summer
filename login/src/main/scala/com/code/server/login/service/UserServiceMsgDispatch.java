@@ -129,7 +129,15 @@ public class UserServiceMsgDispatch {
 
             case "change2Money":
                 return gameUserService.change2Money(msgKey);
+            case "rebate2Gold":
+                int num1 = params.path("num").asInt();
+                return gameUserService.rebate2Gold(msgKey, num1);
 
+            case "gold2Money":
+                int num2 = params.path("num").asInt();
+                return gameUserService.gold2Money(msgKey, num2);
+            case "getRebateDetails":
+                return gameUserService.getRebateDetails(msgKey);
             case "withdrawMoney":
                 double num = params.path("num").asDouble();
                 String userName1 = params.path("name").asText();

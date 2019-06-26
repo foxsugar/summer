@@ -62,6 +62,9 @@ public class GameUserService {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private RebateDetailService rebateDetailService;
+
     private long lastGetTime = 0;
     private int onlinePeople = 0;
 
@@ -797,6 +800,50 @@ public class GameUserService {
 
     }
 
+
+    /**
+     * 返利转换为gold
+     * @param msgKey
+     * @param num
+     * @return
+     */
+    public int rebate2Gold(KafkaMsgKey msgKey, int num){
+        long userId = msgKey.getUserId();
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean.getUserInfo().getAllRebate() < num) {
+            return ErrorCode.CANNOT_GOLD_NOT_ENOUGH;
+        }
+        RedisManager.getUserRedisService().addUserGold(userId,num);
+        userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        userBean.getUserInfo().setAllRebate(userBean.getUserInfo().getAllRebate() - num);
+        RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+        sendMsg(msgKey, new ResponseVo("userService", "rebate2Gold", 0));
+        return 0;
+    }
+
+    /**
+     * gold转换为money
+     * @param msgKey
+     * @param num
+     * @return
+     */
+    public int gold2Money(KafkaMsgKey msgKey, int num) {
+        long userId = msgKey.getUserId();
+        if (RedisManager.getUserRedisService().getUserGold(userId) < num) {
+            return ErrorCode.CANNOT_GOLD_NOT_ENOUGH;
+        }
+        RedisManager.getUserRedisService().addUserGold(userId, -num);
+        RedisManager.getUserRedisService().addUserMoney(userId, num);
+        sendMsg(msgKey, new ResponseVo("userService", "gold2Money", 0));
+        return 0;
+    }
+
+
+    public int getRebateDetails(KafkaMsgKey msgKey) {
+//        rebateDetailService.rebateDetailDao.
+        return 0;
+    }
     /**
      * 提现
      * @param msgKey
@@ -864,8 +911,8 @@ public class GameUserService {
 
                 item.put("name", userBeanItem.getUsername());
                 item.put("money", userBeanItem.getMoney());
-                item.put("gold", userBean.getGold());
-                item.put("image", userBean.getImage());
+                item.put("gold", userBeanItem.getGold());
+                item.put("image", userBeanItem.getImage());
                 list.add(item);
             }
         }
