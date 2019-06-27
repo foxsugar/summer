@@ -65,7 +65,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     var choushui:Double = 0
     if(bankerPlayer.getScore() > 0) {
       choushui = bankerPlayer.getScore() * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_BET).asInstanceOf[String].toDouble / 100
-      bankerPlayer.score = bankerPlayer.score - choushui
+//      bankerPlayer.score = bankerPlayer.score - choushui
 
       //返利
       var rebate =  bankerPlayer.getScore() * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100

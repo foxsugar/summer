@@ -203,8 +203,12 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     genRoomRecord()
 
     if (this.isReOpen) {
+      var personNum = this.personNumber
+      if(this.personNumber<4){
+        personNum = 4
+      }
       RoomPaijiuCrazy.createRoom(this.createUser, this.getRoomType, this.getGameType, this.getGameNumber, this.getClubId, this.getClubRoomModel, this.getClubMode,
-        this.isAA, this.robotType, this.robotNum, this.robotWinner, this.isReOpen, this.getOtherMode, this.getPersonNumber, this.bankerInitScore)
+        this.isAA, this.robotType, this.robotNum, this.robotWinner, this.isReOpen, this.getOtherMode, personNum, this.bankerInitScore)
     }
   }
 
