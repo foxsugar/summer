@@ -841,7 +841,7 @@ public class GameUserService {
 
 
     public int getRebateDetails(KafkaMsgKey msgKey) {
-//        rebateDetailService.rebateDetailDao.
+        sendMsg(msgKey, new ResponseVo("userService", "getRebateDetails", rebateDetailService.rebateDetailDao.findAllByAgentId(msgKey.getUserId())));
         return 0;
     }
     /**
@@ -899,6 +899,11 @@ public class GameUserService {
     }
 
 
+    /**
+     * 获得所有下级
+     * @param msgKey
+     * @return
+     */
     public int getAllMember(KafkaMsgKey msgKey) {
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(msgKey.getUserId());
         List<Map<String, Object>> list = new ArrayList<>();
@@ -917,6 +922,25 @@ public class GameUserService {
             }
         }
         MsgSender.sendMsg2Player(new ResponseVo("userService", "getAllMember", list), msgKey.getUserId());
+        return 0;
+    }
+
+
+    /**
+     * 设置其他人vip
+     * @param msgKey
+     * @param playerId
+     * @return
+     */
+    public int setPlayerVip(KafkaMsgKey msgKey, long playerId){
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(playerId);
+        if (userBean == null) {
+            return ErrorCode.CANNOT_FIND_THIS_USER;
+        }
+        userBean.setVip(1);
+        RedisManager.getUserRedisService().updateUserBean(playerId, userBean);
+        MsgSender.sendMsg2Player(new ResponseVo("userService", "setPlayerVip", 0), msgKey.getUserId());
         return 0;
     }
 

@@ -29,6 +29,7 @@ public class PlayerCardsInfoXXPB extends PlayerCardsInfoMj {
 		super.init(cards);
 		specialHuScore.put(hu_清一色,2);
 		specialHuScore.put(hu_一条龙,2);
+		specialHuScore.put(hu_清龙,4);
 		specialHuScore.put(hu_七小对,2);
 //		specialHuScore.put(hu_十三幺,6);
 		specialHuScore.put(hu_杠上开花,2);
@@ -191,10 +192,10 @@ public class PlayerCardsInfoXXPB extends PlayerCardsInfoMj {
 				this.fan = maxFan;
 			}else{//闲赢
 				if(gameInfo.getFirstTurn() == dianpaoUser){//庄点炮
-					gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 8 * maxFan * room.getMultiple());
-					this.score = this.score + 8 * maxFan * room.getMultiple();
-					room.setUserSocre(dianpaoUser, - 8 * maxFan * room.getMultiple());
-					room.setUserSocre(this.userId, 8 * maxFan * room.getMultiple());
+					gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 6 * maxFan * room.getMultiple());
+					this.score = this.score + 6 * maxFan * room.getMultiple();
+					room.setUserSocre(dianpaoUser, - 6 * maxFan * room.getMultiple());
+					room.setUserSocre(this.userId, 6 * maxFan * room.getMultiple());
 				}else{
 					gameInfo.getPlayerCardsInfos().get(dianpaoUser).setScore(gameInfo.getPlayerCardsInfos().get(dianpaoUser).getScore() - 5 * maxFan * room.getMultiple());
 					this.score = this.score + 5 * maxFan * room.getMultiple();

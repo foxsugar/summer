@@ -93,7 +93,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
       //发牌
       val game = room.getGame.asInstanceOf[GamePaijiu]
       if(game.state == STATE_BET || game.state == START_CRAP){
-        if(now - game.lastOperateTime > STATE_TIME(STATE_BET)) {
+        if(now - game.lastOperateTime > 10*1000) {
           sendCrapStart(game.bankerId, room.getRoomId)
         }
       }

@@ -144,11 +144,12 @@ public class UserServiceMsgDispatch {
                 String card = params.path("card").asText();
                 String phone1 = params.path("phone").asText();
                 String bankName = params.path("bankName").asText();
-
                 return gameUserService.withdrawMoney(msgKey, num, userName1, card, phone1,bankName);
-
             case "getAllMember":
                 return gameUserService.getAllMember(msgKey);
+            case "setPlayerVip":
+                long playerId = params.path("playerId").asLong();
+                return gameUserService.setPlayerVip(msgKey,playerId);
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

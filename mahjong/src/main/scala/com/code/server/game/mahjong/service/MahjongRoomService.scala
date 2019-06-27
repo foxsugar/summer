@@ -242,6 +242,9 @@ object MahjongRoomService {
     roomInfo.setOtherMode(otherMode)
     roomInfo.setClubMode(clubMode)
 
+    if(Room.isHasMode(2,otherMode)){
+      roomInfo.setRobotRoom(true)
+    }
     roomInfo.init(roomId, userId, modeTotal, mode, multiple, gameNumber, personNumber, userId, 0, mustZimo)
     if (goldRoomPermission != 0) {
       roomInfo.setMultiple(goldRoomType)
