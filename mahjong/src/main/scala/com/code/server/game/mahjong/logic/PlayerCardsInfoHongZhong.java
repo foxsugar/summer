@@ -81,7 +81,6 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
         if (!isTing && this.roomInfo.haveTing) return false;
         int lastCard = CardTypeUtil.getTypeByCard(card);
 
-
         List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), getChiPengGangNum(), this.gameInfo.hun, lastCard);
         for (HuCardType huCardType : huList) {
             if (getMaxPoint(huCardType, false) >= ZIMO_MIN_SCORE) {
