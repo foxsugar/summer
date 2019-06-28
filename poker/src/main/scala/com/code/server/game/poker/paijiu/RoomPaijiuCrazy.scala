@@ -76,6 +76,9 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
 
   override def startGame(): Unit = {
+    if(this.game != null) {
+      return
+    }
     //do nothing
 
     MsgSender.sendMsg2Player(new ResponseVo("gameService", "gamePaijiuBegin", "ok"), this.getUsers)

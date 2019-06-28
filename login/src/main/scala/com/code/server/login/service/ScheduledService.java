@@ -1,6 +1,7 @@
 package com.code.server.login.service;
 
 import com.code.server.db.Service.GameRecordService;
+import com.code.server.db.Service.RebateDetailService;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
@@ -46,6 +47,9 @@ public class ScheduledService {
     @Autowired
     GameRecordService gameRecordService;
 
+    @Autowired
+    RebateDetailService rebateDetailService;
+
     /**
      * 每天5点 定时删除游戏记录
      */
@@ -65,6 +69,10 @@ public class ScheduledService {
             gameRecordService.replayDao.deleteAllByDateBefore(d);
         }
 
+        if (SpringUtil.getBean(ServerConfig.class).getLoadAllUser() == 1) {
+//            for(UserBean userBean : RedisManager.getUserRedisService().getUserBeans())
+//            rebateDetailService.rebateDetailDao.findAllByAgentId()
+        }
 
     }
 

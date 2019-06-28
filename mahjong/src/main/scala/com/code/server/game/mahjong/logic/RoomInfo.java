@@ -205,6 +205,8 @@ public class RoomInfo extends RoomInfoExtendGold {
             case "XYKD":
                 return new GameInfoXYKD().setHasJieGangHu(true);
             case "KXZHZ":
+            case "LQZHZ":
+            case "LQZHZ2":
                 return new GameInfoZhuohaozi().setHasJieGangHu(true);
             case "TC1":
                 return new GameInfoTC_M();

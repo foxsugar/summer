@@ -21,7 +21,7 @@ import java.util.Map;
 public class MahjongRobot {
 
     private static long INTERVAL_TIME = 1000L * 30;
-    private static long READY_TIME = 1000L * 15;
+    private static long READY_TIME = 1000L * 20;
 
     public static void execute(RoomInfo room) {
         long now = System.currentTimeMillis();
@@ -51,11 +51,11 @@ public class MahjongRobot {
                     if ((status != Room.STATUS_READY)) {
 //                        boolean isOnline = RedisManager.getUserRedisService().getGateId(uid) != null;
 //                        if (isOnline) {
-//                            getReady(room, uid);
+                            getReady(room, uid);
 //                        }else{
 //                            quitRoom(room,uid);
 //                        }
-                        quitRoom(room,uid);
+//                        quitRoom(room,uid);
                         MsgSender.sendMsg2Player("roomService", "quitRoomKick", "quit", uid);
                     }
 
