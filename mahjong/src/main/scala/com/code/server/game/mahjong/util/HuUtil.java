@@ -285,6 +285,7 @@ public class HuUtil implements HuType {
 
     private static boolean isQixiaoduiDiaojiang(List<String> cards, List<Integer> hun, int lastCard) {
         Map<Integer, Integer> cardNum = new HashMap<>();
+        //混的数量
         int hunCardNum = 0;
         for (String card : cards) {
             int cardType = CardTypeUtil.getTypeByCard(card);
@@ -296,6 +297,7 @@ public class HuUtil implements HuType {
                 cardNum.put(cardType, num);
             }
         }
+        //需要混的数量
         final int[] needHunNum = {0};
         cardNum.forEach((cardType,num)->{
             if (num % 2 == 1) {

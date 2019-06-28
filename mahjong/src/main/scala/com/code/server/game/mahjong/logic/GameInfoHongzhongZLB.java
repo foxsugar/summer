@@ -88,8 +88,8 @@ public class GameInfoHongzhongZLB extends GameInfoHongZhong {
             if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_双耗子)) {
                 this.hun = HuWithHun.getHunType(hunIndex);
             } else {
-                String card = this.remainCards.remove(0);
-                hunIndex = CardTypeUtil.getTypeByCard(card);
+//                String card = this.remainCards.remove(0);
+//                hunIndex = CardTypeUtil.getTypeByCard(card);
                 this.hun.add(hunIndex);
             }
 

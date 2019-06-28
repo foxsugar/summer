@@ -104,8 +104,8 @@ public class GameInfoZhuohaoziZLB extends GameInfoZhuohaozi {
             if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_双耗子)) {
                 this.hun = HuWithHun.getHunType(hunIndex);
             } else {
-                String card = this.remainCards.get(0);
-                hunIndex = CardTypeUtil.getTypeByCard(card);
+//                String card = this.remainCards.get(0);
+//                hunIndex = CardTypeUtil.getTypeByCard(card);
                 this.hun.add(hunIndex);
             }
 

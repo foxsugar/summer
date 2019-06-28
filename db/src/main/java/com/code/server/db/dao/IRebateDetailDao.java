@@ -14,4 +14,6 @@ public interface IRebateDetailDao extends PagingAndSortingRepository<RebateDetai
 
 
     List<RebateDetail> findAllByAgentId(long agentId);
+
+//    select agent_id, sum(num) money,DATE_FORMAT(date,'%Y-%m-%d') d from rebate_detail where agent_id=5 GROUP BY d ORDER BY d desc limit 10;
 }

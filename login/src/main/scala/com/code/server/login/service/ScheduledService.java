@@ -64,6 +64,8 @@ public class ScheduledService {
             gameRecordService.gameRecordDao.deleteAllByDateBefore(d);
             gameRecordService.replayDao.deleteAllByDateBefore(d);
         }
+
+
     }
 
     public static void main(String[] args) {
