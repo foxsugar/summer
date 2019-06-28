@@ -818,6 +818,17 @@ public class GameUserService {
         userBean = RedisManager.getUserRedisService().getUserBean(userId);
         userBean.getUserInfo().setAllRebate(userBean.getUserInfo().getAllRebate() - num);
         RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+
+        Charge charge = new Charge();
+        charge.setOrderId(""+IdWorker.getDefaultInstance().nextId());
+        charge.setStatus(1);
+        charge.setMoney(num);
+        charge.setCreatetime(new Date());
+        charge.setUserid(userId);
+        charge.setRecharge_source("13");
+
+        chargeService.save(charge);
+
         sendMsg(msgKey, new ResponseVo("userService", "rebate2Gold", 0));
         return 0;
     }
@@ -836,6 +847,17 @@ public class GameUserService {
         RedisManager.getUserRedisService().addUserGold(userId, -num);
         RedisManager.getUserRedisService().addUserMoney(userId, num);
         sendMsg(msgKey, new ResponseVo("userService", "gold2Money", 0));
+
+        Charge charge = new Charge();
+        charge.setOrderId(""+IdWorker.getDefaultInstance().nextId());
+        charge.setStatus(1);
+        charge.setMoney(num);
+        charge.setCreatetime(new Date());
+        charge.setUserid(userId);
+        charge.setRecharge_source("12");
+
+        chargeService.save(charge);
+
         return 0;
     }
 

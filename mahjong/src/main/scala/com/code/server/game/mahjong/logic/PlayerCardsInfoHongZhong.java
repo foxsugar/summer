@@ -76,20 +76,21 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
         return false;
     }
 
-//    @Override
-//    public boolean isCanHu_zimo(String card) {
-//        if (!isTing && this.roomInfo.haveTing) return false;
-//        int lastCard = CardTypeUtil.getTypeByCard(card);
-//
-//        List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), getChiPengGangNum(), this.gameInfo.hun, lastCard);
-//        for (HuCardType huCardType : huList) {
-//            if (getMaxPoint(huCardType, false) >= ZIMO_MIN_SCORE) {
-//                return true;
-//            }
-//        }
-//        return false;
-//
-//    }
+    @Override
+    public boolean isCanHu_zimo(String card) {
+        if (!isTing && this.roomInfo.haveTing) return false;
+        int lastCard = CardTypeUtil.getTypeByCard(card);
+
+
+        List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), getChiPengGangNum(), this.gameInfo.hun, lastCard);
+        for (HuCardType huCardType : huList) {
+            if (getMaxPoint(huCardType, false) >= ZIMO_MIN_SCORE) {
+                return true;
+            }
+        }
+        return false;
+
+    }
 
     @Override
     public boolean isCanTing(List<String> cards) {

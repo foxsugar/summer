@@ -28,6 +28,7 @@ public class RebateDetail extends BaseEntity {
 
     private double beforeNum;
     private double afterNum;
+    private int type;
 
 
 
@@ -91,6 +92,15 @@ public class RebateDetail extends BaseEntity {
 
     public RebateDetail setAfterNum(double afterNum) {
         this.afterNum = afterNum;
+        return this;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public RebateDetail setType(int type) {
+        this.type = type;
         return this;
     }
 }

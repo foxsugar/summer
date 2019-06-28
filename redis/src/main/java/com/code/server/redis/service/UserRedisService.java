@@ -169,6 +169,10 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
         return user_bean.multiGet(userStrs).stream().map(ub->JsonUtil.readValue(ub,UserBean.class)).collect(Collectors.toList());
     }
 
+    public Set<String> getAllUserId(){
+        BoundHashOperations<String,String,String> user_bean = redisTemplate.boundHashOps(USER_BEAN);
+        return user_bean.keys();
+    }
 
     @Override
     public void updateUserBean(long userId, UserBean userBean) {

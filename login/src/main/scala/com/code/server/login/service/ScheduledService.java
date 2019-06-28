@@ -1,8 +1,11 @@
 package com.code.server.login.service;
 
+import com.code.server.constant.game.UserBean;
 import com.code.server.db.Service.GameRecordService;
 import com.code.server.db.Service.RebateDetailService;
+import com.code.server.db.model.RebateDetail;
 import com.code.server.login.config.ServerConfig;
+import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +56,7 @@ public class ScheduledService {
     /**
      * 每天5点 定时删除游戏记录
      */
-    @Scheduled(cron = "0 0 5 ? * *")
+    @Scheduled(cron = "0 0 15 ? * *")
     public void scheduled(){
         if (SpringUtil.getBean(ServerConfig.class).getDeleteRecordTask() == 1) {
             logger.info("=====>>>>>定时任务 删除游戏记录  {}",System.currentTimeMillis());
@@ -70,11 +73,38 @@ public class ScheduledService {
         }
 
         if (SpringUtil.getBean(ServerConfig.class).getLoadAllUser() == 1) {
-//            for(UserBean userBean : RedisManager.getUserRedisService().getUserBeans())
+            LocalDate yestoday = LocalDate.now().minusDays(1);
+            String ys = yestoday.toString();
+            for(String uid : RedisManager.getUserRedisService().getAllUserId()){
+                long userId = Long.valueOf(uid);
+                UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+                if (userBean.getVip() != 0 && userBean.getReferee() != 0) {
+
+                    double lastDayRebate = rebateDetailService.rebateDetailDao.getRebateByDate(userId, ys);
+                    double re = lastDayRebate /100;
+
+                    UserBean parent = RedisManager.getUserRedisService().getUserBean(userBean.getReferee());
+                    parent.getUserInfo().setAllRebate(parent.getUserInfo().getAllRebate() + re);
+                    RedisManager.getUserRedisService().updateUserBean(parent.getId(), parent);
+
+                    //返利记录
+                    RebateDetail rebateDetail = new RebateDetail();
+                    rebateDetail.setNum(re);
+                    rebateDetail.setUserId(userBean.getId());
+                    rebateDetail.setAgentId(parent.getId());
+                    rebateDetail.setDate(new Date());
+                    rebateDetail.setType(1);
+
+                    rebateDetailService.rebateDetailDao.save(rebateDetail);
+                }
+            }
 //            rebateDetailService.rebateDetailDao.findAllByAgentId()
         }
 
     }
+
+
+
 
     public static void main(String[] args) {
         LocalDate date = LocalDate.now();
@@ -84,6 +114,6 @@ public class ScheduledService {
         ZonedDateTime zdt = date.atStartOfDay(zoneId);
 
         Date d = Date.from(zdt.toInstant());
-        System.out.println(d);
+        System.out.println(date.toString());
     }
 }
