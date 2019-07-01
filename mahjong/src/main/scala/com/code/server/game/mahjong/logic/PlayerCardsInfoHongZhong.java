@@ -17,6 +17,8 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
     public static final int HUN_NO = 4;
     public static final int NO_FENG = 5;
     public static final int TWO_HUN = 6;
+    public static final int DIANPAOSANJIACHU = 7;//点炮三家出
+    public static final int LIUPAI = 8;//点炮三家出
 
 
     @Override
@@ -48,6 +50,7 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
         this.ZIMO_MIN_SCORE = 0;
         this.DIANPAO_MIN_SCORE = 0;
     }
+
 
 
     @Override
@@ -186,7 +189,7 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
 
     }
 
-    private boolean isHas4Hongzhong() {
+    public boolean isHas4Hongzhong() {
         return this.cards.stream().filter(card -> CardTypeUtil.getTypeByCard(card) == 31).count() == 4;
     }
 
