@@ -30,7 +30,8 @@ public class MahjongRobot {
                 if (gameInfo.getWaitingforList().size() > 0) {
                     GameInfo.WaitDetail waitDetail = gameInfo.getWaitingforList().get(0);
                     if (waitDetail.isHu) {
-                        hu(room, waitDetail.myUserId);
+//                        hu(room, waitDetail.myUserId);
+                        guo(room, waitDetail.myUserId);
                     } else {
                         guo(room, waitDetail.myUserId);
                     }
