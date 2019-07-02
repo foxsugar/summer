@@ -11,15 +11,15 @@ import java.util.Date;
 
 @DynamicUpdate
 @Entity
-@Table(name = "upScoreRecord")
+@Table(name = "upScoreRecord")//上下分记录
 public class UpScoreRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long id;//id
 
-    private Date date;
+    private Date date;//日期
 
-    private String roomId;
+    private String roomId;//房间id
 
 
     public long getId() {

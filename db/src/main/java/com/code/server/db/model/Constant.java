@@ -17,26 +17,26 @@ public class Constant extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-    private String marquee;
-    private String marquee1;
-    private String marquee2;
-    private String download;
-    private String download1;
-    private String download2;
-    private int initMoney;
-    private int initGold;
+    private long id;//id
+    private String marquee;//跑马灯
+    private String marquee1;//跑马灯1
+    private String marquee2;//跑马灯2
+    private String download;//下载地址
+    private String download1;//下载地址1
+    private String download2;//下载地址2
+    private int initMoney;//初始money
+    private int initGold;//初始gold
     private String versionOfAndroid;//安卓版本
     private String versionOfIos;//IOS版本
-    private int appleCheck;
+    private int appleCheck;//苹果审查
     private int shareMoney;//分享获得的钱
-    private String AccessCode;
-    private int income1;
+    private String AccessCode;//
+    private int income1;//
     private int income2;
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
-    private Set<String> blackList = new HashSet<>();
+    private Set<String> blackList = new HashSet<>();//黑名单
 
     private String payUid;//paysa uid
     private String payToken;//paysa token
@@ -44,7 +44,7 @@ public class Constant extends BaseEntity {
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
-    private OtherConstant other;
+    private OtherConstant other;//其他信息
 
 
 

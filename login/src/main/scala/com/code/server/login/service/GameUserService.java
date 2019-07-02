@@ -126,6 +126,83 @@ public class GameUserService {
     }
 
 
+    public int giveOtherGold(KafkaMsgKey msgKey, Long rechargeUserId, double gold){
+        //充值玩家id
+        Long userid = msgKey.getUserId();
+        UserBean userBeanOwn = userRedisService.getUserBean(userid);
+        if (userBeanOwn == null) {
+            return ErrorCode.YOU_HAVE_NOT_LOGIN;
+        }
+        //充值玩家钱数
+        double userMoney = userRedisService.getUserGold(userid);
+        //被充值玩家余额
+        double rechargeUserMoney = userRedisService.getUserMoney(rechargeUserId);
+        //被充值玩家对象
+        UserBean userBean = userRedisService.getUserBean(rechargeUserId);
+
+        String img = "";
+        if (userMoney - gold >= 0 && gold > 0) {
+            if (userBean != null) {
+                userRedisService.addUserGold(rechargeUserId, gold);
+                //减掉充值玩家相应的钱数
+                userRedisService.addUserGold(userid, -gold);
+                Map<String, Object> results = new HashMap<String, Object>();
+                results.put("result", "success");
+                ResponseVo vo = new ResponseVo("userService", "giveOtherGold", results);
+                sendMsg(msgKey, vo);
+                img = userBean.getImage();
+            } else {
+
+                User accepter = userService.getUserByUserId(rechargeUserId);
+                if (accepter == null) {
+                    ResponseVo vo = new ResponseVo("userService", "giveOtherGold", ErrorCode.NOT_HAVE_THIS_ACCEPTER);
+                    sendMsg(msgKey, vo);
+                } else {
+                    accepter.setGold(accepter.getGold() + gold);
+                    userService.save(accepter);
+                    //减掉充值玩家相应的钱数
+                    userRedisService.setUserGold(userid, userMoney - gold);
+                    Map<String, Object> results = new HashMap<String, Object>();
+                    results.put("result", "success");
+                    ResponseVo vo = new ResponseVo("userService", "giveOtherGold", results);
+                    sendMsg(msgKey, vo);
+                    img = accepter.getImage();
+                }
+            }
+
+            Charge charge = new Charge();
+            charge.setOrderId(""+IdWorker.getDefaultInstance().nextId());
+            charge.setUserid(userid);
+            charge.setStatus(1);
+            charge.setChargeType(1);
+            charge.setRecharge_source("14");
+            charge.setCreatetime(new Date());
+            charge.setMoney(gold);
+            charge.setShare_area(img);
+            charge.setA1(rechargeUserId);//被充值
+            chargeService.save(charge);
+
+
+            Charge charge1 = new Charge();
+            charge1.setOrderId(""+IdWorker.getDefaultInstance().nextId());
+            charge1.setUserid(rechargeUserId);
+            charge1.setStatus(1);
+            charge1.setChargeType(1);
+            charge1.setRecharge_source("15");
+            charge1.setCreatetime(new Date());
+            charge1.setMoney(gold);
+            charge1.setA1(userid);//
+            charge1.setShare_area(userBean.getImage());
+            chargeService.save(charge1);
+
+
+        } else {
+            return ErrorCode.NOT_HAVE_MORE_MONEY;
+        }
+        return 0;
+    }
+
+
     public static UserBean user2userBean(User user) {
         UserBean userBean = new UserBean();
         BeanUtils.copyProperties(user, userBean);
@@ -767,6 +844,20 @@ public class GameUserService {
         return 0;
     }
 
+    /**
+     * 获得转账记录
+     * @param msgKey
+     * @return
+     */
+    public int getChargeRecordGive(KafkaMsgKey msgKey) {
+        long userId = msgKey.getUserId();
+        List<Charge> all = new ArrayList<>();
+        all.addAll(chargeService.chargeDao.getChargesByUserid(userId, "14"));
+        all.addAll(chargeService.chargeDao.getChargesByUserid(userId, "15"));
+        sendMsg(msgKey, new ResponseVo("userService", "getChargeRecordGive", all));
+        return 0;
+    }
+
     public int getDiscount(KafkaMsgKey msgKey) {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         sendMsg(msgKey, new ResponseVo("userService", "getDiscount", serverConfig.getDiscount()));
@@ -947,6 +1038,22 @@ public class GameUserService {
         return 0;
     }
 
+    public int getAllVip(KafkaMsgKey msgKey) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (String uid : RedisManager.getUserRedisService().getAllUserId()) {
+            UserBean userBean = RedisManager.getUserRedisService().getUserBean(Long.valueOf(uid));
+            if (userBean.getVip() != 0) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("userId", Long.valueOf(uid));
+                item.put("name", userBean.getUsername());
+                list.add(item);
+
+            }
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("userService", "getAllVip", list), msgKey.getUserId());
+        return 0;
+    }
+
 
     /**
      * 设置其他人vip
@@ -954,13 +1061,13 @@ public class GameUserService {
      * @param playerId
      * @return
      */
-    public int setPlayerVip(KafkaMsgKey msgKey, long playerId){
+    public int setPlayerVip(KafkaMsgKey msgKey, long playerId, int vip){
 
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(playerId);
         if (userBean == null) {
             return ErrorCode.CANNOT_FIND_THIS_USER;
         }
-        userBean.setVip(1);
+        userBean.setVip(vip);
         RedisManager.getUserRedisService().updateUserBean(playerId, userBean);
         MsgSender.sendMsg2Player(new ResponseVo("userService", "setPlayerVip", 0), msgKey.getUserId());
         return 0;

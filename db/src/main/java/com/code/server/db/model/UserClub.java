@@ -22,7 +22,7 @@ public class UserClub {
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
-    private Map<String, List<String>> user_club= new HashMap<>();//房间信息
+    private Map<String, List<String>> user_club= new HashMap<>();//玩家俱乐部信息 key玩家 value玩家的俱乐部
 
     public int getId() {
         return id;

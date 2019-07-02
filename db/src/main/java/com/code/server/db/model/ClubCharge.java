@@ -14,15 +14,15 @@ import javax.persistence.*;
 public class ClubCharge {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private int id;//id
 
-    private String clubId;
+    private String clubId;//俱乐部id
 
-    private long num;
+    private long num;//数量
 
-    private long nowMoney;
+    private long nowMoney;//现在的钱数
 
-    private String chargeTime;
+    private String chargeTime;//时间
 
 
     public int getId() {

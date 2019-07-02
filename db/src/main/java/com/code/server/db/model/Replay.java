@@ -20,15 +20,17 @@ import java.util.Date;
         )
 public class Replay extends BaseEntity {
     @Id
-    private long id;
+    private long id;//id
 
     @Lob
     @Column(columnDefinition = "longtext")
-    private String data;
+    private String data;//回放数据
 
-    private Date date;
+    private Date date;//日期
 
-    private long roomUuid;
+    private long roomUuid;//房间uuid
+
+    private int leftCount;//计数
 
     public int getLeftCount() {
         return leftCount;
@@ -37,8 +39,6 @@ public class Replay extends BaseEntity {
     public void setLeftCount(int leftCount) {
         this.leftCount = leftCount;
     }
-
-    private int leftCount;
 
     public long getId() {
         return id;

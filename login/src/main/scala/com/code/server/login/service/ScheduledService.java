@@ -56,7 +56,7 @@ public class ScheduledService {
     /**
      * 每天5点 定时删除游戏记录
      */
-    @Scheduled(cron = "0 0 15 ? * *")
+    @Scheduled(cron = "0 45 10 ? * *")
     public void scheduled(){
         if (SpringUtil.getBean(ServerConfig.class).getDeleteRecordTask() == 1) {
             logger.info("=====>>>>>定时任务 删除游戏记录  {}",System.currentTimeMillis());
@@ -80,22 +80,25 @@ public class ScheduledService {
                 UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
                 if (userBean.getVip() != 0 && userBean.getReferee() != 0) {
 
-                    double lastDayRebate = rebateDetailService.rebateDetailDao.getRebateByDate(userId, ys);
-                    double re = lastDayRebate /100;
+                    Double lastDayRebate = rebateDetailService.rebateDetailDao.getRebateByDate(userId, ys);
+                    if (lastDayRebate != null) {
 
-                    UserBean parent = RedisManager.getUserRedisService().getUserBean(userBean.getReferee());
-                    parent.getUserInfo().setAllRebate(parent.getUserInfo().getAllRebate() + re);
-                    RedisManager.getUserRedisService().updateUserBean(parent.getId(), parent);
+                        double re = lastDayRebate /100;
 
-                    //返利记录
-                    RebateDetail rebateDetail = new RebateDetail();
-                    rebateDetail.setNum(re);
-                    rebateDetail.setUserId(userBean.getId());
-                    rebateDetail.setAgentId(parent.getId());
-                    rebateDetail.setDate(new Date());
-                    rebateDetail.setType(1);
+                        UserBean parent = RedisManager.getUserRedisService().getUserBean(userBean.getReferee());
+                        parent.getUserInfo().setAllRebate(parent.getUserInfo().getAllRebate() + re);
+                        RedisManager.getUserRedisService().updateUserBean(parent.getId(), parent);
 
-                    rebateDetailService.rebateDetailDao.save(rebateDetail);
+                        //返利记录
+                        RebateDetail rebateDetail = new RebateDetail();
+                        rebateDetail.setNum(re);
+                        rebateDetail.setUserId(userBean.getId());
+                        rebateDetail.setAgentId(parent.getId());
+                        rebateDetail.setDate(new Date());
+                        rebateDetail.setType(1);
+
+                        rebateDetailService.rebateDetailDao.save(rebateDetail);
+                    }
                 }
             }
 //            rebateDetailService.rebateDetailDao.findAllByAgentId()

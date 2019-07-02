@@ -18,8 +18,8 @@ public class AgentUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private String username;
-    private String password;
+    private String username;//用户名
+    private String password;//密码
     private String invite_code;//邀请码
     private String realName;//真实姓名
     private int level;//级别
@@ -31,24 +31,24 @@ public class AgentUser {
     private String area;//所属区域
     private String address;//地址
     private double money;//钱
-    private double gold;//
+    private double gold;//金币
     private double payDeduct;//支付提成
     private double shareDeduct;//分享提成
     private double parentPayDeduct;//上级支付提成
     private double parentShareDeduct;//上级分享提成
 
     @Column(columnDefinition = "int default 0")
-    private int agentType;
+    private int agentType;//代理类型
 
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
-    private AgentInfo agentInfo = new AgentInfo();
+    private AgentInfo agentInfo = new AgentInfo();//代理信息
 
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
-    private AgentInfoRecord agentInfoRecord = new AgentInfoRecord();
+    private AgentInfoRecord agentInfoRecord = new AgentInfoRecord();//代理一些记录
 
     public AgentInfoRecord getAgentInfoRecord() {
         return agentInfoRecord;

@@ -28,27 +28,27 @@ public class Charge {
 
     @Id
     @Column(name = "order_id")
-    private String orderId;
+    private String orderId;//订单号
     private String transaction_id;
-    private long userid;
-    private Date createtime;
-    private Date callbacktime;
+    private long userid;//玩家id
+    private Date createtime;//创建时间
+    private Date callbacktime;//回调时间
     private double money;//人民币
-    private int origin;
-    private int status;
-    private String sign;
-    private String sp_ip;
+    private int origin;//来源
+    private int status;//状态
+    private String sign;//签名
+    private String sp_ip;//ip
     private int shareid;//分享ID
     private String share_content;//分享内容
     private String share_area;//分享区域
     private double money_point;//房卡
     private int chargeType;//充值类型
     private String username;//玩家名称
-    private String recharge_source;//1 微信  2 支付宝  3 分享赠送  4 充值卡  5绑定赠送  11.提现 12.转换 13.rebate2Gold
-    private double charge_before_money;
-    private double charge_after_money;
+    private String recharge_source;//1 微信  2 支付宝  3 分享赠送  4 充值卡  5绑定赠送  11.提现 12.转换 13.rebate2Gold 14.转账 15.被转账
+    private double charge_before_money;//充值前金额
+    private double charge_after_money;//充值后金额
     private String finishTime; //返利完成时间
-    private long a1;
+    private long a1;//预留位
     private long a2;
     private long a3;
 

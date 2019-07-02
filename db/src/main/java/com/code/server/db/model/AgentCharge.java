@@ -16,12 +16,12 @@ import java.util.Date;
 public class AgentCharge {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private int id;//id
     private int agentId;//代理id
     private int chargeSrcAgent;//充值原代理id
-    private int chargeType;
-    private double chargeNum;
-    private Date chargeTime;
+    private int chargeType;//充值类型
+    private double chargeNum;//充值数量
+    private Date chargeTime;//充值时间
 
     public int getId() {
         return id;

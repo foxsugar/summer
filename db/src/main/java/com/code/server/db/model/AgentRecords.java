@@ -16,11 +16,11 @@ import javax.persistence.Table;
                 @Index(name="date",columnList = "date")})
 public class AgentRecords {
     @Id
-    private String id;
+    private String id;//id
 
-    private int agentId;
+    private int agentId;//代理id
 
-    private String date;
+    private String date;//
 
     private double moneyRebate;
 

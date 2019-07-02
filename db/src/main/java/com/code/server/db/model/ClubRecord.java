@@ -19,18 +19,18 @@ import java.util.List;
 public class ClubRecord {
 
     @Id
-    private String id;
+    private String id;//id
 
 
 
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
-    private List<RoomRecord> records= new ArrayList<>();
+    private List<RoomRecord> records= new ArrayList<>();//记录
 
-    private String date;
+    private String date;//日日期
 
-    private String clubId;
+    private String clubId;//俱乐部id
 
     public String getId() {
         return id;

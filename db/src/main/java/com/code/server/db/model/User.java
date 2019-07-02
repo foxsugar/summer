@@ -21,18 +21,18 @@ import java.util.Date;
 public class User extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long id;//id
 
     @Column(nullable = false)
-    private String account;
+    private String account;//用户名
 
     @Column(nullable = false)
-    private String password;
+    private String password;//密码
 
     @Column(columnDefinition = "varchar(4000)")
-    private String username;
+    private String username;//玩家名字
 
-    private String ipConfig;
+    private String ipConfig;//ip
 
     private double money;//虚拟货币
 
@@ -48,8 +48,6 @@ public class User extends BaseEntity{
 
     private double gold;//金币
 
-
-
     private int vip;//vip
 
     private String fatherId;//代理id
@@ -58,27 +56,23 @@ public class User extends BaseEntity{
 
     private String openId;//openId
 
-    private String unionId;
+    private String unionId;//unionId
 
-    private int sex;//
+    private int sex;//性别
 
-    private String aliId;
+    private String aliId;//无用字段
 
     @Column(columnDefinition = "varchar(2000)")
-    private String email;
+    private String email;//邮箱
 
-    private Date registDate;
+    private Date registDate;//注册日期
 
-    private Date lastLoginDate;
-
-//    @Column(columnDefinition = "int default 0")
-//    private int robot;
-
+    private Date lastLoginDate;//上次登录日期
 
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
-    private UserInfo userInfo = new UserInfo();
+    private UserInfo userInfo = new UserInfo();//玩家信息
 
 
 

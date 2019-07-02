@@ -58,6 +58,10 @@ public class UserServiceMsgDispatch {
                 double money = params.get("money").asDouble();
                 Long rechargeUserId = params.get("userId").asLong();
                 return gameUserService.giveOtherMoney(msgKey, rechargeUserId, money);
+            case "giveOtherGold":
+                double gold = params.get("gold").asDouble();
+                Long rechargeUserId1 = params.get("userId").asLong();
+                return gameUserService.giveOtherGold(msgKey, rechargeUserId1, gold);
 
             case "getNickNamePlayer":
                 return gameUserService.getNickNamePlayer(msgKey);
@@ -124,6 +128,8 @@ public class UserServiceMsgDispatch {
                 String recharge_source = params.path("type").asText("1");
                 return gameUserService.getChargeRecord(msgKey, recharge_source);
 
+            case "getChargeRecordGive":
+                return gameUserService.getChargeRecordGive(msgKey);
             case "getDiscount":
                 return gameUserService.getDiscount(msgKey);
 
@@ -149,7 +155,10 @@ public class UserServiceMsgDispatch {
                 return gameUserService.getAllMember(msgKey);
             case "setPlayerVip":
                 long playerId = params.path("playerId").asLong();
-                return gameUserService.setPlayerVip(msgKey,playerId);
+                int vip = params.path("vip").asInt();
+                return gameUserService.setPlayerVip(msgKey,playerId,vip);
+            case "getAllVip":
+                return gameUserService.getAllVip(msgKey);
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

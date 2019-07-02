@@ -26,7 +26,7 @@ public class Club extends BaseEntity {
 
     private long president;//会长
 
-    private String presidentName;
+    private String presidentName;//会长名字
 
     @Column(columnDefinition = "varchar(255)")
     private String presidentWx;//会长id
@@ -46,18 +46,18 @@ public class Club extends BaseEntity {
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
-    private ClubInfo ClubInfo = new ClubInfo();
+    private ClubInfo ClubInfo = new ClubInfo();//俱乐部信息
 
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
-    private Statistics statistics = new Statistics();
+    private Statistics statistics = new Statistics();//俱乐部统计
 
     //上下分记录
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
-    private UpScoreInfo upScoreInfo = new UpScoreInfo();
+    private UpScoreInfo upScoreInfo = new UpScoreInfo();//上下分信息
 
 
     public transient final Object lock = new Object();

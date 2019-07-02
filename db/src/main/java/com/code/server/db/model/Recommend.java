@@ -15,9 +15,9 @@ import javax.persistence.Id;
 public class Recommend extends BaseEntity {
 
     @Id
-    private String unionId;
+    private String unionId;//unionId
 
-    private long agentId;
+    private long agentId;//代理id
 
     public String getUnionId() {
         return unionId;

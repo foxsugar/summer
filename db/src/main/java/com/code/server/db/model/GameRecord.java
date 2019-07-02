@@ -21,20 +21,20 @@ public class GameRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long id;//id
 
-    private long uuid;
+    private long uuid;//uuid
 
-    private Date date;
+    private Date date;//时间
 
-    private int leftCount;
+    private int leftCount;//计数
 
-    private long replayId;
+    private long replayId;//回放id
 
     @Type(type = "json")
     @Lob
     @Column(columnDefinition = "json")
-    private com.code.server.constant.game.GameRecord gameRecord;
+    private com.code.server.constant.game.GameRecord gameRecord;//记录
 
 
     public long getId() {

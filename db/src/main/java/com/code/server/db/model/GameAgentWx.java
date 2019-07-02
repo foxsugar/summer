@@ -14,8 +14,8 @@ import javax.persistence.Table;
 @Table(name = "game_agent_wx")
 public class GameAgentWx {
     @Id
-    private String unionId;
-    private String openId;
+    private String unionId;//unionId
+    private String openId;//openId
 
     public String getUnionId() {
         return unionId;

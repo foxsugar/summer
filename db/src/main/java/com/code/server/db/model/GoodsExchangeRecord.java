@@ -15,27 +15,27 @@ public class GoodsExchangeRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long id;//id
 
-    private long usersId;
+    private long usersId;//玩家id
 
-    private int goodsId;
+    private int goodsId;//物品id
 
-    private Date createDate;
+    private Date createDate;//创建时间
 
-    private Date lastModifiedDate;
-
-    @Column(columnDefinition = "varchar(4000)")
-    private String name;
+    private Date lastModifiedDate;//上次修改时间
 
     @Column(columnDefinition = "varchar(4000)")
-    private String location;
+    private String name;//name
 
-    private int status;
+    @Column(columnDefinition = "varchar(4000)")
+    private String location;//地点
 
-    private String phone;
+    private int status;//状态
 
-    private String idCard;
+    private String phone;//手机号
+
+    private String idCard;//身份证号
 
 
     public long getId() {
