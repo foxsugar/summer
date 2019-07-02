@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class MahjongRobot {
 
-    private static long INTERVAL_TIME = 1000L * 30;
+    private static long INTERVAL_TIME = 1000L * 20;
     private static long READY_TIME = 1000L * 20;
 
     public static void execute(RoomInfo room) {

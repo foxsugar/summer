@@ -52,6 +52,7 @@ public class LoginApplication extends SpringBootServletInitializer {
 			SpringUtil.getBean(AgentService.class).loadAllAgent2Redis();
 
 			CenterService.loadLogInfo();
+			CenterService.loadRank();
 
 			if (serverConfig.getStartRobot() == 1) {
 				LoginAction.loadRobot();
@@ -59,6 +60,7 @@ public class LoginApplication extends SpringBootServletInitializer {
 			if (serverConfig.getLoadAllUser() == 1) {
 				LoginAction.loadAllPlayer();
 			}
+
 
 		}
 

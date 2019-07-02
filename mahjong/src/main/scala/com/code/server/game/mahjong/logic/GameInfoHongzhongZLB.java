@@ -11,10 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static com.code.server.game.mahjong.logic.GameInfoZhuohaozi.mode_不带耗子;
-import static com.code.server.game.mahjong.logic.GameInfoZhuohaozi.mode_双耗子;
-import static com.code.server.game.mahjong.logic.GameInfoZhuohaozi.mode_风耗子;
-
 /**
  * Created by sunxianping on 2019-05-05.
  */
@@ -73,19 +69,19 @@ public class GameInfoHongzhongZLB extends GameInfoHongZhong {
 
         //确定耗子
 
-        if (!room.isHasMode(mode_不带耗子)) {
+        if (!room.isHasMode(PlayerCardsInfoHongZhong.HUN_NO)) {
 
             //随机混
             Random rand = new Random();
             int hunIndex = 0;
-            if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_风耗子)) {
-                hunIndex = 27 + rand.nextInt(7);
-            }else{
+//            if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_风耗子)) {
+//                hunIndex = 27 + rand.nextInt(7);
+//            }else{
                 String card = this.remainCards.remove(0);
                 hunIndex = CardTypeUtil.getTypeByCard(card);
-            }
+//            }
 
-            if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_双耗子)) {
+            if (PlayerCardsInfoMj.isHasMode(this.room.mode, PlayerCardsInfoHongZhong.TWO_HUN)) {
                 this.hun = HuWithHun.getHunType(hunIndex);
             } else {
 //                String card = this.remainCards.remove(0);
@@ -101,7 +97,7 @@ public class GameInfoHongzhongZLB extends GameInfoHongZhong {
     }
 
     public int getNeedRemainCardNum(){
-        if (!this.room.isHasMode(GameInfoZhuohaozi.mode_留牌)) {
+        if (!this.room.isHasMode(PlayerCardsInfoHongZhong.LIUPAI)) {
             return 0;
         }
         int gangCount = 0;

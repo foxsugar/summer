@@ -33,13 +33,13 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
 
         if (isHasMode(this.roomInfo.mode, DA_HU)) {
 
-            specialHuScore.put(hu_七小对, 7);
-            specialHuScore.put(hu_豪华七小对, 15);
-            specialHuScore.put(hu_双豪七小对_山西, 15);
+            specialHuScore.put(hu_七小对, 3);
+            specialHuScore.put(hu_豪华七小对, 6);
+            specialHuScore.put(hu_双豪七小对_山西, 6);
 
-            specialHuScore.put(hu_清一色, 7);
-            specialHuScore.put(hu_一条龙, 7);
-            specialHuScore.put(hu_清龙, 7);
+            specialHuScore.put(hu_清一色, 3);
+            specialHuScore.put(hu_一条龙, 3);
+            specialHuScore.put(hu_清龙, 3);
 
         }
 
@@ -50,7 +50,6 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
         this.ZIMO_MIN_SCORE = 0;
         this.DIANPAO_MIN_SCORE = 0;
     }
-
 
 
     @Override
@@ -156,8 +155,16 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
         int score = huCardType.fan;
 
         this.winType.addAll(huCardType.specialHuList);
-        if (score == 0) {
-            score = isZimo?2:3;
+
+
+        if (isHasMode(this.roomInfo.mode, DIANPAOSANJIACHU)) {
+            if (score == 0) {
+                score = isZimo?2:1;
+            }
+        }else{
+            if (score == 0) {
+                score = isZimo?2:3;
+            }
         }
 
         if (isZimo && huCardType.fan <= 9 && isHasMode(this.roomInfo.mode, HAS_HONGZHONG) && isHas4Hongzhong()) {
@@ -177,10 +184,32 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
             }
         } else {
             PlayerCardsInfoMj dianPao = this.gameInfo.getPlayerCardsInfos().get(dianpaoUser);
+            //点炮三家出
+            if (isHasMode(this.roomInfo.mode, DIANPAOSANJIACHU)) {
+                boolean isBao = !dianPao.isTing;
+                for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
+                    if (playerCardsInfoMj.userId != this.userId) {
+                        if (!isBao) {
+                            playerCardsInfoMj.addScore(-score);
+                            this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -score);
+                        }
+                        allScore += score;
+                    }
+                }
 
-            dianPao.addScore(-score);
-            this.roomInfo.addUserSocre(dianpaoUser, -score);
-            allScore += score;
+                if (isBao) {
+                    dianPao.addScore(-allScore);
+                    this.roomInfo.addUserSocre(dianPao.getUserId(), -allScore);
+                }
+
+
+
+            }else{//点炮一个人出
+                //不带包听
+                dianPao.addScore(-score);
+                this.roomInfo.addUserSocre(dianpaoUser, -score);
+                allScore += score;
+            }
         }
 
         this.addScore(allScore);
@@ -189,7 +218,7 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
 
     }
 
-    public boolean isHas4Hongzhong() {
+    protected boolean isHas4Hongzhong() {
         return this.cards.stream().filter(card -> CardTypeUtil.getTypeByCard(card) == 31).count() == 4;
     }
 

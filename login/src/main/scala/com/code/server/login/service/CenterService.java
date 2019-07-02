@@ -2,27 +2,22 @@ package com.code.server.login.service;
 
 import com.code.server.constant.db.OnlineInfo;
 import com.code.server.constant.db.PartnerRebate;
+import com.code.server.constant.db.PlayerRank;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.UserBean;
-import com.code.server.db.Service.AgentRecordService;
-import com.code.server.db.Service.GameAgentService;
-import com.code.server.db.Service.LogRecordService;
-import com.code.server.db.Service.UserService;
-import com.code.server.db.model.AgentRecords;
-import com.code.server.db.model.GameAgent;
-import com.code.server.db.model.LogRecord;
-import com.code.server.db.model.User;
+import com.code.server.db.Service.*;
+import com.code.server.db.model.*;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.timer.GameTimer;
 import com.code.server.util.timer.TimerNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by sunxianping on 2017/6/16.
@@ -30,6 +25,11 @@ import java.util.Set;
 @Service
 public class CenterService {
 
+
+    private Map<String,PlayerRank> rank = new HashMap<>();
+
+    @Autowired
+    private RankService rankService;
 
     public static void work() {
 
@@ -47,6 +47,7 @@ public class CenterService {
 
 //        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 5, true, CenterService::saveAgentRecord));
         GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 5, true, CenterService::saveAgent));
+        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 5, true, CenterService::saveRank));
 
 
     }
@@ -261,6 +262,47 @@ public class CenterService {
                 RedisManager.getLogRedisService().setLogInfo(data.getLogInfo());
             }
         }
+    }
+
+
+    /**
+     * 读取排行
+     */
+    public static void loadRank(){
+        CenterService centerService = SpringUtil.getBean(CenterService.class);
+        for(Rank rankTemp: centerService.rankService.getRankDao().findAll()){
+            centerService.rank.put(rankTemp.getId(), rankTemp.getPlayerRank());
+        }
+    }
+
+    /**
+     * 保存排行
+     */
+    public static void saveRank(){
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM");
+        String m = simpleDateFormat.format(date);
+        CenterService centerService = SpringUtil.getBean(CenterService.class);
+        PlayerRank playerRank = centerService.getRank().get(m);
+        if (playerRank != null) {
+            Rank r  = new Rank();
+            r.setId(m);
+            r.setPlayerRank(playerRank);
+            centerService.rankService.getRankDao().save(r);
+        }
+
+
+
+
+    }
+
+    public Map<String, PlayerRank> getRank() {
+        return rank;
+    }
+
+    public CenterService setRank(Map<String, PlayerRank> rank) {
+        this.rank = rank;
+        return this;
     }
 
     public static void main(String[] args) {
