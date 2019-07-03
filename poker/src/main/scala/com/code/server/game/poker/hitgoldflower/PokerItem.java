@@ -4,9 +4,9 @@ import java.util.Collections;
 
 public class PokerItem {
 	
-	private String color;  //颜色
-	private String value; //数值
-	private Integer index; //代表序号
+	public String color;  //颜色
+	public String value; //数值
+	public Integer index; //代表序号
 	private	static String[] numbers = {"A","K","Q","J","10","9","8","7","6","5","4","3","2"};
 	private static String[] colors  = {"HEI","HONG","HUA","PIAN"};
 	

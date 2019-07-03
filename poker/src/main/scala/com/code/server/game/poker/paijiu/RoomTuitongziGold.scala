@@ -76,12 +76,12 @@ class RoomTuitongziGold extends RoomPaijiu{
 
         val s = score * (100 - 5) / 100
         //返利
-        RedisManager.getUserRedisService.addUserMoney(userId, s)
+        RedisManager.getUserRedisService.addUserGold(userId, s)
 
         //发送返利
         sendCenterAddRebateLongxiang(userId, score * 1.5 /100)
       }else{
-        RedisManager.getUserRedisService.addUserMoney(userId, score)
+        RedisManager.getUserRedisService.addUserGold(userId, score)
       }
 
   }

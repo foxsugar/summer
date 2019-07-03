@@ -54,21 +54,19 @@ public class PokerYSZ {
         PokerItem item1 = list1.get(1);
         PokerItem item2 = list2.get(1);
 
-        int a = (item1.getIndex() - 2) / 4;
-        int b = (item2.getIndex() - 2) / 4;
-
-        if(a < b){
+        int dui1 = (item1.index - 2) / 4;
+        int dui2 = (item2.index - 2) / 4;
+        if(dui1 < dui2){
             return 0;
-        }else if(a  > b){
+        }else if(dui1 > dui2){
             return 2;
         }else{
-
             //对子相等 比较单
-            PokerItem signle1 = list1.get(0).getValue().equals(item1.getValue()) ? list1.get(2) : list1.get(0);
-            PokerItem signle2 = list2.get(0).getValue().equals(item2.getValue()) ? list2.get(2) : list2.get(0);
+            PokerItem signle1 = list1.get(0).value.equals(item1.value) ? list1.get(2) : list1.get(0);
+            PokerItem signle2 = list2.get(0).value.equals(item2.value) ? list2.get(2) : list2.get(0);
 
-            int chushu1 = (signle1.getIndex() - 2) / 4;
-            int chushu2 = (signle2.getIndex() - 2) / 4;
+            int chushu1 = (signle1.index - 2) / 4;
+            int chushu2 = (signle2.index - 2) / 4;
 
             if(chushu1 < chushu2){
                 return 0;
@@ -79,6 +77,9 @@ public class PokerYSZ {
             }
         }
     }
+
+
+
 
     //比较两个豹子
     public static int baoZiCompare(Player p1, Player p2){
