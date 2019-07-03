@@ -233,6 +233,9 @@ class GamePaijiu extends Game with PaijiuConstant {
   def open(userId: Long, group1: String, group2: String): Int = {
     val playerInfoOption = playerCardInfos.get(userId)
     if (playerInfoOption.isEmpty) return ErrorCode.NO_USER
+    if(playerInfoOption.get.group1 != null) {
+      return ErrorCode.OPEN_PARAM_ERROR
+    }
     //开牌是否合法
     if (!checkOpen(playerInfoOption.get, group1, group2)) return ErrorCode.OPEN_PARAM_ERROR
     playerInfoOption.get.group1 = group1
