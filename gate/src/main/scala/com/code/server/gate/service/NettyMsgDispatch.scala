@@ -321,7 +321,7 @@ object NettyMsgDispatch {
     //登录操作
     val userBean = UserSevice.doLogin(userId, ctx)
 
-    sendMsg(new ResponseVo("gateService", "login", userBean.toVo), userId)
+    sendMsg(new ResponseVo("gateService", "login", userBean.toVo(true)), userId)
 
     //上线通知
     noticeOnline2Other(userId)

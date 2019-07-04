@@ -74,7 +74,7 @@ public class ReconnService {
             allMessage.getLaZhuang().putAll(roomInfo.getLaZhuang());
             allMessage.getLaZhuangStatus().putAll(roomInfo.getLaZhuangStatus());
             for (UserBean userBean : RedisManager.getUserRedisService().getUserBeans(roomInfo.getUsers())) {
-                userList.add(userBean.toVo());
+                userList.add(userBean.toVo(true));
             }
             //在线状态
             for (long uid : roomInfo.getUsers()) {

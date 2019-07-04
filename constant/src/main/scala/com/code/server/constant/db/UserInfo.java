@@ -13,7 +13,6 @@ import java.util.Map;
  */
 public class UserInfo {
     private int totalPlayGameNumber;
-
     private int playGameTime = 0;
     private int shareWXCount = 0;
     private long lastShareTime = 0;
@@ -32,6 +31,20 @@ public class UserInfo {
     private List<Message> messageBox = new ArrayList<>();
     private  Map<Long, ScoreItem> rebate = new HashMap<>();
     private double allRebate;
+    private long newMessageNum = 0;
+
+
+
+    public UserInfo toVoSimple(){
+        UserInfo userInfo = new UserInfo();
+        return userInfo;
+
+    }
+
+    public void handleData(){
+        this.newMessageNum = messageBox.stream().filter(message -> !message.isRead()).count();
+
+    }
 
     public int getTotalPlayGameNumber() {
         return totalPlayGameNumber;
@@ -201,6 +214,15 @@ public class UserInfo {
 
     public UserInfo setAllRebate(double allRebate) {
         this.allRebate = allRebate;
+        return this;
+    }
+
+    public long getNewMessageNum() {
+        return newMessageNum;
+    }
+
+    public UserInfo setNewMessageNum(long newMessageNum) {
+        this.newMessageNum = newMessageNum;
         return this;
     }
 }

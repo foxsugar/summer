@@ -159,6 +159,12 @@ public class UserServiceMsgDispatch {
                 return gameUserService.setPlayerVip(msgKey,playerId,vip);
             case "getAllVip":
                 return gameUserService.getAllVip(msgKey);
+            case "getAllMail":
+                return gameUserService.getAllMail(msgKey);
+            case "readMail":
+                long mailId = params.path("mailId").asLong();
+                boolean readAll = params.path("readAll").asBoolean();
+                return gameUserService.readMail(msgKey,mailId, readAll);
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

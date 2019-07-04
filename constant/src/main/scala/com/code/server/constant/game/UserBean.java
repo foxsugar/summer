@@ -33,7 +33,7 @@ public class UserBean implements IUserBean {
     private String unionId;
 
     @Override
-    public UserVo toVo() {
+    public UserVo toVo(boolean... showAll) {
         UserVo userVo = new UserVo();
         userVo.setId(this.id);
         userVo.setUsername(this.username);// required
@@ -48,11 +48,19 @@ public class UserBean implements IUserBean {
         userVo.setOpenId(this.openId);// required
         userVo.setSex(this.sex);//required
         userVo.setReferee(this.referee);
-        userVo.setUserInfo(this.userInfo);
         userVo.setGold(this.getGold());
         userVo.setCoord(coord);
+        if (showAll.length > 0 && showAll[0]) {
+            this.userInfo.handleData();
+            userVo.setUserInfo(this.userInfo);
+        }else{
+            userVo.setUserInfo(this.userInfo.toVoSimple());
+
+        }
         return userVo;
     }
+
+
 
     public long getId() {
         return id;

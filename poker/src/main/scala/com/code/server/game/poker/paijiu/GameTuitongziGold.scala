@@ -18,6 +18,7 @@ import scala.util.Random
   * Created by sunxianping on 2019-06-17.
   */
 class GameTuitongziGold extends GamePaijiu {
+  val rebateScale:Int = 5
 
   override protected def initCards(): Unit = {
     //两局中的第一局 单数局
@@ -205,6 +206,9 @@ class GameTuitongziGold extends GamePaijiu {
   override def open(userId: lang.Long, group1: String, group2: String): Int = {
     val playerInfoOption = playerCardInfos.get(userId)
     if (playerInfoOption.isEmpty) return ErrorCode.NO_USER
+    if(playerInfoOption.get.group1 != null) {
+      return ErrorCode.OPEN_PARAM_ERROR
+    }
     //开牌是否合法
     playerInfoOption.get.group1 = group1
 
@@ -305,8 +309,8 @@ class GameTuitongziGold extends GamePaijiu {
         //庄的分最后再加
         //          roomPaijiu.addUserSocre(banker.userId, changeScore)
         roomPaijiu.addUserSocre(other.userId, -result)
-        roomPaijiu.logRoomStatistics(other.userId, -result)
         roomPaijiu.logRoomStatistics(banker.userId, result)
+        roomPaijiu.logRoomStatistics(other.userId, -result)
 
 
         //庄家赢
@@ -404,10 +408,9 @@ class GameTuitongziGold extends GamePaijiu {
   }
 
   def isAutoBreakBanker():Boolean ={
-    //大于10倍 小于20% 自动切庄
+    //大于10倍 小于10% 自动切庄
     //todo 是否有多少把 自动下庄
-    this.roomPaijiu.bankerScore > 10 * this.roomPaijiu.bankerInitScore || this.roomPaijiu.bankerScore < this.roomPaijiu.bankerInitScore * 20 /100 || this.roomPaijiu.curGameNumber>20
-
+    this.roomPaijiu.bankerScore > 10 * this.roomPaijiu.bankerInitScore || this.roomPaijiu.bankerScore < this.roomPaijiu.bankerInitScore * 10 /100 || this.roomPaijiu.curGameNumber>20
   }
   /**
     * 庄家切庄(牌局结束)
@@ -472,11 +475,12 @@ class GameTuitongziGold extends GamePaijiu {
 
       //返利
 //      var rebate =  bankerPlayer.getScore() * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100
-      this.roomPaijiu.sendCenterAddRebateLongxiang(this.roomPaijiu.getBankerId, bankerPlayer.getScore() * 1.5 /100)
+      this.roomPaijiu.sendCenterAddRebateLongcheng(this.roomPaijiu.getBankerId, bankerPlayer.getScore() * 1.5 /100)
     }
     this.playerCardInfos.values.foreach(playerInfo => gameResult.getPlayerCardInfos.add(playerInfo.toVo))
     this.roomPaijiu.bankerScore -= choushui
     gameResult.setBankerScore(this.roomPaijiu.bankerScore)
+    gameResult.setRebateScale(rebateScale)
 
     this.commonCards.foreach(t=>{
       val index = t._1

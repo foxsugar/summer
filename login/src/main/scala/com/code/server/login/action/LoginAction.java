@@ -238,14 +238,13 @@ public class LoginAction {
 
     public static void loadAllPlayer() {
         UserService userService = SpringUtil.getBean(UserService.class);
-//        if (RedisManager.getUserRedisService().getUserNum() == 0) {
-
             for (User user : userService.getUserDao().findAll()) {
-                String token = getToken(user.getId());
-                saveUser2Redis(user, token);
+                UserBean userBean = RedisManager.getUserRedisService().getUserBean(user.getId());
+                if (userBean == null) {
+                    String token = getToken(user.getId());
+                    saveUser2Redis(user, token);
+                }
             }
-
-//        }
     }
 
     /**

@@ -81,7 +81,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
       //更新banker
       rp.updateBanker()
       //选定庄家后10秒开局  庄家没变化的话 不许等待10秒
-      if ((now - rp.getLastOperateTime) > 2000 && rp.getBankerId != 0) {
+      if ((now - rp.getLastOperateTime) > 500 && rp.getBankerId != 0) {
 
         println("托管: 开始游戏 100 " + room.getRoomId)
         sendStartGame(rp)
@@ -93,7 +93,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
       //发牌
       val game = room.getGame.asInstanceOf[GamePaijiu]
       if(game.state == STATE_BET || game.state == START_CRAP){
-        if(now - game.lastOperateTime > 10*1000) {
+        if(now - game.lastOperateTime > TUITONGZI_STATE_TIME(STATE_BET)) {
           sendCrapStart(game.bankerId, room.getRoomId)
         }
       }
@@ -121,7 +121,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
       //切锅
       if (game.state == STATE_BANKER_BREAK) {
         //10秒自动 继续
-        if (now - game.lastOperateTime > STATE_TIME(STATE_BANKER_BREAK)) {
+        if (now - game.lastOperateTime > TUITONGZI_STATE_TIME(STATE_BANKER_BREAK)) {
           println("托管: 切庄")
           sendBreakBanker(game.bankerId, room.getRoomId)
         }

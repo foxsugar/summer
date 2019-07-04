@@ -55,7 +55,7 @@ public class PokerGoldRoom extends RoomExtendGold {
      * @param userId
      * @param money
      */
-    public void sendCenterAddRebateLongxiang(long userId, double money){
+    public void sendCenterAddRebateLongcheng(long userId, double money){
         Map<String, Object> addMoney = new HashMap<>();
         addMoney.put("userId", userId);
         addMoney.put("money", money);
@@ -128,7 +128,7 @@ public class PokerGoldRoom extends RoomExtendGold {
             case "456":
                 RoomTuitongziGold roomtuitongzi = null;
                 roomtuitongzi = RoomTuitongziGold.createRoom_(userId,"3","456",4,"","",0,
-                        false,2,0,0,false,0,4,goldRoomType);
+                        false,2,0,0,false,0,200,goldRoomType);
                 return roomtuitongzi;
         }
 

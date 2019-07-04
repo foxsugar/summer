@@ -68,6 +68,8 @@ public class GameUserService {
     private long lastGetTime = 0;
     private int onlinePeople = 0;
 
+    private static final int MAIL_MAX = 50;
+
 
 
     /**
@@ -151,8 +153,12 @@ public class GameUserService {
                 ResponseVo vo = new ResponseVo("userService", "giveOtherGold", results);
                 sendMsg(msgKey, vo);
                 img = userBean.getImage();
-            } else {
 
+                String s = String.format("ID: %s 姓名: %s 给你转了%s蓝钻", userBeanOwn.getId(), userBeanOwn.getUsername(), gold);
+                sendMailToUser(s, rechargeUserId);
+
+
+            } else {
                 User accepter = userService.getUserByUserId(rechargeUserId);
                 if (accepter == null) {
                     ResponseVo vo = new ResponseVo("userService", "giveOtherGold", ErrorCode.NOT_HAVE_THIS_ACCEPTER);
@@ -169,6 +175,8 @@ public class GameUserService {
                     img = accepter.getImage();
                 }
             }
+
+            MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", 0), rechargeUserId);
 
             Charge charge = new Charge();
             charge.setOrderId(""+IdWorker.getDefaultInstance().nextId());
@@ -192,7 +200,7 @@ public class GameUserService {
             charge1.setCreatetime(new Date());
             charge1.setMoney(gold);
             charge1.setA1(userid);//
-            charge1.setShare_area(userBean.getImage());
+            charge1.setShare_area(userBeanOwn.getImage());
             chargeService.save(charge1);
 
 
@@ -202,46 +210,37 @@ public class GameUserService {
         return 0;
     }
 
+    /**
+     * 发送邮件
+     * @param mail
+     * @param userId
+     */
+    public void sendMailToUser(String mail, long userId){
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+            Message message = new Message(mail);
+            message.setId(IdWorker.getDefaultInstance().nextId());
+            userBean.getUserInfo().getMessageBox().add(message);
+            if(userBean.getUserInfo().getMessageBox().size() > MAIL_MAX){
+                userBean.getUserInfo().getMessageBox().remove(0);
+            }
+            RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+//            ResponseVo vo = new ResponseVo("userService", "newMessage", results);
+
+            MsgSender.sendMsg2Player(new ResponseVo("userService", "newMessage", 0),userId);
+        }
+
+    }
 
     public static UserBean user2userBean(User user) {
         UserBean userBean = new UserBean();
         BeanUtils.copyProperties(user, userBean);
-//        userBean.setId(user.getId());
-//        userBean.setUsername(user.getUsername());
-//        userBean.setImage(user.getImage());
-//        userBean.setAccount(user.getAccount());
-//        userBean.setPassword(user.getPassword());
-//        userBean.setIpConfig(user.getIpConfig());
-//        userBean.setMoney(user.getMoney());
-//        userBean.setVip(user.getVip());
-//        userBean.setUuid(user.getUuid());
-//        userBean.setOpenId(user.getOpenId());
-//        userBean.setSex(user.getSex());
-//        userBean.setUserInfo(user.getUserInfo());
-//        userBean.setReferee(user.getReferee());
-
         return userBean;
     }
 
     public static User userBean2User(UserBean userBean) {
         User user = new User();
-
         BeanUtils.copyProperties(userBean, user);
-//        user.setId(userBean.getId());
-//        user.setUsername(userBean.getUsername());
-//        user.setImage(userBean.getImage());
-//        user.setAccount(userBean.getAccount());
-//        user.setPassword(userBean.getPassword());
-//        user.setIpConfig(userBean.getIpConfig());
-//        user.setMoney(userBean.getMoney());
-//        user.setVip(userBean.getVip());
-//        user.setUuid(userBean.getUuid());
-//        user.setOpenId(userBean.getOpenId());
-//        user.setSex(userBean.getSex());
-//        user.setUserInfo(userBean.getUserInfo());
-//        user.setGold(userBean.getGold());
-//        user.setReferee(userBean.getReferee());
-
         return user;
     }
 
@@ -377,7 +376,7 @@ public class GameUserService {
             return ErrorCode.YOU_HAVE_NOT_LOGIN;
         }
         String roomId = userRedisService.getRoomId(msgKey.getUserId());
-        UserVo userVo = userBean.toVo();
+        UserVo userVo = userBean.toVo(true);
         userVo.setRoomId(roomId);
         ResponseVo vo = new ResponseVo("userService", "getUserMessage", userVo);
         sendMsg(msgKey, vo);
@@ -920,6 +919,7 @@ public class GameUserService {
 
         chargeService.save(charge);
 
+        sendMailToUser(String.format("您成功将%s红钻转成蓝钻",num),userId);
         sendMsg(msgKey, new ResponseVo("userService", "rebate2Gold", 0));
         return 0;
     }
@@ -1054,6 +1054,39 @@ public class GameUserService {
         return 0;
     }
 
+
+    /**
+     * 获得邮件
+     * @param msgKey
+     * @return
+     */
+    public int getAllMail(KafkaMsgKey msgKey) {
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(msgKey.getUserId());
+        if (userBean != null) {
+            MsgSender.sendMsg2Player(new ResponseVo("userService", "getAllMail", userBean.getUserInfo().getMessageBox()), msgKey.getUserId());
+        }
+        return 0;
+    }
+
+    /**
+     * 读邮件
+     * @param msgKey
+     * @param mailId
+     * @return
+     */
+    public int readMail(KafkaMsgKey msgKey,long mailId,boolean readAll) {
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(msgKey.getUserId());
+        if (userBean != null) {
+            for(Message m : userBean.getUserInfo().getMessageBox()){
+                if (m.getId() == mailId||readAll) {
+                    m.setRead(true);
+                }
+            }
+            RedisManager.getUserRedisService().updateUserBean( msgKey.getUserId(), userBean);
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("userService", "readMail", 0), msgKey.getUserId());
+        return 0;
+    }
 
     /**
      * 设置其他人vip

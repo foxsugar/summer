@@ -18,6 +18,7 @@ public class GameResultPaijiu {
 
     public Map<Integer, Object> cardMap = new HashMap<>();
     public GamePaijiuResult sfp ;
+    public int rebateScale;
 
     public GameResultPaijiu setPlayerCardInfos(List<IfacePlayerInfoVo> playerCardInfos) {
         this.playerCardInfos = playerCardInfos;
@@ -46,5 +47,14 @@ public class GameResultPaijiu {
 
     public void setSfp(GamePaijiuResult sfp) {
         this.sfp = sfp;
+    }
+
+    public int getRebateScale() {
+        return rebateScale;
+    }
+
+    public GameResultPaijiu setRebateScale(int rebateScale) {
+        this.rebateScale = rebateScale;
+        return this;
     }
 }

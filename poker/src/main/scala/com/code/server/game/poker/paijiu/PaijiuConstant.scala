@@ -22,9 +22,16 @@ trait PaijiuConstant {
     START_CRAP->1000 * 10,
     STATE_OPEN->1000 * 19,
     STATE_BANKER_BREAK->1000 * 15
-
   )
 
+  val TUITONGZI_STATE_TIME = Map(
+    STATE_START->1000 * 10,
+    STATE_FIGHT_FOR_BANKER->1000 * 10,
+    STATE_BET->1000 * 12,
+    START_CRAP->1000 * 10,
+    STATE_OPEN->1000 * 19,
+    STATE_BANKER_BREAK->1000 * 11
+  )
 
 
   //杂8的名字  大于等于杂8输两道

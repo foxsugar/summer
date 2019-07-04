@@ -79,14 +79,27 @@ class RoomTuitongziGold extends RoomPaijiu{
         RedisManager.getUserRedisService.addUserGold(userId, s)
 
         //发送返利
-        sendCenterAddRebateLongxiang(userId, score * 1.5 /100)
+        sendCenterAddRebateLongcheng(userId, score * 1.5 /100)
       }else{
         RedisManager.getUserRedisService.addUserGold(userId, score)
       }
 
   }
 
+  /**
+    * 获取剩余时间
+    * @return
+    */
+  override def getRemainTime(): Long ={
+    val now = System.currentTimeMillis()
+    if(this.game == null) {
+      this.lastOperateTime + TUITONGZI_STATE_TIME(STATE_START) - now
+    }else{
+      val gamePaijiu = this.game.asInstanceOf[GamePaijiu]
+      this.game.lastOperateTime + TUITONGZI_STATE_TIME(gamePaijiu.state) - now
+    }
 
+  }
 
 
 

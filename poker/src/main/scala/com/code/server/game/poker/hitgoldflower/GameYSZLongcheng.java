@@ -135,7 +135,7 @@ public class GameYSZLongcheng extends GameYSZ {
 
                 double rebate = 1.5 / 100 * 77 / 100 * chip / playerCardInfos.size() + 1.5 / 100 * 23 / 100 * (playerCardInfo.getAllScore()) / chip;
 
-                this.room.sendCenterAddRebateLongxiang(playerCardInfo.getUserId(), rebate);
+                this.room.sendCenterAddRebateLongcheng(playerCardInfo.getUserId(), rebate);
                 playerCardInfo.setScore(add);
 
             } else {
