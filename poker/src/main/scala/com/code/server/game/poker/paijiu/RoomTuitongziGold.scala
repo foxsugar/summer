@@ -74,7 +74,7 @@ class RoomTuitongziGold extends RoomPaijiu{
       if(score>0) {
         val game = this.game.asInstanceOf[GameTuitongziGold]
 
-        val s = score * (100 - 5) / 100
+        val s = score * (100 - TUITONGZI_REBATE_SCALE) / 100
         //返利
         RedisManager.getUserRedisService.addUserGold(userId, s)
 

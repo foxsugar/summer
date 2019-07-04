@@ -53,6 +53,8 @@ trait PaijiuConstant {
   val MODE_TIANJIU = 12
   val MODE_DIJIU = 13
 
+  val TUITONGZI_REBATE_SCALE = 5
+
 
 
   val CARDSCORE = Map(

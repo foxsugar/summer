@@ -18,7 +18,6 @@ import scala.util.Random
   * Created by sunxianping on 2019-06-17.
   */
 class GameTuitongziGold extends GamePaijiu {
-  val rebateScale:Int = 5
 
   override protected def initCards(): Unit = {
     //两局中的第一局 单数局
@@ -470,8 +469,8 @@ class GameTuitongziGold extends GamePaijiu {
     //抽水
     var choushui:Double = 0
     if(bankerPlayer.getScore() > 0) {
-      choushui = bankerPlayer.getScore() * 5 / 100
-      bankerPlayer.score = bankerPlayer.score - choushui
+      choushui = bankerPlayer.getScore() * TUITONGZI_REBATE_SCALE / 100
+//      bankerPlayer.score = bankerPlayer.score - choushui
 
       //返利
 //      var rebate =  bankerPlayer.getScore() * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100
@@ -480,7 +479,7 @@ class GameTuitongziGold extends GamePaijiu {
     this.playerCardInfos.values.foreach(playerInfo => gameResult.getPlayerCardInfos.add(playerInfo.toVo))
     this.roomPaijiu.bankerScore -= choushui
     gameResult.setBankerScore(this.roomPaijiu.bankerScore)
-    gameResult.setRebateScale(rebateScale)
+    gameResult.setRebateScale(TUITONGZI_REBATE_SCALE)
 
     this.commonCards.foreach(t=>{
       val index = t._1
