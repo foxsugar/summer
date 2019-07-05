@@ -57,7 +57,7 @@ class PlayerCardInfoPaijiu extends IfacePlayerInfo with PaijiuConstant {
     * @param room
     * @param add
     */
-  def addScore(room:RoomPaijiu,add:Int): Unit ={
+  def addScore(room:RoomPaijiu,add:Double): Unit ={
     this.score += add
     //设置最大分数
     val max = room.getRoomStatisticsMap.get(userId).maxScore

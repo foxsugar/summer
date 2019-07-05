@@ -87,7 +87,7 @@ class GameTuitongziGold extends GamePaijiu {
     val slidList = cards.sliding(4, 4).toList
     var count = 0
     for (playerInfo <- playerCardInfos.values) {
-      playerInfo.cards ++= slidList(count)
+      playerInfo.cards ++= slidList(0)
       count += 1
       //发牌通知
       MsgSender.sendMsg2Player("gamePaijiuService", "getCards", playerInfo.cards.asJava, playerInfo.userId)
@@ -291,23 +291,49 @@ class GameTuitongziGold extends GamePaijiu {
     playerCardInfos.foreach { case (uid, other) =>
       if (uid != bankerId && other.bet != null) {
         var result: Int = 0
+        var bankerWin = 0D
+        var otherWin = 0D
         if(other.bet.one>0) {
-          if (bankerScore>=otherScore1) result += other.bet.one else result -= other.bet.one
+          if (bankerScore>=otherScore1) {
+            result += other.bet.one
+            bankerWin += other.bet.one * (100-TUITONGZI_REBATE_SCALE)/100
+            otherWin -= other.bet.one
+          } else {
+            result -= other.bet.one
+            otherWin += other.bet.one* (100-TUITONGZI_REBATE_SCALE)/100
+            bankerWin -= other.bet.one
+          }
         }
         if(other.bet.two>0) {
-          if (bankerScore>=otherScore2) result += other.bet.two else result -= other.bet.two
+          if (bankerScore>=otherScore2) {
+            result += other.bet.two
+            bankerWin += other.bet.two * (100-TUITONGZI_REBATE_SCALE)/100
+            otherWin -= other.bet.two
+          } else {
+            result -= other.bet.two
+            otherWin += other.bet.two* (100-TUITONGZI_REBATE_SCALE)/100
+            bankerWin -= other.bet.two
+          }
         }
         if(other.bet.three>0) {
-          if (bankerScore>=otherScore3) result += other.bet.three else result -= other.bet.three
+          if (bankerScore>=otherScore3) {
+            result += other.bet.three
+            bankerWin += other.bet.three * (100-TUITONGZI_REBATE_SCALE)/100
+            otherWin -= other.bet.three
+          } else {
+            result -= other.bet.three
+            otherWin += other.bet.three* (100-TUITONGZI_REBATE_SCALE)/100
+            bankerWin -= other.bet.three
+          }
         }
 
-        banker.addScore(roomPaijiu,result)
-        other.addScore(roomPaijiu,-result)
+        banker.addScore(roomPaijiu,bankerWin)
+        other.addScore(roomPaijiu,otherWin)
 
-        roomPaijiu.bankerScore += result
+        roomPaijiu.bankerScore += bankerWin
         //庄的分最后再加
         //          roomPaijiu.addUserSocre(banker.userId, changeScore)
-        roomPaijiu.addUserSocre(other.userId, -result)
+        roomPaijiu.addUserSocre(other.userId, otherWin)
         roomPaijiu.logRoomStatistics(banker.userId, result)
         roomPaijiu.logRoomStatistics(other.userId, -result)
 
@@ -468,16 +494,41 @@ class GameTuitongziGold extends GamePaijiu {
     val bankerPlayer = this.playerCardInfos(this.roomPaijiu.getBankerId)
     //抽水
     var choushui:Double = 0
-    if(bankerPlayer.getScore() > 0) {
-      choushui = bankerPlayer.getScore() * TUITONGZI_REBATE_SCALE / 100
-//      bankerPlayer.score = bankerPlayer.score - choushui
+    var rebate = 0D
+//    if(bankerPlayer.getScore() > 0) {
+//      choushui = bankerPlayer.getScore() * TUITONGZI_REBATE_SCALE / 100
+//      rebate = bankerPlayer.getScore()
+//      //      bankerPlayer.score = bankerPlayer.score - choushui
+//
+//      //返利
+//      //      var rebate =  bankerPlayer.getScore() * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100
+//      //      this.roomPaijiu.sendCenterAddRebateLongcheng(this.roomPaijiu.getBankerId, bankerPlayer.getScore() * 1.5 /100)
+//    }else{
+//      rebate = -bankerPlayer.getScore()
+//    }
 
-      //返利
-//      var rebate =  bankerPlayer.getScore() * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100
-      this.roomPaijiu.sendCenterAddRebateLongcheng(this.roomPaijiu.getBankerId, bankerPlayer.getScore() * 1.5 /100)
+    var betNum = 0D
+    var betPeople = 1
+    this.playerCardInfos.foreach(info=>{
+      if(info._2.bet != null && info._2.getBetNum() != 0) {
+        betNum += info._2.getBetNum()
+        betPeople += 1
+      }
+    })
+
+    rebate = betNum * 2.5 /100 /betPeople
+    if(rebate != 0) {
+
+      this.playerCardInfos.foreach(info=>{
+        if(info._2.group1 != null && (info._2.getBetNum()!=0 || info._1 == this.bankerId)){
+        this.roomPaijiu.sendCenterAddRebateLongcheng(info._1, rebate)
+      }
+      })
     }
+
+
     this.playerCardInfos.values.foreach(playerInfo => gameResult.getPlayerCardInfos.add(playerInfo.toVo))
-    this.roomPaijiu.bankerScore -= choushui
+//    this.roomPaijiu.bankerScore -= choushui
     gameResult.setBankerScore(this.roomPaijiu.bankerScore)
     gameResult.setRebateScale(TUITONGZI_REBATE_SCALE)
 

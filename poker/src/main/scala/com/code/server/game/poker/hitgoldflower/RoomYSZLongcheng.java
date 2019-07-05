@@ -21,7 +21,7 @@ public class RoomYSZLongcheng extends RoomYSZ {
 
     public static RoomYSZLongcheng createYSZRoom_(long userId, int gameNumber, int personNumber, int cricleNumber, int multiple, int caiFen,
                                          int menPai, String gameType, String roomType, boolean isAA, boolean isJoin,
-                                         String clubId, String clubRoomModel, int goldRoomType, int goldRoomPermission) throws DataNotFoundException {
+                                         String clubId, String clubRoomModel, int goldRoomType, int goldRoomPermission,int otherMode) throws DataNotFoundException {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 
         RoomYSZLongcheng room = new RoomYSZLongcheng();
@@ -43,6 +43,7 @@ public class RoomYSZLongcheng extends RoomYSZ {
 //        room.isRobotRoom = true;
         room.goldRoomType = goldRoomType;
         room.goldRoomPermission = goldRoomPermission;
+        room.otherMode = otherMode;
         room.init(gameNumber, multiple);
 
 //        RoomManager.addRoom(room.roomId, "" + serverConfig.getServerId(), room);

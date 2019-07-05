@@ -126,9 +126,9 @@ public class RoomMsgDispatch {
             case "pushScoreChange": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 Room r = (Room) room;
-                if (r.isGoldRoom() || r.isClubRoom()) {
+//                if (r.isGoldRoom() || r.isClubRoom()) {
                     r.pushScoreChange();
-                }
+//                }
                 return 0;
             }
             case "changeRoom": {

@@ -204,6 +204,27 @@ public class GameUserService {
             chargeService.save(charge1);
 
 
+            //如果在游戏中 刷新
+            String roomId = RedisManager.getUserRedisService().getRoomId(rechargeUserId);
+            if (roomId != null) {
+                String serverId = RedisManager.getRoomRedisService().getServerId(roomId);
+                if (serverId != null) {
+
+                    KafkaMsgKey msgKey1 = new KafkaMsgKey();
+                    msgKey1.setRoomId(roomId);
+                    int partitionId = Integer.valueOf(serverId);
+                    msgKey1.setPartition(partitionId);
+                    msgKey1.setUserId(rechargeUserId);
+                    MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+
+                    ResponseVo responseVo = new ResponseVo();
+                    responseVo.setService("roomService");
+                    responseVo.setMethod("pushScoreChange");
+                    responseVo.setParams("inner");
+                    msgProducer.send2Partition("roomService", partitionId, msgKey1, responseVo);
+
+                }
+            }
         } else {
             return ErrorCode.NOT_HAVE_MORE_MONEY;
         }

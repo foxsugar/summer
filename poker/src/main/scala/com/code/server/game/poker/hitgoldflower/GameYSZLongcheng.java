@@ -129,18 +129,20 @@ public class GameYSZLongcheng extends GameYSZ {
         }
         for (PlayerYSZ playerCardInfo : playerCardInfos.values()) {
             if (winList.contains(playerCardInfo.getUserId())) {
-                //抽水5%
-                double add = totalChip * 95 /100 /winList.size();
-                //todo 返利
+                //抽水10%
+                double add = totalChip * 90 /100 /winList.size();
 
-                double rebate = 1.5 / 100 * 77 / 100 * chip / playerCardInfos.size() + 1.5 / 100 * 23 / 100 * (playerCardInfo.getAllScore()) / chip;
-
-                this.room.sendCenterAddRebateLongcheng(playerCardInfo.getUserId(), rebate);
                 playerCardInfo.setScore(add);
 
             } else {
                 playerCardInfo.setScore(-1 * playerCardInfo.getAllScore());
             }
+
+            //todo 返利
+
+            double rebate = 5D / 100 * 70 / 100 * totalChip / playerCardInfos.size() + 5D / 100 * 30 / 100 * (playerCardInfo.getAllScore()) ;
+
+            this.room.sendCenterAddRebateLongcheng(playerCardInfo.getUserId(), rebate);
         }
         for (PlayerYSZ playerCardInfo : playerCardInfos.values()) {
             if (winList.contains(playerCardInfo.getUserId())) {

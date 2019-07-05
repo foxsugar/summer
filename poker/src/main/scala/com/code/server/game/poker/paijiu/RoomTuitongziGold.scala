@@ -71,18 +71,18 @@ class RoomTuitongziGold extends RoomPaijiu{
   override def addUserSocre(userId: Long, score: Double): Unit = {
     //百人牌九 加分时抽水
 
-      if(score>0) {
-        val game = this.game.asInstanceOf[GameTuitongziGold]
-
-        val s = score * (100 - TUITONGZI_REBATE_SCALE) / 100
-        //返利
-        RedisManager.getUserRedisService.addUserGold(userId, s)
-
-        //发送返利
-        sendCenterAddRebateLongcheng(userId, score * 1.5 /100)
-      }else{
-        RedisManager.getUserRedisService.addUserGold(userId, score)
-      }
+//      if(score>0) {
+//        val game = this.game.asInstanceOf[GameTuitongziGold]
+//
+//        val s = score * (100 - TUITONGZI_REBATE_SCALE) / 100
+//        //返利
+//        RedisManager.getUserRedisService.addUserGold(userId, s)
+//
+//        //发送返利
+////        sendCenterAddRebateLongcheng(userId, score * 1.5 /100)
+//      }else{
+//      }
+    RedisManager.getUserRedisService.addUserGold(userId, score)
 
   }
 
@@ -214,7 +214,7 @@ class RoomTuitongziGold extends RoomPaijiu{
       return ErrorCode.CRAP_ALREADY_BANKER
     }
     //上庄先扣钱
-    RedisManager.getUserRedisService.addUserMoney(userId, -score)
+    RedisManager.getUserRedisService.addUserGold(userId, -score)
     this.bankerList = this.bankerList:+ userId
     this.bankerScoreMap = this.bankerScoreMap.+(userId -> score)
 
