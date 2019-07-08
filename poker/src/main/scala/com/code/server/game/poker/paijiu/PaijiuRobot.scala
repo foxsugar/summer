@@ -307,9 +307,9 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
             if(bw == 1){
               sendBet(playerInfo.userId, room.getRoomId, betNum, 0, 0, 1)
             }else if(bw == 2){
-              sendBet(playerInfo.userId, room.getRoomId, 0, betNum, 0, 1)
+              sendBet(playerInfo.userId, room.getRoomId, 0, betNum, 0, 2)
             }else{
-              sendBet(playerInfo.userId, room.getRoomId, 0, 0, betNum, 1)
+              sendBet(playerInfo.userId, room.getRoomId, 0, 0, betNum, 3)
             }
           }
 
