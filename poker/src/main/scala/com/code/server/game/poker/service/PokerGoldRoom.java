@@ -118,7 +118,7 @@ public class PokerGoldRoom extends RoomExtendGold {
             case "450":
                 RoomYSZ roomlc = null;
                 try {
-                    roomlc = RoomYSZLongcheng.createYSZRoom_(userId, 100, 6, 15, goldRoomType, 0, 1,
+                    roomlc = RoomYSZLongcheng.createYSZRoom_(userId, 100, 6, 20, goldRoomType, 0, 1,
                             gameType, roomType, true, true, null, null, goldRoomType, IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT,2);
                 } catch (DataNotFoundException e) {
                     e.printStackTrace();

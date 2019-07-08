@@ -21,7 +21,7 @@ public class YSZRobotImpl implements YSZRobot {
 
     protected static final Logger logger = LoggerFactory.getLogger(YSZRobotImpl.class);
     public static final long SECOND = 1000L;//秒;
-    public static final long COUNT = 10;
+    public static final long COUNT = 20;
 
     @Override
     //自动过

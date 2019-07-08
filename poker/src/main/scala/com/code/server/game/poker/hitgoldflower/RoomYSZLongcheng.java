@@ -4,6 +4,7 @@ import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.UserBean;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.zhaguzi.RoomYSZ;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
@@ -121,6 +122,7 @@ public class RoomYSZLongcheng extends RoomYSZ {
             });
             for (long userId : removeList) {
                 this.quitRoom(userId);
+                MsgSender.sendMsg2Player("roomService", "quitRoomKick", "quit", userId);
             }
         }
     }
