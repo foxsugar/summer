@@ -290,7 +290,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     val gamePaijiu = game.asInstanceOf[GameTuitongziGold]
 //    if(room.bankerInitScore<=3000) return
     //下注阶段5秒后机器人下注
-    if (!gamePaijiu.isRobotBet && time - gamePaijiu.lastOperateTime > 1000 * 6) {
+    if (!gamePaijiu.isRobotBet && time - gamePaijiu.lastOperateTime > 1000 * 8) {
       println("托管: 下注")
       //没下注的机器人开始下注
       gamePaijiu.isRobotBet = true
