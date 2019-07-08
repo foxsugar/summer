@@ -88,6 +88,14 @@ class RoomTuitongziGold extends RoomPaijiu{
 
   }
 
+
+  override protected def goldRoomStart(): Unit = { //消耗上级房卡
+    import scala.collection.JavaConversions._
+    for (userId <- users) { //扣除费用
+      val parentId = playerParentMap.get(userId)
+      RedisManager.getUserRedisService.addUserMoney(parentId, -1)
+    }
+  }
   /**
     * 获取剩余时间
     * @return
