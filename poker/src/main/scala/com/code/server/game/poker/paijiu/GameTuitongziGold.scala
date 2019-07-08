@@ -435,7 +435,7 @@ class GameTuitongziGold extends GamePaijiu {
   def isAutoBreakBanker():Boolean ={
     //大于10倍 小于10% 自动切庄
     //todo 是否有多少把 自动下庄
-     this.roomPaijiu.bankerScore < this.roomPaijiu.bankerInitScore * 10 /100 || this.roomPaijiu.curGameNumber>20
+     this.roomPaijiu.bankerScore < this.roomPaijiu.bankerInitScore * 10 /100 || this.roomPaijiu.curGameNumber>=20
   }
   /**
     * 庄家切庄(牌局结束)
