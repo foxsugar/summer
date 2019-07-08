@@ -1,5 +1,7 @@
 package com.code.server.game.poker.paijiu
 
+import java.util
+
 import com.code.server.constant.game.RoomStatistics
 import com.code.server.constant.response.{ErrorCode, ResponseVo}
 import com.code.server.game.poker.config.ServerConfig
@@ -17,7 +19,7 @@ import scala.collection.JavaConverters._
   */
 class RoomTuitongziGold extends RoomPaijiu{
 
-
+  private var playerParentMap = new util.HashMap[Long, Long]
 
 
   override def roomRemoveUser(userId: Long): Unit = {
@@ -118,8 +120,21 @@ class RoomTuitongziGold extends RoomPaijiu{
   override def spendMoney(): Unit = {
   }
 
+  /**
+    * 房间中同样的上级玩家个数
+    *
+    * @param pid
+    * @return
+    */
+  private def getSameParentNum(pid: Long) = playerParentMap.values.stream.filter((parentId: Long) => pid == parentId).count
 
   override protected def isCanJoinCheckMoney(userId: Long): Boolean = { //todo 检验金币
+
+    val userBean = RedisManager.getUserRedisService.getUserBean(userId)
+    val parentId = userBean.getReferee
+    if (parentId == 0) return false
+    if (RedisManager.getUserRedisService.getUserMoney(parentId) < getSameParentNum(parentId)) return false
+    return true
     true
   }
 

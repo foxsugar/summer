@@ -128,7 +128,7 @@ public class PokerGoldRoom extends RoomExtendGold {
             case "456":
                 RoomTuitongziGold roomtuitongzi = null;
                 roomtuitongzi = RoomTuitongziGold.createRoom_(userId,"3","456",4,"","",0,
-                        false,2,0,0,false,0,200,goldRoomType);
+                        false,2,30,0,false,0,200,goldRoomType);
                 return roomtuitongzi;
         }
 

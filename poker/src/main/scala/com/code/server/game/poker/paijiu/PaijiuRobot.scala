@@ -34,14 +34,15 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     val now = System.currentTimeMillis()
 
     //机器人加入的逻辑
+    doAddRobot(roomPaijiu)
+
+
+
     //机器人可加入 并且 game为空时 机器人加入
     if(room.isInstanceOf[RoomTuitongziGold]) {
       tuitongziRobot(roomPaijiu,now)
       return
     }
-
-    doAddRobot(roomPaijiu)
-
 
 
     //开始游戏
@@ -78,6 +79,8 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     val rp = room
     if(room.getGame == null) {
 
+
+
       //更新banker
       rp.updateBanker()
       //选定庄家后10秒开局  庄家没变化的话 不许等待10秒
@@ -90,8 +93,12 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     }else{
 
 
+
       //发牌
       val game = room.getGame.asInstanceOf[GamePaijiu]
+
+      doTuitongziRobotBet(room, game,now)
+
       if(game.state == STATE_BET || game.state == START_CRAP){
         if(now - game.lastOperateTime > TUITONGZI_STATE_TIME(STATE_BET)) {
           sendCrapStart(game.bankerId, room.getRoomId)
@@ -277,6 +284,39 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     }
   }
 
+
+  def doTuitongziRobotBet(room: RoomPaijiu, game: GamePaijiu, time: Long): Unit ={
+    if (game.state != STATE_BET) return
+    val gamePaijiu = game.asInstanceOf[GameTuitongziGold]
+//    if(room.bankerInitScore<=3000) return
+    //下注阶段5秒后机器人下注
+    if (!gamePaijiu.isRobotBet && time - gamePaijiu.lastOperateTime > 1000 * 6) {
+      println("托管: 下注")
+      //没下注的机器人开始下注
+      gamePaijiu.isRobotBet = true
+      //下注选择
+      for (userId <- room.robotList) {
+
+        val playerInfo = gamePaijiu.playerCardInfos(userId)
+        //没下注
+        if (playerInfo != null && playerInfo.bet == null && gamePaijiu.bankerId != playerInfo.userId) {
+          if(Random.nextBoolean()){
+            val r = List(1, 2, 3)
+            val bw = Random.shuffle(r).head
+            val betNum = 200
+            if(bw == 1){
+              sendBet(playerInfo.userId, room.getRoomId, betNum, 0, 0, 1)
+            }else if(bw == 2){
+              sendBet(playerInfo.userId, room.getRoomId, 0, betNum, 0, 1)
+            }else{
+              sendBet(playerInfo.userId, room.getRoomId, 0, 0, betNum, 1)
+            }
+          }
+
+        }
+      }
+    }
+  }
   /**
     * 强制下注
     *
