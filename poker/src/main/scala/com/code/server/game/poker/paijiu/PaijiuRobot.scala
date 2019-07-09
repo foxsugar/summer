@@ -33,17 +33,20 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
 
     val now = System.currentTimeMillis()
 
-    //机器人加入的逻辑
-    doAddRobot(roomPaijiu)
+
 
 
 
     //机器人可加入 并且 game为空时 机器人加入
     if(room.isInstanceOf[RoomTuitongziGold]) {
+      //机器人加入的逻辑
+      doAddRobot(roomPaijiu,1)
       tuitongziRobot(roomPaijiu,now)
       return
     }
 
+    //机器人加入的逻辑
+    doAddRobot(roomPaijiu,0)
 
     //开始游戏
     doStartGame(roomPaijiu, now)
@@ -164,7 +167,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     *
     * @param roomPaijiu
     */
-  def doAddRobot(roomPaijiu: RoomPaijiu): Unit = {
+  def doAddRobot(roomPaijiu: RoomPaijiu,minGold:Double): Unit = {
     if (roomPaijiu.robotType != 0 && roomPaijiu.getGame == null) {
       val robotNum = roomPaijiu.robotList.size
       //小于所需机器人数量
@@ -173,7 +176,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
         val needPeopleNum = roomPaijiu.getPersonNumber - roomPaijiu.users.size()
         val needNum = if (needRobotNum < needPeopleNum) needRobotNum else needPeopleNum
         if (needNum != 0) {
-          val newRobotList = getRobotList(needNum)
+          val newRobotList = getRobotList(needNum,minGold)
           for (robot <- newRobotList) {
             //发送加入房间
             sendJoinRoom(robot, roomPaijiu.getRoomId)
@@ -394,7 +397,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     * @param num
     * @return
     */
-  private def getRobotList(num: Int): List[Long] = {
+  private def getRobotList(num: Int,minGold:Double): List[Long] = {
     val list: java.util.List[String] = RedisManager.getUserRedisService.getRobotPoolUser
 
     Collections.shuffle(list)
@@ -406,8 +409,10 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
       val uid: Long = Long.parseLong(userId)
       val roomId = RedisManager.getUserRedisService.getRoomId(uid)
       if (roomId == null) {
-        count += 1
-        robotList = robotList.+:(uid)
+        if(minGold>0 && RedisManager.getUserRedisService.getUserGold(uid)>minGold){
+          count += 1
+          robotList = robotList.+:(uid)
+        }
         if (count >= num) {
           return robotList
         }
