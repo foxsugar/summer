@@ -103,7 +103,14 @@ class GameTuitongziGold extends GamePaijiu {
     if (playerInfo_option.isEmpty) return ErrorCode.NO_USER
     val playerCardInfoPaijiu = playerInfo_option.get
     //已经下过注
-    //    if (playerCardInfoPaijiu.bet != null) return ErrorCode.ALREADY_BET
+    if (playerCardInfoPaijiu.bet == null) {
+      val room = this.roomPaijiu.asInstanceOf[RoomTuitongziGold]
+      val parentId = room.playerParentMap.get(userId)
+      if(RedisManager.getUserRedisService.getUserGold(parentId) <1) {
+        return ErrorCode.CANNOT_JOIN_ROOM_NO_GOLD
+      }
+      RedisManager.getUserRedisService.addUserGold(parentId, -1)
+    }
     //下注不合法
 
     val bet = new Bet(one, two, three, index)

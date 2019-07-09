@@ -363,6 +363,8 @@ object GameService {
       case "raise" =>
         val addChip = params.path("addChip").asLong(0)
         game.raise(userId,addChip);
+      case "killAll"=>
+        game.killAll(userId);
       case _ =>
         ErrorCode.REQUEST_PARAM_ERROR
     }

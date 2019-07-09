@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class GameBaseYSZ extends Game {
     protected static final Logger logger = LoggerFactory.getLogger(GameBaseYSZ.class);
 
-    private static  Double INIT_BOTTOM_CHIP = 1.0;//底注
+    private static Double INIT_BOTTOM_CHIP = 1.0;//底注
     private static final int INIT_CARD_NUM = 3;//玩家牌数3张
     private List<Double> choumaList = new ArrayList<>();
     protected List<Integer> cards = new ArrayList<>();//牌
@@ -34,11 +34,13 @@ public class GameBaseYSZ extends Game {
     protected List<Long> loseUser = new ArrayList<>();//输牌的人
     protected Long curUserId;
     protected RoomYSZ room;
-    protected  double minGold;
+    protected double minGold;
     protected List<Integer> genZhuList = new ArrayList<>();
+
     public List<Integer> getGenZhuList() {
         return genZhuList;
     }
+
     public void setGenZhuList(List<Integer> genZhuList) {
         this.genZhuList = genZhuList;
     }
@@ -69,14 +71,17 @@ public class GameBaseYSZ extends Game {
                 return "giveup";
             case "raise":
                 return "raise";
+            case "killAll":
+                return "killAll";
+            default:
+                return str;
         }
-        return null;
     }
 
-    public void initDiZhu(){
+    public void initDiZhu() {
 
         //房卡场 暂定
-        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE) {
 //            MAX_BET_NUM = DataManager.data.getRoomDataMap().get(room.getGameType()).getMaxBet();
             MAX_BET_NUM = 10d;
             INIT_BOTTOM_CHIP = 1d;
@@ -92,45 +97,45 @@ public class GameBaseYSZ extends Game {
         double max = 0;
 
         //随机
-        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT){
+        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT) {
             dizhu = room.getGoldRoomType();
-            if (room.getGoldRoomType() == 50){
+            if (room.getGoldRoomType() == 50) {
                 max = 500;
                 minGold = 500;
                 genZhuList.add(100);
                 genZhuList.add(150);
                 genZhuList.add(200);
                 genZhuList.add(250);
-            }else if (room.getGoldRoomType() == 100){
+            } else if (room.getGoldRoomType() == 100) {
                 max = 1000;
                 minGold = 1000;
                 genZhuList.add(200);
                 genZhuList.add(300);
                 genZhuList.add(400);
                 genZhuList.add(500);
-            }else if (room.getGoldRoomType() == 200){
+            } else if (room.getGoldRoomType() == 200) {
                 max = 2000;
                 minGold = 2000;
                 genZhuList.add(400);
                 genZhuList.add(600);
                 genZhuList.add(800);
                 genZhuList.add(1000);
-            }else if (room.getGoldRoomType() == 500){
+            } else if (room.getGoldRoomType() == 500) {
                 max = 4000;
                 minGold = 5000;
                 genZhuList.add(800);
                 genZhuList.add(1200);
                 genZhuList.add(1600);
                 genZhuList.add(2000);
-            }else {
+            } else {
                 logger.info("传值错误~~~");
             }
             INIT_BOTTOM_CHIP = dizhu;
             MAX_BET_NUM = max;
 
-        }else if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_PUBLIC || room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_PRIVATE){
+        } else if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_PUBLIC || room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_PRIVATE) {
             dizhu = room.getGoldRoomType();
-            if (room.getGoldRoomType() == 50){
+            if (room.getGoldRoomType() == 50) {
                 max = 500;
                 minGold = 500;
                 genZhuList.add(100);
@@ -138,7 +143,7 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(200);
                 genZhuList.add(250);
 
-            }else if (room.getGoldRoomType() == 100){
+            } else if (room.getGoldRoomType() == 100) {
                 max = 1000;
                 minGold = 1000;
                 genZhuList.add(200);
@@ -146,7 +151,7 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(400);
                 genZhuList.add(500);
 
-            }else if (room.getGoldRoomType() == 200){
+            } else if (room.getGoldRoomType() == 200) {
                 max = 2000;
                 minGold = 2000;
                 genZhuList.add(400);
@@ -154,14 +159,14 @@ public class GameBaseYSZ extends Game {
                 genZhuList.add(800);
                 genZhuList.add(1000);
 
-            }else if (room.getGoldRoomType() == 500){
+            } else if (room.getGoldRoomType() == 500) {
                 max = 4000;
                 minGold = 5000;
                 genZhuList.add(800);
                 genZhuList.add(1200);
                 genZhuList.add(1600);
                 genZhuList.add(2000);
-            }else {
+            } else {
                 logger.info("传值错误~~~");
             }
 
@@ -171,7 +176,7 @@ public class GameBaseYSZ extends Game {
 
     }
 
-    public void updateAliveUsers(){
+    public void updateAliveUsers() {
         Map<String, Object> result = new HashMap<>();
         result.put("aliveUser", this.aliveUser);
         ResponseVo vo = new ResponseVo("gameService", "updateAliveUser", result);
@@ -250,14 +255,14 @@ public class GameBaseYSZ extends Game {
 
     }
 
-    public void recordCardType(){
+    public void recordCardType() {
 
-        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+        if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE) {
 
 
-            for (Map.Entry<Long, PlayerYSZ> entry : this.playerCardInfos.entrySet()){
+            for (Map.Entry<Long, PlayerYSZ> entry : this.playerCardInfos.entrySet()) {
                 RoomStatistics roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
-                if (roomStatistics == null){
+                if (roomStatistics == null) {
                     roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
                     roomStatistics.maxCardGroup = "";
                     roomStatistics.ext = "";
@@ -272,15 +277,15 @@ public class GameBaseYSZ extends Game {
                 roomStatistics = this.room.getRoomStatisticsMap().get(entry.getKey());
 
                 String ext = roomStatistics.ext;
-                if (ext == null || ext.isEmpty() || ext.length() == 0){
+                if (ext == null || ext.isEmpty() || ext.length() == 0) {
                     roomStatistics.ext = CardUtils.transfromCardsToString(entry.getValue().handcards);
                     Integer l1 = entry.getValue().handcards.get(0);
                     Integer l2 = entry.getValue().handcards.get(1);
                     Integer l3 = entry.getValue().handcards.get(2);
-                    Player playerLast = new Player(1l,  ArrUtils.cardCode.get(l1), ArrUtils.cardCode.get(l2), ArrUtils.cardCode.get(l3));
+                    Player playerLast = new Player(1l, ArrUtils.cardCode.get(l1), ArrUtils.cardCode.get(l2), ArrUtils.cardCode.get(l3));
                     roomStatistics.maxCardGroup = playerLast.transfromCategoryToString();
 
-                }else {
+                } else {
 
                     List<Integer> current = entry.getValue().getHandcards();
                     Player playerCurrent = new Player(2l, ArrUtils.cardCode.get(current.get(0)), ArrUtils.cardCode.get(current.get(1)), ArrUtils.cardCode.get(current.get(2)));
@@ -290,7 +295,7 @@ public class GameBaseYSZ extends Game {
                     int lastValue = Player.transformCardsValue(lastMax);
                     int currentValue = Player.transformCardsValue(currentMax);
 
-                    if (currentValue < lastValue){
+                    if (currentValue < lastValue) {
                         roomStatistics.maxCardGroup = currentMax;
                     }
 
@@ -313,7 +318,7 @@ public class GameBaseYSZ extends Game {
                 }
             }
         }
-        logger.info(" 第{}局    ===== 开始 牌 型:{}", this.room.curGameNumber , this.room.getRoomStatisticsMap());
+        logger.info(" 第{}局    ===== 开始 牌 型:{}", this.room.curGameNumber, this.room.getRoomStatisticsMap());
     }
 
 //    public double getUserScores(long userId){
@@ -339,13 +344,13 @@ public class GameBaseYSZ extends Game {
 //            }
 //        }
 
-        if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+        if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE) {
             double gold = RedisManager.getUserRedisService().getUserGold(userId);
             logger.info(userId + "  金币: " + gold);
 //            if (gold - (playerCardInfos.get(userId).getAllScore() + addChip) < minGold){
 //                return ErrorCode.GOLD_NOT_ENOUGH;
 //            }
-            if (checkNeedCharge(userId, addChip)){
+            if (checkNeedCharge(userId, addChip)) {
                 return ErrorCode.GOLD_NOT_ENOUGH;
             }
         }
@@ -394,13 +399,13 @@ public class GameBaseYSZ extends Game {
         return 0;
     }
 
-    public boolean checkNeedCharge(long userId, double addChip){
+    public boolean checkNeedCharge(long userId, double addChip) {
         double gold = RedisManager.getUserRedisService().getUserGold(userId);
-        if (gold < minGold){
+        if (gold < minGold) {
             return true;
         }
 //        PlayerYSZ playerYSZ = playerCardInfos.get(userId);
-        if (gold - addChip < 0){
+        if (gold - addChip < 0) {
             return true;
         }
         return false;
@@ -420,17 +425,17 @@ public class GameBaseYSZ extends Game {
 //            }
 //        }
 
-        if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+        if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE) {
             double gold = RedisManager.getUserRedisService().getUserGold(userId);
             logger.info(userId + "  金币: " + gold);
             double addChip = chip;
-            if (seeUser.contains(userId)){
+            if (seeUser.contains(userId)) {
                 addChip = chip * 2;
             }
 //            if (gold - (playerCardInfos.get(userId).getAllScore() + addChip) < minGold){
 //                return ErrorCode.GOLD_NOT_ENOUGH;
 //            }
-            if (checkNeedCharge(userId, addChip)){
+            if (checkNeedCharge(userId, addChip)) {
                 return ErrorCode.GOLD_NOT_ENOUGH;
             }
         }
@@ -474,9 +479,9 @@ public class GameBaseYSZ extends Game {
         return 0;
     }
 
-    public boolean check(long userId){
+    public boolean check(long userId) {
 
-        if (curUserId != userId){
+        if (curUserId != userId) {
             logger.info(userId + "  重复操作");
 
             return false;
@@ -489,7 +494,7 @@ public class GameBaseYSZ extends Game {
 
         logger.info(userId + "  foldddd!!!");
 
-        if (check(userId) == false){
+        if (check(userId) == false) {
 
             return ErrorCode.NOT_YOU_TURN;
         }
@@ -530,7 +535,7 @@ public class GameBaseYSZ extends Game {
 
     public int see(long userId) {
 
-        if (check(userId) == false){
+        if (check(userId) == false) {
             return ErrorCode.NOT_YOU_TURN;
         }
 
@@ -561,9 +566,9 @@ public class GameBaseYSZ extends Game {
         return 0;
     }
 
-    public boolean checkCanKill(long askerId, long accepterId){
+    public boolean checkCanKill(long askerId, long accepterId) {
 
-        if (aliveUser.contains(askerId) && aliveUser.contains(accepterId)){
+        if (aliveUser.contains(askerId) && aliveUser.contains(accepterId)) {
             return true;
         }
         return false;
@@ -577,12 +582,12 @@ public class GameBaseYSZ extends Game {
     public int kill(long askerId, long accepterId) {
 
 
-        if (check(askerId) == false){
+        if (check(askerId) == false) {
 
             return ErrorCode.NOT_YOU_TURN;
         }
 
-        if (checkCanKill(askerId, accepterId) == false){
+        if (checkCanKill(askerId, accepterId) == false) {
             return ErrorCode.NOT_KILL;
         }
 
@@ -593,17 +598,17 @@ public class GameBaseYSZ extends Game {
             return ErrorCode.NOT_KILL;
         }
 
-        if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+        if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE) {
             double gold = RedisManager.getUserRedisService().getUserGold(askerId);
             logger.info(askerId + "  金 币: " + gold);
             double addChip = chip;
-            if (seeUser.contains(askerId)){
+            if (seeUser.contains(askerId)) {
                 addChip = chip * 2;
             }
 //            if (gold - (playerCardInfos.get(askerId).getAllScore() + addChip) < minGold){
 //                return ErrorCode.GOLD_NOT_ENOUGH;
 //            }
-            if (checkNeedCharge(askerId, addChip)){
+            if (checkNeedCharge(askerId, addChip)) {
                 return ErrorCode.GOLD_NOT_ENOUGH;
             }
         }
@@ -624,8 +629,8 @@ public class GameBaseYSZ extends Game {
         Map<String, Object> result = new HashMap<>();
         result.put("askerId", askerId);
         result.put("winnerId", winnerId);
-        long loserId = winnerId==askerId?accepterId:askerId;
-        result.put("loserId",loserId);
+        long loserId = winnerId == askerId ? accepterId : askerId;
+        result.put("loserId", loserId);
         result.put("winnerCards", this.playerCardInfos.get(winnerId).handcards);
         result.put("loserCards", this.playerCardInfos.get(loserId).handcards);
         if (seeUser.contains(askerId)) {
@@ -689,6 +694,171 @@ public class GameBaseYSZ extends Game {
 
         return 0;
     }
+
+
+
+    private List<Long> getUserList(long userId){
+        List<Long> result = new ArrayList<>();
+        long curId = userId;
+        for(int i=0;i<users.size();i++) {
+            long nextId = nextTurnId(curId);
+            if (aliveUser.contains(nextId) && !result.contains(userId) && nextId != userId) {
+                result.add(nextId);
+            }
+            curId = nextId;
+
+        }
+        return result;
+    }
+
+
+    /**
+     * 比牌
+     *
+     * @return
+     */
+    public int killAll(long askerId) {
+        if (check(askerId) == false){
+            return ErrorCode.NOT_YOU_TURN;
+        }
+
+        logger.info(askerId + "  比 牌: " + chip);
+
+        if (!aliveUser.contains(askerId)) {
+            return ErrorCode.NOT_KILL;
+        }
+
+        List<Map> respResult = new ArrayList<>();
+        double gold = RedisManager.getUserRedisService().getUserGold(askerId);
+        long finalWinner = 0;
+        for (long accepterId : getUserList(askerId)) {
+
+            if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
+//                double gold = RedisManager.getUserRedisService().getUserGold(askerId);
+                logger.info(askerId + "  金 币: " + gold);
+                double addChip = gold;
+//                if (seeUser.contains(askerId)){
+//                    addChip = chip * 2;
+//                }
+//            if (gold - (playerCardInfos.get(askerId).getAllScore() + addChip) < minGold){
+//                return ErrorCode.GOLD_NOT_ENOUGH;
+//            }
+//                if (checkNeedCharge(askerId, addChip)){
+//                    return ErrorCode.GOLD_NOT_ENOUGH;
+//                }
+            }
+
+            Player asker = new Player(askerId, ArrUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(0)), ArrUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(1)), ArrUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(2)));
+            Player accepter = new Player(accepterId, ArrUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(0)), ArrUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(1)), ArrUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(2)));
+
+            ArrayList<Player> winnerList = new ArrayList<>();
+            if ("30".equals(this.room.getGameType())) {
+                winnerList = Player.findWinners(Player.Rules.XiaoYao, asker, accepter);
+            } else {
+                winnerList = Player.findWinners(Player.Rules.XiaoYao, asker, accepter);
+            }
+
+            Long winnerId = winnerList.size() == 1 ? winnerList.get(0).getUid() : winnerList.get(1).getUid();
+            loseUser.add(winnerId == askerId ? accepterId : askerId);
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("askerId", askerId);
+            result.put("winnerId", winnerId);
+            long loserId = winnerId==askerId?accepterId:askerId;
+            result.put("loserId",loserId);
+            result.put("winnerCards", this.playerCardInfos.get(winnerId).handcards);
+            result.put("loserCards", this.playerCardInfos.get(loserId).handcards);
+            if (seeUser.contains(askerId)) {
+                playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore() + gold);
+                this.room.addUserSocre(askerId, -gold);
+                result.put("addChip", gold);
+                logger.info("");
+            } else {
+                playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore() + gold);
+                this.room.addUserSocre(askerId, -gold);
+                result.put("addChip", gold);
+            }
+
+            respResult.add(result);
+
+//            ResponseVo vo = new ResponseVo("gameService", "killResponse", result);
+//            MsgSender.sendMsg2Player(vo, users);
+
+            aliveUser.remove(winnerId == askerId ? accepterId : askerId);
+
+            //庄家输
+            if (winnerId != askerId) {
+                finalWinner = accepterId;
+                break;
+            }else{
+                finalWinner = askerId;
+
+            }
+
+
+        }
+
+        MsgSender.sendMsg2Player("gameService", "killAllResp", respResult, users);
+        MsgSender.sendMsg2Player("gameService", "killAll", 0, askerId);
+
+        if (aliveUser.size() <= 1) {
+            List<Long> list = new ArrayList<>();
+            list.add(finalWinner);
+            compute(list);
+            sendResult();
+            genRecord();
+            room.setBankerId(finalWinner);
+            room.clearReadyStatus(true);
+            sendFinalResult();
+        }else{
+            noticeAction(finalWinner);
+        }
+//
+//        if (aliveUser.size() > 2) {
+//            logger.info("");
+//            if (winnerId == askerId) {
+//                aliveUser.remove(winnerId == askerId ? accepterId : askerId);
+//            }
+//
+//            if (aliveUser.size() > 1) {
+//                noticeAction(curUserId);
+//            } else {
+//                logger.info("");
+//                //处理结果
+//                List<Long> list = new ArrayList<>();
+//                list.add(winnerId);
+//                compute(list);
+//                sendResult();
+//                genRecord();
+//
+//                room.setBankerId(winnerId);
+//                room.clearReadyStatus(true);
+//                sendFinalResult();
+//            }
+//
+//            if (winnerId != askerId) {
+//                aliveUser.remove(winnerId == askerId ? accepterId : askerId);
+//            }
+//        } else {
+//            aliveUser.remove(winnerId == askerId ? accepterId : askerId);
+//            List<Long> list = new ArrayList<>();
+//            list.add(winnerId);
+//            compute(list);
+//            sendResult();
+//            genRecord();
+//            logger.info("");
+//            room.setBankerId(winnerId);
+//            room.clearReadyStatus(true);
+//            sendFinalResult();
+//        }
+
+
+        this.pushGoldScore();
+        updateLastOperateTime();
+
+        return 0;
+    }
+
 
     protected void computeCardType(){
 

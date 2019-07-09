@@ -137,14 +137,6 @@ public class RoomYSZLongcheng extends RoomYSZ {
         return getPlayerParentMap().values().stream().filter(parentId->pid == parentId).count();
     }
 
-    protected void goldRoomStart() {
-        //消耗上级房卡
-        for (long userId : users) {
-            //扣除费用
-            long parentId = playerParentMap.get(userId);
-            RedisManager.getUserRedisService().addUserMoney(parentId, -1);
-        }
-    }
 
 
     public Map<Long, Long> getPlayerParentMap() {

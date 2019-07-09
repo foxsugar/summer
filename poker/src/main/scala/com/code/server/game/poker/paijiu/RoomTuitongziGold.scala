@@ -19,7 +19,7 @@ import scala.collection.JavaConverters._
   */
 class RoomTuitongziGold extends RoomPaijiu{
 
-  private var playerParentMap = new util.HashMap[Long, Long]
+  var playerParentMap = new util.HashMap[Long, Long]
 
 
   override def roomRemoveUser(userId: Long): Unit = {
