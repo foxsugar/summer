@@ -8,6 +8,7 @@ import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.RoomDoudizhuVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.room.Room;
+import com.code.server.game.room.RoomExtendGold;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.config.IConstant;
@@ -24,7 +25,7 @@ import java.util.List;
 /**
  * Created by sunxianping on 2017/3/13.
  */
-public class RoomDouDiZhu extends Room {
+public class RoomDouDiZhu extends RoomExtendGold {
 
 
     protected int jiaoScoreMax = 3;

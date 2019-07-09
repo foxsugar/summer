@@ -79,7 +79,7 @@ public class ScheduledService {
             for(String uid : RedisManager.getUserRedisService().getAllUserId()){
                 long userId = Long.valueOf(uid);
                 UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-                if (userBean.getVip() != 0 && userBean.getReferee() != 0) {
+                if (userBean.getVip() > 1 && userBean.getReferee() != 0) {
 
                     Double lastDayRebate = rebateDetailService.rebateDetailDao.getRebateByDate(userId, ys);
                     if (lastDayRebate != null) {

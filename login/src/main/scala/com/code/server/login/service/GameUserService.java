@@ -707,7 +707,7 @@ public class GameUserService {
         userBean.setReferee(referrerId);
         RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
 
-        RedisManager.getUserRedisService().addUserMoney(msgKey.getUserId(), SpringUtil.getBean(ServerConfig.class).getBindRefereeReward());
+//        RedisManager.getUserRedisService().addUserMoney(msgKey.getUserId(), SpringUtil.getBean(ServerConfig.class).getBindRefereeReward());
 
 
         ResponseVo vo = new ResponseVo("userService", "bindInGame", 0);
