@@ -15,6 +15,7 @@ import java.util.Date;
         indexes = {@Index(name = "id", columnList = "id"),
                 @Index(name="userId",columnList = "userId"),
                 @Index(name="agentId",columnList = "agentId"),
+                @Index(name="date",columnList = "date"),
         })
 public class RebateDetail extends BaseEntity {
 
