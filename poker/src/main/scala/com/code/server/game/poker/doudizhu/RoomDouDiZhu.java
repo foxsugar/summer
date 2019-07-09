@@ -51,6 +51,33 @@ public class RoomDouDiZhu extends Room {
 
     }
 
+    public static Room createRoom_(long userId, int gameNumber, int multiple, String gameType, String roomType,
+                                   boolean isAA, boolean isJoin, boolean showChat, int personNum, int jiaoScoreMax,int shuanglong,
+                                   String clubId, String clubRoomModel,int clubMode,int otherMode) throws DataNotFoundException {
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        RoomDouDiZhu room = new RoomDoudizhuZLB();
+
+        room.personNumber = personNum;
+
+        room.roomId = getRoomIdStr(genRoomId(serverConfig.getServerId()));
+        room.createUser = userId;
+        room.gameType = gameType;
+        room.roomType = roomType;
+        room.isAA = isAA;
+        room.isCreaterJoin = isJoin;
+        room.showChat = showChat;
+        room.jiaoScoreMax = jiaoScoreMax;
+        room.shuanglong = shuanglong;
+        room.otherMode = otherMode;
+        room.setClubMode(clubMode);
+
+
+        room.setClubId(clubId);
+        room.setClubRoomModel(clubRoomModel);
+        room.init(gameNumber, multiple);
+        return room;
+    }
+
     public static int createRoom(long userId, int gameNumber, int multiple, String gameType, String roomType,
                                  boolean isAA, boolean isJoin, boolean showChat, int personNum, int jiaoScoreMax,int shuanglong,
                                  String clubId, String clubRoomModel,int clubMode,int otherMode) throws DataNotFoundException {

@@ -15,11 +15,49 @@ public class RoomInfoExtendGold extends RoomExtendGold {
     public Room getDefaultGoldRoomInstance(long userId, String roomType, String gameType, Integer goldRoomType) {
 
 
-        Room room = createRoom(userId, roomType, gameType, goldRoomType);
+//        Room room = createRoom(userId, roomType, gameType, goldRoomType);
+        return create(userId, roomType, gameType,goldRoomType);
 
-        return room;
+//        return room;
+    }
+//    {"service":"mahjongRoomService","method":"createRoomByUser",
+//            "params":{"userId":"10001154","modeTotal":"106","mode":118784,"multiple":"1","gameNumber":"8","personNumber":"4","gameType":"ZHANGLEBAO","roomType":"1"}})
+
+    public static Room create(long userId, String roomType, String gameType,int goldRoomType){
+        switch (gameType){
+            case "ZHANGLEBAO":
+                return createKd(userId, roomType, gameType,goldRoomType);
+            default:
+                return null;
+
+        }
+
     }
 
+    public static Room createKd(long userId, String roomType, String gameType,int goldRoomType){
+        int serverId = SpringUtil.getBean(ServerConfig.class).getServerId();
+        String roomId = Room.getRoomIdStr(Room.genRoomId(serverId));
+        RoomInfo room = new RoomInfoZLB();
+        room.setRoomId(roomId);
+        room.setGameType(gameType);
+        room.setRoomType(roomType);
+        room.setGoldRoomType(goldRoomType);
+        room.setGoldRoomPermission(IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT);
+        room.setMultiple(1);
+        room.setMode("118784");
+        room.setModeTotal("106");
+        room.isRobotRoom = true;
+        room.setPersonNumber(4);
+        room.setGameNumber(4);
+        room.setAA(true);
+        room.setEach("0");
+        room.setCreaterJoin(false);
+        room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), userId, 0, room.getMustZimo());
+//        room.setYipaoduoxiang(true);
+//        room.setCanChi(false);
+//        room.setHaveTing(false);
+        return room;
+    }
 
 
     public void add2GoldPool() {
@@ -27,6 +65,8 @@ public class RoomInfoExtendGold extends RoomExtendGold {
         RoomManager.getInstance().addNotFullGoldRoom(this);
         RoomManager.addRoom(this.getRoomId(), "" + serverId, this);
     }
+
+
 
     public static Room createRoom(long userId, String roomType, String gameType, Integer goldRoomType) {
         int serverId = SpringUtil.getBean(ServerConfig.class).getServerId();

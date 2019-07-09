@@ -56,7 +56,7 @@ public class ScheduledService {
     /**
      * 每天5点 定时删除游戏记录
      */
-    @Scheduled(cron = "0 45 10 ? * *")
+    @Scheduled(cron = "0 0 5 ? * *")
     public void scheduled(){
         if (SpringUtil.getBean(ServerConfig.class).getDeleteRecordTask() == 1) {
             logger.info("=====>>>>>定时任务 删除游戏记录  {}",System.currentTimeMillis());
@@ -75,6 +75,7 @@ public class ScheduledService {
         if (SpringUtil.getBean(ServerConfig.class).getLoadAllUser() == 1) {
             LocalDate yestoday = LocalDate.now().minusDays(1);
             String ys = yestoday.toString();
+//            ys = LocalDate.now().toString();
             for(String uid : RedisManager.getUserRedisService().getAllUserId()){
                 long userId = Long.valueOf(uid);
                 UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
@@ -83,7 +84,7 @@ public class ScheduledService {
                     Double lastDayRebate = rebateDetailService.rebateDetailDao.getRebateByDate(userId, ys);
                     if (lastDayRebate != null) {
 
-                        double re = lastDayRebate /100;
+                        double re = lastDayRebate /10;
 
                         UserBean parent = RedisManager.getUserRedisService().getUserBean(userBean.getReferee());
                         parent.getUserInfo().setAllRebate(parent.getUserInfo().getAllRebate() + re);
