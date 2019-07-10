@@ -3,6 +3,7 @@ package com.code.server.login.service;
 import com.code.server.constant.db.OnlineInfo;
 import com.code.server.constant.db.PartnerRebate;
 import com.code.server.constant.db.PlayerRank;
+import com.code.server.constant.db.PlayerScore;
 import com.code.server.constant.game.AgentBean;
 import com.code.server.constant.game.UserBean;
 import com.code.server.db.Service.*;
@@ -273,6 +274,26 @@ public class CenterService {
         for(Rank rankTemp: centerService.rankService.getRankDao().findAll()){
             centerService.rank.put(rankTemp.getId(), rankTemp.getPlayerRank());
         }
+    }
+
+    /**
+     * 增加人员胜场数
+     * @param userId
+     * @param userBean
+     * @param num
+     */
+    public static void addWinNum(long userId,UserBean userBean,  int num) {
+        CenterService centerService = SpringUtil.getBean(CenterService.class);
+        String date = LocalDate.now().toString();
+        PlayerRank playerRank = centerService.rank.getOrDefault(date, new PlayerRank());
+        PlayerScore playerScore = playerRank.getPlayers().get(userId);
+        if (playerScore == null) {
+            playerScore = new PlayerScore(userId, userBean.getUsername(), userBean.getImage());
+        }
+        playerScore.setWinNum(playerScore.getWinNum() + num);
+        playerRank.getPlayers().put(userId, playerScore);
+        centerService.rank.put(date, playerRank);
+
     }
 
     /**

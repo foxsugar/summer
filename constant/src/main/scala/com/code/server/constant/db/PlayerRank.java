@@ -1,19 +1,19 @@
 package com.code.server.constant.db;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2019-07-01.
  */
 public class PlayerRank {
-    private List<PlayerScore> players = new ArrayList<>();
+    private Map<Long,PlayerScore> players = new HashMap<>();
 
-    public List<PlayerScore> getPlayers() {
+    public Map<Long, PlayerScore> getPlayers() {
         return players;
     }
 
-    public PlayerRank setPlayers(List<PlayerScore> players) {
+    public PlayerRank setPlayers(Map<Long, PlayerScore> players) {
         this.players = players;
         return this;
     }

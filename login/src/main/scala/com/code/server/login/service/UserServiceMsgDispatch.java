@@ -143,7 +143,8 @@ public class UserServiceMsgDispatch {
                 int num2 = params.path("num").asInt();
                 return gameUserService.gold2Money(msgKey, num2);
             case "getRebateDetails":
-                return gameUserService.getRebateDetails(msgKey);
+                long uid = params.path("userId").asLong(msgKey.getUserId());
+                return gameUserService.getRebateDetails(msgKey,uid);
             case "withdrawMoney":
                 double num = params.path("num").asDouble();
                 String userName1 = params.path("name").asText();
@@ -165,6 +166,10 @@ public class UserServiceMsgDispatch {
                 long mailId = params.path("mailId").asLong();
                 boolean readAll = params.path("readAll").asBoolean();
                 return gameUserService.readMail(msgKey,mailId, readAll);
+            case "getRank":
+                int month = params.path("month").asInt();
+                return gameUserService.getRank(msgKey, month);
+
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

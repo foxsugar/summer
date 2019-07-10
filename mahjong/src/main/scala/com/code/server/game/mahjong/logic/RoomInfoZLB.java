@@ -1,7 +1,20 @@
 package com.code.server.game.mahjong.logic;
 
+import com.code.server.constant.game.RoomRecord;
+import com.code.server.constant.game.UserBean;
+import com.code.server.constant.game.UserRecord;
+import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.game.room.service.RoomManager;
+import com.code.server.kafka.MsgProducer;
+import com.code.server.redis.service.RedisManager;
+import com.code.server.util.SpringUtil;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunxianping on 2019-07-09.
@@ -34,6 +47,81 @@ public class RoomInfoZLB extends RoomInfo {
 
     }
 
+    public void genRoomRecord() {
+        if (!isOpen) return;
+        RoomRecord roomRecord = new RoomRecord();
+        roomRecord.setRoomId(this.roomId);
+        roomRecord.setId(this.getUuid());
+        roomRecord.setType(this.roomType);
+        roomRecord.setTime(System.currentTimeMillis());
+        roomRecord.setClubId(clubId);
+        roomRecord.setClubRoomModel(clubRoomModel);
+        roomRecord.setGameType(gameType);
+        roomRecord.setModelTotal(modeTotal);
+        roomRecord.setMode(mode);
+        roomRecord.setCurGameNum(curGameNumber);
+
+        this.userScores.forEach((key, value) -> {
+            UserRecord userRecord = new UserRecord();
+            userRecord.setScore(value);
+            userRecord.setUserId(key);
+            UserBean userBean = RedisManager.getUserRedisService().getUserBean(key);
+            if (userBean != null) {
+                userRecord.setName(userBean.getUsername());
+            }
+            roomRecord.getRecords().add(userRecord);
+        });
+
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ROOM_RECORD);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord);
+
+
+        double maxScore = this.userScores.values().stream().max(Double::compare).get();
+        List<Long> maxList = new ArrayList<>();
+        this.userScores.forEach((uid,score)->{
+            if (score == maxScore) {
+                maxList.add(uid);
+            }
+        });
+
+        int giveNum = getWinGiveMoney(maxList.size());
+
+        maxList.forEach(uid->{
+            RedisManager.getUserRedisService().addUserMoney(uid, giveNum);
+            //胜场数+1
+
+            Map<String, Object> n = new HashMap<>();
+            n.put("userId", uid);
+            n.put("num", 1);
+            KafkaMsgKey kafkaMsgKey1 = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ADD_WIN_NUM);
+
+            msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey1, n);
+
+        });
+
+    }
+
+    private int getWinGiveMoney(int num) {
+        if (num == 1) {
+            return 6;
+        } else if (num == 2) {
+            return 3;
+        } else if (num == 3) {
+            return 3;
+        }else{
+            return 1;
+        }
+    }
+
+    public static void main(String[] args) {
+        Map<Integer, Double> map = new HashMap<>();
+        map.put(1, 1D);
+        map.put(1, 1D);
+        map.put(1, 1D);
+        double maxScore = map.values().stream().max(Double::compare).get();
+        System.out.println(maxScore);
+    }
 
     @Override
     public int quitRoom(long userId) {

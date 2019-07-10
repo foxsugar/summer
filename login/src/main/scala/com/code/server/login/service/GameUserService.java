@@ -1,6 +1,8 @@
 package com.code.server.login.service;
 
 
+import com.code.server.constant.db.PlayerRank;
+import com.code.server.constant.db.PlayerScore;
 import com.code.server.constant.game.*;
 import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.KafkaMsgKey;
@@ -974,8 +976,8 @@ public class GameUserService {
     }
 
 
-    public int getRebateDetails(KafkaMsgKey msgKey) {
-        sendMsg(msgKey, new ResponseVo("userService", "getRebateDetails", rebateDetailService.rebateDetailDao.findAllByAgentId(msgKey.getUserId())));
+    public int getRebateDetails(KafkaMsgKey msgKey,long userId) {
+        sendMsg(msgKey, new ResponseVo("userService", "getRebateDetails", rebateDetailService.rebateDetailDao.findAllByAgentId(userId)));
         return 0;
     }
     /**
@@ -1052,6 +1054,7 @@ public class GameUserService {
                 item.put("money", userBeanItem.getMoney());
                 item.put("gold", userBeanItem.getGold());
                 item.put("image", userBeanItem.getImage());
+                item.put("vip", userBeanItem.getVip());
                 list.add(item);
             }
         }
@@ -1106,6 +1109,35 @@ public class GameUserService {
             RedisManager.getUserRedisService().updateUserBean( msgKey.getUserId(), userBean);
         }
         MsgSender.sendMsg2Player(new ResponseVo("userService", "readMail", 0), msgKey.getUserId());
+        return 0;
+    }
+
+    public int getRank(KafkaMsgKey msgKey, int month){
+        long userId = msgKey.getUserId();
+        LocalDate localDate = LocalDate.now().minusMonths(month);
+        CenterService centerService = SpringUtil.getBean(CenterService.class);
+        PlayerRank playerRank = centerService.getRank().get(localDate.toString());
+        List<PlayerScore> list = new ArrayList<>();
+        list.addAll(playerRank.getPlayers().values());
+        list.sort((o1, o2) -> {
+            if (o1.getWinNum() > o2.getWinNum()) {
+                return -1;
+            } else if (o1.getWinNum() == o2.getWinNum()) {
+                return 0;
+            }else{
+                return 1;
+            }
+        });
+        int index = -1;
+        PlayerScore playerScore = playerRank.getPlayers().get(userId);
+        if (playerScore != null) {
+            index = list.indexOf(playerScore);
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("all", list);
+        map.put("index", index);
+        MsgSender.sendMsg2Player(new ResponseVo("userService", "getRank", map), msgKey.getUserId());
+
         return 0;
     }
 

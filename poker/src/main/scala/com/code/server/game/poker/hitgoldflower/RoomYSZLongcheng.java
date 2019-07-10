@@ -82,6 +82,21 @@ public class RoomYSZLongcheng extends RoomYSZ {
         return rtn;
     }
 
+    public void spendMoney() {
+
+    }
+
+    public int getNeedMoney() throws DataNotFoundException {
+
+     return 0;
+    }
+
+    protected void goldRoomStart() {
+        for (long userId : users) { //扣除费用
+            long parentId = playerParentMap.get(userId);
+            RedisManager.getUserRedisService().addUserMoney(parentId, -1);
+        }
+    }
 
     @Override
     public void addUserSocre(long userId, double score) {

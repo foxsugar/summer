@@ -8,6 +8,7 @@ import com.code.server.db.model.RebateDetail;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.Date;
 import java.util.List;
 
 public interface IRebateDetailDao extends PagingAndSortingRepository<RebateDetail, Long> {
@@ -20,4 +21,7 @@ public interface IRebateDetailDao extends PagingAndSortingRepository<RebateDetai
 
     @Query(value = "select sum(num) from rebate_detail where agent_id=?1 and DATE_FORMAT(date,'%Y-%m-%d')=?2", nativeQuery = true)
     Double getRebateByDate(long userId, String date);
+
+
+    void deleteAllByDateBefore(Date date);
 }

@@ -6,6 +6,7 @@ import com.code.server.db.Service.RebateDetailService;
 import com.code.server.db.model.RebateDetail;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.DateUtil;
 import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,6 +104,9 @@ public class ScheduledService {
                 }
             }
 //            rebateDetailService.rebateDetailDao.findAllByAgentId()
+
+            LocalDate localDate = LocalDate.now().minusDays(8);
+            rebateDetailService.rebateDetailDao.deleteAllByDateBefore(DateUtil.convertDay2Date(localDate.toString()));
         }
 
     }

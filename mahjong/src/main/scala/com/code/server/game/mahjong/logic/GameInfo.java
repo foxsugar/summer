@@ -447,6 +447,7 @@ public class GameInfo extends Game {
         PlayCardResp playCardResp = new PlayCardResp();
         playCardResp.setUserId(userId);
         playCardResp.setCard(this.disCard);
+        playCardResp.setAuto(this.autoPlay);
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_PLAY_CARD, playCardResp);
         MsgSender.sendMsg2Player(vo, users);
 

@@ -10,6 +10,17 @@ public class PlayerScore {
     private String name;
     private String image;
 
+
+    public PlayerScore() {
+
+    }
+
+    public PlayerScore(long userId, String name, String image) {
+        this.userId = userId;
+        this.name = name;
+        this.image = image;
+    }
+
     public long getUserId() {
         return userId;
     }

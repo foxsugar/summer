@@ -813,48 +813,11 @@ public class GameBaseYSZ extends Game {
         }else{
             noticeAction(finalWinner);
         }
-//
-//        if (aliveUser.size() > 2) {
-//            logger.info("");
-//            if (winnerId == askerId) {
-//                aliveUser.remove(winnerId == askerId ? accepterId : askerId);
-//            }
-//
-//            if (aliveUser.size() > 1) {
-//                noticeAction(curUserId);
-//            } else {
-//                logger.info("");
-//                //处理结果
-//                List<Long> list = new ArrayList<>();
-//                list.add(winnerId);
-//                compute(list);
-//                sendResult();
-//                genRecord();
-//
-//                room.setBankerId(winnerId);
-//                room.clearReadyStatus(true);
-//                sendFinalResult();
-//            }
-//
-//            if (winnerId != askerId) {
-//                aliveUser.remove(winnerId == askerId ? accepterId : askerId);
-//            }
-//        } else {
-//            aliveUser.remove(winnerId == askerId ? accepterId : askerId);
-//            List<Long> list = new ArrayList<>();
-//            list.add(winnerId);
-//            compute(list);
-//            sendResult();
-//            genRecord();
-//            logger.info("");
-//            room.setBankerId(winnerId);
-//            room.clearReadyStatus(true);
-//            sendFinalResult();
-//        }
 
 
         this.pushGoldScore();
         updateLastOperateTime();
+        this.lastOperateTime += 5000;
 
         return 0;
     }
