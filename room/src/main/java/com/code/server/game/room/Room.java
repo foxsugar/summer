@@ -87,6 +87,8 @@ public class Room implements IfaceRoom {
     protected Map<Long, Integer> autoPlayStatus = new HashMap<>();
 
 
+
+
     public static String getRoomIdStr(int roomId) {
         String s = "000000" + roomId;
         int len = s.length();

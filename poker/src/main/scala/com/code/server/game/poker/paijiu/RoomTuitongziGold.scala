@@ -17,7 +17,7 @@ import scala.collection.JavaConverters._
 /**
   * Created by sunxianping on 2019-06-17.
   */
-class RoomTuitongziGold extends RoomPaijiu{
+class RoomTuitongziGold extends RoomPaijiu {
 
   var playerParentMap = new util.HashMap[Long, Long]
 
@@ -69,21 +69,20 @@ class RoomTuitongziGold extends RoomPaijiu{
   }
 
 
-
   override def addUserSocre(userId: Long, score: Double): Unit = {
     //百人牌九 加分时抽水
 
-//      if(score>0) {
-//        val game = this.game.asInstanceOf[GameTuitongziGold]
-//
-//        val s = score * (100 - TUITONGZI_REBATE_SCALE) / 100
-//        //返利
-//        RedisManager.getUserRedisService.addUserGold(userId, s)
-//
-//        //发送返利
-////        sendCenterAddRebateLongcheng(userId, score * 1.5 /100)
-//      }else{
-//      }
+    //      if(score>0) {
+    //        val game = this.game.asInstanceOf[GameTuitongziGold]
+    //
+    //        val s = score * (100 - TUITONGZI_REBATE_SCALE) / 100
+    //        //返利
+    //        RedisManager.getUserRedisService.addUserGold(userId, s)
+    //
+    //        //发送返利
+    ////        sendCenterAddRebateLongcheng(userId, score * 1.5 /100)
+    //      }else{
+    //      }
     RedisManager.getUserRedisService.addUserGold(userId, score)
 
   }
@@ -96,23 +95,22 @@ class RoomTuitongziGold extends RoomPaijiu{
       RedisManager.getUserRedisService.addUserMoney(parentId, -1)
     }
   }
+
   /**
     * 获取剩余时间
+    *
     * @return
     */
-  override def getRemainTime(): Long ={
+  override def getRemainTime(): Long = {
     val now = System.currentTimeMillis()
-    if(this.game == null) {
+    if (this.game == null) {
       this.lastOperateTime + TUITONGZI_STATE_TIME(STATE_START) - now
-    }else{
+    } else {
       val gamePaijiu = this.game.asInstanceOf[GamePaijiu]
       this.game.lastOperateTime + TUITONGZI_STATE_TIME(gamePaijiu.state) - now
     }
 
   }
-
-
-
 
 
   /**
@@ -121,7 +119,7 @@ class RoomTuitongziGold extends RoomPaijiu{
     * @return
     */
   override def getNeedMoney(): Int = {
-   return 0
+    return 0
 
   }
 
@@ -157,38 +155,49 @@ class RoomTuitongziGold extends RoomPaijiu{
 
   override def startGame(): Unit = {
     //do nothing
-//    if (this.curGameNumber > 1) {
-      MsgSender.sendMsg2Player(new ResponseVo("gameService", "gamePaijiuBegin", "ok"), this.getUsers)
-      //开始游戏
-      val game = getGameInstance
-      this.game = game
-      game.startGame(users, this)
+    //    if (this.curGameNumber > 1) {
+    MsgSender.sendMsg2Player(new ResponseVo("gameService", "gamePaijiuBegin", "ok"), this.getUsers)
+    //开始游戏
+    val game = getGameInstance
+    this.game = game
+    game.startGame(users, this)
 
-      //游戏开始 代建房 去除定时解散
-      if (!isOpen && !this.isCreaterJoin) GameTimer.removeNode(prepareRoomTimerNode)
+    //游戏开始 代建房 去除定时解散
+    if (!isOpen && !this.isCreaterJoin) GameTimer.removeNode(prepareRoomTimerNode)
 
-      //扣钱
-      if (!isOpen && isCreaterJoin) spendMoney()
-      this.isInGame = true
-      this.isOpen = true
-      pushScoreChange()
-//    }
+    //扣钱
+    if (!isOpen && isCreaterJoin) spendMoney()
+    this.isInGame = true
+    this.isOpen = true
+    pushScoreChange()
+    //    }
   }
 
   /**
     * 加入房间
+    *
     * @param userId
     * @param isJoin
-    *     */
+    **/
   override def joinRoom(userId: Long, isJoin: Boolean): Int = {
     val rtn = super.joinRoom(userId, isJoin)
     if (rtn != 0) return rtn
+
+
+    val userBean = RedisManager.getUserRedisService.getUserBean(userId)
+    playerParentMap.put(userId, userBean.getReferee)
+
+
     //    getReady(userId)
-    if (this.game != null) if (!this.game.getUsers.contains(userId)) {
-      this.game.users.add(userId)
-      val playerPaijiu = new PlayerCardInfoPaijiu
-      playerPaijiu.userId = userId
-      this.game.asInstanceOf[GamePaijiu].addUser(userId, playerPaijiu)
+    if (this.game != null) {
+
+      if (!this.game.getUsers.contains(userId)) {
+        this.game.users.add(userId)
+        val playerPaijiu = new PlayerCardInfoPaijiu
+        playerPaijiu.userId = userId
+        this.game.asInstanceOf[GamePaijiu].addUser(userId, playerPaijiu)
+
+      }
     }
     0
   }
@@ -203,7 +212,7 @@ class RoomTuitongziGold extends RoomPaijiu{
         if (this.bankerId == userId)
           return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME
       }
-      if(player.bet != null && game.state != STATE_BANKER_BREAK){
+      if (player.bet != null && game.state != STATE_BANKER_BREAK) {
         return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME
       }
     }
@@ -238,7 +247,7 @@ class RoomTuitongziGold extends RoomPaijiu{
     }
     //上庄先扣钱
     RedisManager.getUserRedisService.addUserGold(userId, -score)
-    this.bankerList = this.bankerList:+ userId
+    this.bankerList = this.bankerList :+ userId
     this.bankerScoreMap = this.bankerScoreMap.+(userId -> score)
 
     //更新庄家
@@ -250,8 +259,6 @@ class RoomTuitongziGold extends RoomPaijiu{
   }
 
 }
-
-
 
 
 object RoomTuitongziGold extends Room {
@@ -292,16 +299,15 @@ object RoomTuitongziGold extends Room {
   }
 
 
-
   def createRoom_(userId: Long, roomType: String, gameType: String, gameNumber: Int, clubId: String, clubRoomModel: String, clubMode: Int, isAA: Boolean,
-                 robotType: Int, robotNum: Int, robotWinner: Int, isReOpen: Boolean, otherMode: Int, personNum: Int,bankerInitScore:Int): RoomTuitongziGold = {
+                  robotType: Int, robotNum: Int, robotWinner: Int, isReOpen: Boolean, otherMode: Int, personNum: Int, bankerInitScore: Int): RoomTuitongziGold = {
     val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
     val roomPaijiu = new RoomTuitongziGold
     roomPaijiu.setRoomId(Room.getRoomIdStr(Room.genRoomId(serverConfig.getServerId)))
     roomPaijiu.setRoomType(roomType)
     roomPaijiu.setGameType(gameType)
     roomPaijiu.setGameNumber(gameNumber)
-//    roomPaijiu.setBankerId(userId)
+    //    roomPaijiu.setBankerId(userId)
     roomPaijiu.setCreateUser(userId)
     roomPaijiu.setPersonNumber(personNum)
     roomPaijiu.setClubId(clubId)
@@ -319,14 +325,14 @@ object RoomTuitongziGold extends Room {
 
     roomPaijiu.bankerScore = bankerInitScore
     roomPaijiu.bankerInitScore = bankerInitScore
-    roomPaijiu.lastBankerInitScore  = bankerInitScore
+    roomPaijiu.lastBankerInitScore = bankerInitScore
 
 
     roomPaijiu.init(gameNumber, 1)
-//    val code = roomPaijiu.joinRoom(userId, true)
-//    if (code != 0) return code
+    //    val code = roomPaijiu.joinRoom(userId, true)
+    //    if (code != 0) return code
 
-//    RoomManager.addRoom(roomPaijiu.getRoomId, "" + serverConfig.getServerId, roomPaijiu)
+    //    RoomManager.addRoom(roomPaijiu.getRoomId, "" + serverConfig.getServerId, roomPaijiu)
     val idword = new IdWorker(serverConfig.getServerId, 0)
     roomPaijiu.setUuid(idword.nextId())
 

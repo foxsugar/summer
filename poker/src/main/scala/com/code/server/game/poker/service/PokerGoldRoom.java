@@ -5,6 +5,7 @@ import com.code.server.constant.kafka.IKafaTopic;
 import com.code.server.constant.kafka.IkafkaMsgId;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.game.poker.config.ServerConfig;
+import com.code.server.game.poker.doudizhu.RoomDouDiZhu;
 import com.code.server.game.poker.doudizhu.RoomDouDiZhuGold;
 import com.code.server.game.poker.doudizhu.RoomDouDiZhuPlus;
 import com.code.server.game.poker.hitgoldflower.RoomYSZLongcheng;
@@ -130,8 +131,16 @@ public class PokerGoldRoom extends RoomExtendGold {
                 roomtuitongzi = RoomTuitongziGold.createRoom_(userId,"3","456",4,"","",0,
                         false,2,30,0,false,0,200,goldRoomType);
                 return roomtuitongzi;
+
+            case "403":
+
+                Room roomDoudizhuZLB = RoomDouDiZhu.createRoom_(userId,4,-1,"403","2",
+                        true,false,true,3,3,0,"","",0,0);
+                return roomDoudizhuZLB;
         }
 
+//        ConsumerRecord(topic = pokerRoomService, partition = 1, offset = 6930, CreateTime = 1562809072703, checksum = 2539413064, serialized key size = 36, serialized value size = 190, key = {"msgId":0,"userId":3,"partition":0}, value = {"service":"pokerRoomService","method":"createRoom",
+//                "params":{"gameType":"403","gameNumber":"8","maxMultiple":"-1","roomType":"2","otherMode":"1","isAA":false,"showChat":true,"isJoin":true}})
 
         return room;
     }

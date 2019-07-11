@@ -284,7 +284,9 @@ public class CenterService {
      */
     public static void addWinNum(long userId,UserBean userBean,  int num) {
         CenterService centerService = SpringUtil.getBean(CenterService.class);
-        String date = LocalDate.now().toString();
+        Date d = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM");
+        String date = simpleDateFormat.format(d);
         PlayerRank playerRank = centerService.rank.getOrDefault(date, new PlayerRank());
         PlayerScore playerScore = playerRank.getPlayers().get(userId);
         if (playerScore == null) {

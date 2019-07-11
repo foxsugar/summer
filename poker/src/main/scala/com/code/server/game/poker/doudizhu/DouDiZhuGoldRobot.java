@@ -4,6 +4,7 @@ package com.code.server.game.poker.doudizhu;
 import com.code.server.constant.game.CardStruct;
 import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.kafka.KafkaMsgKey;
+import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.robot.ResponseRobotVo;
 import com.code.server.game.room.Room;
@@ -27,27 +28,63 @@ public class DouDiZhuGoldRobot implements IDouDiZhuRobot,IGameConstant {
     }
 
     public void doExecute(Room room) {
-        if (room == null || room.getGame() == null) {
-            return;
-        }
-        if (room.getGame() instanceof GameDouDiZhuGold) {
-            GameDouDiZhu game = (GameDouDiZhu) room.getGame();
-            long now = System.currentTimeMillis();
-            //执行
-            if(now > game.lastOperateTime + SECOND * 20){
-                switch (game.step) {
-                    case STEP_JIAO_DIZHU:
-                        jiaoDizhu(game);
-                        break;
-                    case STEP_QIANG_DIZHU:
-                        qiangDizhu(game);
-                        break;
-                    case STEP_PLAY:
-                        play(game);
-                        break;
+        if(room == null) return;
+        long now = System.currentTimeMillis();
+        if ( room.getGame() != null) {
+            if (room.getGame() instanceof GameDouDiZhu) {
+                GameDouDiZhu game = (GameDouDiZhu) room.getGame();
+                //执行
+                if(now > game.lastOperateTime + SECOND * 10){
+                    switch (game.step) {
+                        case STEP_JIAO_DIZHU:
+                            jiaoDizhu(game);
+                            break;
+                        case STEP_QIANG_DIZHU:
+                            qiangDizhu(game);
+                            break;
+                        case STEP_PLAY:
+                            play(game);
+                            break;
+                    }
                 }
             }
+
+        }else{
+            if(room.getCurGameNumber()>1 && now - room.getLastOperateTime() > 10000){
+                Map<Long, Integer> map = new HashMap<>();
+                map.putAll(room.getUserStatus());
+                map.forEach((uid,status) ->{
+
+                    if ((status != Room.STATUS_READY)) {
+//                        boolean isOnline = RedisManager.getUserRedisService().getGateId(uid) != null;
+//                        if (isOnline) {
+                        getReady(room, uid);
+//                        }else{
+//                            quitRoom(room,uid);
+//                        }
+//                        quitRoom(room,uid);
+//                        MsgSender.sendMsg2Player("roomService", "quitRoomKick", "quit", uid);
+                    }
+
+                });
+            }
         }
+    }
+
+    public static void getReady(Room room, long userId) {
+        String roomId = room.getRoomId();
+        int partition = SpringUtil.getBean(ServerConfig.class).getServerId();
+        KafkaMsgKey msgKey = new KafkaMsgKey();
+
+        msgKey.setRoomId(roomId);
+        msgKey.setPartition(partition);
+        msgKey.setUserId(userId);
+
+        Map<String, Object> put = new HashMap();
+
+        ResponseVo result = new ResponseVo("roomService", "getReady", put);
+        SpringUtil.getBean(MsgProducer.class).send2Partition("roomService", partition, msgKey, result);
+
     }
 
     @Override

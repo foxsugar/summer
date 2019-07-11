@@ -100,6 +100,8 @@ public class RoomYSZLongcheng extends RoomYSZ {
 
     @Override
     public void addUserSocre(long userId, double score) {
+        double s = userScores.get(userId);
+        userScores.put(userId, s + score);
         RedisManager.getUserRedisService().addUserGold(userId, score);
     }
 

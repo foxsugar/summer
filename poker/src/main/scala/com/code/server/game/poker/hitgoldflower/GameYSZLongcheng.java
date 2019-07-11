@@ -52,7 +52,11 @@ public class GameYSZLongcheng extends GameYSZ {
 
         this.playerCardInfos.values().forEach(playerInfo->{
             UserRecord userRecord = new UserRecord();
-            userRecord.setScore(playerInfo.getScore());
+            if (playerInfo.getFinalScore() > 0) {
+                userRecord.setScore(playerInfo.getFinalScore() - playerInfo.getAllScore());
+            }else{
+                userRecord.setScore(playerInfo.getFinalScore());
+            }
             userRecord.setUserId(playerInfo.userId);
             roomRecord.addRecord(userRecord);
 

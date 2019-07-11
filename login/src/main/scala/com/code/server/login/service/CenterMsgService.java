@@ -85,6 +85,10 @@ public class CenterMsgService implements IkafkaMsgId {
                 addRebateLongcheng(msg);
                 break;
 
+            case KAFKA_MSG_ID_ADD_WIN_NUM:
+                addWinNum(msg);
+                break;
+
 
         }
     }
@@ -118,11 +122,11 @@ public class CenterMsgService implements IkafkaMsgId {
         if (club != null) {
 
             map.put("credit", club.getClubInfo().getCreditInfo());
-            ClubMember clubMember = club.getClubInfo().getMember().get(""+userId);
+            ClubMember clubMember = club.getClubInfo().getMember().get("" + userId);
             if (clubMember != null) {
                 map.put("score", clubMember.getAllStatistics().getAllScore());
                 map.put("playMinScore", clubMember.getAllStatistics().getPlayMinScore());
-            }else{
+            } else {
                 map.put("score", 0);
                 map.put("playMinScore", 0);
             }
@@ -135,6 +139,7 @@ public class CenterMsgService implements IkafkaMsgId {
 
     /**
      * 增加rebate
+     *
      * @param msg
      */
     private static void addRebate(String msg) {
@@ -154,37 +159,37 @@ public class CenterMsgService implements IkafkaMsgId {
             UserBean parentUser = LoginAction.loadUserBean(parentId);
             if (parentUser != null) {
                 //返利记录
-
                 RebateDetail rebateDetail = new RebateDetail();
                 rebateDetail.setUserId(userId);
                 rebateDetail.setAgentId(parentId);
                 rebateDetail.setNum(money);
                 rebateDetail.setDate(new Date());
-
                 rebateDetail.setBeforeNum(parentUser.getUserInfo().getAllRebate());
                 parentUser.getUserInfo().setAllRebate(parentUser.getUserInfo().getAllRebate() + money);
                 rebateDetail.setAfterNum(parentUser.getUserInfo().getAllRebate());
                 RedisManager.getUserRedisService().addSaveUser(parentId);
-
-
-
                 RedisManager.getUserRedisService().updateUserBean(parentId, parentUser);
-
                 rebateDetailService.rebateDetailDao.save(rebateDetail);
             }
         }
+    }
 
+    private static void addWinNum(String msg){
+        long userId = JsonUtil.readTree(msg).path("userId").asLong();
+        int num = JsonUtil.readTree(msg).path("num").asInt();
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        CenterService.addWinNum(userId, userBean, num);
     }
 
 
-    public static void addRebate(long userId, double money){
+    public static void addRebate(long userId, double money) {
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         long parentId = userBean.getReferee();
         if (parentId != 0) {
             UserBean parentUser = LoginAction.loadUserBean(parentId);
             if (parentUser != null) {
                 //返利记录
-                Map<Long,ScoreItem> rebateMap = parentUser.getUserInfo().getRebate();
+                Map<Long, ScoreItem> rebateMap = parentUser.getUserInfo().getRebate();
                 if (rebateMap == null) {
                     rebateMap = new HashMap<>();
                     parentUser.getUserInfo().setRebate(rebateMap);
@@ -269,6 +274,7 @@ public class CenterMsgService implements IkafkaMsgId {
 
     /**
      * 增加游戏数记录
+     *
      * @param date
      * @param userId
      */
@@ -285,11 +291,12 @@ public class CenterMsgService implements IkafkaMsgId {
             RedisManager.getUserRedisService().updateUserBean(userId, userBean);
         }
     }
+
     private static void genRoomRecord(String msg) {
         RoomRecord roomRecord = JsonUtil.readValue(msg, RoomRecord.class);
 
-        boolean isAddGameNum = roomRecord.getCurGameNum()>1;
-        try{
+        boolean isAddGameNum = roomRecord.getCurGameNum() > 1;
+        try {
 
             if (roomRecord.isOpen()) {
 
@@ -313,7 +320,7 @@ public class CenterMsgService implements IkafkaMsgId {
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -387,9 +394,6 @@ public class CenterMsgService implements IkafkaMsgId {
     }
 
 
-
-
-
     private static void sendLq_http(RoomRecord roomRecord, Club club) {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         if (serverConfig.getSend_lq_http() == 1) {
@@ -434,9 +438,9 @@ public class CenterMsgService implements IkafkaMsgId {
                 e.printStackTrace();
             }
 
-            try{
+            try {
                 lq_upScoreRecord(roomRecord.getRoomId());
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -445,9 +449,10 @@ public class CenterMsgService implements IkafkaMsgId {
 
     /**
      * 龙七记录上分
+     *
      * @param roomId
      */
-    private static void lq_upScoreRecord(String roomId){
+    private static void lq_upScoreRecord(String roomId) {
         UpScoreRecordService upScoreRecordService = SpringUtil.getBean(UpScoreRecordService.class);
         UpScoreRecord upScoreRecord = new UpScoreRecord();
         upScoreRecord.setDate(new Date());

@@ -7,6 +7,7 @@ import com.code.server.constant.response.IfaceRoomVo;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.RoomDoudizhuVo;
 import com.code.server.game.poker.config.ServerConfig;
+import com.code.server.game.room.IfaceRoom;
 import com.code.server.game.room.Room;
 import com.code.server.game.room.RoomExtendGold;
 import com.code.server.game.room.kafka.MsgSender;
@@ -54,7 +55,7 @@ public class RoomDouDiZhu extends RoomExtendGold {
 
     public static Room createRoom_(long userId, int gameNumber, int multiple, String gameType, String roomType,
                                    boolean isAA, boolean isJoin, boolean showChat, int personNum, int jiaoScoreMax,int shuanglong,
-                                   String clubId, String clubRoomModel,int clubMode,int otherMode) throws DataNotFoundException {
+                                   String clubId, String clubRoomModel,int clubMode,int otherMode) {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         RoomDouDiZhu room = new RoomDoudizhuZLB();
 
@@ -70,12 +71,19 @@ public class RoomDouDiZhu extends RoomExtendGold {
         room.jiaoScoreMax = jiaoScoreMax;
         room.shuanglong = shuanglong;
         room.otherMode = otherMode;
+        room.setGoldRoomPermission(IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT);
+        room.isRobotRoom = true;
+
         room.setClubMode(clubMode);
 
 
         room.setClubId(clubId);
         room.setClubRoomModel(clubRoomModel);
-        room.init(gameNumber, multiple);
+        try {
+            room.init(gameNumber, multiple);
+        } catch (DataNotFoundException e) {
+            e.printStackTrace();
+        }
         return room;
     }
 

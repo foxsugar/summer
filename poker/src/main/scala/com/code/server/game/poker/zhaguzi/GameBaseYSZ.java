@@ -731,6 +731,14 @@ public class GameBaseYSZ extends Game {
         List<Map> respResult = new ArrayList<>();
         double gold = RedisManager.getUserRedisService().getUserGold(askerId);
         long finalWinner = 0;
+
+
+
+        playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore() + gold);
+        this.room.addUserSocre(askerId, -gold);
+
+
+
         for (long accepterId : getUserList(askerId)) {
 
             if (room.getGoldRoomPermission() != IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
@@ -768,16 +776,8 @@ public class GameBaseYSZ extends Game {
             result.put("loserId",loserId);
             result.put("winnerCards", this.playerCardInfos.get(winnerId).handcards);
             result.put("loserCards", this.playerCardInfos.get(loserId).handcards);
-            if (seeUser.contains(askerId)) {
-                playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore() + gold);
-                this.room.addUserSocre(askerId, -gold);
-                result.put("addChip", gold);
-                logger.info("");
-            } else {
-                playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore() + gold);
-                this.room.addUserSocre(askerId, -gold);
-                result.put("addChip", gold);
-            }
+            result.put("addChip", gold);
+
 
             respResult.add(result);
 
