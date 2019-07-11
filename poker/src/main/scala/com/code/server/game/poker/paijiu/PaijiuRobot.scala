@@ -303,7 +303,9 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
         val playerInfo = gamePaijiu.playerCardInfos(userId)
         //没下注
         if (playerInfo != null && playerInfo.bet == null && gamePaijiu.bankerId != playerInfo.userId) {
-          if(Random.nextBoolean()){
+          var bool = Random.nextBoolean()
+          bool = true
+          if(bool){
             val r = List(1, 2, 3)
             val bw = Random.shuffle(r).head
             val betNum = 200
