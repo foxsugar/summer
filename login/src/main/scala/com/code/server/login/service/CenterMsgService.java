@@ -170,6 +170,8 @@ public class CenterMsgService implements IkafkaMsgId {
                 RedisManager.getUserRedisService().addSaveUser(parentId);
                 RedisManager.getUserRedisService().updateUserBean(parentId, parentUser);
                 rebateDetailService.rebateDetailDao.save(rebateDetail);
+
+
             }
         }
     }

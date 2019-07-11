@@ -13,6 +13,7 @@ import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
+import com.code.server.login.service.CenterMsgService;
 import com.code.server.login.service.ClubManager;
 import com.code.server.login.service.GameUserService;
 import com.code.server.login.service.ServerManager;
@@ -281,6 +282,16 @@ public class ManagerAction extends Cors {
         recommend.setUnionId(ip);
         recommend.setAgentId(userId);
         recommendService.getRecommendDao().save(recommend);
+        return 0;
+    }
+
+    @RequestMapping("/repairRobotRebate")
+    public Object repairRobotRebate(long userId){
+        for (User user : userService.getUserDao().findAll()) {
+            if (user.getReferee() == userId) {
+                CenterMsgService.addRebate(user.getId(), 0D);
+            }
+        }
         return 0;
     }
     public static void main(String[] args) {
