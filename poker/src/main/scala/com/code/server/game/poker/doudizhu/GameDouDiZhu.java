@@ -688,6 +688,8 @@ public class GameDouDiZhu extends Game {
         vo.playTurn = this.getPlayTurn();
         vo.curMultiple = this.getMultiple();
         vo.tableScore = this.getTableScore();
+        vo.getAutoStatus().putAll(this.autoStatus);
+        vo.getAutoTimes().putAll(this.autoTimes);
         if (userId == this.getDizhu() || !(this instanceof GameDouDiZhuLinFen)) {//玩家是地主 并且是临汾斗地主
             vo.tableCards.addAll(this.getTableCards());
         }

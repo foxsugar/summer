@@ -17,6 +17,8 @@ public class ServerConfig {
     private String domain;
     private int dissloutionRoomMustAllAgree = 0;
     private int addClubMoney = 0;
+    private int autoInterval = 0;//托管后执行时间
+    private int commonInterval = 10000;//普通托管执行时间
 
     public String getServerType() {
         return serverType;
@@ -98,6 +100,24 @@ public class ServerConfig {
 
     public ServerConfig setAddClubMoney(int addClubMoney) {
         this.addClubMoney = addClubMoney;
+        return this;
+    }
+
+    public int getAutoInterval() {
+        return autoInterval;
+    }
+
+    public ServerConfig setAutoInterval(int autoInterval) {
+        this.autoInterval = autoInterval;
+        return this;
+    }
+
+    public int getCommonInterval() {
+        return commonInterval;
+    }
+
+    public ServerConfig setCommonInterval(int commonInterval) {
+        this.commonInterval = commonInterval;
         return this;
     }
 }

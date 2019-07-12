@@ -13,10 +13,7 @@ import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
-import com.code.server.login.service.CenterMsgService;
-import com.code.server.login.service.ClubManager;
-import com.code.server.login.service.GameUserService;
-import com.code.server.login.service.ServerManager;
+import com.code.server.login.service.*;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -236,6 +233,7 @@ public class ManagerAction extends Cors {
             user.setReferee((int)referrer);
             userService.save(user);
         }
+        CenterMsgService.addRebate(userId, 0);
         return 0;
     }
     @RequestMapping("/setVip")

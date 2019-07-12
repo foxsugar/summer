@@ -20,11 +20,45 @@ import java.util.Map;
  */
 public class DouDiZhuGoldRobot implements IDouDiZhuRobot,IGameConstant {
 
+    private static boolean USE_AUTO_TIME = false;
     @Override
     public void execute() {
 //        RoomManager.getInstance().getFullGoldRoom().values().forEach(list->list.forEach());
        RoomManager.getInstance().getRobotRoom().forEach(this::doExecute);
         //RoomManager.getRobotRoom().forEach(this::doExecute);
+    }
+
+    static{
+        USE_AUTO_TIME = SpringUtil.getBean(ServerConfig.class).getAutoInterval()!=0;
+    }
+
+    /**
+     * 获得当前trun的人
+     * @return
+     */
+    public static long getCurUser(GameDouDiZhu game){
+        switch (game.step){
+            case STEP_JIAO_DIZHU:
+                return game.canJiaoUser;
+            case STEP_QIANG_DIZHU:
+                return game.canQiangUser;
+            case STEP_PLAY:
+                return game.playTurn;
+        }
+        return 0;
+    }
+
+
+    public static boolean isFire(GameDouDiZhu gameInfo){
+        if(!USE_AUTO_TIME) return false;
+        long userId = getCurUser(gameInfo);
+        if(gameInfo.autoTimes.getOrDefault(userId, 0)>=3) return true;
+        return false;
+    }
+
+    public static void addAutoTimes(GameDouDiZhu gameInfo, long userId) {
+        gameInfo.autoTimes.put(userId, gameInfo.autoTimes.getOrDefault(userId, 0) + 1);
+        gameInfo.autoStatus.put(userId, 1);
     }
 
     public void doExecute(Room room) {
@@ -34,7 +68,8 @@ public class DouDiZhuGoldRobot implements IDouDiZhuRobot,IGameConstant {
             if (room.getGame() instanceof GameDouDiZhu) {
                 GameDouDiZhu game = (GameDouDiZhu) room.getGame();
                 //执行
-                if(now > game.lastOperateTime + SECOND * 10){
+                if(now > game.lastOperateTime + SECOND * 10 || isFire(game)){
+                    long curUserId = getCurUser(game);
                     switch (game.step) {
                         case STEP_JIAO_DIZHU:
                             jiaoDizhu(game);
@@ -46,6 +81,7 @@ public class DouDiZhuGoldRobot implements IDouDiZhuRobot,IGameConstant {
                             play(game);
                             break;
                     }
+                    addAutoTimes(game,curUserId);
                 }
             }
 

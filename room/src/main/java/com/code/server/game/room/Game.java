@@ -26,6 +26,8 @@ public class Game implements IfaceGame{
     public int number;
     public long lastOperateTime;
 
+    public Map<Long, Integer> autoStatus = new HashMap<>();
+    public Map<Long, Integer> autoTimes = new HashMap<>();
     public void startGame(List<Long> users,Room room){
 
     }
@@ -39,7 +41,23 @@ public class Game implements IfaceGame{
     }
 
 
+    public Map<Long, Integer> getAutoStatus() {
+        return autoStatus;
+    }
 
+    public Game setAutoStatus(Map<Long, Integer> autoStatus) {
+        this.autoStatus = autoStatus;
+        return this;
+    }
+
+    public Map<Long, Integer> getAutoTimes() {
+        return autoTimes;
+    }
+
+    public Game setAutoTimes(Map<Long, Integer> autoTimes) {
+        this.autoTimes = autoTimes;
+        return this;
+    }
 
     /**
      * 下个人

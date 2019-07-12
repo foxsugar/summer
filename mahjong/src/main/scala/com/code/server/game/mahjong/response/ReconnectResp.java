@@ -6,7 +6,9 @@ import com.code.server.game.mahjong.logic.GameInfo;
 import com.code.server.game.mahjong.logic.PlayerCardsInfoMj;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by win7 on 2016/12/5.
@@ -24,6 +26,8 @@ public class ReconnectResp {
     private long fanshiLastCatchUser = 0;
     private int state;
 
+    public Map<Long, Integer> autoStatus = new HashMap<>();
+    public Map<Long, Integer> autoTimes = new HashMap<>();
 
 
 
@@ -40,6 +44,8 @@ public class ReconnectResp {
         fanshiLastCatchUser = gameInfo.getLastCatchCardUser();
         state = gameInfo.getState();
 
+        autoStatus.putAll(gameInfo.getAutoStatus());
+        autoTimes.putAll(gameInfo.getAutoTimes());
         for (PlayerCardsInfoMj playerCardsInfo : gameInfo.getPlayerCardsInfos().values()) {
             long uid = playerCardsInfo.getUserId();
             boolean isMine = userId == uid;

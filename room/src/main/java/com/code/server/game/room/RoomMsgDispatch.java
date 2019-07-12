@@ -184,6 +184,12 @@ public class RoomMsgDispatch {
                 return r.setAutoStatus(userId,status);
             }
 
+            case "cancelAuto":{
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                Room r = (Room) room;
+
+            }
+
 
 
 

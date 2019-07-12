@@ -521,6 +521,16 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
+
+    public int cancelAuto(long userId) {
+        if (this.game != null) {
+            this.game.getAutoStatus().put(userId, 0);
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "cancelAuto", 0), userId);
+        return 0;
+    }
+
+
     public int kickPlayer(long userId, long kickUser) {
         if (this.isOpen) {
             return ErrorCode.CANNOT_KICK_USER;

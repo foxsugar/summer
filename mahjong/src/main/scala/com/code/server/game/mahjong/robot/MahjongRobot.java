@@ -21,12 +21,50 @@ public class MahjongRobot {
 
     private static long INTERVAL_TIME = 1000L * 20;
     private static long READY_TIME = 1000L * 20;
+    private static boolean USE_AUTO_TIME = false;
+    private static long AUTO_TIME = 10000;
+
+
+
+    static{
+        INTERVAL_TIME = SpringUtil.getBean(ServerConfig.class).getCommonInterval();
+        USE_AUTO_TIME = SpringUtil.getBean(ServerConfig.class).getAutoInterval() != 0;
+        AUTO_TIME = SpringUtil.getBean(ServerConfig.class).getAutoInterval();
+    }
+
+    /**
+     * 获得当前trun的人
+     * @param gameInfo
+     * @return
+     */
+    public static long getCurUser(GameInfo gameInfo){
+        if (gameInfo.getWaitingforList().size() > 0) {
+            GameInfo.WaitDetail waitDetail = gameInfo.getWaitingforList().get(0);
+            return waitDetail.myUserId;
+        } else {
+            return gameInfo.getTurnId();
+        }
+    }
+
+
+    public static boolean isFire(GameInfo gameInfo){
+        if(!USE_AUTO_TIME) return false;
+        long userId = getCurUser(gameInfo);
+        if(gameInfo.autoTimes.getOrDefault(userId, 0)>=3) return true;
+        return false;
+    }
+
+    public static void addAutoTimes(GameInfo gameInfo, long userId) {
+        gameInfo.autoTimes.put(userId, gameInfo.autoTimes.getOrDefault(userId, 0) + 1);
+        gameInfo.autoStatus.put(userId, 1);
+    }
+
 
     public static void execute(RoomInfo room) {
         long now = System.currentTimeMillis();
         GameInfo gameInfo = (GameInfo) room.getGame();
         if (gameInfo != null) {
-            if (now- gameInfo.getLastOperateTime()   > INTERVAL_TIME) {
+            if (now- gameInfo.getLastOperateTime()   > INTERVAL_TIME || isFire(gameInfo)) {
                 if (gameInfo.getWaitingforList().size() > 0) {
                     GameInfo.WaitDetail waitDetail = gameInfo.getWaitingforList().get(0);
                     if (waitDetail.isHu) {
@@ -35,9 +73,11 @@ public class MahjongRobot {
                     } else {
                         guo(room, waitDetail.myUserId);
                     }
+                    addAutoTimes(gameInfo, waitDetail.myUserId);
                 } else {
                     if (gameInfo.getTurnId() != 0) {
                         playCard(room);
+                        addAutoTimes(gameInfo, gameInfo.getTurnId());
                     }
                 }
             }
