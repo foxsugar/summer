@@ -411,7 +411,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
       val uid: Long = Long.parseLong(userId)
       val roomId = RedisManager.getUserRedisService.getRoomId(uid)
       if (roomId == null) {
-        if(minGold>0 && RedisManager.getUserRedisService.getUserGold(uid)>minGold){
+        if(minGold == 0 || (minGold>0 && RedisManager.getUserRedisService.getUserGold(uid)>minGold)){
           count += 1
           robotList = robotList.+:(uid)
         }
