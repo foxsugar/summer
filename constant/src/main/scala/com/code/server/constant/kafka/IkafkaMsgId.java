@@ -22,6 +22,7 @@ public interface IkafkaMsgId {
     int KAFKA_MSG_ID_ADD_REBATE_LONGCHENG = 3202;
 
     int KAFKA_MSG_ID_ADD_WIN_NUM = 3203;
+    int KAFKA_MSG_ID_ADD_COUPON = 3204;
 
 
 

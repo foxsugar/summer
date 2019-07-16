@@ -187,6 +187,7 @@ public class RoomMsgDispatch {
             case "cancelAuto":{
                 IfaceRoom room = RoomManager.getRoom(roomId);
                 Room r = (Room) room;
+                return r.cancelAuto(userId);
 
             }
 

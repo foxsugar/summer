@@ -450,6 +450,7 @@ public class GameInfo extends Game {
         playCardResp.setAuto(this.autoPlay);
         ResponseVo vo = new ResponseVo(ResponseType.SERVICE_TYPE_GAMELOGIC, ResponseType.METHOD_TYPE_PLAY_CARD, playCardResp);
         MsgSender.sendMsg2Player(vo, users);
+        this.autoPlay = false;
 
         //回放 出牌
         OperateReqResp operateReqResp = new OperateReqResp();

@@ -61,6 +61,9 @@ public class RoomInfoZLB extends RoomInfo {
         roomRecord.setMode(mode);
         roomRecord.setCurGameNum(curGameNumber);
 
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ROOM_RECORD);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+
         this.userScores.forEach((key, value) -> {
             UserRecord userRecord = new UserRecord();
             userRecord.setScore(value);
@@ -70,10 +73,17 @@ public class RoomInfoZLB extends RoomInfo {
                 userRecord.setName(userBean.getUsername());
             }
             roomRecord.getRecords().add(userRecord);
+
+
+            Map<String, Object> n = new HashMap<>();
+            n.put("userId", key);
+            n.put("num", 1);
+            KafkaMsgKey kafkaMsgKey1 = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ADD_COUPON);
+
+            msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey1, n);
         });
 
-        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ROOM_RECORD);
-        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+
         msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord);
 
 
@@ -97,21 +107,12 @@ public class RoomInfoZLB extends RoomInfo {
             KafkaMsgKey kafkaMsgKey1 = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ADD_WIN_NUM);
 
             msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey1, n);
-
         });
 
     }
 
     private int getWinGiveMoney(int num) {
-        if (num == 1) {
-            return 6;
-        } else if (num == 2) {
-            return 3;
-        } else if (num == 3) {
-            return 3;
-        }else{
-            return 1;
-        }
+        return (this.personNumber * 2 -2) /num;
     }
 
     public static void main(String[] args) {
@@ -153,5 +154,9 @@ public class RoomInfoZLB extends RoomInfo {
         noticeQuitRoom(userId);
         return 0;
 
+    }
+
+    public void drawBack() {
+        //do nothing
     }
 }

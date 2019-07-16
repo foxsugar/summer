@@ -8,6 +8,7 @@ import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.robot.ResponseRobotVo;
 import com.code.server.game.room.Room;
+import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.util.SpringUtil;
@@ -82,6 +83,7 @@ public class DouDiZhuGoldRobot implements IDouDiZhuRobot,IGameConstant {
                             break;
                     }
                     addAutoTimes(game,curUserId);
+                    MsgSender.sendMsg2Player("gameService","autoPush",0,curUserId);
                 }
             }
 

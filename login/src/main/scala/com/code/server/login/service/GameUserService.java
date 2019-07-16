@@ -5,6 +5,7 @@ import com.code.server.constant.db.PlayerRank;
 import com.code.server.constant.db.PlayerScore;
 import com.code.server.constant.game.*;
 import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.IkafkaMsgId;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -972,9 +974,24 @@ public class GameUserService {
 
         chargeService.save(charge);
 
+        sendCenterAddRebateLongcheng(88888, num);
         return 0;
     }
 
+    /**
+     * 发送返利
+     * @param userId
+     * @param money
+     */
+    public void sendCenterAddRebateLongcheng(long userId, double money){
+        Map<String, Object> addMoney = new HashMap<>();
+        addMoney.put("userId", userId);
+        addMoney.put("money", money);
+
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ADD_REBATE_LONGCHENG);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney);
+    }
 
     public int getRebateDetails(KafkaMsgKey msgKey,long userId) {
         sendMsg(msgKey, new ResponseVo("userService", "getRebateDetails", rebateDetailService.rebateDetailDao.findAllByAgentId(userId)));
@@ -1115,11 +1132,15 @@ public class GameUserService {
     public int getRank(KafkaMsgKey msgKey, int month){
         long userId = msgKey.getUserId();
         LocalDate localDate = LocalDate.now().minusMonths(month);
+        String m = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
         CenterService centerService = SpringUtil.getBean(CenterService.class);
-        PlayerRank playerRank = centerService.getRank().get(localDate.toString());
+        PlayerRank playerRank = centerService.getRank().get(m);
         List<PlayerScore> list = new ArrayList<>();
-        list.addAll(playerRank.getPlayers().values());
-        list.sort((o1, o2) -> {
+        int index = -1;
+        if (playerRank != null) {
+
+            list.addAll(playerRank.getPlayers().values());
+            list.sort((o1, o2) -> {
             if (o1.getWinNum() > o2.getWinNum()) {
                 return -1;
             } else if (o1.getWinNum() == o2.getWinNum()) {
@@ -1127,11 +1148,11 @@ public class GameUserService {
             }else{
                 return 1;
             }
-        });
-        int index = -1;
-        PlayerScore playerScore = playerRank.getPlayers().get(userId);
-        if (playerScore != null) {
-            index = list.indexOf(playerScore);
+            });
+            PlayerScore playerScore = playerRank.getPlayers().get(userId);
+            if (playerScore != null) {
+                index = list.indexOf(playerScore);
+            }
         }
         Map<String, Object> map = new HashMap<>();
         map.put("all", list);

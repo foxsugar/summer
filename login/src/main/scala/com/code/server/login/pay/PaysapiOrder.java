@@ -104,7 +104,8 @@ public class PaysapiOrder {
         charge.setChargeType(0);
         charge.setOrigin(0);
         charge.setStatus(0);
-        charge.setRecharge_source("" + platform);
+        String charge_source = platform == 1?"2":"1";
+        charge.setRecharge_source(charge_source);
         charge.setCreatetime(new Date());
         chargeService.save(charge);
 

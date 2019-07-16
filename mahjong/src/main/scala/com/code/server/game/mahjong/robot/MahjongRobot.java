@@ -70,10 +70,11 @@ public class MahjongRobot {
                     if (waitDetail.isHu) {
 //                        hu(room, waitDetail.myUserId);
                         guo(room, waitDetail.myUserId);
+                        addAutoTimes(gameInfo, waitDetail.myUserId);
                     } else {
                         guo(room, waitDetail.myUserId);
+                        addAutoTimes(gameInfo, waitDetail.myUserId);
                     }
-                    addAutoTimes(gameInfo, waitDetail.myUserId);
                 } else {
                     if (gameInfo.getTurnId() != 0) {
                         playCard(room);

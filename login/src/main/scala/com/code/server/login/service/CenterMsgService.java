@@ -89,6 +89,10 @@ public class CenterMsgService implements IkafkaMsgId {
                 addWinNum(msg);
                 break;
 
+            case KAFKA_MSG_ID_ADD_COUPON:
+                addCoupon(msg);
+                break;
+
 
         }
     }
@@ -181,6 +185,14 @@ public class CenterMsgService implements IkafkaMsgId {
         int num = JsonUtil.readTree(msg).path("num").asInt();
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         CenterService.addWinNum(userId, userBean, num);
+    }
+
+    public static void addCoupon(String msg){
+        long userId = JsonUtil.readTree(msg).path("userId").asLong();
+        int num = JsonUtil.readTree(msg).path("num").asInt();
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        userBean.getUserInfo().setCoupon(userBean.getUserInfo().getCoupon() + num);
+        RedisManager.getUserRedisService().updateUserBean(userId, userBean);
     }
 
 
