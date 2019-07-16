@@ -6,7 +6,7 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath("org.springframework.boomt:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
 }
 allprojects {
@@ -15,7 +15,7 @@ allprojects {
 	}
 }
 apply plugin: 'java'
-apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 
 version = '0.0.1-SNAPSHOT'
@@ -25,7 +25,10 @@ repositories {
 	mavenCentral()
 }
 
-
+jar {
+	baseName = 'admin'
+	version = '0.0.1-SNAPSHOT'
+}
 
 dependencies {
 //	compile project(path: ':redis')
