@@ -135,7 +135,7 @@ public class PokerGoldRoom extends RoomExtendGold {
             case "403":
 
                 Room roomDoudizhuZLB = RoomDouDiZhu.createRoom_(userId,4,-1,"403","2",
-                        true,false,true,3,3,0,"","",0,0);
+                        true,true,true,3,3,0,"","",0,0);
                 return roomDoudizhuZLB;
         }
 

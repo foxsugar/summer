@@ -80,6 +80,9 @@ public class RoomDoudizhuZLB extends RoomDouDiZhu {
 
     }
 
+    public void drawBack() {
+        //do nothing
+    }
 
     /**
      * 生成房间战绩

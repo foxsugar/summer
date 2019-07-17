@@ -114,7 +114,7 @@ public class RoomInfoExtendGold extends RoomExtendGold {
         room.setCreaterJoin(true);
         room.setUuid(new IdWorker(serverId, 0).nextId());
         room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), userId, 0, room.getMustZimo());
-        room.setHaveTing(true);
+        room.setHaveTing(false);
 //        room.setYipaoduoxiang(true);
 //        room.setCanChi(false);
         return room;
@@ -141,7 +141,7 @@ public class RoomInfoExtendGold extends RoomExtendGold {
         room.setCreaterJoin(true);
         room.setUuid(new IdWorker(serverId, 0).nextId());
         room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), userId, 0, room.getMustZimo());
-        room.setHaveTing(true);
+        room.setHaveTing(false);
 //        room.setYipaoduoxiang(true);
 //        room.setCanChi(false);
         return room;
