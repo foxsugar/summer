@@ -349,7 +349,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
 
   override def joinRoom(userId: Long, isJoin: Boolean): Int = {
-    if(this.robotType == 1) {
+    if(this.robotType == 1 && this.robotNum == 4) {
       val userBean = RedisManager.getUserRedisService.getUserBean(userId)
       if(userBean != null && userBean.getVip != 1)  return ErrorCode.CANNOT_JOIN_ROOM_IS_FULL
     }
