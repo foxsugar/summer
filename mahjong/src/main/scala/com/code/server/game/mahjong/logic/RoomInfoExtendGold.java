@@ -35,7 +35,8 @@ public class RoomInfoExtendGold extends RoomExtendGold {
             case "HONGZHONGZLB":
                 return createhongzhong(userId, roomType, gameType, goldRoomType);
             default:
-                return null;
+                return createRoom(userId, roomType, gameType, goldRoomType);
+
 
         }
 
