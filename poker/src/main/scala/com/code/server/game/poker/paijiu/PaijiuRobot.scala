@@ -12,6 +12,7 @@ import com.code.server.game.room.service.IRobot
 import com.code.server.kafka.MsgProducer
 import com.code.server.redis.service.RedisManager
 import com.code.server.util.SpringUtil
+import com.code.server.util.timer.GameTimer
 
 import scala.collection.JavaConverters._
 import scala.util.Random
@@ -254,7 +255,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     val gamePaijiu = game.asInstanceOf[GamePaijiu100]
 
     //下注阶段5秒后机器人下注
-    if (!gamePaijiu.isRobotBet && time - gamePaijiu.lastOperateTime > 1000 * 5) {
+    if (!gamePaijiu.isRobotBet && time - gamePaijiu.lastOperateTime > 1000 * 3) {
       println("托管: 下注")
       //没下注的机器人开始下注
       var count = 0
@@ -273,14 +274,17 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
           //只下一道
           val two = 0
 
+          val nextTime = Random.nextInt(1000 * 8)
           //下赢得注
           if (count < room.robotWinner) {
-            sendBet(playerInfo.userId, room.getRoomId, one, two, 0, winIndex)
+            GameTimer.addTimerNode(nextTime,false, () => sendBet(playerInfo.userId, room.getRoomId, one, two, 0, winIndex))
+//            sendBet(playerInfo.userId, room.getRoomId, one, two, 0, winIndex)
             count += 1
           } else {
             //下输的注
             val index = Random.shuffle(loseIndex).head
-            sendBet(playerInfo.userId, room.getRoomId, one, two, 0, index)
+//            sendBet(playerInfo.userId, room.getRoomId, one, two, 0, index)
+            GameTimer.addTimerNode(nextTime,false, () =>sendBet(playerInfo.userId, room.getRoomId, one, two, 0, index))
           }
         }
       }
