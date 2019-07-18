@@ -3,7 +3,7 @@ package com.code.server.game.poker.paijiu
 import java.util
 import java.util.Random
 
-import com.code.server.constant.game.{IGameConstant, RoomRecord, RoomStatistics, UserRecord}
+import com.code.server.constant.game.{IGameConstant, RoomRecord, RoomStatistics, UserBean, UserRecord}
 import com.code.server.constant.kafka.{IKafaTopic, IkafkaMsgId, KafkaMsgKey}
 import com.code.server.constant.response.{ErrorCode, GameOfResult, IfaceRoomVo, ResponseVo}
 import com.code.server.game.poker.config.ServerConfig
@@ -349,6 +349,10 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
 
   override def joinRoom(userId: Long, isJoin: Boolean): Int = {
+    if(this.robotType == 1) {
+      val userBean = RedisManager.getUserRedisService.getUserBean(userId)
+      if(userBean != null && userBean.getVip != 1)  return ErrorCode.CANNOT_JOIN_ROOM_IS_FULL
+    }
     val rtn = super.joinRoom(userId, isJoin)
     if (rtn != 0) return rtn
     if (!this.isInstanceOf[RoomPaijiu100]) {
