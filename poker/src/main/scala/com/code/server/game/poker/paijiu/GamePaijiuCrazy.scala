@@ -398,7 +398,7 @@ class GamePaijiuCrazy extends GamePaijiu{
 
   def isAutoBreakBanker():Boolean ={
     //大于10倍 小于20% 自动切庄
-    if(this.roomPaijiu.robotType ==1 && this.roomPaijiu.curGameNumber>15) return true
+    if(this.roomPaijiu.robotType ==1 && this.roomPaijiu.curGameNumber>10) return true
     if(this.roomPaijiu.bankerScore > this.roomPaijiu.bankerInitScore * 10 || this.roomPaijiu.bankerScore<=0) return true
     for(playerInfo <- this.playerCardInfos.values){
       if(this.bankerId != playerInfo.userId){
