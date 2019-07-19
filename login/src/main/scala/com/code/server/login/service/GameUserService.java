@@ -1083,7 +1083,7 @@ public class GameUserService {
         List<Map<String, Object>> list = new ArrayList<>();
         for (String uid : RedisManager.getUserRedisService().getAllUserId()) {
             UserBean userBean = RedisManager.getUserRedisService().getUserBean(Long.valueOf(uid));
-            if (userBean.getVip() != 0) {
+            if (userBean.getVip() == 2) {
                 Map<String, Object> item = new HashMap<>();
                 item.put("userId", Long.valueOf(uid));
                 item.put("name", userBean.getUsername());
