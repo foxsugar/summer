@@ -108,6 +108,7 @@ public class LoginAction {
     private int login4sqlByOpenIdAndIP(String openId,String unionId, String userName, String img, int sex, Map<String, Object> params,String ip) {
         User user = userService.getUserByOpenId(openId);
         //查询数据库，没有新建玩家
+        boolean addRebate = false;
         if (user == null) {
             //新建玩家
             user = createUser(openId,unionId, userName, img, sex);
@@ -128,7 +129,8 @@ public class LoginAction {
             }
 
             if (recommend != null) {
-                CenterMsgService.addRebate(user.getId(), 0D);
+                addRebate = true;
+
             }
 
             //reids 记录新增玩家
@@ -137,6 +139,9 @@ public class LoginAction {
         String token = getToken(user.getId());
         saveUser2Redis(user, token);
 
+        if (addRebate) {
+            CenterMsgService.addRebate(user.getId(), 0D);
+        }
         params.put("token", token);
         params.put("userId", "" + user.getId());
         return 0;
