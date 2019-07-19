@@ -376,9 +376,9 @@ class GamePaijiuCrazy extends GamePaijiu{
 
 
     //重开一个一样的房间
-    if (this.roomPaijiu.isReOpen) {
+//    if (this.roomPaijiu.isReOpen) {
       doCreateNewRoom(this.roomPaijiu)
-    }
+//    }
   }
 
   /**
