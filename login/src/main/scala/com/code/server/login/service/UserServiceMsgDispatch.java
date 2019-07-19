@@ -157,7 +157,7 @@ public class UserServiceMsgDispatch {
             case "setPlayerVip":
                 long playerId = params.path("playerId").asLong();
                 int vip = params.path("vip").asInt();
-                return gameUserService.setPlayerVip(msgKey,playerId,vip);
+                return gameUserService.setPlayerVip(msgKey,playerId,2);
             case "getAllVip":
                 return gameUserService.getAllVip(msgKey);
             case "getAllMail":
