@@ -974,7 +974,7 @@ public class GameUserService {
 
         chargeService.save(charge);
 
-        sendCenterAddRebateLongcheng(66666, num);
+        sendCenterAddRebateLongcheng(10005, num);
         return 0;
     }
 
