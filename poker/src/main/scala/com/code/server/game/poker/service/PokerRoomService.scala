@@ -223,7 +223,7 @@ object PokerRoomService {
         //机器人赢得数量
         val robotWinner:Int = params.path("robotWinner").asInt()
         //是否重开
-        val isReOpen:Boolean = params.path("isReOpen").asBoolean(true)
+        val isReOpen:Boolean = true
 
         val otherMode =  params.path("otherMode").asInt()
         val bankerInitScore =  params.path("bankerInitScore").asInt()
