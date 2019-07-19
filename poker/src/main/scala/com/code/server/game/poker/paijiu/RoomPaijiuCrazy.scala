@@ -397,8 +397,8 @@ object RoomPaijiuCrazy extends Room with PaijiuConstant {
 
     roomPaijiu.rebateData = RedisManager.getConstantRedisService.getConstant
     roomPaijiu.init(gameNumber, 1)
-    val code = roomPaijiu.joinRoom(userId, false)
-    if (code != 0) return code
+//    val code = roomPaijiu.joinRoom(userId, false)
+//    if (code != 0) return code
 
     RoomManager.addRoom(roomPaijiu.getRoomId, "" + serverConfig.getServerId, roomPaijiu)
     val idword = new IdWorker(serverConfig.getServerId, 0)
