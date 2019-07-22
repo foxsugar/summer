@@ -393,24 +393,27 @@ class GameTuitongziGold extends GamePaijiu {
 
      this.playerCardInfos.values.foreach(playerInfo=>{
 
-       val roomRecord = new RoomRecord
-       roomRecord.setRoomId(this.roomPaijiu.getRoomId)
-       roomRecord.setId(this.roomPaijiu.getUuid)
-       roomRecord.setType(this.roomPaijiu.getRoomType)
-       roomRecord.setTime(System.currentTimeMillis)
-       roomRecord.setGameType(this.roomPaijiu.getGameType)
-       roomRecord.setCurGameNum(this.roomPaijiu.curGameNumber)
-       roomRecord.setAllGameNum(this.roomPaijiu.getGameNumber())
-       roomRecord.setOpen(this.roomPaijiu.isOpen)
+       if(playerInfo.score != 0) {
 
-      val userRecord = new UserRecord
-      userRecord.setScore(playerInfo.score)
-      userRecord.setUserId(playerInfo.userId)
-      roomRecord.addRecord(userRecord)
+         val roomRecord = new RoomRecord
+         roomRecord.setRoomId(this.roomPaijiu.getRoomId)
+         roomRecord.setId(this.roomPaijiu.getUuid)
+         roomRecord.setType(this.roomPaijiu.getRoomType)
+         roomRecord.setTime(System.currentTimeMillis)
+         roomRecord.setGameType(this.roomPaijiu.getGameType)
+         roomRecord.setCurGameNum(this.roomPaijiu.curGameNumber)
+         roomRecord.setAllGameNum(this.roomPaijiu.getGameNumber())
+         roomRecord.setOpen(this.roomPaijiu.isOpen)
 
-      val kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ROOM_RECORD)
-      val msgProducer = SpringUtil.getBean(classOf[MsgProducer])
-      msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord)
+         val userRecord = new UserRecord
+         userRecord.setScore(playerInfo.score)
+         userRecord.setUserId(playerInfo.userId)
+         roomRecord.addRecord(userRecord)
+
+         val kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ROOM_RECORD)
+         val msgProducer = SpringUtil.getBean(classOf[MsgProducer])
+         msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord)
+       }
     })
 
 
