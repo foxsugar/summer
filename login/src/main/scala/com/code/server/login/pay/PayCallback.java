@@ -222,6 +222,7 @@ public class PayCallback {
 
                     //改成真实充值
                     charge.setMoney(rebateMoney);
+                    charge.setMoney_point(addMoney);
 
                     //保存订单
                     chargeService.save(charge);

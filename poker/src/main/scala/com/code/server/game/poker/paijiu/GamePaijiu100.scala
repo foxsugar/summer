@@ -192,7 +192,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     this.playerCardInfos.values.foreach(player=>{
       betCount += player.getBetNum()
     })
-    betCount>=this.roomPaijiu.bankerScore.toInt
+    betCount>=this.roomPaijiu.bankerScore * 80 /100
   }
 
 

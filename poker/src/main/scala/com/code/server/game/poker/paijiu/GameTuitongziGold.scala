@@ -390,17 +390,19 @@ class GameTuitongziGold extends GamePaijiu {
     */
    def genRoomRecord(): Unit = {
 
-    val roomRecord = new RoomRecord
-    roomRecord.setRoomId(this.roomPaijiu.getRoomId)
-    roomRecord.setId(this.roomPaijiu.getUuid)
-    roomRecord.setType(this.roomPaijiu.getRoomType)
-    roomRecord.setTime(System.currentTimeMillis)
-    roomRecord.setGameType(this.roomPaijiu.getGameType)
-    roomRecord.setCurGameNum(this.roomPaijiu.curGameNumber)
-    roomRecord.setAllGameNum(this.roomPaijiu.getGameNumber())
-    roomRecord.setOpen(this.roomPaijiu.isOpen)
 
-    this.playerCardInfos.values.foreach(playerInfo=>{
+     this.playerCardInfos.values.foreach(playerInfo=>{
+
+       val roomRecord = new RoomRecord
+       roomRecord.setRoomId(this.roomPaijiu.getRoomId)
+       roomRecord.setId(this.roomPaijiu.getUuid)
+       roomRecord.setType(this.roomPaijiu.getRoomType)
+       roomRecord.setTime(System.currentTimeMillis)
+       roomRecord.setGameType(this.roomPaijiu.getGameType)
+       roomRecord.setCurGameNum(this.roomPaijiu.curGameNumber)
+       roomRecord.setAllGameNum(this.roomPaijiu.getGameNumber())
+       roomRecord.setOpen(this.roomPaijiu.isOpen)
+
       val userRecord = new UserRecord
       userRecord.setScore(playerInfo.score)
       userRecord.setUserId(playerInfo.userId)
