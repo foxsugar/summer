@@ -137,7 +137,8 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
 
   override protected def isCanJoinCheckMoney(userId: Long): Boolean = { //代建房
-    return RedisManager.getUserRedisService.getUserMoney(userId) >= createNeedMoney + 2*bankerInitScore
+    return RedisManager.getUserRedisService.getUserMoney(userId) >=  2*bankerInitScore
+//    return RedisManager.getUserRedisService.getUserMoney(userId) >= createNeedMoney + 2*bankerInitScore
   }
 
 
