@@ -86,7 +86,7 @@ public class TestAction {
         request.setAttribute("Moneys", money + "");
         request.setAttribute("Bankco", "zfb");
         request.setAttribute("orderId", orderId);
-        request.getRequestDispatcher("/WEB-INF/jsp/pay.jsp").forward(request, resp);
+        request.getRequestDispatcher("/WEB-INF/jsp/pay1.jsp").forward(request, resp);
     }
 
     @RequestMapping("/Pay/notify")
