@@ -49,7 +49,7 @@ public class TestAction {
 
     protected static Logger logger = LoggerFactory.getLogger(TestAction.class);
 
-    private static final String keyValue = "?9kehci9n1kn3q17lhm9d64itq3i7q8vn";
+    private static final String keyValue = "9kehci9n1kn3q17lhm9d64itq3i7q8vn";
     private UserBean userBeanRedis;
 
     @RequestMapping("/index")

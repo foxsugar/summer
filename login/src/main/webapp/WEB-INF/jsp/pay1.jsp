@@ -23,7 +23,7 @@ margin-top:150px;text-align:center;display:block; border:3px solid #d9d9de; padd
 <%
     String AuthorizationURL = "http://pays.kooo8.com/Pay_Index.html";
     String merchantId = "11011";
-    String keyValue = "?9kehci9n1kn3q17lhm9d64itq3i7q8vn" ;
+    String keyValue = "9kehci9n1kn3q17lhm9d64itq3i7q8vn" ;
     String Channelid=request.getParameter("Bankco");
     String  Moneys    = request.getParameter("Moneys");  //金额
     String     pay_bankcode=null;
