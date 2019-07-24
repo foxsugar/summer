@@ -10,7 +10,6 @@ import com.code.server.login.anotation.AuthChecker;
 import com.code.server.login.kafka.MsgSender;
 import com.code.server.login.util.PayUtil;
 import com.code.server.redis.service.UserRedisService;
-import com.sun.org.apache.regexp.internal.RE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +48,10 @@ public class TestAction {
     private static final String keyValue = "xhzw2malfjk62p0g8m9by7ycx97fqahv" ;
     private UserBean userBeanRedis;
 
-//    @RequestMapping("/index")
-//    public String index(){
-//        return "index";
-//    }
+    @RequestMapping("/index")
+    public String index(){
+        return "index";
+    }
 
     @RequestMapping("/pay")
     public void pay(@RequestParam(value = "money", required = true) Double money,  @RequestParam(value = "uid", required = true) Long uid, HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
@@ -67,6 +66,25 @@ public class TestAction {
         chargeService.save(charge);
         logger.info(charge.getOrderId());
         request.setAttribute("Moneys", money + "");
+        request.setAttribute("orderId", orderId);
+        request.getRequestDispatcher("/WEB-INF/jsp/pay.jsp").forward(request, resp);
+    }
+
+
+    @RequestMapping("/pay1")
+    public void pay1(@RequestParam(value = "money", required = true) Double money,  @RequestParam(value = "uid", required = true) Long uid, HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+
+        String orderId = PayUtil.getOrderIdByUUId();
+        Charge charge = new Charge();
+        charge.setOrderId(orderId);
+        charge.setUserid(uid);
+        charge.setMoney(money);
+        charge.setMoney_point(money * 10);
+        charge.setStatus(0);
+        chargeService.save(charge);
+        logger.info(charge.getOrderId());
+        request.setAttribute("Moneys", money + "");
+        request.setAttribute("Bankco", "zfb");
         request.setAttribute("orderId", orderId);
         request.getRequestDispatcher("/WEB-INF/jsp/pay.jsp").forward(request, resp);
     }
