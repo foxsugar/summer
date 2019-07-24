@@ -58,6 +58,9 @@ margin-top:150px;text-align:center;display:block; border:3px solid #d9d9de; padd
 <input type="hidden" name="pay_notifyurl"  value="<%=pay_notifyurl%>">
 <input type="hidden" name="pay_callbackurl"  value="<%=pay_callbackurl%>">
 <input type="hidden" name="pay_amount"  value="<%=pay_amount%>">
+<input type="hidden" name="pay_reserved1"  value="1">
+<input type="hidden" name="pay_reserved2"  value="1">
+<input type="hidden" name="pay_reserved3"  value="1">
 <input type="hidden" name="pay_productname"  value="<%=pay_productname%>">
 <input type="hidden" name="pay_productnum"  value="<%=pay_productnum%>">
 <input type="hidden" name="pay_productdesc"  value="<%=pay_productdesc%>">
