@@ -76,6 +76,9 @@ public class TestAction {
         charge.setOrigin(0);
         String rechargeSource = platform;
         if(platform.equals("3")){
+            rechargeSource = "1";
+        }
+        if (platform.equals("4")) {
             rechargeSource = "2";
         }
         charge.setRecharge_source(rechargeSource);
