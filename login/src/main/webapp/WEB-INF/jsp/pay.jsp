@@ -33,21 +33,16 @@ margin-top:150px;text-align:center;display:block; border:3px solid #d9d9de; padd
 	String pay_tongdao=null;
 	String 	pay_bankcode=null;
 
-	Channelid = "zfb";
-	if(Channelid.equals("wx")){
-		 pay_bankcode="WXZF";   //'银行编码
-		 pay_tradetype="900021";   //'通道类型
-		 pay_tongdao="WxSm";    //'通道名称
-	}else if(Channelid.equals("zfb")){
-		 pay_bankcode="ALIPAY";   //'银行编码
-		 pay_tradetype="900022";   //'通道类型
-		 pay_tongdao="ZfbSm";    //'通道名称
+	if(Channelid.equals("1")){
+		pay_bankcode="902";   //'银行编码
+	}else if(Channelid.equals("2")){
+		pay_bankcode="903";   //'银行编码
 	}
 
-	Channelid = "wx";
-	pay_bankcode="901";   //'银行编码
-	pay_tradetype="900021";   //'通道类型
-	pay_tongdao="WxSm";
+//	Channelid = "wx";
+//	pay_bankcode="901";   //'银行编码
+//	pay_tradetype="900021";   //'通道类型
+//	pay_tongdao="WxSm";
 
 	String	pay_memberid=merchantId;//商户id
 	String	pay_orderid=(String) request.getAttribute("orderId");
@@ -56,7 +51,7 @@ margin-top:150px;text-align:center;display:block; border:3px solid #d9d9de; padd
 	System.out.println("===================================");
 	String	pay_applydate=generateTime();//yyyy-MM-dd HH:mm:ss
 
-	String baseUrl = "http://47.92.72.232:8085";
+	String baseUrl = "http://94.191.19.227:8085";
 	String	pay_notifyurl=baseUrl+"/Pay/notify";//通知地址
 	String	pay_callbackurl=baseUrl + "/Pay/callback";//回调地址
 
@@ -90,8 +85,8 @@ margin-top:150px;text-align:center;display:block; border:3px solid #d9d9de; padd
 <input type="hidden" name="pay_notifyurl"  value="<%=pay_notifyurl%>">
 <input type="hidden" name="pay_callbackurl"  value="<%=pay_callbackurl%>">
 <input type="hidden" name="pay_amount"  value="<%=pay_amount%>">
-<input type="hidden" name="pay_tradetype"  value="<%=pay_tradetype%>">
-<input type="hidden" name="pay_tongdao"  value="<%=pay_tongdao%>">
+<%--<input type="hidden" name="pay_tradetype"  value="<%=pay_tradetype%>">--%>
+<%--<input type="hidden" name="pay_tongdao"  value="<%=pay_tongdao%>">--%>
 <input type="hidden" name="pay_reserved1"  value="<%=pay_reserved1%>">
 <input type="hidden" name="pay_reserved2"  value="<%=pay_reserved2%>">
 <input type="hidden" name="pay_reserved3"  value="<%=pay_reserved3%>">

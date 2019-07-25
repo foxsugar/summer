@@ -58,18 +58,23 @@ public class TestAction {
     }
 
     @RequestMapping("/pay")
-    public void pay(@RequestParam(value = "money", required = true) Double money, @RequestParam(value = "uid", required = true) Long uid, HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+    public void pay(@RequestParam(value = "money", required = true) Double money, @RequestParam(value = "uid", required = true) Long uid, String platform,HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 
         String orderId = PayUtil.getOrderIdByUUId();
         Charge charge = new Charge();
         charge.setOrderId(orderId);
         charge.setUserid(uid);
         charge.setMoney(money);
-        charge.setMoney_point(money * 10);
+        charge.setMoney_point(money);
         charge.setStatus(0);
+        charge.setCreatetime(new Date());
+        charge.setChargeType(0);
+        charge.setOrigin(0);
+        charge.setRecharge_source(platform);
         chargeService.save(charge);
         logger.info(charge.getOrderId());
         request.setAttribute("Moneys", money + "");
+        request.setAttribute("Bankco", platform);
         request.setAttribute("orderId", orderId);
         request.getRequestDispatcher("/WEB-INF/jsp/pay.jsp").forward(request, resp);
     }
