@@ -169,6 +169,9 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     //庄家初始分 再减掉
     //todo 庄家的分如何处理
     //    this.addUserSocre(this.getBankerId, -this.bankerInitScore)
+    if(this.bankerId != 0 && this.bankerScore>0) {
+      RedisManager.getUserRedisService.addUserMoney(this.bankerId, bankerScore)
+    }
 
     // 存储返回
     val gameOfResult = new GameOfResult
@@ -283,6 +286,8 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
     MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "someOneTobeBanker", Map("userId" -> userId, "score" -> score).asJava), this.users)
     MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "paijiuTobeBanker", 0), userId)
+
+    pushScoreChange()
     0
   }
 
