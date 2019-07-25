@@ -397,12 +397,18 @@ class GamePaijiuCrazy extends GamePaijiu{
 
 
   def isAutoBreakBanker():Boolean ={
-    //大于10倍 小于20% 自动切庄
+    //机器人三局结束
     if(this.roomPaijiu.robotType ==1 && this.roomPaijiu.robotNum==4 && this.roomPaijiu.curGameNumber>3) return true
+    //大于10倍 小于20% 自动切庄
     if(this.roomPaijiu.bankerScore > this.roomPaijiu.bankerInitScore * 10 || this.roomPaijiu.bankerScore<=0) return true
+    var min = 1
+    if(this.roomPaijiu.getGameType.equals("410")) {
+      min = 10
+    }
     for(playerInfo <- this.playerCardInfos.values){
       if(this.bankerId != playerInfo.userId){
-        if(RedisManager.getUserRedisService.getUserMoney(playerInfo.userId) <=0){
+
+        if(RedisManager.getUserRedisService.getUserMoney(playerInfo.userId) < min){
           return true
         }
       }

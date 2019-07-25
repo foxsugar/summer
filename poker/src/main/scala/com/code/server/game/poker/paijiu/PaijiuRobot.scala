@@ -339,11 +339,24 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
 
     if (time - game.lastOperateTime < STATE_TIME(STATE_BET)) return
 
+    val isCrazy ="412".equals(room.getGameType)
+
+
     for (playerInfo <- game.playerCardInfos.values) {
 
+
       if (playerInfo.bet == null && playerInfo.userId != game.bankerId) {
-        //默认下10
-        sendBet(playerInfo.userId, room.getRoomId, 10, 0, 0, 0)
+        if(isCrazy){
+          //疯狂下最大
+          var selfMoney = RedisManager.getUserRedisService.getUserMoney(playerInfo.userId)
+          var betNum = if(selfMoney > room.bankerScore) room.bankerScore.toInt else selfMoney.toInt
+          sendBet(playerInfo.userId, room.getRoomId, betNum, 0, 0, 0)
+
+        }else{
+          //四人默认下10
+          sendBet(playerInfo.userId, room.getRoomId, 10, 0, 0, 0)
+        }
+
       }
     }
   }
