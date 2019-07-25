@@ -28,6 +28,7 @@ margin-top:150px;text-align:center;display:block; border:3px solid #d9d9de; padd
 	String Channelid=request.getParameter("Bankco");
 	String  Moneys	= (String) request.getAttribute("Moneys");
 	System.out.println("===");
+	System.out.println("Channelid " + Channelid);
 	System.out.println(Moneys);
 	String pay_tradetype=null;
 	String pay_tongdao=null;

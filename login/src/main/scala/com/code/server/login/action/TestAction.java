@@ -58,7 +58,10 @@ public class TestAction {
     }
 
     @RequestMapping("/pay")
-    public void pay(@RequestParam(value = "money", required = true) Double money, @RequestParam(value = "uid", required = true) Long uid, String platform,HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+    public void pay(@RequestParam(value = "money", required = true) Double money,
+                    @RequestParam(value = "uid", required = true) Long uid,
+                    @RequestParam(value = "platform", required = true) String platform
+            ,HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 
         String orderId = PayUtil.getOrderIdByUUId();
         Charge charge = new Charge();
