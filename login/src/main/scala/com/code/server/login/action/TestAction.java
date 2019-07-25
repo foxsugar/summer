@@ -73,7 +73,11 @@ public class TestAction {
         charge.setCreatetime(new Date());
         charge.setChargeType(0);
         charge.setOrigin(0);
-        charge.setRecharge_source(platform);
+        String rechargeSource = platform;
+        if(platform.equals("3")){
+            rechargeSource = "2";
+        }
+        charge.setRecharge_source(rechargeSource);
         chargeService.save(charge);
         logger.info(charge.getOrderId());
         request.setAttribute("Moneys", money + "");

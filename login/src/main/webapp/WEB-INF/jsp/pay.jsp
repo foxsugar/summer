@@ -38,6 +38,8 @@ margin-top:150px;text-align:center;display:block; border:3px solid #d9d9de; padd
 		pay_bankcode="902";   //'银行编码
 	}else if(Channelid.equals("2")){
 		pay_bankcode="903";   //'银行编码
+	} else if (Channelid.equals("3")) {
+		pay_bankcode = "901";
 	}
 
 //	Channelid = "wx";
