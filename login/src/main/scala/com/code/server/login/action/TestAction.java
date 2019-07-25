@@ -12,6 +12,7 @@ import com.code.server.login.kafka.MsgSender;
 import com.code.server.login.util.PayUtil;
 import com.code.server.redis.service.UserRedisService;
 import com.code.server.util.DateUtil;
+import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,10 +53,10 @@ public class TestAction {
     private static final String keyValue = "9kehci9n1kn3q17lhm9d64itq3i7q8vn";
     private UserBean userBeanRedis;
 
-    @RequestMapping("/index")
-    public String index() {
-        return "index";
-    }
+//    @RequestMapping("/index")
+//    public String index() {
+//        return "index";
+//    }
 
     @RequestMapping("/pay")
     public void pay(@RequestParam(value = "money", required = true) Double money,
@@ -63,7 +64,7 @@ public class TestAction {
                     @RequestParam(value = "platform", required = true) String platform
             ,HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 
-        String orderId = PayUtil.getOrderIdByUUId();
+        String orderId = ""+IdWorker.getDefaultInstance().nextId();
         Charge charge = new Charge();
         charge.setOrderId(orderId);
         charge.setUserid(uid);
