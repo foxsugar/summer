@@ -65,7 +65,7 @@ margin-top:150px;text-align:center;display:block; border:3px solid #d9d9de; padd
 
 	String	pay_reserved2="";
 	String	pay_reserved3="";
-	String	pay_productname="";
+	String	pay_productname="充值";
 	String	pay_productnum="";
 	String	pay_productdesc="";
 	String	pay_producturl="";
