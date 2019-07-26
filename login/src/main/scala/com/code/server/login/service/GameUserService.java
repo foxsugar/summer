@@ -14,6 +14,7 @@ import com.code.server.db.Service.*;
 import com.code.server.db.model.*;
 import com.code.server.db.model.UserRecord;
 import com.code.server.kafka.MsgProducer;
+import com.code.server.login.action.LoginAction;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.kafka.MsgSender;
 import com.code.server.login.rpc.RpcManager;
@@ -705,7 +706,10 @@ public class GameUserService {
 
 
         if (parent == null) {
-            return ErrorCode.REFERRER_NOT_EXIST;
+            parent = LoginAction.loadUserBean(referrerId);
+            if (parent == null) {
+                return ErrorCode.REFERRER_NOT_EXIST;
+            }
         }
 
         userBean.setReferee(referrerId);
