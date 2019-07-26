@@ -185,7 +185,7 @@ public class TestAction {
             return "failed";
         }
 
-        return "success";
+        return "ok";
     }
 
     @RequestMapping("/Pay/callback")
@@ -227,7 +227,7 @@ public class TestAction {
             return "failed";
         }
 
-        return "success";
+        return "ok";
     }
 
     @ResponseBody
