@@ -309,6 +309,8 @@ class GamePaijiuCrazy extends GamePaijiu{
       //扣钱
       RedisManager.getUserRedisService.addUserMoney(this.bankerId, -this.roomPaijiu.bankerScore)
 
+      this.roomPaijiu.pushScoreChange()
+
 
       //开始下注
       betStart()
