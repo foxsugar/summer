@@ -56,7 +56,7 @@ margin-top:150px;text-align:center;display:block; border:3px solid #d9d9de; padd
 	System.out.println("===================================");
 	String	pay_applydate=generateTime();//yyyy-MM-dd HH:mm:ss
 
-	String baseUrl = "http://94.191.19.227:8085";
+	String baseUrl = "http://94.191.19.227:8086";
 	String	pay_notifyurl=baseUrl+"/Pay/notify";//通知地址
 	String	pay_callbackurl=baseUrl + "/Pay/callback";//回调地址
 
