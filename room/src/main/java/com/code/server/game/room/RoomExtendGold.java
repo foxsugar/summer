@@ -6,11 +6,16 @@ import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.PrepareRoom;
 import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.game.UserBean;
+import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.IkafkaMsgId;
+import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
+import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.SpringUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,6 +64,8 @@ public class RoomExtendGold extends Room {
         MsgSender.sendMsg2Player(new ResponseVo("gameService", "scoreChange", userScores), this.getUsers());
     }
 
+
+
     @Override
     public void startGame() {
         goldRoomStart();
@@ -106,6 +113,23 @@ public class RoomExtendGold extends Room {
 
         return false;
     }
+
+
+    /**
+     * 发送返利
+     * @param userId
+     * @param money
+     */
+    public void sendCenterAddRebateLongcheng(long userId, double money){
+        Map<String, Object> addMoney = new HashMap<>();
+        addMoney.put("userId", userId);
+        addMoney.put("money", money);
+
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ADD_REBATE_LONGCHENG);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney);
+    }
+
 
     @Override
     public boolean isGoldRoom() {

@@ -272,7 +272,7 @@ public class GameInfoNew extends GameInfo {
 
     public void noticeDissolutionResult() {
         //金币房 不记录
-        if (this.room.isGoldRoom()) return;
+//        if (this.room.isGoldRoom()) return;
 
         if (isRoomOver()) {
             List<UserOfResult> userOfResultList = this.room.getUserOfResult();

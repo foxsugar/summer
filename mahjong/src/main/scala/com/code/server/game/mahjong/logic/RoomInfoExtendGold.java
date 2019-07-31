@@ -34,6 +34,8 @@ public class RoomInfoExtendGold extends RoomExtendGold {
                 return createGuaisanjiao(userId, roomType, gameType, goldRoomType);
             case "HONGZHONGZLB":
                 return createhongzhong(userId, roomType, gameType, goldRoomType);
+            case "LONGCHENG":
+                return createLongcheng(userId, roomType, gameType, goldRoomType);
             default:
                 return createRoom(userId, roomType, gameType, goldRoomType);
 
@@ -61,7 +63,7 @@ public class RoomInfoExtendGold extends RoomExtendGold {
         room.setEach("0");
         room.setCreaterJoin(true);
         room.setUuid(new IdWorker(serverId, 0).nextId());
-        room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), userId, 0, room.getMustZimo());
+        room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), 0, 0, room.getMustZimo());
 //        room.setYipaoduoxiang(true);
 //        room.setCanChi(false);
 //        room.setHaveTing(false);
@@ -88,7 +90,7 @@ public class RoomInfoExtendGold extends RoomExtendGold {
         room.setEach("0");
         room.setCreaterJoin(true);
         room.setUuid(new IdWorker(serverId, 0).nextId());
-        room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), userId, 0, room.getMustZimo());
+        room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), 0, 0, room.getMustZimo());
 //        room.setYipaoduoxiang(true);
 //        room.setCanChi(false);
         room.setHaveTing(true);
@@ -114,7 +116,7 @@ public class RoomInfoExtendGold extends RoomExtendGold {
         room.setEach("0");
         room.setCreaterJoin(true);
         room.setUuid(new IdWorker(serverId, 0).nextId());
-        room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), userId, 0, room.getMustZimo());
+        room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), 0, 0, room.getMustZimo());
         room.setHaveTing(false);
 //        room.setYipaoduoxiang(true);
 //        room.setCanChi(false);
@@ -141,8 +143,34 @@ public class RoomInfoExtendGold extends RoomExtendGold {
         room.setEach("0");
         room.setCreaterJoin(true);
         room.setUuid(new IdWorker(serverId, 0).nextId());
-        room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), userId, 0, room.getMustZimo());
+        room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), 0, 0, room.getMustZimo());
         room.setHaveTing(false);
+//        room.setYipaoduoxiang(true);
+//        room.setCanChi(false);
+        return room;
+    }
+
+    public static Room createLongcheng(long userId, String roomType, String gameType, int goldRoomType){
+        int serverId = SpringUtil.getBean(ServerConfig.class).getServerId();
+        String roomId = Room.getRoomIdStr(Room.genRoomId(serverId));
+        RoomInfo room = new RoomInfoLongcheng();
+        room.setRoomId(roomId);
+        room.setGameType(gameType);
+        room.setRoomType(roomType);
+        room.setGoldRoomType(goldRoomType);
+        room.setGoldRoomPermission(IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT);
+        room.setMultiple(goldRoomType);
+        room.setMode("0");
+        room.setModeTotal("118");
+        room.isRobotRoom = true;
+        room.setPersonNumber(4);
+        room.setGameNumber(1);
+        room.setAA(true);
+        room.setEach("0");
+        room.setCreaterJoin(true);
+        room.setUuid(new IdWorker(serverId, 0).nextId());
+        room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), 0, 0, room.getMustZimo());
+        room.setHaveTing(true);
 //        room.setYipaoduoxiang(true);
 //        room.setCanChi(false);
         return room;

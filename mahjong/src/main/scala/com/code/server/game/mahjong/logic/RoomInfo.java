@@ -53,6 +53,8 @@ public class RoomInfo extends RoomInfoExtendGold {
     protected boolean canChi;
     protected boolean haveTing;
 
+    protected Map<Long, Long> playerParentMap = new HashMap<>();
+
 
     public String getEach() {
         return each;
@@ -256,6 +258,9 @@ public class RoomInfo extends RoomInfoExtendGold {
             case "XUEZHANDAODI":
 //                this.setHasGangBlackList(false);
                 return new GameInfoXZDD();
+
+            case "LONGCHENG":
+                return new GameInfoNew().setTurnZeroAfterHuangZhuang(true);
 
             default:
                 return new GameInfo();
@@ -840,4 +845,12 @@ public class RoomInfo extends RoomInfoExtendGold {
     }
 
 
+    public Map<Long, Long> getPlayerParentMap() {
+        return playerParentMap;
+    }
+
+    public RoomInfo setPlayerParentMap(Map<Long, Long> playerParentMap) {
+        this.playerParentMap = playerParentMap;
+        return this;
+    }
 }
