@@ -148,7 +148,6 @@ public class RoomInfoZLB extends RoomInfo {
 
         //todo 如果都退出了  删除房间
         if (this.users.size() == 0) {
-
             RoomManager.removeRoom(this.roomId);
         }
         noticeQuitRoom(userId);
