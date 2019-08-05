@@ -200,21 +200,21 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
 
 //        PlayerCardsInfoSZ_LQ playerCardsInfo = new PlayerCardsInfoSZ_LQ();
 //        PlayerCardsInfoTDH playerCardsInfo = new PlayerCardsInfoTDH();
-        PlayerCardsInfoHongZhong playerCardsInfo = new PlayerCardsInfoHongZhong();
+        PlayerCardsInfoHeleKD playerCardsInfo = new PlayerCardsInfoHeleKD();
 //        playerCardsInfo.isHasFengShun = true;
 
 //        playerCardsInfo.isHasYimenpai = true;
 //        playerCardsInfo.isHasShuye = true;
 //        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","042","124","135"};
 //        String[] s = new String[]{"064","051","097","132","045","067","101","133","092","065","134","042","124","135"};
-        String[] s = new String[]{"004","005","006","007","008","009", "044","045",  "064","065",  "068","100","101","124"};
+        String[] s = new String[]{"000","001","014","015",    "028","029","032", "031",   "008",  "009","010",  "011","012","013"};
 //        String[] s = new String[]{"000","001","002",     "036",  "037","038",    "052", "053","054",    "080","081","082",    "112","113"};
 
 //        String[] s = new String[]{"076","077","078",     "080",  "084","085",    "088", "089","090",    "092","093","096",    "100","101"};
 
 
         List<Integer> hun = new ArrayList<>();
-        hun.add(31);
+        hun.add(8);
 //        hun.add(31);
 //        hun.add(1);
 //        hun.add(8);
@@ -251,7 +251,8 @@ public class PlayerCardsInfoHongZhong extends PlayerCardsInfoZhuohaozi {
 ////        playerCardsInfo.isTing = true;
 //        playerCardsInfo.tingSet = new HashSet<>();
 //        playerCardsInfo.tingSet.add(15);
-        System.out.println(playerCardsInfo.isCanHu_zimo("124"));
+        playerCardsInfo.setTing(true);
+        System.out.println(playerCardsInfo.isCanHu_zimo("031"));
 //        System.out.println("==="+playerCardsInfo.getYiZhangYingSet(playerCardsInfo.getCardsNoChiPengGang(temp),null));
 //        System.out.println(playerCardsInfo.isCanHu_zimo("113"));
 //        System.out.println(playerCardsInfo.isCanTing(playerCardsInfo.cards));

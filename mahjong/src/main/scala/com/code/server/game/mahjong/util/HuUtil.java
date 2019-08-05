@@ -308,7 +308,7 @@ public class HuUtil implements HuType {
         if (lastCardIsHun) {
             return hunCardNum - needHunNum[0] >=2;
         } else {
-            return hunCardNum>0 && hunCardNum - needHunNum[0]>=1;
+            return hunCardNum>0 && hunCardNum - needHunNum[0]>=0;
         }
 
 
