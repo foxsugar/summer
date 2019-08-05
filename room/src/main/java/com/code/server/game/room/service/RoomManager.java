@@ -158,7 +158,7 @@ public class RoomManager {
             }
 
             //金币房
-            if (rm.getGoldRoomPermission() != GOLD_ROOM_PERMISSION_NONE) {
+            if (rm.isGoldRoom() || rm.getGoldRoomPermission() != GOLD_ROOM_PERMISSION_NONE) {
                 //默认金币房
                 if (rm.isDefaultGoldRoom()) {
                     getInstance().getNotFullRoom(rm.getGameType(), rm.getGoldRoomType()).remove(room);

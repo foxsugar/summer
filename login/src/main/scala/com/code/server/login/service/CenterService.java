@@ -313,10 +313,6 @@ public class CenterService {
             r.setPlayerRank(playerRank);
             centerService.rankService.getRankDao().save(r);
         }
-
-
-
-
     }
 
     public Map<String, PlayerRank> getRank() {
