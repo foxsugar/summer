@@ -157,7 +157,7 @@ public class PayCallback {
                         if (u.getVip() == 0) {
                             childCost1.firstLevel += rebateMoney * serverConfig.getAgentFirstRebate().get(agentUser1.getAgentType()) * 0.01;
                         } else {
-                            childCost1.firstLevel += rebateMoney * serverConfig.getAgentSecondRebate().get(agentUser1.getAgentType()) * 0.01;
+                            childCost1.firstLevel += rebateMoney * serverConfig.getAgentSecondRebate().get(u.getVip()) * 0.01;
 
                         }
                         rs1.put(dayStr, childCost1);
