@@ -102,7 +102,7 @@ public class PlayerKDLongcheng extends PlayerCardsInfoKD {
             score *= 3;
         }
 
-        score *= this.roomInfo.getMultiple();
+        score *= this.roomInfo.getMultiple() * 10;
         int allScore = 0;
         if (isZimo) {
             for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
