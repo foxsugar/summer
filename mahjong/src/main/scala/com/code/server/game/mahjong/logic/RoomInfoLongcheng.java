@@ -13,6 +13,8 @@ import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
 
+import java.util.Map;
+
 /**
  * Created by sunxianping on 2019-07-26.
  */
@@ -57,7 +59,31 @@ public class RoomInfoLongcheng extends RoomInfo {
         }
         return true;
     }
+    public void clearReadyStatus(boolean isAddGameNum) {
+//        GameManager.getInstance().remove(game);
+        lastOperateTime = System.currentTimeMillis();
+        this.setGame(null);
 
+
+        this.setInGame(false);
+        for (Map.Entry<Long, Integer> entry : this.userStatus.entrySet()) {
+            entry.setValue(STATUS_JOIN);
+        }
+        if (isAddGameNum) {
+
+            this.curGameNumber += 1;
+        }
+        //每局的庄家
+        this.bankerMap.put(curGameNumber, bankerId);
+
+        //选择状态置成没选过
+        this.users.forEach(uid -> {
+            if (uid != bankerId) {
+                laZhuangStatus.put(uid, false);
+            }
+        });
+
+    }
 
     @Override
     public boolean isRoomOver() {
