@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static com.code.server.game.room.IfaceRoom.GOLD_ROOM_PERMISSION_NONE;
-
 /**
  * Created by sunxianping on 2017/5/31.
  */
@@ -158,16 +156,16 @@ public class RoomManager {
             }
 
             //金币房
-            if (rm.isGoldRoom() || rm.getGoldRoomPermission() != GOLD_ROOM_PERMISSION_NONE) {
-                //默认金币房
-                if (rm.isDefaultGoldRoom()) {
+//            if (rm.isGoldRoom() || rm.getGoldRoomPermission() != GOLD_ROOM_PERMISSION_NONE) {
+//                //默认金币房
+//                if (rm.isDefaultGoldRoom()) {
                     getInstance().getNotFullRoom(rm.getGameType(), rm.getGoldRoomType()).remove(room);
                     getInstance().getFullRoom(rm.getGameType(), rm.getGoldRoomType()).remove(room);
-                } else {
+//                } else {
                     //公开金币房
                     getInstance().getPublicGoldRoom(rm.getGameType(), rm.getGoldRoomType()).remove(room);
-                }
-            }
+//                }
+//            }
         }
 
 
