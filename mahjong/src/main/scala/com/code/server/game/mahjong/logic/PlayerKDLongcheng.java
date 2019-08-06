@@ -35,7 +35,7 @@ public class PlayerKDLongcheng extends PlayerCardsInfoKD {
         int allScore = 0;
 
         int cardType = CardTypeUtil.getTypeByCard(card);
-        int score = CardTypeUtil.cardTingScore.get(cardType) * this.roomInfo.getMultiple();
+        int score = CardTypeUtil.cardTingScore.get(cardType) * this.roomInfo.getMultiple() * 10;
         if (isMing && diangangUser != -1) {
 
 
