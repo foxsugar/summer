@@ -18,6 +18,7 @@ trait PaijiuConstant {
   val STATE_TIME = Map(
     STATE_START->1000 * 10,
     STATE_FIGHT_FOR_BANKER->1000 * 10,
+    STATE_BANKER_SET_SCORE->0,
     STATE_BET->1000 * 20,
     START_CRAP->1000 * 10,
     STATE_OPEN->1000 * 19,
@@ -27,6 +28,7 @@ trait PaijiuConstant {
   val TUITONGZI_STATE_TIME = Map(
     STATE_START->1000 * 10,
     STATE_FIGHT_FOR_BANKER->1000 * 10,
+    STATE_BANKER_SET_SCORE->0,
     STATE_BET->1000 * 12,
     START_CRAP->1000 * 10,
     STATE_OPEN->1000 * 19,
