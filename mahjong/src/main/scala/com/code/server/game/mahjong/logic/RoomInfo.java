@@ -222,6 +222,8 @@ public class RoomInfo extends RoomInfoExtendGold {
 
 //                this.setHasGangBlackList(false);
                 return new GameInfoZhanglebao().setTurnZeroAfterHuangZhuang(true);
+            case "ZHANGLEBAOZHUOHAOZI" :
+                return new GameInfoZhanglebao().setTurnZeroAfterHuangZhuang(true);
             case "LUANGUAF":
                 return new GameInfoLuanGuaFeng();
             case "HONGZHONG":

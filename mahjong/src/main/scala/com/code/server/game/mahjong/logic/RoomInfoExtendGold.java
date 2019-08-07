@@ -76,7 +76,7 @@ public class RoomInfoExtendGold extends RoomExtendGold {
         String roomId = Room.getRoomIdStr(Room.genRoomId(serverId));
         RoomInfo room = new RoomInfoZLB();
         room.setRoomId(roomId);
-        room.setGameType("ZHANGLEBAO");
+        room.setGameType(gameType);
         room.setRoomType(roomType);
         room.setGoldRoomType(goldRoomType);
         room.setGoldRoomPermission(IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT);
