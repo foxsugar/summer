@@ -188,13 +188,13 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
     public boolean isCanHu_zimo(String card) {
         if (!isTing) return false;
         int lastCard = CardTypeUtil.getTypeByCard(card);
-        //不是混  2019.6.27 自摸小于3不让胡
-        if (!this.gameInfo.getHun().contains(lastCard)) {
-            if (CardTypeUtil.cardTingScore.get(lastCard) < ZIMO_MIN_SCORE) {
-                return false;
-            }
-
-        }
+//        //不是混  2019.6.27 自摸小于3不让胡
+//        if (!this.gameInfo.getHun().contains(lastCard)) {
+//            if (CardTypeUtil.cardTingScore.get(lastCard) < ZIMO_MIN_SCORE) {
+//                return false;
+//            }
+//
+//        }
         List<HuCardType> huList = HuUtil.isHu(this, getCardsNoChiPengGang(this.cards), getChiPengGangNum(), this.gameInfo.hun, lastCard);
         for (HuCardType huCardType : huList) {
             if (getMaxPoint(huCardType, false) >= ZIMO_MIN_SCORE) {
