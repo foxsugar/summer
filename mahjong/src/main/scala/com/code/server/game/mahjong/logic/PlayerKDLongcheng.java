@@ -39,8 +39,7 @@ public class PlayerKDLongcheng extends PlayerCardsInfoKD {
         if (isMing && diangangUser != -1) {
 
 
-            PlayerCardsInfoMj dianGangUser = this.gameInfo.getPlayerCardsInfos().get(diangangUser);
-            boolean isBaoAll = !dianGangUser.isTing;
+            boolean isBaoAll = true;
 
             for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
                 if (playerCardsInfoMj.getUserId() != this.userId) {
@@ -56,6 +55,7 @@ public class PlayerKDLongcheng extends PlayerCardsInfoKD {
             }
 
             if (isBaoAll) {
+                PlayerCardsInfoMj dianGangUser = this.gameInfo.getPlayerCardsInfos().get(diangangUser);
                 dianGangUser.addGangScore(-allScore);
                 dianGangUser.addScore(-allScore);
                 this.roomInfo.addUserSocre(dianGangUser.getUserId(), -allScore);
@@ -99,7 +99,7 @@ public class PlayerKDLongcheng extends PlayerCardsInfoKD {
         if (isZimo) {
             score *= 2;
         }else{
-            score *= 3;
+//            score *= 3;
         }
 
         score *= this.roomInfo.getMultiple() * 10;
@@ -115,9 +115,32 @@ public class PlayerKDLongcheng extends PlayerCardsInfoKD {
         } else {
             PlayerCardsInfoMj dianPao = this.gameInfo.getPlayerCardsInfos().get(dianpaoUser);
 
-            dianPao.addScore(-score);
-            this.roomInfo.addUserSocre(dianpaoUser, -score);
-            allScore += score;
+//            dianPao.addScore(-score);
+//            this.roomInfo.addUserSocre(dianpaoUser, -score);
+//            allScore += score;
+
+
+
+            boolean isBaoAll = !dianPao.isTing;
+
+
+            for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
+                if (playerCardsInfoMj.getUserId() != this.userId) {
+                    allScore += score;
+                    if (!isBaoAll) {
+                        playerCardsInfoMj.addScore(-score);
+                        this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -score);
+                    }
+
+                }
+
+            }
+
+            if (isBaoAll) {
+                PlayerCardsInfoMj dianGangUser = this.gameInfo.getPlayerCardsInfos().get(dianpaoUser);
+                dianGangUser.addScore(-allScore);
+                this.roomInfo.addUserSocre(dianGangUser.getUserId(), -allScore);
+            }
         }
 
         this.addScore(allScore);
