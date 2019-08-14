@@ -39,7 +39,8 @@ public class PlayerKDLongcheng extends PlayerCardsInfoKD {
         if (isMing && diangangUser != -1) {
 
 
-            boolean isBaoAll = true;
+            PlayerCardsInfoMj dianGangUser = this.gameInfo.getPlayerCardsInfos().get(diangangUser);
+            boolean isBaoAll = !dianGangUser.isTing;
 
             for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
                 if (playerCardsInfoMj.getUserId() != this.userId) {
@@ -55,7 +56,6 @@ public class PlayerKDLongcheng extends PlayerCardsInfoKD {
             }
 
             if (isBaoAll) {
-                PlayerCardsInfoMj dianGangUser = this.gameInfo.getPlayerCardsInfos().get(diangangUser);
                 dianGangUser.addGangScore(-allScore);
                 dianGangUser.addScore(-allScore);
                 this.roomInfo.addUserSocre(dianGangUser.getUserId(), -allScore);

@@ -146,7 +146,7 @@ public class RoomInfoLongcheng extends RoomInfo {
             double newValue = value;
             if (newValue > 0) {
                 winNum[0] += newValue;
-                newValue = newValue * 90 / 100;
+                newValue = newValue * 92 / 100;
             }
             RedisManager.getUserRedisService().addUserGold(key, newValue);
 
@@ -163,13 +163,14 @@ public class RoomInfoLongcheng extends RoomInfo {
 
         });
 
-        double rebateNum = winNum[0] * 5 /100;
+        double rebateNum = winNum[0] * 4.8 /100;
+        double rebateNum1 = winNum[0] * 3.2 /100;
 
         this.userScores.forEach((key, value)->{
             sendCenterAddRebateLongcheng(key, rebateNum/4);
         });
 
-        sendCenterAddRebateLongcheng(10005, rebateNum);
+        sendCenterAddRebateLongcheng(10005, rebateNum1);
 
         KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ROOM_RECORD);
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
