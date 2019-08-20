@@ -63,6 +63,7 @@ public class RoomInfoExtendGold extends RoomExtendGold {
         room.setEach("0");
         room.setCreaterJoin(true);
         room.setUuid(new IdWorker(serverId, 0).nextId());
+        room.setOtherMode(8);
         room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), 0, 0, room.getMustZimo());
 //        room.setYipaoduoxiang(true);
 //        room.setCanChi(false);
@@ -90,6 +91,7 @@ public class RoomInfoExtendGold extends RoomExtendGold {
         room.setEach("0");
         room.setCreaterJoin(true);
         room.setUuid(new IdWorker(serverId, 0).nextId());
+        room.setOtherMode(8);
         room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), 0, 0, room.getMustZimo());
 //        room.setYipaoduoxiang(true);
 //        room.setCanChi(false);
@@ -116,6 +118,7 @@ public class RoomInfoExtendGold extends RoomExtendGold {
         room.setEach("0");
         room.setCreaterJoin(true);
         room.setUuid(new IdWorker(serverId, 0).nextId());
+        room.setOtherMode(8);
         room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), 0, 0, room.getMustZimo());
         room.setHaveTing(false);
 //        room.setYipaoduoxiang(true);
@@ -143,6 +146,7 @@ public class RoomInfoExtendGold extends RoomExtendGold {
         room.setEach("0");
         room.setCreaterJoin(true);
         room.setUuid(new IdWorker(serverId, 0).nextId());
+        room.setOtherMode(8);
         room.init(roomId, userId, room.getModeTotal(), room.getMode(), room.getMultiple(), room.getGameNumber(), room.getPersonNumber(), 0, 0, room.getMustZimo());
         room.setHaveTing(false);
 //        room.setYipaoduoxiang(true);

@@ -36,6 +36,7 @@ public class GameBaseYSZ extends Game {
     protected RoomYSZ room;
     protected double minGold;
     protected List<Integer> genZhuList = new ArrayList<>();
+    protected List<Map<Long, Long>> killInfo = new ArrayList<>();
 
     public List<Integer> getGenZhuList() {
         return genZhuList;
@@ -590,7 +591,9 @@ public class GameBaseYSZ extends Game {
         if (checkCanKill(askerId, accepterId) == false) {
             return ErrorCode.NOT_KILL;
         }
-
+        Map<Long, Long> killItem = new HashMap<>();
+        killItem.put(askerId, accepterId);
+        killInfo.add(killItem);
 
         logger.info(askerId + "  比 牌: " + chip);
 
@@ -758,6 +761,10 @@ public class GameBaseYSZ extends Game {
 
             Player asker = new Player(askerId, ArrUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(0)), ArrUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(1)), ArrUtils.cardCode.get(playerCardInfos.get(askerId).getHandcards().get(2)));
             Player accepter = new Player(accepterId, ArrUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(0)), ArrUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(1)), ArrUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(2)));
+
+            Map<Long, Long> killItem = new HashMap<>();
+            killItem.put(askerId, accepterId);
+            killInfo.add(killItem);
 
             ArrayList<Player> winnerList = new ArrayList<>();
             if ("30".equals(this.room.getGameType())) {
@@ -1002,6 +1009,7 @@ public class GameBaseYSZ extends Game {
         }
         gameResultHitGoldFlower.setWinnerList(winnerList);
         gameResultHitGoldFlower.setBankerId(winnerList.get(0));
+        gameResultHitGoldFlower.setKillInfo(killInfo);
 
         if (room.getGoldRoomPermission() == IfaceRoom.GOLD_ROOM_PERMISSION_NONE){
             for (Map.Entry<Long, PlayerYSZ> entry : this.playerCardInfos.entrySet()){
