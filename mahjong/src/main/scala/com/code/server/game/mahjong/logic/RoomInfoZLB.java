@@ -97,17 +97,20 @@ public class RoomInfoZLB extends RoomInfo {
 
         int giveNum = getWinGiveMoney(maxList.size());
 
-        maxList.forEach(uid->{
-            RedisManager.getUserRedisService().addUserMoney(uid, giveNum);
-            //胜场数+1
+        if (this.curGameNumber != 1 || maxList.size() != 4) {
 
-            Map<String, Object> n = new HashMap<>();
-            n.put("userId", uid);
-            n.put("num", 1);
-            KafkaMsgKey kafkaMsgKey1 = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ADD_WIN_NUM);
+            maxList.forEach(uid->{
+                RedisManager.getUserRedisService().addUserMoney(uid, giveNum);
+                //胜场数+1
 
-            msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey1, n);
-        });
+                Map<String, Object> n = new HashMap<>();
+                n.put("userId", uid);
+                n.put("num", 1);
+                KafkaMsgKey kafkaMsgKey1 = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ADD_WIN_NUM);
+
+                msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey1, n);
+            });
+        }
 
     }
 
