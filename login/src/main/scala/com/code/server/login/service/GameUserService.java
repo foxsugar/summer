@@ -1174,7 +1174,12 @@ public class GameUserService {
     }
 
 
-
+    /**
+     * 获得返利详情
+     * @param msgKey
+     * @param date
+     * @return
+     */
     public int getRebateInfo(KafkaMsgKey msgKey, String date){
 
         long userId = msgKey.getUserId();
@@ -1230,16 +1235,61 @@ public class GameUserService {
         result.put("secondNum", secondLevel.size());
         result.put("thirdNum", thirdLevel.size());
 
-        result.put("firstContribute", firstContribute);
-        result.put("secondContribute", secondContribute);
-        result.put("thirdContribute", thirdContribute);
+        result.put("firstContribute", firstContribute[0]);
+        result.put("secondContribute", secondContribute[0]);
+        result.put("thirdContribute", thirdContribute[0]);
 
-        result.put("firstRebate", firstRebate);
-        result.put("secondRebate", secondRebate);
-        result.put("thirdRebate", thirdRebate);
+        result.put("firstRebate", firstRebate[0]);
+        result.put("secondRebate", secondRebate[0]);
+        result.put("thirdRebate", thirdRebate[0]);
 
         MsgSender.sendMsg2Player(new ResponseVo("userService", "getRebateInfo", result), msgKey.getUserId());
 
+        return 0;
+    }
+
+    private Map<String,Object> getChildInfo(int level,UserBean userBean){
+        Map<String, Object> result = new HashMap<>();
+        result.put("level", level);
+        result.put("userId", userBean.getId());
+        result.put("name", userBean.getUsername());
+        result.put("money", userBean.getMoney());
+        return result;
+    }
+
+    public int getChild(KafkaMsgKey msgKey){
+        long userId = msgKey.getUserId();
+        List<UserBean> allUserBean = RedisManager.getUserRedisService().getAllUserBean();
+        Map<Integer,UserBean> firstLevel = new HashMap<>();
+        Map<Integer,UserBean> secondLevel = new HashMap<>();
+        Map<Integer,UserBean> thirdLevel = new HashMap<>();
+
+        List<Map<String, Object>> result = new ArrayList<>();
+
+
+
+        allUserBean.forEach(userBean -> {
+            if(userBean.getReferee() == userId){
+                firstLevel.put((int)userBean.getId(), userBean);
+                result.add(getChildInfo(1, userBean));
+            }
+        });
+
+        allUserBean.forEach(userBean -> {
+            if(firstLevel.containsKey(userBean.getReferee())){
+                secondLevel.put((int)userBean.getId(), userBean);
+                result.add(getChildInfo(2, userBean));
+            }
+        });
+
+        allUserBean.forEach(userBean -> {
+            if(secondLevel.containsKey(userBean.getReferee())){
+                thirdLevel.put((int)userBean.getId(), userBean);
+                result.add(getChildInfo(3, userBean));
+            }
+        });
+
+        MsgSender.sendMsg2Player(new ResponseVo("userService", "getChild", result), msgKey.getUserId());
         return 0;
     }
 

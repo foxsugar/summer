@@ -70,8 +70,14 @@ public interface IGameConstant extends IkafkaMsgId{
     String PAIJIU_PAY_AA = "pay_aa";
 
     String FIRST_LEVEL = "first_level";
-    String SECODE_LEVEL = "second_level";
+    String SECOND_LEVEL = "second_level";
     String THIRD_LEVEL = "third_level";
+
+    String FIRST_LEVEL_100 = "first_level_100";
+    String SECOND_LEVEL_100 = "second_level_100";
+    String THIRD_LEVEL_100 = "third_level_100";
+
+
 
 
 }

@@ -174,6 +174,9 @@ public class UserServiceMsgDispatch {
                 String date = params.path("date").asText("all");
                 return gameUserService.getRebateInfo(msgKey, date);
 
+            case "getChild":
+                return gameUserService.getChild(msgKey);
+
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

@@ -198,7 +198,8 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
 
       val rebate:Double = this.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble
       for(userId <- this.users){
-        this.sendCenterAddRebate(userId, rebate)
+//        this.sendCenterAddRebate(userId, rebate)
+        this.sendCenterAddThreeRebate(userId, rebate,0)
       }
     }
 
@@ -227,7 +228,13 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     //大赢家最后付钱
     if (isAA) {
       createNeedMoney = this.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[String].toDouble.toInt
+
+
     }
+
+    this.users.forEach(userId=>{
+      sendCenterAddContribute(userId, 1)
+    })
     super.spendMoney()
 
   }

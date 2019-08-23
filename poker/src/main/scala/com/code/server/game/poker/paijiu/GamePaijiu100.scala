@@ -68,8 +68,10 @@ class GamePaijiu100 extends GamePaijiuCrazy {
 //      bankerPlayer.score = bankerPlayer.score - choushui
 
       //返利
-      var rebate =  bankerPlayer.getScore() * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100
-      this.roomPaijiu.sendCenterAddRebate(this.roomPaijiu.getBankerId, rebate)
+//      var rebate =  bankerPlayer.getScore() * this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100
+//      this.roomPaijiu.sendCenterAddRebate(this.roomPaijiu.getBankerId, rebate)
+
+      this.roomPaijiu.sendCenterAddThreeRebate(this.roomPaijiu.getBankerId, bankerPlayer.getScore(),1)
     }
     this.playerCardInfos.values.foreach(playerInfo => gameResult.getPlayerCardInfos.add(playerInfo.toVo))
     this.roomPaijiu.bankerScore -= choushui
@@ -89,6 +91,11 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     })
 
     gameResult.setSfp(this.roomPaijiu.winnerIndex.last)
+
+    this.playerCardInfos.foreach(player=>{
+      val num = 1D * player._2.getBetNum() /100
+      this.roomPaijiu.sendCenterAddContribute(player._1, num)
+    })
 
     MsgSender.sendMsg2Player("gamePaijiuService", "gameResult", gameResult, roomPaijiu.users)
     this.roomPaijiu.pushScoreChange()

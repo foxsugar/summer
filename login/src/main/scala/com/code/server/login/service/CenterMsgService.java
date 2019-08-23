@@ -82,6 +82,8 @@ public class CenterMsgService implements IkafkaMsgId {
             case KAFKA_MSG_ID_ADD_THREE_REBATE:
                 addThreeRebate(msg);
                 break;
+            case KAFKA_MSG_ID_CCONTRIBUTE:
+                addContribute(msg);
 
             case KAFKA_MSG_ID_ADD_REBATE_LONGCHENG:
                 addRebateLongcheng(msg);
@@ -154,12 +156,33 @@ public class CenterMsgService implements IkafkaMsgId {
         addRebate(userId, money);
     }
 
+    /**
+     * 增加三级返利
+     * @param msg
+     */
     private static void addThreeRebate(String msg){
         long userId = JsonUtil.readTree(msg).path("userId").asLong();
         double money = JsonUtil.readTree(msg).path("money").asDouble();
-        int firstlevel = (int)ServerManager.constant.getOther().getRebateData().get(IGameConstant.FIRST_LEVEL);
-        int secondlevel = (int)ServerManager.constant.getOther().getRebateData().get(IGameConstant.SECODE_LEVEL);
-        int thirdlevel = (int)ServerManager.constant.getOther().getRebateData().get(IGameConstant.THIRD_LEVEL);
+        int is100 = JsonUtil.readTree(msg).path("is100").asInt();
+        Map m = RedisManager.getConstantRedisService().getConstant();
+        double firstMoney = 0;
+        double secondMoney = 0;
+        double thirdMoney = 0;
+        if (is100 == 1) {
+
+            int firstlevel = Integer.valueOf((String)m.get(IGameConstant.FIRST_LEVEL_100));
+            int secondlevel = Integer.valueOf((String)m.get(IGameConstant.SECOND_LEVEL_100));
+            int thirdlevel = Integer.valueOf((String)m.get(IGameConstant.THIRD_LEVEL_100));
+            firstMoney = money * firstlevel /100;
+            secondMoney = money * secondlevel /100;
+            thirdMoney = money * thirdlevel / 100;
+        }else{
+            firstMoney = Double.valueOf((String)m.get(IGameConstant.FIRST_LEVEL));
+            secondMoney = Double.valueOf((String)m.get(IGameConstant.SECOND_LEVEL));
+            thirdMoney = Double.valueOf((String)m.get(IGameConstant.THIRD_LEVEL));
+
+        }
+
 
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         String date = LocalDate.now().toString();
@@ -168,9 +191,7 @@ public class CenterMsgService implements IkafkaMsgId {
         ThreeRebate allRebate = userBean.getUserInfo().getThreeRebate().getOrDefault("all", new ThreeRebate());
         userBean.getUserInfo().getThreeRebate().put(date, threeRebate);
         userBean.getUserInfo().getThreeRebate().put("all", allRebate);
-        double firstMoney = money * firstlevel /100;
-        double secondMoney = money * secondlevel /100;
-        double thirdMoney = money * thirdlevel / 100;
+
         UserBean firstUserBean = RedisManager.getUserRedisService().getUserBean(userBean.getReferee());
         if (firstUserBean != null) {
             threeRebate.setFirst(threeRebate.getFirst() + firstMoney);
@@ -214,6 +235,23 @@ public class CenterMsgService implements IkafkaMsgId {
 
     }
 
+
+    /**
+     * 增加贡献
+     * @param msg
+     */
+    public static void addContribute(String msg){
+        long userId = JsonUtil.readTree(msg).path("userId").asLong();
+        double money = JsonUtil.readTree(msg).path("money").asDouble();
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        String date = LocalDate.now().toString();
+        ThreeRebate threeRebate = userBean.getUserInfo().getThreeRebate().getOrDefault(date, new ThreeRebate());
+        ThreeRebate allRebate = userBean.getUserInfo().getThreeRebate().getOrDefault("all", new ThreeRebate());
+        userBean.getUserInfo().getThreeRebate().put(date, threeRebate);
+        userBean.getUserInfo().getThreeRebate().put("all", allRebate);
+        threeRebate.setContribute(threeRebate.getContribute() + money);
+        allRebate.setContribute(allRebate.getContribute() + money);
+    }
     /**
      * 获得需要留下的日期
      * @return

@@ -276,6 +276,24 @@ class RoomPaijiu extends PokerGoldRoom with PaijiuConstant {
     msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney.asJava)
   }
 
+  /**
+    * 发送三级返利
+    * @param userId
+    * @param money
+    */
+  def sendCenterAddThreeRebate(userId:Long, money:Double,is100:Int): Unit ={
+    val addMoney = Map("userId"->userId, "money"->money, "is100"->is100)
+    val kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ADD_THREE_REBATE)
+    val msgProducer = SpringUtil.getBean(classOf[MsgProducer])
+    msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney.asJava)
+  }
+
+  def sendCenterAddContribute(userId:Long, money:Double): Unit ={
+    val addMoney = Map("userId"->userId, "money"->money)
+    val kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_CCONTRIBUTE)
+    val msgProducer = SpringUtil.getBean(classOf[MsgProducer])
+    msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney.asJava)
+  }
 
   /**
     * 获取剩余时间

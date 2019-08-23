@@ -25,6 +25,8 @@ public interface IkafkaMsgId {
     int KAFKA_MSG_ID_ADD_COUPON = 3204;
 
     int KAFKA_MSG_ID_ADD_THREE_REBATE = 3205;
+    int KAFKA_MSG_ID_CCONTRIBUTE = 3206;
+
 
 
 

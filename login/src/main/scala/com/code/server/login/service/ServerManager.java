@@ -49,9 +49,13 @@ public class ServerManager {
         data.put(PAIJIU_PAY_ONE, constant.getOther().getRebateData().getOrDefault(PAIJIU_PAY_ONE,"10"));
         data.put(PAIJIU_PAY_AA, constant.getOther().getRebateData().getOrDefault(PAIJIU_PAY_AA,"3"));
 
-        data.put(FIRST_LEVEL, constant.getOther().getRebateData().getOrDefault(FIRST_LEVEL,"3"));
-        data.put(SECODE_LEVEL, constant.getOther().getRebateData().getOrDefault(SECODE_LEVEL,"3"));
-        data.put(THIRD_LEVEL, constant.getOther().getRebateData().getOrDefault(THIRD_LEVEL,"3"));
+        data.put(FIRST_LEVEL, constant.getOther().getRebateData().getOrDefault(FIRST_LEVEL,"1.2"));
+        data.put(SECOND_LEVEL, constant.getOther().getRebateData().getOrDefault(SECOND_LEVEL,"0.6"));
+        data.put(THIRD_LEVEL, constant.getOther().getRebateData().getOrDefault(THIRD_LEVEL,"0.2"));
+
+        data.put(FIRST_LEVEL_100, constant.getOther().getRebateData().getOrDefault(FIRST_LEVEL_100,"1.5"));
+        data.put(SECOND_LEVEL_100, constant.getOther().getRebateData().getOrDefault(SECOND_LEVEL_100,"0.8"));
+        data.put(THIRD_LEVEL_100, constant.getOther().getRebateData().getOrDefault(THIRD_LEVEL_100,"0.2"));
 
         RedisManager.getConstantRedisService().updateConstant(data);
     }

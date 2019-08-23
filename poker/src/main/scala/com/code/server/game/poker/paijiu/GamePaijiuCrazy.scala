@@ -358,6 +358,7 @@ class GamePaijiuCrazy extends GamePaijiu{
       //付房费
       RedisManager.getUserRedisService.addUserMoney(winner, -money)
       gameOfResult.setOther(Map("isAA"->this.roomPaijiu.isAA,"winnerId"->winner, "cost"->money).asJava)
+      this.roomPaijiu.sendCenterAddContribute(winner, money)
     }else{
       gameOfResult.setOther(Map("isAA"->this.roomPaijiu.isAA, "cost"->this.roomPaijiu.getNeedMoney).asJava)
     }
@@ -367,7 +368,9 @@ class GamePaijiuCrazy extends GamePaijiu{
 
       val rebate:Double = this.roomPaijiu.rebateData.get(IGameConstant.PAIJIU_REBATE4).asInstanceOf[String].toDouble
       for(playerInfo <- this.playerCardInfos.values){
-        this.roomPaijiu.sendCenterAddRebate(playerInfo.userId, rebate)
+//        this.roomPaijiu.sendCenterAddRebate(playerInfo.userId, rebate)
+        //todo 确认数值
+        this.roomPaijiu.sendCenterAddThreeRebate(playerInfo.userId, rebate,0)
       }
     }
 
