@@ -170,6 +170,10 @@ public class UserServiceMsgDispatch {
                 int month = params.path("month").asInt();
                 return gameUserService.getRank(msgKey, month);
 
+            case "getRebateInfo":
+                String date = params.path("date").asText("all");
+                return gameUserService.getRebateInfo(msgKey, date);
+
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

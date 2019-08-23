@@ -1,9 +1,7 @@
 package com.code.server.login.service;
 
-import com.code.server.constant.club.ClubMember;
-import com.code.server.constant.club.ClubStatistics;
-import com.code.server.constant.club.RoomModel;
-import com.code.server.constant.club.ScoreItem;
+import com.code.server.constant.club.*;
+import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.game.Record;
 import com.code.server.constant.game.RoomRecord;
 import com.code.server.constant.game.UserBean;
@@ -81,6 +79,10 @@ public class CenterMsgService implements IkafkaMsgId {
                 addRebate(msg);
                 break;
 
+            case KAFKA_MSG_ID_ADD_THREE_REBATE:
+                addThreeRebate(msg);
+                break;
+
             case KAFKA_MSG_ID_ADD_REBATE_LONGCHENG:
                 addRebateLongcheng(msg);
                 break;
@@ -152,6 +154,84 @@ public class CenterMsgService implements IkafkaMsgId {
         addRebate(userId, money);
     }
 
+    private static void addThreeRebate(String msg){
+        long userId = JsonUtil.readTree(msg).path("userId").asLong();
+        double money = JsonUtil.readTree(msg).path("money").asDouble();
+        int firstlevel = (int)ServerManager.constant.getOther().getRebateData().get(IGameConstant.FIRST_LEVEL);
+        int secondlevel = (int)ServerManager.constant.getOther().getRebateData().get(IGameConstant.SECODE_LEVEL);
+        int thirdlevel = (int)ServerManager.constant.getOther().getRebateData().get(IGameConstant.THIRD_LEVEL);
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        String date = LocalDate.now().toString();
+        //获得今日返利
+        ThreeRebate threeRebate = userBean.getUserInfo().getThreeRebate().getOrDefault(date, new ThreeRebate());
+        ThreeRebate allRebate = userBean.getUserInfo().getThreeRebate().getOrDefault("all", new ThreeRebate());
+        userBean.getUserInfo().getThreeRebate().put(date, threeRebate);
+        userBean.getUserInfo().getThreeRebate().put("all", allRebate);
+        double firstMoney = money * firstlevel /100;
+        double secondMoney = money * secondlevel /100;
+        double thirdMoney = money * thirdlevel / 100;
+        UserBean firstUserBean = RedisManager.getUserRedisService().getUserBean(userBean.getReferee());
+        if (firstUserBean != null) {
+            threeRebate.setFirst(threeRebate.getFirst() + firstMoney);
+            allRebate.setFirst(allRebate.getFirst() + firstMoney);
+            //返利
+            RedisManager.getUserRedisService().addUserGold(firstUserBean.getId(), firstMoney);
+
+            //二级代理
+            UserBean secondUserBean = RedisManager.getUserRedisService().getUserBean(firstUserBean.getReferee());
+            if (secondUserBean != null) {
+                threeRebate.setSecond(threeRebate.getSecond() + secondMoney);
+                allRebate.setFirst(allRebate.getSecond() + secondMoney);
+                RedisManager.getUserRedisService().addUserGold(secondUserBean.getId(), secondMoney);
+
+                //三级代理
+                UserBean thirdUserBean = RedisManager.getUserRedisService().getUserBean(secondUserBean.getReferee());
+                if (thirdUserBean != null) {
+                    threeRebate.setThird(threeRebate.getThird() + thirdMoney);
+                    allRebate.setFirst(allRebate.getThird() + thirdMoney);
+                    RedisManager.getUserRedisService().addUserGold(thirdUserBean.getId(), thirdMoney);
+                }
+            }
+        }
+
+        //删除7天以前的数据
+        Set<String> needDay = getNeedDay();
+        List<String> deleteList = new ArrayList<>();
+        for (String key : userBean.getUserInfo().getThreeRebate().keySet()) {
+            if (!needDay.contains(key)) {
+                deleteList.add(key);
+            }
+        }
+
+        //删除
+        for (String delete : deleteList) {
+            userBean.getUserInfo().getThreeRebate().remove(delete);
+        }
+
+        //更新userBean
+        RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+
+    }
+
+    /**
+     * 获得需要留下的日期
+     * @return
+     */
+    private static Set<String> getNeedDay(){
+        Set<String> result = new HashSet<>();
+        result.add("all");
+        LocalDate localDate = LocalDate.now();
+        for(int i=1;i<9;i++){
+            LocalDate l = localDate.minusDays(i);
+            result.add(l.toString());
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getNeedDay());
+    }
 
     private static void addRebateLongcheng(String msg) {
         long userId = JsonUtil.readTree(msg).path("userId").asLong();

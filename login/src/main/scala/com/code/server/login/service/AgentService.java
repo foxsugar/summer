@@ -12,9 +12,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 
 /**
  * Created by sunxianping on 2018/3/14.
@@ -423,4 +422,20 @@ public class AgentService {
         }
     }
 
+
+
+    private static List<String> getNeedDay(){
+        List<String> result = new ArrayList<>();
+        result.add("all");
+        LocalDate localDate = LocalDate.now();
+        for(int i=1;i<9;i++){
+            LocalDate l = localDate.minusDays(i);
+            result.add(l.toString());
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getNeedDay());
+    }
 }

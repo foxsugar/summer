@@ -1,6 +1,7 @@
 package com.code.server.constant.db;
 
 import com.code.server.constant.club.ScoreItem;
+import com.code.server.constant.club.ThreeRebate;
 import com.code.server.constant.game.Message;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class UserInfo {
     private Map<String, Map<Integer, Integer>> taskComplete = new HashMap<>();
     private List<Message> messageBox = new ArrayList<>();
     private  Map<Long, ScoreItem> rebate = new HashMap<>();
+    private Map<String, ThreeRebate> threeRebate = new HashMap<>();
     private double allRebate;
     private long newMessageNum = 0;
 
@@ -223,6 +225,15 @@ public class UserInfo {
 
     public UserInfo setNewMessageNum(long newMessageNum) {
         this.newMessageNum = newMessageNum;
+        return this;
+    }
+
+    public Map<String, ThreeRebate> getThreeRebate() {
+        return threeRebate;
+    }
+
+    public UserInfo setThreeRebate(Map<String, ThreeRebate> threeRebate) {
+        this.threeRebate = threeRebate;
         return this;
     }
 }

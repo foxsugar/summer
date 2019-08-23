@@ -24,6 +24,9 @@ public interface IkafkaMsgId {
     int KAFKA_MSG_ID_ADD_WIN_NUM = 3203;
     int KAFKA_MSG_ID_ADD_COUPON = 3204;
 
+    int KAFKA_MSG_ID_ADD_THREE_REBATE = 3205;
+
+
 
 
 

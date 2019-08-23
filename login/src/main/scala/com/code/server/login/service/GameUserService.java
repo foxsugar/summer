@@ -1,6 +1,7 @@
 package com.code.server.login.service;
 
 
+import com.code.server.constant.club.ThreeRebate;
 import com.code.server.constant.db.PlayerRank;
 import com.code.server.constant.db.PlayerScore;
 import com.code.server.constant.game.*;
@@ -1133,6 +1134,12 @@ public class GameUserService {
         return 0;
     }
 
+    /**
+     * 获得排行榜
+     * @param msgKey
+     * @param month
+     * @return
+     */
     public int getRank(KafkaMsgKey msgKey, int month){
         long userId = msgKey.getUserId();
         LocalDate localDate = LocalDate.now().minusMonths(month);
@@ -1162,6 +1169,76 @@ public class GameUserService {
         map.put("all", list);
         map.put("index", index);
         MsgSender.sendMsg2Player(new ResponseVo("userService", "getRank", map), msgKey.getUserId());
+
+        return 0;
+    }
+
+
+
+    public int getRebateInfo(KafkaMsgKey msgKey, String date){
+
+        long userId = msgKey.getUserId();
+        List<UserBean> allUserBean = RedisManager.getUserRedisService().getAllUserBean();
+        Map<Integer,UserBean> firstLevel = new HashMap<>();
+        Map<Integer,UserBean> secondLevel = new HashMap<>();
+        Map<Integer,UserBean> thirdLevel = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+
+        final double[] firstContribute = {0};
+        final double[] secondContribute = {0};
+        final double[] thirdContribute = {0};
+        
+        final double[] firstRebate = {0};
+        final double[] secondRebate = {0};
+        final double[] thirdRebate = {0};
+
+
+        allUserBean.forEach(userBean -> {
+            if(userBean.getReferee() == userId){
+                firstLevel.put((int)userBean.getId(), userBean);
+                ThreeRebate threeRebate = userBean.getUserInfo().getThreeRebate().get(date);
+                if (threeRebate != null) {
+                    firstContribute[0] +=  threeRebate.getContribute();
+                    firstRebate[0] +=  threeRebate.getFirst();
+                }
+            }
+        });
+
+        allUserBean.forEach(userBean -> {
+            if(firstLevel.containsKey(userBean.getReferee())){
+                secondLevel.put((int)userBean.getId(), userBean);
+                ThreeRebate threeRebate = userBean.getUserInfo().getThreeRebate().get(date);
+                if (threeRebate != null) {
+                    secondContribute[0] +=  threeRebate.getContribute();
+                    secondRebate[0] +=  threeRebate.getSecond();
+                }
+            }
+        });
+
+        allUserBean.forEach(userBean -> {
+            if(secondLevel.containsKey(userBean.getReferee())){
+                thirdLevel.put((int)userBean.getId(), userBean);
+                ThreeRebate threeRebate = userBean.getUserInfo().getThreeRebate().get(date);
+                if (threeRebate != null) {
+                    thirdContribute[0] +=  threeRebate.getContribute();
+                    thirdRebate[0] +=  threeRebate.getThird();
+                }
+            }
+        });
+
+        result.put("firstNum", firstLevel.size());
+        result.put("secondNum", secondLevel.size());
+        result.put("thirdNum", thirdLevel.size());
+
+        result.put("firstContribute", firstContribute);
+        result.put("secondContribute", secondContribute);
+        result.put("thirdContribute", thirdContribute);
+
+        result.put("firstRebate", firstRebate);
+        result.put("secondRebate", secondRebate);
+        result.put("thirdRebate", thirdRebate);
+
+        MsgSender.sendMsg2Player(new ResponseVo("userService", "getRebateInfo", result), msgKey.getUserId());
 
         return 0;
     }

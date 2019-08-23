@@ -536,9 +536,9 @@ public class GameBaseYSZ extends Game {
 
     public int see(long userId) {
 
-        if (check(userId) == false) {
-            return ErrorCode.NOT_YOU_TURN;
-        }
+//        if (check(userId) == false) {
+//            return ErrorCode.NOT_YOU_TURN;
+//        }
 
         logger.info(userId + "  看 牌" + playerCardInfos.get(userId).getHandcards());
 
@@ -559,7 +559,7 @@ public class GameBaseYSZ extends Game {
         ResponseVo seeVo = new ResponseVo("gameService", "seeResponse", result);
         MsgSender.sendMsg2Player(vo, userId);
 
-        noticeActionSelf(userId);
+//        noticeActionSelf(userId);
 
         MsgSender.sendMsg2Player("gameService", "see", 0, userId);
         updateLastOperateTime();

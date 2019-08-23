@@ -513,6 +513,11 @@ class GamePaijiu extends Game with PaijiuConstant {
     0
   }
 
+  def watchCards(userId:Long):Int = {
+    MsgSender.sendMsg2Player("gamePaijiuService", "watchCards", this.commonCards.asJava, userId)
+    0
+  }
+
   def setBankerId(userId: Long): Unit = {
     this.bankerId = userId
   }

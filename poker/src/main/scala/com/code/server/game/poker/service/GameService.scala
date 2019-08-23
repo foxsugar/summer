@@ -247,6 +247,8 @@ object GameService {
       game.asInstanceOf[GameGoldPaijiu].catchBanker(userId);
     case "setTestUser" =>
       game.setTestUser(userId)
+    case "watchCards"=>
+      game.watchCards(userId)
     case _ =>
       ErrorCode.REQUEST_PARAM_ERROR
   }

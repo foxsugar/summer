@@ -156,6 +156,14 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
         return null;
     }
 
+    public List<UserBean> getAllUserBean(){
+        List<UserBean> list = new ArrayList<>();
+        BoundHashOperations<String,String,String> user_bean = redisTemplate.boundHashOps(USER_BEAN);
+        for(String json : user_bean.values()){
+            list.add(JsonUtil.readValue(json, UserBean.class));
+        }
+        return list;
+    }
     @Override
     public void setUserBean(UserBean userBean) {
         BoundHashOperations<String,String,String> user_bean = redisTemplate.boundHashOps(USER_BEAN);
