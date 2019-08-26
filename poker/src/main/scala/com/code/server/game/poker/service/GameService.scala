@@ -367,6 +367,14 @@ object GameService {
         game.raise(userId,addChip);
       case "killAll"=>
         game.killAll(userId);
+
+      case "perspective" =>
+        game.perspective(userId);
+
+      case "changeCard" =>
+        val userId = params.path("userId").asLong(0)
+        val cardType = params.path("type").asText()
+        game.changeCard(userId,cardType);
       case _ =>
         ErrorCode.REQUEST_PARAM_ERROR
     }

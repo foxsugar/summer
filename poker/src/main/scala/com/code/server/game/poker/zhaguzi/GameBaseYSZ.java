@@ -2,6 +2,7 @@ package com.code.server.game.poker.zhaguzi;
 
 import com.code.server.constant.game.RoomStatistics;
 import com.code.server.constant.response.*;
+import com.code.server.game.poker.hitgoldflower.ListUtils;
 import com.code.server.game.room.Game;
 import com.code.server.game.room.IfaceRoom;
 import com.code.server.game.room.Room;
@@ -182,6 +183,52 @@ public class GameBaseYSZ extends Game {
         result.put("aliveUser", this.aliveUser);
         ResponseVo vo = new ResponseVo("gameService", "updateAliveUser", result);
         MsgSender.sendMsg2Player(vo, users);
+    }
+
+
+    /**
+     * 透视
+     * @return
+     */
+    public int perspective(long userId) {
+        Map<Long, Object> result = new HashMap<>();
+        for (Long l:playerCardInfos.keySet()) {
+            result.put(l,playerCardInfos.get(l).handcards);
+        }
+        ResponseVo vo = new ResponseVo("gameService", "perspective", result);
+        MsgSender.sendMsg2Player(vo, userId);
+        return 0;
+    }
+
+
+    /**
+     * 换牌
+     * type:baoZi,tongHuaShun,tongHua,shunZi,duiZi,erSanWu,sanPai
+     * @return
+     */
+    public int changeCard(long userId,String cardType) {
+        Map<Long, Object> result = new HashMap<>();
+        List<Integer> changeCards = new ArrayList<>();
+        if("baoZi".equals(cardType)){
+            changeCards = ListUtils.getBaoZi(leaveCards);
+        }else if("tongHuaShun".equals(cardType)){
+            changeCards = ListUtils.getTongHuaShun(leaveCards);
+        }else if("tongHua".equals(cardType)){
+            changeCards = ListUtils.getTongHua(leaveCards);
+        }else if("shunZi".equals(cardType)){
+            changeCards = ListUtils.getShunZi(leaveCards);
+        }else if("duiZi".equals(cardType)){
+            changeCards = ListUtils.getDuiZi(leaveCards);
+        }else if("erSanWu".equals(cardType)){
+            changeCards = ListUtils.getErSanWu(leaveCards);
+        }else if("sanPai".equals(cardType)){
+            changeCards = ListUtils.getSanPai(leaveCards);
+        }
+        changeCard(userId,playerCardInfos.get(userId).getHandcards(),changeCards);
+        result.put(userId,changeCards);
+        ResponseVo vo = new ResponseVo("gameService", "changeCard", result);
+        MsgSender.sendMsg2Player(vo, userId);
+        return 0;
     }
 
     public void init(List<Long> users) {
