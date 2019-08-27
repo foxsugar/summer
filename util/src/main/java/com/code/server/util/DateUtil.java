@@ -84,6 +84,25 @@ public final class DateUtil {
         return date;
     }
 
+    public static List<String> getThisWeekDay() {
+        List<String> list = new ArrayList<>();
+        LocalDate now = LocalDate.now();
+        int day = now.getDayOfWeek().getValue();
+        for(int i=day-1;i>=0;i--) {
+            LocalDate d = now.minusDays(i);
+            list.add(d.toString());
+        }
+//        System.out.println(list.toString());
+//        LocalDate a = now.minusWeeks(1);
+//        System.out.println(a.toString());
+//        System.out.println(a.getDayOfWeek().getValue());
+
+        return list;
+    }
+
+    public static void main(String[] args) {
+        getThisWeekDay();
+    }
     public static String convert2DayString(Date date){
         return convert2String(date, DATE_TIME_FORMAT_YYYY_MM_DD);
     }

@@ -1248,6 +1248,81 @@ public class GameUserService {
         return 0;
     }
 
+    public int getWeekRebate(KafkaMsgKey msgKey) {
+        long userId = msgKey.getUserId();
+        List<UserBean> allUserBean = RedisManager.getUserRedisService().getAllUserBean();
+        Map<Integer,UserBean> firstLevel = new HashMap<>();
+        Map<Integer,UserBean> secondLevel = new HashMap<>();
+        Map<Integer,UserBean> thirdLevel = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+
+//        final double[] firstContribute = {0};
+//        final double[] secondContribute = {0};
+//        final double[] thirdContribute = {0};
+
+        final double[] firstRebate = {0};
+        final double[] secondRebate = {0};
+        final double[] thirdRebate = {0};
+
+        List<String> thisWeekDays = DateUtil.getThisWeekDay();
+
+        allUserBean.forEach(userBean -> {
+            if(userBean.getReferee() == userId){
+                firstLevel.put((int)userBean.getId(), userBean);
+                for (String date : thisWeekDays) {
+
+                    ThreeRebate threeRebate = userBean.getUserInfo().getThreeRebate().get(date);
+                    if (threeRebate != null) {
+//                        firstContribute[0] +=  threeRebate.getContribute();
+                        firstRebate[0] +=  threeRebate.getFirst();
+                    }
+                }
+            }
+        });
+
+        allUserBean.forEach(userBean -> {
+            if(firstLevel.containsKey(userBean.getReferee())){
+                secondLevel.put((int)userBean.getId(), userBean);
+                for (String date : thisWeekDays) {
+                    ThreeRebate threeRebate = userBean.getUserInfo().getThreeRebate().get(date);
+                    if (threeRebate != null) {
+//                        secondContribute[0] += threeRebate.getContribute();
+                        secondRebate[0] += threeRebate.getSecond();
+                    }
+                }
+            }
+        });
+
+        allUserBean.forEach(userBean -> {
+            if(secondLevel.containsKey(userBean.getReferee())){
+                thirdLevel.put((int)userBean.getId(), userBean);
+                for (String date : thisWeekDays) {
+                    ThreeRebate threeRebate = userBean.getUserInfo().getThreeRebate().get(date);
+                    if (threeRebate != null) {
+//                        thirdContribute[0] += threeRebate.getContribute();
+                        thirdRebate[0] += threeRebate.getThird();
+                    }
+                }
+            }
+        });
+
+        result.put("firstNum", firstLevel.size());
+        result.put("secondNum", secondLevel.size());
+        result.put("thirdNum", thirdLevel.size());
+
+//        result.put("firstContribute", firstContribute[0]);
+//        result.put("secondContribute", secondContribute[0]);
+//        result.put("thirdContribute", thirdContribute[0]);
+
+        result.put("firstRebate", firstRebate[0]);
+        result.put("secondRebate", secondRebate[0]);
+        result.put("thirdRebate", thirdRebate[0]);
+
+        MsgSender.sendMsg2Player(new ResponseVo("userService", "getWeekRebate", result), msgKey.getUserId());
+
+        return 0;
+    }
+
     private Map<String,Object> getChildInfo(int level,UserBean userBean){
         Map<String, Object> result = new HashMap<>();
         result.put("level", level);

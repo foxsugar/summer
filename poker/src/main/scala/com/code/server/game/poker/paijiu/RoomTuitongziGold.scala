@@ -245,10 +245,16 @@ class RoomTuitongziGold extends RoomPaijiu {
     if (RedisManager.getUserRedisService.getUserGold(userId) < score) {
       return ErrorCode.CRAP_ALREADY_BANKER
     }
+
     //上庄先扣钱
     RedisManager.getUserRedisService.addUserGold(userId, -score)
     this.bankerList = this.bankerList :+ userId
     this.bankerScoreMap = this.bankerScoreMap.+(userId -> score)
+
+    val ub = RedisManager.getUserRedisService.getUserBean(userId)
+    if(RedisManager.getUserRedisService.getUserGold(ub.getReferee)<1){
+      return ErrorCode.CANNOT_JOIN_ROOM_NO_GOLD
+    }
 
     //更新庄家
     //    updateBanker()

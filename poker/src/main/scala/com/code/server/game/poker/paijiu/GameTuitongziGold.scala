@@ -106,10 +106,10 @@ class GameTuitongziGold extends GamePaijiu {
     if (playerCardInfoPaijiu.bet == null) {
       val room = this.roomPaijiu.asInstanceOf[RoomTuitongziGold]
       val parentId = room.playerParentMap.get(userId)
-      if(RedisManager.getUserRedisService.getUserGold(parentId) <1) {
+      if(RedisManager.getUserRedisService.getUserMoney(parentId) <1) {
         return ErrorCode.CANNOT_JOIN_ROOM_NO_GOLD
       }
-      RedisManager.getUserRedisService.addUserGold(parentId, -1)
+      RedisManager.getUserRedisService.addUserMoney(parentId, -1)
     }
     //下注不合法
 
@@ -176,7 +176,7 @@ class GameTuitongziGold extends GamePaijiu {
   /**
     * 掷骰子
     */
-  def crap(userId: Long): Int = {
+  override def crap(userId: lang.Long): Int = {
     if (state != START_CRAP) return ErrorCode.CRAP_PARAM_ERROR
     if (userId != bankerId) return ErrorCode.NOT_BANKER
 
@@ -187,9 +187,15 @@ class GameTuitongziGold extends GamePaijiu {
     MsgSender.sendMsg2Player("gamePaijiuService", "randSZ", result.asJava, roomPaijiu.users)
     MsgSender.sendMsg2Player("gamePaijiuService", "crap", 0, userId)
     openStart()
-//    gameOver()
+    //    gameOver()
+
+    val room = this.roomPaijiu.asInstanceOf[RoomTuitongziGold]
+    val parentId = room.playerParentMap.get(userId)
+    RedisManager.getUserRedisService.addUserMoney(parentId, -1)
     0
   }
+
+
 
 
   def isBetFull():Boolean={
