@@ -1231,6 +1231,8 @@ public class GameUserService {
             }
         });
 
+
+
         result.put("firstNum", firstLevel.size());
         result.put("secondNum", secondLevel.size());
         result.put("thirdNum", thirdLevel.size());
@@ -1256,9 +1258,9 @@ public class GameUserService {
         Map<Integer,UserBean> thirdLevel = new HashMap<>();
         Map<String, Object> result = new HashMap<>();
 
-//        final double[] firstContribute = {0};
-//        final double[] secondContribute = {0};
-//        final double[] thirdContribute = {0};
+        final double[] firstContribute = {0};
+        final double[] secondContribute = {0};
+        final double[] thirdContribute = {0};
 
         final double[] firstRebate = {0};
         final double[] secondRebate = {0};
@@ -1273,7 +1275,7 @@ public class GameUserService {
 
                     ThreeRebate threeRebate = userBean.getUserInfo().getThreeRebate().get(date);
                     if (threeRebate != null) {
-//                        firstContribute[0] +=  threeRebate.getContribute();
+                        firstContribute[0] +=  threeRebate.getContribute();
                         firstRebate[0] +=  threeRebate.getFirst();
                     }
                 }
@@ -1286,7 +1288,7 @@ public class GameUserService {
                 for (String date : thisWeekDays) {
                     ThreeRebate threeRebate = userBean.getUserInfo().getThreeRebate().get(date);
                     if (threeRebate != null) {
-//                        secondContribute[0] += threeRebate.getContribute();
+                        secondContribute[0] += threeRebate.getContribute();
                         secondRebate[0] += threeRebate.getSecond();
                     }
                 }
@@ -1299,7 +1301,7 @@ public class GameUserService {
                 for (String date : thisWeekDays) {
                     ThreeRebate threeRebate = userBean.getUserInfo().getThreeRebate().get(date);
                     if (threeRebate != null) {
-//                        thirdContribute[0] += threeRebate.getContribute();
+                        thirdContribute[0] += threeRebate.getContribute();
                         thirdRebate[0] += threeRebate.getThird();
                     }
                 }
@@ -1310,9 +1312,9 @@ public class GameUserService {
         result.put("secondNum", secondLevel.size());
         result.put("thirdNum", thirdLevel.size());
 
-//        result.put("firstContribute", firstContribute[0]);
-//        result.put("secondContribute", secondContribute[0]);
-//        result.put("thirdContribute", thirdContribute[0]);
+        result.put("firstContribute", firstContribute[0]);
+        result.put("secondContribute", secondContribute[0]);
+        result.put("thirdContribute", thirdContribute[0]);
 
         result.put("firstRebate", firstRebate[0]);
         result.put("secondRebate", secondRebate[0]);

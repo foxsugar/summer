@@ -84,6 +84,7 @@ public class CenterMsgService implements IkafkaMsgId {
                 break;
             case KAFKA_MSG_ID_CCONTRIBUTE:
                 addContribute(msg);
+                break;
 
             case KAFKA_MSG_ID_ADD_REBATE_LONGCHENG:
                 addRebateLongcheng(msg);
@@ -203,14 +204,14 @@ public class CenterMsgService implements IkafkaMsgId {
             UserBean secondUserBean = RedisManager.getUserRedisService().getUserBean(firstUserBean.getReferee());
             if (secondUserBean != null) {
                 threeRebate.setSecond(threeRebate.getSecond() + secondMoney);
-                allRebate.setFirst(allRebate.getSecond() + secondMoney);
+                allRebate.setSecond(allRebate.getSecond() + secondMoney);
                 RedisManager.getUserRedisService().addUserGold(secondUserBean.getId(), secondMoney);
 
                 //三级代理
                 UserBean thirdUserBean = RedisManager.getUserRedisService().getUserBean(secondUserBean.getReferee());
                 if (thirdUserBean != null) {
                     threeRebate.setThird(threeRebate.getThird() + thirdMoney);
-                    allRebate.setFirst(allRebate.getThird() + thirdMoney);
+                    allRebate.setThird(allRebate.getThird() + thirdMoney);
                     RedisManager.getUserRedisService().addUserGold(thirdUserBean.getId(), thirdMoney);
                 }
             }
@@ -251,6 +252,8 @@ public class CenterMsgService implements IkafkaMsgId {
         userBean.getUserInfo().getThreeRebate().put("all", allRebate);
         threeRebate.setContribute(threeRebate.getContribute() + money);
         allRebate.setContribute(allRebate.getContribute() + money);
+
+        RedisManager.getUserRedisService().updateUserBean(userId, userBean);
     }
     /**
      * 获得需要留下的日期
@@ -260,7 +263,7 @@ public class CenterMsgService implements IkafkaMsgId {
         Set<String> result = new HashSet<>();
         result.add("all");
         LocalDate localDate = LocalDate.now();
-        for(int i=1;i<9;i++){
+        for(int i=0;i<9;i++){
             LocalDate l = localDate.minusDays(i);
             result.add(l.toString());
         }
