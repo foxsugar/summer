@@ -292,6 +292,21 @@ public class ManagerAction extends Cors {
         }
         return 0;
     }
+
+    @RequestMapping("/clearRebate")
+    public Object clearRebate() {
+        for(String userId : RedisManager.getUserRedisService().getAllUserId()){
+            long uid = Long.valueOf(userId);
+            RedisManager.getUserRedisService().setUserGold(uid,0);
+            UserBean userBean = RedisManager.getUserRedisService().getUserBean(uid);
+            userBean.setGold(0);
+            userBean.getUserInfo().setAllRebate(0);
+            RedisManager.getUserRedisService().updateUserBean(uid, userBean);
+
+        }
+        return 0;
+    }
+
     public static void main(String[] args) {
         LocalDate localDate = LocalDate.now();
         LocalDate beginDateTime = LocalDate.parse("2017-10-10", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
