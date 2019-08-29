@@ -93,7 +93,7 @@ class GamePaijiu100 extends GamePaijiuCrazy {
     gameResult.setSfp(this.roomPaijiu.winnerIndex.last)
 
     this.playerCardInfos.foreach(player=>{
-      val num = 1D * player._2.getBetNum() /100
+      val num = 2D * player._2.getBetNum() /100
       this.roomPaijiu.sendCenterAddContribute(player._1, num)
     })
 

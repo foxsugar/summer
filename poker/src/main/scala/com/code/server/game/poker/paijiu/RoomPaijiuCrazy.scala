@@ -233,7 +233,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     }
 
     this.users.forEach(userId=>{
-      sendCenterAddContribute(userId, 1)
+      sendCenterAddContribute(userId, 2)
     })
     super.spendMoney()
 
