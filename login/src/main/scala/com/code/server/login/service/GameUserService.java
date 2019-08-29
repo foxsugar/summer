@@ -1330,7 +1330,16 @@ public class GameUserService {
         result.put("level", level);
         result.put("userId", userBean.getId());
         result.put("name", userBean.getUsername());
-        result.put("money", userBean.getMoney());
+        ThreeRebate threeRebate = userBean.getUserInfo().getThreeRebate().getOrDefault("all", new ThreeRebate());
+        double m = 0;
+        if(level == 1){
+            m = threeRebate.getFirst();
+        } else if(level == 2){
+            m = threeRebate.getSecond();
+        }else{
+            m = threeRebate.getThird();
+        }
+        result.put("money", m);
         return result;
     }
 
