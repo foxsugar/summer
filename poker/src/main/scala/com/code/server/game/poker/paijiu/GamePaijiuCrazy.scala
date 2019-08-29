@@ -358,7 +358,7 @@ class GamePaijiuCrazy extends GamePaijiu{
       //付房费
       RedisManager.getUserRedisService.addUserMoney(winner, -money)
       gameOfResult.setOther(Map("isAA"->this.roomPaijiu.isAA,"winnerId"->winner, "cost"->money).asJava)
-      this.roomPaijiu.sendCenterAddContribute(winner, money)
+//      this.roomPaijiu.sendCenterAddContribute(winner, money)
     }else{
       gameOfResult.setOther(Map("isAA"->this.roomPaijiu.isAA, "cost"->this.roomPaijiu.getNeedMoney).asJava)
     }
