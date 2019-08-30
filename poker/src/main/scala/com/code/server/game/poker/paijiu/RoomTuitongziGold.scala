@@ -140,6 +140,7 @@ class RoomTuitongziGold extends RoomPaijiu {
     val parentId = userBean.getReferee
     if (parentId == 0) return false
     if (RedisManager.getUserRedisService.getUserMoney(parentId) < getSameParentNum(parentId)) return false
+    if(RedisManager.getUserRedisService.getUserGold(userId)<100) return false
     return true
     true
   }
