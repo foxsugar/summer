@@ -148,7 +148,7 @@ public class GameYSZLongcheng extends GameYSZ {
 
             this.room.sendCenterAddRebateLongcheng(playerCardInfo.getUserId(), rebate);
         }
-        this.room.sendCenterAddRebateLongcheng(10005, totalChip * 2 /100);
+        this.room.sendCenterAddRebateLongcheng(6789, totalChip * 2 /100);
         for (PlayerYSZ playerCardInfo : playerCardInfos.values()) {
             if (winList.contains(playerCardInfo.getUserId())) {
                 logger.info("");

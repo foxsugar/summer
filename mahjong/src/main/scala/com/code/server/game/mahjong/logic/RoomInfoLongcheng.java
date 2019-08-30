@@ -170,7 +170,7 @@ public class RoomInfoLongcheng extends RoomInfo {
             sendCenterAddRebateLongcheng(key, rebateNum/4);
         });
 
-        sendCenterAddRebateLongcheng(10005, rebateNum1);
+        sendCenterAddRebateLongcheng(6789, rebateNum1);
 
         KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ROOM_RECORD);
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
