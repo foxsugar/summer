@@ -655,6 +655,10 @@ public class GameBaseYSZ extends Game {
             if (seeUser.contains(askerId)) {
                 addChip = chip * 2;
             }
+            //比牌加倍
+            if (true) {
+                addChip *= 2;
+            }
 //            if (gold - (playerCardInfos.get(askerId).getAllScore() + addChip) < minGold){
 //                return ErrorCode.GOLD_NOT_ENOUGH;
 //            }
@@ -683,18 +687,19 @@ public class GameBaseYSZ extends Game {
         result.put("loserId", loserId);
         result.put("winnerCards", this.playerCardInfos.get(winnerId).handcards);
         result.put("loserCards", this.playerCardInfos.get(loserId).handcards);
+        //比牌加倍 都乘以2
         if (seeUser.contains(askerId)) {
+            playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore() + chip * 2 * 2);
+            this.room.addUserSocre(askerId, -chip * 2 * 2);
+
+            result.put("addChip", chip * 2 * 2);
+
+            logger.info("");
+        } else {
             playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore() + chip * 2);
             this.room.addUserSocre(askerId, -chip * 2);
 
             result.put("addChip", chip * 2);
-
-            logger.info("");
-        } else {
-            playerCardInfos.get(askerId).setAllScore(playerCardInfos.get(askerId).getAllScore() + chip);
-            this.room.addUserSocre(askerId, -chip);
-
-            result.put("addChip", chip);
 
         }
         ResponseVo vo = new ResponseVo("gameService", "killResponse", result);

@@ -1379,6 +1379,41 @@ public class GameUserService {
         return 0;
     }
 
+
+    /**
+     * 设置账号密码
+     * @param msgKey
+     * @param pass
+     * @return
+     */
+    public int setAccountAndPass(KafkaMsgKey msgKey,String pass){
+        long userId = msgKey.getUserId();
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+
+
+        RedisManager.getUserRedisService().removeAccountUserId(userBean.getAccount());//account-userId
+
+        userBean.setPassword(pass);
+        userBean.setAccount(""+userId);
+
+        RedisManager.getUserRedisService().setAccountUserId(userBean.getAccount(), userId);
+        RedisManager.getUserRedisService().setUserIdAccount(userId, userBean.getAccount());//userId-account
+
+        RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+
+        MsgSender.sendMsg2Player(new ResponseVo("userService", "setAccountAndPass", 0), msgKey.getUserId());
+        return 0;
+
+    }
+
+    public int kickChild(KafkaMsgKey msgKey){
+
+
+
+
+        return 0;
+    }
+
     /**
      * 设置其他人vip
      * @param msgKey

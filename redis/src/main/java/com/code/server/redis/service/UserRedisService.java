@@ -233,6 +233,11 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
         user_token.put(ACCOUNT_USER, ""+account,""+userId);
     }
 
+    public void removeAccountUserId(String account){
+        HashOperations<String,String,String> user_token = redisTemplate.opsForHash();
+        user_token.delete(ACCOUNT_USER, ""+account);
+    }
+
     @Override
     public String getOpenIdByUserId(long userId) {
         HashOperations<String,String,String> user_token = redisTemplate.opsForHash();

@@ -181,6 +181,12 @@ public class UserServiceMsgDispatch {
             case "getChild":
                 return gameUserService.getChild(msgKey);
 
+            case "setAccountAndPass":
+                String pass = params.path("pass").asText("111111");
+                return gameUserService.setAccountAndPass(msgKey, pass);
+            case "kickChild":
+                return gameUserService.kickChild(msgKey);
+
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

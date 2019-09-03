@@ -50,7 +50,8 @@ public class MahjongRobot {
     public static boolean isFire(GameInfo gameInfo){
         if(!USE_AUTO_TIME) return false;
         long userId = getCurUser(gameInfo);
-        if(gameInfo.autoTimes.getOrDefault(userId, 0)>=3) return true;
+//        if(gameInfo.autoTimes.getOrDefault(userId, 0)>=3) return true;
+        if(gameInfo.autoStatus.getOrDefault(userId, 0) == 1) return true;
         return false;
     }
 
