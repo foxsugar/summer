@@ -1406,10 +1406,18 @@ public class GameUserService {
 
     }
 
-    public int kickChild(KafkaMsgKey msgKey){
+    public int kickChild(KafkaMsgKey msgKey, long childId){
 
+        long userId = msgKey.getUserId();
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        userBean.getUserInfo().getRebate().remove(childId);
 
+        UserBean child = RedisManager.getUserRedisService().getUserBean(childId);
+        child.setReferee(0);
 
+        RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+        RedisManager.getUserRedisService().updateUserBean(childId, child);
+        MsgSender.sendMsg2Player(new ResponseVo("userService", "kickChild", 0), msgKey.getUserId());
 
         return 0;
     }
