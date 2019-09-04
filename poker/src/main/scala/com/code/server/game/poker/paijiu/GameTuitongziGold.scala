@@ -106,10 +106,20 @@ class GameTuitongziGold extends GamePaijiu {
     if (playerCardInfoPaijiu.bet == null) {
       val room = this.roomPaijiu.asInstanceOf[RoomTuitongziGold]
       val parentId = room.playerParentMap.get(userId)
-      if(RedisManager.getUserRedisService.getUserMoney(parentId) <1) {
+      if(room.getGoldRoomType == 3000 && RedisManager.getUserRedisService.getUserMoney(parentId) <3) {
         return ErrorCode.CANNOT_JOIN_ROOM_NO_GOLD
       }
-      RedisManager.getUserRedisService.addUserMoney(parentId, -1)
+      if(room.getGoldRoomType == 5000 && RedisManager.getUserRedisService.getUserMoney(parentId) <6) {
+        return ErrorCode.CANNOT_JOIN_ROOM_NO_GOLD
+      }
+      if(room.getGoldRoomType == 3000) {
+
+        RedisManager.getUserRedisService.addUserMoney(parentId, -3)
+      }
+      if(room.getGoldRoomType == 5000) {
+
+        RedisManager.getUserRedisService.addUserMoney(parentId, -6)
+      }
     }
     //下注不合法
 

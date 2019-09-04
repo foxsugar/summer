@@ -244,6 +244,12 @@ public class GameUserService {
      */
     public void sendMailToUser(String mail, long userId){
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        sendMailToUser(mail, userBean);
+
+    }
+
+
+    public void sendMailToUser(String mail, UserBean userBean){
         if (userBean != null) {
             Message message = new Message(mail);
             message.setId(IdWorker.getDefaultInstance().nextId());
@@ -251,12 +257,11 @@ public class GameUserService {
             if(userBean.getUserInfo().getMessageBox().size() > MAIL_MAX){
                 userBean.getUserInfo().getMessageBox().remove(0);
             }
-            RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+            RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
 //            ResponseVo vo = new ResponseVo("userService", "newMessage", results);
 
-            MsgSender.sendMsg2Player(new ResponseVo("userService", "newMessage", 0),userId);
+            MsgSender.sendMsg2Player(new ResponseVo("userService", "newMessage", 0),userBean.getId());
         }
-
     }
 
     public static UserBean user2userBean(User user) {
@@ -723,6 +728,14 @@ public class GameUserService {
         sendMsg(msgKey, vo);
 
         CenterMsgService.addRebate(msgKey.getUserId(), 0D);
+
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", msgKey.getUserId());
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_BIND);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, map);
+
         return 0;
     }
 

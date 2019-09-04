@@ -1,6 +1,7 @@
 package com.code.server.game.poker.paijiu
 
 import com.code.server.constant.game.IGameConstant
+import com.code.server.game.room.Room
 import com.code.server.redis.service.RedisManager
 
 /**
@@ -34,12 +35,20 @@ class RoomPaijiu100 extends RoomPaijiuCrazy{
         //返利
         val rs = score * rebateData.get(IGameConstant.PAIJIU_REBATE100).asInstanceOf[String].toDouble / 100
         RedisManager.getUserRedisService.addUserMoney(userId, s)
-
+        if(Room.isHasMode(MODE_2CARD,this.otherMode)){
+          sendCenterAddThreeRebate(userId, score,1)
+        }
         //发送返利
 //        sendCenterAddRebate(userId, rs)
-        sendCenterAddThreeRebate(userId, score,1)
+
       }else{
         RedisManager.getUserRedisService.addUserMoney(userId, score)
+      }
+
+      var s = score
+      if(s<0) s = -s
+      if(s!=0 && !Room.isHasMode(MODE_2CARD,this.otherMode)) {
+        sendCenterAddThreeRebate(userId, s,1)
       }
     }
   }

@@ -41,6 +41,7 @@ public class CenterMsgService implements IkafkaMsgId {
 
 
     private static UserRecordService userRecordService = SpringUtil.getBean(UserRecordService.class);
+    private static GameUserService gameUserService = SpringUtil.getBean(GameUserService.class);
     private static GameRecordService gameRecordService = SpringUtil.getBean(GameRecordService.class);
     private static ClubRecordService clubRecordService = SpringUtil.getBean(ClubRecordService.class);
     private static AgentUserService agentUserService = SpringUtil.getBean(AgentUserService.class);
@@ -96,6 +97,10 @@ public class CenterMsgService implements IkafkaMsgId {
 
             case KAFKA_MSG_ID_ADD_COUPON:
                 addCoupon(msg);
+                break;
+
+            case KAFKA_MSG_ID_BIND:
+                sendBindMsg(msg);
                 break;
 
 
@@ -314,6 +319,28 @@ public class CenterMsgService implements IkafkaMsgId {
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         userBean.getUserInfo().setCoupon(userBean.getUserInfo().getCoupon() + num);
         RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+    }
+
+
+    public static void sendBindMsg(String msg){
+        long userId = JsonUtil.readTree(msg).path("userId").asLong();
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        UserBean firstBean = RedisManager.getUserRedisService().getUserBean(userBean.getReferee());
+        if (firstBean != null) {
+            gameUserService.sendMailToUser(getMailStr("一级", ""+userBean.getId(), userBean.getUsername()),firstBean);
+            UserBean secondBean = RedisManager.getUserRedisService().getUserBean(firstBean.getReferee());
+            if (secondBean != null) {
+                gameUserService.sendMailToUser(getMailStr("二级", ""+userBean.getId(), userBean.getUsername()),firstBean);
+                UserBean thirdBean = RedisManager.getUserRedisService().getUserBean(secondBean.getReferee());
+                if (thirdBean != null) {
+                    gameUserService.sendMailToUser(getMailStr("三级", ""+userBean.getId(), userBean.getUsername()),firstBean);
+                }
+            }
+        }
+    }
+
+    private static String getMailStr(String str1, String str2, String str3){
+        return  String.format("您的%s下线成员id:%s 名字:%s已成功绑定",str1, str2, str3);
     }
 
 
