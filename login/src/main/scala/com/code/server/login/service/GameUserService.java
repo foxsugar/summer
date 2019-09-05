@@ -1066,6 +1066,8 @@ public class GameUserService {
         Map<String, String> rs = new HashMap<>();
         MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
 
+        sendMailToUser("提现成功", userId);
+
         return 0;
     }
 
@@ -1133,12 +1135,17 @@ public class GameUserService {
      * @param mailId
      * @return
      */
-    public int readMail(KafkaMsgKey msgKey,long mailId,boolean readAll) {
+    public int readMail(KafkaMsgKey msgKey,long mailId,boolean readAll, boolean deleteAll) {
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(msgKey.getUserId());
         if (userBean != null) {
-            for(Message m : userBean.getUserInfo().getMessageBox()){
-                if (m.getId() == mailId||readAll) {
-                    m.setRead(true);
+            if (deleteAll) {
+                userBean.getUserInfo().getMessageBox().clear();
+            }else{
+
+                for(Message m : userBean.getUserInfo().getMessageBox()){
+                    if (m.getId() == mailId||readAll) {
+                        m.setRead(true);
+                    }
                 }
             }
             RedisManager.getUserRedisService().updateUserBean( msgKey.getUserId(), userBean);

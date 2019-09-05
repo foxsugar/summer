@@ -330,10 +330,10 @@ public class CenterMsgService implements IkafkaMsgId {
             gameUserService.sendMailToUser(getMailStr("一级", ""+userBean.getId(), userBean.getUsername()),firstBean);
             UserBean secondBean = RedisManager.getUserRedisService().getUserBean(firstBean.getReferee());
             if (secondBean != null) {
-                gameUserService.sendMailToUser(getMailStr("二级", ""+userBean.getId(), userBean.getUsername()),firstBean);
+                gameUserService.sendMailToUser(getMailStr("二级", ""+userBean.getId(), userBean.getUsername()),secondBean);
                 UserBean thirdBean = RedisManager.getUserRedisService().getUserBean(secondBean.getReferee());
                 if (thirdBean != null) {
-                    gameUserService.sendMailToUser(getMailStr("三级", ""+userBean.getId(), userBean.getUsername()),firstBean);
+                    gameUserService.sendMailToUser(getMailStr("三级", ""+userBean.getId(), userBean.getUsername()),thirdBean);
                 }
             }
         }

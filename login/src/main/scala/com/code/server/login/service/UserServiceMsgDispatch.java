@@ -166,7 +166,8 @@ public class UserServiceMsgDispatch {
             case "readMail":
                 long mailId = params.path("mailId").asLong();
                 boolean readAll = params.path("readAll").asBoolean();
-                return gameUserService.readMail(msgKey,mailId, readAll);
+                boolean deleteAll = params.path("deleteAll").asBoolean();
+                return gameUserService.readMail(msgKey,mailId, readAll, deleteAll);
             case "getRank":
                 int month = params.path("month").asInt();
                 return gameUserService.getRank(msgKey, month);
