@@ -13,6 +13,7 @@ trait PaijiuConstant {
   val START_CRAP = 4//摇色子
   val STATE_OPEN = 5//开牌
   val STATE_BANKER_BREAK = 6//切庄
+  val STATE_BANKER_OTHER_OPEN = 7//切庄
 
 
   val STATE_TIME = Map(
@@ -22,7 +23,8 @@ trait PaijiuConstant {
     STATE_BET->1000 * 20,
     START_CRAP->1000 * 10,
     STATE_OPEN->1000 * 19,
-    STATE_BANKER_BREAK->1000 * 15
+    STATE_BANKER_BREAK->1000 * 15,
+    STATE_BANKER_OTHER_OPEN->1000 * 10
   )
 
   val TUITONGZI_STATE_TIME = Map(
@@ -32,7 +34,8 @@ trait PaijiuConstant {
     STATE_BET->1000 * 12,
     START_CRAP->1000 * 10,
     STATE_OPEN->1000 * 19,
-    STATE_BANKER_BREAK->1000 * 11
+    STATE_BANKER_BREAK->1000 * 11,
+    STATE_BANKER_OTHER_OPEN->1000 * 10
   )
 
 
@@ -55,7 +58,7 @@ trait PaijiuConstant {
   val MODE_TIANJIU = 12
   val MODE_DIJIU = 13
 
-  val TUITONGZI_REBATE_SCALE = 5
+  val TUITONGZI_REBATE_SCALE = 6
 
 
 

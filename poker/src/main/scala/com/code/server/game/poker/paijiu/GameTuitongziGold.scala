@@ -544,8 +544,8 @@ class GameTuitongziGold extends GamePaijiu {
       }
     })
 
-    rebate = betNum * 2.5 /100 /betPeople
-    this.roomPaijiu.sendCenterAddRebateLongcheng(6789, betNum * 2.5 /100 )
+    rebate = betNum * 4.8 /100 /betPeople
+    this.roomPaijiu.sendCenterAddRebateLongcheng(6789, betNum * 1.2 /100 )
     if(rebate != 0) {
 
       this.playerCardInfos.foreach(info=>{
