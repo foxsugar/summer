@@ -1421,6 +1421,7 @@ public class GameUserService {
 
         RedisManager.getUserRedisService().updateUserBean(userId, userBean);
 
+        userService.save(GameUserService.userBean2User(userBean));
         MsgSender.sendMsg2Player(new ResponseVo("userService", "setAccountAndPass", 0), msgKey.getUserId());
         return 0;
 
