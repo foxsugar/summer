@@ -176,9 +176,9 @@ public class CenterMsgService implements IkafkaMsgId {
         double thirdMoney = 0;
         if (is100 == 1) {
 
-            int firstlevel = Integer.valueOf((String)m.get(IGameConstant.FIRST_LEVEL_100));
-            int secondlevel = Integer.valueOf((String)m.get(IGameConstant.SECOND_LEVEL_100));
-            int thirdlevel = Integer.valueOf((String)m.get(IGameConstant.THIRD_LEVEL_100));
+            double firstlevel = Double.valueOf((String)m.get(IGameConstant.FIRST_LEVEL_100));
+            double secondlevel = Double.valueOf((String)m.get(IGameConstant.SECOND_LEVEL_100));
+            double thirdlevel = Double.valueOf((String)m.get(IGameConstant.THIRD_LEVEL_100));
             firstMoney = money * firstlevel /100;
             secondMoney = money * secondlevel /100;
             thirdMoney = money * thirdlevel / 100;

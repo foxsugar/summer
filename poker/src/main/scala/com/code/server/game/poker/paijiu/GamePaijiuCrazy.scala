@@ -500,7 +500,6 @@ class GamePaijiuCrazy extends GamePaijiu{
 
     playerCardInfoPaijiu.bet = bet
 
-//    this.roomPaijiu.addUserSocre(userId, -betNum)
 
 
     val result = Map("userId" -> userId, "bet" -> bet)
@@ -565,7 +564,6 @@ class GamePaijiuCrazy extends GamePaijiu{
 
           roomPaijiu.bankerScore += changeScore
           //庄的分最后再加
-//          roomPaijiu.addUserSocre(banker.userId, changeScore)
           roomPaijiu.addUserSocre(other.userId, -changeScore)
           roomPaijiu.logRoomStatistics(other.userId, -changeScore)
           roomPaijiu.logRoomStatistics(banker.userId, changeScore)
