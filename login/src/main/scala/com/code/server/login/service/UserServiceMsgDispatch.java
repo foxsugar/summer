@@ -189,6 +189,12 @@ public class UserServiceMsgDispatch {
                 long childId = params.path("childId").asLong();
                 return gameUserService.kickChild(msgKey, childId);
 
+            case "hasNotReadMail":
+                return gameUserService.hasNotReadMail(msgKey);
+
+            case "getMails":
+                return gameUserService.getMails(msgKey);
+
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

@@ -27,6 +27,7 @@ import com.code.server.util.SpringUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +71,9 @@ public class GameUserService {
 
     @Autowired
     private RebateDetailService rebateDetailService;
+
+    @Autowired
+    private MailService mailService;
 
     private long lastGetTime = 0;
     private int onlinePeople = 0;
@@ -161,7 +165,7 @@ public class GameUserService {
                 img = userBean.getImage();
 
                 String s = String.format("ID: %s 姓名: %s 给你转了%s蓝钻", userBeanOwn.getId(), userBeanOwn.getUsername(), gold);
-                sendMailToUser(s, rechargeUserId);
+                sendMailToUserOld(s, rechargeUserId);
 
 
             } else {
@@ -242,23 +246,41 @@ public class GameUserService {
      * @param mail
      * @param userId
      */
-    public void sendMailToUser(String mail, long userId){
+    public void sendMailToUserOld(String mail, long userId){
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-        sendMailToUser(mail, userBean);
+
+
+
+
+        Message message = new Message(mail);
+        message.setId(IdWorker.getDefaultInstance().nextId());
+        userBean.getUserInfo().getMessageBox().add(message);
+        if(userBean.getUserInfo().getMessageBox().size() > MAIL_MAX){
+            userBean.getUserInfo().getMessageBox().remove(0);
+        }
+        RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
+//            ResponseVo vo = new ResponseVo("userService", "newMessage", results);
+
+
 
     }
 
 
+    /**
+     * 发送邮件
+     * @param mail
+     * @param userBean
+     */
     public void sendMailToUser(String mail, UserBean userBean){
         if (userBean != null) {
-            Message message = new Message(mail);
-            message.setId(IdWorker.getDefaultInstance().nextId());
-            userBean.getUserInfo().getMessageBox().add(message);
-            if(userBean.getUserInfo().getMessageBox().size() > MAIL_MAX){
-                userBean.getUserInfo().getMessageBox().remove(0);
-            }
-            RedisManager.getUserRedisService().updateUserBean(userBean.getId(), userBean);
-//            ResponseVo vo = new ResponseVo("userService", "newMessage", results);
+            Mail m = new Mail();
+            m.setId(""+IdWorker.getDefaultInstance().nextId());
+            m.setMailType(0);
+            m.setContent(mail);
+            m.setUserId(userBean.getId());
+            m.setMailDate(System.currentTimeMillis());
+
+            mailService.getMailDao().save(m);
 
             MsgSender.sendMsg2Player(new ResponseVo("userService", "newMessage", 0),userBean.getId());
         }
@@ -727,7 +749,7 @@ public class GameUserService {
         ResponseVo vo = new ResponseVo("userService", "bindInGame", 0);
         sendMsg(msgKey, vo);
 
-        CenterMsgService.addRebate(msgKey.getUserId(), 0D);
+//        CenterMsgService.addRebate(msgKey.getUserId(), 0D);
 
 
         Map<String, Object> map = new HashMap<>();
@@ -962,7 +984,7 @@ public class GameUserService {
 
         chargeService.save(charge);
 
-        sendMailToUser(String.format("您成功将%s红钻转成蓝钻",num),userId);
+        sendMailToUserOld(String.format("您成功将%s红钻转成蓝钻",num),userId);
         sendMsg(msgKey, new ResponseVo("userService", "rebate2Gold", 0));
         return 0;
     }
@@ -1066,7 +1088,7 @@ public class GameUserService {
         Map<String, String> rs = new HashMap<>();
         MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), charge.getUserid());
 
-        sendMailToUser("提现成功", userId);
+//        sendMailToUser("提现成功", userId);
 
         return 0;
     }
@@ -1140,6 +1162,7 @@ public class GameUserService {
         if (userBean != null) {
             if (deleteAll) {
                 userBean.getUserInfo().getMessageBox().clear();
+                mailService.getMailDao().readAll(msgKey.getUserId());
             }else{
 
                 for(Message m : userBean.getUserInfo().getMessageBox()){
@@ -1147,8 +1170,9 @@ public class GameUserService {
                         m.setRead(true);
                     }
                 }
+                mailService.getMailDao().deleteAllByUserId(msgKey.getUserId());
             }
-            RedisManager.getUserRedisService().updateUserBean( msgKey.getUserId(), userBean);
+//            RedisManager.getUserRedisService().updateUserBean( msgKey.getUserId(), userBean);
         }
         MsgSender.sendMsg2Player(new ResponseVo("userService", "readMail", 0), msgKey.getUserId());
         return 0;
@@ -1265,6 +1289,12 @@ public class GameUserService {
         result.put("secondRebate", secondRebate[0]);
         result.put("thirdRebate", thirdRebate[0]);
 
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+
+        result.put("fixNum", userBean.getUserInfo().getPlayGameTime());
+        result.put("fixRebate", userBean.getUserInfo().getChargeMoneyNum());
+        result.put("fixAllRebate", userBean.getUserInfo().getChargeGoldNum());
+
         MsgSender.sendMsg2Player(new ResponseVo("userService", "getRebateInfo", result), msgKey.getUserId());
 
         return 0;
@@ -1339,6 +1369,12 @@ public class GameUserService {
         result.put("firstRebate", firstRebate[0]);
         result.put("secondRebate", secondRebate[0]);
         result.put("thirdRebate", thirdRebate[0]);
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+
+        result.put("fixNum", userBean.getUserInfo().getPlayGameTime());
+        result.put("fixRebate", userBean.getUserInfo().getChargeMoneyNum());
+        result.put("fixAllRebate", userBean.getUserInfo().getChargeGoldNum());
 
         MsgSender.sendMsg2Player(new ResponseVo("userService", "getWeekRebate", result), msgKey.getUserId());
 
@@ -1442,6 +1478,21 @@ public class GameUserService {
 
         return 0;
     }
+
+    public int hasNotReadMail(KafkaMsgKey msgKey){
+        Mail mail = mailService.getMailDao().getFirstByIsReadEqualsAndUserId(0, msgKey.getUserId());
+        MsgSender.sendMsg2Player(new ResponseVo("userService", "hasNotReadMail", mail != null), msgKey.getUserId());
+        return 0;
+    }
+
+    public int getMails(KafkaMsgKey msgKey) {
+        long userId = msgKey.getUserId();
+        MsgSender.sendMsg2Player(new ResponseVo("userService", "getMails",
+                mailService.getMailDao().getAllByUserIdOrderByMailDateDesc(userId, new PageRequest(0,50))), msgKey.getUserId());
+        return 0;
+    }
+
+
 
     /**
      * 设置其他人vip

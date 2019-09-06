@@ -1,6 +1,7 @@
 package com.code.server.login.action;
 
 import com.code.server.constant.club.ClubMember;
+import com.code.server.constant.club.ThreeRebate;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ResponseVo;
@@ -13,8 +14,12 @@ import com.code.server.db.model.Recommend;
 import com.code.server.db.model.User;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
-import com.code.server.login.service.*;
+import com.code.server.login.service.CenterMsgService;
+import com.code.server.login.service.ClubManager;
+import com.code.server.login.service.GameUserService;
+import com.code.server.login.service.ServerManager;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.DateUtil;
 import com.code.server.util.SpringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -307,6 +312,152 @@ public class ManagerAction extends Cors {
 //        return 0;
 //    }
 
+    @RequestMapping("/setFixNum")
+    public Object setFixNum(long userId, int childNum, double weekRebate, double allRebate){
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+            userBean.getUserInfo().setPlayGameTime(childNum);
+            userBean.getUserInfo().setChargeMoneyNum(weekRebate);
+            userBean.getUserInfo().setChargeGoldNum(allRebate);
+            RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+        }
+        return 0;
+    }
+
+    @RequestMapping("/getRebateInfo")
+    public Object getRebateInfo(long userId) {
+
+        List<UserBean> allUserBean = RedisManager.getUserRedisService().getAllUserBean();
+        Map<Integer,UserBean> firstLevel = new HashMap<>();
+        Map<Integer,UserBean> secondLevel = new HashMap<>();
+        Map<Integer,UserBean> thirdLevel = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+
+        final double[] firstContribute = {0};
+        final double[] secondContribute = {0};
+        final double[] thirdContribute = {0};
+
+        final double[] firstRebate = {0};
+        final double[] secondRebate = {0};
+        final double[] thirdRebate = {0};
+
+
+        final double[] allFirstContribute = {0};
+        final double[] allSecondContribute = {0};
+        final double[] allThirdContribute = {0};
+
+        final double[] allFirstRebate = {0};
+        final double[] allSecondRebate = {0};
+        final double[] allThirdRebate = {0};
+
+        List<String> thisWeekDays = DateUtil.getThisWeekDay();
+
+        allUserBean.forEach(userBean -> {
+            if(userBean.getReferee() == userId){
+                firstLevel.put((int)userBean.getId(), userBean);
+                ThreeRebate allThreeRebate = userBean.getUserInfo().getThreeRebate().get("all");
+                if (allThreeRebate != null) {
+
+                    allFirstContribute[0] +=  allThreeRebate.getContribute();
+                    allFirstRebate[0] +=  allThreeRebate.getFirst();
+                }
+                for (String date : thisWeekDays) {
+                    ThreeRebate threeRebate = userBean.getUserInfo().getThreeRebate().get(date);
+
+                    if (threeRebate != null) {
+                        firstContribute[0] +=  threeRebate.getContribute();
+                        firstRebate[0] +=  threeRebate.getFirst();
+                    }
+                }
+            }
+        });
+
+        allUserBean.forEach(userBean -> {
+            if(firstLevel.containsKey(userBean.getReferee())){
+                secondLevel.put((int)userBean.getId(), userBean);
+                ThreeRebate allThreeRebate = userBean.getUserInfo().getThreeRebate().get("all");
+                if (allThreeRebate != null) {
+
+                    allSecondContribute[0] +=  allThreeRebate.getContribute();
+                    allSecondRebate[0] +=  allThreeRebate.getSecond();
+                }
+
+                for (String date : thisWeekDays) {
+                    ThreeRebate threeRebate = userBean.getUserInfo().getThreeRebate().get(date);
+                    if (threeRebate != null) {
+                        secondContribute[0] += threeRebate.getContribute();
+                        secondRebate[0] += threeRebate.getSecond();
+                    }
+                }
+            }
+        });
+
+        allUserBean.forEach(userBean -> {
+            if(secondLevel.containsKey(userBean.getReferee())){
+                thirdLevel.put((int)userBean.getId(), userBean);
+                ThreeRebate allThreeRebate = userBean.getUserInfo().getThreeRebate().get("all");
+                if (allThreeRebate != null) {
+
+                    allThirdContribute[0] +=  allThreeRebate.getContribute();
+                    allThirdRebate[0] +=  allThreeRebate.getThird();
+                }
+
+                for (String date : thisWeekDays) {
+                    ThreeRebate threeRebate = userBean.getUserInfo().getThreeRebate().get(date);
+                    if (threeRebate != null) {
+                        thirdContribute[0] += threeRebate.getContribute();
+                        thirdRebate[0] += threeRebate.getThird();
+                    }
+                }
+            }
+        });
+
+        List<Object> firstUser = new ArrayList<>();
+        List<Object> secondUser = new ArrayList<>();
+        List<Object> thirdUser = new ArrayList<>();
+        firstLevel.values().forEach(userBean -> {
+            firstUser.add(userBean.toVo(false));
+        });
+        secondLevel.values().forEach(userBean -> {
+            secondUser.add(userBean.toVo(false));
+        });
+        thirdLevel.values().forEach(userBean -> {
+            thirdUser.add(userBean.toVo(false));
+        });
+        result.put("firstNum", firstLevel.size());//一级人数
+        result.put("secondNum", secondLevel.size());//二级人数
+        result.put("thirdNum", thirdLevel.size());//三级人数
+
+        result.put("firstContribute", firstContribute[0]);//本周一级贡献
+        result.put("secondContribute", secondContribute[0]);//本周二级贡献
+        result.put("thirdContribute", thirdContribute[0]);//本周三级贡献
+
+        result.put("firstRebate", firstRebate[0]);//本周一级返利
+        result.put("secondRebate", secondRebate[0]);//本周二级返利
+        result.put("thirdRebate", thirdRebate[0]);//本周三级返利
+
+
+        result.put("allFirstContribute", allFirstContribute[0]);//全部一级贡献
+        result.put("allSecondContribute", allSecondContribute[0]);//全部二级贡献
+        result.put("allThirdContribute", allThirdContribute[0]);//全部三级贡献
+
+        result.put("allFirstRebate", allFirstRebate[0]);//全部一级返利
+        result.put("allSecondRebate", allSecondRebate[0]);//全部二级返利
+        result.put("allThirdRebate", allThirdRebate[0]);//全部三级返利
+
+        result.put("firstLevelUser", firstUser);//一级所有玩家
+        result.put("secondLevelUser", secondUser);//二级所有玩家
+        result.put("thirdLevelUser", thirdUser);//三级所有玩家
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+
+        result.put("fixNum", userBean.getUserInfo().getPlayGameTime());//修正玩家人数
+        result.put("fixRebate", userBean.getUserInfo().getChargeMoneyNum());//修正本周数据
+        result.put("fixAllRebate", userBean.getUserInfo().getChargeGoldNum());//修正历史数据
+
+
+        return result;
+    }
     public static void main(String[] args) {
         LocalDate localDate = LocalDate.now();
         LocalDate beginDateTime = LocalDate.parse("2017-10-10", DateTimeFormatter.ofPattern("yyyy-MM-dd"));

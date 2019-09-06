@@ -323,11 +323,14 @@ public class CenterMsgService implements IkafkaMsgId {
 
 
     public static void sendBindMsg(String msg){
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        if("".equals(serverConfig.getQrDir())) return;
         long userId = JsonUtil.readTree(msg).path("userId").asLong();
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         UserBean firstBean = RedisManager.getUserRedisService().getUserBean(userBean.getReferee());
         if (firstBean != null) {
             gameUserService.sendMailToUser(getMailStr("一级", ""+userBean.getId(), userBean.getUsername()),firstBean);
+
             UserBean secondBean = RedisManager.getUserRedisService().getUserBean(firstBean.getReferee());
             if (secondBean != null) {
                 gameUserService.sendMailToUser(getMailStr("二级", ""+userBean.getId(), userBean.getUsername()),secondBean);
