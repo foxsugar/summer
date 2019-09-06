@@ -184,6 +184,7 @@ public class UserRedisService implements IUserRedis,IUser_Room,IUser_Gate,IConst
 
     @Override
     public void updateUserBean(long userId, UserBean userBean) {
+        System.err.println("保存玩家: " + userId);
         BoundHashOperations<String,String,String> user_bean = redisTemplate.boundHashOps(USER_BEAN);
         user_bean.put(String.valueOf(userId),JsonUtil.toJson(userBean));
         //加入保存列表

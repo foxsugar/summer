@@ -47,7 +47,7 @@ public class ServerManager {
         data.put(PAIJIU_REBATE100, constant.getOther().getRebateData().getOrDefault(PAIJIU_REBATE100,"2.5"));
         data.put(PAIJIU_REBATE4, constant.getOther().getRebateData().getOrDefault(PAIJIU_REBATE4,"2"));
         data.put(PAIJIU_PAY_ONE, constant.getOther().getRebateData().getOrDefault(PAIJIU_PAY_ONE,"10"));
-        data.put(PAIJIU_PAY_AA, constant.getOther().getRebateData().getOrDefault(PAIJIU_PAY_AA,"3"));
+        data.put(PAIJIU_PAY_AA, constant.getOther().getRebateData().getOrDefault(PAIJIU_PAY_AA,"2"));
 
         data.put(FIRST_LEVEL, constant.getOther().getRebateData().getOrDefault(FIRST_LEVEL,"1.2"));
         data.put(SECOND_LEVEL, constant.getOther().getRebateData().getOrDefault(SECOND_LEVEL,"0.6"));

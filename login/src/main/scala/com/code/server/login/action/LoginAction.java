@@ -237,6 +237,9 @@ public class LoginAction {
                 String token = getToken(user.getId());
                 saveUser2Redis(user, token);
                 RedisManager.getUserRedisService().addRobotPool(user.getId());
+
+            RedisManager.getUserRedisService().setAccountUserId(userBean.getAccount(), userBean.getId());
+            RedisManager.getUserRedisService().setUserIdAccount(userBean.getId(), userBean.getAccount());//userId-account
 //            }
         }
     }
@@ -247,7 +250,10 @@ public class LoginAction {
                 UserBean userBean = RedisManager.getUserRedisService().getUserBean(user.getId());
                 if (userBean == null) {
                     String token = getToken(user.getId());
-                    saveUser2Redis(user, token);
+                    UserBean ub = saveUser2Redis(user, token);
+                    RedisManager.getUserRedisService().setAccountUserId(ub.getAccount(), ub.getId());
+                    RedisManager.getUserRedisService().setUserIdAccount(ub.getId(), ub.getAccount());//userId-account
+
                 }
             }
     }
@@ -265,6 +271,8 @@ public class LoginAction {
             if (user != null) {
                 String token = getToken(user.getId());
                 userBean = saveUser2Redis(user, token);
+                RedisManager.getUserRedisService().setAccountUserId(userBean.getAccount(), userId);
+                RedisManager.getUserRedisService().setUserIdAccount(userId, userBean.getAccount());//userId-account
             }
         }
         return userBean;
