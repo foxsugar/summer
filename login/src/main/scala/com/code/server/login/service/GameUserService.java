@@ -749,7 +749,7 @@ public class GameUserService {
         ResponseVo vo = new ResponseVo("userService", "bindInGame", 0);
         sendMsg(msgKey, vo);
 
-//        CenterMsgService.addRebate(msgKey.getUserId(), 0D);
+        CenterMsgService.addRebate(msgKey.getUserId(), 0D);
 
 
         Map<String, Object> map = new HashMap<>();
