@@ -114,11 +114,11 @@ class GameTuitongziGold extends GamePaijiu {
       }
       if(room.getGoldRoomType == 3000) {
 
-        RedisManager.getUserRedisService.addUserMoney(parentId, -3)
+        RedisManager.getUserRedisService.addUserMoney(parentId, -5)
       }
       if(room.getGoldRoomType == 5000) {
 
-        RedisManager.getUserRedisService.addUserMoney(parentId, -6)
+        RedisManager.getUserRedisService.addUserMoney(parentId, -5)
       }
     }
     //下注不合法
@@ -544,8 +544,8 @@ class GameTuitongziGold extends GamePaijiu {
       }
     })
 
-    rebate = betNum * 4.8 /100 /betPeople
-    this.roomPaijiu.sendCenterAddRebateLongcheng(6789, betNum * 1.2 /100 )
+    rebate = betNum * 4 /100 /betPeople
+    this.roomPaijiu.sendCenterAddRebateLongcheng(6789, betNum * 1 /100 )
     if(rebate != 0) {
 
       this.playerCardInfos.foreach(info=>{
