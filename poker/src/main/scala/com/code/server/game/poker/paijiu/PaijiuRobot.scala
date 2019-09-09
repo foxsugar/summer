@@ -73,6 +73,13 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     //开牌
     doAutoOpen(roomPaijiu, gamePaijiu, now)
 
+
+    doAuto100_4_banker(roomPaijiu, gamePaijiu, now)
+
+    doAuto100_4_other(roomPaijiu, gamePaijiu, now)
+
+
+
     //自动切锅 或者继续
     doBreakBanker(roomPaijiu, gamePaijiu, now)
 
@@ -382,6 +389,7 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
     * @param time
     */
   def doAutoOpen(room: RoomPaijiu, game: GamePaijiu, time: Long): Unit = {
+    if(game.isInstanceOf[GamePaijiu100] && !Room.isHasMode(MODE_2CARD,room.otherMode)) return
     //    if(!game.isInstanceOf[GamePaijiu100]) return
     if (game.state != STATE_OPEN) return
 
@@ -405,7 +413,43 @@ class PaijiuRobot extends IRobot with PaijiuConstant {
 
       }
     }
+  }
 
+  /**
+    * 庄家开牌
+    * @param room
+    * @param game
+    * @param time
+    */
+  def doAuto100_4_banker(room:RoomPaijiu , game:GamePaijiu, time:Long):Unit = {
+    if (game.state != STATE_OPEN) return
+    if(!game.isInstanceOf[GamePaijiu100]) return
+    if(Room.isHasMode(MODE_2CARD,room.otherMode)) return
+    if (time - game.lastOperateTime <= 19000) return
+    val playerInfo:PlayerCardInfoPaijiu = game.playerCardInfos(room.getBankerId)
+    if (playerInfo.cards.nonEmpty && playerInfo.group1 == null) {
+      val finalGroup = game.getMaxOpenGroup(playerInfo.cards)
+      sendOpenMsg(playerInfo.userId, room.getRoomId, finalGroup._1, finalGroup._2)
+    }
+
+  }
+
+
+  def doAuto100_4_other(room:RoomPaijiu , game:GamePaijiu, time:Long):Unit = {
+    if (game.state != STATE_BANKER_OTHER_OPEN) return
+    if(!game.isInstanceOf[GamePaijiu100]) return
+    if(Room.isHasMode(MODE_2CARD,room.otherMode)) return
+    if (time - game.lastOperateTime <= 15000) return
+    for (playerInfo <- game.playerCardInfos.values) {
+
+      if (playerInfo.cards.nonEmpty && playerInfo.group1 == null && playerInfo.userId != room.getBankerId) {
+
+        val finalGroup = game.getMaxOpenGroup(playerInfo.cards)
+
+        sendOpenMsg(playerInfo.userId, room.getRoomId, finalGroup._1, finalGroup._2)
+
+      }
+    }
 
   }
 

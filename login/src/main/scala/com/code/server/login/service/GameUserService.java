@@ -1129,6 +1129,7 @@ public class GameUserService {
                 Map<String, Object> item = new HashMap<>();
                 item.put("userId", Long.valueOf(uid));
                 item.put("name", userBean.getUsername());
+                item.put("parent", userBean.getReferee());
                 list.add(item);
 
             }

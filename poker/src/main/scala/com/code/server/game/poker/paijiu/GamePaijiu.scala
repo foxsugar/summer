@@ -598,6 +598,13 @@ class GamePaijiu extends Game with PaijiuConstant {
     updateLastOperateTime()
   }
 
+  def otherOpenStart(): Unit ={
+    state = STATE_BANKER_OTHER_OPEN
+    //推送开始下注
+    MsgSender.sendMsg2Player("gamePaijiuService", "otherOpenStart", this.bankerId, roomPaijiu.users)
+    updateLastOperateTime()
+  }
+
   /**
     * 掷骰子
     */

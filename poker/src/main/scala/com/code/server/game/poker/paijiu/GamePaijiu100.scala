@@ -217,6 +217,52 @@ class GamePaijiu100 extends GamePaijiuCrazy {
 
 
   /**
+    * 开牌
+    *
+    * @param userId
+    * @param group1
+    * @param group2
+    * @return
+    */
+  override def open(userId: lang.Long, group1: String, group2: String): Int = {
+    val playerInfoOption = playerCardInfos.get(userId)
+    if (playerInfoOption.isEmpty) return ErrorCode.NO_USER
+    if(playerInfoOption.get.group1 != null) {
+      return ErrorCode.OPEN_PARAM_ERROR
+    }
+    //开牌是否合法
+    if (!checkOpen(playerInfoOption.get, group1, group2)) return ErrorCode.OPEN_PARAM_ERROR
+    playerInfoOption.get.group1 = group1
+    playerInfoOption.get.group2 = group2
+
+    //记录最大牌型
+    val lastMax = roomPaijiu.getRoomStatisticsMap.get(userId).maxCardGroup
+    val lastMaxScore = if (lastMax == null) 0 else getGroupScore(lastMax)
+    val thisScore = getGroupScore(group1)
+    if (thisScore > lastMaxScore) {
+      roomPaijiu.getRoomStatisticsMap.get(userId).maxCardGroup = group1
+    }
+
+    //是否已经全开牌
+    val isAllOpen = isAllPlayerOpen()
+    if (isAllOpen) {
+      gameOver()
+    }else{
+      if(!Room.isHasMode(MODE_2CARD,roomPaijiu.otherMode) && userId == roomPaijiu.getBankerId){
+        otherOpenStart()
+      }
+    }
+    //开牌通知
+    MsgSender.sendMsg2Player("gamePaijiuService", "openResult", Map("userId" -> userId).asJava, roomPaijiu.users)
+    MsgSender.sendMsg2Player("gamePaijiuService", "open", 0, userId)
+
+
+    0
+  }
+
+
+
+  /**
     * 是否所有人都开牌
     *
     * @return
