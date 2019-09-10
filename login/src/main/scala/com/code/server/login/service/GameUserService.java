@@ -1173,7 +1173,7 @@ public class GameUserService {
                 }
                 mailService.getMailDao().deleteAllByUserId(msgKey.getUserId());
             }
-//            RedisManager.getUserRedisService().updateUserBean( msgKey.getUserId(), userBean);
+            RedisManager.getUserRedisService().updateUserBean( msgKey.getUserId(), userBean);
         }
         MsgSender.sendMsg2Player(new ResponseVo("userService", "readMail", 0), msgKey.getUserId());
         return 0;
