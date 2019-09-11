@@ -238,8 +238,8 @@ public class LoginAction {
                 saveUser2Redis(user, token);
                 RedisManager.getUserRedisService().addRobotPool(user.getId());
 
-            RedisManager.getUserRedisService().setAccountUserId(userBean.getAccount(), userBean.getId());
-            RedisManager.getUserRedisService().setUserIdAccount(userBean.getId(), userBean.getAccount());//userId-account
+//            RedisManager.getUserRedisService().setAccountUserId(userBean.getAccount(), userBean.getId());
+//            RedisManager.getUserRedisService().setUserIdAccount(userBean.getId(), userBean.getAccount());//userId-account
 //            }
         }
     }

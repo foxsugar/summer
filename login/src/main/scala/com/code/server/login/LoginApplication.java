@@ -54,11 +54,13 @@ public class LoginApplication extends SpringBootServletInitializer {
 			CenterService.loadLogInfo();
 			CenterService.loadRank();
 
-			if (serverConfig.getStartRobot() == 1) {
-				LoginAction.loadRobot();
-			}
+
 			if (serverConfig.getLoadAllUser() == 1) {
 				LoginAction.loadAllPlayer();
+			}
+
+			if (serverConfig.getStartRobot() == 1) {
+				LoginAction.loadRobot();
 			}
 
 
