@@ -29,6 +29,8 @@ public interface IkafkaMsgId {
 
     int KAFKA_MSG_ID_BIND = 3207;
 
+    int KAFKA_MSG_ID_MONEY_SPEND = 3208;
+
 
 
 

@@ -124,12 +124,21 @@ public class RoomExtendGold extends Room {
         Map<String, Object> addMoney = new HashMap<>();
         addMoney.put("userId", userId);
         addMoney.put("money", money);
-
         KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_ADD_REBATE_LONGCHENG);
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
         msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney);
     }
 
+
+    public void sendSpendMoneyLongcheng(long userId, double money){
+        Map<String, Object> addMoney = new HashMap<>();
+        addMoney.put("userId", userId);
+        addMoney.put("money", money);
+        addMoney.put("type", this.roomType);
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_MONEY_SPEND);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney);
+    }
 
     @Override
     public boolean isGoldRoom() {

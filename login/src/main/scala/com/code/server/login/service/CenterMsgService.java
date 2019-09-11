@@ -13,6 +13,7 @@ import com.code.server.db.model.*;
 import com.code.server.login.action.LoginAction;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.redis.service.RedisManager;
+import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 import com.code.server.util.ThreadPool;
@@ -50,6 +51,7 @@ public class CenterMsgService implements IkafkaMsgId {
 
     private static UserService userService = SpringUtil.getBean(UserService.class);
     private static RebateDetailService rebateDetailService = SpringUtil.getBean(RebateDetailService.class);
+    private static ChargeService chargeService = SpringUtil.getBean(ChargeService.class);
 
 
     public static void dispatch(KafkaMsgKey msgKey, String msg) {
@@ -101,6 +103,10 @@ public class CenterMsgService implements IkafkaMsgId {
 
             case KAFKA_MSG_ID_BIND:
                 sendBindMsg(msg);
+                break;
+
+            case KAFKA_MSG_ID_MONEY_SPEND:
+                addSpendMoneyLongcheng(msg);
                 break;
 
 
@@ -280,30 +286,33 @@ public class CenterMsgService implements IkafkaMsgId {
     }
 
     private static void addRebateLongcheng(String msg) {
-        long userId = JsonUtil.readTree(msg).path("userId").asLong();
-        double money = JsonUtil.readTree(msg).path("money").asDouble();
+        try{
+            long userId = JsonUtil.readTree(msg).path("userId").asLong();
+            double money = JsonUtil.readTree(msg).path("money").asDouble();
 
-        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-        long parentId = userBean.getReferee();
-        if (parentId != 0) {
-            UserBean parentUser = LoginAction.loadUserBean(parentId);
-            if (parentUser != null) {
-                //返利记录
-                RebateDetail rebateDetail = new RebateDetail();
-                rebateDetail.setUserId(userId);
-                rebateDetail.setAgentId(parentId);
-                rebateDetail.setNum(money);
-                rebateDetail.setDate(new Date());
-                rebateDetail.setBeforeNum(parentUser.getUserInfo().getAllRebate());
-                parentUser.getUserInfo().setAllRebate(parentUser.getUserInfo().getAllRebate() + money);
-                rebateDetail.setAfterNum(parentUser.getUserInfo().getAllRebate());
-                RedisManager.getUserRedisService().addSaveUser(parentId);
-                RedisManager.getUserRedisService().updateUserBean(parentId, parentUser);
-                rebateDetailService.rebateDetailDao.save(rebateDetail);
-
-
+            UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+            long parentId = userBean.getReferee();
+            if (parentId != 0) {
+                UserBean parentUser = LoginAction.loadUserBean(parentId);
+                if (parentUser != null) {
+                    //返利记录
+                    RebateDetail rebateDetail = new RebateDetail();
+                    rebateDetail.setUserId(userId);
+                    rebateDetail.setAgentId(parentId);
+                    rebateDetail.setNum(money);
+                    rebateDetail.setDate(new Date());
+                    rebateDetail.setBeforeNum(parentUser.getUserInfo().getAllRebate());
+                    parentUser.getUserInfo().setAllRebate(parentUser.getUserInfo().getAllRebate() + money);
+                    rebateDetail.setAfterNum(parentUser.getUserInfo().getAllRebate());
+                    RedisManager.getUserRedisService().addSaveUser(parentId);
+                    RedisManager.getUserRedisService().updateUserBean(parentId, parentUser);
+                    rebateDetailService.rebateDetailDao.save(rebateDetail);
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     private static void addWinNum(String msg){
@@ -319,6 +328,22 @@ public class CenterMsgService implements IkafkaMsgId {
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         userBean.getUserInfo().setCoupon(userBean.getUserInfo().getCoupon() + num);
         RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+    }
+
+    public static void addSpendMoneyLongcheng(String msg){
+        long userId = JsonUtil.readTree(msg).path("userId").asLong();
+        int num = JsonUtil.readTree(msg).path("money").asInt();
+        String roomType = JsonUtil.readTree(msg).path("type").asText();
+        Charge charge = new Charge();
+        charge.setUserid(userId);
+        charge.setOrderId(IdWorker.getDefaultInstance().nextId()+"");
+        charge.setCreatetime(new Date());
+        charge.setMoney(num);
+        charge.setRecharge_source("16");
+        charge.setStatus(1);
+        charge.setSign(roomType);
+        chargeService.save(charge);
+
     }
 
 

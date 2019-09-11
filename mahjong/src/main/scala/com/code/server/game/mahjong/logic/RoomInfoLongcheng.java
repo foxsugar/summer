@@ -201,6 +201,7 @@ public class RoomInfoLongcheng extends RoomInfo {
                 need *= 2;
             }
             RedisManager.getUserRedisService().addUserMoney(parentId, -need);
+            sendSpendMoneyLongcheng(parentId, -need);
         }
     }
 }

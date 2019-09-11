@@ -103,6 +103,7 @@ public class RoomYSZLongcheng extends RoomYSZ {
                 need *= 2;
             }
             RedisManager.getUserRedisService().addUserMoney(parentId, -need);
+            sendSpendMoneyLongcheng(parentId, -need);
         }
     }
 

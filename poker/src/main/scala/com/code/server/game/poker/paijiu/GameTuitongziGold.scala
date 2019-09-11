@@ -115,10 +115,12 @@ class GameTuitongziGold extends GamePaijiu {
       if(room.getGoldRoomType == 3000) {
 
         RedisManager.getUserRedisService.addUserMoney(parentId, -5)
+        room.sendSpendMoneyLongcheng(parentId, -5)
       }
       if(room.getGoldRoomType == 5000) {
 
         RedisManager.getUserRedisService.addUserMoney(parentId, -5)
+        room.sendSpendMoneyLongcheng(parentId, -5)
       }
     }
     //下注不合法
@@ -201,7 +203,8 @@ class GameTuitongziGold extends GamePaijiu {
 
     val room = this.roomPaijiu.asInstanceOf[RoomTuitongziGold]
     val parentId = room.playerParentMap.get(userId)
-    RedisManager.getUserRedisService.addUserMoney(parentId, -1)
+    RedisManager.getUserRedisService.addUserMoney(parentId, -5)
+    room.sendSpendMoneyLongcheng(parentId, -5)
     0
   }
 
