@@ -1,12 +1,8 @@
 package com.code.server.login.service;
 
-import com.code.server.constant.game.UserBean;
 import com.code.server.db.Service.GameRecordService;
 import com.code.server.db.Service.RebateDetailService;
-import com.code.server.db.model.RebateDetail;
 import com.code.server.login.config.ServerConfig;
-import com.code.server.redis.service.RedisManager;
-import com.code.server.util.DateUtil;
 import com.code.server.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,41 +69,41 @@ public class ScheduledService {
             gameRecordService.replayDao.deleteAllByDateBefore(d);
         }
 
-        if (SpringUtil.getBean(ServerConfig.class).getLoadAllUser() == 1) {
-            LocalDate yestoday = LocalDate.now().minusDays(1);
-            String ys = yestoday.toString();
-//            ys = LocalDate.now().toString();
-            for(String uid : RedisManager.getUserRedisService().getAllUserId()){
-                long userId = Long.valueOf(uid);
-                UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
-                if (userBean.getVip() > 1 && userBean.getReferee() != 0) {
-
-                    Double lastDayRebate = rebateDetailService.rebateDetailDao.getRebateByDate(userId, ys);
-                    if (lastDayRebate != null) {
-
-                        double re = lastDayRebate /10;
-
-                        UserBean parent = RedisManager.getUserRedisService().getUserBean(userBean.getReferee());
-                        parent.getUserInfo().setAllRebate(parent.getUserInfo().getAllRebate() + re);
-                        RedisManager.getUserRedisService().updateUserBean(parent.getId(), parent);
-
-                        //返利记录
-                        RebateDetail rebateDetail = new RebateDetail();
-                        rebateDetail.setNum(re);
-                        rebateDetail.setUserId(userBean.getId());
-                        rebateDetail.setAgentId(parent.getId());
-                        rebateDetail.setDate(new Date());
-                        rebateDetail.setType(1);
-
-                        rebateDetailService.rebateDetailDao.save(rebateDetail);
-                    }
-                }
-            }
-//            rebateDetailService.rebateDetailDao.findAllByAgentId()
-
-            LocalDate localDate = LocalDate.now().minusDays(8);
-            rebateDetailService.rebateDetailDao.deleteAllByDateBefore(DateUtil.convertDay2Date(localDate.toString()));
-        }
+//        if (SpringUtil.getBean(ServerConfig.class).getLoadAllUser() == 1) {
+//            LocalDate yestoday = LocalDate.now().minusDays(1);
+//            String ys = yestoday.toString();
+////            ys = LocalDate.now().toString();
+//            for(String uid : RedisManager.getUserRedisService().getAllUserId()){
+//                long userId = Long.valueOf(uid);
+//                UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+//                if (userBean.getVip() > 1 && userBean.getReferee() != 0) {
+//
+//                    Double lastDayRebate = rebateDetailService.rebateDetailDao.getRebateByDate(userId, ys);
+//                    if (lastDayRebate != null) {
+//
+//                        double re = lastDayRebate /10;
+//
+//                        UserBean parent = RedisManager.getUserRedisService().getUserBean(userBean.getReferee());
+//                        parent.getUserInfo().setAllRebate(parent.getUserInfo().getAllRebate() + re);
+//                        RedisManager.getUserRedisService().updateUserBean(parent.getId(), parent);
+//
+//                        //返利记录
+//                        RebateDetail rebateDetail = new RebateDetail();
+//                        rebateDetail.setNum(re);
+//                        rebateDetail.setUserId(userBean.getId());
+//                        rebateDetail.setAgentId(parent.getId());
+//                        rebateDetail.setDate(new Date());
+//                        rebateDetail.setType(1);
+//
+//                        rebateDetailService.rebateDetailDao.save(rebateDetail);
+//                    }
+//                }
+//            }
+////            rebateDetailService.rebateDetailDao.findAllByAgentId()
+//
+//            LocalDate localDate = LocalDate.now().minusDays(8);
+//            rebateDetailService.rebateDetailDao.deleteAllByDateBefore(DateUtil.convertDay2Date(localDate.toString()));
+//        }
 
     }
 
