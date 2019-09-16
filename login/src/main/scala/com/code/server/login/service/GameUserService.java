@@ -1163,7 +1163,8 @@ public class GameUserService {
         if (userBean != null) {
             if (deleteAll) {
                 userBean.getUserInfo().getMessageBox().clear();
-                mailService.getMailDao().readAll(msgKey.getUserId());
+                mailService.getMailDao().deleteAllByUserId(msgKey.getUserId());
+
             }else{
 
                 for(Message m : userBean.getUserInfo().getMessageBox()){
@@ -1171,7 +1172,12 @@ public class GameUserService {
                         m.setRead(true);
                     }
                 }
-                mailService.getMailDao().deleteAllByUserId(msgKey.getUserId());
+
+                if (readAll) {
+                    mailService.getMailDao().readAll(msgKey.getUserId());
+                }
+
+
             }
             RedisManager.getUserRedisService().updateUserBean( msgKey.getUserId(), userBean);
         }

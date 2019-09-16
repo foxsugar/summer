@@ -12,6 +12,7 @@ import com.code.server.db.Service.*;
 import com.code.server.db.model.*;
 import com.code.server.login.action.LoginAction;
 import com.code.server.login.config.ServerConfig;
+import com.code.server.login.kafka.MsgSender;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import com.code.server.util.JsonUtil;
@@ -307,6 +308,10 @@ public class CenterMsgService implements IkafkaMsgId {
                     RedisManager.getUserRedisService().addSaveUser(parentId);
                     RedisManager.getUserRedisService().updateUserBean(parentId, parentUser);
                     rebateDetailService.rebateDetailDao.save(rebateDetail);
+
+
+                    Map<String, String> rs = new HashMap<>();
+                    MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), parentId);
                 }
             }
         }catch (Exception e){

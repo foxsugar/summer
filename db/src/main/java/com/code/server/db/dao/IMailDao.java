@@ -26,4 +26,6 @@ public interface IMailDao extends PagingAndSortingRepository<Mail, String> {
     @Modifying
     @Query(value = "update mail set is_read = 1 where user_id=?1", nativeQuery = true)
     void readAll(long userId);
+
+
 }
