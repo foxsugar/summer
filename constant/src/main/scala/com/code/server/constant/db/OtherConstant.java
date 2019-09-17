@@ -11,6 +11,7 @@ public class OtherConstant {
     private Map<String, String> explain = new HashMap<>();//说明
     private Map<String, String> promo = new HashMap<>();//推广
     private Map<String, Object> rebateData = new HashMap<>();
+    private Map<String, String> kefu = new HashMap<>();//客服
 
 
 
@@ -47,6 +48,15 @@ public class OtherConstant {
 
     public OtherConstant setPromo(Map<String, String> promo) {
         this.promo = promo;
+        return this;
+    }
+
+    public Map<String, String> getKefu() {
+        return kefu;
+    }
+
+    public OtherConstant setKefu(Map<String, String> kefu) {
+        this.kefu = kefu;
         return this;
     }
 }
