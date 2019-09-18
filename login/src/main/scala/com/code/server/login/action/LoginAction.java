@@ -224,6 +224,10 @@ public class LoginAction {
 
         RedisManager.getUserRedisService().setOpenIdUserId(user.getOpenId(), user.getId());//openid-userId
         RedisManager.getUserRedisService().setUserIdOpenId(user.getId(), user.getOpenId());//userId-openid
+
+
+        RedisManager.getUserRedisService().setAccountUserId(userBean.getAccount(), user.getId());
+        RedisManager.getUserRedisService().setUserIdAccount(user.getId(), userBean.getAccount());//userId-account
         return userBean;
     }
 
