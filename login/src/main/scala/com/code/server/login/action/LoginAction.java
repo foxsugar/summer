@@ -35,14 +35,20 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import scala.tools.nsc.doc.html.page.JSONObject;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.net.URLDecoder;
 import java.util.*;
 
@@ -325,9 +331,11 @@ public class LoginAction {
 
         if (userId == null) {
 
-            User user = userService.getUserByAccountAndPassword(account, password);
+            User user = null;
+            List<User> list = userService.getUserDao().getUsersByAccount(account);
+
             //查询数据库，没有新建玩家
-            if (user == null) {
+            if (list.size() == 0) {
                 //新建玩家
 
                 user = createUser(account, password);
@@ -339,29 +347,20 @@ public class LoginAction {
                     ZXingUtil.createQrCode(user.getId());
 
                 }
+                String token = getToken(user.getId());
+                saveUser2Redis(user, token);
+
+                params.put("token", token);
+                params.put("userId", user.getId());
+
+
+                code = login4sqlByAccount(account, password, params);
+                userId = String.valueOf(params.get("userId"));
             }
-            String token = getToken(user.getId());
-            saveUser2Redis(user, token);
-
-            params.put("token", token);
-            params.put("userId", user.getId());
-
-
-            code = login4sqlByAccount(account, password, params);
-            userId = String.valueOf(params.get("userId"));
         } else {
-            String redisToken = userRedisService.getToken(Long.valueOf(userId));
-            UserBean userBean = userRedisService.getUserBean(Long.valueOf(userId));
-            if (!password.equals(userBean.getPassword())) {
-                code = ErrorCode.ROLE_ACCOUNT_OR_PASSWORD_ERROR;
-            } else {
-                redisToken = getToken(Long.valueOf(userId));
-                userRedisService.setToken(Long.valueOf(userId), redisToken);
-                userBean.setLastLoginDate(new Date());
-            }
+            code = ErrorCode.ROLE_ACCOUNT_OR_PASSWORD_ERROR;
 
-            params.put("token", redisToken);
-            params.put("userId", userId);
+
         }
 
         //黑名单
@@ -376,6 +375,71 @@ public class LoginAction {
         System.err.println(params);
         return getParams("register", params, code);
     }
+
+
+
+
+
+    /**
+     * 文件上传功能
+     * @return
+     */
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public Map<String,Object> uploadImg(HttpServletRequest request, HttpServletResponse response, long userId, String token, MultipartFile file, String name)
+            throws ServletException, IOException {
+        Map<String, Object> params = new HashMap<>();
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean == null) {
+            return getParams("upload", params, ErrorCode.ACCOUT_HAS_NOT_EXITS);
+        }
+
+
+        if (!token.equals(RedisManager.getUserRedisService().getToken(userId))) {
+            return getParams("upload", params, ErrorCode.ACCOUT_HAS_NOT_EXITS);
+        }
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        ServletFileUpload sfu = new ServletFileUpload(factory);
+        // 处理中文问题
+        sfu.setHeaderEncoding("UTF-8");
+        // 限制文件大小
+        sfu.setSizeMax(1024 * 1024 * 5);
+
+        InputStream files = file.getInputStream();
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
+        String fileName = file.getOriginalFilename();
+        System.out.println(fileName);
+        String[] ss = fileName.split("\\.");
+        if (ss.length != 2 || !"png".equals(ss[1])) {
+            return getParams("upload", params, ErrorCode.IMAGE_ERROR);
+        }
+        String dir = serverConfig.getQrDir() + "icon"+userId + ".png";
+        String url = serverConfig.getDomain() + "icon"+userId + ".png";
+        FileOutputStream out = new FileOutputStream(new File(dir));
+        try {
+            // 每次读取的字节长度
+            int n = 0;
+            // 存储每次读取的内容
+            byte[] bb = new byte[1024];
+            while ((n = files.read(bb)) != -1) {
+                // 将读取的内容，写入到输出流当中
+                out.write(bb, 0, n);
+            }
+        }finally {
+            // 关闭输入输出流
+            out.close();
+            files.close();
+        }
+
+
+        userBean.setImage(url);
+        userBean.setUsername(name);
+        RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+
+        return getParams("upload", params, 0);
+    }
+
 
     private void setHostAndPort(String userId, Map<String, Object> params, boolean isSet) {
         if (isSet) {

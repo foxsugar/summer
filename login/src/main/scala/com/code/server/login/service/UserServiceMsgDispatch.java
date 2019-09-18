@@ -195,6 +195,10 @@ public class UserServiceMsgDispatch {
             case "getMails":
                 return gameUserService.getMails(msgKey);
 
+            case "getChildInfo":
+                boolean showAll = params.path("showAll").asBoolean();
+                return gameUserService.getChildInfo(msgKey, showAll);
+
             default:
                 return ErrorCode.REQUEST_PARAM_ERROR;
         }

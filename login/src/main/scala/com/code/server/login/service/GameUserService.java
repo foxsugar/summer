@@ -1499,6 +1499,33 @@ public class GameUserService {
         return 0;
     }
 
+    public int getChildInfo(KafkaMsgKey msgKey, boolean showAll){
+        List<UserBean> list = RedisManager.getUserRedisService().getAllUserBean();
+        double gold = 0;
+        double rebate = 0;
+
+        for (UserBean userBean : list) {
+            if (showAll) {
+               gold += userBean.getGold();
+               rebate += userBean.getUserInfo().getAllRebate();
+            }else{
+                if(userBean.getReferee() == msgKey.getUserId()){
+                    gold += userBean.getGold();
+                    rebate += userBean.getUserInfo().getAllRebate();
+                }
+
+            }
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("gold", (int)gold);
+        result.put("rebate", (int)rebate);
+        result.put("peopleNum", list.size());
+        result.put("onlineNum", RedisManager.getUserRedisService().getOnlineUserNum());
+        MsgSender.sendMsg2Player(new ResponseVo("userService", "getChildInfo", result), msgKey.getUserId());
+        return 0;
+    }
+
 
 
     /**

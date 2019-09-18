@@ -29,6 +29,8 @@ public class ErrorCode {
 	public static final int ROOM_CAN_NOT_CHANGE = 1000020;
 	public static final int CANNOT_JOIN_ROOM_WATCH = 1000021;
 	public static final int CANNOT_JOIN_ROOM_NO_GOLD = 1000022;
+	public static final int ACCOUT_HAS_NOT_EXITS= 1110030;//账号不存在
+	public static final int IMAGE_ERROR= 1110031;//账号不存在
 
 
 

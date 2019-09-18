@@ -16,6 +16,8 @@ public interface IUserDao extends PagingAndSortingRepository<User, Long>, JpaSpe
 
     User getUserByAccountAndPassword(String account, String password);
 
+    List<User> getUsersByAccount(String account);
+
     User getUserByOpenId(String openId);
 
     User getUserById(long userId);
