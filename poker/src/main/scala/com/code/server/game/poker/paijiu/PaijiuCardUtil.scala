@@ -11,7 +11,7 @@ object PaijiuCardUtil {
 
   var cardScore: List[(String, Int)] = List()
 
-  def initCardScore(): Unit = {
+  def initCardScore(maxScore:Int): Unit = {
     if (cardScore.nonEmpty) return
 
     for (card <- DataManager.data.getPaijiuCardGroupDataMap.asScala) {
@@ -19,7 +19,7 @@ object PaijiuCardUtil {
       val key = card._1
       val groupName = card._2.getName
       val score: Int = DataManager.data.getPaijiuCardGroupScoreDataMap.get(groupName).getScore
-      if(score <= 60){
+      if(score <= maxScore){
         cardScore = cardScore.+:((key, score))
       }
     }
@@ -40,13 +40,13 @@ object PaijiuCardUtil {
     * @param cards
     * @return
     */
-  def getMaxGroupAndNewCards(cards:List[Int]): (List[Int],List[Int]) ={
+  def getMaxGroupAndNewCards(cards:List[Int], maxScore:Int): (List[Int],List[Int]) ={
     var removeList:List[Int] = List()
 //    var newCards:List[Int] = List()
 
 
-    val (removeList1,newCards1):(List[Int],List[Int]) = getMaxGroup(cards)
-    val (removeList2,newCards2):(List[Int],List[Int])  = getMaxGroup(newCards1)
+    val (removeList1,newCards1):(List[Int],List[Int]) = getMaxGroup(cards, maxScore)
+    val (removeList2,newCards2):(List[Int],List[Int])  = getMaxGroup(newCards1, maxScore)
 
     removeList ++= removeList1
     removeList ++= removeList2
@@ -61,8 +61,8 @@ object PaijiuCardUtil {
     * @param cards
     * @return
     */
-  def getMaxGroup(cards: List[Int]): (List[Int],List[Int]) = {
-    initCardScore()
+  def getMaxGroup(cards: List[Int], maxScore:Int): (List[Int],List[Int]) = {
+    initCardScore(maxScore)
     var result:(List[Int], List[Int]) = (List(), List())
     var newCards:List[Int] = List()
     newCards ++= cards

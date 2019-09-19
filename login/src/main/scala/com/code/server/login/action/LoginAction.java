@@ -626,8 +626,6 @@ public class LoginAction {
             }
 
         }
-
-
         ZXingUtil.createQrCode(userId);
         return 0;
 

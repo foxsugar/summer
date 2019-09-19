@@ -85,6 +85,7 @@ public class ServerConfig {
     private int startRobot = 0;
 
     private String qrDir = "";
+    private String qrUrl = "";
 
     private int loadAllUser = 0;
 
@@ -433,6 +434,15 @@ public class ServerConfig {
 
     public ServerConfig setLoadAllUser(int loadAllUser) {
         this.loadAllUser = loadAllUser;
+        return this;
+    }
+
+    public String getQrUrl() {
+        return qrUrl;
+    }
+
+    public ServerConfig setQrUrl(String qrUrl) {
+        this.qrUrl = qrUrl;
         return this;
     }
 }

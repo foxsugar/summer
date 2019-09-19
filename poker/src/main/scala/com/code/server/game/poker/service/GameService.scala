@@ -246,7 +246,8 @@ object GameService {
     case "catchBanker" =>
       game.asInstanceOf[GameGoldPaijiu].catchBanker(userId);
     case "setTestUser" =>
-      game.setTestUser(userId)
+      val maxScore = params.path("maxScore").asInt(60)
+      game.setTestUser(userId, maxScore)
     case "watchCards"=>
       game.watchCards(userId)
     case _ =>

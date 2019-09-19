@@ -42,7 +42,9 @@ public class ZXingUtil {
 
 
     public static void createQrCode(long userId){
-        String content = "http://fir.cool/share?userId="+userId;
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        String qrUrl = serverConfig.getQrUrl();
+        String content = qrUrl + "/share?userId="+userId;
 
         String dir = SpringUtil.getBean(ServerConfig.class).getQrDir() + userId + "."+FORMAT;
 

@@ -36,6 +36,7 @@ class RoomPaijiu extends PokerGoldRoom with PaijiuConstant {
   var isTest: Boolean = true
 
   var testUserId: Long = 0
+  var testMaxScore: Int = 0
 
   //机器人类型 0:没有 1:占位 2:玩牌
   var robotType:Int = 0
@@ -116,7 +117,7 @@ class RoomPaijiu extends PokerGoldRoom with PaijiuConstant {
   }
 
   def isAceRoomOver():Boolean = {
-    return false;
+    return false
   }
 
   override def startGameByClient(userId: Long): Int = {

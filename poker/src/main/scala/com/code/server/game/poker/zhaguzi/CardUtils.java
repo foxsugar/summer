@@ -1,13 +1,7 @@
 package com.code.server.game.poker.zhaguzi;
-import com.code.server.game.poker.doudizhu.CardUtil;
-import com.code.server.game.poker.hitgoldflower.Player;
 import com.code.server.game.poker.pullmice.BaseCardUtils;
 import com.code.server.game.poker.pullmice.IfCard;
-import com.google.common.base.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.util.StringUtils;
-import scala.Int;
+
 import java.util.*;
 
 /**
@@ -189,13 +183,13 @@ public class CardUtils extends BaseCardUtils implements CardUtilsError{
             //双三必须是五人场中 并且亮了方片三才会有
             if (playerZhaGuZi.getRoomPersonNum() == 5){
 
-                if (playerZhaGuZi.getLiangList().size() > 0){
+//                if (playerZhaGuZi.getLiangList().size() > 0){
 
-                    if (playerZhaGuZi.getLiangList().contains(9)){
+//                    if (playerZhaGuZi.getLiangList().contains(9)){
                         if (a == 7 && b == 9){
                             return SHUANG_SAN;
-                        }
-                    }
+//                        }
+//                    }
                 }
 
             }

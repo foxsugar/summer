@@ -55,7 +55,7 @@ class GamePaijiuCrazy extends GamePaijiu{
   override protected def deal(): Unit = {
     //测试的发牌
     if (this.roomPaijiu.isTest && this.roomPaijiu.getCurGameNumber % 2 == 0 && this.roomPaijiu.testUserId != 0) {
-      val (maxCards, newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(cards)
+      val (maxCards, newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(cards, this.roomPaijiu.testMaxScore)
       val testPlayer = playerCardInfos(this.roomPaijiu.testUserId)
       testPlayer.cards = maxCards
 
