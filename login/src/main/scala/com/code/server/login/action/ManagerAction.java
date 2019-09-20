@@ -6,12 +6,10 @@ import com.code.server.constant.game.UserBean;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.ChargeService;
+import com.code.server.db.Service.ConstantService;
 import com.code.server.db.Service.RecommendService;
 import com.code.server.db.Service.UserService;
-import com.code.server.db.model.Charge;
-import com.code.server.db.model.Club;
-import com.code.server.db.model.Recommend;
-import com.code.server.db.model.User;
+import com.code.server.db.model.*;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.service.CenterMsgService;
@@ -52,6 +50,9 @@ public class ManagerAction extends Cors {
     private RecommendService recommendService;
     @Autowired
     private ChargeService chargeService;
+
+    @Autowired
+    private ConstantService constantService;
 
     @RequestMapping("/getOnlineUser")
     public Map<String, Object> getOnlineUser() {
@@ -321,6 +322,14 @@ public class ManagerAction extends Cors {
             userBean.getUserInfo().setChargeGoldNum(allRebate);
             RedisManager.getUserRedisService().updateUserBean(userId, userBean);
         }
+        return 0;
+    }
+
+    @RequestMapping("/setKefu")
+    public Object setKefu(String key, String value){
+        Constant constant = ServerManager.constant;
+        constant.getOther().getKefu().put(key, value);
+        constantService.constantDao.save(constant);
         return 0;
     }
 
