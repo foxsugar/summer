@@ -37,6 +37,7 @@ class RoomPaijiu extends PokerGoldRoom with PaijiuConstant {
 
   var testUserId: Long = 0
   var testMaxScore: Int = 0
+  var testMinScore:Int = 0
 
   //机器人类型 0:没有 1:占位 2:玩牌
   var robotType:Int = 0

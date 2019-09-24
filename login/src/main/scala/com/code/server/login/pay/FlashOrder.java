@@ -60,8 +60,8 @@ public class FlashOrder {
 
     @RequestMapping(value = "/pay_flash")
     public ModelAndView order(int money, String platform, long userId, RedirectAttributes attr) throws IOException {
-        String key = "JVVcedFjsNVsahmhjVfJ";
-        String app_id = "12798";
+        String key = " rXwLtPckvedRiKnNGQrQ";
+        String app_id = "12812";
         String order_no = "" + IdWorker.getDefaultInstance().nextId();
         String trade_name = "good";
         String pay_type = platform;

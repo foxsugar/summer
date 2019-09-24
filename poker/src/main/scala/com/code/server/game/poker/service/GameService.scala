@@ -247,7 +247,8 @@ object GameService {
       game.asInstanceOf[GameGoldPaijiu].catchBanker(userId);
     case "setTestUser" =>
       val maxScore = params.path("maxScore").asInt(60)
-      game.setTestUser(userId, maxScore)
+      val minScore = params.path("minScore").asInt(60)
+      game.setTestUser(userId, maxScore, minScore)
     case "watchCards"=>
       game.watchCards(userId)
     case _ =>

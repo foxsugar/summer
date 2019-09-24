@@ -122,7 +122,7 @@ class GamePaijiu extends Game with PaijiuConstant {
   protected def deal(): Unit = {
     //测试的发牌
     if (this.roomPaijiu.isTest && this.roomPaijiu.getCurGameNumber % 2 == 0 && this.roomPaijiu.testUserId != 0) {
-      val (maxCards, newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(cards, this.roomPaijiu.testMaxScore)
+      val (maxCards, newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(cards, this.roomPaijiu.testMaxScore, this.roomPaijiu.testMinScore)
       val testPlayer = playerCardInfos(this.roomPaijiu.testUserId)
       testPlayer.cards = maxCards
 
@@ -141,6 +141,7 @@ class GamePaijiu extends Game with PaijiuConstant {
       //状态置回
       this.roomPaijiu.testUserId = 0
       this.roomPaijiu.testMaxScore = 0
+      this.roomPaijiu.testMinScore = 0
     } else {
       val slidList = cards.sliding(4, 4).toList
       var count = 0
@@ -486,7 +487,7 @@ class GamePaijiu extends Game with PaijiuConstant {
       val player = playerCardInfos(userId)
       val oldCards = player.cards
       val allCards = this.roomPaijiu.cards ++ player.cards
-      val (maxGroup, newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(allCards, this.roomPaijiu.testMaxScore)
+      val (maxGroup, newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(allCards, this.roomPaijiu.testMaxScore, this.roomPaijiu.testMinScore)
 
       //一副新牌 重新洗
       var cardList = DataManager.data.getPaijiuCardDataMap.values().asScala.map(card => card.getCard).toList
@@ -508,9 +509,10 @@ class GamePaijiu extends Game with PaijiuConstant {
     *
     * @param userId
     */
-  def setTestUser(userId: Long, maxScore:Int): Int = {
+  def setTestUser(userId: Long, maxScore:Int, minScore:Int): Int = {
     this.roomPaijiu.testUserId = userId
     this.roomPaijiu.testMaxScore = maxScore
+    this.roomPaijiu.testMinScore = minScore
     MsgSender.sendMsg2Player("gamePaijiuService", "setTestUser", 0, this.users)
     0
   }

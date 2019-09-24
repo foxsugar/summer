@@ -40,13 +40,13 @@ object PaijiuCardUtil {
     * @param cards
     * @return
     */
-  def getMaxGroupAndNewCards(cards:List[Int], maxScore:Int): (List[Int],List[Int]) ={
+  def getMaxGroupAndNewCards(cards:List[Int], maxScore:Int, minScore:Int): (List[Int],List[Int]) ={
     var removeList:List[Int] = List()
 //    var newCards:List[Int] = List()
 
 
     val (removeList1,newCards1):(List[Int],List[Int]) = getMaxGroup(cards, maxScore)
-    val (removeList2,newCards2):(List[Int],List[Int])  = getMaxGroup(newCards1, maxScore)
+    val (removeList2,newCards2):(List[Int],List[Int])  = getMaxGroup(newCards1, minScore)
 
     removeList ++= removeList1
     removeList ++= removeList2
