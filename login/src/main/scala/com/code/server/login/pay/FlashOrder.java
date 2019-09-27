@@ -60,8 +60,11 @@ public class FlashOrder {
 
     @RequestMapping(value = "/pay_flash")
     public ModelAndView order(int money, String platform, long userId, RedirectAttributes attr) throws IOException {
-        String key = " vmiU2jhpnVDkuknMjtnA";
+        String key = "vmiU2jhpnVDkuknMjtnA";
         String app_id = "12812";
+
+//        String key = "JVVcedFjsNVsahmhjVfJ";
+//        String app_id = "12798";
         String order_no = "" + IdWorker.getDefaultInstance().nextId();
         String trade_name = "good";
         String pay_type = platform;
@@ -79,6 +82,7 @@ public class FlashOrder {
         String sign = (signStr);
         sign = DigestUtils.md5DigestAsHex(signStr.getBytes());
 
+        System.out.println(signStr);
         System.out.println(sign);
 
         Charge charge = new Charge();
