@@ -8,6 +8,7 @@ import com.code.server.redis.service.RedisManager;
 import com.code.server.util.JsonUtil;
 import com.code.server.util.SpringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +23,8 @@ public class MsgSender {
     }
 
     public static void sendMsg2Player(Object msg, List<Long> users) {
-        for (long id : users) {
+        List<Long> temp = new ArrayList<>(users);
+        for (long id : temp) {
             sendMsg2Player(msg, id);
         }
     }
