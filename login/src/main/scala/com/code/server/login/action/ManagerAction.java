@@ -260,7 +260,9 @@ public class ManagerAction extends Cors {
             userBean.setPassword(userVo.getPassword());
             userBean.setImage(userVo.getImage());
             userBean.setSex(userVo.getSex());
-            userBean.setUsername(userVo.getUsername());
+            
+            //因为编码问题 先不更新用户名
+//            userBean.setUsername(userVo.getUsername());
             RedisManager.getUserRedisService().updateUserBean(userVo.getId(),userBean);
             userService.save(GameUserService.userBean2User(userBean));
         }
