@@ -88,6 +88,7 @@ public class ServerConfig {
     private String qrUrl = "";
 
     private int loadAllUser = 0;
+    private int loginCreateNewUser = 1;
 
 
     public String getServerType() {
@@ -444,5 +445,13 @@ public class ServerConfig {
     public ServerConfig setQrUrl(String qrUrl) {
         this.qrUrl = qrUrl;
         return this;
+    }
+
+    public int getLoginCreateNewUser() {
+        return loginCreateNewUser;
+    }
+
+    public void setLoginCreateNewUser(int loginCreateNewUser) {
+        this.loginCreateNewUser = loginCreateNewUser;
     }
 }

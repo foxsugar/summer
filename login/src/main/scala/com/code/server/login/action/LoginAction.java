@@ -90,12 +90,12 @@ public class LoginAction {
         //查询数据库，没有新建玩家
         if (user == null) {
             //新建玩家
-            if (getConstant().getAppleCheck() != 0) {
+            ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+            if (getConstant().getAppleCheck() != 0 && serverConfig.getLoginCreateNewUser() == 1) {
                 user = createUser(account, password);
                 userService.save(user);
                 //reids 记录新增玩家
                 RedisManager.getLogRedisService().logRegisterUser();
-                ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
                 if (!"".equals(serverConfig.getQrDir())) {
                     ZXingUtil.createQrCode(user.getId());
                 }
