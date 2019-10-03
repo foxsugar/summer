@@ -253,6 +253,20 @@ public class ManagerAction extends Cors {
         return 0;
     }
 
+    @RequestMapping("/setUserInfo")
+    public Object setUserInfo(UserBean userVo){
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userVo.getId());
+        if (userBean != null) {
+            userBean.setPassword(userVo.getPassword());
+            userBean.setImage(userVo.getImage());
+            userBean.setSex(userVo.getSex());
+            userBean.setUsername(userVo.getUsername());
+            RedisManager.getUserRedisService().updateUserBean(userVo.getId(),userBean);
+            userService.save(GameUserService.userBean2User(userBean));
+        }
+        return 0;
+    }
+
     @RequestMapping("/getClubCreditInfo")
     public Object getClubCreditInfo(String clubId) {
         Club club = ClubManager.getInstance().getClubById(clubId);
