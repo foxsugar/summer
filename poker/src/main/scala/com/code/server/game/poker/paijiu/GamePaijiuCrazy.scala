@@ -77,6 +77,8 @@ class GamePaijiuCrazy extends GamePaijiu{
 
       //状态置回
       this.roomPaijiu.testUserId = 0
+      this.roomPaijiu.testMaxScore = 0
+      this.roomPaijiu.testMinScore = 0
     } else {
       var slidList = cards.sliding(4, 4).toList
       if(Room.isHasMode(MODE_2CARD,this.roomPaijiu.otherMode)){

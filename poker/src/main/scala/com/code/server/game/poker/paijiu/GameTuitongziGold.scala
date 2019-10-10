@@ -450,6 +450,20 @@ class GameTuitongziGold extends GamePaijiu {
     //切庄开始
     //    updateLastOperateTime()
     this.lastOperateTime = System.currentTimeMillis
+//    val removeList = new util.ArrayList[Long]
+//    import scala.collection.JavaConversions._
+//    for (userId <- this.users) {
+//      if(userId != this.bankerId){
+//
+//      val gold = RedisManager.getUserRedisService.getUserGold(userId)
+//      if (gold < 100) removeList.add(userId)
+//      }
+//    }
+//
+//    import scala.collection.JavaConversions._
+//    for (userId <- removeList) {
+//      this.roomPaijiu.quitRoom(userId)
+//    }
     if(isAutoBreakBanker()) {
       state = STATE_BANKER_BREAK
       bankerBreak(this.bankerId, flag = true)

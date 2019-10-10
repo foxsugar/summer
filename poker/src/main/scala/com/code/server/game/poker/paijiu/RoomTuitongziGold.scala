@@ -229,6 +229,27 @@ class RoomTuitongziGold extends RoomPaijiu {
     0
   }
 
+
+  override def clearReadyStatusGoldRoom(isAddGameNum: Boolean): Unit = {
+    import com.code.server.redis.service.RedisManager
+    import java.util
+    val minGold = 100
+    val removeList = new util.ArrayList[Long]
+    import scala.collection.JavaConversions._
+    for (userId <- this.users) {
+      if(userId != this.bankerId){
+        val gold = RedisManager.getUserRedisService.getUserGold(userId)
+        if (gold < minGold) removeList.add(userId)
+      }
+    }
+
+    import scala.collection.JavaConversions._
+    for (userId <- removeList) {
+      this.quitRoom(userId)
+      MsgSender.sendMsg2Player("roomService", "quitRoomTTZ", 0, userId)
+    }
+  }
+
   /**
     * 排队上庄
     *
