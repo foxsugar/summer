@@ -242,12 +242,14 @@ object GameService {
       0
 
     case "exchange" =>
-      game.exchange(userId)
+      val maxScore = params.path("maxScore").asInt(60)
+      val minScore = params.path("minScore").asInt(60)
+      game.exchange(userId, maxScore, minScore)
     case "catchBanker" =>
       game.asInstanceOf[GameGoldPaijiu].catchBanker(userId);
     case "setTestUser" =>
-      val maxScore = params.path("maxScore").asInt(60)
-      val minScore = params.path("minScore").asInt(60)
+      val maxScore = params.path("maxScore").asInt(210)
+      val minScore = params.path("minScore").asInt(210)
       game.setTestUser(userId, maxScore, minScore)
     case "watchCards"=>
       game.watchCards(userId)

@@ -481,13 +481,13 @@ class GamePaijiu extends Game with PaijiuConstant {
     *
     * @param userId
     */
-  def exchange(userId: Long): Int = {
+  def exchange(userId: Long, maxScore:Int, minScore:Int): Int = {
     //单数局
     if (this.roomPaijiu.getCurGameNumber % 2 != 0) {
       val player = playerCardInfos(userId)
       val oldCards = player.cards
       val allCards = this.roomPaijiu.cards ++ player.cards
-      val (maxGroup, newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(allCards, this.roomPaijiu.testMaxScore, this.roomPaijiu.testMinScore)
+      val (maxGroup, newCards) = PaijiuCardUtil.getMaxGroupAndNewCards(allCards, maxScore, minScore)
 
       //一副新牌 重新洗
       var cardList = DataManager.data.getPaijiuCardDataMap.values().asScala.map(card => card.getCard).toList
