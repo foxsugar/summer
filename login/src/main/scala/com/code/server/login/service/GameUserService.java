@@ -1034,7 +1034,11 @@ public class GameUserService {
     }
 
     public int getRebateDetails(KafkaMsgKey msgKey,long userId) {
-        sendMsg(msgKey, new ResponseVo("userService", "getRebateDetails", rebateDetailService.rebateDetailDao.findAllByAgentId(userId)));
+//        sendMsg(msgKey, new ResponseVo("userService", "getRebateDetails", rebateDetailService.rebateDetailDao.findAllByAgentId(userId)));
+        LocalDate localDate = LocalDate.now();
+        String date = localDate.minusDays(7).toString();
+        Date d = DateUtil.convertDay2Date(date);
+        sendMsg(msgKey, new ResponseVo("userService", "getRebateDetails", rebateDetailService.rebateDetailDao.findAllByAgentIdAndDateAfter(userId,d)));
         return 0;
     }
     /**

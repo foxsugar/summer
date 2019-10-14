@@ -64,7 +64,7 @@ public class RoomYSZLongcheng extends RoomYSZ {
         if (parentId == 0) {
             return false;
         }
-        long need = getSameParentNum(parentId);
+        long need = getSameParentNum(parentId) + 1;
         if (goldRoomType == 20) {
             need *= 2;
         }

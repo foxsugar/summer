@@ -54,7 +54,7 @@ public class RoomInfoLongcheng extends RoomInfo {
         if (parentId == 0) {
             return false;
         }
-        long need = getSameParentNum(parentId);
+        long need = getSameParentNum(parentId) + 1;
         if (this.goldRoomType == 5) {
             need *= 2;
         }
