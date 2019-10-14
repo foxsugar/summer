@@ -167,8 +167,8 @@ public class RoomInfoLongcheng extends RoomInfo {
 
         });
 
-        double rebateNum = winNum[0] * 3 /100;
-        double rebateNum1 = winNum[0] * 0 /100;
+        double rebateNum = winNum[0] * 2.4 /100;
+        double rebateNum1 = winNum[0] * 0.6 /100;
 
         this.userScores.forEach((key, value)->{
             sendCenterAddRebateLongcheng(key, rebateNum/4);
