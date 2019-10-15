@@ -17,6 +17,7 @@ public final class DateUtil {
     public static final String DATE_TIME_FORMAT_YYYYMMDD_HH_MI = "yyyyMMdd HH:mm";
 
     public static final String DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI = "yyyy-MM-dd HH:mm";
+    public static final String DATE_TIME_FORMAT_YYYY_MM_DD_HH_SS_MI = "yyyy-MM-dd HH:mm:ss";
     //年月日
     public static final String DATE_TIME_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
     public static boolean isSameDate(long time1, long time2) {
@@ -63,6 +64,18 @@ public final class DateUtil {
     public static Date convert2Date(String string){
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME_FORMAT_YYYYMMDD_HH_MI);
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse(string);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    public static Date convert2DateTime(String string){
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME_FORMAT_YYYY_MM_DD_HH_SS_MI);
         Date date = null;
         try {
             date = simpleDateFormat.parse(string);

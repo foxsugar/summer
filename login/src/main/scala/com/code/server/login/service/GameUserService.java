@@ -1035,11 +1035,30 @@ public class GameUserService {
 
     public int getRebateDetails(KafkaMsgKey msgKey,long userId) {
 //        sendMsg(msgKey, new ResponseVo("userService", "getRebateDetails", rebateDetailService.rebateDetailDao.findAllByAgentId(userId)));
-        LocalDate localDate = LocalDate.now();
-        String date = localDate.minusDays(7).toString();
-        Date d = DateUtil.convertDay2Date(date);
-        sendMsg(msgKey, new ResponseVo("userService", "getRebateDetails", rebateDetailService.rebateDetailDao.findAllByAgentIdAndDateAfter(userId,d)));
+//        LocalDate localDate = LocalDate.now();
+//        String date = localDate.minusDays(7).toString();
+//        Date d = DateUtil.convertDay2Date(date);
+        sendMsg(msgKey, new ResponseVo("userService", "getRebateDetails", rebateDetailService.rebateDetailDao.findAllByAgentId(userId)));
         return 0;
+    }
+
+    public int getRebateDetails1(KafkaMsgKey msgKey,long userId,String date) {
+//        sendMsg(msgKey, new ResponseVo("userService", "getRebateDetails", rebateDetailService.rebateDetailDao.findAllByAgentId(userId)));
+//        LocalDate localDate = LocalDate.now();
+//        String date = localDate.minusDays(7).toString();
+        String d1 = date+" 00:00:00";
+        String d2 = date+" 23:59:59";
+        Date date1 = DateUtil.convert2DateTime(d1);
+        Date date2 = DateUtil.convert2DateTime(d2);
+        sendMsg(msgKey, new ResponseVo("userService", "getRebateDetails1",
+                rebateDetailService.rebateDetailDao.findAllByAgentIdAndDateAfterAndDateBefore(userId,date1, date2)));
+        return 0;
+    }
+
+    public int getRebateInfoSum(KafkaMsgKey msgKey, long userId){
+        sendMsg(msgKey, new ResponseVo("userService", "getRebateInfoSum", rebateDetailService.rebateDetailDao.getRebateAfterDate(userId)));
+        return 0;
+
     }
     /**
      * 提现

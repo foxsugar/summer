@@ -144,7 +144,15 @@ public class UserServiceMsgDispatch {
                 return gameUserService.gold2Money(msgKey, num2);
             case "getRebateDetails":
                 long uid = params.path("userId").asLong(msgKey.getUserId());
+
                 return gameUserService.getRebateDetails(msgKey,uid);
+            case "getRebateDetails1":
+                long uid2 = params.path("userId").asLong(msgKey.getUserId());
+                String date1 = params.path("date").asText();
+                return gameUserService.getRebateDetails1(msgKey,uid2, date1);
+            case "getRebateInfoSum":
+                long uid1 = params.path("userId").asLong(msgKey.getUserId());
+                return gameUserService.getRebateInfoSum(msgKey,uid1);
             case "withdrawMoney":
                 double num = params.path("num").asDouble();
                 String userName1 = params.path("name").asText();
