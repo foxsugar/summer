@@ -281,8 +281,20 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     if (score <= 0) {
       return ErrorCode.CRAP_ALREADY_BANKER
     }
-    if (RedisManager.getUserRedisService.getUserMoney(userId) < score) {
+    val money = RedisManager.getUserRedisService.getUserMoney(userId)
+    if (money < score) {
       return ErrorCode.CRAP_ALREADY_BANKER
+    }
+    if(this.game != null) {
+      val gameInfo = this.game.asInstanceOf[GamePaijiuCrazy]
+      val playerInfoOp = gameInfo.playerCardInfos.get(userId)
+      if(playerInfoOp.nonEmpty) {
+        val playerInfo = playerInfoOp.get
+        if(money < score + playerInfo.getBetNum()) {
+          return ErrorCode.CRAP_ALREADY_BANKER
+        }
+      }
+
     }
     //上庄先扣钱
     RedisManager.getUserRedisService.addUserMoney(userId, -score)
