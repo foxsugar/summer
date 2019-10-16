@@ -138,7 +138,7 @@ public class GameUserService {
     }
 
 
-    public int giveOtherGold(KafkaMsgKey msgKey, Long rechargeUserId, double gold){
+    public synchronized int giveOtherGold(KafkaMsgKey msgKey, Long rechargeUserId, double gold){
         //充值玩家id
         Long userid = msgKey.getUserId();
         UserBean userBeanOwn = userRedisService.getUserBean(userid);
