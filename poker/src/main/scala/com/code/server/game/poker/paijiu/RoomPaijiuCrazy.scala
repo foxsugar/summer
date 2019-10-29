@@ -231,13 +231,15 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
       createNeedMoney = this.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[String].toDouble.toInt
       createNeedMoney = 2
 
-
+      this.users.forEach((userId) => {
+        RedisManager.getUserRedisService.addUserMoney(userId, -2)
+      })
     }
 
     this.users.forEach(userId=>{
       sendCenterAddContribute(userId, 2)
     })
-    super.spendMoney()
+//    super.spendMoney()
 
   }
 
