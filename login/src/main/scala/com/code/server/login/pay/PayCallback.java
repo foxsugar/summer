@@ -159,6 +159,7 @@ public class PayCallback {
                         } else {
                             childCost1.firstLevel += rebateMoney * serverConfig.getAgentSecondRebate().get(u.getVip()) * 0.01;
 
+
                         }
                         rs1.put(dayStr, childCost1);
                         agentUserDao.save(agentUser1);
@@ -431,7 +432,7 @@ public class PayCallback {
 
                     ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 //                    serverConfig.getChargeMap()
-                    //龙七分档
+
                     if (serverConfig.getChargeMap().containsKey(money_total)) {
                         addMoney = serverConfig.getChargeMap().get(money_total);
                     }

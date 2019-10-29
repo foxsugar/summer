@@ -257,6 +257,12 @@ public class GameHitGoldFlower extends Game {
             winnerList = Player.findWinners(Player.Rules.XiaoYao,asker,accepter);
         }
 
+        if (Room.isHasMode(3, this.room.otherMode)) {
+            winnerList = Player.findWinners(Player.Rules.HuanLe,asker,accepter);
+        }else{
+            winnerList = Player.findWinners(Player.Rules.XiaoYao,asker,accepter);
+        }
+
         Long winnerId = winnerList.size()==1?winnerList.get(0).getUid():winnerList.get(1).getUid();
         loseUser.add(winnerId==askerId?accepterId:askerId);
 
@@ -413,6 +419,20 @@ public class GameHitGoldFlower extends Game {
         //添加彩分
         for (PlayerCardInfoHitGoldFlower playerCardInfo : playerCardInfos.values()) {
             if("BaoZi".equals(playerCardInfo.getCardType())){
+                double tempCaifen = 0.0;
+                for (PlayerCardInfoHitGoldFlower p : playerCardInfos.values()) {
+                    if(playerCardInfo.getUserId()!=p.getUserId()){
+                        tempCaifen+=2 * room.getCaiFen();
+                        p.setCaifen(p.getCaifen()-2 * room.getCaiFen());
+                    }
+                }
+                playerCardInfo.setCaifen(playerCardInfo.getCaifen()+tempCaifen);
+            }
+        }
+
+        //添加彩分
+        for (PlayerCardInfoHitGoldFlower playerCardInfo : playerCardInfos.values()) {
+            if("ShunJin".equals(playerCardInfo.getCardType())){
                 double tempCaifen = 0.0;
                 for (PlayerCardInfoHitGoldFlower p : playerCardInfos.values()) {
                     if(playerCardInfo.getUserId()!=p.getUserId()){

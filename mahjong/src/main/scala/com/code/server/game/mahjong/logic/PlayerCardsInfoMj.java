@@ -29,6 +29,7 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
     protected List<Integer> pengList = new ArrayList<>();//碰的列表
     protected Set<Integer> anGangType = new HashSet<>();//暗杠
     protected Map<Integer, Long> mingGangType = new HashMap<>();//明杠
+    protected Map<Integer, Boolean> dianGangIsTing = new HashMap<>();//明杠时是否已经听了
     protected Set<Integer> chiType = new HashSet<>();
     protected List<List<String>> chiCards = new ArrayList<>();
     protected Map<Integer, List<String>> xuanfengDan = new HashMap<>();
@@ -1511,6 +1512,15 @@ public class PlayerCardsInfoMj extends PlayerCardInfo implements HuType {
 
     public PlayerCardsInfoMj setChangeCards(List<String> changeCards) {
         this.changeCards = changeCards;
+        return this;
+    }
+
+    public Map<Integer, Boolean> getDianGangIsTing() {
+        return dianGangIsTing;
+    }
+
+    public PlayerCardsInfoMj setDianGangIsTing(Map<Integer, Boolean> dianGangIsTing) {
+        this.dianGangIsTing = dianGangIsTing;
         return this;
     }
 }

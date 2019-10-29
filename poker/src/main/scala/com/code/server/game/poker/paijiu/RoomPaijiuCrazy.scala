@@ -130,6 +130,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     if (!isAA) {
       return this.rebateData.get(IGameConstant.PAIJIU_PAY_ONE).asInstanceOf[String].toDouble.toInt
     } else {
+      return 2
       return this.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[String].toDouble.toInt
     }
 
@@ -228,6 +229,7 @@ class RoomPaijiuCrazy extends RoomPaijiu with PaijiuConstant {
     //大赢家最后付钱
     if (isAA) {
       createNeedMoney = this.rebateData.get(IGameConstant.PAIJIU_PAY_AA).asInstanceOf[String].toDouble.toInt
+      createNeedMoney = 2
 
 
     }

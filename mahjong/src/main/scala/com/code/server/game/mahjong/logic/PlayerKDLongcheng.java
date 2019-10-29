@@ -25,6 +25,27 @@ public class PlayerKDLongcheng extends PlayerCardsInfoKD {
     }
 
 
+    /**
+     * 杠弃牌
+     *
+     * @param diangangUser
+     * @param disCard
+     * @return
+     */
+    public boolean gang_discard(RoomInfo room, GameInfo gameInfo, long diangangUser, String disCard) {
+        this.cards.add(disCard);
+        int cardType = CardTypeUtil.cardType.get(disCard);
+        mingGangType.put(cardType, diangangUser);
+        gangCompute(room, gameInfo, true, diangangUser, disCard);
+        PlayerCardsInfoMj playerCardsInfoMj = gameInfo.playerCardsInfos.get(diangangUser);
+        if (playerCardsInfoMj != null) {
+            playerCardsInfoMj.getDianGangIsTing().put(cardType, playerCardsInfoMj.isTing);
+        }
+
+        return false;
+    }
+
+
 
     @Override
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card) {
@@ -38,8 +59,8 @@ public class PlayerKDLongcheng extends PlayerCardsInfoKD {
         int score = CardTypeUtil.cardTingScore.get(cardType) * this.roomInfo.getMultiple() * 10;
         if (isMing && diangangUser != -1) {
 
-
-            boolean isBaoAll = true;
+            PlayerCardsInfoMj dianGangUser = this.gameInfo.getPlayerCardsInfos().get(diangangUser);
+            boolean isBaoAll = dianGangUser.getDianGangIsTing().containsKey(cardType) && dianGangUser.getDianGangIsTing().get(cardType);
 
             for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
                 if (playerCardsInfoMj.getUserId() != this.userId) {
@@ -55,7 +76,7 @@ public class PlayerKDLongcheng extends PlayerCardsInfoKD {
             }
 
             if (isBaoAll) {
-                PlayerCardsInfoMj dianGangUser = this.gameInfo.getPlayerCardsInfos().get(diangangUser);
+
                 dianGangUser.addGangScore(-allScore);
                 dianGangUser.addScore(-allScore);
                 this.roomInfo.addUserSocre(dianGangUser.getUserId(), -allScore);
