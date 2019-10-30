@@ -195,6 +195,15 @@ public class ManagerAction extends Cors {
     }
 
 
+//    login?tid=2709363745&openid=1003Page%20not%20found%20at%20/login HTTP/1.1" 404 7116
+
+
+    @RequestMapping("/getTid")
+    public Object getTid(String tid) {
+
+        return "您当前群聊id为: " + tid;
+    }
+
     @RequestMapping("/clearClub")
     public AgentResponse clearClub(String clubId) {
         Club club = ClubManager.getInstance().getClubById(clubId);
