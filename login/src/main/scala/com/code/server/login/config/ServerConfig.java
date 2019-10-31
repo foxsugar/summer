@@ -89,6 +89,7 @@ public class ServerConfig {
 
     private int loadAllUser = 0;
     private int loginCreateNewUser = 1;
+    private int sendDuoliao = 0;
 
 
     public String getServerType() {
@@ -453,5 +454,14 @@ public class ServerConfig {
 
     public void setLoginCreateNewUser(int loginCreateNewUser) {
         this.loginCreateNewUser = loginCreateNewUser;
+    }
+
+    public int getSendDuoliao() {
+        return sendDuoliao;
+    }
+
+    public ServerConfig setSendDuoliao(int sendDuoliao) {
+        this.sendDuoliao = sendDuoliao;
+        return this;
     }
 }
