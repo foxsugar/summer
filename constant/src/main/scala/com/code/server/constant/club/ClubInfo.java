@@ -22,6 +22,7 @@ public class ClubInfo {
     private List<Long> partner = new ArrayList<>();
     private boolean autoJoin = false;
     private Map<String, Object> creditInfo = new HashMap<>();
+    private String duoliaoTid = "";
 
 
     public Map<String, ClubMember> getMember() {
@@ -111,6 +112,15 @@ public class ClubInfo {
 
     public ClubInfo setCreditInfo(Map<String, Object> creditInfo) {
         this.creditInfo = creditInfo;
+        return this;
+    }
+
+    public String getDuoliaoTid() {
+        return duoliaoTid;
+    }
+
+    public ClubInfo setDuoliaoTid(String duoliaoTid) {
+        this.duoliaoTid = duoliaoTid;
         return this;
     }
 }

@@ -580,6 +580,7 @@ public class CenterMsgService implements IkafkaMsgId {
 
                 //龙七 发送http
                 sendLq_http(roomRecord, club);
+                DuoLiaoService.sendRecord(roomRecord, club);
 
             }
 

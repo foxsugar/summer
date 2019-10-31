@@ -1746,6 +1746,19 @@ public class GameClubService {
         return 0;
     }
 
+    public int setDuoliaoTid(KafkaMsgKey msgKey, String clubId, String tid){
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        club.getClubInfo().setDuoliaoTid(tid);
+        DuoLiaoService.bind(clubId, tid);
+
+
+        sendMsg(msgKey, new ResponseVo("clubService", "setDuoliaoTid", 0));
+        return 0;
+    }
+
     /**
      * 清空信用分
      * @param msgKey

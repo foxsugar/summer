@@ -2,7 +2,7 @@ package com.code.server.login.action;
 
 import com.code.server.constant.club.ClubMember;
 import com.code.server.constant.club.ThreeRebate;
-import com.code.server.constant.game.UserBean;
+import com.code.server.constant.game.*;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.ChargeService;
@@ -12,10 +12,7 @@ import com.code.server.db.Service.UserService;
 import com.code.server.db.model.*;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
-import com.code.server.login.service.CenterMsgService;
-import com.code.server.login.service.ClubManager;
-import com.code.server.login.service.GameUserService;
-import com.code.server.login.service.ServerManager;
+import com.code.server.login.service.*;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.DateUtil;
 import com.code.server.util.SpringUtil;
@@ -214,6 +211,23 @@ public class ManagerAction extends Cors {
         }
         AgentResponse agentResponse = new AgentResponse();
         return agentResponse;
+    }
+    @RequestMapping("/test11111")
+    public Object test11111(){
+        RoomRecord roomRecord = new RoomRecord();
+        roomRecord.setId(123456);
+        com.code.server.constant.game.UserRecord  userRecord = new com.code.server.constant.game.UserRecord();
+        userRecord.setName("a").setImage("httt").setScore(1).setUserId(1);
+        roomRecord.addRecord(userRecord);
+
+        Club club = new Club();
+        club.getClubInfo().setDuoliaoTid("2709363745");
+
+//        DuoLiaoService.sendRecord(roomRecord, club);
+
+
+        DuoLiaoService.bind("111111", "2709363745");
+        return "";
     }
 
     private void clearClubMember(ClubMember clubMember) {

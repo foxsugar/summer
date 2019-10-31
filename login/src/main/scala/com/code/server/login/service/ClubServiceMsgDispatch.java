@@ -312,6 +312,10 @@ public class ClubServiceMsgDispatch {
             case "getCreditAndOwnInfo":{
                 return gameClubService.getCreditAndOwnInfo(msgKey, clubId);
             }
+            case "setDuoliaoTid":{
+                String tid = params.path("tid").asText();
+                return gameClubService.setDuoliaoTid(msgKey, clubId, tid);
+            }
 
 
         }
