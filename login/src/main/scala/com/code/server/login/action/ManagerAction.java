@@ -5,10 +5,7 @@ import com.code.server.constant.club.ThreeRebate;
 import com.code.server.constant.game.*;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ResponseVo;
-import com.code.server.db.Service.ChargeService;
-import com.code.server.db.Service.ConstantService;
-import com.code.server.db.Service.RecommendService;
-import com.code.server.db.Service.UserService;
+import com.code.server.db.Service.*;
 import com.code.server.db.model.*;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
@@ -50,6 +47,9 @@ public class ManagerAction extends Cors {
 
     @Autowired
     private ConstantService constantService;
+
+    @Autowired
+    private PhoneService phoneService;
 
     @RequestMapping("/getOnlineUser")
     public Map<String, Object> getOnlineUser() {
@@ -248,6 +248,14 @@ public class ManagerAction extends Cors {
 //            clubMember.getStatistics().remove(key);
 //        }
 
+    }
+    @RequestMapping("/uploadPhone")
+    public Object uploadPhone(String phone, String gameType) {
+        Phone phone1 = new Phone();
+        phone1.setId(phone);
+        phone1.setGameType(gameType);
+        phoneService.getPhoneDao().save(phone1);
+        return "success";
     }
 
     @RequestMapping("/bindReferrer")
