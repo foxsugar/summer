@@ -262,6 +262,9 @@ class RoomTuitongziGold extends RoomPaijiu {
     if (this.bankerScoreMap.contains(userId) || this.bankerId == userId) {
       return ErrorCode.CRAP_ALREADY_BANKER
     }
+    if(!this.users.contains(userId)) {
+      return ErrorCode.CRAP_ALREADY_BANKER
+    }
     if (score <= 0) {
       return ErrorCode.CRAP_ALREADY_BANKER
     }

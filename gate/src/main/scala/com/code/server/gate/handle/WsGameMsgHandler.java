@@ -4,7 +4,6 @@ import com.code.server.constant.response.ResponseVo;
 import com.code.server.gate.service.GateManager;
 import com.code.server.gate.service.NettyMsgDispatch;
 import com.code.server.redis.service.RedisManager;
-import com.code.server.util.JsonUtil;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
@@ -51,7 +50,7 @@ public class WsGameMsgHandler extends ChannelDuplexHandler {
         System.out.println("返回消息");
         r.put("code", 1);
         ResponseVo responseVo = new ResponseVo("gateService", "heart", 0);
-        ctx.writeAndFlush(JsonUtil.toJson(responseVo));
+//        ctx.writeAndFlush(JsonUtil.toJson(responseVo));
     }
 
 
