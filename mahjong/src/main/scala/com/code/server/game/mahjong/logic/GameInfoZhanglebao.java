@@ -85,11 +85,14 @@ public class GameInfoZhanglebao extends GameInfoHeleKD {
 
             if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_双耗子)) {
                 this.hun = HuWithHun.getHunType(hunIndex);
-            } else {
-                String card = this.remainCards.remove(0);
-                hunIndex = CardTypeUtil.getTypeByCard(card);
+            }else{
                 this.hun.add(hunIndex);
             }
+//            else {
+//                String card = this.remainCards.remove(0);
+//                hunIndex = CardTypeUtil.getTypeByCard(card);
+//                this.hun.add(hunIndex);
+//            }
 
             //通知混
             MsgSender.sendMsg2Player("gameService", "noticeHun", this.hun, users);
