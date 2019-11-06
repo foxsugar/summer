@@ -15,7 +15,11 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
     @Override
     public void init(List<String> cards) {
         super.init(cards);
-        specialHuScore.put(hu_七小对_吊将, 0);
+        if (!isHasMode(this.roomInfo.getMode(), GameInfoZhuohaozi.mode_不带七小对)) {
+
+            specialHuScore.put(hu_七小对_吊将, 0);
+        }
+
     }
 
     @Override

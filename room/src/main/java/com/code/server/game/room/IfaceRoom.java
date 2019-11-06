@@ -99,4 +99,5 @@ public interface IfaceRoom extends IGameConstant {
     GameLogKey getGameLogKey();
 
     int dissolutionRoom(long userId);
+
 }

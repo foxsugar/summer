@@ -6,14 +6,14 @@ package com.code.server.constant.response;
 public class RoomHitGoldFlowerVo extends RoomVo {
 
     //扎金花专用
-    protected double caiFen;
-    protected int menPai;
-    protected int cricleNumber;//轮数
+    public double caiFen;
+    public int menPai;
+    public int cricleNumber;//轮数
 
-    protected int time;
-    protected boolean isJoinHalfWay;
-    protected boolean wanjialiangpai;
-    protected boolean bipaijiabei;
+    public int time;
+    public boolean isJoinHalfWay;
+    public boolean wanjialiangpai;
+    public boolean bipaijiabei;
 
 
     public double getCaiFen() {

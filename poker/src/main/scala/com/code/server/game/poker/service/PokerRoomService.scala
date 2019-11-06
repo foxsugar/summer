@@ -451,6 +451,10 @@ object PokerRoomService {
       case "getPaijiuPlayerNum"=>
 
         RoomPaijiuCrazy.getPaijiuPlayerNum(userId)
+      case "getRoomGameNum"=>
+        val rooms = params.path("rooms").asText()
+        MsgSender.sendMsg2Player("pokerRoomService", "getRoomGameNum", Room.getRoomNum(rooms), userId)
+        0
 
       case _ =>
         return -1

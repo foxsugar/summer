@@ -25,6 +25,7 @@ public class GameYSZLongcheng extends GameYSZ {
 
     public void startGame(List<Long> users, Room room) {
 
+
         com.code.server.game.poker.zhaguzi.PokerItem.isYSZ = true;
 
         this.room = (RoomYSZLongcheng) room;

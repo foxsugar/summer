@@ -122,6 +122,10 @@ public class RoomYSZLongcheng extends RoomYSZ {
             List<Long> removePartner = new ArrayList<>();
             Map<Long, Integer> joinNextPartnerPlayerNum = new HashMap<>();
             for (long userId : this.users) {
+                boolean isOnLine = RedisManager.getUserRedisService().getGateId(userId) != null;
+                if (!isOnLine) {
+                    removeList.add(userId);
+                }
                 double gold = RedisManager.getUserRedisService().getUserGold(userId);
                 //小于goldtype
                 if (gold < getOutGold()) {

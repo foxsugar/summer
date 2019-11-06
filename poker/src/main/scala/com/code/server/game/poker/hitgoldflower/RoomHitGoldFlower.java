@@ -498,6 +498,7 @@ public class RoomHitGoldFlower extends PokerGoldRoom {
         RoomHitGoldFlowerVo roomVo = new RoomHitGoldFlowerVo();
         BeanUtils.copyProperties(this, roomVo);
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
+        roomVo.setBipaijiabei(this.bipaijiabei);
         if (this.game != null) {
             Map<Long,Double> userScoresTemp = new HashMap<>();
             GameHitGoldFlower gameTemp = (GameHitGoldFlower)this.getGame();

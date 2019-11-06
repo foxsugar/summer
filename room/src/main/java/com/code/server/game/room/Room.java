@@ -530,6 +530,16 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
+    public static Map<String,Object> getRoomNum(String rooms){
+        Map<String, Object> result = new HashMap<>();
+        for(String roomId : rooms.split(",")){
+            Room room = (Room)RoomManager.getRoom(roomId);
+
+            result.put(roomId, room.getCurGameNumber());
+        }
+        return result;
+    }
+
 
     public int kickPlayer(long userId, long kickUser) {
         if (this.isOpen) {
