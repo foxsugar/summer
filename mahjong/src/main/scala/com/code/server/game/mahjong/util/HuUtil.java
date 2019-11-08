@@ -228,7 +228,7 @@ public class HuUtil implements HuType {
                 huList.add(huCardType);
 
                 if (playerCardsInfo.isHasSpecialHu(hu_七小对_吊将)) {
-                    if (isQixiaoduiDiaojiang(cards, hun, lastCard)) {
+                    if (isQixiaoduiDiaojiang(playerCardsInfo, cards, hun, lastCard)) {
                         huCardType.specialHuList.add(hu_七小对_吊将);
                     }
                 }
@@ -242,7 +242,7 @@ public class HuUtil implements HuType {
                 huCardType.setFan(playerCardsInfo.getSpecialHuScore(hu_豪华七小对)).specialHuList.add(hu_豪华七小对);
                 huList.add(huCardType);
                 if (playerCardsInfo.isHasSpecialHu(hu_七小对_吊将)) {
-                    if (isQixiaoduiDiaojiang(cards, hun, lastCard)) {
+                    if (isQixiaoduiDiaojiang(playerCardsInfo, cards, hun, lastCard)) {
                         huCardType.specialHuList.add(hu_七小对_吊将);
                     }
                 }
@@ -256,7 +256,7 @@ public class HuUtil implements HuType {
                 huCardType.setFan(playerCardsInfo.getSpecialHuScore(hu_清七对)).specialHuList.add(hu_清七对);
                 huList.add(huCardType);
                 if (playerCardsInfo.isHasSpecialHu(hu_七小对_吊将)) {
-                    if (isQixiaoduiDiaojiang(cards, hun, lastCard)) {
+                    if (isQixiaoduiDiaojiang(playerCardsInfo, cards, hun, lastCard)) {
                         huCardType.specialHuList.add(hu_七小对_吊将);
                     }
                 }
@@ -283,7 +283,11 @@ public class HuUtil implements HuType {
         return huList;
     }
 
-    private static boolean isQixiaoduiDiaojiang(List<String> cards, List<Integer> hun, int lastCard) {
+    private static boolean isQixiaoduiDiaojiang(PlayerCardsInfoMj playerCardsInfoMj, List<String> cards, List<Integer> hun, int lastCard) {
+        int size = playerCardsInfoMj.getMingGangType().size() + playerCardsInfoMj.getAnGangType().size() + playerCardsInfoMj.getPengType().size() + playerCardsInfoMj.getChiType().size();
+        if (size > 0) {
+            return false;
+        }
         Map<Integer, Integer> cardNum = new HashMap<>();
         //混的数量
         int hunCardNum = 0;
@@ -793,6 +797,10 @@ public class HuUtil implements HuType {
 
 
     private static boolean isQingQiDui_hun(List<String> cards, PlayerCardsInfoMj playerCardsInfo, List<Integer> hun, int lastCard) {
+        int size = playerCardsInfo.getMingGangType().size() + playerCardsInfo.getAnGangType().size() + playerCardsInfo.getPengType().size() + playerCardsInfo.getChiType().size();
+        if (size > 0) {
+            return false;
+        }
         List<String> noHunCards = new ArrayList<>();
         for (String card : cards) {
 
