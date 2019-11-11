@@ -289,6 +289,16 @@ public class HuUtil implements HuType {
             return false;
         }
         Map<Integer, Integer> cardNum = new HashMap<>();
+        //先去掉最后一张
+        String removeACard = null;
+        for (String card : cards) {
+            int cardType = CardTypeUtil.getTypeByCard(card);
+            if (cardType == lastCard) {
+                removeACard = card;
+                break;
+            }
+        }
+        cards.remove(removeACard);
         //混的数量
         int hunCardNum = 0;
         for (String card : cards) {
@@ -310,9 +320,12 @@ public class HuUtil implements HuType {
         });
         boolean lastCardIsHun = hun.contains(lastCard);
         if (lastCardIsHun) {
+            //如果是混 给混的数量+1
+            hunCardNum += 1;
             return hunCardNum - needHunNum[0] >=2;
         } else {
-            return hunCardNum>0 && hunCardNum - needHunNum[0]>=0;
+//            return hunCardNum>0 && hunCardNum - needHunNum[0]>=0;
+            return hunCardNum>0 && needHunNum[0]==0;
         }
 
 
