@@ -37,7 +37,7 @@ public interface IChargeDao extends PagingAndSortingRepository<Charge, Long>, Jp
     @Query(value="select * from charge where userid=?1 and recharge_source=?2", nativeQuery = true)
     List<Charge> getChargesByUserid(long userId,String recharge_source);
 
-    @Query(value="select * from charge where userid=?1 and recharge_source=?2 and DATE_FORMAT(createtime,'%Y-%m-%d')=?3 limit ?4,100", nativeQuery = true)
+    @Query(value="select * from charge where userid=?1 and recharge_source=?2 and DATE_FORMAT(createtime,'%Y-%m-%d')=?3 limit ?4,30", nativeQuery = true)
     List<Charge> getChargesByUseridAndDate(long userId, String recharge_source, String date, int index);
 
 

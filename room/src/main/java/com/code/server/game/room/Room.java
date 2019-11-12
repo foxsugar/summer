@@ -535,7 +535,9 @@ public class Room implements IfaceRoom {
         for(String roomId : rooms.split(",")){
             Room room = (Room)RoomManager.getRoom(roomId);
 
-            result.put(roomId, room.getCurGameNumber());
+            if (room != null) {
+                result.put(roomId, room.getCurGameNumber());
+            }
         }
         return result;
     }

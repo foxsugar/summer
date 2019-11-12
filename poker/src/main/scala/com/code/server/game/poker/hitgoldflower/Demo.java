@@ -335,21 +335,23 @@ public class Demo {
 //		System.out.println(p1.getCategory().toString());
 
 
-		Player p1 = new Player(1l, "HEI", "J", "HONG", "J", "HUA", "3");
-		Player p2 = new Player(2l, "HUA", "J", "PIAN", "J", "HEI", "5");
+		Player p1 = new Player(1l, "HEI", "A", "HONG", "2", "HUA", "3");
+		Player p2 = new Player(2l, "HUA", "10", "PIAN", "J", "HEI", "Q");
 
+		p1.rules_ = Player.Rules.HuanLe;
+		p2.rules_ = Player.Rules.HuanLe;
 		ArrayList<Player> aList = Player.findWinners(p1, p2);
 		System.out.println(aList);
 
-		Player asker = new Player(222L, ListUtils.cardCode.get(20), ListUtils.cardCode.get(16), ListUtils.cardCode.get(44));
-		Player accepter = new Player(333L, ListUtils.cardCode.get(40), ListUtils.cardCode.get(24), ListUtils.cardCode.get(36));
-
-		ArrayList<Player> winnerList = Player.findWinners(asker,accepter);
-
-		Long winnerId = winnerList.size()==1?winnerList.get(0).getUid():winnerList.get(1).getUid();
-		System.out.println("winnerId====="+winnerList.toString());
-		System.out.println("winnerId====="+winnerId);
-		System.out.println("===="+asker.getCategory());
+//		Player asker = new Player(222L, ListUtils.cardCode.get(20), ListUtils.cardCode.get(16), ListUtils.cardCode.get(44));
+//		Player accepter = new Player(333L, ListUtils.cardCode.get(40), ListUtils.cardCode.get(24), ListUtils.cardCode.get(36));
+//
+//		ArrayList<Player> winnerList = Player.findWinners(asker,accepter);
+//
+//		Long winnerId = winnerList.size()==1?winnerList.get(0).getUid():winnerList.get(1).getUid();
+//		System.out.println("winnerId====="+winnerList.toString());
+//		System.out.println("winnerId====="+winnerId);
+//		System.out.println("===="+asker.getCategory());
 	}
 
 }

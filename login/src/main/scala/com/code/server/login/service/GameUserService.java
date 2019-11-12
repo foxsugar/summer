@@ -912,7 +912,7 @@ public class GameUserService {
     public int getChargeRecordByDate(KafkaMsgKey msgKey, String type, String date,int index) {
         long userId = msgKey.getUserId();
         sendMsg(msgKey, new ResponseVo("userService", "getChargeRecordByDate",
-                chargeService.chargeDao.getChargesByUseridAndDate(userId, type, date,index)));
+                chargeService.chargeDao.getChargesByUseridAndDate(userId, type, date,index * 30)));
         return 0;
     }
 
@@ -928,8 +928,8 @@ public class GameUserService {
             all.addAll(chargeService.chargeDao.getChargesByUserid(userId, "14"));
             all.addAll(chargeService.chargeDao.getChargesByUserid(userId, "15"));
         }else{
-            all.addAll(chargeService.chargeDao.getChargesByUseridAndDate(userId, "14", date, index));
-            all.addAll(chargeService.chargeDao.getChargesByUseridAndDate(userId, "15", date, index));
+            all.addAll(chargeService.chargeDao.getChargesByUseridAndDate(userId, "14", date, index * 30));
+            all.addAll(chargeService.chargeDao.getChargesByUseridAndDate(userId, "15", date, index * 30));
         }
         sendMsg(msgKey, new ResponseVo("userService", "getChargeRecordGive", all));
         return 0;

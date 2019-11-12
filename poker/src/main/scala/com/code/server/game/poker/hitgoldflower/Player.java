@@ -42,7 +42,7 @@ public class Player {
 		this.setPokers(list);
 	}
 
-	static Rules rules_;
+	Rules rules_;
 	private CardCategory category;
 	public CardCategory getCategory() {
 		return category;
@@ -198,92 +198,97 @@ public class Player {
 
 	public static ArrayList<Player> findWinners(Rules rules, Player...player){
 
-		rules_ = rules;
-		if(player.length > 1){
-			//如果有235 和豹子 还有其他 就不处理
 
-			//判断豹子
-			Player baozi = null;
-			for(int i = 0; i < player.length; i++){
-				Player p = player[i];
-				boolean ret = PokerItem.BaoZi(p.getPokers());
-				if(ret){
-					baozi = p;
-					break;
-				}
-			}
-
-			Player p235 = null;
-			for(int i = 0; i < player.length; i++){
-				Player p = player[i];
-				boolean ret = PokerItem.is235(p.getPokers());
-				if(ret){
-					p235 = p;
-					break;
-				}
-			}
-
-			Player pother = null;
-			for(int i = 0; i < player.length; i++){
-				Player p = player[i];
-				boolean ret1 = PokerItem.is235(p.getPokers());
-				boolean ret2 = PokerItem.BaoZi(p.getPokers());
-				if(ret1 == false && ret2 == false){
-					pother = p;
-					break;
-				}
-			}
-			if(p235 != null && pother!=null && baozi!=null){
-				if(p235 != pother){
-
-					ArrayList list = new ArrayList();
-					for(Player plr : player){
-						list.add(plr);
-					}
-					return list;
-				}
-			}
-		}else {
-			ArrayList<Player> list = new ArrayList<Player>();
-			list.add(player[0]);
-			return list;
+		for (Player player1 : player) {
+			player1.rules_ = rules;
 		}
+		return findWinners(player);
 
-		for(int i = 0; i <  player.length - 1; i++){
-
-//			Player p1 = player[i];
-			for(int j = i + 1; j < player.length; j++){
-				//对数组进行排序
-//				Player p2 = player[j];
-
-//				if(p1.comparePlayer(p2) == 2){
+//		if(player.length > 1){
+//			//如果有235 和豹子 还有其他 就不处理
+//
+//			//判断豹子
+//			Player baozi = null;
+//			for(int i = 0; i < player.length; i++){
+//				Player p = player[i];
+//				boolean ret = PokerItem.BaoZi(p.getPokers());
+//				if(ret){
+//					baozi = p;
+//					break;
+//				}
+//			}
+//
+//			Player p235 = null;
+//			for(int i = 0; i < player.length; i++){
+//				Player p = player[i];
+//				boolean ret = PokerItem.is235(p.getPokers());
+//				if(ret){
+//					p235 = p;
+//					break;
+//				}
+//			}
+//
+//			Player pother = null;
+//			for(int i = 0; i < player.length; i++){
+//				Player p = player[i];
+//				boolean ret1 = PokerItem.is235(p.getPokers());
+//				boolean ret2 = PokerItem.BaoZi(p.getPokers());
+//				if(ret1 == false && ret2 == false){
+//					pother = p;
+//					break;
+//				}
+//			}
+//			if(p235 != null && pother!=null && baozi!=null){
+//				if(p235 != pother){
+//
+//					ArrayList list = new ArrayList();
+//					for(Player plr : player){
+//						list.add(plr);
+//					}
+//					return list;
+//				}
+//			}
+//		}else {
+//			ArrayList<Player> list = new ArrayList<Player>();
+//			list.add(player[0]);
+//			return list;
+//		}
+//
+//		for(int i = 0; i <  player.length - 1; i++){
+//
+////			Player p1 = player[i];
+//			for(int j = i + 1; j < player.length; j++){
+//				//对数组进行排序
+////				Player p2 = player[j];
+//
+////				if(p1.comparePlayer(p2) == 2){
+////					Player temp = player[i];
+////					player[i] = player[j];
+////					p1 = player[i];
+////					player[j] = temp;
+////				}
+//
+//				if (player[i].comparePlayer(player[j]) == 2){
+//
 //					Player temp = player[i];
 //					player[i] = player[j];
-//					p1 = player[i];
 //					player[j] = temp;
 //				}
-
-				if (player[i].comparePlayer(player[j]) == 2){
-
-					Player temp = player[i];
-					player[i] = player[j];
-					player[j] = temp;
-				}
-
-			}
-		}
-		ArrayList<Player> list = new ArrayList<Player>();
-
-		Player player1 = player[0];
-		list.add(player1);
-		for(int i = 1; i < player.length; i++){
-			Player onePlayer = player[i];
-			if(player1.comparePlayer(onePlayer) == 0){
-				break;
-			}
-			list.add(onePlayer);
-		}
-		return list;
+//
+//			}
+//		}
+//		ArrayList<Player> list = new ArrayList<Player>();
+//
+//		Player player1 = player[0];
+//		list.add(player1);
+//		for(int i = 1; i < player.length; i++){
+//			Player onePlayer = player[i];
+//			if(player1.comparePlayer(onePlayer) == 0){
+//				break;
+//			}
+//			list.add(onePlayer);
+//		}
+//		return list;
 	}
 
 	public static int comparePlayer(Player p1, Player p2){
@@ -318,7 +323,7 @@ public class Player {
 			if(value1 == 1){
 				return PokerItem.baoZiCompare(p1, p2);
 			}else if(value1 == 2){
-				if (rules_ == Rules.HuanLe){
+				if (p1.rules_ == Rules.HuanLe){
 					return PokerItem.ShunJinCompare(p1, p2);
 				}else {
 					return PokerItem.ShunJin(p1, p2);
@@ -328,7 +333,7 @@ public class Player {
 				return PokerItem.JinHua(p1, p2);
 			}else if(value1 == 4){
 
-				if (rules_ == Rules.HuanLe){
+				if (p1.rules_ == Rules.HuanLe){
 					return PokerItem.shunZiCompare(p1, p2);
 				}else{
 					return PokerItem.shunZi(p1, p2);

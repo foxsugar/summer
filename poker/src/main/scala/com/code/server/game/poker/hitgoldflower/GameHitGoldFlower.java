@@ -251,11 +251,11 @@ public class GameHitGoldFlower extends Game {
         Player accepter = new Player(accepterId, ListUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(0)), ListUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(1)), ListUtils.cardCode.get(playerCardInfos.get(accepterId).getHandcards().get(2)));
 
         ArrayList<Player> winnerList = new ArrayList<>();
-        if("30".equals(this.room.getGameType())){
-            winnerList = Player.findWinners(Player.Rules.XiaoYao,asker,accepter);
-        }else {
-            winnerList = Player.findWinners(Player.Rules.XiaoYao,asker,accepter);
-        }
+//        if("30".equals(this.room.getGameType())){
+//            winnerList = Player.findWinners(Player.Rules.XiaoYao,asker,accepter);
+//        }else {
+//            winnerList = Player.findWinners(Player.Rules.XiaoYao,asker,accepter);
+//        }
 
         if (Room.isHasMode(3, this.room.otherMode)) {
             winnerList = Player.findWinners(Player.Rules.HuanLe,asker,accepter);
@@ -765,14 +765,23 @@ public class GameHitGoldFlower extends Game {
             Player p = new Player(l, ListUtils.cardCode.get(playerCardInfos.get(l).getHandcards().get(0)), ListUtils.cardCode.get(playerCardInfos.get(l).getHandcards().get(1)), ListUtils.cardCode.get(playerCardInfos.get(l).getHandcards().get(2)));
             list.add(p);
         }
+
+        Player.Rules rule = null;
+        if (Room.isHasMode(3, this.room.otherMode)) {
+            rule = Player.Rules.HuanLe;
+        }else{
+            rule = Player.Rules.XiaoYao;
+        }
+
+
         if (list.size() == 5) {
-            winnerList = Player.findWinners(list.get(0), list.get(1), list.get(2), list.get(3), list.get(4));
+            winnerList = Player.findWinners(rule,list.get(0), list.get(1), list.get(2), list.get(3), list.get(4));
         } else if (list.size() == 4) {
-            winnerList = Player.findWinners(list.get(0), list.get(1), list.get(2), list.get(3));
+            winnerList = Player.findWinners(rule,list.get(0), list.get(1), list.get(2), list.get(3));
         } else if (list.size() == 3) {
-            winnerList = Player.findWinners(list.get(0), list.get(1), list.get(2));
+            winnerList = Player.findWinners(rule,list.get(0), list.get(1), list.get(2));
         } else if (list.size() == 2) {
-            winnerList = Player.findWinners(list.get(0), list.get(1));
+            winnerList = Player.findWinners(rule,list.get(0), list.get(1));
         } else {
             winList.add(list.get(0).getUid());
         }
