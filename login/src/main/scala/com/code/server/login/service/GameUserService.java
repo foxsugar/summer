@@ -924,8 +924,13 @@ public class GameUserService {
     public int getChargeRecordGive(KafkaMsgKey msgKey, String date) {
         long userId = msgKey.getUserId();
         List<Charge> all = new ArrayList<>();
-        all.addAll(chargeService.chargeDao.getChargesByUseridAndDate(userId, "14", date));
-        all.addAll(chargeService.chargeDao.getChargesByUseridAndDate(userId, "15", date));
+        if (date == null || "".equals(date)) {
+            all.addAll(chargeService.chargeDao.getChargesByUserid(userId, "14"));
+            all.addAll(chargeService.chargeDao.getChargesByUserid(userId, "15"));
+        }else{
+            all.addAll(chargeService.chargeDao.getChargesByUseridAndDate(userId, "14", date));
+            all.addAll(chargeService.chargeDao.getChargesByUseridAndDate(userId, "15", date));
+        }
         sendMsg(msgKey, new ResponseVo("userService", "getChargeRecordGive", all));
         return 0;
     }
