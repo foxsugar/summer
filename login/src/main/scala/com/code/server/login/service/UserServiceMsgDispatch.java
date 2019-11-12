@@ -131,11 +131,13 @@ public class UserServiceMsgDispatch {
             case "getChargeRecordByDate":
                 String recharge_source1 = params.path("type").asText("1");
                 String date1 = params.path("date").asText();
-                return gameUserService.getChargeRecordByDate(msgKey, recharge_source1, date1);
+                int index1 = params.path("index").asInt();
+                return gameUserService.getChargeRecordByDate(msgKey, recharge_source1, date1, index1);
 
             case "getChargeRecordGive":
                 String date = params.path("date").asText();
-                return gameUserService.getChargeRecordGive(msgKey, date);
+                int index2 = params.path("index2").asInt();
+                return gameUserService.getChargeRecordGive(msgKey, date, index2);
             case "getDiscount":
                 return gameUserService.getDiscount(msgKey);
 

@@ -909,10 +909,10 @@ public class GameUserService {
     }
 
 
-    public int getChargeRecordByDate(KafkaMsgKey msgKey, String type, String date) {
+    public int getChargeRecordByDate(KafkaMsgKey msgKey, String type, String date,int index) {
         long userId = msgKey.getUserId();
         sendMsg(msgKey, new ResponseVo("userService", "getChargeRecordByDate",
-                chargeService.chargeDao.getChargesByUseridAndDate(userId, type, date)));
+                chargeService.chargeDao.getChargesByUseridAndDate(userId, type, date,index)));
         return 0;
     }
 
@@ -921,15 +921,15 @@ public class GameUserService {
      * @param msgKey
      * @return
      */
-    public int getChargeRecordGive(KafkaMsgKey msgKey, String date) {
+    public int getChargeRecordGive(KafkaMsgKey msgKey, String date, int index) {
         long userId = msgKey.getUserId();
         List<Charge> all = new ArrayList<>();
         if (date == null || "".equals(date)) {
             all.addAll(chargeService.chargeDao.getChargesByUserid(userId, "14"));
             all.addAll(chargeService.chargeDao.getChargesByUserid(userId, "15"));
         }else{
-            all.addAll(chargeService.chargeDao.getChargesByUseridAndDate(userId, "14", date));
-            all.addAll(chargeService.chargeDao.getChargesByUseridAndDate(userId, "15", date));
+            all.addAll(chargeService.chargeDao.getChargesByUseridAndDate(userId, "14", date, index));
+            all.addAll(chargeService.chargeDao.getChargesByUseridAndDate(userId, "15", date, index));
         }
         sendMsg(msgKey, new ResponseVo("userService", "getChargeRecordGive", all));
         return 0;
