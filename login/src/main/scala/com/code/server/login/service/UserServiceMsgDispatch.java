@@ -128,8 +128,14 @@ public class UserServiceMsgDispatch {
                 String recharge_source = params.path("type").asText("1");
                 return gameUserService.getChargeRecord(msgKey, recharge_source);
 
+            case "getChargeRecordByDate":
+                String recharge_source1 = params.path("type").asText("1");
+                String date1 = params.path("date").asText();
+                return gameUserService.getChargeRecordByDate(msgKey, recharge_source1, date1);
+
             case "getChargeRecordGive":
-                return gameUserService.getChargeRecordGive(msgKey);
+                String date = params.path("date").asText();
+                return gameUserService.getChargeRecordGive(msgKey, date);
             case "getDiscount":
                 return gameUserService.getDiscount(msgKey);
 
@@ -148,8 +154,8 @@ public class UserServiceMsgDispatch {
                 return gameUserService.getRebateDetails(msgKey,uid);
             case "getRebateDetails1":
                 long uid2 = params.path("userId").asLong(msgKey.getUserId());
-                String date1 = params.path("date").asText();
-                return gameUserService.getRebateDetails1(msgKey,uid2, date1);
+                String date2 = params.path("date").asText();
+                return gameUserService.getRebateDetails1(msgKey,uid2, date2);
             case "getRebateInfoSum":
                 long uid1 = params.path("userId").asLong(msgKey.getUserId());
                 return gameUserService.getRebateInfoSum(msgKey,uid1);
@@ -181,8 +187,8 @@ public class UserServiceMsgDispatch {
                 return gameUserService.getRank(msgKey, month);
 
             case "getRebateInfo":
-                String date = params.path("date").asText("all");
-                return gameUserService.getRebateInfo(msgKey, date);
+                String date3 = params.path("date").asText("all");
+                return gameUserService.getRebateInfo(msgKey, date3);
 
             case "getWeekRebate":
                 return gameUserService.getWeekRebate(msgKey);

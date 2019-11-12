@@ -908,16 +908,24 @@ public class GameUserService {
         return 0;
     }
 
+
+    public int getChargeRecordByDate(KafkaMsgKey msgKey, String type, String date) {
+        long userId = msgKey.getUserId();
+        sendMsg(msgKey, new ResponseVo("userService", "getChargeRecordByDate",
+                chargeService.chargeDao.getChargesByUseridAndDate(userId, type, date)));
+        return 0;
+    }
+
     /**
      * 获得转账记录
      * @param msgKey
      * @return
      */
-    public int getChargeRecordGive(KafkaMsgKey msgKey) {
+    public int getChargeRecordGive(KafkaMsgKey msgKey, String date) {
         long userId = msgKey.getUserId();
         List<Charge> all = new ArrayList<>();
-        all.addAll(chargeService.chargeDao.getChargesByUserid(userId, "14"));
-        all.addAll(chargeService.chargeDao.getChargesByUserid(userId, "15"));
+        all.addAll(chargeService.chargeDao.getChargesByUseridAndDate(userId, "14", date));
+        all.addAll(chargeService.chargeDao.getChargesByUseridAndDate(userId, "15", date));
         sendMsg(msgKey, new ResponseVo("userService", "getChargeRecordGive", all));
         return 0;
     }
