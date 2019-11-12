@@ -5,6 +5,7 @@ package com.code.server.db.dao;
  */
 
 import com.code.server.db.model.RebateDetail;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -17,7 +18,7 @@ public interface IRebateDetailDao extends PagingAndSortingRepository<RebateDetai
 
     List<RebateDetail> findAllByAgentId(long agentId);
 
-    List<RebateDetail> findAllByAgentIdAndDateAfterAndDateBefore(long agentId, Date date, Date date1);
+    List<RebateDetail> findAllByAgentIdAndDateAfterAndDateBefore(long agentId, Date date, Date date1,Pageable pageable);
 //    List<RebateDetail> findAllByAgentIdAndDate_Date(long agentId, Date date, Date date1);
 
 //    select agent_id, sum(num) money,DATE_FORMAT(date,'%Y-%m-%d') d from rebate_detail where agent_id=5 GROUP BY d ORDER BY d desc limit 10;

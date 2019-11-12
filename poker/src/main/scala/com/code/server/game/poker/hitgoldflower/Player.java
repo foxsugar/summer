@@ -199,9 +199,9 @@ public class Player {
 	public static ArrayList<Player> findWinners(Rules rules, Player...player){
 
 
-		for (Player player1 : player) {
-			player1.rules_ = rules;
-		}
+//		for (Player player1 : player) {
+//			player1.rules_ = rules;
+//		}
 		return findWinners(player);
 
 //		if(player.length > 1){

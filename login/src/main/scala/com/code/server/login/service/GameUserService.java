@@ -28,6 +28,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -1055,7 +1057,7 @@ public class GameUserService {
         return 0;
     }
 
-    public int getRebateDetails1(KafkaMsgKey msgKey,long userId,String date) {
+    public int getRebateDetails1(KafkaMsgKey msgKey,long userId,String date,int index) {
 //        sendMsg(msgKey, new ResponseVo("userService", "getRebateDetails", rebateDetailService.rebateDetailDao.findAllByAgentId(userId)));
 //        LocalDate localDate = LocalDate.now();
 //        String date = localDate.minusDays(7).toString();
@@ -1063,8 +1065,10 @@ public class GameUserService {
         String d2 = date+" 23:59:59";
         Date date1 = DateUtil.convert2DateTime(d1);
         Date date2 = DateUtil.convert2DateTime(d2);
+        Sort sort = new Sort(Sort.Direction.DESC,"date"); //创建时间降序排序
+        Pageable pageable = new PageRequest(index,30,sort);
         sendMsg(msgKey, new ResponseVo("userService", "getRebateDetails1",
-                rebateDetailService.rebateDetailDao.findAllByAgentIdAndDateAfterAndDateBefore(userId,date1, date2)));
+                rebateDetailService.rebateDetailDao.findAllByAgentIdAndDateAfterAndDateBefore(userId,date1, date2,pageable)));
         return 0;
     }
 

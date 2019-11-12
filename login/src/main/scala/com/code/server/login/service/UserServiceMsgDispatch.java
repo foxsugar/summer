@@ -157,7 +157,8 @@ public class UserServiceMsgDispatch {
             case "getRebateDetails1":
                 long uid2 = params.path("userId").asLong(msgKey.getUserId());
                 String date2 = params.path("date").asText();
-                return gameUserService.getRebateDetails1(msgKey,uid2, date2);
+                int index4 = params.path("index").asInt();
+                return gameUserService.getRebateDetails1(msgKey,uid2, date2, index4);
             case "getRebateInfoSum":
                 long uid1 = params.path("userId").asLong(msgKey.getUserId());
                 return gameUserService.getRebateInfoSum(msgKey,uid1);
