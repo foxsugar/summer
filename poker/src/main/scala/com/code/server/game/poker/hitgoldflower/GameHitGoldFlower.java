@@ -258,12 +258,8 @@ public class GameHitGoldFlower extends Game {
 //        }
 
         if (Room.isHasMode(3, this.room.otherMode)) {
-            asker.rules_ = Player.Rules.HuanLe;
-            accepter.rules_ = Player.Rules.HuanLe;
             winnerList = Player.findWinners(Player.Rules.HuanLe,asker,accepter);
         }else{
-            asker.rules_ = Player.Rules.XiaoYao;
-            accepter.rules_ = Player.Rules.XiaoYao;
             winnerList = Player.findWinners(Player.Rules.XiaoYao,asker,accepter);
         }
 

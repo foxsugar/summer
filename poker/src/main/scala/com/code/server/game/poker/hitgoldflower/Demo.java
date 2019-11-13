@@ -336,15 +336,16 @@ public class Demo {
 //		System.out.println(p1.getCategory().toString());
 
 
-        Player p1 = new Player(1l, "HEI", "A", "HONG", "2", "HUA", "3");
-        Player p2 = new Player(2l, "HUA", "5", "PIAN", "6", "HEI", "7");
+        Player p2 = new Player(2l, "HUA", "10", "PIAN", "9", "HEI", "8");
+        Player p1 = new Player(1l, "HEI", "A", "HONG", "3", "HUA", "2");
+//        Player p2 = new Player(2l, "HUA", "K", "PIAN", "Q", "HEI", "J");
 
-//		p1.rules_ = Player.Rules.HuanLe;
-//		p2.rules_ = Player.Rules.HuanLe;
-        p1.rules_ = Player.Rules.XiaoYao;
-        p2.rules_ = Player.Rules.XiaoYao;
+		p1.rules_ = Player.Rules.HuanLe;
+		p2.rules_ = Player.Rules.HuanLe;
+//        p1.rules_ = Player.Rules.XiaoYao;
+//        p2.rules_ = Player.Rules.XiaoYao;
         ArrayList<Player> aList = Player.findWinners(p1, p2);
-        System.out.println(aList);
+        System.err.println(aList);
 
 //		Player asker = new Player(222L, ListUtils.cardCode.get(20), ListUtils.cardCode.get(16), ListUtils.cardCode.get(44));
 //		Player accepter = new Player(333L, ListUtils.cardCode.get(40), ListUtils.cardCode.get(24), ListUtils.cardCode.get(36));

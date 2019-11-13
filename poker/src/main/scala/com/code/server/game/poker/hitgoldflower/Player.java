@@ -185,6 +185,7 @@ public class Player {
 		ArrayList<Player> list = new ArrayList<Player>();
 		
 		Player player1 = player[0];
+		System.out.println("大牌 : "+player1.getPokers());
 		list.add(player1);
 		for(int i = 1; i < player.length; i++){
 			Player onePlayer = player[i];
@@ -199,9 +200,9 @@ public class Player {
 	public static ArrayList<Player> findWinners(Rules rules, Player...player){
 
 
-//		for (Player player1 : player) {
-//			player1.rules_ = rules;
-//		}
+		for (Player player1 : player) {
+			player1.rules_ = rules;
+		}
 		return findWinners(player);
 
 //		if(player.length > 1){
@@ -323,7 +324,7 @@ public class Player {
 			if(value1 == 1){
 				return PokerItem.baoZiCompare(p1, p2);
 			}else if(value1 == 2){
-				if (p1.rules_ == Rules.HuanLe){
+				if (p1.rules_ == Rules.XiaoYao){
 					return PokerItem.ShunJinCompare(p1, p2);
 				}else {
 					return PokerItem.ShunJin(p1, p2);
@@ -333,7 +334,7 @@ public class Player {
 				return PokerItem.JinHua(p1, p2);
 			}else if(value1 == 4){
 
-				if (p1.rules_ == Rules.HuanLe){
+				if (p1.rules_ == Rules.XiaoYao){
 					return PokerItem.shunZiCompare(p1, p2);
 				}else{
 					return PokerItem.shunZi(p1, p2);
