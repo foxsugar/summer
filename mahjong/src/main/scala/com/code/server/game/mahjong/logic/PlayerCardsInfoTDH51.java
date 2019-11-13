@@ -101,6 +101,63 @@ public class PlayerCardsInfoTDH51 extends PlayerCardsInfoHongZhong {
 //        room.pushScoreChange();
 //    }
 
+
+    @Override
+    public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card) {
+        int allScore = 0;
+        int score = 0;
+        if (diangangUser != -1) {
+            PlayerCardsInfoMj dianPao = this.gameInfo.getPlayerCardsInfos().get(diangangUser);
+            boolean isDianpaoTing = this.gameInfo.getPlayerCardsInfos().get(diangangUser).isTing;
+
+            score =  this.roomInfo.getMultiple();
+
+
+            for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
+                if (playerCardsInfoMj.getUserId() != this.userId) {
+                    if (isDianpaoTing) {
+                        playerCardsInfoMj.addGangScore(-score);
+                        playerCardsInfoMj.addScore(-score);
+                        this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -score);
+
+                    }
+                    allScore += score;
+
+                }
+
+            }
+
+            if (!isDianpaoTing) {
+
+                PlayerCardsInfoMj dianGangUser = this.gameInfo.getPlayerCardsInfos().get(diangangUser);
+                dianGangUser.addGangScore(-allScore);
+                dianGangUser.addScore(-allScore);
+                this.roomInfo.addUserSocre(dianGangUser.getUserId(), -allScore);
+            }
+
+
+
+
+            dianPao.addScore(-score);
+            this.roomInfo.addUserSocre(diangangUser, -score);
+
+        } else {
+            score = isMing ? this.roomInfo.getMultiple() : 2 * this.roomInfo.getMultiple();
+            for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
+                if (playerCardsInfoMj.userId != this.userId) {
+                    playerCardsInfoMj.addScore(-score);
+                    playerCardsInfoMj.addGangScore(-score);
+                    this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -score);
+                    allScore += score;
+                }
+            }
+        }
+        this.addScore(allScore);
+        this.addGangScore(allScore);
+        this.roomInfo.addUserSocre(this.userId, allScore);
+    }
+
+
     @Override
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
 
