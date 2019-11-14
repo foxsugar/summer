@@ -137,10 +137,6 @@ public class PlayerCardsInfoTDH51 extends PlayerCardsInfoHongZhong {
 
 
 
-
-            dianPao.addScore(-score);
-            this.roomInfo.addUserSocre(diangangUser, -score);
-
         } else {
             score = isMing ? this.roomInfo.getMultiple() : 2 * this.roomInfo.getMultiple();
             for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
