@@ -8,6 +8,7 @@ import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserOfResult;
 import com.code.server.game.mahjong.response.*;
 import com.code.server.game.room.Game;
+import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
@@ -410,7 +411,11 @@ public class GameInfo extends Game {
                 "HONGZHONGSS".equals(gameType)||
                 "HONGZHONGSS3".equals(gameType)||
                 "FANSHI".equals(gameType)||
-                "KXKD".equals(gameType);
+                "KXKD".equals(gameType)||
+                //第四位 过胡
+                Room.isHasMode(4, this.room.otherMode)
+                ;
+
     }
 
     public boolean isHasGuoPeng(){
