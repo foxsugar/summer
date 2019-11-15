@@ -309,7 +309,8 @@ public class GameInfo extends Game {
      */
     protected void mopai(long userId, String... wz) {
         PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
-        if (isHasGuoHu()) {
+        //张乐宝 过一次后把把过胡,通过第5位控制
+        if (isHasGuoHu() && !Room.isHasMode(5, this.room.otherMode)) {
             playerCardsInfo.setGuoHu(false);
         }
         if (isHasGuoPeng()) {

@@ -5,6 +5,7 @@ import com.code.server.constant.response.GameOfResult;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.UserOfResult;
 import com.code.server.game.mahjong.response.*;
+import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
 
@@ -133,7 +134,8 @@ public class GameInfoNew extends GameInfo {
     protected void mopai(long userId, String... wz) {
         logger.info("摸牌: " + userId);
         PlayerCardsInfoMj playerCardsInfo = playerCardsInfos.get(userId);
-        if (isHasGuoHu()) {
+        //张乐宝 过一次后把把过胡,通过第5位控制
+        if (isHasGuoHu() && !Room.isHasMode(5, this.room.otherMode)) {
             playerCardsInfo.setGuoHu(false);
         }
         if (isHasGuoPeng()) {
