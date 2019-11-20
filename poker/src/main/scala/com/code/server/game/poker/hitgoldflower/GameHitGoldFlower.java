@@ -52,6 +52,7 @@ public class GameHitGoldFlower extends Game {
         this.aliveUser.addAll(users);
         chip = room.getMultiple()+0.0;
         init_bottom_chip = room.getMultiple()+0.0;
+        updateLastOperateTime();
 
         shuffle();//洗牌
         deal();//发牌
@@ -59,7 +60,6 @@ public class GameHitGoldFlower extends Game {
         curUserId = room.getBankerId();
 
         noticeAction(curUserId);
-        updateLastOperateTime();
     }
 
     public void startGame(List<Long> users, Room room) {
