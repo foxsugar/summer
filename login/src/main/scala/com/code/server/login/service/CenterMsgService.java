@@ -355,6 +355,21 @@ public class CenterMsgService implements IkafkaMsgId {
 
     }
 
+    private static void rebateRecord(UserBean userBean, AgentUser agentUser, int level, double chargeNum, double rebateNum, int type){
+        RebateDetail rebateDetail = new RebateDetail();
+        rebateDetail.setUserId(userBean.getId());
+        rebateDetail.setName(userBean.getUsername());
+        rebateDetail.setAgentId(agentUser.getId());
+        rebateDetail.setAgentName(agentUser.getUsername());
+        rebateDetail.setNum(rebateNum);
+        rebateDetail.setChargeNum(chargeNum);
+        rebateDetail.setAgentLevel(agentUser.getLevel());
+        rebateDetail.setDate(new Date());
+        rebateDetail.setUserLevel(userBean.getVip());
+        rebateDetail.setType(type);
+        rebateDetail.setLevle(level);
+        rebateDetailService.rebateDetailDao.save(rebateDetail);
+    }
 
     /**
      * 51号返利
@@ -376,28 +391,34 @@ public class CenterMsgService implements IkafkaMsgId {
             AgentInfo agentInfo1 = agentUser1.getAgentInfo();
             Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
             ChildCost childCost1 = rs1.getOrDefault(dayStr, new ChildCost());
-            childCost1.firstLevel += num * serverConfig.getZlbAAOne().get(agentUser1.getLevel()) * 0.01;
+            double rebateNum = num * serverConfig.getZlbAAOne().get(agentUser1.getLevel()) * 0.01;
+            childCost1.firstLevel += rebateNum;
             rs1.put(dayStr, childCost1);
             agentUserService.getAgentUserDao().save(agentUser1);
+
+            rebateRecord(userBean, agentUser1, 1, num, rebateNum, 1);
 
             AgentUser agentUser2 = agentUserService.getAgentUserDao().findOne(agentUser1.getParentId());
             if (agentUser2 != null) {
                 AgentInfo agentInfo2 = agentUser2.getAgentInfo();
                 Map<String, ChildCost> rs2 = agentInfo2.getEveryDayCost();
                 ChildCost childCost2 = rs2.getOrDefault(dayStr, new ChildCost());
-                childCost1.secondLevel += num * serverConfig.getZlbAATwo().get(agentUser2.getLevel()) * 0.01;
+                double rebateNum2 = num * serverConfig.getZlbAATwo().get(agentUser2.getLevel()) * 0.01;
+                childCost1.secondLevel += rebateNum2;
                 rs2.put(dayStr, childCost2);
                 agentUserService.getAgentUserDao().save(agentUser2);
-
+                rebateRecord(userBean, agentUser1, 2, num, rebateNum2, 1);
 
                 AgentUser agentUser3 = agentUserService.getAgentUserDao().findOne(agentUser2.getParentId());
                 if (agentUser3 != null) {
                     AgentInfo agentInfo3 = agentUser3.getAgentInfo();
                     Map<String, ChildCost> rs3 = agentInfo3.getEveryDayCost();
                     ChildCost childCost3 = rs3.getOrDefault(dayStr, new ChildCost());
-                    childCost3.thirdLevel += num * serverConfig.getZlbAATwo().get(agentUser3.getLevel()) * 0.01;
+                    double rebate3 = num * serverConfig.getZlbAATwo().get(agentUser3.getLevel()) * 0.01;
+                    childCost3.thirdLevel += rebate3;
                     rs3.put(dayStr, childCost3);
                     agentUserService.getAgentUserDao().save(agentUser3);
+                    rebateRecord(userBean, agentUser1, 3, num, rebate3, 1);
                 }
 
             }
@@ -406,9 +427,12 @@ public class CenterMsgService implements IkafkaMsgId {
             AgentInfo agentInfo1 = agentUser1.getAgentInfo();
             Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
             ChildCost childCost1 = rs1.getOrDefault(dayStr, new ChildCost());
-            childCost1.firstLevel += num * serverConfig.getZlbRebate().get(agentUser1.getLevel()) * 0.01;
+            double rebate = num * serverConfig.getZlbRebate().get(agentUser1.getLevel()) * 0.01;
+            childCost1.firstLevel += rebate;
             rs1.put(dayStr, childCost1);
             agentUserService.getAgentUserDao().save(agentUser1);
+
+            rebateRecord(userBean, agentUser1, 1, num, rebate, 2);
         }
 
     }

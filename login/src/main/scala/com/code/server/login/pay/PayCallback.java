@@ -6,13 +6,11 @@ import com.code.server.constant.db.ChildCost;
 import com.code.server.constant.game.UserBean;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.ChargeService;
+import com.code.server.db.Service.RebateDetailService;
 import com.code.server.db.Service.UserService;
 import com.code.server.db.dao.IAgentUserDao;
 import com.code.server.db.dao.IConstantDao;
-import com.code.server.db.model.AgentUser;
-import com.code.server.db.model.Charge;
-import com.code.server.db.model.Constant;
-import com.code.server.db.model.User;
+import com.code.server.db.model.*;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.kafka.MsgSender;
 import com.code.server.login.util.ErrorCode;
@@ -52,6 +50,9 @@ public class PayCallback {
 
     @Autowired
     private IConstantDao constantDao;
+
+    @Autowired
+    private RebateDetailService rebateDetailService;
 
     private static final Map<Integer, Integer> chargeMoney = new HashMap<>();
 
@@ -154,38 +155,60 @@ public class PayCallback {
 
                         logger.info("childCost1  is :{}", childCost1);
                         //今日来源于玩家的收入
+                        double rebate = 0;
                         if (u.getVip() == 0) {
-                            childCost1.firstLevel += rebateMoney * serverConfig.getAgentFirstRebate().get(agentUser1.getAgentType()) * 0.01;
+                            rebate = rebateMoney * serverConfig.getAgentFirstRebate().get(agentUser1.getAgentType()) * 0.01;
+                            childCost1.firstLevel += rebate;
                         } else {
-                            childCost1.firstLevel += rebateMoney * serverConfig.getAgentSecondRebate().get(u.getVip()) * 0.01;
+                            rebate = rebateMoney * serverConfig.getAgentSecondRebate().get(u.getVip()) * 0.01;
+                            childCost1.firstLevel += rebate;
 
 
                         }
                         rs1.put(dayStr, childCost1);
                         agentUserDao.save(agentUser1);
+
+
+
+
+                        RebateDetail rebateDetail = new RebateDetail();
+                        rebateDetail.setUserId(charge.getUserid());
+                        rebateDetail.setAgentName(agentUser1.getUsername());
+                        rebateDetail.setName(u.getUsername());
+                        rebateDetail.setAgentId(agentUser1.getId());
+                        rebateDetail.setNum(rebate);
+                        rebateDetail.setChargeNum(money);
+                        rebateDetail.setAgentLevel(agentUser1.getAgentType());
+                        rebateDetail.setDate(new Date());
+                        rebateDetail.setLevle(1);
+                        rebateDetail.setUserLevel(u.getVip());
+                        rebateDetail.setType(0);
+                        rebateDetailService.rebateDetailDao.save(rebateDetail);
+
                     }
 
-                    AgentUser agentUser2 = null;
-                    if (agentUser1 != null){
-                        agentUser2 = agentUserDao.findOne(agentUser1.getParentId());
-                    }
-
-                    logger.info("AgentUser2 is :{}", agentUser2);
-
-                    if (agentUser2 != null && u.getVip() == 0){
-                        AgentInfo agentInfo2 = agentUser2.getAgentInfo();
-                        logger.info("AgentInfo2 is :{}", agentInfo2);
-                        Map<String, ChildCost> rs2 = agentInfo2.getEveryDayCost();
-                        ChildCost childCost2 = rs2.get(dayStr);
-                        if (childCost2 == null){
-                            childCost2 = new ChildCost();
-                        }
-                        logger.info("childCost2  is :{}", childCost2);
-                        //今日来源于代理的收入
-                        childCost2.secondLevel += rebateMoney * serverConfig.getAgentSecondRebate().get(agentUser1.getAgentType()) * 0.01;
-                        rs2.put(dayStr, childCost2);
-                        agentUserDao.save(agentUser2);
-                    }
+                    //二级返利去掉
+//                    AgentUser agentUser2 = null;
+//                    if (agentUser1 != null){
+//                        agentUser2 = agentUserDao.findOne(agentUser1.getParentId());
+//                    }
+//
+//                    logger.info("AgentUser2 is :{}", agentUser2);
+//
+//                    if (agentUser2 != null && u.getVip() == 0){
+//                        AgentInfo agentInfo2 = agentUser2.getAgentInfo();
+//                        logger.info("AgentInfo2 is :{}", agentInfo2);
+//                        Map<String, ChildCost> rs2 = agentInfo2.getEveryDayCost();
+//                        ChildCost childCost2 = rs2.get(dayStr);
+//                        if (childCost2 == null){
+//                            childCost2 = new ChildCost();
+//                        }
+//                        logger.info("childCost2  is :{}", childCost2);
+//                        //今日来源于代理的收入
+//                        childCost2.secondLevel += rebateMoney * serverConfig.getAgentSecondRebate().get(agentUser1.getAgentType()) * 0.01;
+//                        rs2.put(dayStr, childCost2);
+//                        agentUserDao.save(agentUser2);
+//                    }
 
                     //更新订单结算是否已经返利
                     charge.setFinishTime(dayStr);

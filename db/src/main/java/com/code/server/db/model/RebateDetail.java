@@ -23,10 +23,16 @@ public class RebateDetail extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private long userId;
+    private String name;
     private long agentId;
+    private String agentName;
     private double num;
+    private double chargeNum;
     private Date date;
 
+    private int levle;
+    private int userLevel;
+    private int agentLevel;
     private double beforeNum;
     private double afterNum;
     private int type;
@@ -102,6 +108,60 @@ public class RebateDetail extends BaseEntity {
 
     public RebateDetail setType(int type) {
         this.type = type;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public RebateDetail setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getAgentName() {
+        return agentName;
+    }
+
+    public RebateDetail setAgentName(String agentName) {
+        this.agentName = agentName;
+        return this;
+    }
+
+    public double getChargeNum() {
+        return chargeNum;
+    }
+
+    public RebateDetail setChargeNum(double chargeNum) {
+        this.chargeNum = chargeNum;
+        return this;
+    }
+
+    public int getAgentLevel() {
+        return agentLevel;
+    }
+
+    public RebateDetail setAgentLevel(int agentLevel) {
+        this.agentLevel = agentLevel;
+        return this;
+    }
+
+    public int getUserLevel() {
+        return userLevel;
+    }
+
+    public RebateDetail setUserLevel(int userLevel) {
+        this.userLevel = userLevel;
+        return this;
+    }
+
+    public int getLevle() {
+        return levle;
+    }
+
+    public RebateDetail setLevle(int levle) {
+        this.levle = levle;
         return this;
     }
 }
