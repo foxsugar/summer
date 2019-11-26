@@ -132,6 +132,9 @@ public class PlayerCardsInfoFactory {
             case "118":
                 playerCardsInfo = new PlayerKDLongcheng();
                 break;
+            case "121":
+                playerCardsInfo = new PlayerCardsInfoLingchuan();
+                break;
             default:
                 logger.error("初始化 playercardsInfo 错误");
                 return null;

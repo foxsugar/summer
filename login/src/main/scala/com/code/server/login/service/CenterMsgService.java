@@ -1,6 +1,8 @@
 package com.code.server.login.service;
 
 import com.code.server.constant.club.*;
+import com.code.server.constant.db.AgentInfo;
+import com.code.server.constant.db.ChildCost;
 import com.code.server.constant.game.IGameConstant;
 import com.code.server.constant.game.Record;
 import com.code.server.constant.game.RoomRecord;
@@ -14,10 +16,7 @@ import com.code.server.login.action.LoginAction;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.kafka.MsgSender;
 import com.code.server.redis.service.RedisManager;
-import com.code.server.util.IdWorker;
-import com.code.server.util.JsonUtil;
-import com.code.server.util.SpringUtil;
-import com.code.server.util.ThreadPool;
+import com.code.server.util.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.Gson;
@@ -53,6 +52,7 @@ public class CenterMsgService implements IkafkaMsgId {
     private static UserService userService = SpringUtil.getBean(UserService.class);
     private static RebateDetailService rebateDetailService = SpringUtil.getBean(RebateDetailService.class);
     private static ChargeService chargeService = SpringUtil.getBean(ChargeService.class);
+
 
 
     public static void dispatch(KafkaMsgKey msgKey, String msg) {
@@ -108,6 +108,10 @@ public class CenterMsgService implements IkafkaMsgId {
 
             case KAFKA_MSG_ID_MONEY_SPEND:
                 addSpendMoneyLongcheng(msg);
+                break;
+
+            case KAFKA_MSG_ID_51_ADD_REBATE:
+                add51Rebate(msg);
                 break;
 
 
@@ -352,6 +356,64 @@ public class CenterMsgService implements IkafkaMsgId {
     }
 
 
+    /**
+     * 51号返利
+     * @param msg
+     */
+    public static void add51Rebate(String msg) {
+        long userId = JsonUtil.readTree(msg).path("userId").asLong();
+        int num = JsonUtil.readTree(msg).path("money").asInt();
+        boolean isAA = JsonUtil.readTree(msg).path("isAA").asBoolean();
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        int parent = userBean.getReferee();
+        AgentUser agentUser1 = agentUserService.getAgentUserDao().findOne(parent);
+        if(agentUser1 == null) return;
+        String dayStr = DateUtil.convert2DayString(new Date());
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+        if (isAA) {
+
+            AgentInfo agentInfo1 = agentUser1.getAgentInfo();
+            Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
+            ChildCost childCost1 = rs1.getOrDefault(dayStr, new ChildCost());
+            childCost1.firstLevel += num * serverConfig.getZlbAAOne().get(agentUser1.getLevel()) * 0.01;
+            rs1.put(dayStr, childCost1);
+            agentUserService.getAgentUserDao().save(agentUser1);
+
+            AgentUser agentUser2 = agentUserService.getAgentUserDao().findOne(agentUser1.getParentId());
+            if (agentUser2 != null) {
+                AgentInfo agentInfo2 = agentUser2.getAgentInfo();
+                Map<String, ChildCost> rs2 = agentInfo2.getEveryDayCost();
+                ChildCost childCost2 = rs2.getOrDefault(dayStr, new ChildCost());
+                childCost1.secondLevel += num * serverConfig.getZlbAATwo().get(agentUser2.getLevel()) * 0.01;
+                rs2.put(dayStr, childCost2);
+                agentUserService.getAgentUserDao().save(agentUser2);
+
+
+                AgentUser agentUser3 = agentUserService.getAgentUserDao().findOne(agentUser2.getParentId());
+                if (agentUser3 != null) {
+                    AgentInfo agentInfo3 = agentUser3.getAgentInfo();
+                    Map<String, ChildCost> rs3 = agentInfo3.getEveryDayCost();
+                    ChildCost childCost3 = rs3.getOrDefault(dayStr, new ChildCost());
+                    childCost3.thirdLevel += num * serverConfig.getZlbAATwo().get(agentUser3.getLevel()) * 0.01;
+                    rs3.put(dayStr, childCost3);
+                    agentUserService.getAgentUserDao().save(agentUser3);
+                }
+
+            }
+
+        }else{
+            AgentInfo agentInfo1 = agentUser1.getAgentInfo();
+            Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
+            ChildCost childCost1 = rs1.getOrDefault(dayStr, new ChildCost());
+            childCost1.firstLevel += num * serverConfig.getZlbRebate().get(agentUser1.getLevel()) * 0.01;
+            rs1.put(dayStr, childCost1);
+            agentUserService.getAgentUserDao().save(agentUser1);
+        }
+
+    }
+
+
     public static void sendBindMsg(String msg){
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
         if("".equals(serverConfig.getQrDir())) return;
@@ -582,7 +644,11 @@ public class CenterMsgService implements IkafkaMsgId {
                 sendLq_http(roomRecord, club);
 
                 if (serverConfig.getSendDuoliao() == 1) {
-                    DuoLiaoService.sendRecord(roomRecord, club);
+                    try{
+                        DuoLiaoService.sendRecord(roomRecord, club);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
 
             }

@@ -65,8 +65,7 @@ public class GameInfoZhanglebao extends GameInfoHeleKD {
         }
 
 
-        //第一个人抓牌
-        mopai(firstTurn, "发牌");
+
 
 
         //确定耗子
@@ -79,7 +78,7 @@ public class GameInfoZhanglebao extends GameInfoHeleKD {
             if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_风耗子)) {
                 hunIndex = 27 + rand.nextInt(7);
             }else{
-                String card = this.remainCards.remove(0);
+                String card = this.remainCards.remove(1);
                 hunIndex = CardTypeUtil.getTypeByCard(card);
             }
 
@@ -99,6 +98,10 @@ public class GameInfoZhanglebao extends GameInfoHeleKD {
 
             replay.getHun().addAll(this.hun);
         }
+
+
+        //第一个人抓牌
+        mopai(firstTurn, "发牌");
     }
 
     /**

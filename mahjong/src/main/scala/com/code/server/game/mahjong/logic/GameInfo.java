@@ -999,7 +999,7 @@ public class GameInfo extends Game {
      * 设置庄家
      *
      * @param winnerId
-     */
+//     */
     public void setBanker(long winnerId) {
         if (winnerId == this.getFirstTurn()) {
 

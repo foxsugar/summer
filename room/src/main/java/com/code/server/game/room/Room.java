@@ -6,6 +6,7 @@ import com.code.server.constant.data.StaticDataProto;
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.*;
 import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.IkafkaMsgId;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.*;
 import com.code.server.game.room.kafka.MsgSender;
@@ -85,8 +86,6 @@ public class Room implements IfaceRoom {
 
     //托管状态
     protected Map<Long, Integer> autoPlayStatus = new HashMap<>();
-
-
 
 
     public static String getRoomIdStr(int roomId) {
@@ -244,7 +243,7 @@ public class Room implements IfaceRoom {
         if (!isCanJoinCheckMoney(userId)) {
             if (isGoldRoom()) {
                 return ErrorCode.CANNOT_JOIN_ROOM_NO_GOLD;
-            }else{
+            } else {
                 return ErrorCode.CANNOT_JOIN_ROOM_NO_MONEY;
             }
         }
@@ -292,7 +291,6 @@ public class Room implements IfaceRoom {
         r.put("num", this.watchUser.size());
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "watchNum", r), users);
     }
-
 
 
     protected void addUser2RoomRedis(long userId) {
@@ -391,12 +389,13 @@ public class Room implements IfaceRoom {
 
     /**
      * 得到最大分数的人
+     *
      * @return
      */
-    public long getMaxScoreUser(){
+    public long getMaxScoreUser() {
         long userId = 0;
         double score = 0;
-        for(Map.Entry<Long,RoomStatistics> en : this.roomStatisticsMap.entrySet()){
+        for (Map.Entry<Long, RoomStatistics> en : this.roomStatisticsMap.entrySet()) {
             if (en.getValue().score > score) {
                 score = en.getValue().score;
                 userId = en.getKey();
@@ -509,6 +508,7 @@ public class Room implements IfaceRoom {
 
     /**
      * 设置托管状态
+     *
      * @param userId
      * @param status
      * @return
@@ -530,10 +530,10 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
-    public static Map<String,Object> getRoomNum(String rooms){
+    public static Map<String, Object> getRoomNum(String rooms) {
         Map<String, Object> result = new HashMap<>();
-        for(String roomId : rooms.split(",")){
-            Room room = (Room)RoomManager.getRoom(roomId);
+        for (String roomId : rooms.split(",")) {
+            Room room = (Room) RoomManager.getRoom(roomId);
 
             if (room != null) {
                 result.put(roomId, room.getCurGameNumber());
@@ -850,9 +850,10 @@ public class Room implements IfaceRoom {
     }
 
 
-    protected void setResultOtherInfo(GameOfResult gameOfResult){
+    protected void setResultOtherInfo(GameOfResult gameOfResult) {
 
     }
+
     private void removeClubInstance() {
         MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
         KafkaMsgKey kafkaKey = new KafkaMsgKey();
@@ -937,11 +938,30 @@ public class Room implements IfaceRoom {
             this.users.forEach(userId -> {
                 RedisManager.getUserRedisService().addUserMoney(userId, -createNeedMoney);
                 if (isAddGold()) RedisManager.addGold(userId, createNeedMoney / 10);
+                if (isZhanglebao()) sendzhanglebaoAddRebate(userId, createNeedMoney, true);
             });
         } else {
             RedisManager.getUserRedisService().addUserMoney(this.createUser, -createNeedMoney);
             if (isAddGold()) RedisManager.addGold(this.createUser, createNeedMoney / 10);
+            if (isZhanglebao()) sendzhanglebaoAddRebate(this.createUser, createNeedMoney, false);
         }
+        if (isZhanglebao()) {
+
+        }
+    }
+
+    private void sendzhanglebaoAddRebate(long userId, int money, boolean isAA) {
+        Map<String, Object> addMoney = new HashMap<>();
+        addMoney.put("userId", userId);
+        addMoney.put("money", money);
+        addMoney.put("isAA", isAA);
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_51_ADD_REBATE);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney);
+    }
+
+    protected boolean isZhanglebao() {
+        return false;
     }
 
     public int changeRoom(long userId) {
@@ -1024,8 +1044,8 @@ public class Room implements IfaceRoom {
         System.out.println(roomVo.roomId);
 
         System.out.println(43421 % 4 == 2);
-        System.out.println(isHasMode(3,5128));
-        System.out.println(isHasMode(3,5132));
+        System.out.println(isHasMode(3, 5128));
+        System.out.println(isHasMode(3, 5132));
     }
 
     @Override

@@ -2,10 +2,13 @@ package com.code.server.gate.encoding;
 
 import com.code.server.util.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.util.CharsetUtil;
 
 import java.util.List;
 
@@ -28,26 +31,31 @@ public class WsCodec extends MessageToMessageCodec<WebSocketFrame,String> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, String msg, List<Object> out) throws Exception {
+
+
+        byte[] data = msg.getBytes("utf-8");
+
+
         System.out.println("jieshouxiaoxi");
-        WebSocketFrame webSocketFrame = new TextWebSocketFrame(msg);
+        ByteBuf byteBuf = Unpooled.buffer(data.length);
+        byteBuf.writeBytes(data);
+        BinaryWebSocketFrame binaryWebSocketFrame = new BinaryWebSocketFrame(byteBuf);
 
         System.out.println("encode = "+msg);
 
 
-        out.add(webSocketFrame);
+        out.add(binaryWebSocketFrame);
     }
 
     @Override
     protected void decode(ChannelHandlerContext ctx, WebSocketFrame msg, List<Object> out) throws Exception {
 
-        System.out.println("jieshouxiaoxi  decode ");
-        TextWebSocketFrame textWebSocketFrame = (TextWebSocketFrame)msg;
-        System.out.println("decode = " + textWebSocketFrame.text());
+        BinaryWebSocketFrame frame = (BinaryWebSocketFrame)msg;
 
-        JsonNode json = JsonUtil.readTree(textWebSocketFrame.text());
-//        JSONObject json = JSONObject.fromObject(str);
-
-        out.add(json);
+        if (frame.isFinalFragment()) {
+            JsonNode json = JsonUtil.readTree(frame.content().toString(CharsetUtil.UTF_8));
+            out.add(json);
+        }
 
     }
 }

@@ -74,6 +74,12 @@ public class ServerConfig {
     private Map<Integer, Integer> agentFirstRebate = new HashMap<>();
     private Map<Integer, Integer> agentSecondRebate = new HashMap<>();
 
+    private Map<Integer, Integer> zlbRebate = new HashMap<>();
+    private Map<Integer, Integer> zlbAAOne = new HashMap<>();
+    private Map<Integer, Integer> zlbAATwo = new HashMap<>();
+    private Map<Integer, Integer> zlbAAThree = new HashMap<>();
+
+
     private String paysapiUrl = "";
     private String paysapiNotifyUrl = "";
     private String paysapiReturnUrl = "";
@@ -462,6 +468,42 @@ public class ServerConfig {
 
     public ServerConfig setSendDuoliao(int sendDuoliao) {
         this.sendDuoliao = sendDuoliao;
+        return this;
+    }
+
+    public Map<Integer, Integer> getZlbRebate() {
+        return zlbRebate;
+    }
+
+    public ServerConfig setZlbRebate(Map<Integer, Integer> zlbRebate) {
+        this.zlbRebate = zlbRebate;
+        return this;
+    }
+
+    public Map<Integer, Integer> getZlbAAOne() {
+        return zlbAAOne;
+    }
+
+    public ServerConfig setZlbAAOne(Map<Integer, Integer> zlbAAOne) {
+        this.zlbAAOne = zlbAAOne;
+        return this;
+    }
+
+    public Map<Integer, Integer> getZlbAATwo() {
+        return zlbAATwo;
+    }
+
+    public ServerConfig setZlbAATwo(Map<Integer, Integer> zlbAATwo) {
+        this.zlbAATwo = zlbAATwo;
+        return this;
+    }
+
+    public Map<Integer, Integer> getZlbAAThree() {
+        return zlbAAThree;
+    }
+
+    public ServerConfig setZlbAAThree(Map<Integer, Integer> zlbAAThree) {
+        this.zlbAAThree = zlbAAThree;
         return this;
     }
 }

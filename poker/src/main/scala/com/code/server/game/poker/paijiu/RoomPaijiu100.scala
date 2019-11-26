@@ -38,17 +38,17 @@ class RoomPaijiu100 extends RoomPaijiuCrazy{
 //          sendCenterAddThreeRebate(userId, score,1)
 //        }
         //发送返利
-//        sendCenterAddRebate(userId, rs)
+        sendCenterAddRebate(userId, rs)
 
       }else{
         RedisManager.getUserRedisService.addUserMoney(userId, score)
       }
 
-      var s = score
-      if(s<0) s = -s
-      if(s!=0) {
-        sendCenterAddThreeRebate(userId, s,1)
-      }
+//      var s = score
+//      if(s<0) s = -s
+//      if(s!=0) {
+//        sendCenterAddThreeRebate(userId, s,1)
+//      }
     }
   }
 

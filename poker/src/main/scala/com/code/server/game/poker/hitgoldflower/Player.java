@@ -1,5 +1,8 @@
 package com.code.server.game.poker.hitgoldflower;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Player {
 	
@@ -169,31 +172,49 @@ public class Player {
 			}
 		}
 
-		for(int i = 0; i <  player.length - 1; i++){
-			
-			Player p1 = player[i];
-			for(int j = i + 1; j < player.length; j++){
-				//对数组进行排序
-				if (player[i].comparePlayer(player[j]) == 2){
-
-					Player temp = player[i];
-					player[i] = player[j];
-					player[j] = temp;
+		ArrayList<Player> list = new ArrayList<Player>();
+		List<Player> tempPlayerList = Arrays.asList(player);
+		tempPlayerList.sort(Player::comparePlayerNew);
+		System.out.println("比牌后的排序");
+		System.out.println(tempPlayerList);
+//		tempPlayerList.sort(Player::comparePlayerNew);
+//		System.out.println("再次排序==");
+//		System.out.println(tempPlayerList);
+		Player max = tempPlayerList.get(tempPlayerList.size() - 1);
+		list.add(max);
+		for (Player p : tempPlayerList) {
+			if (p != max) {
+				if (p.comparePlayer(max) == 1) {
+					list.add(p);
 				}
 			}
 		}
-		ArrayList<Player> list = new ArrayList<Player>();
-		
-		Player player1 = player[0];
-		System.out.println("大牌 : "+player1.getPokers());
-		list.add(player1);
-		for(int i = 1; i < player.length; i++){
-			Player onePlayer = player[i];
-			if(player1.comparePlayer(onePlayer) == 0){
-				break;
-			}
-			list.add(onePlayer);
-		}
+
+//		for(int i = 0; i <  player.length - 1; i++){
+//
+//			Player p1 = player[i];
+//			for(int j = i + 1; j < player.length; j++){
+//				//对数组进行排序
+//				if (player[i].comparePlayer(player[j]) == 2){
+//
+//					Player temp = player[i];
+//					player[i] = player[j];
+//					player[j] = temp;
+//				}
+//			}
+//		}
+//		ArrayList<Player> list = new ArrayList<Player>();
+//
+//		Player player1 = player[0];
+//		System.out.println("大牌 : "+player1.getPokers());
+//		list.add(player1);
+//		for(int i = 1; i < player.length; i++){
+//			Player onePlayer = player[i];
+//			if(player1.comparePlayer(onePlayer) == 0){
+//				break;
+//			}
+//			list.add(onePlayer);
+//		}
 		return list;
 	}
 
@@ -292,6 +313,19 @@ public class Player {
 //		return list;
 	}
 
+	public static int comparePlayerNew(Player p1, Player p2) {
+//		if(p1.uid>p2.uid) return 1;
+//		if(p1.uid<p2.uid) return -1;
+//		if(Objects.equals(p1.uid, p2.uid)) return 0;
+		int result = comparePlayer(p1, p2);
+		if (result == 2) {
+			return -1;
+		}else if(result == 0){
+			return 1;
+		}else{
+			return 0;
+		}
+	}
 	public static int comparePlayer(Player p1, Player p2){
 		// 先对一个235 和一个豹子进行判断
 		boolean ret1 = PokerItem.is235(p1.getPokers());
@@ -335,8 +369,10 @@ public class Player {
 			}else if(value1 == 4){
 
 				if (p1.rules_ == Rules.XiaoYao){
+					System.out.println("进入逍遥模式");
 					return PokerItem.shunZiCompare(p1, p2);
 				}else{
+					System.out.println("进入欢乐模式");
 					return PokerItem.shunZi(p1, p2);
 				}
 

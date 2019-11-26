@@ -44,6 +44,9 @@ public class PokerGoldRoom extends RoomExtendGold {
     }
 
 
+    protected boolean isZhanglebao(){
+        return SpringUtil.getBean(ServerConfig.class).getIsZhanglebao() == 1;
+    }
 
 
 

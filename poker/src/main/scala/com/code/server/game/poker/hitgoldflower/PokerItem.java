@@ -280,7 +280,7 @@ public class PokerItem {
 			PokerItem itemA = list2.get(1);
 			PokerItem itemB = list2.get(2);
 
-			if ((chushu2 == 0) && (itemA.index / 4 == 11) && (itemB.index / 4 == 12)){
+			if ((chushu2 == 0) && ((itemA.index-2) / 4 == 11) && ((itemB.index-2) / 4 == 12)){
 				return 0;
 			}
 
@@ -289,7 +289,7 @@ public class PokerItem {
 
 			PokerItem itemA = list1.get(1);
 			PokerItem itemB = list1.get(2);
-			if (chushu1 == 0 && (itemA.index / 4 == 11) && (itemB.index / 4 == 12)){
+			if (chushu1 == 0 && ((itemA.index-2) / 4 == 11) && ((itemB.index-2) / 4 == 12)){
 				return 2;
 			}
 			return 0;

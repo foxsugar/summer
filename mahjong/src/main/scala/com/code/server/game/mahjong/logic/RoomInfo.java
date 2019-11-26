@@ -109,6 +109,11 @@ public class RoomInfo extends RoomInfoExtendGold {
         return (c & (1 << type)) >> type == 1;
     }
 
+    protected boolean isZhanglebao(){
+        return SpringUtil.getBean(ServerConfig.class).getIsZhanglebao() == 1;
+    }
+
+
     public void setUserSocre(long userId, double score) {
         if (!userScores.containsKey(userId)) {
 //            logger.error("===设置分数时出错 userId = "+userId +"users: "+userScores.toString());
@@ -263,6 +268,8 @@ public class RoomInfo extends RoomInfoExtendGold {
 
             case "LONGCHENG":
                 return new GameInfoNew().setTurnZeroAfterHuangZhuang(true);
+            case "LINGCHUAN" :
+                return new GameInfoLingchuan();
 
             default:
                 return new GameInfo();

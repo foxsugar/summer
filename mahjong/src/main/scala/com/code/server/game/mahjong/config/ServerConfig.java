@@ -19,6 +19,16 @@ public class ServerConfig {
     private int addClubMoney = 0;
     private int autoInterval = 0;//托管后执行时间
     private int commonInterval = 10000;//普通托管执行时间
+    private int isZhanglebao = 0;
+
+    public int getIsZhanglebao() {
+        return isZhanglebao;
+    }
+
+    public ServerConfig setIsZhanglebao(int isZhanglebao) {
+        this.isZhanglebao = isZhanglebao;
+        return this;
+    }
 
     public String getServerType() {
         return serverType;

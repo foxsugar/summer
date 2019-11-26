@@ -336,14 +336,20 @@ public class Demo {
 //		System.out.println(p1.getCategory().toString());
 
 
-        Player p2 = new Player(2l, "HUA", "10", "PIAN", "9", "HEI", "8");
-        Player p1 = new Player(1l, "HEI", "A", "HONG", "3", "HUA", "2");
-//        Player p2 = new Player(2l, "HUA", "K", "PIAN", "Q", "HEI", "J");
+//        Player p1 = new Player(3l, "HEI", "A", "HONG", "3", "HUA", "2");
+//        Player p2 = new Player(2l, "HUA", "5", "PIAN", "4", "HEI", "3");
 
-		p1.rules_ = Player.Rules.HuanLe;
-		p2.rules_ = Player.Rules.HuanLe;
-//        p1.rules_ = Player.Rules.XiaoYao;
-//        p2.rules_ = Player.Rules.XiaoYao;
+
+//        Player p2 = new Player(3l, "HEI", "A", "HONG", "3", "HUA", "2");
+//        Player p1 = new Player(2l, "HEI", "10", "HUA", "9", "HUA", "8");
+        Player p1 = new Player(3l, "HEI", "A", "HUA", "3", "HUA", "2");
+        Player p2 = new Player(2l, "HEI", "10", "HUA", "9", "HUA", "8");
+//        Player p2 = new Player(2l, "HUA", "A", "PIAN", "K", "HEI", "Q");
+
+//		p1.rules_ = Player.Rules.HuanLe;
+//		p2.rules_ = Player.Rules.HuanLe;
+        p1.rules_ = Player.Rules.XiaoYao;
+        p2.rules_ = Player.Rules.XiaoYao;
         ArrayList<Player> aList = Player.findWinners(p1, p2);
         System.err.println(aList);
 

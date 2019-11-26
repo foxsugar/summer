@@ -31,6 +31,8 @@ public interface IkafkaMsgId {
 
     int KAFKA_MSG_ID_MONEY_SPEND = 3208;
 
+    int KAFKA_MSG_ID_51_ADD_REBATE = 3209;
+
 
 
 
