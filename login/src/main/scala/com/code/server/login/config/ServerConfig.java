@@ -75,6 +75,8 @@ public class ServerConfig {
     private Map<Integer, Integer> agentSecondRebate = new HashMap<>();
 
     private Map<Integer, Integer> zlbRebate = new HashMap<>();
+    private Map<Integer, Integer> zlbRebate2 = new HashMap<>();
+    private Map<Integer, Integer> zlbRebate3 = new HashMap<>();
     private Map<Integer, Integer> zlbAAOne = new HashMap<>();
     private Map<Integer, Integer> zlbAATwo = new HashMap<>();
     private Map<Integer, Integer> zlbAAThree = new HashMap<>();
@@ -504,6 +506,24 @@ public class ServerConfig {
 
     public ServerConfig setZlbAAThree(Map<Integer, Integer> zlbAAThree) {
         this.zlbAAThree = zlbAAThree;
+        return this;
+    }
+
+    public Map<Integer, Integer> getZlbRebate2() {
+        return zlbRebate2;
+    }
+
+    public ServerConfig setZlbRebate2(Map<Integer, Integer> zlbRebate2) {
+        this.zlbRebate2 = zlbRebate2;
+        return this;
+    }
+
+    public Map<Integer, Integer> getZlbRebate3() {
+        return zlbRebate3;
+    }
+
+    public ServerConfig setZlbRebate3(Map<Integer, Integer> zlbRebate3) {
+        this.zlbRebate3 = zlbRebate3;
         return this;
     }
 }

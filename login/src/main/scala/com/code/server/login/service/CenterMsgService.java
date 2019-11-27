@@ -54,7 +54,6 @@ public class CenterMsgService implements IkafkaMsgId {
     private static ChargeService chargeService = SpringUtil.getBean(ChargeService.class);
 
 
-
     public static void dispatch(KafkaMsgKey msgKey, String msg) {
         int msgId = msgKey.getMsgId();
         switch (msgId) {
@@ -175,9 +174,10 @@ public class CenterMsgService implements IkafkaMsgId {
 
     /**
      * 增加三级返利
+     *
      * @param msg
      */
-    private static void addThreeRebate(String msg){
+    private static void addThreeRebate(String msg) {
         long userId = JsonUtil.readTree(msg).path("userId").asLong();
         double money = JsonUtil.readTree(msg).path("money").asDouble();
         int is100 = JsonUtil.readTree(msg).path("is100").asInt();
@@ -187,16 +187,16 @@ public class CenterMsgService implements IkafkaMsgId {
         double thirdMoney = 0;
         if (is100 == 1) {
 
-            double firstlevel = Double.valueOf((String)m.get(IGameConstant.FIRST_LEVEL_100));
-            double secondlevel = Double.valueOf((String)m.get(IGameConstant.SECOND_LEVEL_100));
-            double thirdlevel = Double.valueOf((String)m.get(IGameConstant.THIRD_LEVEL_100));
-            firstMoney = money * firstlevel /100;
-            secondMoney = money * secondlevel /100;
+            double firstlevel = Double.valueOf((String) m.get(IGameConstant.FIRST_LEVEL_100));
+            double secondlevel = Double.valueOf((String) m.get(IGameConstant.SECOND_LEVEL_100));
+            double thirdlevel = Double.valueOf((String) m.get(IGameConstant.THIRD_LEVEL_100));
+            firstMoney = money * firstlevel / 100;
+            secondMoney = money * secondlevel / 100;
             thirdMoney = money * thirdlevel / 100;
-        }else{
-            firstMoney = Double.valueOf((String)m.get(IGameConstant.FIRST_LEVEL));
-            secondMoney = Double.valueOf((String)m.get(IGameConstant.SECOND_LEVEL));
-            thirdMoney = Double.valueOf((String)m.get(IGameConstant.THIRD_LEVEL));
+        } else {
+            firstMoney = Double.valueOf((String) m.get(IGameConstant.FIRST_LEVEL));
+            secondMoney = Double.valueOf((String) m.get(IGameConstant.SECOND_LEVEL));
+            thirdMoney = Double.valueOf((String) m.get(IGameConstant.THIRD_LEVEL));
 
         }
 
@@ -255,9 +255,10 @@ public class CenterMsgService implements IkafkaMsgId {
 
     /**
      * 增加贡献
+     *
      * @param msg
      */
-    public static void addContribute(String msg){
+    public static void addContribute(String msg) {
         long userId = JsonUtil.readTree(msg).path("userId").asLong();
         double money = JsonUtil.readTree(msg).path("money").asDouble();
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
@@ -271,15 +272,17 @@ public class CenterMsgService implements IkafkaMsgId {
 
         RedisManager.getUserRedisService().updateUserBean(userId, userBean);
     }
+
     /**
      * 获得需要留下的日期
+     *
      * @return
      */
-    private static Set<String> getNeedDay(){
+    private static Set<String> getNeedDay() {
         Set<String> result = new HashSet<>();
         result.add("all");
         LocalDate localDate = LocalDate.now();
-        for(int i=0;i<9;i++){
+        for (int i = 0; i < 9; i++) {
             LocalDate l = localDate.minusDays(i);
             result.add(l.toString());
         }
@@ -291,7 +294,7 @@ public class CenterMsgService implements IkafkaMsgId {
     }
 
     private static void addRebateLongcheng(String msg) {
-        try{
+        try {
             long userId = JsonUtil.readTree(msg).path("userId").asLong();
             double money = JsonUtil.readTree(msg).path("money").asDouble();
 
@@ -318,20 +321,20 @@ public class CenterMsgService implements IkafkaMsgId {
                     MsgSender.sendMsg2Player(new ResponseVo("userService", "refresh", rs), parentId);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    private static void addWinNum(String msg){
+    private static void addWinNum(String msg) {
         long userId = JsonUtil.readTree(msg).path("userId").asLong();
         int num = JsonUtil.readTree(msg).path("num").asInt();
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         CenterService.addWinNum(userId, userBean, num);
     }
 
-    public static void addCoupon(String msg){
+    public static void addCoupon(String msg) {
         long userId = JsonUtil.readTree(msg).path("userId").asLong();
         int num = JsonUtil.readTree(msg).path("num").asInt();
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
@@ -339,13 +342,13 @@ public class CenterMsgService implements IkafkaMsgId {
         RedisManager.getUserRedisService().updateUserBean(userId, userBean);
     }
 
-    public static void addSpendMoneyLongcheng(String msg){
+    public static void addSpendMoneyLongcheng(String msg) {
         long userId = JsonUtil.readTree(msg).path("userId").asLong();
         int num = JsonUtil.readTree(msg).path("money").asInt();
         String roomType = JsonUtil.readTree(msg).path("type").asText();
         Charge charge = new Charge();
         charge.setUserid(userId);
-        charge.setOrderId(IdWorker.getDefaultInstance().nextId()+"");
+        charge.setOrderId(IdWorker.getDefaultInstance().nextId() + "");
         charge.setCreatetime(new Date());
         charge.setMoney(num);
         charge.setRecharge_source("16");
@@ -355,7 +358,7 @@ public class CenterMsgService implements IkafkaMsgId {
 
     }
 
-    private static void rebateRecord(UserBean userBean, AgentUser agentUser, int level, double chargeNum, double rebateNum, int type){
+    private static void rebateRecord(UserBean userBean, AgentUser agentUser, int level, double chargeNum, double rebateNum, boolean isAA) {
         RebateDetail rebateDetail = new RebateDetail();
         rebateDetail.setUserId(userBean.getId());
         rebateDetail.setName(userBean.getUsername());
@@ -366,13 +369,24 @@ public class CenterMsgService implements IkafkaMsgId {
         rebateDetail.setAgentLevel(agentUser.getLevel());
         rebateDetail.setDate(new Date());
         rebateDetail.setUserLevel(userBean.getVip());
-        rebateDetail.setType(type);
+        rebateDetail.setType(isAA ? 1 : 2);
         rebateDetail.setLevle(level);
         rebateDetailService.rebateDetailDao.save(rebateDetail);
     }
 
+    private static double getRebateNum(ServerConfig serverConfig, boolean isAA, int agentLevel, double num) {
+        if (isAA && agentLevel == 1) return num * serverConfig.getZlbAAOne().get(agentLevel) * 0.01;
+        if (isAA && agentLevel == 2) return num * serverConfig.getZlbAATwo().get(agentLevel) * 0.01;
+        if (isAA && agentLevel == 3) return num * serverConfig.getZlbAAThree().get(agentLevel) * 0.01;
+        if (!isAA && agentLevel == 1) return num * serverConfig.getZlbRebate().get(agentLevel) * 0.01;
+        if (!isAA && agentLevel == 2) return num * serverConfig.getZlbRebate2().get(agentLevel) * 0.01;
+        if (!isAA && agentLevel == 3) return num * serverConfig.getZlbRebate3().get(agentLevel) * 0.01;
+        return 0;
+    }
+
     /**
      * 51号返利
+     *
      * @param msg
      */
     public static void add51Rebate(String msg) {
@@ -383,83 +397,74 @@ public class CenterMsgService implements IkafkaMsgId {
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         int parent = userBean.getReferee();
         AgentUser agentUser1 = agentUserService.getAgentUserDao().findOne(parent);
-        if(agentUser1 == null) return;
+        if (agentUser1 == null) return;
         String dayStr = DateUtil.convert2DayString(new Date());
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
-        if (isAA) {
 
-            AgentInfo agentInfo1 = agentUser1.getAgentInfo();
-            Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
-            ChildCost childCost1 = rs1.getOrDefault(dayStr, new ChildCost());
-            double rebateNum = num * serverConfig.getZlbAAOne().get(agentUser1.getLevel()) * 0.01;
-            childCost1.firstLevel += rebateNum;
-            rs1.put(dayStr, childCost1);
-            agentUserService.getAgentUserDao().save(agentUser1);
 
-            rebateRecord(userBean, agentUser1, 1, num, rebateNum, 1);
+        AgentInfo agentInfo1 = agentUser1.getAgentInfo();
+        Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
+        ChildCost childCost1 = rs1.getOrDefault(dayStr, new ChildCost());
+        double rebateNum = getRebateNum(serverConfig, isAA, agentUser1.getLevel(), num);
 
-            AgentUser agentUser2 = agentUserService.getAgentUserDao().findOne(agentUser1.getParentId());
-            if (agentUser2 != null) {
-                AgentInfo agentInfo2 = agentUser2.getAgentInfo();
-                Map<String, ChildCost> rs2 = agentInfo2.getEveryDayCost();
-                ChildCost childCost2 = rs2.getOrDefault(dayStr, new ChildCost());
-                double rebateNum2 = num * serverConfig.getZlbAATwo().get(agentUser2.getLevel()) * 0.01;
-                childCost1.secondLevel += rebateNum2;
-                rs2.put(dayStr, childCost2);
-                agentUserService.getAgentUserDao().save(agentUser2);
-                rebateRecord(userBean, agentUser1, 2, num, rebateNum2, 1);
+        childCost1.firstLevel += rebateNum;
+        rs1.put(dayStr, childCost1);
+        agentUserService.getAgentUserDao().save(agentUser1);
 
-                AgentUser agentUser3 = agentUserService.getAgentUserDao().findOne(agentUser2.getParentId());
-                if (agentUser3 != null) {
-                    AgentInfo agentInfo3 = agentUser3.getAgentInfo();
-                    Map<String, ChildCost> rs3 = agentInfo3.getEveryDayCost();
-                    ChildCost childCost3 = rs3.getOrDefault(dayStr, new ChildCost());
-                    double rebate3 = num * serverConfig.getZlbAATwo().get(agentUser3.getLevel()) * 0.01;
-                    childCost3.thirdLevel += rebate3;
-                    rs3.put(dayStr, childCost3);
-                    agentUserService.getAgentUserDao().save(agentUser3);
-                    rebateRecord(userBean, agentUser1, 3, num, rebate3, 1);
-                }
+        rebateRecord(userBean, agentUser1, 1, num, rebateNum, isAA);
 
+        AgentUser agentUser2 = agentUserService.getAgentUserDao().findOne(agentUser1.getParentId());
+        if (agentUser2 != null) {
+            AgentInfo agentInfo2 = agentUser2.getAgentInfo();
+            Map<String, ChildCost> rs2 = agentInfo2.getEveryDayCost();
+            ChildCost childCost2 = rs2.getOrDefault(dayStr, new ChildCost());
+            double rebateNum2 = getRebateNum(serverConfig, isAA, agentUser2.getLevel(), num);
+            childCost1.secondLevel += rebateNum2;
+            rs2.put(dayStr, childCost2);
+            agentUserService.getAgentUserDao().save(agentUser2);
+
+            rebateRecord(userBean, agentUser2, 2, num, rebateNum2, isAA);
+
+            AgentUser agentUser3 = agentUserService.getAgentUserDao().findOne(agentUser2.getParentId());
+            if (agentUser3 != null) {
+                AgentInfo agentInfo3 = agentUser3.getAgentInfo();
+                Map<String, ChildCost> rs3 = agentInfo3.getEveryDayCost();
+                ChildCost childCost3 = rs3.getOrDefault(dayStr, new ChildCost());
+                double rebate3 = getRebateNum(serverConfig, isAA, agentUser3.getLevel(), num);
+                childCost3.thirdLevel += rebate3;
+                rs3.put(dayStr, childCost3);
+                agentUserService.getAgentUserDao().save(agentUser3);
+                rebateRecord(userBean, agentUser3, 3, num, rebate3, isAA);
             }
 
-        }else{
-            AgentInfo agentInfo1 = agentUser1.getAgentInfo();
-            Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
-            ChildCost childCost1 = rs1.getOrDefault(dayStr, new ChildCost());
-            double rebate = num * serverConfig.getZlbRebate().get(agentUser1.getLevel()) * 0.01;
-            childCost1.firstLevel += rebate;
-            rs1.put(dayStr, childCost1);
-            agentUserService.getAgentUserDao().save(agentUser1);
 
-            rebateRecord(userBean, agentUser1, 1, num, rebate, 2);
         }
 
     }
 
 
-    public static void sendBindMsg(String msg){
+    public static void sendBindMsg(String msg) {
         ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
-        if("".equals(serverConfig.getQrDir())) return;
+        if ("".equals(serverConfig.getQrDir())) return;
         long userId = JsonUtil.readTree(msg).path("userId").asLong();
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         UserBean firstBean = RedisManager.getUserRedisService().getUserBean(userBean.getReferee());
         if (firstBean != null) {
-            gameUserService.sendMailToUser(getMailStr("一级", ""+userBean.getId(), userBean.getUsername()),firstBean);
+            gameUserService.sendMailToUser(getMailStr("一级", "" + userBean.getId(), userBean.getUsername()), firstBean);
 
             UserBean secondBean = RedisManager.getUserRedisService().getUserBean(firstBean.getReferee());
             if (secondBean != null) {
-                gameUserService.sendMailToUser(getMailStr("二级", ""+userBean.getId(), userBean.getUsername()),secondBean);
+                gameUserService.sendMailToUser(getMailStr("二级", "" + userBean.getId(), userBean.getUsername()), secondBean);
                 UserBean thirdBean = RedisManager.getUserRedisService().getUserBean(secondBean.getReferee());
                 if (thirdBean != null) {
-                    gameUserService.sendMailToUser(getMailStr("三级", ""+userBean.getId(), userBean.getUsername()),thirdBean);
+                    gameUserService.sendMailToUser(getMailStr("三级", "" + userBean.getId(), userBean.getUsername()), thirdBean);
                 }
             }
         }
     }
 
-    private static String getMailStr(String str1, String str2, String str3){
-        return  String.format("您的%s下线成员id:%s 名字:%s已成功绑定",str1, str2, str3);
+    private static String getMailStr(String str1, String str2, String str3) {
+        return String.format("您的%s下线成员id:%s 名字:%s已成功绑定", str1, str2, str3);
     }
 
 
@@ -668,9 +673,9 @@ public class CenterMsgService implements IkafkaMsgId {
                 sendLq_http(roomRecord, club);
 
                 if (serverConfig.getSendDuoliao() == 1) {
-                    try{
+                    try {
                         DuoLiaoService.sendRecord(roomRecord, club);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
