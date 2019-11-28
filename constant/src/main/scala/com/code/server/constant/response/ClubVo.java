@@ -50,6 +50,16 @@ public class ClubVo {
 
     private Map<String, Object> creditInfo = new HashMap<>();
 
+    private boolean open ;
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public ClubVo setOpen(boolean open) {
+        this.open = open;
+        return this;
+    }
 
     public String getId() {
         return id;

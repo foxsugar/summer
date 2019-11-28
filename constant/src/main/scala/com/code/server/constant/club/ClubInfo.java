@@ -23,6 +23,7 @@ public class ClubInfo {
     private boolean autoJoin = false;
     private Map<String, Object> creditInfo = new HashMap<>();
     private String duoliaoTid = "";
+    private boolean isOpen = true;
 
 
     public Map<String, ClubMember> getMember() {
@@ -121,6 +122,15 @@ public class ClubInfo {
 
     public ClubInfo setDuoliaoTid(String duoliaoTid) {
         this.duoliaoTid = duoliaoTid;
+        return this;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public ClubInfo setOpen(boolean open) {
+        isOpen = open;
         return this;
     }
 }

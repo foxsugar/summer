@@ -129,6 +129,7 @@ public class GameClubService {
         clubVo.getAdmin().addAll(club.getClubInfo().getAdmin());
         clubVo.getPartner().addAll(club.getClubInfo().getPartner());
         clubVo.setCreditInfo(club.getClubInfo().getCreditInfo());
+        clubVo.setOpen(club.getClubInfo().isOpen());
 
         clubVo.getMember().forEach(clubMember -> {
             String gateId = RedisManager.getUserRedisService().getGateId(clubMember.getUserId());
@@ -1756,6 +1757,31 @@ public class GameClubService {
 
 
         sendMsg(msgKey, new ResponseVo("clubService", "setDuoliaoTid", 0));
+        return 0;
+    }
+
+    public int setClubOpen(KafkaMsgKey msgKey, String clubId, boolean flag){
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        club.getClubInfo().setOpen(flag);
+        //推送
+        sendMsg(new ResponseVo("clubService", "setClubOpenResp", flag), getClubUser(club));
+        sendMsg(msgKey, new ResponseVo("clubService", "setClubOpen", 0));
+        return 0;
+    }
+
+    public int setMemberCanJoin(KafkaMsgKey msgKey, String clubId, long userId, boolean flag) {
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        ClubMember clubMember = club.getClubInfo().getMember().get(""+userId);
+        if (clubMember != null) {
+            clubMember.setCanJoinGame(flag);
+        }
+        sendMsg(msgKey, new ResponseVo("clubService", "setMemberCanJoin", 0));
         return 0;
     }
 

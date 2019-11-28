@@ -23,6 +23,8 @@ public class ClubMember {
     //统计总和
     private ClubStatistics allStatistics = new ClubStatistics();
 
+    private boolean canJoinGame = true;
+
     public long getUserId() {
         return userId;
     }
@@ -128,6 +130,15 @@ public class ClubMember {
 
     public ClubMember setAllStatistics(ClubStatistics allStatistics) {
         this.allStatistics = allStatistics;
+        return this;
+    }
+
+    public boolean isCanJoinGame() {
+        return canJoinGame;
+    }
+
+    public ClubMember setCanJoinGame(boolean canJoinGame) {
+        this.canJoinGame = canJoinGame;
         return this;
     }
 }

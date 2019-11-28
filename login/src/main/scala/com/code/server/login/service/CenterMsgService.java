@@ -146,13 +146,17 @@ public class CenterMsgService implements IkafkaMsgId {
         if (club != null) {
 
             map.put("credit", club.getClubInfo().getCreditInfo());
+            map.put("isOpen", club.getClubInfo().isOpen());
+
             ClubMember clubMember = club.getClubInfo().getMember().get("" + userId);
             if (clubMember != null) {
                 map.put("score", clubMember.getAllStatistics().getAllScore());
                 map.put("playMinScore", clubMember.getAllStatistics().getPlayMinScore());
+                map.put("isCanJoin", clubMember.isCanJoinGame());
             } else {
                 map.put("score", 0);
                 map.put("playMinScore", 0);
+                map.put("isCanJoin", false);
             }
         }
 

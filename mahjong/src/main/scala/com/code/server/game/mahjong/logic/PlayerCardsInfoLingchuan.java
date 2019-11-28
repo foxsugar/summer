@@ -5,8 +5,10 @@ import com.code.server.game.mahjong.util.HuLimit;
 import com.code.server.game.mahjong.util.HuType;
 import com.code.server.game.mahjong.util.HuUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by sunxianping on 2019-11-20.
@@ -49,6 +51,56 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
         return super.isCanPengAddThisCard(card);
     }
 
+    @Override
+    public boolean isHasGang() {
+        if (isTing) {
+            Set<Integer> canGangType = getHasGangList(cards);
+            for (int gt : canGangType) {
+                List<String> temp = new ArrayList<>();
+                temp.addAll(cards);
+                if (isCanTingAfterGang(temp, gt,false)) {
+                    return true;
+                }
+            }
+            return false;
+
+        }else return super.isHasGang();
+    }
+
+    /**
+     * 杠之后是否能听
+     * @param cards
+     * @param cardType
+     * @return
+     */
+    protected boolean isCanTingAfterGang(List<String> cards,int cardType,boolean isDianGang){
+        //先删除这次杠的
+        removeCardByType(cards,cardType,4);
+        boolean isMing = false;
+        //去除碰
+        for(int pt : pengType.keySet()){//如果杠的是之前碰过的牌
+            if (pt != cardType) {
+                removeCardByType(cards, pt, 3);
+            } else {
+                isMing = true;
+            }
+        }
+        //去掉杠的牌
+        cards = getCardsNoGang(cards);
+        isMing = isMing||isDianGang;
+
+        //胡牌类型加上杠
+        List<HuCardType> list = getTingHuCardType(cards,null);
+
+        for (HuCardType huCardType : list) {
+
+            if (kaobazhangNum(huCardType) >= 8) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     @Override
     public boolean isCanTing(List<String> cards) {
@@ -63,6 +115,7 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
 
 
         for (HuCardType huCardType : list) {
+
             if (kaobazhangNum(huCardType) >= 8) {
                 return true;
             }
@@ -70,6 +123,20 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
         return false;
     }
 
+
+    private int kaobazhangNum(HuCardType huCardType, List<String> cards) {
+        if (huCardType.specialHuList.contains(HuType.hu_十三幺)) {
+            return 14;
+        }
+        int[] cardNum = {0, 0, 0, 0};
+        for (String card : cards) {
+            int group = CardTypeUtil.getCardGroup(card);
+            cardGroupAddCard(cardNum, group, 1);
+        }
+
+        Arrays.sort(cardNum);
+        return cardNum[3];
+    }
     /**
      * 靠八张数量
      *
@@ -115,20 +182,16 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
 
     }
 
+
     @Override
     public void huCompute(RoomInfo room, GameInfo gameInfo, boolean isZimo, long dianpaoUser, String card) {
 
 
         List<HuCardType> huList = HuUtil.isHu(getCardsNoChiPengGang(cards), this, CardTypeUtil.cardType.get(card), new HuLimit(0));
 
-        HuCardType huCardType = null;
-        int max = 0;
-        for (HuCardType hct : huList) {
-            int bz = kaobazhangNum(hct);
-            if (bz > max) {
-                huCardType = hct;
-            }
-        }
+        HuCardType huCardType = huList.get(0);
+
+        int max = kaobazhangNum(huCardType, this.cards);
 
         this.winType.addAll(huCardType.specialHuList);
         int score = max;

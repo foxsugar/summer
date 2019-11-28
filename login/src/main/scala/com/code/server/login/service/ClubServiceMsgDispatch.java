@@ -316,6 +316,15 @@ public class ClubServiceMsgDispatch {
                 String tid = params.path("tid").asText();
                 return gameClubService.setDuoliaoTid(msgKey, clubId, tid);
             }
+            case "setClubOpen":{
+                boolean flag = params.path("flag").asBoolean();
+                return gameClubService.setClubOpen(msgKey, clubId, flag);
+            }
+            case "setMemberCanJoin":{
+                boolean flag = params.path("flag").asBoolean();
+                long uid = params.path("userId").asLong();
+                return gameClubService.setMemberCanJoin(msgKey, clubId, uid, flag);
+            }
 
 
         }
