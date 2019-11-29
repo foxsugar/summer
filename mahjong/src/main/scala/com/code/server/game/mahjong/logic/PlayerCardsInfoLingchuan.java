@@ -198,7 +198,7 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
         score += mingGangType.size();
         score += anGangType.size() * 2;
         //庄家 * 2
-        boolean isBankerWin = this.userId == this.roomInfo.getBankerId();
+        boolean isBankerWin = this.userId == this.roomInfo.getBankerId() && this.roomInfo.isHasMode(1);
         if(isBankerWin) score *= 2;
         if(isZimo) score *= 2;
 
@@ -211,8 +211,12 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
         }
 
         for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
+            if(playerCardsInfoMj.userId == this.userId) continue;
 
             int scoreSelf = score;
+            if (playerCardsInfoMj.userId == dianpaoUser && this.roomInfo.getBankerId() ==dianpaoUser && this.roomInfo.isHasMode(1)) {
+                scoreSelf *= 2;
+            }
             if (playerCardsInfoMj.userId == dianpaoUser) {
                 scoreSelf += 2;
             }

@@ -594,8 +594,13 @@ public class GameInfoNew extends GameInfo {
             //通知所有人有杠
             MsgSender.sendMsg2Player(vo, users);
 
+            boolean isCanGuohu = true;
+            if (isHasGuoHu() && playerCardsInfo.isGuoHu()) {
+                isCanGuohu = false;
+            }
+
             //截杠胡
-            if (isHasJieGangHu && isMing) {
+            if (isHasJieGangHu && isMing ) {
 
                 for (Map.Entry<Long, PlayerCardsInfoMj> entry : playerCardsInfos.entrySet()) {
                     OperateResp operateResp = new OperateResp();
@@ -605,6 +610,9 @@ public class GameInfoNew extends GameInfo {
                         //通知其他玩家出了什么牌 自己能有什么操作
                         PlayerCardsInfoMj playerOther = entry.getValue();
                         boolean isCanHu = playerOther.isCanHu_dianpao(card);
+                        if (isHasGuoHu() && playerCardsInfo.isGuoHu()) {
+                            isCanHu = false;
+                        }
                         //设置返回结果
                         operateResp.setCanBeOperate(false, false, false, false, isCanHu, false, false);
                         //设置自己能做的操作

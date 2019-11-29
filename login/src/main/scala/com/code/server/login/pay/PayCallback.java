@@ -143,7 +143,7 @@ public class PayCallback {
                     if (u.getVip() != 0) {
                         rebateMoney = money * serverConfig.getDiscount().get(u.getVip()) / 100;
                     }
-                    if (agentUser1 != null){
+                    if (agentUser1 != null && agentUser1.getLevel()<2){
                         agentInfo1 = agentUser1.getAgentInfo();
 
                         logger.info("AgentInfo1 is :{}", agentInfo1);
