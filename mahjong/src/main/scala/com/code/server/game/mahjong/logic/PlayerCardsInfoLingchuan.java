@@ -230,7 +230,7 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
             if(playerCardsInfoMj.userId == this.userId) continue;
 
             int scoreSelf = score;
-            if (playerCardsInfoMj.userId == dianpaoUser && this.roomInfo.getBankerId() ==dianpaoUser && this.roomInfo.isHasMode(1)) {
+            if (playerCardsInfoMj.userId == this.roomInfo.getBankerId() && this.roomInfo.isHasMode(1)) {
                 scoreSelf *= 2;
             }
             if (playerCardsInfoMj.userId == dianpaoUser) {
