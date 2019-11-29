@@ -67,6 +67,22 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
         }else return super.isHasGang();
     }
 
+    @Override
+    public boolean isCanHu_dianpao(String card) {
+        if (this.roomInfo.isHaveTing() && !this.isTing) {
+            return false;
+        }
+        return super.isCanHu_dianpao(card);
+    }
+
+    @Override
+    public boolean isCanHu_zimo(String card) {
+        if (this.roomInfo.isHaveTing() && !this.isTing) {
+            return false;
+        }
+        return super.isCanHu_zimo(card);
+    }
+
     /**
      * 杠之后是否能听
      * @param cards
