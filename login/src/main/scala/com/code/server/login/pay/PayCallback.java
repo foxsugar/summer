@@ -188,13 +188,13 @@ public class PayCallback {
                     }
 
                     //二级返利去掉
-//                    AgentUser agentUser2 = null;
-//                    if (agentUser1 != null){
-//                        agentUser2 = agentUserDao.findOne(agentUser1.getParentId());
-//                    }
-//
-//                    logger.info("AgentUser2 is :{}", agentUser2);
-//
+                    AgentUser agentUser2 = null;
+                    if (agentUser1 != null){
+                        agentUser2 = agentUserDao.findOne(agentUser1.getParentId());
+                    }
+
+                    logger.info("AgentUser2 is :{}", agentUser2);
+
 //                    if (agentUser2 != null && u.getVip() == 0){
 //                        AgentInfo agentInfo2 = agentUser2.getAgentInfo();
 //                        logger.info("AgentInfo2 is :{}", agentInfo2);
@@ -205,9 +205,27 @@ public class PayCallback {
 //                        }
 //                        logger.info("childCost2  is :{}", childCost2);
 //                        //今日来源于代理的收入
-//                        childCost2.secondLevel += rebateMoney * serverConfig.getAgentSecondRebate().get(agentUser1.getAgentType()) * 0.01;
+//                        double rebate = rebateMoney * serverConfig.getAgentSecondRebate().get(agentUser1.getAgentType()) * 0.01;
+//                        childCost2.secondLevel += rebate;
 //                        rs2.put(dayStr, childCost2);
 //                        agentUserDao.save(agentUser2);
+//
+//
+//
+//                        RebateDetail rebateDetail = new RebateDetail();
+//                        rebateDetail.setUserId(charge.getUserid());
+//                        rebateDetail.setAgentName(agentUser2.getUsername());
+//                        rebateDetail.setName(u.getUsername());
+//                        rebateDetail.setAgentId(agentUser2.getId());
+//                        rebateDetail.setNum(rebate);
+//                        rebateDetail.setChargeNum(money);
+//                        rebateDetail.setAgentLevel(agentUser2.getAgentType());
+//                        rebateDetail.setDate(new Date());
+//                        rebateDetail.setLevle(2);
+//                        rebateDetail.setUserLevel(u.getVip());
+//                        rebateDetail.setType(0);
+//                        rebateDetailService.rebateDetailDao.save(rebateDetail);
+//
 //                    }
 
                     //更新订单结算是否已经返利

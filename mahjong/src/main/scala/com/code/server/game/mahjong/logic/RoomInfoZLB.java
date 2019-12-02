@@ -10,6 +10,7 @@ import com.code.server.game.room.service.RoomManager;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.SpringUtil;
+import com.code.server.util.timer.GameTimer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ public class RoomInfoZLB extends RoomInfo {
         }
 
 //            getReady(userId);
+        GameTimer.addTimerNode(2000, false, () -> getReady(userId));
         return 0;
 
 
