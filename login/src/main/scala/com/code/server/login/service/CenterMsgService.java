@@ -108,10 +108,10 @@ public class CenterMsgService implements IkafkaMsgId {
             case KAFKA_MSG_ID_MONEY_SPEND:
                 addSpendMoneyLongcheng(msg);
                 break;
-
-            case KAFKA_MSG_ID_51_ADD_REBATE:
-                add51Rebate(msg);
-                break;
+//
+//            case KAFKA_MSG_ID_51_ADD_REBATE:
+//                add51Rebate(msg);
+//                break;
 
 
         }
@@ -391,12 +391,10 @@ public class CenterMsgService implements IkafkaMsgId {
     /**
      * 51号返利
      *
-     * @param msg
+     *
      */
-    public static void add51Rebate(String msg) {
-        long userId = JsonUtil.readTree(msg).path("userId").asLong();
-        int num = JsonUtil.readTree(msg).path("money").asInt();
-        boolean isAA = JsonUtil.readTree(msg).path("isAA").asBoolean();
+    public static void add51Rebate(long userId, double num, boolean isAA) {
+
 
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         int parent = userBean.getReferee();

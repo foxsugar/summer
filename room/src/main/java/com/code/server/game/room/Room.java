@@ -938,12 +938,12 @@ public class Room implements IfaceRoom {
             this.users.forEach(userId -> {
                 RedisManager.getUserRedisService().addUserMoney(userId, -createNeedMoney);
                 if (isAddGold()) RedisManager.addGold(userId, createNeedMoney / 10);
-                if (isZhanglebao()) sendzhanglebaoAddRebate(userId, createNeedMoney, true);
+//                if (isZhanglebao()) sendzhanglebaoAddRebate(userId, createNeedMoney, true);
             });
         } else {
             RedisManager.getUserRedisService().addUserMoney(this.createUser, -createNeedMoney);
             if (isAddGold()) RedisManager.addGold(this.createUser, createNeedMoney / 10);
-            if (isZhanglebao()) sendzhanglebaoAddRebate(this.createUser, createNeedMoney, false);
+//            if (isZhanglebao()) sendzhanglebaoAddRebate(this.createUser, createNeedMoney, false);
         }
         if (isZhanglebao()) {
 

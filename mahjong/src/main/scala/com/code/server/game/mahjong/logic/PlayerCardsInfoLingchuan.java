@@ -51,6 +51,20 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
         return super.isCanPengAddThisCard(card);
     }
 
+
+    @Override
+    public boolean isCanGangAddThisCard(String card) {
+        //听之后 杠后的牌还能听
+        if (isTing && super.isCanGangAddThisCard(card)) {
+            List<String> temp = getCardsAddThisCard(card);
+            //去掉 这张杠牌
+            int ct = CardTypeUtil.cardType.get(card);
+            return isCanTingAfterGang(temp, ct,true);
+
+        } else return super.isCanGangAddThisCard(card);
+
+    }
+
     @Override
     public boolean isHasGang() {
         if (isTing) {

@@ -13,6 +13,7 @@ import com.code.server.db.dao.IConstantDao;
 import com.code.server.db.model.*;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.login.kafka.MsgSender;
+import com.code.server.login.service.CenterMsgService;
 import com.code.server.login.util.ErrorCode;
 import com.code.server.login.util.PayUtil;
 import com.code.server.redis.service.UserRedisService;
@@ -57,15 +58,14 @@ public class PayCallback {
     private static final Map<Integer, Integer> chargeMoney = new HashMap<>();
 
 
-
     protected static final Logger logger = LoggerFactory.getLogger(PayCallback.class);
 
-    static{
-        chargeMoney.put(5,60);
-        chargeMoney.put(10,140);
-        chargeMoney.put(20,300);
-        chargeMoney.put(50,800);
-        chargeMoney.put(100,1800);
+    static {
+        chargeMoney.put(5, 60);
+        chargeMoney.put(10, 140);
+        chargeMoney.put(20, 300);
+        chargeMoney.put(50, 800);
+        chargeMoney.put(100, 1800);
     }
 
     @RequestMapping(value = "/callback_zhanglebao")
@@ -139,61 +139,66 @@ public class PayCallback {
 
                     logger.info("AgentUser1 is :{}", agentUser1);
 
-                    double rebateMoney = money ;
+                    double rebateMoney = money;
                     if (u.getVip() != 0) {
                         rebateMoney = money * serverConfig.getDiscount().get(u.getVip()) / 100;
                     }
-                    if (agentUser1 != null && agentUser1.getLevel()<2){
-                        agentInfo1 = agentUser1.getAgentInfo();
+                    if (agentUser1 != null) {
+                        if (agentUser1.getLevel() < 2) {
 
-                        logger.info("AgentInfo1 is :{}", agentInfo1);
-                        Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
-                        ChildCost childCost1 = rs1.get(dayStr);
-                        if (childCost1 == null){
-                            childCost1 = new ChildCost();
+
+                            agentInfo1 = agentUser1.getAgentInfo();
+
+                            logger.info("AgentInfo1 is :{}", agentInfo1);
+                            Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
+                            ChildCost childCost1 = rs1.get(dayStr);
+                            if (childCost1 == null) {
+                                childCost1 = new ChildCost();
+                            }
+
+                            logger.info("childCost1  is :{}", childCost1);
+                            //今日来源于玩家的收入
+                            double rebate = 0;
+                            if (u.getVip() == 0) {
+                                rebate = rebateMoney * serverConfig.getAgentFirstRebate().get(agentUser1.getAgentType()) * 0.01;
+                                childCost1.firstLevel += rebate;
+                            }
+//                        else {
+//                            rebate = rebateMoney * serverConfig.getAgentSecondRebate().get(u.getVip()) * 0.01;
+//                            childCost1.firstLevel += rebate;
+//
+//
+//                        }
+                            rs1.put(dayStr, childCost1);
+                            agentUserDao.save(agentUser1);
+
+
+                            RebateDetail rebateDetail = new RebateDetail();
+                            rebateDetail.setUserId(charge.getUserid());
+                            rebateDetail.setAgentName(agentUser1.getUsername());
+                            rebateDetail.setName(u.getUsername());
+                            rebateDetail.setAgentId(agentUser1.getId());
+                            rebateDetail.setNum(rebate);
+                            rebateDetail.setChargeNum(money);
+                            rebateDetail.setAgentLevel(agentUser1.getAgentType());
+                            rebateDetail.setDate(new Date());
+                            rebateDetail.setLevle(1);
+                            rebateDetail.setUserLevel(u.getVip());
+                            rebateDetail.setType(0);
+                            rebateDetailService.rebateDetailDao.save(rebateDetail);
+                        }else{
+                            CenterMsgService.add51Rebate(u.getId(), money, u.getVip() == 0);
                         }
-
-                        logger.info("childCost1  is :{}", childCost1);
-                        //今日来源于玩家的收入
-                        double rebate = 0;
-                        if (u.getVip() == 0) {
-                            rebate = rebateMoney * serverConfig.getAgentFirstRebate().get(agentUser1.getAgentType()) * 0.01;
-                            childCost1.firstLevel += rebate;
-                        } else {
-                            rebate = rebateMoney * serverConfig.getAgentSecondRebate().get(u.getVip()) * 0.01;
-                            childCost1.firstLevel += rebate;
-
-
-                        }
-                        rs1.put(dayStr, childCost1);
-                        agentUserDao.save(agentUser1);
-
-
-
-
-                        RebateDetail rebateDetail = new RebateDetail();
-                        rebateDetail.setUserId(charge.getUserid());
-                        rebateDetail.setAgentName(agentUser1.getUsername());
-                        rebateDetail.setName(u.getUsername());
-                        rebateDetail.setAgentId(agentUser1.getId());
-                        rebateDetail.setNum(rebate);
-                        rebateDetail.setChargeNum(money);
-                        rebateDetail.setAgentLevel(agentUser1.getAgentType());
-                        rebateDetail.setDate(new Date());
-                        rebateDetail.setLevle(1);
-                        rebateDetail.setUserLevel(u.getVip());
-                        rebateDetail.setType(0);
-                        rebateDetailService.rebateDetailDao.save(rebateDetail);
 
                     }
 
-                    //二级返利去掉
-                    AgentUser agentUser2 = null;
-                    if (agentUser1 != null){
-                        agentUser2 = agentUserDao.findOne(agentUser1.getParentId());
-                    }
-
-                    logger.info("AgentUser2 is :{}", agentUser2);
+//                    //二级返利去掉
+//                    AgentUser agentUser2 = null;
+//                    if (agentUser1 != null) {
+//                        agentUser2 = agentUserDao.findOne(agentUser1.getParentId());
+//                    }
+//
+//                    logger.info("AgentUser2 is :{}", agentUser2);
 
 //                    if (agentUser2 != null && u.getVip() == 0){
 //                        AgentInfo agentInfo2 = agentUser2.getAgentInfo();
@@ -234,16 +239,15 @@ public class PayCallback {
                     logger.info("Charge  is :{}", charge);
 
 
-
                     UserBean userBeanRedis = userRedisService.getUserBean(charge.getUserid());
 
-                    int addMoney = Integer.valueOf(element.elementText("total_fee"))/10;
+                    int addMoney = Integer.valueOf(element.elementText("total_fee")) / 10;
 
 
 //                    serverConfig.getChargeMap()
                     //龙七分档
-                    if (serverConfig.getChargeMap().containsKey((int)charge.getMoney())) {
-                        addMoney = serverConfig.getChargeMap().get((int)charge.getMoney());
+                    if (serverConfig.getChargeMap().containsKey((int) charge.getMoney())) {
+                        addMoney = serverConfig.getChargeMap().get((int) charge.getMoney());
                     }
 
                     if (userBeanRedis != null) {
@@ -421,13 +425,13 @@ public class PayCallback {
 
                     logger.info("AgentUser1 is :{}", agentUser1);
 
-                    if (agentUser1 != null){
+                    if (agentUser1 != null) {
                         agentInfo1 = agentUser1.getAgentInfo();
 
                         logger.info("AgentInfo1 is :{}", agentInfo1);
                         Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
                         ChildCost childCost1 = rs1.get(dayStr);
-                        if (childCost1 == null){
+                        if (childCost1 == null) {
                             childCost1 = new ChildCost();
                         }
 
@@ -439,18 +443,18 @@ public class PayCallback {
                     }
 
                     AgentUser agentUser2 = null;
-                    if (agentUser1 != null){
+                    if (agentUser1 != null) {
                         agentUser2 = agentUserDao.findOne(agentUser1.getParentId());
                     }
 
                     logger.info("AgentUser2 is :{}", agentUser2);
 
-                    if (agentUser2 != null){
+                    if (agentUser2 != null) {
                         AgentInfo agentInfo2 = agentUser2.getAgentInfo();
                         logger.info("AgentInfo2 is :{}", agentInfo2);
                         Map<String, ChildCost> rs2 = agentInfo2.getEveryDayCost();
                         ChildCost childCost2 = rs2.get(dayStr);
-                        if (childCost2 == null){
+                        if (childCost2 == null) {
                             childCost2 = new ChildCost();
                         }
                         logger.info("childCost2  is :{}", childCost2);
@@ -466,10 +470,9 @@ public class PayCallback {
                     logger.info("Charge  is :{}", charge);
 
 
-
                     UserBean UserBeanRedis = userRedisService.getUserBean(charge.getUserid());
 
-                    int addMoney = Integer.valueOf(element.elementText("total_fee"))/10;
+                    int addMoney = Integer.valueOf(element.elementText("total_fee")) / 10;
 
                     ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
 //                    serverConfig.getChargeMap()
