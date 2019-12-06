@@ -179,7 +179,7 @@ public class PayCallback {
                             rebateDetail.setName(u.getUsername());
                             rebateDetail.setAgentId(agentUser1.getId());
                             rebateDetail.setNum(rebate);
-                            rebateDetail.setChargeNum(money);
+                            rebateDetail.setChargeNum(rebateMoney);
                             rebateDetail.setAgentLevel(agentUser1.getAgentType());
                             rebateDetail.setDate(new Date());
                             rebateDetail.setLevle(1);
@@ -187,7 +187,7 @@ public class PayCallback {
                             rebateDetail.setType(0);
                             rebateDetailService.rebateDetailDao.save(rebateDetail);
                         }else{
-                            CenterMsgService.add51Rebate(u.getId(), money, u.getVip() == 0);
+                            CenterMsgService.add51Rebate(u.getId(), rebateMoney, u.getVip() == 0);
                         }
 
                     }
