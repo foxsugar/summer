@@ -68,9 +68,9 @@ public class RoomYSZLongcheng extends RoomYSZ {
         if (goldRoomType == 20) {
             need *= 2;
         }
-        if(RedisManager.getUserRedisService().getUserMoney(parentId)<need){
-            return false;
-        }
+//        if(RedisManager.getUserRedisService().getUserMoney(parentId)<need){
+//            return false;
+//        }
         return true;
     }
 
@@ -102,8 +102,8 @@ public class RoomYSZLongcheng extends RoomYSZ {
             if (goldRoomType == 20) {
                 need *= 2;
             }
-            RedisManager.getUserRedisService().addUserMoney(parentId, -need);
-            sendSpendMoneyLongcheng(parentId, -need);
+//            RedisManager.getUserRedisService().addUserMoney(parentId, -need);
+//            sendSpendMoneyLongcheng(parentId, -need);
         }
     }
 

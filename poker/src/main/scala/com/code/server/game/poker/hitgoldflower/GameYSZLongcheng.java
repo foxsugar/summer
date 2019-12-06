@@ -145,11 +145,11 @@ public class GameYSZLongcheng extends GameYSZ {
 
             //todo 返利
 
-            double rebate = 2.4 / 100 * 70 / 100 * totalChip / playerCardInfos.size() + 2.4 / 100 * 30 / 100 * (playerCardInfo.getAllScore()) ;
+            double rebate = 2.1 / 100 * 70 / 100 * totalChip / playerCardInfos.size() + 2.1 / 100 * 30 / 100 * (playerCardInfo.getAllScore()) ;
 
             this.room.sendCenterAddRebateLongcheng(playerCardInfo.getUserId(), rebate);
         }
-        this.room.sendCenterAddRebateLongcheng(6789, totalChip * 0.6 /100);
+        this.room.sendCenterAddRebateLongcheng(6789, totalChip * 0.9 /100);
         for (PlayerYSZ playerCardInfo : playerCardInfos.values()) {
             if (winList.contains(playerCardInfo.getUserId())) {
                 logger.info("");

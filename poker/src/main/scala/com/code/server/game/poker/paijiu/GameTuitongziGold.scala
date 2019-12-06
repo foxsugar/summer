@@ -106,22 +106,22 @@ class GameTuitongziGold extends GamePaijiu {
     if (playerCardInfoPaijiu.bet == null) {
       val room = this.roomPaijiu.asInstanceOf[RoomTuitongziGold]
       val parentId = room.playerParentMap.get(userId)
-      if(room.getGoldRoomType == 3000 && RedisManager.getUserRedisService.getUserMoney(parentId) <5) {
-        return ErrorCode.CANNOT_JOIN_ROOM_NO_GOLD
-      }
-      if(room.getGoldRoomType == 5000 && RedisManager.getUserRedisService.getUserMoney(parentId) <5) {
-        return ErrorCode.CANNOT_JOIN_ROOM_NO_GOLD
-      }
-      if(room.getGoldRoomType == 3000) {
-
-        RedisManager.getUserRedisService.addUserMoney(parentId, -5)
-        room.sendSpendMoneyLongcheng(parentId, -5)
-      }
-      if(room.getGoldRoomType == 5000) {
-
-        RedisManager.getUserRedisService.addUserMoney(parentId, -5)
-        room.sendSpendMoneyLongcheng(parentId, -5)
-      }
+//      if(room.getGoldRoomType == 3000 && RedisManager.getUserRedisService.getUserMoney(parentId) <5) {
+//        return ErrorCode.CANNOT_JOIN_ROOM_NO_GOLD
+//      }
+//      if(room.getGoldRoomType == 5000 && RedisManager.getUserRedisService.getUserMoney(parentId) <5) {
+//        return ErrorCode.CANNOT_JOIN_ROOM_NO_GOLD
+//      }
+//      if(room.getGoldRoomType == 3000) {
+//
+//        RedisManager.getUserRedisService.addUserMoney(parentId, -5)
+//        room.sendSpendMoneyLongcheng(parentId, -5)
+//      }
+//      if(room.getGoldRoomType == 5000) {
+//
+//        RedisManager.getUserRedisService.addUserMoney(parentId, -5)
+//        room.sendSpendMoneyLongcheng(parentId, -5)
+//      }
     }
     //下注不合法
 
@@ -202,9 +202,9 @@ class GameTuitongziGold extends GamePaijiu {
     //    gameOver()
 
     val room = this.roomPaijiu.asInstanceOf[RoomTuitongziGold]
-    val parentId = room.playerParentMap.get(userId)
-    RedisManager.getUserRedisService.addUserMoney(parentId, -5)
-    room.sendSpendMoneyLongcheng(parentId, -5)
+//    val parentId = room.playerParentMap.get(userId)
+//    RedisManager.getUserRedisService.addUserMoney(parentId, -5)
+//    room.sendSpendMoneyLongcheng(parentId, -5)
     0
   }
 
@@ -561,8 +561,8 @@ class GameTuitongziGold extends GamePaijiu {
       }
     })
 
-    rebate = betNum * 4 /100 /betPeople
-    this.roomPaijiu.sendCenterAddRebateLongcheng(6789, betNum * 1 /100 )
+    rebate = betNum * 3.5 /100 /betPeople
+    this.roomPaijiu.sendCenterAddRebateLongcheng(6789, betNum * 1.5 /100 )
     if(rebate != 0) {
 
       this.playerCardInfos.foreach(info=>{

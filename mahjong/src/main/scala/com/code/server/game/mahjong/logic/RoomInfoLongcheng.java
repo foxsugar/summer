@@ -167,8 +167,8 @@ public class RoomInfoLongcheng extends RoomInfo {
 
         });
 
-        double rebateNum = winNum[0] * 2.4 /100;
-        double rebateNum1 = winNum[0] * 0.6 /100;
+        double rebateNum = winNum[0] * 2.1 /100;
+        double rebateNum1 = winNum[0] * 0.9 /100;
 
         this.userScores.forEach((key, value)->{
             sendCenterAddRebateLongcheng(key, rebateNum/4);
@@ -200,8 +200,8 @@ public class RoomInfoLongcheng extends RoomInfo {
             if (goldRoomType == 5) {
                 need *= 2;
             }
-            RedisManager.getUserRedisService().addUserMoney(parentId, -need);
-            sendSpendMoneyLongcheng(parentId, -need);
+//            RedisManager.getUserRedisService().addUserMoney(parentId, -need);
+//            sendSpendMoneyLongcheng(parentId, -need);
         }
     }
 }
