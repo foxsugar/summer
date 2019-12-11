@@ -144,51 +144,51 @@ public class PayCallback {
                         rebateMoney = money * serverConfig.getDiscount().get(u.getVip()) / 100;
                     }
                     if (agentUser1 != null) {
-//                        if (agentUser1.getLevel() < 2) {
+                        if (agentUser1.getLevel() < 2) {
+
+
+                            agentInfo1 = agentUser1.getAgentInfo();
+
+                            logger.info("AgentInfo1 is :{}", agentInfo1);
+                            Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
+                            ChildCost childCost1 = rs1.get(dayStr);
+                            if (childCost1 == null) {
+                                childCost1 = new ChildCost();
+                            }
+
+                            logger.info("childCost1  is :{}", childCost1);
+                            //今日来源于玩家的收入
+                            double rebate = 0;
+                            if (u.getVip() == 0) {
+                                rebate = rebateMoney * serverConfig.getAgentFirstRebate().get(agentUser1.getAgentType()) * 0.01;
+                                childCost1.firstLevel += rebate;
+                            }
+//                        else {
+//                            rebate = rebateMoney * serverConfig.getAgentSecondRebate().get(u.getVip()) * 0.01;
+//                            childCost1.firstLevel += rebate;
 //
 //
-//                            agentInfo1 = agentUser1.getAgentInfo();
-//
-//                            logger.info("AgentInfo1 is :{}", agentInfo1);
-//                            Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
-//                            ChildCost childCost1 = rs1.get(dayStr);
-//                            if (childCost1 == null) {
-//                                childCost1 = new ChildCost();
-//                            }
-//
-//                            logger.info("childCost1  is :{}", childCost1);
-//                            //今日来源于玩家的收入
-//                            double rebate = 0;
-//                            if (u.getVip() == 0) {
-//                                rebate = rebateMoney * serverConfig.getAgentFirstRebate().get(agentUser1.getAgentType()) * 0.01;
-//                                childCost1.firstLevel += rebate;
-//                            }
-////                        else {
-////                            rebate = rebateMoney * serverConfig.getAgentSecondRebate().get(u.getVip()) * 0.01;
-////                            childCost1.firstLevel += rebate;
-////
-////
-////                        }
-//                            rs1.put(dayStr, childCost1);
-//                            agentUserDao.save(agentUser1);
-//
-//
-//                            RebateDetail rebateDetail = new RebateDetail();
-//                            rebateDetail.setUserId(charge.getUserid());
-//                            rebateDetail.setAgentName(agentUser1.getUsername());
-//                            rebateDetail.setName(u.getUsername());
-//                            rebateDetail.setAgentId(agentUser1.getId());
-//                            rebateDetail.setNum(rebate);
-//                            rebateDetail.setChargeNum(rebateMoney);
-//                            rebateDetail.setAgentLevel(agentUser1.getAgentType());
-//                            rebateDetail.setDate(new Date());
-//                            rebateDetail.setLevle(1);
-//                            rebateDetail.setUserLevel(u.getVip());
-//                            rebateDetail.setType(0);
-//                            rebateDetailService.rebateDetailDao.save(rebateDetail);
-//                        }else{
-                            CenterMsgService.add51Rebate(u.getId(), rebateMoney, u.getVip() == 0);
 //                        }
+                            rs1.put(dayStr, childCost1);
+                            agentUserDao.save(agentUser1);
+
+
+                            RebateDetail rebateDetail = new RebateDetail();
+                            rebateDetail.setUserId(charge.getUserid());
+                            rebateDetail.setAgentName(agentUser1.getUsername());
+                            rebateDetail.setName(u.getUsername());
+                            rebateDetail.setAgentId(agentUser1.getId());
+                            rebateDetail.setNum(rebate);
+                            rebateDetail.setChargeNum(rebateMoney);
+                            rebateDetail.setAgentLevel(agentUser1.getAgentType());
+                            rebateDetail.setDate(new Date());
+                            rebateDetail.setLevle(1);
+                            rebateDetail.setUserLevel(u.getVip());
+                            rebateDetail.setType(0);
+                            rebateDetailService.rebateDetailDao.save(rebateDetail);
+                        }else{
+                            CenterMsgService.add51Rebate(u.getId(), rebateMoney, u.getVip() == 0);
+                        }
 
                     }
 
