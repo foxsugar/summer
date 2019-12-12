@@ -124,7 +124,7 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
 
         for (HuCardType huCardType : list) {
 
-            if (kaobazhangNum(huCardType) >= 8) {
+            if (kaobazhangNum(huCardType,cards) >= 8) {
                 return true;
             }
         }
