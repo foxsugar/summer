@@ -264,7 +264,8 @@ public class GameHitGoldFlower extends Game {
         }
 
         Long winnerId = winnerList.size()==1?winnerList.get(0).getUid():winnerList.get(1).getUid();
-        loseUser.add(winnerId==askerId?accepterId:askerId);
+        //谁比谁输
+        loseUser.add(winnerId!=askerId?accepterId:askerId);
 
         Map<String, Object> result = new HashMap<>();
         result.put("askerId",askerId);
@@ -296,7 +297,7 @@ public class GameHitGoldFlower extends Game {
 
         if(aliveUser.size()>2){
             if(winnerId==askerId){
-                aliveUser.remove(winnerId==askerId?accepterId:askerId);
+                aliveUser.remove(winnerId==askerId?askerId:accepterId);
             }
 
             if(aliveUser.size()>1){
@@ -315,10 +316,10 @@ public class GameHitGoldFlower extends Game {
             }
 
             if(winnerId!=askerId){
-                aliveUser.remove(winnerId==askerId?accepterId:askerId);
+                aliveUser.remove(winnerId==askerId?askerId:accepterId);
             }
         }else{
-            aliveUser.remove(winnerId==askerId?accepterId:askerId);
+            aliveUser.remove(winnerId==askerId?askerId:accepterId);
             List<Long> list = new ArrayList<>();
             list.add(winnerId);
             compute(list);
