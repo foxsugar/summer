@@ -5,7 +5,7 @@ import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.poker.cow.RoomCow
 import com.code.server.game.poker.doudizhu.RoomDouDiZhu
 import com.code.server.game.poker.guess.RoomGuessCar
-import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower
+import com.code.server.game.poker.hitgoldflower.{RoomHitGoldFlower, RoomYSZLongcheng}
 import com.code.server.game.poker.paijiu._
 import com.code.server.game.poker.playseven.RoomPlaySeven
 import com.code.server.game.poker.pullmice.RoomPullMice
@@ -443,6 +443,9 @@ object PokerRoomService {
       case "getCrazyRoom"=>
         val crazyType : Int = params.path("type").asInt(0)
         RoomPaijiuCrazy.getCrazyRoom(userId,crazyType)
+      case "getYSZRoom"=>
+        val gameType = params.path("gameType").asText()
+        RoomYSZLongcheng.getAllRoom(userId, gameType);
 
       case "paijiuTobeBanker"=>
         val roomId = params.get("roomId").asText()
