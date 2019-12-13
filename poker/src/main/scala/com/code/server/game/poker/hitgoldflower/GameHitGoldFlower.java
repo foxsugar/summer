@@ -318,6 +318,7 @@ public class GameHitGoldFlower extends Game {
                 aliveUser.remove(winnerId==askerId?accepterId:askerId);
             }
         }else{
+            //比牌改变
             aliveUser.remove(winnerId==askerId?accepterId:askerId);
             List<Long> list = new ArrayList<>();
             list.add(winnerId);
