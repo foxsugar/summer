@@ -16,7 +16,7 @@ import com.code.server.game.poker.yuxiaxie.RoomYuxiaxie
 import com.code.server.game.poker.zhaguzi.{RoomWzq, RoomYSZ, RoomZhaGuZi}
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
-import com.code.server.game.room.{Room, RoomExtendGold}
+import com.code.server.game.room.{IfaceRoom, Room, RoomExtendGold}
 import com.code.server.util.SpringUtil
 import com.fasterxml.jackson.databind.JsonNode
 
@@ -281,6 +281,29 @@ object PokerRoomService {
         val goldRoomType = params.path("goldRoomType").asInt(0)
         val goldRoomPermission = params.path("goldRoomPermission").asInt(0)
         return RoomYSZ.createYSZRoom(userId, gameNumber, personNumber, cricleNumber, multiple, caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel, goldRoomType, goldRoomPermission)
+
+      case "createYSZLONGCHENG"=>
+        val roomType = params.get("roomType").asText()
+        val gameNumber = params.get("gameNumber").asInt()
+        val personNumber = params.get("personNumber").asInt()
+        val cricleNumber = params.get("cricleNumber").asInt()
+        val multiple = params.get("multiple").asInt()
+        val caiFen = params.get("caiFen").asInt()
+        val menPai = params.get("menPai").asInt()
+
+        val gameType = params.path("gameType").asText("0")
+        //        val isAA = params.path("isAA").asBoolean(false)
+        //fix bug
+        val isAA =params.path("isAA").asBoolean(false) || params.path("isAll").asBoolean(false)
+        val isJoin = params.path("isJoin").asBoolean(true)
+        val clubId = params.path("clubId").asText
+        val clubRoomModel = params.path("clubRoomModel").asText
+        val goldRoomType = params.path("goldRoomType").asInt(0)
+//        val goldRoomPermission = params.path("goldRoomPermission").asInt(0)
+        val goldRoomPermission = IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT
+        val r = RoomYSZ.createYSZRoom_(0, gameNumber, personNumber, cricleNumber, multiple, caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel, goldRoomType, goldRoomPermission)
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createYSZLONGCHENG", r.toVo(userId)), userId)
+        return 0
 
       case "createPullMiceRoom" =>
         val roomType = params.path("roomType").asText()
