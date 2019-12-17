@@ -299,9 +299,11 @@ object PokerRoomService {
         val clubId = params.path("clubId").asText
         val clubRoomModel = params.path("clubRoomModel").asText
         val goldRoomType = params.path("goldRoomType").asInt(0)
+        val otherMode = params.path("otherMode").asInt(0)
 //        val goldRoomPermission = params.path("goldRoomPermission").asInt(0)
         val goldRoomPermission = IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT
-        val r = RoomYSZ.createYSZRoom_(0, gameNumber, personNumber, cricleNumber, multiple, caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel, goldRoomType, goldRoomPermission)
+        val r = RoomYSZLongcheng.createYSZRoom_(0, gameNumber, personNumber, cricleNumber, multiple,
+          caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel, goldRoomType, goldRoomPermission,otherMode)
         r.setGameType(gameType)
         r.setRoomType(roomType)
         r.setGoldRoomType(goldRoomType)
