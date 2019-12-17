@@ -302,6 +302,9 @@ object PokerRoomService {
 //        val goldRoomPermission = params.path("goldRoomPermission").asInt(0)
         val goldRoomPermission = IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT
         val r = RoomYSZ.createYSZRoom_(0, gameNumber, personNumber, cricleNumber, multiple, caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel, goldRoomType, goldRoomPermission)
+        val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
+        RoomManager.addRoom(r.getRoomId, "" + serverConfig.getServerId, r)
+
         MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createYSZLONGCHENG", r.toVo(userId)), userId)
         return 0
 
