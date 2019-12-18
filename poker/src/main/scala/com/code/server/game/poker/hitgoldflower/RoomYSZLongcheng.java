@@ -2,9 +2,15 @@ package com.code.server.game.poker.hitgoldflower;
 
 import com.code.server.constant.exception.DataNotFoundException;
 import com.code.server.constant.game.UserBean;
+import com.code.server.constant.response.ErrorCode;
+import com.code.server.constant.response.IfaceRoomVo;
+import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.zhaguzi.RoomYSZ;
+import com.code.server.game.room.IfaceRoom;
+import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
+import com.code.server.game.room.service.RoomManager;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
 import com.code.server.util.SpringUtil;
@@ -52,6 +58,49 @@ public class RoomYSZLongcheng extends RoomYSZ {
         room.setUuid(idWorker.nextId());
 
         return room;
+    }
+    @Override
+    public int quitRoom(long userId) {
+        if (isGoldRoom()) {
+            if (!this.users.contains(userId)) {
+                return ErrorCode.CANNOT_QUIT_ROOM_NOT_EXIST;
+            }
+
+            if (isInGame && this.game.users.contains(userId)) {
+                return ErrorCode.CANNOT_QUIT_ROOM_IS_IN_GAME;
+            }
+
+//            List<Long> noticeList = new ArrayList<>();
+//            noticeList.addAll(this.getUsers());
+
+            //删除玩家房间映射关系
+            roomRemoveUser(userId);
+
+
+            if (goldRoomPermission == GOLD_ROOM_PERMISSION_DEFAULT) {
+                RoomManager.getInstance().moveFull2NotFullRoom(this);
+            }
+
+            //todo 如果都退出了  删除房间
+//            if (this.users.size() == 0 ) {
+//
+//                RoomManager.removeRoom(this.roomId);
+//            }
+            noticeQuitRoom(userId);
+            return 0;
+        } else return super.quitRoom(userId);
+    }
+
+    public static int getAllRoom(long userId, String gameType){
+        List<IfaceRoomVo> roomList = new ArrayList<>();
+        for(IfaceRoom room : RoomManager.getInstance().getRooms().values()){
+            Room r = (Room)room;
+            if (r.getGameType().equals( gameType)) {
+                roomList.add(r.toVo(0));
+            }
+        }
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "getYSZRoom", roomList), userId);
+        return 0;
     }
 
     @Override

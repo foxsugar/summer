@@ -5,7 +5,7 @@ import com.code.server.game.poker.config.ServerConfig
 import com.code.server.game.poker.cow.RoomCow
 import com.code.server.game.poker.doudizhu.RoomDouDiZhu
 import com.code.server.game.poker.guess.RoomGuessCar
-import com.code.server.game.poker.hitgoldflower.RoomHitGoldFlower
+import com.code.server.game.poker.hitgoldflower.{RoomHitGoldFlower, RoomYSZLongcheng}
 import com.code.server.game.poker.paijiu._
 import com.code.server.game.poker.playseven.RoomPlaySeven
 import com.code.server.game.poker.pullmice.RoomPullMice
@@ -16,7 +16,7 @@ import com.code.server.game.poker.yuxiaxie.RoomYuxiaxie
 import com.code.server.game.poker.zhaguzi.{RoomWzq, RoomYSZ, RoomZhaGuZi}
 import com.code.server.game.room.kafka.MsgSender
 import com.code.server.game.room.service.RoomManager
-import com.code.server.game.room.{Room, RoomExtendGold}
+import com.code.server.game.room.{IfaceRoom, Room, RoomExtendGold}
 import com.code.server.util.SpringUtil
 import com.fasterxml.jackson.databind.JsonNode
 
@@ -282,6 +282,40 @@ object PokerRoomService {
         val goldRoomPermission = params.path("goldRoomPermission").asInt(0)
         return RoomYSZ.createYSZRoom(userId, gameNumber, personNumber, cricleNumber, multiple, caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel, goldRoomType, goldRoomPermission)
 
+      case "createYSZLONGCHENG"=>
+        val roomType = params.get("roomType").asText()
+        val gameNumber = params.get("gameNumber").asInt()
+        val personNumber = params.get("personNumber").asInt()
+        val cricleNumber = params.get("cricleNumber").asInt()
+        val multiple = params.get("multiple").asInt()
+        val caiFen = params.get("caiFen").asInt()
+        val menPai = params.get("menPai").asInt()
+
+        val gameType = params.path("gameType").asText("0")
+        //        val isAA = params.path("isAA").asBoolean(false)
+        //fix bug
+        val isAA =params.path("isAA").asBoolean(false) || params.path("isAll").asBoolean(false)
+        val isJoin = params.path("isJoin").asBoolean(true)
+        val clubId = params.path("clubId").asText
+        val clubRoomModel = params.path("clubRoomModel").asText
+        val goldRoomType = params.path("goldRoomType").asInt(0)
+        val otherMode = params.path("otherMode").asInt(0)
+//        val goldRoomPermission = params.path("goldRoomPermission").asInt(0)
+        val goldRoomPermission = IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT
+        val r = RoomYSZLongcheng.createYSZRoom_(0, gameNumber, personNumber, cricleNumber, multiple,
+          caiFen, menPai, gameType, roomType, isAA, isJoin, clubId, clubRoomModel, goldRoomType, goldRoomPermission,otherMode)
+        r.setGameType(gameType)
+        r.setRoomType(roomType)
+        r.setGoldRoomType(goldRoomType)
+        r.setGoldRoomPermission(IfaceRoom.GOLD_ROOM_PERMISSION_DEFAULT)
+        r.setMultiple(goldRoomType)
+
+        val serverConfig = SpringUtil.getBean(classOf[ServerConfig])
+        RoomManager.addRoom(r.getRoomId, "" + serverConfig.getServerId, r)
+
+        MsgSender.sendMsg2Player(new ResponseVo("pokerRoomService", "createYSZLONGCHENG", r.toVo(userId)), userId)
+        return 0
+
       case "createPullMiceRoom" =>
         val roomType = params.path("roomType").asText()
         val gameType = params.path("gameType").asText()
@@ -420,6 +454,9 @@ object PokerRoomService {
       case "getCrazyRoom"=>
         val crazyType : Int = params.path("type").asInt(0)
         RoomPaijiuCrazy.getCrazyRoom(userId,crazyType)
+      case "getYSZRoom"=>
+        val gameType = params.path("gameType").asText()
+        RoomYSZLongcheng.getAllRoom(userId, gameType);
 
       case "paijiuTobeBanker"=>
         val roomId = params.get("roomId").asText()

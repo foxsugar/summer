@@ -75,6 +75,8 @@ public class RoomYSZ extends PokerGoldRoom {
     }
 
 
+
+
     public static RoomYSZ createYSZRoom_(long userId, int gameNumber, int personNumber, int cricleNumber, int multiple, int caiFen,
                                     int menPai, String gameType, String roomType, boolean isAA, boolean isJoin,
                                     String clubId, String clubRoomModel, int goldRoomType, int goldRoomPermission) throws DataNotFoundException {

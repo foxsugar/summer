@@ -83,8 +83,7 @@ public class GameInfoZhuohaoziZLB extends GameInfoZhuohaozi {
         }
 
 
-        //第一个人抓牌
-        mopai(firstTurn, "发牌");
+
 
 
         //确定耗子
@@ -97,7 +96,7 @@ public class GameInfoZhuohaoziZLB extends GameInfoZhuohaozi {
             if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_风耗子)) {
                 hunIndex = 27 + rand.nextInt(7);
             }else{
-                String card = this.remainCards.remove(0);
+                String card = this.remainCards.remove(1);
                 hunIndex = CardTypeUtil.getTypeByCard(card);
             }
 
@@ -112,7 +111,9 @@ public class GameInfoZhuohaoziZLB extends GameInfoZhuohaozi {
             //通知混
             MsgSender.sendMsg2Player("gameService", "noticeHun", this.hun, users);
 
-            replay.getHun().addAll(this.hun);
         }
+        //第一个人抓牌
+        mopai(firstTurn, "发牌");
+        replay.getHun().addAll(this.hun);
     }
 }

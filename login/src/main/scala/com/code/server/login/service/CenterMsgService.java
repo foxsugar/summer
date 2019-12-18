@@ -421,7 +421,7 @@ public class CenterMsgService implements IkafkaMsgId {
             Map<String, ChildCost> rs2 = agentInfo2.getEveryDayCost();
             ChildCost childCost2 = rs2.getOrDefault(dayStr, new ChildCost());
             double rebateNum2 = getRebateNum(serverConfig, isAA, 2, agentUser2.getLevel(), num);
-            childCost1.secondLevel += rebateNum2;
+            childCost2.secondLevel += rebateNum2;
             rs2.put(dayStr, childCost2);
             agentUserService.getAgentUserDao().save(agentUser2);
 
