@@ -105,6 +105,8 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
      */
     protected boolean isCanTingAfterGang(List<String> cards,int cardType,boolean isDianGang){
         //先删除这次杠的
+        List<String> allCards = new ArrayList<>();
+        allCards.addAll(cards);
         removeCardByType(cards,cardType,4);
         boolean isMing = false;
         //去除碰
@@ -124,7 +126,7 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
 
         for (HuCardType huCardType : list) {
 
-            if (kaobazhangNum(huCardType,cards) >= 8) {
+            if (kaobazhangNum(huCardType,allCards) >= 8) {
                 return true;
             }
         }

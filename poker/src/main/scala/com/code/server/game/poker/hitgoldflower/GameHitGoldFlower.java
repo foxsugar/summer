@@ -264,6 +264,9 @@ public class GameHitGoldFlower extends Game {
         }
 
         Long winnerId = winnerList.size()==1?winnerList.get(0).getUid():winnerList.get(1).getUid();
+        if (winnerList.size() == 2) {
+            winnerId = accepterId;
+        }
         loseUser.add(winnerId==askerId?accepterId:askerId);
 
         Map<String, Object> result = new HashMap<>();
