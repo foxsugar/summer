@@ -473,7 +473,7 @@ public class PlayerCardsInfoLongxiang extends PlayerCardsInfoMj {
 
 
     public static void main(String[] args) {
-        PlayerCardsInfoLongxiang playerCardsInfo = new PlayerCardsInfoLongxiang();
+        PlayerCardsInfoLingchuan playerCardsInfo = new PlayerCardsInfoLingchuan();
 
 
 

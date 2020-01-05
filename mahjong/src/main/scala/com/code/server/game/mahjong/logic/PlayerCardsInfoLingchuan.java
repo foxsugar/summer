@@ -108,21 +108,18 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
         List<String> allCards = new ArrayList<>();
         allCards.addAll(cards);
         removeCardByType(cards,cardType,4);
-        boolean isMing = false;
         //去除碰
         for(int pt : pengType.keySet()){//如果杠的是之前碰过的牌
             if (pt != cardType) {
                 removeCardByType(cards, pt, 3);
-            } else {
-                isMing = true;
             }
         }
         //去掉杠的牌
         cards = getCardsNoGang(cards);
-        isMing = isMing||isDianGang;
 
         //胡牌类型加上杠
         List<HuCardType> list = getTingHuCardType(cards,null);
+
 
         for (HuCardType huCardType : list) {
 
@@ -266,6 +263,10 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
 
         this.addScore(allScore);
         this.roomInfo.addUserSocre(this.userId, allScore);
+
+    }
+
+    public static void main(String[] args) {
 
     }
 

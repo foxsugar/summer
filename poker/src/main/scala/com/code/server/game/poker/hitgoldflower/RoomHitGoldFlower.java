@@ -14,15 +14,15 @@ package com.code.server.game.poker.hitgoldflower;
  */
 
 import com.code.server.constant.exception.DataNotFoundException;
-import com.code.server.constant.game.IGameConstant;
-import com.code.server.constant.game.PrepareRoom;
-import com.code.server.constant.game.RoomStatistics;
-import com.code.server.constant.game.UserBean;
+import com.code.server.constant.game.*;
+import com.code.server.constant.kafka.IKafaTopic;
+import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.*;
 import com.code.server.game.poker.config.ServerConfig;
 import com.code.server.game.poker.service.PokerGoldRoom;
 import com.code.server.game.room.kafka.MsgSender;
 import com.code.server.game.room.service.RoomManager;
+import com.code.server.kafka.MsgProducer;
 import com.code.server.redis.config.IConstant;
 import com.code.server.redis.service.RedisManager;
 import com.code.server.util.IdWorker;
@@ -208,6 +208,48 @@ public class RoomHitGoldFlower extends PokerGoldRoom {
         return 0;
     }
 
+
+    @Override
+    public void spendMoney() {
+//        super.spendMoney();
+    }
+
+    /**
+     * 生成房间战绩
+     */
+    public void genRoomRecord() {
+        if (!isOpen) return;
+        RoomRecord roomRecord = new RoomRecord();
+        roomRecord.setRoomId(this.roomId);
+        roomRecord.setId(this.getUuid());
+        roomRecord.setType(this.roomType);
+        roomRecord.setTime(System.currentTimeMillis());
+        roomRecord.setClubId(clubId);
+        roomRecord.setClubRoomModel(clubRoomModel);
+        roomRecord.setGameType(gameType);
+        roomRecord.setCurGameNum(this.curGameNumber);
+        roomRecord.setAllGameNum(this.gameNumber);
+        roomRecord.setOpen(isOpen);
+
+        this.userScores.forEach((key, value) -> {
+            UserRecord userRecord = new UserRecord();
+            userRecord.setScore(value);
+            userRecord.setUserId(key);
+            UserBean userBean = RedisManager.getUserRedisService().getUserBean(key);
+            if (userBean != null) {
+                userRecord.setName(userBean.getUsername());
+            }
+            roomRecord.getRecords().add(userRecord);
+            if (this.curGameNumber > 1) {
+                RedisManager.getUserRedisService().addUserMoney(key, -createNeedMoney);
+            }
+        });
+
+        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(KAFKA_MSG_ID_ROOM_RECORD);
+        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
+        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, roomRecord);
+
+    }
 
     public int getReady(long userId) {
         if (!this.users.contains(userId)) {
