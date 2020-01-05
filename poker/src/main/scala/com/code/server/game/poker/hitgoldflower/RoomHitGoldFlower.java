@@ -211,7 +211,15 @@ public class RoomHitGoldFlower extends PokerGoldRoom {
 
     @Override
     public void spendMoney() {
-//        super.spendMoney();
+        if (isAA) {
+//            this.users.forEach(userId -> {
+//                RedisManager.getUserRedisService().addUserMoney(userId, -createNeedMoney);
+//                if (isAddGold()) RedisManager.addGold(userId, createNeedMoney / 10);
+//            });
+        } else {
+            RedisManager.getUserRedisService().addUserMoney(this.createUser, -createNeedMoney);
+            if (isAddGold()) RedisManager.addGold(this.createUser, createNeedMoney / 10);
+        }
     }
 
     /**
@@ -240,7 +248,7 @@ public class RoomHitGoldFlower extends PokerGoldRoom {
                 userRecord.setName(userBean.getUsername());
             }
             roomRecord.getRecords().add(userRecord);
-            if (this.curGameNumber > 1) {
+            if (this.curGameNumber > 1 && isAA) {
                 RedisManager.getUserRedisService().addUserMoney(key, -createNeedMoney);
             }
         });
