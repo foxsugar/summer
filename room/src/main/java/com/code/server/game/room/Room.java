@@ -938,31 +938,14 @@ public class Room implements IfaceRoom {
             this.users.forEach(userId -> {
                 RedisManager.getUserRedisService().addUserMoney(userId, -createNeedMoney);
                 if (isAddGold()) RedisManager.addGold(userId, createNeedMoney / 10);
-//                if (isZhanglebao()) sendzhanglebaoAddRebate(userId, createNeedMoney, true);
             });
         } else {
             RedisManager.getUserRedisService().addUserMoney(this.createUser, -createNeedMoney);
             if (isAddGold()) RedisManager.addGold(this.createUser, createNeedMoney / 10);
-//            if (isZhanglebao()) sendzhanglebaoAddRebate(this.createUser, createNeedMoney, false);
-        }
-        if (isZhanglebao()) {
-
         }
     }
 
-    private void sendzhanglebaoAddRebate(long userId, int money, boolean isAA) {
-        Map<String, Object> addMoney = new HashMap<>();
-        addMoney.put("userId", userId);
-        addMoney.put("money", money);
-        addMoney.put("isAA", isAA);
-        KafkaMsgKey kafkaMsgKey = new KafkaMsgKey().setMsgId(IkafkaMsgId.KAFKA_MSG_ID_51_ADD_REBATE);
-        MsgProducer msgProducer = SpringUtil.getBean(MsgProducer.class);
-        msgProducer.send(IKafaTopic.CENTER_TOPIC, kafkaMsgKey, addMoney);
-    }
 
-    protected boolean isZhanglebao() {
-        return false;
-    }
 
     public int changeRoom(long userId) {
 

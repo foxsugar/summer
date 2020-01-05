@@ -375,10 +375,16 @@ public class CenterMsgService implements IkafkaMsgId {
         rebateDetail.setUserLevel(userBean.getVip());
         rebateDetail.setType(isAA ? 1 : 2);
         rebateDetail.setLevle(level);
+
+        if (agentUser.getLevel() < 2) {
+            rebateDetail.setAgentLevel(agentUser.getAgentType());
+            rebateDetail.setType(0);
+        }
         rebateDetailService.rebateDetailDao.save(rebateDetail);
     }
 
-    private static double getRebateNum(ServerConfig serverConfig, boolean isAA, int level, int agentLevel, double num) {
+    private static double getRebateNum(ServerConfig serverConfig, boolean isAA, int level, int agentLevel, double num, int agentType) {
+        if(agentLevel<2 && level == 1) return num * serverConfig.getAgentFirstRebate().get(agentType) * 0.01;
         if (isAA && level == 1) return num * serverConfig.getZlbAAOne().get(agentLevel) * 0.01;
         if (isAA && level == 2) return num * serverConfig.getZlbAATwo().get(agentLevel) * 0.01;
         if (isAA && level == 3) return num * serverConfig.getZlbAAThree().get(agentLevel) * 0.01;
@@ -407,7 +413,7 @@ public class CenterMsgService implements IkafkaMsgId {
         AgentInfo agentInfo1 = agentUser1.getAgentInfo();
         Map<String, ChildCost> rs1 = agentInfo1.getEveryDayCost();
         ChildCost childCost1 = rs1.getOrDefault(dayStr, new ChildCost());
-        double rebateNum = getRebateNum(serverConfig, isAA, 1, agentUser1.getLevel(), num);
+        double rebateNum = getRebateNum(serverConfig, isAA, 1, agentUser1.getLevel(), num, agentUser1.getAgentType());
 
         childCost1.firstLevel += rebateNum;
         rs1.put(dayStr, childCost1);
@@ -420,7 +426,7 @@ public class CenterMsgService implements IkafkaMsgId {
             AgentInfo agentInfo2 = agentUser2.getAgentInfo();
             Map<String, ChildCost> rs2 = agentInfo2.getEveryDayCost();
             ChildCost childCost2 = rs2.getOrDefault(dayStr, new ChildCost());
-            double rebateNum2 = getRebateNum(serverConfig, isAA, 2, agentUser2.getLevel(), num);
+            double rebateNum2 = getRebateNum(serverConfig, isAA, 2, agentUser2.getLevel(), num, agentUser2.getAgentType());
             childCost2.secondLevel += rebateNum2;
             rs2.put(dayStr, childCost2);
             agentUserService.getAgentUserDao().save(agentUser2);
@@ -432,7 +438,7 @@ public class CenterMsgService implements IkafkaMsgId {
                 AgentInfo agentInfo3 = agentUser3.getAgentInfo();
                 Map<String, ChildCost> rs3 = agentInfo3.getEveryDayCost();
                 ChildCost childCost3 = rs3.getOrDefault(dayStr, new ChildCost());
-                double rebate3 = getRebateNum(serverConfig, isAA, 3, agentUser3.getLevel(), num);
+                double rebate3 = getRebateNum(serverConfig, isAA, 3, agentUser3.getLevel(), num, agentUser3.getAgentType());
                 childCost3.thirdLevel += rebate3;
                 rs3.put(dayStr, childCost3);
                 agentUserService.getAgentUserDao().save(agentUser3);
