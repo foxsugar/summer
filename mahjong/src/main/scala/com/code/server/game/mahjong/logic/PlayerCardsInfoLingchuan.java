@@ -165,6 +165,7 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
 
         Arrays.sort(cardNum);
         return cardNum[3];
+
     }
     /**
      * 靠八张数量
