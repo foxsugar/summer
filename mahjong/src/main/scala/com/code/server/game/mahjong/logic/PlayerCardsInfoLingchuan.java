@@ -123,7 +123,7 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
 
         for (HuCardType huCardType : list) {
 
-            if (kaobazhangNum(huCardType,allCards) >= 8) {
+            if (kaobazhangNum(huCardType,allCards,true) >= 8) {
                 return true;
             }
         }
@@ -153,13 +153,17 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
     }
 
 
-    private int kaobazhangNum(HuCardType huCardType, List<String> cards) {
+    private int kaobazhangNum(HuCardType huCardType, List<String> cards, boolean isTing) {
         if (huCardType.specialHuList.contains(HuType.hu_十三幺)) {
             return 14;
         }
         int[] cardNum = {0, 0, 0, 0};
         for (String card : cards) {
             int group = CardTypeUtil.getCardGroup(card);
+            cardGroupAddCard(cardNum, group, 1);
+        }
+        if (isTing && huCardType.tingCardType!= -1) {
+            int group = CardTypeUtil.getCardGroupByCardType(huCardType.tingCardType);
             cardGroupAddCard(cardNum, group, 1);
         }
 
@@ -221,7 +225,7 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
 
         HuCardType huCardType = huList.get(0);
 
-        int max = kaobazhangNum(huCardType, this.cards);
+        int max = kaobazhangNum(huCardType, this.cards,false);
 
         this.winType.addAll(huCardType.specialHuList);
         int score = max;
