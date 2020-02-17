@@ -49,9 +49,9 @@ public class ClubRecordService {
             rc.add(roomRecord);
         }
         //过长 删除第一个
-//        if (rc.size() >= 20) {
-//            rc.remove(0);
-//        }
+        if (rc.size() >= 20) {
+            rc.remove(0);
+        }
 
         //数据统计
 //        Club club = ClubManager.getInstance().getClubById(clubId);

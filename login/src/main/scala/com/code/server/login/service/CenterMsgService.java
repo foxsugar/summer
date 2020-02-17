@@ -634,7 +634,7 @@ public class CenterMsgService implements IkafkaMsgId {
 
                 String date = LocalDate.now().toString();
                 //记录50天的数据
-                String dateBefore50 = LocalDate.now().minusDays(50).toString();
+                String dateBefore50 = LocalDate.now().minusDays(20).toString();
                 for (com.code.server.constant.game.UserRecord userRecord : roomRecord.getRecords()) {
                     ClubMember clubMember = club.getClubInfo().getMember().get("" + userRecord.getUserId());
                     if (clubMember != null) {
