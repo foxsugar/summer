@@ -26,14 +26,15 @@ public class PlayerCardsInfoLingchuan extends PlayerCardsInfoMj {
 //        specialHuScore.put(hu_清一色, 1);
 //        specialHuScore.put(hu_一条龙, 1);
 //        specialHuScore.put(hu_十三幺, 1);
-//        specialHuScore.put(hu_豪华七小对, 1);
-//        specialHuScore.put(hu_双豪七小对, 1);
-//        specialHuScore.put(hu_三豪七小对, 1);
+        specialHuScore.put(hu_豪华七小对, 2);
+        specialHuScore.put(hu_双豪七小对, 2);
+        specialHuScore.put(hu_三豪七小对, 2);
 //        specialHuScore.put(hu_清龙, 1);
 
 //        specialHuScore.put(hu_缺一门, 0);
 //        specialHuScore.put(hu_缺两门, 0);
-
+        this.roomInfo.setHasGangBlackList(false);
+        this.setHasGangBlackList(false);
 
     }
 
