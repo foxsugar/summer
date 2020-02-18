@@ -212,6 +212,22 @@ public class ManagerAction extends Cors {
         AgentResponse agentResponse = new AgentResponse();
         return agentResponse;
     }
+
+    @RequestMapping("/clearAllClub")
+    public AgentResponse clearAllClub() {
+//        Club club = ClubManager.getInstance();
+        for (Club club : ClubManager.getInstance().getClubMap().values()) {
+            if (club != null) {
+                for (ClubMember clubMember : club.getClubInfo().getMember().values()) {
+                    clearClubMember(clubMember);
+                }
+            }
+        }
+        AgentResponse agentResponse = new AgentResponse();
+        return agentResponse;
+    }
+
+
     @RequestMapping("/test11111")
     public Object test11111(){
         RoomRecord roomRecord = new RoomRecord();

@@ -44,7 +44,7 @@ public class CenterService {
 
 
         //在线记录
-        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 10, true, CenterService::saveLogRecord));
+        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 20, true, CenterService::saveLogRecord));
 
 //        GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 5, true, CenterService::saveAgentRecord));
         GameTimer.addTimerNode(new TimerNode(System.currentTimeMillis(), 1000L * 60 * 5, true, CenterService::saveAgent));
