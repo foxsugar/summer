@@ -596,18 +596,18 @@ public class CenterMsgService implements IkafkaMsgId {
 
                 List<com.code.server.constant.game.UserRecord> lists = roomRecord.getRecords();
                 for (com.code.server.constant.game.UserRecord userRecord : lists) {
-                    UserRecord addRecord = userRecordService.getUserRecordByUserId(userRecord.getUserId());
-                    if (addRecord != null) {
-                        userRecordService.addRecord(userRecord.getUserId(), roomRecord);
-                    } else {
-                        Record record = new Record();
-                        record.addRoomRecord(roomRecord);
-
-                        UserRecord newRecord = new UserRecord();
-                        newRecord.setId(userRecord.getUserId());
-                        newRecord.setRecord(record);
-                        userRecordService.save(newRecord);
-                    }
+//                    UserRecord addRecord = userRecordService.getUserRecordByUserId(userRecord.getUserId());
+//                    if (addRecord != null) {
+//                        userRecordService.addRecord(userRecord.getUserId(), roomRecord);
+//                    } else {
+//                        Record record = new Record();
+//                        record.addRoomRecord(roomRecord);
+//
+//                        UserRecord newRecord = new UserRecord();
+//                        newRecord.setId(userRecord.getUserId());
+//                        newRecord.setRecord(record);
+//                        userRecordService.save(newRecord);
+//                    }
                     if (isAddGameNum) {
                         String date = LocalDate.now().toString();
                         addPlayNum(date, userRecord.getUserId());
