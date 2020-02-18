@@ -690,7 +690,7 @@ public class CenterMsgService implements IkafkaMsgId {
 
             }
 
-            clubRecordService.addRecord(clubId, roomRecord);
+//            clubRecordService.addRecord(clubId, roomRecord);
 
         }
     }
