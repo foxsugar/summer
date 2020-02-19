@@ -3,6 +3,7 @@ package com.code.server.login.action;
 import com.code.server.constant.club.ClubMember;
 import com.code.server.constant.club.ThreeRebate;
 import com.code.server.constant.game.*;
+import com.code.server.constant.game.UserRecord;
 import com.code.server.constant.kafka.KafkaMsgKey;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.*;
@@ -50,6 +51,9 @@ public class ManagerAction extends Cors {
 
     @Autowired
     private PhoneService phoneService;
+
+    @Autowired
+    private UserRecordService userRecordService;
 
     @RequestMapping("/getOnlineUser")
     public Map<String, Object> getOnlineUser() {
@@ -225,6 +229,23 @@ public class ManagerAction extends Cors {
         }
         AgentResponse agentResponse = new AgentResponse();
         return agentResponse;
+    }
+
+    @RequestMapping("/getRecord")
+    public Object getRecord(long userId) {
+        com.code.server.db.model.UserRecord userRecord = userRecordService.getUserRecordByUserId(userId);
+        final long start = 1581955200000L;
+        final long end = 1582016400000L;
+        List<RoomRecord> list = new ArrayList<>();
+        for(List<RoomRecord> roomRecord : userRecord.getRecord().getRoomRecords().values()){
+            for (RoomRecord roomRecord1 : roomRecord) {
+                if (roomRecord1.getTime() < start && roomRecord1.getTime() < end) {
+                    list.add(roomRecord1);
+                }
+            }
+        }
+
+        return list;
     }
 
 
