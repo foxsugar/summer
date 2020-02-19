@@ -254,6 +254,7 @@ public class ManagerAction extends Cors {
             }
         }
         result.put("num", count);
+        result.put("allData", userRecord);
 
         return result;
     }
