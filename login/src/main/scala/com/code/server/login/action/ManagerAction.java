@@ -238,9 +238,11 @@ public class ManagerAction extends Cors {
         final long end = 1582016400000L;
         Map<String, Object> result = new HashMap<>();
         List<UserRecord> list = new ArrayList<>();
-        result.put("num", userRecord.getRecord().getRoomRecords().values().size());
+
         result.put("records", list);
+        int count = 0;
         for(List<RoomRecord> roomRecord : userRecord.getRecord().getRoomRecords().values()){
+            count += roomRecord.size();
             for (RoomRecord roomRecord1 : roomRecord) {
                 if (roomRecord1.getTime() < start && roomRecord1.getTime() < end ) {
                     for(UserRecord userRecord1 : roomRecord1.getRecords()){
@@ -251,6 +253,7 @@ public class ManagerAction extends Cors {
                 }
             }
         }
+        result.put("num", count);
 
         return result;
     }
