@@ -239,6 +239,7 @@ public class ManagerAction extends Cors {
         Map<String, Object> result = new HashMap<>();
         List<UserRecord> list = new ArrayList<>();
         result.put("num", userRecord.getRecord().getRoomRecords().values().size());
+        result.put("records", list);
         for(List<RoomRecord> roomRecord : userRecord.getRecord().getRoomRecords().values()){
             for (RoomRecord roomRecord1 : roomRecord) {
                 if (roomRecord1.getTime() < start && roomRecord1.getTime() < end ) {
