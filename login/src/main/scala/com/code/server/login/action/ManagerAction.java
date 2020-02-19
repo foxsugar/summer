@@ -236,16 +236,22 @@ public class ManagerAction extends Cors {
         com.code.server.db.model.UserRecord userRecord = userRecordService.getUserRecordByUserId(userId);
         final long start = 1581955200000L;
         final long end = 1582016400000L;
-        List<RoomRecord> list = new ArrayList<>();
+        Map<String, Object> result = new HashMap<>();
+        List<UserRecord> list = new ArrayList<>();
+        result.put("num", userRecord.getRecord().getRoomRecords().values().size());
         for(List<RoomRecord> roomRecord : userRecord.getRecord().getRoomRecords().values()){
             for (RoomRecord roomRecord1 : roomRecord) {
-                if (roomRecord1.getTime() < start && roomRecord1.getTime() < end) {
-                    list.add(roomRecord1);
+                if (roomRecord1.getTime() < start && roomRecord1.getTime() < end ) {
+                    for(UserRecord userRecord1 : roomRecord1.getRecords()){
+                        if (userRecord1.getUserId() == userId) {
+                            list.add(userRecord1);
+                        }
+                    }
                 }
             }
         }
 
-        return list;
+        return result;
     }
 
 
