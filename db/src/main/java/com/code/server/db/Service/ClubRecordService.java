@@ -49,7 +49,7 @@ public class ClubRecordService {
             rc.add(roomRecord);
         }
         //过长 删除第一个
-        if (rc.size() >= 10) {
+        if (rc.size() >= 60) {
             rc.remove(0);
         }
 
