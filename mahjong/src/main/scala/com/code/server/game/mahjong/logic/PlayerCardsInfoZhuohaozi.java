@@ -54,7 +54,7 @@ public class PlayerCardsInfoZhuohaozi extends PlayerCardsInfoKD {
             specialHuScore.put(hu_一条龙, 2);
             specialHuScore.put(hu_七小对, 2);
 
-            specialHuScore.put(hu_十三幺, 2);
+//            specialHuScore.put(hu_十三幺, 2);
             specialHuScore.put(hu_豪华七小对,2);
             specialHuScore.put(hu_双豪七小对_山西, 2);
             specialHuScore.put(hu_清龙, 2);
