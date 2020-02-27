@@ -430,7 +430,6 @@ public class CenterMsgService implements IkafkaMsgId {
             childCost2.secondLevel += rebateNum2;
             rs2.put(dayStr, childCost2);
             agentUserService.getAgentUserDao().save(agentUser2);
-
             rebateRecord(userBean, agentUser2, 2, num, rebateNum2, isAA);
 
             AgentUser agentUser3 = agentUserService.getAgentUserDao().findOne(agentUser2.getParentId());
