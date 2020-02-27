@@ -27,9 +27,9 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
         //出牌 弃牌置为空(客户端扣牌)
         this.cards.remove(card);
         String ifAnKou = this.gameInfo.room.getMode();
-        if(!this.gameInfo.room.isHasMode(mode_明听)){
+        if (!this.gameInfo.room.isHasMode(mode_明听)) {
             this.disCards.add(null);
-        }else {
+        } else {
             this.disCards.add(card);
         }
 
@@ -40,6 +40,41 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
         this.gameInfo.addUserOperate(this.userId, type_ting);
     }
 
+
+    public void gangCompute_dabao(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, int cardType) {
+        boolean isJinGang = this.gameInfo.hun.contains(cardType);
+        int score = CardTypeUtil.cardTingScore.get(cardType);
+
+        if (isHasMode(room.getMode(), GameInfoZhuohaozi.mode_摸四胡五)) {
+            score = 5;
+        }
+        if (isJinGang) score = 50;
+        int allScore = 0;
+
+
+        if (!isMing) score *= 2;
+        for (PlayerCardsInfoMj playerCardsInfoMj : this.gameInfo.playerCardsInfos.values()) {
+            if (playerCardsInfoMj.getUserId() != this.userId) {
+                allScore += score;
+
+
+            }
+
+        }
+
+
+        PlayerCardsInfoMj dianGangUser = this.gameInfo.getPlayerCardsInfos().get(diangangUser);
+        dianGangUser.addGangScore(-allScore);
+        dianGangUser.addScore(-allScore);
+        this.roomInfo.addUserSocre(dianGangUser.getUserId(), -allScore);
+
+
+        this.addGangScore(allScore);
+        this.addScore(allScore);
+        this.roomInfo.addUserSocre(this.getUserId(), allScore);
+
+    }
+
     @Override
     public void gangCompute(RoomInfo room, GameInfo gameInfo, boolean isMing, long diangangUser, String card) {
         this.lastOperate = type_gang;
@@ -48,7 +83,7 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
 
         if (isMing) {
             this.roomInfo.addMingGangNum(this.getUserId());
-        }else{
+        } else {
             this.roomInfo.addAnGangNum(this.getUserId());
         }
 
@@ -103,13 +138,11 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
         this.roomInfo.addUserSocre(this.getUserId(), allScore);
 
 
-
         String gameType = this.roomInfo.getGameType();
         if (!"ZHANGLEBAO".equals(gameType) && !"ZHANGLEBAO2".equals(gameType) && !"ZHANGLEBAO3".equals(gameType)) {
             room.pushScoreChange();
         }
     }
-
 
 
     @Override
@@ -127,22 +160,57 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
         //所有的杠都加回去
         if (isDabao) {
 
-//            PlayerCardsInfoMj dabaoUser = gameInfo.getPlayerCardsInfos().get(dianpaoUser);
+            //所有杠分清零
+            for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
+
+                double s = playerCardsInfoMj.getScore();
+                playerCardsInfoMj.addScore(-s);
+                room.addUserSocre(playerCardsInfoMj.getUserId(), -s);
+
+                dabaoUser.addScore(s);
+                room.addUserSocre(dianpaoUser, s);
+                playerCardsInfoMj.setGangScore(0);
+            }
+
+            //算到点炮的人身上
             for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
                 if (playerCardsInfoMj.getUserId() != dianpaoUser) {
-                    if (playerCardsInfoMj.getScore() < 0) {
 
-                        double s = playerCardsInfoMj.getScore();
-                        playerCardsInfoMj.addScore(-s);
-                        room.addUserSocre(playerCardsInfoMj.getUserId(), -s);
-
-                        dabaoUser.addScore(s);
-                        room.addUserSocre(dianpaoUser, s);
+                    for (int cardType : playerCardsInfoMj.mingGangType.keySet()) {
+                        gangCompute_dabao(roomInfo, gameInfo, true, dianpaoUser, cardType);
                     }
+                    for (int cardType : playerCardsInfoMj.anGangType) {
+                        gangCompute_dabao(roomInfo, gameInfo, false, dianpaoUser, cardType);
+                    }
+//                    if (playerCardsInfoMj.getScore() < 0) {
+//
+//                        double s = playerCardsInfoMj.getScore();
+//                        playerCardsInfoMj.addScore(-s);
+//                        room.addUserSocre(playerCardsInfoMj.getUserId(), -s);
+//
+//                        dabaoUser.addScore(s);
+//                        room.addUserSocre(dianpaoUser, s);
+//                    }
 
 
                 }
             }
+//            PlayerCardsInfoMj dabaoUser = gameInfo.getPlayerCardsInfos().get(dianpaoUser);
+//            for (PlayerCardsInfoMj playerCardsInfoMj : gameInfo.getPlayerCardsInfos().values()) {
+//                if (playerCardsInfoMj.getUserId() != dianpaoUser) {
+//                    if (playerCardsInfoMj.getScore() < 0) {
+//
+//                        double s = playerCardsInfoMj.getScore();
+//                        playerCardsInfoMj.addScore(-s);
+//                        room.addUserSocre(playerCardsInfoMj.getUserId(), -s);
+//
+//                        dabaoUser.addScore(s);
+//                        room.addUserSocre(dianpaoUser, s);
+//                    }
+//
+//
+//                }
+//            }
         }
 
 
@@ -154,7 +222,7 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
         for (HuCardType huCardType : huList) {
 
             int temp = getMaxPoint(huCardType, !isZimo) * getTimes(huCardType);
-            if(temp > maxPoint){
+            if (temp > maxPoint) {
                 maxPoint = temp;
                 hct = huCardType;
             }
@@ -167,10 +235,9 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
 
         //显庄 并且 赢得人是庄家
         boolean isBankerWinMore = bankerIsZhuang && isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_显庄);
-        if(isBankerWinMore &&(isZimo || !isBaoAll)) maxPoint += 10;
+        if (isBankerWinMore && (isZimo || !isBaoAll)) maxPoint += 10;
 
-        if(isZimo) maxPoint *= 2;
-
+        if (isZimo) maxPoint *= 2;
 
 
         int allScore = 0;
@@ -181,19 +248,19 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
                 int tempScore = maxPoint;
                 //庄家多输
                 if (playerCardsInfoMj.getUserId() == this.gameInfo.getFirstTurn() && isHasMode(this.roomInfo.mode, GameInfoZhuohaozi.mode_显庄)) {
-                    if(isZimo) {
+                    if (isZimo) {
                         tempScore += 20;
-                    }else{
+                    } else {
                         if (playerCardsInfoMj.getUserId() == dianpaoUser) {
                             tempScore += 10;
-                        }else{
+                        } else {
                             tempScore += 10;
                         }
                     }
                 }
                 allScore += tempScore;
 
-                if(!isBaoAll){
+                if (!isBaoAll) {
                     playerCardsInfoMj.addScore(-tempScore);
                     this.roomInfo.addUserSocre(playerCardsInfoMj.getUserId(), -tempScore);
                 }
