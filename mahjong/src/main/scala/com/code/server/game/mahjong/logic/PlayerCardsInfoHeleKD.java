@@ -177,10 +177,10 @@ public class PlayerCardsInfoHeleKD extends PlayerCardsInfoZhuohaozi {
                 if (playerCardsInfoMj.getUserId() != dianpaoUser) {
 
                     for (int cardType : playerCardsInfoMj.mingGangType.keySet()) {
-                        gangCompute_dabao(roomInfo, gameInfo, true, dianpaoUser, cardType);
+                        ((PlayerCardsInfoHeleKD)playerCardsInfoMj).gangCompute_dabao(roomInfo, gameInfo, true, dianpaoUser, cardType);
                     }
                     for (int cardType : playerCardsInfoMj.anGangType) {
-                        gangCompute_dabao(roomInfo, gameInfo, false, dianpaoUser, cardType);
+                        ((PlayerCardsInfoHeleKD)playerCardsInfoMj).gangCompute_dabao(roomInfo, gameInfo, false, dianpaoUser, cardType);
                     }
 //                    if (playerCardsInfoMj.getScore() < 0) {
 //
