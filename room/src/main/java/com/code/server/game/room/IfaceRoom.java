@@ -45,6 +45,7 @@ public interface IfaceRoom extends IGameConstant {
      */
     int joinRoom(long userId,boolean isJoin, int... seat);
 
+    int joinRoom(long userId,boolean isJoin);
     /**
      * 退出房间
      * @param userId

@@ -68,7 +68,7 @@ class RoomPaijiu100 extends RoomPaijiuCrazy{
     * @param userId
     * @param isJoin
     *     */
-  override def joinRoom(userId: Long, isJoin: Boolean, seat: Int*): Int = {
+  override def joinRoom(userId: Long, isJoin: Boolean): Int = {
     val rtn = super.joinRoom(userId, isJoin)
     if (rtn != 0) return rtn
 //    getReady(userId)
