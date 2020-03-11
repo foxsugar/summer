@@ -50,10 +50,11 @@ public class RoomMsgDispatch {
         switch (method) {
             case "joinRoom": {
                 IfaceRoom room = RoomManager.getRoom(roomId);
+                int seat = params.path("seat").asInt(-1);
                 if (room == null) {
                     return ErrorCode.CANNOT_JOIN_ROOM_NOT_EXIST;
                 }
-                return room.joinRoom(userId, true);
+                return room.joinRoom(userId, true, seat);
             }
 
             case "dissolutionRoom": {

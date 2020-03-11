@@ -857,7 +857,8 @@ public class GameClubService {
      * @param desc
      * @return
      */
-    public int createRoomModel(KafkaMsgKey msgKey, long userId, String clubId, String createCommand, String gameType, int gameNumber, String desc, List<Integer> indexs) {
+    public int createRoomModel(KafkaMsgKey msgKey, long userId, String clubId, String createCommand, String gameType,
+                               int gameNumber, String desc, List<Integer> indexs, int floor) {
         Club club = ClubManager.getInstance().getClubById(clubId);
         if (club == null) {
             return ErrorCode.CLUB_NO_THIS;
@@ -898,6 +899,7 @@ public class GameClubService {
             roomModel.setTime(System.currentTimeMillis());
             roomModel.setMoney(roomData.getMoneyMap().get(gameNumber));
             roomModel.setServiceName(serviceName);
+            roomModel.setFloor(floor);
 
             club.getClubInfo().getRoomModels().add(roomModel);
 

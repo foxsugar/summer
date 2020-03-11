@@ -76,8 +76,14 @@ public class GameInfoHongzhongZLB extends GameInfoHongZhong {
 //            if (PlayerCardsInfoMj.isHasMode(this.room.mode, mode_风耗子)) {
 //                hunIndex = 27 + rand.nextInt(7);
 //            }else{
+            //如果是红中玩法的话
+            if(PlayerCardsInfoMj.isHasMode(this.room.mode, PlayerCardsInfoHongZhong.HAS_HONGZHONG)){
+                hunIndex = 31;
+            }else{
                 String card = this.remainCards.remove(1);
                 hunIndex = CardTypeUtil.getTypeByCard(card);
+            }
+
 //            }
 
             if (PlayerCardsInfoMj.isHasMode(this.room.mode, PlayerCardsInfoHongZhong.TWO_HUN)) {

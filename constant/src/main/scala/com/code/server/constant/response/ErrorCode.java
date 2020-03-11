@@ -49,6 +49,7 @@ public class ErrorCode {
 	//创建房间参数有误
 	public static final int SEND_MESSAGE_USERID_IS_ERROR = 140001;
 	public static final int JOIN_ROOM_USERID_IS_0= 140002;
+	public static final int JOIN_ROOM_SEAT= 140003;
 
 
 

@@ -222,7 +222,7 @@ public class Room implements IfaceRoom {
      * @param isJoin
      * @return
      */
-    public int joinRoom(long userId, boolean isJoin) {
+    public int joinRoom(long userId, boolean isJoin, int... seat) {
 
         if (isClubRoom() && userId == 0) {
             return 0;

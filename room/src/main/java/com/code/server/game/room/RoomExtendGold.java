@@ -146,10 +146,10 @@ public class RoomExtendGold extends Room {
     }
 
     @Override
-    public int joinRoom(long userId, boolean isJoin) {
+    public int joinRoom(long userId, boolean isJoin, int... seat) {
         //随机匹配的金币房
         if (isGoldRoom()) {
-            int rtn = super.joinRoom(userId, isJoin);
+            int rtn = super.joinRoom(userId, isJoin, seat);
             if (rtn != 0) {
                 return rtn;
             }
@@ -162,7 +162,7 @@ public class RoomExtendGold extends Room {
 //            getReady(userId);
             return 0;
         } else {
-            return super.joinRoom(userId, isJoin);
+            return super.joinRoom(userId, isJoin,seat);
         }
 
     }

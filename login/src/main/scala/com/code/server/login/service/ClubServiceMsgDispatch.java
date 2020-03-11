@@ -103,6 +103,7 @@ public class ClubServiceMsgDispatch {
                 String gameType = params.get("gameType").asText();
                 int gameNumber = params.get("gameNumber").asInt();
                 String desc1 = params.get("desc").asText();
+                int floor = params.path("floor").asInt(-1);
                 String str = params.path("indexs").toString();
                 List<Integer> indexs = null;
                 if (str != null && !str.equals("")) {
@@ -110,7 +111,7 @@ public class ClubServiceMsgDispatch {
                     });
                 }
 
-                return gameClubService.createRoomModel(msgKey, userId, clubId, createCommand, gameType, gameNumber, desc1, indexs);
+                return gameClubService.createRoomModel(msgKey, userId, clubId, createCommand, gameType, gameNumber, desc1, indexs, floor);
             }
 
             case "removeRoomModel":

@@ -29,6 +29,7 @@ public class RoomInfo extends RoomInfoExtendGold {
     protected Map<Integer, Long> bankerMap = new HashMap<>();
     protected Map<Integer, Integer> circleNumber = new HashMap<>();//圈数，key存圈数，value存庄家换人的次数
     protected int maxCircle;
+    protected Map<Integer, Long> seatMap = new HashMap<>();
 
     protected boolean isHasGangBlackList = true;
 
@@ -276,8 +277,133 @@ public class RoomInfo extends RoomInfoExtendGold {
         }
     }
 
+    @Override
+    public int joinRoom(long userId, boolean isJoin, int... seat) {
+        //有选座位
+        if (seat.length > 0 && seat[0]>=0) {
+            //这个座位如果被人坐了
+            Long seatUser = seatMap.get(seat[0]);
+            if(seatUser != null){
+                if (seatUser != userId && users.contains(seatUser)) {
+                    return ErrorCode.JOIN_ROOM_SEAT;
+                }
+            }
+        }
+        //随机匹配的金币房
+        if (isGoldRoom()) {
+            int rtn = super.joinRoom(userId, isJoin, seat);
+           if (rtn != 0) {
+                return rtn;
+            }
+
+
+            //如果房间已满 加入已满房间
+            if (goldRoomPermission == GOLD_ROOM_PERMISSION_DEFAULT && this.isRoomFull()) {
+                RoomManager.getInstance().moveGoldRoomNotFull2Full(this);
+            }
+
+//            getReady(userId);
+            return 0;
+        } else {
+            return super.joinRoom(userId, isJoin,seat);
+        }
+
+    }
+
+    @Override
+    public int startGameByClient(long userId) {
+
+//        if (this.bankerId != userId){
+//            return ErrorCode.ROOM_START_NOT_CREATEUSER;
+//        }
+
+        //第一局
+        if (this.curGameNumber != 1) return ErrorCode.ROOM_START_CAN_NOT;
+
+//        if (userStatus.get(userId) != IGameConstant.STATUS_READY) return ErrorCode.ROOM_START_CAN_NOT;
+
+        //防止多次点开始
+        if(this.game != null) return ErrorCode.ROOM_START_CAN_NOT;
+
+        int readyCount = 0;
+        for (Map.Entry<Long, Integer> entry : userStatus.entrySet()) {
+
+            Integer status = entry.getValue();
+            if(status == IGameConstant.STATUS_READY) readyCount++;
+        }
+
+        if (readyCount < 2) return ErrorCode.READY_NUM_ERROR;
+
+//        this.setPersonNumber(userScores.size());
+//        this.setPersonNumber(PERSONNUM);
+        //没准备的人
+        ArrayList<Long> removeList = new ArrayList<>();
+
+        for (Map.Entry<Long, Integer> entry : userStatus.entrySet()){
+            Integer status = entry.getValue();
+
+            if (status != IGameConstant.STATUS_READY){
+                removeList.add(entry.getKey());
+            }
+        }
+
+        for (Long removeId : removeList){
+            roomRemoveUser(removeId);
+        }
+
+       startGame();
+        return 0;
+    }
+
+    protected void sortSeat(){
+        long one = users.get(0);
+        int oneSeat = getUserSeat(one);
+
+        List<Long> u = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            int nextSeat = getNextSeat(oneSeat);
+
+            if (seatMap.containsKey(i)) {
+
+                long seatUser = seatMap.get(i);
+                //有这个玩家
+                if (users.contains(seatUser)) {
+                    //没加进去过
+                    if (!u.contains(seatUser)) {
+                        u.add(seatUser);
+                    }
+                }
+            }
+        }
+
+        //替换users顺序
+
+        this.users.clear();
+        this.users.addAll(u);
+    }
+
+    protected int getNextSeat(int seat){
+        int nextSeat = seat + 1;
+        if (nextSeat >= 4) {
+            nextSeat = 0;
+        }
+        return nextSeat;
+    }
+
+    private int getUserSeat(long userId) {
+        for (Map.Entry<Integer, Long> entry : seatMap.entrySet()) {
+            if (entry.getValue() == userId) {
+                return entry.getKey();
+            }
+        }
+        return -1;
+    }
     public void startGame() {
 
+        if (seatMap.size() != 0) {
+            //选座的情况
+            sortSeat();
+        }
         //确定庄家
         if (this.bankerId == 0) {
             this.bankerId = users.get(0);
@@ -554,6 +680,7 @@ public class RoomInfo extends RoomInfoExtendGold {
         result.put("goldRoomPermission", this.getGoldRoomPermission());
         result.put("showChat", this.showChat);
         result.put("otherMode", this.otherMode);
+        result.put("seatMap", this.seatMap);
 
         return result;
     }
@@ -617,6 +744,7 @@ public class RoomInfo extends RoomInfoExtendGold {
         roomVo.setMustZimo(this.mustZimo);
         roomVo.setShowChat(this.showChat);
         roomVo.setOtherMode(this.otherMode);
+        roomVo.setSeatMap(this.seatMap);
         RedisManager.getUserRedisService().getUserBeans(users).forEach(userBean -> roomVo.userList.add(userBean.toVo()));
         if (this.getGame() != null) {
             roomVo.game = this.game.toVo(userId);
@@ -861,5 +989,13 @@ public class RoomInfo extends RoomInfoExtendGold {
     public RoomInfo setPlayerParentMap(Map<Long, Long> playerParentMap) {
         this.playerParentMap = playerParentMap;
         return this;
+    }
+
+    public Map<Integer, Long> getSeatMap() {
+        return seatMap;
+    }
+
+    public void setSeatMap(Map<Integer, Long> seatMap) {
+        this.seatMap = seatMap;
     }
 }

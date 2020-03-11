@@ -16,9 +16,16 @@ public class RoomModel {
     private String serviceName;
     private Map<String, ClubStatistics> statisticsMap = new HashMap<>();
     private int mode;
+    private int floor;
 
 
+    public int getFloor() {
+        return floor;
+    }
 
+    public void setFloor(int floor) {
+        this.floor = floor;
+    }
 
     public String getId() {
         return id;
