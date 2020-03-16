@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  * Created by sunxianping on 2019-05-05.
  */
-public class GameInfoHongzhongZLB extends GameInfoHongZhong {
+public class GameInfoHongzhongZLB extends GameInfo {
 
 
 

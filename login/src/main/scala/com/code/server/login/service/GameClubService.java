@@ -10,14 +10,8 @@ import com.code.server.constant.response.ClubVo;
 import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.constant.response.RoomInstanceVo;
-import com.code.server.db.Service.ClubChargeService;
-import com.code.server.db.Service.ClubRecordService;
-import com.code.server.db.Service.ClubService;
-import com.code.server.db.Service.UserService;
-import com.code.server.db.model.Club;
-import com.code.server.db.model.ClubCharge;
-import com.code.server.db.model.ClubRecord;
-import com.code.server.db.model.User;
+import com.code.server.db.Service.*;
+import com.code.server.db.model.*;
 import com.code.server.kafka.MsgProducer;
 import com.code.server.login.config.ServerConfig;
 import com.code.server.redis.service.RedisManager;
@@ -62,6 +56,9 @@ public class GameClubService {
 
     @Autowired
     ClubRecordService clubRecordService;
+
+    @Autowired
+    ClubRoomRecordService clubRoomRecordService;
 
     @Autowired
     ClubChargeService clubChargeService;
@@ -1351,6 +1348,23 @@ public class GameClubService {
 
         ClubRecord clubRecord = clubRecordService.getClubRecordDao().getClubRecordById(unionId);
         sendMsg(msgKey, new ResponseVo("clubService", "getClubRecordByDate", clubRecord));
+        return 0;
+    }
+
+    public int getClubRecordByDateNew(KafkaMsgKey msgKey, long userId, String clubId, String date, int floor){
+        Club club = ClubManager.getInstance().getClubById(clubId);
+        if (club == null) {
+            return ErrorCode.CLUB_NO_THIS;
+        }
+        List<ClubRoomRecord> list = null;
+        if (floor == -1) {
+            list = clubRoomRecordService.getClubRoomRecordDao().getAllByClubIdAndDate(clubId, date);
+        }else{
+            list = clubRoomRecordService.getClubRoomRecordDao().getAllByClubIdAndFloor(clubId, floor, date);
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("records", list);
+        sendMsg(msgKey, new ResponseVo("clubService", "getClubRecordByDateNew", result));
         return 0;
     }
 

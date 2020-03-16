@@ -167,6 +167,10 @@ public class ClubServiceMsgDispatch {
             case "getClubRecordByDate":
                 String date = params.get("date").asText();
                 return gameClubService.getClubRecordByDate(msgKey, userId, clubId, date);
+            case "getClubRecordByDateNew":
+                String date1 = params.get("date").asText();
+                int floornew = params.path("floor").asInt(-1);
+                return gameClubService.getClubRecordByDateNew(msgKey, userId, clubId, date1, floornew);
             case "clubDrawBack":
                 String clubModelId2 = params.get("clubModelId").asText();
                 String rid1 = params.path("roomId").asText();

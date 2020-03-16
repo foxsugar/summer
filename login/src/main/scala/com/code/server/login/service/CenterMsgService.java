@@ -52,6 +52,7 @@ public class CenterMsgService implements IkafkaMsgId {
     private static UserService userService = SpringUtil.getBean(UserService.class);
     private static RebateDetailService rebateDetailService = SpringUtil.getBean(RebateDetailService.class);
     private static ChargeService chargeService = SpringUtil.getBean(ChargeService.class);
+    private static ClubRoomRecordService clubRoomRecordService = SpringUtil.getBean(ClubRoomRecordService.class);
 
 
     public static void dispatch(KafkaMsgKey msgKey, String msg) {
@@ -621,9 +622,10 @@ public class CenterMsgService implements IkafkaMsgId {
         String clubId = roomRecord.getClubId();
         if (clubId != null && !"".equals(clubId)) {
             Club club = ClubManager.getInstance().getClubById(clubId);
+            RoomModel rm = null;
             if (club != null) {
                 String roomModel = roomRecord.getClubRoomModel();
-                RoomModel rm = GameClubService.getRoomModel(club, roomModel);
+                rm = GameClubService.getRoomModel(club, roomModel);
                 if (rm != null) {
                     roomRecord.setName(rm.getDesc());
                 }
@@ -690,6 +692,20 @@ public class CenterMsgService implements IkafkaMsgId {
             }
 
             clubRecordService.addRecord(clubId, roomRecord);
+
+            //记录俱乐部战绩
+
+            if (rm != null) {
+
+                ClubRoomRecord clubRoomRecord = new ClubRoomRecord();
+                clubRoomRecord.setClubId(clubId);
+                clubRoomRecord.setRoomModelId(roomRecord.getClubRoomModel());
+                clubRoomRecord.setRecordDate(new Date());
+                clubRoomRecord.setFloor(rm.getFloor());
+                clubRoomRecord.setRoomRecord(roomRecord);
+                clubRoomRecord.setRoomId(roomRecord.getRoomId());
+                clubRoomRecordService.getClubRoomRecordDao().save(clubRoomRecord);
+            }
 
         }
     }
