@@ -162,7 +162,7 @@ public class GameInfoFanshi extends GameInfoNew {
             return ErrorCode.NOT_TURN;
         }
         if (isGet) {
-            super.mopai(userId,null);
+            super.mopai(userId);
         } else {
             handleHuangzhuang(userId);
         }

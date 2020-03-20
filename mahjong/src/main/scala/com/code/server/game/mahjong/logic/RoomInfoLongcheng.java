@@ -96,8 +96,8 @@ public class RoomInfoLongcheng extends RoomInfo {
     }
 
     @Override
-    public int joinRoom(long userId, boolean isJoin, int... seat) {
-        int rtn =  super.joinRoom(userId, isJoin,seat);
+    public int joinRoom(long userId, boolean isJoin) {
+        int rtn =  super.joinRoom(userId, isJoin);
         if (rtn == 0) {
             UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
             playerParentMap.put(userId, (long) userBean.getReferee());
