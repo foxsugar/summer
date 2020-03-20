@@ -215,9 +215,6 @@ public class Room implements IfaceRoom {
         removeClubInstance();
     }
 
-    public int joinRoom(long userId, boolean isJoin, int... seat) {
-        return this.joinRoom(userId, isJoin);
-    }
     /**
      * 加入房间
      *
@@ -261,6 +258,10 @@ public class Room implements IfaceRoom {
         return 0;
     }
 
+    @Override
+    public int seat(long userId, int seat) {
+        return 0;
+    }
 
     /**
      * 加入房间观战

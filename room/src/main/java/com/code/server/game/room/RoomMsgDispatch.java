@@ -54,13 +54,19 @@ public class RoomMsgDispatch {
                 if (room == null) {
                     return ErrorCode.CANNOT_JOIN_ROOM_NOT_EXIST;
                 }
-                if (seat != -1) {
 
-                    return room.joinRoom(userId, true, seat);
-                }else{
+                return room.joinRoom(userId, true);
 
-                    return room.joinRoom(userId, true);
+            }
+
+            case "seat":{
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                int seat = params.path("seat").asInt(-1);
+                if (room == null) {
+                    return ErrorCode.CANNOT_JOIN_ROOM_NOT_EXIST;
                 }
+
+                return room.seat(userId, seat);
             }
 
             case "dissolutionRoom": {

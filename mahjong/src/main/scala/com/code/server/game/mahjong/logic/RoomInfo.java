@@ -277,21 +277,40 @@ public class RoomInfo extends RoomInfoExtendGold {
         }
     }
 
-    @Override
-    public int joinRoom(long userId, boolean isJoin, int... seat) {
-        //有选座位
-        if (seat.length > 0 && seat[0]>=0) {
+    public int seat(long userId, int seat) {
+        if (seat!= -1) {
             //这个座位如果被人坐了
-            Long seatUser = seatMap.get(seat[0]);
+            Long seatUser = seatMap.get(seat);
             if(seatUser != null){
                 if (seatUser != userId && users.contains(seatUser)) {
                     return ErrorCode.JOIN_ROOM_SEAT;
                 }
             }
+            seatMap.put(seat, userId);
         }
+
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "seat", seatMap), userId);
+        return 0;
+    }
+
+    public void roomRemoveUser(long userId) {
+
+        this.users.remove(userId);
+        this.userStatus.remove(userId);
+        this.userScores.remove(userId);
+        this.roomStatisticsMap.remove(userId);
+        removeUserRoomRedis(userId);
+        //删除座位
+        int seat = getUserSeat(userId);
+        seatMap.remove(seat);
+    }
+
+    @Override
+    public int joinRoom(long userId, boolean isJoin) {
+
         //随机匹配的金币房
         if (isGoldRoom()) {
-            int rtn = super.joinRoom(userId, isJoin, seat);
+            int rtn = super.joinRoom(userId, isJoin);
            if (rtn != 0) {
                 return rtn;
             }
@@ -305,7 +324,7 @@ public class RoomInfo extends RoomInfoExtendGold {
 //            getReady(userId);
             return 0;
         } else {
-            return super.joinRoom(userId, isJoin,seat);
+            return super.joinRoom(userId, isJoin);
         }
 
     }

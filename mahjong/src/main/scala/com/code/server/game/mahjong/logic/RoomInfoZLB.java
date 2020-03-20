@@ -29,10 +29,10 @@ public class RoomInfoZLB extends RoomInfo {
     }
 
     @Override
-    public int joinRoom(long userId, boolean isJoin, int... seat) {
+    public int joinRoom(long userId, boolean isJoin) {
         //随机匹配的金币房
 
-        int rtn = super.joinRoom(userId, isJoin, seat);
+        int rtn = super.joinRoom(userId, isJoin);
         if (rtn != 0) {
             return rtn;
         }

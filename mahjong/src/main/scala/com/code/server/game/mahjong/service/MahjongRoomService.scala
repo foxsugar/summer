@@ -258,6 +258,7 @@ object MahjongRoomService {
     }
     var code = 0
     if (isJoin) {
+      //todo 选座位
       code = roomInfo.joinRoom(userId, true)
       if (code != 0) {
         return (code, null)
