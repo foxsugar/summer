@@ -55,6 +55,7 @@ public class RoomVo implements IfaceRoomVo {
     public int otherMode;
 
     public long canStartUserId;//代建房专用，告诉谁可以手动开始
+    public Map<Integer,Long> seatMap = new HashMap<>();
 
     public RoomVo() {
     }
@@ -379,6 +380,15 @@ public class RoomVo implements IfaceRoomVo {
 
     public RoomVo setClubMode(int clubMode) {
         this.clubMode = clubMode;
+        return this;
+    }
+
+    public Map<Integer, Long> getSeatMap() {
+        return seatMap;
+    }
+
+    public RoomVo setSeatMap(Map<Integer, Long> seatMap) {
+        this.seatMap = seatMap;
         return this;
     }
 }

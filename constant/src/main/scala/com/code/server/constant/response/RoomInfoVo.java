@@ -13,15 +13,7 @@ public class RoomInfoVo extends RoomVo {
     public boolean yipaoduoxiang;
     public boolean canChi;
     public boolean haveTing;
-    private Map<Integer,Long> seatMap;
 
-    public Map<Integer, Long> getSeatMap() {
-        return seatMap;
-    }
-
-    public void setSeatMap(Map<Integer, Long> seatMap) {
-        this.seatMap = seatMap;
-    }
 
     public String getModeTotal() {
         return modeTotal;
@@ -76,4 +68,5 @@ public class RoomInfoVo extends RoomVo {
         this.haveTing = haveTing;
         return this;
     }
+
 }

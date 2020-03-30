@@ -370,7 +370,10 @@ public class RoomInfo extends RoomInfoExtendGold {
             roomRemoveUser(removeId);
         }
 
-       startGame();
+        this.setPersonNumber(this.userScores.size());
+
+        startGame();
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "startGameByClient", 0), userId);
         return 0;
     }
 
@@ -399,6 +402,7 @@ public class RoomInfo extends RoomInfoExtendGold {
 
         this.users.clear();
         this.users.addAll(u);
+
     }
 
     protected int getNextSeat(int seat){
