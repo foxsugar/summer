@@ -100,6 +100,7 @@ public class GameDouDiZhu extends Game {
 
     protected void handleNoShuffle(){
         if (isNoShuffle() && this.room.getLastGameCards().size()>0) {
+            System.out.println("进入不洗牌流程-----------------");
             this.cards.clear();
             this.cards.addAll(this.room.getLastGameCards());
             //清空 不洗牌的牌堆
