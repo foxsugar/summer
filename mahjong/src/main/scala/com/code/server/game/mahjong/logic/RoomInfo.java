@@ -303,6 +303,9 @@ public class RoomInfo extends RoomInfoExtendGold {
         //删除座位
         int seat = getUserSeat(userId);
         seatMap.remove(seat);
+        if (this.users.size() >= 1) {
+            this.canStartUserId = this.users.get(0);
+        }
     }
 
     @Override
@@ -327,6 +330,19 @@ public class RoomInfo extends RoomInfoExtendGold {
             return super.joinRoom(userId, isJoin);
         }
 
+    }
+
+    protected void roomAddUser(long userId) {
+
+        this.users.add(userId);
+        this.userStatus.put(userId, 0);
+        this.userScores.put(userId, 0D);
+        this.roomStatisticsMap.put(userId, new RoomStatistics(userId));
+        this.canStartUserId = users.get(0);
+
+        if (!isCreaterJoin || isClubRoom()) this.bankerId = users.get(0);
+
+        addUser2RoomRedis(userId);
     }
 
     @Override
