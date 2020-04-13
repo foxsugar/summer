@@ -326,6 +326,9 @@ public class Room implements IfaceRoom {
         this.userScores.remove(userId);
         this.roomStatisticsMap.remove(userId);
         removeUserRoomRedis(userId);
+        if (this.users.size() >= 1) {
+            this.canStartUserId = this.users.get(0);
+        }
     }
 
 
