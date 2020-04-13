@@ -20,6 +20,7 @@ import java.util.Date;
 public class ClubRoomRecord {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String clubId;
     private Date recordDate;
