@@ -451,7 +451,7 @@ public class LoginAction {
      * @return
      */
     @RequestMapping(value = "/uploadNotice", method = RequestMethod.POST)
-    public String uploadNotice(HttpServletRequest request, HttpServletResponse response, MultipartFile file)
+    public Object uploadNotice(HttpServletRequest request, HttpServletResponse response, MultipartFile file)
             throws ServletException, IOException {
         Map<String, Object> params = new HashMap<>();
 
