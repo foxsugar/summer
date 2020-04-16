@@ -492,8 +492,9 @@ public class LoginAction {
         constantService.constantDao.save(constant);
 
 
-
-        return "上传成功";
+        Map<String, Object> result = new HashMap<>();
+        result.put("status", "ok");
+        return result;
     }
 
     private void setHostAndPort(String userId, Map<String, Object> params, boolean isSet) {
