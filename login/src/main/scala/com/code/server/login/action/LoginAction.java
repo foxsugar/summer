@@ -445,6 +445,57 @@ public class LoginAction {
     }
 
 
+
+    /**
+     * 文件上传功能
+     * @return
+     */
+    @RequestMapping(value = "/uploadNotice", method = RequestMethod.POST)
+    public String uploadNotice(HttpServletRequest request, HttpServletResponse response, MultipartFile file)
+            throws ServletException, IOException {
+        Map<String, Object> params = new HashMap<>();
+
+
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        ServletFileUpload sfu = new ServletFileUpload(factory);
+        // 处理中文问题
+        sfu.setHeaderEncoding("UTF-8");
+        // 限制文件大小
+        sfu.setSizeMax(1024 * 1024 * 50);
+
+        InputStream files = file.getInputStream();
+        ServerConfig serverConfig = SpringUtil.getBean(ServerConfig.class);
+
+        String fileName = file.getOriginalFilename();
+
+        String fn = ""+IdWorker.getDefaultInstance().nextId();
+        String dir = serverConfig.getQrDir() + fn + ".png";
+        String url = serverConfig.getDomain() + fn + ".png";
+        FileOutputStream out = new FileOutputStream(new File(dir));
+        try {
+            // 每次读取的字节长度
+            int n = 0;
+            // 存储每次读取的内容
+            byte[] bb = new byte[1024];
+            while ((n = files.read(bb)) != -1) {
+                // 将读取的内容，写入到输出流当中
+                out.write(bb, 0, n);
+            }
+        }finally {
+            // 关闭输入输出流
+            out.close();
+            files.close();
+        }
+
+        Constant constant = ServerManager.constant;
+        constant.getOther().getNotice().put("gonggao", url);
+        constantService.constantDao.save(constant);
+
+
+
+        return "上传成功";
+    }
+
     private void setHostAndPort(String userId, Map<String, Object> params, boolean isSet) {
         if (isSet) {
 
