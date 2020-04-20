@@ -468,9 +468,9 @@ public class LoginAction {
 
         String fileName = file.getOriginalFilename();
 
-        String fn = ""+IdWorker.getDefaultInstance().nextId();
+        String fn = "/"+IdWorker.getDefaultInstance().nextId();
         String dir = serverConfig.getQrDir() + fn + ".png";
-        String url = serverConfig.getDomain() + fn + ".png";
+        String url = "http://"+serverConfig.getDomain() + fn + ".png";
         FileOutputStream out = new FileOutputStream(new File(dir));
         try {
             // 每次读取的字节长度
