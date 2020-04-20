@@ -470,7 +470,7 @@ public class LoginAction {
 
         String fn = "/"+IdWorker.getDefaultInstance().nextId();
         String dir = serverConfig.getQrDir() + fn + ".png";
-        String url = "http://"+serverConfig.getDomain() + fn + ".png";
+        String url = "http://"+serverConfig.getQrUrl() + fn + ".png";
         FileOutputStream out = new FileOutputStream(new File(dir));
         try {
             // 每次读取的字节长度
