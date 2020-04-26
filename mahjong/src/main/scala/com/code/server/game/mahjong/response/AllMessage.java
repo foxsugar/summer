@@ -42,6 +42,7 @@ public class AllMessage {
 
 	private Map<Long, Integer> laZhuang = new HashMap<>();
 	private Map<Long, Boolean> laZhuangStatus = new HashMap<>();
+	private Map<Integer, Long> seatMap = new HashMap<>();
 
 
 	public Map<String, Object> getRoom() {
@@ -177,6 +178,15 @@ public class AllMessage {
 
 	public AllMessage setLaZhuangStatus(Map<Long, Boolean> laZhuangStatus) {
 		this.laZhuangStatus = laZhuangStatus;
+		return this;
+	}
+
+	public Map<Integer, Long> getSeatMap() {
+		return seatMap;
+	}
+
+	public AllMessage setSeatMap(Map<Integer, Long> seatMap) {
+		this.seatMap = seatMap;
 		return this;
 	}
 }

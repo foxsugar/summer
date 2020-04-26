@@ -812,6 +812,8 @@ public class RoomInfo extends RoomInfoExtendGold {
         prepareRoom.clubId = this.getClubId();
         prepareRoom.otherMode = this.otherMode;
         prepareRoom.clubRoomModel = this.getClubRoomModel();
+        prepareRoom.seatMap = this.seatMap;
+
         return prepareRoom;
     }
 
