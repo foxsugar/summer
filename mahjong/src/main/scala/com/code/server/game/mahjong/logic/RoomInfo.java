@@ -279,6 +279,11 @@ public class RoomInfo extends RoomInfoExtendGold {
 
     public int seat(long userId, int seat) {
         if (seat!= -1) {
+            //这个人是否之前已经坐下
+            int oldSeat = getUserSeat(userId);
+            if (oldSeat != -1) {
+                seatMap.remove(oldSeat);
+            }
             //这个座位如果被人坐了
             Long seatUser = seatMap.get(seat);
             if(seatUser != null){
@@ -287,9 +292,13 @@ public class RoomInfo extends RoomInfoExtendGold {
                 }
             }
             seatMap.put(seat, userId);
+            if (seatMap.size() == 1) {
+                this.canStartUserId = userId;
+            }
         }
 
         MsgSender.sendMsg2Player(new ResponseVo("roomService", "seat", seatMap), userId);
+        MsgSender.sendMsg2Player(new ResponseVo("roomService", "seatInfo", seatMap), users);
         return 0;
     }
 
@@ -398,8 +407,8 @@ public class RoomInfo extends RoomInfoExtendGold {
         int oneSeat = getUserSeat(one);
 
         List<Long> u = new ArrayList<>();
+        List<Long> quitUser = new ArrayList<>(users);
         for (int i = 0; i < 4; i++) {
-            int nextSeat = getNextSeat(oneSeat);
 
             if (seatMap.containsKey(i)) {
 
@@ -411,6 +420,7 @@ public class RoomInfo extends RoomInfoExtendGold {
                         u.add(seatUser);
                     }
                 }
+                quitUser.remove(seatUser);
             }
         }
 
@@ -418,6 +428,10 @@ public class RoomInfo extends RoomInfoExtendGold {
 
         this.users.clear();
         this.users.addAll(u);
+        for (long userId : quitUser) {
+            this.quitRoom(userId);
+        }
+
 
     }
 
