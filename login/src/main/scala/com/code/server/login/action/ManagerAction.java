@@ -435,6 +435,8 @@ public class ManagerAction extends Cors {
     public Object goodExchange(String name, String location, long userId, String phone, double num){
 
 
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", 0);
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         double needCoupon = num;
         if (userBean != null) {
@@ -442,7 +444,8 @@ public class ManagerAction extends Cors {
 
         //减去
         if (userBean.getUserInfo().getCoupon() < needCoupon) {
-            return ErrorCode.CANNOT_GOOD_EXCHANGE_ERROR;
+            result.put("code", ErrorCode.CANNOT_GOOD_EXCHANGE_ERROR);
+            return result;
         }
         userBean.getUserInfo().setCoupon(userBean.getUserInfo().getCoupon() - (int)needCoupon);
         RedisManager.getUserRedisService().updateUserBean(userId, userBean);
@@ -461,12 +464,13 @@ public class ManagerAction extends Cors {
                 .setLocation(location).setPhone(phone);
         goodExchangeService.goodsExchangeRecordDao.save(goodsExchangeRecord);
 
-        return "ok";
+        return result;
     }
 
     @RequestMapping("/user/coupon")
     public Object getUserCoupon(long userId){
         Map<String, Object> result = new HashMap<>();
+        result.put("code", 0);
         UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
         if (userBean != null) {
             result.put("coupon", userBean.getUserInfo().getCoupon());
