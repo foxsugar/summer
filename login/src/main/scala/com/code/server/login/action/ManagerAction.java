@@ -5,6 +5,7 @@ import com.code.server.constant.club.ThreeRebate;
 import com.code.server.constant.game.*;
 import com.code.server.constant.game.UserRecord;
 import com.code.server.constant.kafka.KafkaMsgKey;
+import com.code.server.constant.response.ErrorCode;
 import com.code.server.constant.response.ResponseVo;
 import com.code.server.db.Service.*;
 import com.code.server.db.model.*;
@@ -54,6 +55,9 @@ public class ManagerAction extends Cors {
 
     @Autowired
     private UserRecordService userRecordService;
+
+    @Autowired
+    private GoodExchangeService goodExchangeService;
 
     @RequestMapping("/getOnlineUser")
     public Map<String, Object> getOnlineUser() {
@@ -426,6 +430,54 @@ public class ManagerAction extends Cors {
         constant.getOther().getKefu().put(key, value);
         constantService.constantDao.save(constant);
         return 0;
+    }
+    @RequestMapping("/goods/exchange")
+    public Object goodExchange(String name, String location, long userId, String phone, double num){
+
+
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        double needCoupon = num;
+        if (userBean != null) {
+
+
+        //减去
+        if (userBean.getUserInfo().getCoupon() < needCoupon) {
+            return ErrorCode.CANNOT_GOOD_EXCHANGE_ERROR;
+        }
+        userBean.getUserInfo().setCoupon(userBean.getUserInfo().getCoupon() - (int)needCoupon);
+        RedisManager.getUserRedisService().updateUserBean(userId, userBean);
+        }else{
+            User user = userService.getUserByUserId(userId);
+            if (user != null) {
+
+                user.getUserInfo().setCoupon(user.getUserInfo().getCoupon() - (int)needCoupon);
+                userService.getUserDao().save(user);
+            }
+        }
+        //插入兑换记录
+
+        GoodsExchangeRecord goodsExchangeRecord = new GoodsExchangeRecord();
+        goodsExchangeRecord.setCreateDate(new Date()).setGoodsId(0).setUsersId(userId).setName(name)
+                .setLocation(location).setPhone(phone);
+        goodExchangeService.goodsExchangeRecordDao.save(goodsExchangeRecord);
+
+        return "ok";
+    }
+
+    @RequestMapping("/user/coupon")
+    public Object getUserCoupon(long userId){
+        Map<String, Object> result = new HashMap<>();
+        UserBean userBean = RedisManager.getUserRedisService().getUserBean(userId);
+        if (userBean != null) {
+            result.put("coupon", userBean.getUserInfo().getCoupon());
+        }else{
+            User user = userService.getUserByUserId(userId);
+            if (user != null) {
+
+                result.put("coupon", user.getUserInfo().getCoupon());
+            }
+        }
+        return result;
     }
 
     @RequestMapping("/getRebateInfo")
