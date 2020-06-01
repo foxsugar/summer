@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -483,6 +485,50 @@ public class ManagerAction extends Cors {
         }
         return result;
     }
+
+    @PostMapping("/mowang")
+    public Object mowang(@RequestParam(value = "groupId") String groupId){
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", 200);
+        result.put("msg", "成功");
+        Map<String, Object> data = new HashMap<>();
+        data.put("title", "群id为:" + groupId);
+        data.put("ct", "");
+        data.put("content", "群id为:" + groupId);
+        data.put("androidJumpParam" ,"");
+        data.put("img" ,"");
+        data.put("webType" ,"");
+        data.put("iOSJumpParam" ,"");
+        data.put("sign" ,"");
+        return result;
+    }
+
+//         {
+//
+//            code: 200,  int 200:成功 401:创建失败
+//
+//            msg: "成功",string 失败原因: 如未授权登录等等…
+//
+//            data:{
+//
+//                title:"", string 卡片标题
+//
+//                ct:"",	string 消息子类型 1:跳转h5 2:跳转app 3:跳转h5或App
+//
+//                content:"",string 卡片内容
+//
+//                androidJumpParam:"", string android跳转地址
+//
+//                img:"",	string	图片地址
+//
+//                webType:"",string 跳转h5的url地址
+//
+//                iOSJumpParam:"",string iOS跳转地址
+//
+//                sign:””, 用于验证参数是否被修改,详见签名算法
+//        return result;
+//    }
 
     @RequestMapping("/getRebateInfo")
     public Object getRebateInfo(long userId) {
