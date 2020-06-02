@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -486,8 +483,8 @@ public class ManagerAction extends Cors {
         return result;
     }
 
-    @PostMapping("/mowang")
-    public Object mowang(@RequestParam(value = "groupId") String groupId){
+    @GetMapping("/mowang")
+    public Object mowang(String groupId){
 
         Map<String, Object> result = new HashMap<>();
         result.put("code", 200);
@@ -504,6 +501,27 @@ public class ManagerAction extends Cors {
         return result;
     }
 
+//         privatestaticfinal String APP_KEY="JTM7GJbNhM";
+//      privatestaticfinal String APP_SECRET="521e6771dae5c8ae542b3a470fd81857";
+//      publicstaticvoid main(String[] args) throws Exception {
+//            TestSign();
+//      }
+//      publicstaticvoid TestSign() {
+//            Map<String,String>p = new HashMap();
+//            p.put("appKey", APP_KEY);
+//            p.put("appSecret", APP_SECRET);
+//            p.put("groupId", "1073356146997198848");
+//            p.put("openId", "7573657249641a58b48da007c00979c1c17480cf80b2");
+//            p.put("title", "xfather");
+//            p.put("ct", "666");
+//            p.put("content", "XHFATHER");
+//            p.put("androidJumpParam", "?x=h&h=0xff");
+//            p.put("img", "www.xcxx.com");
+//            p.put("webType", "6");
+//            p.put("iOSJumpParam", "?x=h&h=0xff");
+//            String sg = SignUtil.sign(p);
+//            System.out.println(sg);
+//      }
 //         {
 //
 //            code: 200,  int 200:成功 401:创建失败
