@@ -483,7 +483,7 @@ public class ManagerAction extends Cors {
         return result;
     }
 
-    @GetMapping("/mowang")
+    @GetMapping("/mowang1")
     public Object mowang(String groupId){
 
         Map<String, Object> result = new HashMap<>();
