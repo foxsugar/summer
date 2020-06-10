@@ -204,6 +204,17 @@ public class RoomMsgDispatch {
 
             }
 
+            case "updateLastOperateTme":{
+                IfaceRoom room = RoomManager.getRoom(roomId);
+                Room r = (Room) room;
+                Game game = r.getGame();
+                if (game != null) {
+                    game.updateLastOperateTime();
+                }
+                MsgSender.sendMsg2Player("roomService", "updateLastOperateTme", 0, userId);
+                return 0;
+            }
+
 
 
 
