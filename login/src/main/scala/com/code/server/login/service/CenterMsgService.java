@@ -681,13 +681,13 @@ public class CenterMsgService implements IkafkaMsgId {
                 //龙七 发送http
                 sendLq_http(roomRecord, club);
 
-                if (serverConfig.getSendDuoliao() == 1) {
-                    try {
-                        DuoLiaoService.sendRecord(roomRecord, club);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+//                if (serverConfig.getSendDuoliao() == 1) {
+//                    try {
+//                        DuoLiaoService.sendRecord(roomRecord, club);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
 
             }
 
