@@ -144,7 +144,7 @@ public class GameInfo extends Game {
     public void fapai() {
         //打乱顺序
         Collections.shuffle(remainCards);
-        for (int i = 0; i < playerSize; i++) {
+        for (int i = 0; i < this.users.size(); i++) {
             PlayerCardsInfoMj playerCardsInfo = PlayerCardsInfoFactory.getInstance(room);
             playerCardsInfo.setGameInfo(this);
             long userId = users.get(i);

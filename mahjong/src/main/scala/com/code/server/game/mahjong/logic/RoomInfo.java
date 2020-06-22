@@ -279,11 +279,7 @@ public class RoomInfo extends RoomInfoExtendGold {
 
     public int seat(long userId, int seat) {
         if (seat!= -1) {
-            //这个人是否之前已经坐下
-            int oldSeat = getUserSeat(userId);
-            if (oldSeat != -1) {
-                seatMap.remove(oldSeat);
-            }
+
             //这个座位如果被人坐了
             Long seatUser = seatMap.get(seat);
             if(seatUser != null){
@@ -291,6 +287,13 @@ public class RoomInfo extends RoomInfoExtendGold {
                     return ErrorCode.JOIN_ROOM_SEAT;
                 }
             }
+
+            //这个人是否之前已经坐下
+            int oldSeat = getUserSeat(userId);
+            if (oldSeat != -1) {
+                seatMap.remove(oldSeat);
+            }
+
             seatMap.put(seat, userId);
             if (seatMap.size() == 1) {
                 this.canStartUserId = userId;
@@ -377,6 +380,11 @@ public class RoomInfo extends RoomInfoExtendGold {
         }
 
         if (readyCount < 2) return ErrorCode.READY_NUM_ERROR;
+
+        //如果有选座位 那么必须大于2人落座
+        if (this.seatMap.size() == 1) {
+            return ErrorCode.READY_NUM_ERROR;
+        }
 
 //        this.setPersonNumber(userScores.size());
 //        this.setPersonNumber(PERSONNUM);
