@@ -17,6 +17,28 @@ import java.util.Random;
 public class GameInfoHongzhongZLB extends GameInfo {
 
 
+    @Override
+    public void init(int gameId, long firstTurn, List<Long> users, RoomInfo room) {
+        this.gameId = gameId;
+
+        this.firstTurn = firstTurn;
+        this.turnId = firstTurn;
+        remainCards.addAll(CardTypeUtil.ALL_CARD);
+        this.users.addAll(users);
+        this.room = room;
+        this.cardSize = 13;
+        this.playerSize = room.getPersonNumber();
+
+        if (this.room.isHasMode(PlayerCardsInfoHongZhong.NO_FENG)) {
+            remainCards.removeAll(CardTypeUtil.FENG_CARD);
+            remainCards.removeAll(CardTypeUtil.ZI_CARD);
+
+        }
+
+        initHun();
+        //不带风
+        fapai();
+    }
 
     @Override
     public void initHun() {
