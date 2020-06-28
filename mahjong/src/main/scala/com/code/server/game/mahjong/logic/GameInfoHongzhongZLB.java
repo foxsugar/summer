@@ -32,7 +32,14 @@ public class GameInfoHongzhongZLB extends GameInfo {
         if (this.room.isHasMode(PlayerCardsInfoHongZhong.NO_FENG)) {
             remainCards.removeAll(CardTypeUtil.FENG_CARD);
             remainCards.removeAll(CardTypeUtil.ZI_CARD);
-
+            if (!this.room.isHasMode(PlayerCardsInfoHongZhong.HUN_RAND) &&
+                    !this.room.isHasMode(PlayerCardsInfoHongZhong.HUN_NO) &&
+                    !this.room.isHasMode(PlayerCardsInfoHongZhong.TWO_HUN) ) {
+                remainCards.add("124");
+                remainCards.add("125");
+                remainCards.add("126");
+                remainCards.add("127");
+            }
         }
 
         initHun();
