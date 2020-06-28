@@ -4,6 +4,7 @@ import com.code.server.constant.response.ResponseVo;
 import com.code.server.game.mahjong.response.HandCardsResp;
 import com.code.server.game.mahjong.response.ResponseType;
 import com.code.server.game.mahjong.util.HuWithHun;
+import com.code.server.game.room.Room;
 import com.code.server.game.room.kafka.MsgSender;
 
 import java.util.ArrayList;
@@ -32,9 +33,7 @@ public class GameInfoHongzhongZLB extends GameInfo {
         if (this.room.isHasMode(PlayerCardsInfoHongZhong.NO_FENG)) {
             remainCards.removeAll(CardTypeUtil.FENG_CARD);
             remainCards.removeAll(CardTypeUtil.ZI_CARD);
-            if (!this.room.isHasMode(PlayerCardsInfoHongZhong.HUN_RAND) &&
-                    !this.room.isHasMode(PlayerCardsInfoHongZhong.HUN_NO) &&
-                    !this.room.isHasMode(PlayerCardsInfoHongZhong.TWO_HUN) ) {
+            if (this.room.isHasMode(PlayerCardsInfoHongZhong.HAS_HONGZHONG)) {
                 remainCards.add("124");
                 remainCards.add("125");
                 remainCards.add("126");
@@ -47,6 +46,12 @@ public class GameInfoHongzhongZLB extends GameInfo {
         fapai();
     }
 
+    public static void main(String[] args) {
+        System.out.println(Room.isHasMode(PlayerCardsInfoHongZhong.HUN_RAND, 174));
+        System.out.println(Room.isHasMode(PlayerCardsInfoHongZhong.HUN_NO, 174));
+        System.out.println(Room.isHasMode(PlayerCardsInfoHongZhong.TWO_HUN, 174));
+        System.out.println(Room.isHasMode(PlayerCardsInfoHongZhong.HAS_HONGZHONG, 174));
+    }
     @Override
     public void initHun() {
 
