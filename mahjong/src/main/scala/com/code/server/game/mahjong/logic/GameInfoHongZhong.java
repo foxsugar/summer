@@ -28,9 +28,7 @@ public class GameInfoHongZhong extends GameInfoNew {
             remainCards.removeAll(CardTypeUtil.FENG_CARD);
             remainCards.removeAll(CardTypeUtil.ZI_CARD);
 
-            if (!this.room.isHasMode(PlayerCardsInfoHongZhong.HUN_RAND) &&
-                    !this.room.isHasMode(PlayerCardsInfoHongZhong.HUN_NO) &&
-                    !this.room.isHasMode(PlayerCardsInfoHongZhong.TWO_HUN) ) {
+            if (this.room.isHasMode(PlayerCardsInfoHongZhong.HAS_HONGZHONG)) {
                 remainCards.add("124");
                 remainCards.add("125");
                 remainCards.add("126");
