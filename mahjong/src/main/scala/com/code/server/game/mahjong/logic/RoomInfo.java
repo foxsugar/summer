@@ -416,6 +416,7 @@ public class RoomInfo extends RoomInfoExtendGold {
 
         List<Long> u = new ArrayList<>();
         List<Long> quitUser = new ArrayList<>(users);
+        List<Integer> noSeatIndex = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
 
             if (seatMap.containsKey(i)) {
@@ -429,16 +430,24 @@ public class RoomInfo extends RoomInfoExtendGold {
                     }
                 }
                 quitUser.remove(seatUser);
+            }else{
+                noSeatIndex.add(i);
             }
         }
 
         //替换users顺序
-
         this.users.clear();
         this.users.addAll(u);
-        for (long userId : quitUser) {
-            this.quitRoom(userId);
+
+        //没选座 随机安排一个座位
+        for (int i = 0; i < quitUser.size(); i++) {
+            long us = quitUser.get(i);
+            if (noSeatIndex.size() > i) {
+                seatMap.put(noSeatIndex.get(i), us);
+                this.users.add(noSeatIndex.get(i), us);
+            }
         }
+
 
 
     }
