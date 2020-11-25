@@ -187,7 +187,7 @@ public class PlayerCardsInfoTDH51 extends PlayerCardsInfoHongZhong {
 
         if (isZimo && huCardType.fan <= 9 && isHasMode(this.roomInfo.mode, HAS_HONGZHONG) && isHas4Hongzhong()) {
             this.winType.add(hu_四个红中);
-            score = 10;
+            score += 10;
         }
 
         score *= this.roomInfo.getMultiple();
