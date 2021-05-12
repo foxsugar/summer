@@ -117,7 +117,7 @@ public class RoomInfo extends RoomInfoExtendGold {
 
     public void setUserSocre(long userId, double score) {
         if (!userScores.containsKey(userId)) {
-//            logger.error("===设置分数时出错 userId = "+userId +"users: "+userScores.toString());
+            logger.error("=== userId = "+userId +"users: "+userScores.toString());
             return;
         }
         double s = userScores.get(userId);
